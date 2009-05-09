@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="cats">
+        <item>Riots</item>
+        <item>Deaths </item>
+        <item>Property Loss</item>
+        <item>Sexual Assault</item>
+        <item>Internally Displaced People</item>
+        <item>Government Forces</item>
+        <item>Civilians</item>
+        <item>Looting</item>
+        <item>Peace Efforts</item>
+    </array>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+	
+	<style name="UshahidiTheme" parent="android:Theme.Black">
+		<item name="android:windowFrame">@color/light_yellow</item>
+   	<item name="android:windowBackground">@color/light_yellow</item>
+   	<item name="android:textColor">@color/black</item>
+	</style>
+	
+</resources>

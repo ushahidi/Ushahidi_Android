@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">Ushahidi Logo here</string>
+    <string name="app_name">Ushahidi</string>
+    <string name="add_incident">Ushahidi | Add Incident</string>
+    <string name="view_incident">Ushahidi | View Incident</string>
+    <string name="incident_details">Ushahidi | Incident Detail</string>
+    <string name="app_settings">Ushahidi | Settings </string>
+    <string name="date_time">Event Title</string>
+    <string name="prompt_mesg">Choose A Category to Filter</string>
+    <string name="domain">An Ushahidi Website</string>
+    <string name="country">Default location</string>
+    <string name="confirm">Save</string>
+    <string name="strPostPhotos">Add a Photo</string>
+    <string name="add_categories">Choose Categories</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+</resources>

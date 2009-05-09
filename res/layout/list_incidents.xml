@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:background="@color/light_yellow">
+	
+	<Spinner android:id="@+id/incident_cat"
+		android:prompt="@string/prompt_mesg"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:drawSelectorOnTop="true" />
+		 
+	<ListView android:id="@+id/view_incidents"
+ 		android:layout_width="fill_parent"
+ 		android:layout_height="fill_parent"
+ 		android:background="@color/light_yellow"/>
+</LinearLayout>

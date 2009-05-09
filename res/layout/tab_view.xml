@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/incident_tab"
+     android:layout_width="fill_parent"
+     android:layout_height="fill_parent">
+     <TabWidget
+          android:id="@android:id/tabs"
+          android:layout_width="fill_parent"
+          android:layout_height="fill_parent"/>
+     <FrameLayout
+          android:id="@android:id/tabcontent"
+          android:layout_width="fill_parent"
+          android:layout_height="fill_parent"
+          android:paddingTop="65px">
+          <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+						android:layout_width="fill_parent"
+						android:layout_height="fill_parent">
+						<com.google.android.maps.MapView android:id="@+id/map"
+							android:layout_width="fill_parent"
+							android:layout_height="fill_parent"
+							android:apiKey="IncidentsMap"
+							android:clickable="true" />
+						<LinearLayout android:id="@+id/zoom"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_alignParentBottom="true"
+							android:layout_alignParentLeft="true" />
+		
+							<Spinner android:id="@+id/incident_cat"
+	  						android:prompt="@string/prompt_mesg"
+	  						android:layout_width="fill_parent"
+        				android:layout_height="wrap_content"
+        				android:drawSelectorOnTop="true" />
+    
+						</RelativeLayout>
+						
+						<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+							android:layout_width="fill_parent" 
+							android:layout_height="fill_parent"
+							android:orientation="vertical"
+							android:background="@color/light_yellow"
+							android:padding="10px">
+	
+						<TextView  android:id="@+id/header_title"
+							android:layout_width="wrap_content" 
+							android:layout_height="wrap_content" 
+							android:textColor="@color/black"
+							android:layout_centerHorizontal="true"
+							android:background="@drawable/ushahidi_title"/>
+ 
+ 						<ListView android:id="@+id/view_incidents"
+ 							android:layout_width="fill_parent"
+ 							android:textColor="@color/black"
+ 							android:layout_height="wrap_content"/>
+    
+					</LinearLayout>
+     </FrameLayout>
+</TabHost>

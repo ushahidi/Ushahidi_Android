@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/light_yellow"
+    android:gravity="center"
+    android:padding="25px">
+    <ScrollView android:layout_width="fill_parent" 
+		android:layout_height="fill_parent"
+		android:gravity="center">
+		<LinearLayout android:layout_width="fill_parent" 
+	    	android:layout_height="wrap_content"
+	    	android:orientation="vertical"
+	    	android:gravity="center"
+	    	android:paddingRight="15px">
+		
+			<TextView  android:id="@+id/title"
+    			android:layout_width="wrap_content" 
+    			android:layout_height="wrap_content" 
+    			android:background="@drawable/ushahidi_btn" />
+ 			
+ 			<TextView  android:id="@+id/spacer"
+    			android:layout_width="fill_parent" 
+    			android:layout_height="wrap_content" />
+ 			
+ 			<TextView  android:id="@+id/spacer"
+    			android:layout_width="fill_parent" 
+    			android:layout_height="wrap_content" />      
+ 			
+ 			<Button android:id="@+id/incident_list"
+        		android:layout_width="fill_parent"
+        		android:layout_height="wrap_content"
+        		android:layout_below="@id/title"
+        		android:layout_alignParentLeft="true"
+        		android:layout_marginLeft="0px"
+        		android:text="Incident List" />
+ 			
+ 			<TextView  android:id="@+id/spacer2"
+    			android:layout_width="fill_parent" 
+    			android:layout_height="wrap_content" />
+        
+ 			<Button android:id="@+id/incident_map"
+        		android:layout_width="fill_parent"
+        		android:layout_height="wrap_content"
+        		android:layout_alignParentLeft="true"
+        		android:layout_marginLeft="0px"
+        		android:text="Incident Map" />
+    		
+    		<TextView  android:id="@+id/spacer"
+    			android:layout_width="fill_parent" 
+    			android:layout_height="wrap_content" />
+    		          
+ 			<Button android:id="@+id/home_add_btn"
+        		android:layout_width="fill_parent"
+        		android:layout_height="wrap_content"
+        		android:layout_alignParentLeft="true"
+        		android:layout_marginLeft="0px"
+        		android:text="Add Incident" />
+        </LinearLayout>
+	</ScrollView>        
+</RelativeLayout>

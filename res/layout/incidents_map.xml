@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	<com.google.android.maps.MapView android:id="@+id/map"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:apiKey="02cv5Q8Rob0AxK9cfya5gqZJEmaM0lyZsPdLrmg"
+		android:clickable="true" />
+	<LinearLayout android:id="@+id/zoom"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentLeft="true" />
+		
+		<Spinner android:id="@+id/incident_cat"
+	  		android:prompt="@string/prompt_mesg"
+	  		android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:drawSelectorOnTop="true"/>
+    
+</RelativeLayout>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:padding="10px"
+	android:background="@color/light_yellow">
+	<ScrollView android:layout_width="fill_parent" 
+		android:layout_height="fill_parent">
+	    <LinearLayout android:layout_width="fill_parent" 
+	    	android:layout_height="fill_parent"
+	    	android:orientation="vertical"
+	    	android:paddingRight="10px">
+
+			<LinearLayout android:orientation="vertical"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+		
+				<TextView	android:id="@+id/lbl_title" 
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:text="Event Title" />
+		
+				<EditText android:id="@+id/incident_title" 
+		  			android:layout_width="fill_parent"
+					android:layout_height="wrap_content"  /> 
+			
+			</LinearLayout>
+			
+			<LinearLayout android:orientation="horizontal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="20px"
+				android:paddingRight="20px"
+				android:paddingBottom="15px">
+				
+				<TextView	android:id="@+id/lbl_time" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Event Time" />
+		
+				<DigitalClock android:id="@+id/incident_time" 
+		  		android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					android:paddingLeft="15px"
+					android:editable="true" /> 
+			
+			</LinearLayout>
+			
+			<LinearLayout android:orientation="vertical"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:paddingBottom="15px">
+		
+				<TextView	android:id="@+id/lbl_date" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="@color/black" 
+					android:text="Event Date" />
+		
+				<DatePicker android:id="@+id/incident_date" 
+		  			android:layout_width="wrap_content"
+					android:layout_height="wrap_content"  /> 
+			</LinearLayout>
+			
+			<LinearLayout android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:paddingBottom="15px">
+
+				<TextView	android:id="@+id/incident_loc" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="@color/black" 
+					android:text="Location " />
+
+				<Spinner android:id="@+id/incident_location"
+	  				android:prompt="@string/prompt_mesg"
+	  				android:layout_width="fill_parent"
+        			android:layout_height="wrap_content"
+        			android:drawSelectorOnTop="true"/>
+			</LinearLayout>
+			
+			<LinearLayout android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="fill_parent"
+				android:paddingBottom="15px">
+			<TextView	android:id="@+id/lbl_incidents_dec" 
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" 
+				android:text="Description" />
+			
+			<EditText android:id="@+id/incident_desc" 
+				android:layout_width="fill_parent"
+				android:layout_height="100px"
+				android:scrollbars="vertical" />
+			</LinearLayout>
+			<LinearLayout android:orientation="horizontal"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:padding="15px">
+						
+				<Button android:id="@+id/add_category"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingLeft="15px"
+					android:text="Add Category" />		
+			
+				<ImageButton android:id="@+id/btnPicture" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					android:src="@drawable/photo"  
+					android:layout_marginTop="3px"/>
+			
+			</LinearLayout>
+			
+			<RelativeLayout android:orientation="horizontal"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+	
+				<Button android:id="@+id/incident_add_btn"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_x="15px"
+					android:layout_y="15px"
+					android:layout_alignParentRight="true"
+  					android:layout_marginLeft="10px"
+					android:text="Save " />
+       
+				<Button android:id="@+id/incident_add_cancel"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+ 					android:layout_toLeftOf="@id/incident_add_btn"
+  					android:layout_alignTop="@id/incident_add_btn"
+					android:text="Cancel" />
+	
+			</RelativeLayout>
+		</LinearLayout>
+	</ScrollView>
+</LinearLayout>
