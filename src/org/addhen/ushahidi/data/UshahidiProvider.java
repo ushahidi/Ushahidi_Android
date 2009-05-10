@@ -3,10 +3,13 @@ package org.addhen.ushahidi.data;
 import java.util.HashMap;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
@@ -123,7 +126,7 @@ public class UshahidiProvider extends ContentProvider {
 	public Uri insert(Uri uri, ContentValues initialValues) {
 		ContentValues values;
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-
+		long rowId;
 		String table;
 		String nullColumnHack;
 		Uri contentUri;
@@ -139,28 +142,129 @@ public class UshahidiProvider extends ContentProvider {
 			table = INCIDENTS_TABLE_NAME;
 			nullColumnHack = Incidents.INCIDENT_ID;
 			contentUri = Incidents.CONTENT_URI;
+			if(!values.containsKey(Incidents.INCIDENT_ID)) values.put(Incidents.INCIDENT_ID,"");
+			if(!values.containsKey(Incidents.INCIDENT_TITLE)) values.put(Incidents.INCIDENT_TITLE,"");
+			if(!values.containsKey(Incidents.INCIDENT_DESC)) values.put(Incidents.INCIDENT_DESC,"");
+			if(!values.containsKey(Incidents.INCIDENT_DATE)) values.put(Incidents.INCIDENT_DATE,"");
+			if(!values.containsKey(Incidents.INCIDENT_MODE)) values.put(Incidents.INCIDENT_MODE,"");
+			if(!values.containsKey(Incidents.INCIDENT_VERIFIED)) values.put(Incidents.INCIDENT_VERIFIED,"");
+			if(!values.containsKey(Incidents.INCIDENT_LOC_NAME)) values.put(Incidents.INCIDENT_LOC_NAME,"");
+			if(!values.containsKey(Incidents.INCIDENT_LOC_LATITUDE)) values.put(Incidents.INCIDENT_LOC_LATITUDE,"");
+			if(!values.containsKey(Incidents.INCIDENT_LOC_LONGITUDE)) values.put(Incidents.INCIDENT_LOC_LONGITUDE,"");
+			if(!values.containsKey(Incidents.INCIDENT_CATEGORIES)) values.put(Incidents.INCIDENT_CATEGORIES,"");
+			if(!values.containsKey(Incidents.INCIDENT_MEDIA)) values.put(Incidents.INCIDENT_MEDIA,"");
 			break;
 
 		case CATEGORIES:
-			
+			table = CATEGORIES_TABLE_NAME;
+			nullColumnHack = Categories.CATEGORY_ID;
+			contentUri = Categories.CONTENT_URI;
+			if(values.containsKey(Categories.CATEGORY_ID)) values.put(Categories.CATEGORY_ID, "");
+			if(values.containsKey(Categories.CATEGORY_TITLE)) values.put(Categories.CATEGORY_TITLE, "");
+			if(values.containsKey(Categories.CATEGORY_DESC)) values.put(Categories.CATEGORY_DESC, "");
+			if(values.containsKey(Categories.CATEGORY_COLOR)) values.put(Categories.CATEGORY_COLOR, "");
 			break;
 
 		case LOCATIONS:
-			
+			table = LOCATIONS_TABLE_NAME;
+			nullColumnHack = Locations.LOCATION_ID;
+			contentUri = Locations.CONTENT_URI;
+			if(values.containsKey(Locations.LOCATION_ID)) values.put(Locations.LOCATION_ID,"");
+			if(values.containsKey(Locations.LOCATION_NAME)) values.put(Locations.LOCATION_NAME, "");
+			if(values.containsKey(Locations.LOCATION_LATITUDE)) values.put(Locations.LOCATION_LATITUDE, "");
+			if(values.containsKey(Locations.LOCATION_LONGITUDE)) values.put(Locations.LOCATION_LONGITUDE, "");
 			break;
 
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 		
-		return null;
+		rowId = db.insert(table, nullColumnHack, values);
+		if (rowId > 0) {
+			Uri newUri = ContentUris.withAppendedId(contentUri, rowId);
+			getContext().getContentResolver().notifyChange(newUri, null);
+			return newUri;
+		}
+
+		throw new SQLException("Failed to insert row into " + uri);
 	}
 	
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
-		// TODO Auto-generated method stub
-		return null;
+		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+		
+		switch (sUriMatcher.match(uri)) {
+			case INCIDENTS:
+				qb.setTables(INCIDENTS_TABLE_NAME);
+				qb.setProjectionMap(sIncidentsProjectionMap);
+				break;
+			case INCIDENTS_ID:
+				qb.setTables(INCIDENTS_TABLE_NAME);
+				qb.setProjectionMap(sIncidentsProjectionMap);
+				qb.appendWhere(Incidents._ID + "=" + uri.getPathSegments().get(1) );
+				break;
+
+			case CATEGORIES:
+				qb.setTables(CATEGORIES_TABLE_NAME);
+				qb.setProjectionMap(sCategoriesProjectionMap);
+				break;
+
+			case CATEGORIES_ID:
+				qb.setTables(CATEGORIES_TABLE_NAME);
+				qb.setProjectionMap(sCategoriesProjectionMap);
+				qb.appendWhere(Categories._ID + "=" + uri.getPathSegments().get(1) );
+				break;
+				
+			case LOCATIONS:
+				qb.setTables(LOCATIONS_TABLE_NAME);
+				qb.setProjectionMap(sLocationsProjectionMap);
+				break;
+
+			case LOCATIONS_ID:
+				qb.setTables(LOCATIONS_TABLE_NAME);
+				qb.setProjectionMap(sLocationsProjectionMap);
+				qb.appendWhere(Locations._ID + "=" + uri.getPathSegments().get(1) );
+				break;
+
+			default:
+				throw new IllegalArgumentException("Unknown URI " + uri);
+		}
+		
+		// If no sort order is specified use the default
+		String orderBy;
+		if (TextUtils.isEmpty(sortOrder)) {
+			switch (sUriMatcher.match(uri)) {
+				case INCIDENTS:
+				case INCIDENTS_ID:
+					orderBy = Incidents.DEFAULT_SORT_ORDER;
+					break;
+					
+				case CATEGORIES:
+				case CATEGORIES_ID:
+					orderBy = Incidents.DEFAULT_SORT_ORDER;
+					break;
+				case LOCATIONS:
+				case LOCATIONS_ID:
+					orderBy = Locations.DEFAULT_SORT_ORDER;
+					break;
+			
+				default:
+					throw new IllegalArgumentException("Unknown URI " + uri);	
+			
+			}
+		
+		} else {
+			orderBy  = sortOrder;
+		}
+		
+		// Get the database and run the query
+		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+		Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+
+		// Tell the cursor what Uri to watch, so it knows when its source data changes
+		c.setNotificationUri(getContext().getContentResolver(), uri);
+		return c;
 	}
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,

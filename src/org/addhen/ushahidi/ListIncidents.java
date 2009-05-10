@@ -131,6 +131,36 @@ public class ListIncidents extends Activity{
 				"Date:2009-04-17",
 				"Verified",24)
 		);
+		
+		ila.addItem( new ListIncidentText(getResources().getDrawable( R.drawable.ushahidi_icon),
+				"Uhuru Fires still strong - Uhuru, Kenya",
+				"Date:2009-04-17",
+				"Verified",24)
+		);
+		
+		ila.addItem( new ListIncidentText(getResources().getDrawable( R.drawable.ushahidi_icon),
+				"Uhuru Fires still strong - Uhuru, Kenya",
+				"Date:2009-04-17",
+				"Verified",24)
+		);
+		
+		ila.addItem( new ListIncidentText(getResources().getDrawable( R.drawable.ushahidi_icon),
+				"Uhuru Fires still strong - Uhuru, Kenya",
+				"Date:2009-04-17",
+				"Verified",24)
+		);
+		
+		ila.addItem( new ListIncidentText(getResources().getDrawable( R.drawable.ushahidi_icon),
+				"Uhuru Fires still strong - Uhuru, Kenya",
+				"Date:2009-04-17",
+				"Verified",24)
+		);
+		
+		ila.addItem( new ListIncidentText(getResources().getDrawable( R.drawable.ushahidi_icon),
+				"Uhuru Fires still strong - Uhuru, Kenya",
+				"Date:2009-04-17",
+				"Verified",24)
+		);
 		 
 		listIncidents.setAdapter( ila );
 	}
@@ -143,10 +173,10 @@ public class ListIncidents extends Activity{
 		vector.add("DEATHS");
 		vector.add("PROPERTY LOSS");
 		
-		spinnerArrayAdapter = new ArrayAdapter(this,
-				android.R.layout.simple_spinner_dropdown_item, vector );
+		//spinnerArrayAdapter = new ArrayAdapter(this,
+			//	android.R.layout.simple_spinner_dropdown_item, vector );
 		
-		spinner.setAdapter(spinnerArrayAdapter);
+		///spinner.setAdapter(spinnerArrayAdapter);
 		spinner.setOnItemSelectedListener(spinnerListener);
 
 	}

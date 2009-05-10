@@ -7,6 +7,7 @@ import android.widget.TextView;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,8 @@ public class ViewIncidents extends Activity {
         mImageView = (ImageView) findViewById(R.id.img);
         
         title = (TextView) findViewById(R.id.title);
-        title.setTextColor(Color.BLUE);
+        title.setTypeface(Typeface.DEFAULT_BOLD);
+        title.setTextColor(Color.rgb(144, 80, 62));
 		title.setText("Uhuru Fires still strong - Uhuru, Kenay");
         
         category = (TextView) findViewById(R.id.category);
@@ -58,10 +60,18 @@ public class ViewIncidents extends Activity {
         
         body = (TextView) findViewById(R.id.webview);
         body.setTextColor(Color.BLACK);
-        body.setText("On top of that, like what happened in Gaza, is that you can get the OSM community to help build out more detailed maps as you go along, something none of the big mapping suppliers (Google, MSFT, Yahoo) can/will do. When you get a chance, compare the OSM view of Gaza to the one done by MSFT and Google.");
+        body.setText("On top of that, like what happened in Gaza, is that you can get the OSM " +
+        		"community to help build out more detailed maps as you go along, " +
+        		"something none of the big mapping suppliers (Google, MSFT, Yahoo) can/will do. " +
+        		"When you get a chance, compare the OSM view of Gaza to the one done by MSFT and Google." +
+        		"\n\n" +
+        		"On top of that, like what happened in Gaza, is that you can get the OSM " +
+        		"community to help build out more detailed maps as you go along, " +
+        		"something none of the big mapping suppliers (Google, MSFT, Yahoo) can/will do. " +
+        		"When you get a chance, compare the OSM view of Gaza to the one done by MSFT and Google.");
         
         status = (TextView) findViewById( R.id.status);
-        status.setTextColor(Color.GREEN);
+        status.setTextColor(Color.rgb(41, 142, 40));
         status.setText("VERIFIED");
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
     	this.setURL( settings.getString("Domain", "") );

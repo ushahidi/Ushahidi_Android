@@ -1,19 +1,8 @@
 <resources>
-    <drawable name="red">#7f00</drawable>
-    <drawable name="blue">#770000ff</drawable>
-    <drawable name="green">#7700ff00</drawable>
-	<drawable name="yellow">#77ffff00</drawable>
-	
-	<drawable name="screen_background_black">#ff000000</drawable>
-    <drawable name="translucent_background">#e0000000</drawable>
-    <drawable name="transparent_background">#00000000</drawable>
-
-    <color name="solid_red">#f00</color>
-    <color name="solid_blue">#0000ff</color>
-    <color name="solid_green">#f0f0</color>
-    <color name="solid_yellow">#ffffff00</color>
-    <color name="light_yellow">#E8D9AE</color>
-    <color name="wine">#791709</color>
-    <color name="deep_green">#79b06a</color>
-    <color name="black">#000000</color>
+    <drawable name="title_color">#7C2811</drawable>
+    <drawable name="date_color">#262321</drawable>
+    <drawable name="header_color">#3E51BC</drawable>
+    <drawable name="verified_color">#25991C</drawable>
+    <drawable name="background_color">#E8DBAE</drawable>
+    <drawable name="thick_background_color">#DDD0A3</drawable>
 </resources>

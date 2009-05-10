@@ -1,18 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" 
-	android:layout_height="fill_parent"
-	android:orientation="vertical"
-	android:background="@color/light_yellow">
-	
-	<Spinner android:id="@+id/incident_cat"
-		android:prompt="@string/prompt_mesg"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:drawSelectorOnTop="true" />
-		 
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:background="@drawable/background_color">
+  
+  <!-- List incidents -->
 	<ListView android:id="@+id/view_incidents"
  		android:layout_width="fill_parent"
  		android:layout_height="fill_parent"
- 		android:background="@color/light_yellow"/>
-</LinearLayout>
+ 		android:paddingTop="11px"    
+    android:paddingBottom="70px"    	    
+    android:paddingLeft="5px"
+    android:paddingRight="5px"    
+    android:fadingEdge="none"
+    android:cacheColorHint="#00000000"
+    android:scrollbars="none"/>
+ 		
+ 	<!-- Categories Area. -->    
+    <LinearLayout
+    	android:orientation="vertical"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentBottom="true"    
+    	android:paddingBottom="5px"    	    
+    	android:paddingLeft="7px"
+    	android:paddingRight="9px">    
+    	<LinearLayout
+    		android:orientation="horizontal"
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content">
+    		
+				<Spinner android:id="@+id/incident_cat"
+					android:prompt="@string/prompt_mesg"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"/>
+		</LinearLayout>
+	</LinearLayout>
+</RelativeLayout>
