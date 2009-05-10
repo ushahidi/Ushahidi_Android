@@ -8,11 +8,23 @@
     <string name="app_settings">Ushahidi | Settings </string>
     <string name="date_time">Event Title</string>
     <string name="prompt_mesg">Choose A Category to Filter</string>
-    <string name="domain">An Ushahidi Website</string>
-    <string name="country">Default location</string>
-    <string name="confirm">Save</string>
+    <string name="btnCountry">Default location</string>
+    <string name="btnConfirm">Save</string>
     <string name="strPostPhotos">Add a Photo</string>
     <string name="add_categories">Choose Categories</string>
-    <string name="ok">Ok</string>
-    <string name="cancel">Cancel</string>
+    <string name="btnOk">Ok</string>
+    <string name="btnCancel">Cancel</string>
+    <string name="btnClearCache">Clear Cache Files</string>
+    <string name="option_save_phone">Save on Phone</string>
+		<string name="option_save_sdcard">Save On SD Card</string>
+		<string name="hintSDSavePath">Type a folder name</string>
+		<string name="hintDomain">Should start with http://</string>
+		<string name="chkAutoFetch">Auto fetch new incidents on open</string>
+		<string name="txtAutoUpdateDelay">Auto Update Every:</string>
+		<string name="txtPathSD">Path On SD:</string>
+		<string name="txtCache">Cache files:</string>
+		<string name="txtCountries">Select a default country</string>
+		<string name="txtDomain">An Ushahidi website</string>
+		
+		<string name="preferences_notifications">Notifications</string>
 </resources>

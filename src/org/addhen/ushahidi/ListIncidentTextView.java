@@ -21,10 +21,8 @@ public class ListIncidentTextView extends LinearLayout{
 	private LinearLayout textLayout;
 	public ListIncidentTextView( Context context, ListIncidentText listText ) {
 		super(context);
-		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+		
 		this.setOrientation(HORIZONTAL);
-		//this.setLayoutParams(params);
-		//this.setBackgroundColor(R.color.light_yellow);
 		this.initComponent( context, listText);
 		
 	}

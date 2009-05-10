@@ -2,26 +2,112 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    >		
-		<TextView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" 
-			android:text="@string/domain" />
-		<EditText android:id="@+id/domain" 
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent" 
-			android:layout_weight="1"/>
-		<TextView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" 
-			android:text="@string/country" />
-		<Spinner android:id="@+id/countries"
-			android:prompt="@string/prompt_mesg"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:drawSelectorOnTop="true" />
-		<Button android:id="@+id/confirm" 
-		  android:text="@string/confirm"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />	    
-		
+    android:layout_height="fill_parent"
+    android:padding="10px" 
+    android:background="@drawable/background_color">
+    		
+	<ScrollView android:layout_width="fill_parent" 
+		android:layout_height="fill_parent"
+		android:scrollbars="none">
+	    <LinearLayout android:layout_width="fill_parent" 
+	    	android:layout_height="fill_parent"
+	    	android:orientation="vertical">
+	    	<LinearLayout android:orientation="vertical"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<TextView android:layout_width="fill_parent"
+					android:layout_height="wrap_content" 
+					android:text="@string/txtDomain" 
+					android:textColor="@drawable/date_color"/>
+				<EditText android:id="@+id/domain" 
+			  	android:hint="@string/hintDomain"
+			  	android:layout_width="fill_parent"
+					android:layout_height="wrap_content" 
+					android:layout_weight="1"/>
+			</LinearLayout>
+			<LinearLayout android:orientation="vertical"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content">	
+				<TextView android:layout_width="fill_parent"
+					android:layout_height="wrap_content" 
+					android:text="@string/txtCountries" 
+					android:textColor="@drawable/date_color"/>
+					
+				<Spinner android:id="@+id/spnCountries" 
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content" />		
+			</LinearLayout>
+			
+			<LinearLayout android:orientation="vertical" 
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content">
+				<TextView android:layout_width="fill_parent"
+					android:textColor="@drawable/date_color"
+					android:layout_height="wrap_content"
+					android:text="@string/txtCache" />
+				<Button android:id="@+id/btnClearCache"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/btnClearCache" />
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent" 
+				android:layout_height="wrap_content">
+				<RadioGroup android:layout_width="wrap_content" 
+					android:layout_height="wrap_content">
+					<RadioButton android:id="@+id/rbOnPhone" 
+						android:layout_width="wrap_content" 
+						android:layout_height="wrap_content"
+						android:textColor="@drawable/date_color" 
+						android:text="@string/option_save_phone" />
+					<RadioButton android:id="@+id/rbOnSD" 
+						android:layout_width="wrap_content" 
+						android:layout_height="wrap_content" 
+						android:textColor="@drawable/date_color"
+						android:text="@string/option_save_sdcard" />
+				</RadioGroup>
+			</LinearLayout>
+			<LinearLayout android:orientation="vertical"
+				android:id="@+id/llOnSd"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<TextView android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:textColor="@drawable/date_color"
+					android:text="@string/txtPathSD" />
+				<EditText android:id="@+id/etSdSavePath" 
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content"
+					android:hint="@string/hintSDSavePath" />
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<TextView android:layout_width="wrap_content"
+					android:textColor="@drawable/date_color"
+					android:layout_height="wrap_content"
+					android:text="@string/txtAutoUpdateDelay" />				
+				<Spinner android:id="@+id/spnAutoUpdateDelay" 
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content" />
+			</LinearLayout>
+			
+			<CheckBox android:id="@+id/chkAutoFetch" 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:textColor="@drawable/date_color" 
+				android:text="@string/chkAutoFetch"/>
+			
+			<RelativeLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<Button android:id="@+id/btnCancel" 
+		  			android:text="@string/btnCancel"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"  />
+				<Button android:id="@+id/btnConfirm" 
+		  			android:text="@string/btnConfirm"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					android:layout_alignParentRight="true" />				
+			</RelativeLayout>	    		
+		</LinearLayout>	
+	</ScrollView>
 </LinearLayout>

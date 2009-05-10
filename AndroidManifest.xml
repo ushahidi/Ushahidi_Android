@@ -43,5 +43,13 @@
             </intent-filter>
         </activity>
         
+        <!-- Settings  -->
+        <activity android:name=".Settings" android:label="@string/app_settings">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.ACTION_VIEW" />            
+            </intent-filter>
+        </activity>
+        
     </application>
 </manifest> 

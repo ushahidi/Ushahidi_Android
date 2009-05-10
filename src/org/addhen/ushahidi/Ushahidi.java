@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 public class Ushahidi extends Activity {
@@ -36,6 +37,21 @@ public class Ushahidi extends Activity {
         super.onCreate(savedInstanceState);
         
         setContentView( R.layout.main );
+        
+        //load settings
+        if( UshahidiService.domain.length() == 0 ) {
+        	UshahidiService.loadSettings(this);
+        }
+        
+        //check if domain has been set
+        if(UshahidiService.domain.length() == 0 ) {
+        	//means this is a new install or the settings have been corrupted, prompt them!
+			final Toast t = Toast.makeText(this,
+					"Please enter",
+					Toast.LENGTH_LONG);
+			t.show();
+			return;
+        }
         
         listBtn = (Button) findViewById(R.id.incident_list);
         addBtn = (Button) findViewById(R.id.home_add_btn );
@@ -123,21 +139,27 @@ public class Ushahidi extends Activity {
 		Intent launchPreferencesIntent;
 		switch (item.getItemId()) {
 			case INCIDENT_LIST:
-				//write code to show incident list
+				launchPreferencesIntent = new Intent( Ushahidi.this,ListIncidents.class);
+        		startActivityForResult( launchPreferencesIntent, LIST_INCIDENTS );
+        		setResult(RESULT_OK);
 				return true;
 		
 			case INCIDENT_MAP:
-				//TODO write code to show incident map
+				launchPreferencesIntent = new Intent( Ushahidi.this, ViewIncidents.class);
+        		startActivityForResult( launchPreferencesIntent,MAP_INCIDENTS );
 				return true;
 		
 			case INCIDENT_ADD:
-				//TODO write code to add incident
+				launchPreferencesIntent = new Intent( Ushahidi.this,AddIncident.class);
+        		startActivityForResult( launchPreferencesIntent, ADD_INCIDENTS );
+        		setResult(RESULT_OK);
 				return true;
 				
 			case SETTINGS:	
-				//launchPreferencesIntent = new Intent(this, Settings.class);
+				launchPreferencesIntent = new Intent().setClass(Ushahidi.this, Settings.class);
+				
 				// Make it a subactivity so we know when it returns
-				//startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);
+				startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);
 				return true;
 		}
 		return false;
