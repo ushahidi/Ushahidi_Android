@@ -1,341 +1,267 @@
 package org.addhen.ushahidi.net;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
-import java.net.URLEncoder;
-import java.text.ParseException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
-import android.util.Log;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
+import org.addhen.ushahidi.UshahidiService;
 
-public class UshahidiHttpClient extends Service{
+public class UshahidiHttpClient {
+    
+	private static final int IO_BUFFER_SIZE = 512;
+    
+    final public static List<NameValuePair> blankNVPS = new ArrayList<NameValuePair>();
 	
-	@Override
-	public void onCreate() {
-		super.onCreate();
-	}
-	@Override
-	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
+    public static HttpResponse PostURLWithCookies(String URL, List<NameValuePair> data,
+			String Username, String Password) throws IOException {
+    	while(UshahidiService.httpRunning){
+    		try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    	
+    	UshahidiService.httpRunning = true;
+		
+    	if ((Username.length() > 0) && (Password.length() > 0)) {
+			UshahidiService.httpclient.getCredentialsProvider().setCredentials(
+					new AuthScope(null, -1),
+					new UsernamePasswordCredentials(Username, Password));
+		}
+    	
+		final HttpGet httpget = new HttpGet(URL);
+		 HttpResponse response;
+         try {
+              response = UshahidiService.httpclient.execute(httpget);
+             HttpEntity entity = response.getEntity();
+             
+              if (entity != null) {
+                  entity.consumeContent();
+              }
+              
+         } catch (final ClientProtocolException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		}
+
+		final HttpPost httpost = new HttpPost(URL);
+
+		try {
+			//NEED THIS NOW TO FIX ERROR 417 
+			httpost.getParams().setBooleanParameter( "http.protocol.expect-continue", false );	
+			httpost.setEntity(new UrlEncodedFormEntity(data, HTTP.UTF_8));
+		} catch (final UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+			UshahidiService.httpRunning = false;
+			return null;
+		}
+
+		// Post, check and show the result (not really spectacular, but works):
+		try {
+			response =  UshahidiService.httpclient.execute(httpost);
+			UshahidiService.httpRunning = false;
+			return response;
+
+		} catch (final ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		UshahidiService.httpRunning = false;
+		return null;
+    }
+    
+    public static HttpResponse GetURL(String URL) throws IOException {
+    	UshahidiService.httpRunning = true;
+		
+		final HttpGet httpget = new HttpGet(URL);
+		httpget.addHeader("User-Agent", "Ushahidi-Android/1.0)");
+
+		// Post, check and show the result (not really spectacular, but works):
+		try {
+			HttpResponse response =  UshahidiService.httpclient.execute(httpget);
+			UshahidiService.httpRunning = false;
+			
+			return response;
+
+		} catch (final Exception e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
+		UshahidiService.httpRunning = false;
+		return null;
+    }
+	public static HttpResponse PostURL(String URL, List<NameValuePair> data,
+			String Referer) throws IOException {
+		UshahidiService.httpRunning = true;
+
+		final HttpPost httpost = new HttpPost(URL);
+		//org.apache.http.client.methods.
+		if(Referer.length() > 0){
+			httpost.addHeader("Referer", Referer);
+		}
+		if(data != null){
+			try {
+				//NEED THIS NOW TO FIX ERROR 417
+				httpost.getParams().setBooleanParameter( "http.protocol.expect-continue", false ); 
+				httpost.setEntity(new UrlEncodedFormEntity(data, HTTP.UTF_8));
+			} catch (final UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+				UshahidiService.httpRunning = false;
+				return null;
+			}
+		}
+
+		// Post, check and show the result (not really spectacular, but works):
+		try {
+			HttpResponse response =  UshahidiService.httpclient.execute(httpost);
+			UshahidiService.httpRunning = false;
+			return response;
+
+		} catch (final Exception e) {
+
+		} 
+		UshahidiService.httpRunning = false;
 		return null;
 	}
 	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+	public static HttpResponse PostURL(String URL, List<NameValuePair> data) throws IOException {
+		return PostURL(URL, data, "");
 	}
 	
-	
-	public List<IncidentData> getIncidents( String URL, String cat ) throws Exception{
-		
-		String category = "&name="+URLEncoder.encode( cat, "UTF-8");
-    	List<IncidentData> incidentData = null;	
-		
-		StringBuilder uriBuilder = new StringBuilder(URL);
-		uriBuilder.append("?task=incidents");
-		uriBuilder.append("&by=catname");
-		uriBuilder.append( category );
-		uriBuilder.append("&resp=xml");
-		String responseBody = httpRequest( uriBuilder );
-		try {
-			
-			incidentData = buildIncidentData(responseBody);
-		}catch( Exception e ){
-			Log.i("Fetch data", "Exception "+e.toString()+uriBuilder );
-		}
-		return incidentData;
-	}
-	
-	public List<Category> getCategories( String URL ) throws Exception{
-		
-		List<Category> categoryData = null;
-		StringBuilder uriBuilder = new StringBuilder( URL );
-		uriBuilder.append("?task=categories");
-		uriBuilder.append("&resp=xml");
-		
-		String responseBody = httpRequest( uriBuilder );
-		
-		try{
-			categoryData = buildCategoryData( responseBody );
-		}catch( Exception e ){
-			Log.e("Ushahidi Get Service", "Exception "+e.toString() );
-		}
-		
-		return categoryData;
-	}
-	
-	public String httpRequest( StringBuilder uriBuilder ) {
-		
-		HttpClient httpClient = new DefaultHttpClient();
-		
-		HttpGet getRequest = new HttpGet( uriBuilder.toString() );
-		
-		String responseBody = "";
-		
-		try {
-			ResponseHandler<String> responseHandler = new BasicResponseHandler();
-			responseBody = httpClient.execute(getRequest,responseHandler );
-			
-		}catch( ClientProtocolException cPE ){
-			Log.i("ClientProtocolException ", "ClientProtocalException "+ cPE.toString());
-		}catch( IOException ex ){
-			Log.i("IOException ", "IOException "+ ex.toString());
-		}
-		return responseBody;
-	}
-	
-	//get incident content
-	public List<IncidentData> buildIncidentData(String raw) throws Exception {
-		String thumbs[] = null;
-		String t = "";
-		List<IncidentData> incidentsData = new ArrayList<IncidentData>();
-		/*IncidentData incidentData = new IncidentData();
-		JSONArray mIncidents;
-		
-		try{
-			mIncidents = new JSONArray(raw);
-			for( int i = 0; i < mIncidents.length(); i++ ){
-				JSONObject incidents = mIncidents.getJSONObject(i);
-				JSONObject inc = incidents.getJSONObject("incident");
-				//JSONObject inc = in.getJSONObject("incident");
-				incidentData.setTitle( inc.getString("incidenttitle") );
-				incidentData.setIBody( inc.getString("incidentdescription"));
-				incidentData.setThumbnail(inc.getString("thumbnails") );
-				incidentData.setICategory(inc.getString("categorytitle"));
-				incidentData.setILocation(inc.getString("locationname"));
-			}
-			incidentsData.add(incidentData);
-		}catch(JSONException e){
-			e.printStackTrace();
-		}*/
-		DocumentBuilder builder=DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		
-		Document doc=builder.parse(new InputSource(new StringReader(raw)));
-		
-		NodeList titles = doc.getElementsByTagName("incidenttitle");
-		
-		for (int i=0;i<titles.getLength();i++) {
-			Element title = (Element)titles.item(i);
-			IncidentData incidentData = new IncidentData();
-			
-			incidentsData.add(incidentData);
-			incidentData.setTitle(title.getFirstChild().getNodeValue());
-		}
-		
-		NodeList bodies = doc.getElementsByTagName("incidentdescription");
-		
-		for (int i=0;i< bodies.getLength();i++) {
-			
-			Element body = (Element) bodies.item(i);
-			IncidentData incidentData = incidentsData.get(i);
-			
-			incidentData.setIBody( body.getFirstChild().getNodeValue() );
-		}
-		
-		NodeList thumbnails = doc.getElementsByTagName("thumb");
-		
-		for (int i=0;i< thumbnails.getLength();i++) {
-			
-			Element thumbnail= (Element) thumbnails.item(i);
-			IncidentData incidentData = incidentsData.get(i);
-			t +=thumbnail.getFirstChild().getNodeValue()+",";
-			//incidentData.setThumbnail("");
-			incidentData.setThumbnail(thumbnail.getFirstChild().getNodeValue());
-		}
-		
-		Log.i("thumbnails", t);
-		
-		NodeList categories = doc.getElementsByTagName("categorytitle");
-		
-		for (int i=0;i< categories.getLength();i++) {
-			Element category = (Element) categories.item(i);
-			IncidentData incidentData = incidentsData.get(i);
-			
-			incidentData.setICategory( category.getFirstChild().getNodeValue());
-		}
-		
-		NodeList iLocations = doc.getElementsByTagName("locationname");
-		
-		for (int i=0;i< iLocations.getLength();i++) {
-			Element iLocation = (Element) iLocations.item(i);
-			IncidentData incidentData = incidentsData.get(i);
-			
-			incidentData.setILocation(iLocation.getFirstChild().getNodeValue());
-		}
-		
-		return incidentsData;
-	}
-	
-	public List<Category> buildCategoryData( String raw ) throws Exception{	
-		
-		List<Category> categoriesData = new ArrayList<Category>();
-			
-		DocumentBuilder builder=DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			
-		Document doc=builder.parse(new InputSource(new StringReader(raw)));	
-		
-		//category title
-		NodeList cTitles =doc.getElementsByTagName("category_title");
-		for (int i=0;i < cTitles.getLength();i++) {
-			
-			Element cTitle = (Element) cTitles.item(i);
-			Category category = new Category(); 
-			categoriesData.add( category );
-			
-			category.setCTitle( cTitle.getFirstChild().getNodeValue() );
-		}
-		
-		//category description
-		NodeList cDescs = doc.getElementsByTagName("category_description");
-			
-		for (int i=0;i< cDescs.getLength();i++) {
-				
-			Element cDesc = (Element) cDescs.item(i);
-			Category category = categoriesData.get(i);
-				
-			category.setCDesc( cDesc.getFirstChild().getNodeValue() );
-		}
-		
-		//category id
-		NodeList cIds = doc.getElementsByTagName("id");
-			
-		for (int i=0;i< cIds.getLength();i++) {
-			Element cId = (Element) cIds.item(i);
-			Category category = categoriesData.get(i);
-				
-			category.setCId( new Integer( cId.getFirstChild().getNodeValue()) );
-		}
-			
-		//category color
-		NodeList cColors = doc.getElementsByTagName("category_color");
-			
-		for (int i=0;i< cColors.getLength();i++) {
-				
-			Element cColor = (Element) cDescs.item(i);
-			Category category = categoriesData.get(i);
-				
-			category.setCDesc( cColor.getFirstChild().getNodeValue() );
-		}
-			
-		return categoriesData;
-	}
-	
-	
-	//build incident data.
-	public class IncidentData {
-		
-		String iTitle = "";
-		String iBody = "";
-		String iThumbnail = "";
-		String iCategory = "";
-		String iLocation = "";
-		
-		public IncidentData() {
-			
-		}
-		public String getTitle() {
-			return iTitle;
-		}
-	
-		public void setTitle(String title ) {
-			this.iTitle = title;
-		}
-		
-		public String getIBody() {
-			return iBody;
-		}
-		
-		public void setIBody( String iBody) {
-			this.iBody = iBody;
-		}
-		
-		public String getThumbnail() {
-			return iThumbnail;
-		}
-		
-		public void setThumbnail(String iThumbnail ) {
-			this.iThumbnail = iThumbnail;
-		}
-		
-		public String getICategory() {
-			return iCategory;
-		}
-		
-		public void setICategory( String iCategory ) {
-			this.iCategory = iCategory;
-		}
-		
-		public String getILocation() {
-			return this.iLocation;
-		}
-		
-		public void setILocation( String iLocation ) {
-			this.iLocation =  iLocation;
-		}
-	}
-	
-public class Category {
-		
-		String cTitle = "";
-		String cDesc = "";
-		int cId;
-		String cColor = "";
-		
-		public String getCTitle() {
-			return cTitle;
-		}
-	
-		public void setCTitle(String cTitle ) {
-			this.cTitle = cTitle;
-		}
-		
-		public String getCDesc() {
-			return cDesc;
-		}
-		
-		public void setCDesc( String cDesc ) {
-			this.cDesc = cDesc;
-		}
-		
-		public int getCId() {
-			return cId;
-		}
-		
-		public void setCId( int cId ) {
-			this.cId = cId;
-		}
-		
-		public String getCColor() {
-			return cColor;
-		}
-		
-		public void setICategory( String cColor ) {
-			this.cColor = cColor;
-		}
-		
-}
+    public static boolean PostFileUpload(String URL, String FileName, String Username, String Password) throws IOException{
+        ClientHttpRequest req = null;
 
+        try {
+             URL url = new URL(URL);
+             req = new ClientHttpRequest(url);
+             req.setParameter("media", new File(FileName));
+             req.setParameter("username", Username);
+             req.setParameter("password", Password);
+             req.setParameter("source", "atweeter");
+             InputStream serverInput = req.post();
+             if(GetText(serverInput).contains("<rsp status=\"ok\">")){
+            	 return true;
+             }
+        } catch (MalformedURLException ex) {
+        	//fall through and return false
+        }
+        return false;
+   }
+	public static byte[] fetchImage(String address) throws MalformedURLException, IOException {
+        InputStream in = null;
+        OutputStream out = null;
+
+        try {
+            in = new BufferedInputStream(new URL(address).openStream(),
+                    IO_BUFFER_SIZE);
+
+            final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+            out = new BufferedOutputStream(dataStream, 4 * 1024);
+            copy(in, out);
+            out.flush();
+
+            return dataStream.toByteArray();
+        } catch (IOException e) {
+            //android.util.Log.e("IO", "Could not load buddy icon: " + this, e);
+        } finally {
+            closeStream(in);
+            closeStream(out);
+            
+        } 
+        return null;
+		/*final URL url = new URL(address);
+		final Object content = url.getContent();
+		return content;*/
+	}
+	/**
+     * Copy the content of the input stream into the output stream,
+using a temporary
+     * byte array buffer whose size is defined by {@link #IO_BUFFER_SIZE}.
+     *
+     * @param in The input stream to copy from.
+     * @param out The output stream to copy to.
+     *
+     * @throws IOException If any error occurs during the copy.
+     */
+    private static void copy(InputStream in, OutputStream out) throws IOException {
+        byte[] b = new byte[4 * 1024];
+        int read;
+        while ((read = in.read(b)) != -1) {
+            out.write(b, 0, read);
+        }
+    }
+
+    /**
+     * Closes the specified stream.
+     *
+     * @param stream The stream to close.
+     */
+    private static void closeStream(Closeable stream) {
+        if (stream != null) {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                android.util.Log.e("IO", "Could not close stream", e);
+            }
+        }
+    } 
+	public static String GetText(HttpResponse response) {
+		String text = "";
+		try {
+			text = GetText(response.getEntity().getContent());
+		} catch (final Exception ex) {
+		}
+		return text;
+	}
+	public static String GetText(InputStream in) {
+		String text = "";
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(
+				in), 1024);
+		final StringBuilder sb = new StringBuilder();
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			text = sb.toString();
+		} catch (final Exception ex) {
+		} finally {
+			try {
+				in.close();
+			} catch (final Exception ex) {
+			}
+		}
+		return text;
+	}
 }
 

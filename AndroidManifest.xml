@@ -5,14 +5,20 @@
       android:versionName="1.0.0">
     <uses-permission android:name="android.permission.INTERNET" />
 		<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>    
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <application android:icon="@drawable/ushahidi_icon" android:label="@string/app_name">
+    <service android:name="UshahidiService" />
+
+        <receiver android:name="BootReceiver">
+          <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+          </intent-filter>
+        </receiver>        
     	<uses-library android:name="com.google.android.maps" />
         <activity android:name=".Ushahidi" 
-        	android:label="@string/app_name"
-        	android:configChanges="orientation|keyboardHidden" 
-        	android:launchMode="singleTask"
-          android:alwaysRetainTaskState="true">
+        	android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

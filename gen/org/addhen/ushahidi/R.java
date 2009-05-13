@@ -16,21 +16,22 @@ public final class R {
     }
     public static final class drawable {
         public static final int background=0x7f020000;
-        public static final int background_color=0x7f02000e;
-        public static final int date_color=0x7f02000b;
-        public static final int header_color=0x7f02000c;
-        public static final int icon=0x7f020001;
-        public static final int photo=0x7f020002;
-        public static final int thick_background_color=0x7f02000f;
-        public static final int title_color=0x7f02000a;
-        public static final int ushahidi_btn=0x7f020003;
-        public static final int ushahidi_fire=0x7f020004;
-        public static final int ushahidi_globe=0x7f020005;
-        public static final int ushahidi_icon=0x7f020006;
-        public static final int ushahidi_marker=0x7f020007;
-        public static final int ushahidi_plane=0x7f020008;
-        public static final int ushahidi_title=0x7f020009;
-        public static final int verified_color=0x7f02000d;
+        public static final int background_color=0x7f02000f;
+        public static final int date_color=0x7f02000c;
+        public static final int favicon=0x7f020001;
+        public static final int header_color=0x7f02000d;
+        public static final int icon=0x7f020002;
+        public static final int photo=0x7f020003;
+        public static final int thick_background_color=0x7f020010;
+        public static final int title_color=0x7f02000b;
+        public static final int ushahidi_btn=0x7f020004;
+        public static final int ushahidi_fire=0x7f020005;
+        public static final int ushahidi_globe=0x7f020006;
+        public static final int ushahidi_icon=0x7f020007;
+        public static final int ushahidi_marker=0x7f020008;
+        public static final int ushahidi_plane=0x7f020009;
+        public static final int ushahidi_title=0x7f02000a;
+        public static final int verified_color=0x7f02000e;
     }
     public static final class id {
         public static final int add_category=0x7f07000a;
@@ -115,9 +116,11 @@ public final class R {
         public static final int hintDomain=0x7f050012;
         public static final int hintSDSavePath=0x7f050011;
         public static final int incident_details=0x7f050004;
+        public static final int newCategories=0x7f05001a;
+        public static final int newIncidents=0x7f050019;
         public static final int option_save_phone=0x7f05000f;
         public static final int option_save_sdcard=0x7f050010;
-        public static final int preferences_notifications=0x7f050019;
+        public static final int preferences_notifications=0x7f05001b;
         public static final int prompt_mesg=0x7f050007;
         public static final int strPostPhotos=0x7f05000a;
         public static final int title=0x7f050000;

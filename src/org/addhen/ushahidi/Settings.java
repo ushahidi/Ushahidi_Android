@@ -235,13 +235,22 @@ public class Settings extends Activity {
 	}
     
     public void clearOldCache(){
-		File f = new File(oldSavePath + "tweets.json");
+		File f = new File(oldSavePath + "incidents.xml");
 		if(f.exists()){
 			if(!f.delete()){
 				//couldn't delete the old tweets array, could be due to it not existing
 			}
 		}
-		JSONArray Images;
+		
+		f = new File(oldSavePath + "categories.xml");
+		if(f.exists()){
+			if(!f.delete()){
+				//couldn't delete the old tweets array, could be due to it not existing
+			}
+		}
+		
+		
+		/*JSONArray Images;
 		f = new File(oldSavePath + "images.json");
 		
 		if(f.exists()){
@@ -296,7 +305,7 @@ public class Settings extends Activity {
 			if(!f.delete()){
 				//delete failed, can't do much about that.
 			}		
-		}
+		}*/
 		
 	}
     
@@ -304,6 +313,7 @@ public class Settings extends Activity {
     protected void loadSettings(){
 		domain.setText(UshahidiService.domain);
 		spnCountries.setSelection(UshahidiService.countries);
+		chkAutoFetch.setChecked(UshahidiService.AutoFetch);
 		oldSavePath = UshahidiService.savePath;
 		int option = 0;
 		switch(UshahidiService.AutoUpdateDelay){

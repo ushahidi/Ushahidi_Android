@@ -47,7 +47,7 @@ public class Ushahidi extends Activity {
         if(UshahidiService.domain.length() == 0 ) {
         	//means this is a new install or the settings have been corrupted, prompt them!
 			final Toast t = Toast.makeText(this,
-					"Please enter",
+					"Please enter an instance to track from",
 					Toast.LENGTH_LONG);
 			t.show();
 			return;

@@ -10,13 +10,14 @@ import java.util.List;
 import java.util.Vector;
 
 import org.addhen.ushahidi.net.UshahidiHttpClient;
-import org.addhen.ushahidi.net.UshahidiHttpClient.Category;
-import org.addhen.ushahidi.net.UshahidiHttpClient.IncidentData;
+import org.addhen.ushahidi.data.CategoriesData;
+import org.addhen.ushahidi.data.IncidentsData;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -56,20 +57,23 @@ public class ListIncidents extends Activity
 	private int col = 5;
 	private String incidentDetails[][];
 	private String incidents[][];
+	
 	private Bundle incidentsMap = new Bundle();
+	
 	private final Handler mHandler = new Handler();
+	
 	private String PREFS_NAME = "Ushahidi";
 	
+	private static final String LAUNCH_ACTION = "org.addhen.ushahidi.INCIDENTS";
+	private static final String NEW_INCIDENTS_ACTION = "org.addhen.ushahidi.NEW";
+
+	private static final String EXTRA_TEXT = "text";
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         setContentView( R.layout.list_incidents );
-        
-        final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        settingsURL = settings.getString("Domain", "");
-    	this.setURL( settingsURL );
-    	incidents = this.getIncidentDetails();
+       
         listIncidents = (ListView) findViewById( R.id.view_incidents );
         
         listIncidents.setOnItemClickListener( new OnItemClickListener(){	
@@ -94,6 +98,24 @@ public class ListIncidents extends Activity
         	
         });
         spinner = (Spinner) findViewById(R.id.incident_cat);
+        if( UshahidiService.AutoFetch ) {
+        	try {
+        		mHandler.post(mDisplayIncidentsLoading);
+        		if(org.addhen.ushahidi.net.Incidents.getAllIncidentsFromWeb()) {
+        			UshahidiService.saveSettings(this);
+        		}
+        		mHandler.post(mDismissLoading);
+        	}catch(IOException e) {
+        		mHandler.post(mDismissLoading);
+        		mHandler.post(mDisplayNetworkError);
+        		return;
+        	}
+        }
+        
+        //startService(new Intent(this, UshahidiService.class));
+		mHandler.post(mDisplayIncidents);
+		
+    	incidents = this.getIncidentDetails();
         this.showCategories();
         //mHandler.post( mDisplayCategories );
         //mHandler.post( mDisplayIncidents );
@@ -102,6 +124,20 @@ public class ListIncidents extends Activity
         //this.setIncidentDetails( iIncidentDetails );
         incidents = this.getIncidentDetails();
     }
+	
+	public static Intent createIntent(Context context) {
+	    Intent intent = new Intent(LAUNCH_ACTION);
+	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+	    return intent;
+	  }
+	
+	public static Intent createNewIncidentsIntent(String text) {
+	    Intent intent = new Intent(NEW_INCIDENTS_ACTION);
+	    intent.putExtra(EXTRA_TEXT, text);
+
+	    return intent;
+	  }
 	
 	@Override
     protected Dialog onCreateDialog(int id) {
@@ -190,6 +226,16 @@ public class ListIncidents extends Activity
 		}
 	};
 	
+	final Runnable mDismissLoading = new Runnable(){
+		public void run(){
+			try{
+				dismissDialog(DIALOG_LOADING_INCIDENTS);				
+			} catch(IllegalArgumentException e){
+				return;	//means that the dialog is not showing, ignore please!
+			}
+		}
+	};
+	
 	public void setURL( String URL ) {
 		// set the directory where ushahidi photos are stored
 		String photoDir = "/media/uploads/";
@@ -255,8 +301,8 @@ public class ListIncidents extends Activity
 		
 		String url = settingsURL+"/api";
 		
-		try{
-			List<IncidentData> incidentData = new UshahidiHttpClient().getIncidents( url,cat );
+		/*try{
+			List<Incidents> incidentData = new UshahidiHttpClient().getIncidents( url,cat );
 			
 		String body = "";
 		
@@ -278,13 +324,13 @@ public class ListIncidents extends Activity
 			iIncidentDetails[i][3] = data.iLocation;
 			iIncidentDetails[i][4] = data.getThumbnail();
 			i++;	
-		}*/
+		}*
 		setIncidentDetails( iIncidentDetails ); 
 		listIncidents.setAdapter( ila );
 			
 		}catch( Exception e){
 			mHandler.post( mDisplayNetworkError );
-		}
+		}*/
 		
 	}
 	
@@ -298,12 +344,12 @@ public class ListIncidents extends Activity
 	
 	@SuppressWarnings("unchecked")
 	public void showCategories() {
-		String url = settingsURL+"/api";
+		/*String url = settingsURL+"/api";
 		try{
-		List<Category> category = new UshahidiHttpClient().getCategories( url );
+		List<Categories> category = new UshahidiHttpClient().getCategories( url );
 		Vector<String> vector = new Vector<String>();
 		
-		for( Category data : category ) {
+		for( Categories data : category ) {
 			vector.add( data.getCTitle() );
 		}
 		
@@ -315,7 +361,7 @@ public class ListIncidents extends Activity
 		}catch( Exception e ){
 			Log.d("URL Exception",e.toString());
 			mHandler.post(mDisplayNetworkError);
-		}
+		}*/
 	}
 	
 	//spinner listener

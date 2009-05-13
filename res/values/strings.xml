@@ -25,6 +25,8 @@
 		<string name="txtCache">Cache files:</string>
 		<string name="txtCountries">Select a default country</string>
 		<string name="txtDomain">An Ushahidi website</string>
+		<string name="newIncidents">{0} New Incidents </string>
+		<string name="newCategories">{0} New Categories </string>
 		
 		<string name="preferences_notifications">Notifications</string>
 </resources>
