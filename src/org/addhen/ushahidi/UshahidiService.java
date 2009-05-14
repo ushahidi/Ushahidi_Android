@@ -494,7 +494,7 @@ public class UshahidiService extends Service {
 	      //TODO http stuff to get the xml file items 
 	      try {
 			   if(Incidents.getAllIncidentsFromWeb()){
-				   //UshahidiService.incidentsResponse;
+				   //UshahidiService.incidentsResponse ; 
 			   }
 		   } catch (IOException e) {
 				//means there was a problem getting it
