@@ -165,9 +165,6 @@ public class UshahidiHttpClient {
              URL url = new URL(URL);
              req = new ClientHttpRequest(url);
              req.setParameter("media", new File(FileName));
-             req.setParameter("username", Username);
-             req.setParameter("password", Password);
-             req.setParameter("source", "atweeter");
              InputStream serverInput = req.post();
              if(GetText(serverInput).contains("<rsp status=\"ok\">")){
             	 return true;

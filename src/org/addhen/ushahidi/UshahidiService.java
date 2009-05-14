@@ -490,11 +490,15 @@ public class UshahidiService extends Service {
 	      int maxId = getDb().fetchMaxId();
 	      Log.i(TAG, "Max id is:" + maxId);
 
-	      //JSONArray jsonArray;
 	      
 	      //TODO http stuff to get the xml file items 
-	      // then deserialize it.
-	      // for Incidents
+	      try {
+			   if(Incidents.getAllIncidentsFromWeb()){
+				   //UshahidiService.incidentsResponse;
+			   }
+		   } catch (IOException e) {
+				//means there was a problem getting it
+		   }
 	      
 	      IncidentsData incidents = null;
 	      mNewIncidents.add(incidents);
