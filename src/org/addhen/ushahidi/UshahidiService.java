@@ -18,6 +18,7 @@ import java.util.Vector;
 
 import org.addhen.ushahidi.net.Incidents;
 import org.addhen.ushahidi.data.CategoriesData;
+import org.addhen.ushahidi.data.HandleXml;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -36,7 +37,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.os.SystemClock;
 import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -131,16 +131,17 @@ public class UshahidiService extends Service {
 	    
 	    mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	    
-	    mNewIncidents = new ArrayList<IncidentsData>();
-	    mNewCategories = new ArrayList<CategoriesData>();
+	    //mNewIncidents = new ArrayList<IncidentsData>();
+	    //mNewIncidents =
+	    //mNewCategories = new ArrayList<CategoriesData>();
 
 	    mRetrieveTask = new RetrieveTask().execute();
 	    
-		queue = new QueueThread("ushahidi");
+		//queue = new QueueThread("ushahidi");
 
 		// init the service here
-		mHandler = new Handler();
-		if(AutoUpdateDelay > 0){
+		//mHandler = new Handler();
+		/*if(AutoUpdateDelay > 0){
 			mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
 			mHandler.postDelayed(mUpdateTimeTask, (1000 * 60 * AutoUpdateDelay));
 		}
@@ -152,7 +153,7 @@ public class UshahidiService extends Service {
 				}
 			}
 		};
-		tr.start();
+		tr.start();*/
 	}
 	
 	private void processNewIncidents() {
@@ -160,7 +161,7 @@ public class UshahidiService extends Service {
 	    	return;
 	    }
 
-	    Log.i(TAG, mNewIncidents.size() + " new tweets.");
+	    Log.i(TAG, mNewIncidents.size() + " new incidents.");
 
 	    int count = getDb().addNewIncidentsAndCountUnread(mNewIncidents);
 
@@ -233,7 +234,7 @@ public class UshahidiService extends Service {
 	      return;
 	    }
 
-	    Log.i(TAG, mNewCategories.size() + " new DMs.");
+	    Log.i(TAG, mNewCategories.size() + " new categories.");
 
 	    int count = 0;
 
@@ -242,7 +243,7 @@ public class UshahidiService extends Service {
 	    if (db.fetchCategoriesCount() > 0) {
 	      count = db.addNewCategoryAndCountUnread(mNewCategories);
 	    } else {
-	      Log.i(TAG, "No existing DMs. Don't notify.");
+	      Log.i(TAG, "No existing categories. Don't notify.");
 	      db.addCategories(mNewCategories, false);
 	    }
 
@@ -441,6 +442,7 @@ public class UshahidiService extends Service {
 			e.printStackTrace();
 		}
 	}
+	
 	public class QueueThread {
 	    protected Vector<Thread>    queue;
 	    protected int       itemcount;
@@ -487,34 +489,39 @@ public class UshahidiService extends Service {
 	private class RetrieveTask extends UserTask<Void, Void, RetrieveResult> {
 	    @Override
 	    public RetrieveResult doInBackground(Void... params) {
-	      int maxId = getDb().fetchMaxId();
-	      Log.i(TAG, "Max id is:" + maxId);
-
+	    	int maxId = getDb().fetchMaxId();
+	    	Log.i(TAG, "Max id is:" + maxId);
+	    	
 	      
-	      //TODO http stuff to get the xml file items 
-	      try {
+	    	//TODO http stuff to get the xml file items 
+	    	try {
 			   if(Incidents.getAllIncidentsFromWeb()){
-				   //UshahidiService.incidentsResponse ; 
+				   mNewIncidents =  (ArrayList<IncidentsData>) HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
 			   }
-		   } catch (IOException e) {
+	    	} catch (IOException e) {
 				//means there was a problem getting it
-		   }
+	    	}
+	    	String i = "";
+	    	for( IncidentsData incident: mNewIncidents ) {
+	    		i += incident+" - ";
+	    	}
+	    	
+	    	Log.i(TAG, "Ushahidi incidents" +i);
+	    	//IncidentsData incidents = null;
+	    	mNewIncidents.addAll(mNewIncidents);
 	      
-	      IncidentsData incidents = null;
-	      mNewIncidents.add(incidents);
-	      
-	      if (isCancelled()) {
-	        return RetrieveResult.CANCELLED;
-	      }
+	    	if (isCancelled()) {
+	    		return RetrieveResult.CANCELLED;
+	    	}
 
 	      
 	      	//TODO do the same for categories
 	        CategoriesData categories = null;
 	        mNewCategories.add(categories);
 
-	      if (isCancelled()) {
-	        return RetrieveResult.CANCELLED;
-	      }
+	        if (isCancelled()) {
+	        	return RetrieveResult.CANCELLED;
+	        }
 
 	      return RetrieveResult.OK;
 	    }

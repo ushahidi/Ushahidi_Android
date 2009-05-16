@@ -10,7 +10,7 @@ import android.database.Cursor;
 
 public class UshahidiApplication extends Application {
 	
-	public static final String TAG = "TwitterApplication";
+	public static final String TAG = "UshahidiApplication";
 	  
 	  public static ImageManager mImageManager;
 	  public static UshahidiDatabase mDb; 

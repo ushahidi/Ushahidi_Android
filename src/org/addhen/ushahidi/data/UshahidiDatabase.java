@@ -32,7 +32,7 @@ public class UshahidiDatabase {
 	public static final String INCIDENT_IS_UNREAD = "is_unread";
 	
 	
-	public static final String CATEGORY_ID = "category_id";
+	public static final String CATEGORY_ID = "_id";
 	public static final String CATEGORY_TITLE = "category_title";
 	public static final String CATEGORY_DESC = "category_desc";
 	public static final String CATEGORY_COLOR = "category_color";
@@ -64,26 +64,26 @@ public class UshahidiDatabase {
   // the old row upon conflict.
 	
 	private static final String INCIDENTS_TABLE_CREATE = "CREATE TABLE " + INCIDENTS_TABLE + " ("
-		+ INCIDENT_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE,"  
-		+ INCIDENT_TITLE + "TEXT NOT NULL,"
-		+ INCIDENT_DESC + "TEXT,"
-		+ INCIDENT_DATE + " DATE NOT NULL,"
-		+ INCIDENT_MODE + "INTEGER,"
-		+ INCIDENT_VERIFIED + "INTEGER,"
-		+ INCIDENT_LOC_NAME + " TEXT NOT NULL,"
-		+ INCIDENT_LOC_LATITUDE + " TEXT NOT NULL,"
-		+ INCIDENT_LOC_LONGITUDE + " TEXT NOT NULL,"
-		+ INCIDENT_CATEGORIES + " TEXT NOT NULL,"
-		+ INCIDENT_MEDIA + " TEXT,"
-		+ INCIDENT_IS_UNREAD + " BOOLEAN NOT NULL, "
+		+ INCIDENT_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "  
+		+ INCIDENT_TITLE + " TEXT NOT NULL, "
+		+ INCIDENT_DESC + " TEXT, "
+		+ INCIDENT_DATE + " DATE NOT NULL, "
+		+ INCIDENT_MODE + " INTEGER, "
+		+ INCIDENT_VERIFIED + " INTEGER, "
+		+ INCIDENT_LOC_NAME + " TEXT NOT NULL, "
+		+ INCIDENT_LOC_LATITUDE + " TEXT NOT NULL, "
+		+ INCIDENT_LOC_LONGITUDE + " TEXT NOT NULL, "
+		+ INCIDENT_CATEGORIES + " TEXT NOT NULL, "
+		+ INCIDENT_MEDIA + " TEXT, "
+		+ INCIDENT_IS_UNREAD + " BOOLEAN NOT NULL "
 		+ ")";
 	
 	private static final String CATEGORIES_TABLE_CREATE = "CREATE TABLE " + CATEGORIES_TABLE + " ("
-		+ CATEGORY_ID + " INTEGER PRIMARY KEY ON CONFLICK REPLACE, "
-		+ CATEGORY_TITLE + " TEXT NOT NULL," 
+		+ CATEGORY_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
+		+ CATEGORY_TITLE + " TEXT NOT NULL, " 
 		+ CATEGORY_DESC + " TEXT, " 
 		+ CATEGORY_COLOR + " TEXT, "
-		+ CATEGORY_IS_UNREAD + "BOOLEAN NOT NULL"
+		+ CATEGORY_IS_UNREAD + " BOOLEAN NOT NULL "
 		+ ")";
 	
 
@@ -125,22 +125,20 @@ public class UshahidiDatabase {
   		mDbHelper.close();
   	}
 
-  	public final static DateFormat DB_DATE_FORMATTER = new SimpleDateFormat(
-    "yyyy-MM-dd'T'HH:mm:ss.SSS");
-  	// TODO: move all these to the model.
   	public long createIncidents(IncidentsData incidents, boolean isUnread) {
   		ContentValues initialValues = new ContentValues();
   		
     	initialValues.put(INCIDENT_ID, incidents.getIncidentId());
     	initialValues.put(INCIDENT_TITLE, incidents.getIncidentTitle());
     	initialValues.put(INCIDENT_DESC, incidents.getIncidentDesc());
-    	initialValues.put(INCIDENT_DATE, DB_DATE_FORMATTER.format(incidents.getIncidentDate()));
+    	initialValues.put(INCIDENT_DATE, incidents.getIncidentDate());
     	initialValues.put(INCIDENT_MODE, incidents.getIncidentMode());
     	initialValues.put(INCIDENT_VERIFIED, incidents.getIncidentVerified());
     	initialValues.put(INCIDENT_LOC_NAME, incidents.getIncidentLocation());
     	initialValues
         	.put(INCIDENT_LOC_LATITUDE, incidents.getIncidentLocLatitude());
     	initialValues.put(INCIDENT_LOC_LONGITUDE, incidents.getIncidentLocLongitude());
+    	initialValues.put(INCIDENT_CATEGORIES, incidents.getIncidentCategories());
     	initialValues.put(INCIDENT_MEDIA, incidents.getIncidentMedia());
     	initialValues.put(INCIDENT_IS_UNREAD, isUnread);
 
@@ -174,22 +172,14 @@ public class UshahidiDatabase {
         + " DESC");
   }
 
-  public Cursor fetchIncidentsByCategories( String filter ) {
-	 String likeFilter = '%' + filter + '%';
-	 String sql = "SELECT * FROM "+INCIDENTS_TABLE+" WHERE "+INCIDENT_CATEGORIES+" LIKE ? ORDER BY "
-	 	+INCIDENT_TITLE+" COLLATE NOCASE";
-	 return mDb.rawQuery(sql, new String[] { likeFilter } );
-  }
+  	public Cursor fetchIncidentsByCategories( String filter ) {
+  		String likeFilter = '%' + filter + '%';
+  		String sql = "SELECT * FROM "+INCIDENTS_TABLE+" WHERE "+INCIDENT_CATEGORIES+" LIKE ? ORDER BY "
+  			+INCIDENT_TITLE+" COLLATE NOCASE";
+  		return mDb.rawQuery(sql, new String[] { likeFilter } );
+  	}
   
-  public Cursor getFollowerUsernames(String filter) {
-    String likeFilter = '%' + filter + '%';
-
-    // TODO: clean this up.
-    return mDb
-        .rawQuery(
-            "SELECT user_id AS _id, user FROM (SELECT user_id, user FROM tweets INNER JOIN followers on tweets.user_id = followers._id UNION SELECT user_id, user FROM dms INNER JOIN followers on dms.user_id = followers._id) WHERE user LIKE ? ORDER BY user COLLATE NOCASE",
-            new String[] { likeFilter });
-  }
+  
 
   	public void clearData() {
   		// TODO: just wipe the database.

@@ -115,12 +115,15 @@ public final class R {
         public static final int date_time=0x7f050006;
         public static final int hintDomain=0x7f050012;
         public static final int hintSDSavePath=0x7f050011;
+        public static final int incident_date=0x7f05001b;
         public static final int incident_details=0x7f050004;
+        public static final int incident_unverified=0x7f05001d;
+        public static final int incident_verified=0x7f05001c;
         public static final int newCategories=0x7f05001a;
         public static final int newIncidents=0x7f050019;
         public static final int option_save_phone=0x7f05000f;
         public static final int option_save_sdcard=0x7f050010;
-        public static final int preferences_notifications=0x7f05001b;
+        public static final int preferences_notifications=0x7f05001e;
         public static final int prompt_mesg=0x7f050007;
         public static final int strPostPhotos=0x7f05000a;
         public static final int title=0x7f050000;

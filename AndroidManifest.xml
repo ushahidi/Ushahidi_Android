@@ -31,6 +31,14 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT"></category>
             </intent-filter>
+            <intent-filter>
+                <action android:name="org.addhen.ushahidi.INCIDENTS" />
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.addhen.ushahidi.NEW" />
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
         </activity>
         
         <!-- Incidents Map -->
@@ -54,6 +62,14 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.ACTION_VIEW" />            
+            </intent-filter>
+        </activity>
+        
+        <!--  Image capture -->
+        <activity android:name=".ImageCapture" android:label="@string/strPostPhotos">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"></category>
             </intent-filter>
         </activity>
         

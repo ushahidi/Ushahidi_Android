@@ -36,7 +36,7 @@ public class CategoriesData {
 		return categoryColor;
 	}
 	
-	public void setICategory( String color ) {
+	public void setCategoryColor( String color ) {
 		this.categoryColor = color;
 	}
 }

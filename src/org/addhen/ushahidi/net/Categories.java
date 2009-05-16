@@ -10,11 +10,10 @@ public class Categories {
 public static boolean getAllCategoriesFromWeb() throws IOException {
 		
 		HttpResponse response;
-		String incidents = "";
+		String categories = "";
 		
 		StringBuilder uriBuilder = new StringBuilder( UshahidiService.domain);
 		uriBuilder.append("/api?task=categories");
-		uriBuilder.append("&by=all");
 		uriBuilder.append("&resp=xml");
 		
 		response = UshahidiHttpClient.GetURL( uriBuilder.toString() );
@@ -26,8 +25,8 @@ public static boolean getAllCategoriesFromWeb() throws IOException {
 		final int statusCode = response.getStatusLine().getStatusCode();
 		
 		if( statusCode == 200 ) {
-			incidents = UshahidiHttpClient.GetText(response);
-			UshahidiService.incidentsResponse = incidents;
+			categories = UshahidiHttpClient.GetText(response);
+			UshahidiService.categoriesResponse = categories;
 			return true;
 		
 		} else {
