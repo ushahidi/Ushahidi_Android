@@ -65,11 +65,7 @@ public class ListIncidents extends Activity
   private static final int LIST_INCIDENTS = 0;
   private Spinner spinner = null;
   private ArrayAdapter spinnerArrayAdapter = null;
-  private String URL = "" ;
-  private String settingsURL = "";
-  private int col = 5;
-  private String incidentDetails[][];
-  
+  private String URL = "" ; 
   private final Handler mHandler = new Handler();
   
   private static final String TAG = "ListIncidents";
@@ -93,8 +89,6 @@ public class ListIncidents extends Activity
         mDb = new UshahidiDatabase(this);
 	    mDb.open();
         
-	    setProgressBarIndeterminateVisibility(true);
-	    
         listIncidents.setOnItemClickListener( new OnItemClickListener(){  
       
           public void onItemClick(AdapterView<?> arg0, View view, int position,
@@ -209,7 +203,7 @@ public class ListIncidents extends Activity
   final Runnable mDisplayIncidents = new Runnable() {
     public void run() {
       //showDialog(DIALOG_LOADING_INCIDENTS);
-
+    	setProgressBarIndeterminateVisibility(true);
     	retrieveIncidentsAndCategories();
       
     	showIncidents();
@@ -262,16 +256,7 @@ public class ListIncidents extends Activity
       }
     }
   };
-  
-  public void setURL( String URL ) {
-    // set the directory where ushahidi photos are stored
-    String photoDir = "/media/uploads/";
-    this.URL = URL+photoDir;
-  }
-  
-  public String getURL() {
-    return this.URL;
-  }
+
  
   //menu stuff
   @Override

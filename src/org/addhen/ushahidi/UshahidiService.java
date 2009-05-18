@@ -144,7 +144,7 @@ public class UshahidiService extends Service {
 		/*if(AutoUpdateDelay > 0){
 			mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
 			mHandler.postDelayed(mUpdateTimeTask, (1000 * 60 * AutoUpdateDelay));
-		}
+		}*/
 		final Thread tr = new Thread() {
 			@Override
 			public void run() {
@@ -153,7 +153,7 @@ public class UshahidiService extends Service {
 				}
 			}
 		};
-		tr.start();*/
+		tr.start();
 	}
 	
 	private void processNewIncidents() {
