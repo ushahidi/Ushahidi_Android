@@ -10,21 +10,36 @@ public class ListIncidentText {
 	private int id;
 	private Drawable thumbnail;
 	private Uri thumbnailUri;
+	private String description;
+	private String location;
+	private String media;
+	private String categories;
 	private boolean isSelectable;
 	
-	public ListIncidentText(Drawable thumbnail, String title, String date, String status, int id) {
+	public ListIncidentText(Drawable thumbnail, 
+			String title, String date, 
+				String status, 
+				String description, String location,String media, String categories,int id) {
+		
 		this.thumbnail = thumbnail;
 		this.title = title;
 		this.date = date;
 		this.status = status;
+		this.description = description;
+		this.location = location;
+		this.media = media;
 		this.id = id;
 	}
 	
-	public ListIncidentText(Uri uri, String title, String date, String status, int id) {
+	public ListIncidentText(Uri uri, String title, String date, String status,
+			String description, String location,String media, String categories, int id) {
 		this.thumbnailUri = uri;
 		this.title = title;
 		this.date = date;
 		this.status = status;
+		this.description = description;
+		this.location = location;
+		this.media = media;
 		this.id = id;
 	}
 	
@@ -74,6 +89,38 @@ public class ListIncidentText {
 	
 	public String getStatus() {
 		return this.status;
+	}
+	
+	public void setDesc( String description ) {
+		this.description = description;
+	}
+	
+	public String getDesc() {
+		return this.description;
+	}
+	
+	public void setLocation( String location ) {
+		this.location = location;
+	}
+	
+	public String getLocation() {
+		return this.location;
+	}
+	
+	public void setMedia( String media ) {
+		this.media = media;
+	}
+	
+	public String getMedia() {
+		return this.media; 
+	}
+	
+	public void setCategories( String categories ) {
+		this.categories = categories;
+	}
+	
+	public String getCategories() {
+		return this.categories;
 	}
 	
 	public void setId( int id ) {

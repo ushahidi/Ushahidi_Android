@@ -66,7 +66,10 @@ private Context iContext;
 			iTv.setDate( iItems.get( position ).getDate() );
 			
 			iTv.setStatus( iItems.get( position ).getStatus() );
-			
+			iTv.setDesc(iItems.get(position).getDesc());
+			iTv.setCategories(iItems.get(position).getLocation());
+			iTv.setMedia(iItems.get(position).getMedia());
+			iTv.setCategories(iItems.get(position).getCategories());
 			iTv.setId( iItems.get( position ).getId() );
 		
 		}

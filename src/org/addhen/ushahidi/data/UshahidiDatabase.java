@@ -179,7 +179,11 @@ public class UshahidiDatabase {
   		return mDb.rawQuery(sql, new String[] { likeFilter } );
   	}
   
-  
+  	public Cursor fetchIncidentsById( String id ) {
+  		  		String sql = "SELECT * FROM "+INCIDENTS_TABLE+" WHERE "+INCIDENT_ID+" = ? ORDER BY "
+  			+INCIDENT_TITLE+" COLLATE NOCASE";
+  		return mDb.rawQuery(sql, new String[] { id } );
+  	}
 
   	public void clearData() {
   		// TODO: just wipe the database.

@@ -16,6 +16,10 @@ public class ListIncidentTextView extends LinearLayout{
 	private TextView date;
 	private TextView status;
 	private ImageView thumbnail;
+	private String description;
+	private String categories;
+	private String media;
+	private String location;
 	private int id;
 	private float fontSize = 13.5f;
 	private LinearLayout textLayout;
@@ -100,6 +104,22 @@ public class ListIncidentTextView extends LinearLayout{
 	
 	public void setStatus( String status ) {
 		this.status.setText( status );
+	}
+	
+	public void setDesc( String description ) {
+		this.description = description;
+	}
+	
+	public void setCategories( String categories ) {
+		this.categories = categories;
+	}
+	
+	public void setLocation( String location ) {
+		this.location = location;
+	}
+	
+	public void setMedia( String media ) {
+		this.media = media;
 	}
 	
 	public void setId( int id ) {

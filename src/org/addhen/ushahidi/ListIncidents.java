@@ -64,10 +64,10 @@ public class ListIncidents extends Activity
   private static final int DIALOG_EMPTY_INCIDENTS = 3;
   private static final int LIST_INCIDENTS = 0;
   private Spinner spinner = null;
-  private ArrayAdapter spinnerArrayAdapter = null;
-  private String URL = "" ; 
+  private ArrayAdapter spinnerArrayAdapter;
+  private Bundle incidentsBundle = new Bundle();
   private final Handler mHandler = new Handler();
-  
+  private String incidentDetails[][];
   private static final String TAG = "ListIncidents";
   public static UshahidiDatabase mDb;
   private static final String LAUNCH_ACTION = "org.addhen.ushahidi.INCIDENTS";
@@ -94,7 +94,20 @@ public class ListIncidents extends Activity
           public void onItemClick(AdapterView<?> arg0, View view, int position,
           long id) {
         	  //TODO show view incident details the user clicks on the list
-            //Log.i("Incidents", incidents[position][0]);
+        	  Log.i(TAG, "incident id "+mNewIncidents.get(position).getIncidentId());
+        	  incidentsBundle.putString("title",mNewIncidents.get(position).getIncidentTitle());
+        	  incidentsBundle.putString("desc", mNewIncidents.get(position).getIncidentDesc());
+        	  incidentsBundle.putString("category", mNewIncidents.get(position).getIncidentCategories());
+        	  incidentsBundle.putString("location", mNewIncidents.get(position).getIncidentLocation());
+        	  incidentsBundle.putString("date", mNewIncidents.get(position).getIncidentDate());
+        	  incidentsBundle.putString("media", mNewIncidents.get(position).getIncidentMedia());
+        	  incidentsBundle.putString("status", ""+mNewIncidents.get(position).getIncidentVerified());
+          
+        	  Intent intent = new Intent( ListIncidents.this,ViewIncidents.class);
+				intent.putExtra("incidents", incidentsBundle);
+				startActivityForResult(intent,VIEW_INCIDENT);
+				setResult( RESULT_OK, intent );
+              finish();
           }
           
         });
@@ -313,10 +326,16 @@ public class ListIncidents extends Activity
   public void showIncidents() {
     
 	  Cursor cursor = mDb.fetchAllIncidents();
-	  IncidentsData incidentData = new IncidentsData();
 	  String status;
 	  String date;
-	  List<IncidentsData> incidents = new ArrayList<IncidentsData>();
+	  String description;
+	  String location;
+	  String categories;
+	  String media;
+	  int i = 0;
+	  
+	  //iIncidentDetails[][] = new String[IncidentsData.size()][6];
+	  
 	  if (cursor.moveToFirst()) {
 		  int idIndex = cursor.getColumnIndexOrThrow( 
 				  UshahidiDatabase.INCIDENT_ID);
@@ -326,29 +345,41 @@ public class ListIncidents extends Activity
 				  UshahidiDatabase.INCIDENT_DATE);
 		  int verifiedIndex = cursor.getColumnIndexOrThrow(
 				  UshahidiDatabase.INCIDENT_VERIFIED);
+		  int locationIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_NAME);
+		  
+		  int descIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_DESC);
+		  
+		  int categoryIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_CATEGORIES);
+		  
+		  int mediaIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_MEDIA);
+		  
 		  ila.removeItems();
 		  
 		  do {
-			  int id = Integer.parseInt(cursor.getString(idIndex));
+			  int id = Util.toInt(cursor.getString(idIndex));
 			  
 			  //TODO make the string readable from the string resource
-			  status = Integer.parseInt(cursor.getString(verifiedIndex) ) == 0 ? "Unverified" : "Verified";
+			  status = Util.toInt(cursor.getString(verifiedIndex) ) == 0 ? "Unverified" : "Verified";
 			  
-			  date = "Date: "+cursor.getString(dateIndex);
+			  date = Util.joinString("Date: ",cursor.getString(dateIndex));
+			  
+			  description = cursor.getString(descIndex);
+			  
+			  location = cursor.getString(locationIndex);
+			  categories = cursor.getString(categoryIndex);
+			  media= cursor.getString(mediaIndex);
+			  
 			  
 			  ila.addItem( new ListIncidentText(getResources().getDrawable( R.drawable.ushahidi_icon), 
 					  cursor.getString(titleIndex), date, 
-					  	status, id) );
+					  	status,description,location,media,categories, id) );
+			  
 		  } while (cursor.moveToNext());
 	  }
     
 	  cursor.close();
 	  listIncidents.setAdapter( ila );
     
-  }
-  
-  public String[][] getIncidentDetails(){
-    return incidentDetails;
   }
   
   @SuppressWarnings("unchecked")

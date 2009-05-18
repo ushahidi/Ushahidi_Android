@@ -28,7 +28,7 @@ public class ViewIncidents extends Activity {
     private TextView category;
     private TextView status;
     
-    private Bundle incidents = new Bundle();
+    private Bundle extras = new Bundle();
     private String URL;
     private final String PREFS_NAME = "Ushahidi";
 	@Override
@@ -39,44 +39,39 @@ public class ViewIncidents extends Activity {
         
         mImageView = (ImageView) findViewById(R.id.img);
         
+        Bundle incidents = getIntent().getExtras();
+        
+        extras = incidents.getBundle("incidents");
+        
+        String iStatus = Util.toInt(extras.getString("status") ) == 0 ? "Unverified" : "Verified";
         title = (TextView) findViewById(R.id.title);
         title.setTypeface(Typeface.DEFAULT_BOLD);
         title.setTextColor(Color.rgb(144, 80, 62));
-		title.setText("Uhuru Fires still strong - Uhuru, Kenay");
+		title.setText(extras.getString("title"));
         
         category = (TextView) findViewById(R.id.category);
         category.setTextColor(Color.BLACK);
-        category.setText("Category: DEATH, PROPERTY LOSS");
+        category.setText(extras.getString("category"));
         
         
         date = (TextView) findViewById(R.id.date);
         date.setTextColor(Color.BLACK);
-        date.setText("Date:2009-04-17");
+        date.setText( Util.joinString("Date:",extras.getString("date")));
         
         
         location = (TextView) findViewById(R.id.location);
         location.setTextColor(Color.BLACK);
-        location.setText("Uhuru, Kenya");
+        location.setText(extras.getString("location"));
         
         body = (TextView) findViewById(R.id.webview);
         body.setTextColor(Color.BLACK);
-        body.setText("On top of that, like what happened in Gaza, is that you can get the OSM " +
-        		"community to help build out more detailed maps as you go along, " +
-        		"something none of the big mapping suppliers (Google, MSFT, Yahoo) can/will do. " +
-        		"When you get a chance, compare the OSM view of Gaza to the one done by MSFT and Google." +
-        		"\n\n" +
-        		"On top of that, like what happened in Gaza, is that you can get the OSM " +
-        		"community to help build out more detailed maps as you go along, " +
-        		"something none of the big mapping suppliers (Google, MSFT, Yahoo) can/will do. " +
-        		"When you get a chance, compare the OSM view of Gaza to the one done by MSFT and Google.");
+        body.setText(extras.getString("desc"));
         
         status = (TextView) findViewById( R.id.status);
         status.setTextColor(Color.rgb(41, 142, 40));
-        status.setText("VERIFIED");
+        status.setText(iStatus);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
     	this.setURL( settings.getString("Domain", "") );
-        
-        Bundle extras = getIntent().getExtras();
         
         mImageView = (ImageView) findViewById(R.id.img);
         
