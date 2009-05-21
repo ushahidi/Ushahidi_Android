@@ -74,11 +74,9 @@
 					android:textColor="@drawable/date_color" 
 					android:text="Location " />
 
-				<Spinner android:id="@+id/incident_location"
-	  				android:prompt="@string/prompt_mesg"
+				<EditText android:id="@+id/incident_location"
 	  				android:layout_width="fill_parent"
-        			android:layout_height="wrap_content"
-        			android:drawSelectorOnTop="true"/>
+        		android:layout_height="wrap_content"/>
 			</LinearLayout>
 			
 			<LinearLayout android:orientation="vertical"

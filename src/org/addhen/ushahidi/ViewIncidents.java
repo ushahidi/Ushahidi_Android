@@ -84,7 +84,7 @@ public class ViewIncidents extends Activity {
     	if( !media.equals("")) {
     		
     		thumbnails = media.split(",");    	
-    		//if( !thumbnails[0].equals(""))
+    
     		d = ImageManager.getImages( thumbnails[0]);
         
         	mImageView = (ImageView) findViewById(R.id.img);
@@ -163,13 +163,6 @@ public class ViewIncidents extends Activity {
 			return i;
 		}
 		
-		
-		 /* = {
-        		R.drawable.ushahidi_icon,
-        		R.drawable.ushahidi_icon,
-        		R.drawable.ushahidi_icon,
-        		R.drawable.ushahidi_icon,
-        };*/
     }
         
 }

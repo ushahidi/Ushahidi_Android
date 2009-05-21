@@ -1,7 +1,9 @@
 package org.addhen.ushahidi;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
@@ -9,8 +11,14 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -26,7 +34,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class AddIncident extends Activity{
+public class AddIncident extends Activity {
 	private static final int LIST_INCIDENT = Menu.FIRST+1;
 	private static final int MAP_INCIDENT = Menu.FIRST+2;
 	private static final int ADD_INCIDENT = Menu.FIRST+3;
@@ -40,7 +48,7 @@ public class AddIncident extends Activity{
 	private EditText incidentTitle;
 	private DigitalClock incidentTime;
 	private DatePicker incidentDate;
-	private Spinner incidentLocation;
+	private EditText incidentLocation;
 	private EditText incidentDesc;
 	private Button btnSave;
 	private Button btnAddCategory;
@@ -52,7 +60,8 @@ public class AddIncident extends Activity{
 	private static final int DIALOG_CHOOSE_IMAGE_METHOD = 4;
 	private static final int DIALOG_POST_INCIDENTS = 5;
 	private static final int DIALOG_MULTIPLE_CATEGORY = 6;
-	
+	private static Geocoder gc;
+	private List<Address> foundAddresses;
 	private final static Handler mHandler = new Handler();
 	
 	@Override
@@ -61,6 +70,21 @@ public class AddIncident extends Activity{
         
         setContentView(R.layout.add_incident);
         initComponents();
+        
+        foundAddresses = new ArrayList<Address>();
+        gc = new Geocoder(this);
+        
+        MyLocationListener listener = new MyLocationListener(); 
+        LocationManager manager = (LocationManager) 
+    getSystemService(Context.LOCATION_SERVICE); 
+        long updateTimeMsec = 1000L; 
+        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 
+    updateTimeMsec, 500.0f, 
+            listener); 
+        manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 
+    updateTimeMsec, 500.0f, 
+            listener); 
+        
     }
 	
 	//menu stuff
@@ -124,7 +148,7 @@ public class AddIncident extends Activity{
 		incidentTitle = (EditText) findViewById(R.id.incident_title);
 		incidentTime = (DigitalClock) findViewById(R.id.incident_time);
 		incidentDate = (DatePicker) findViewById(R.id.incident_date);
-		incidentLocation = (Spinner) findViewById(R.id.incident_location);
+		incidentLocation = (EditText) findViewById(R.id.incident_location);
 		incidentDesc = (EditText) findViewById(R.id.incident_desc);
 		btnSave = (Button) findViewById(R.id.incident_add_btn);
 		final String URL = "http://192.168.10.98/ush/api";
@@ -325,5 +349,43 @@ public class AddIncident extends Activity{
             
         }
         return null;
-    } 
+    }
+	
+	public class MyLocationListener implements LocationListener { 
+	    public void onLocationChanged(Location location) { 
+	    	String latLongString;
+	    	double latitude = 0;
+	    	double longitude = 0;
+	    	if (location != null) { 
+	    		latitude = location.getLatitude(); 
+	  	        longitude = location.getLongitude(); 
+	  	    } else { 
+	  	      latLongString = "No Location Found"; 
+	  	    } 
+	    	
+	    	try {
+				
+	    		foundAddresses = gc.getFromLocation( latitude, longitude, 5 );
+	    		Address address = foundAddresses.get(0);
+	    		
+	    		incidentLocation.setText( "" + address.getSubAdminArea() );
+			
+	    	} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	     
+	    } 
+	    public void onProviderDisabled(String provider) { 
+	      // TODO Auto-generated method stub 
+	    } 
+	    public void onProviderEnabled(String provider) { 
+	      // TODO Auto-generated method stub 
+	    } 
+	    public void onStatusChanged(String provider, int status, Bundle extras) 
+	    { 
+	      // TODO Auto-generated method stub 
+	    } 
+	  } 
+	
 }
