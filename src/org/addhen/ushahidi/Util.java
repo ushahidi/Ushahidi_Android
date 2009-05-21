@@ -15,4 +15,8 @@ public class Util {
 	public static int toInt( String value){
 		return Integer.parseInt(value);
 	}
+	
+	public static String capitalizeString( String text ) {
+		return text.substring(0,1).toUpperCase() + text.substring(1);
+	}
 }

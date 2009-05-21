@@ -4,23 +4,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
  
 import org.addhen.ushahidi.net.Categories;
 import org.addhen.ushahidi.net.Incidents;
-import org.addhen.ushahidi.net.UshahidiHttpClient;
 import org.addhen.ushahidi.data.CategoriesData;
 import org.addhen.ushahidi.data.HandleXml;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.google.android.photostream.UserTask;
  
@@ -31,7 +23,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -67,7 +58,6 @@ public class ListIncidents extends Activity
   private ArrayAdapter spinnerArrayAdapter;
   private Bundle incidentsBundle = new Bundle();
   private final Handler mHandler = new Handler();
-  private String incidentDetails[][];
   private static final String TAG = "ListIncidents";
   public static UshahidiDatabase mDb;
   private static final String LAUNCH_ACTION = "org.addhen.ushahidi.INCIDENTS";
@@ -75,6 +65,7 @@ public class ListIncidents extends Activity
   
   private List<IncidentsData> mNewIncidents;
   private List<CategoriesData> mNewCategories;
+  private Vector<String> vectorCategories = new Vector<String>();
  
   private static final String EXTRA_TEXT = "text";
   private UserTask<Void, Void, RetrieveResult> mRetrieveTask;
@@ -87,14 +78,15 @@ public class ListIncidents extends Activity
         listIncidents = (ListView) findViewById( R.id.view_incidents );
         
         mDb = new UshahidiDatabase(this);
-	    mDb.open();
+	    //mDb.close();
+        mDb.open();
         
         listIncidents.setOnItemClickListener( new OnItemClickListener(){  
       
           public void onItemClick(AdapterView<?> arg0, View view, int position,
-          long id) {
-        	  //TODO show view incident details the user clicks on the list
-        	  Log.i(TAG, "incident id "+mNewIncidents.get(position).getIncidentId());
+        		  long id) {
+        	  Log.i(TAG, " Long "+id+" Position "+position);
+        	  
         	  incidentsBundle.putString("title",mNewIncidents.get(position).getIncidentTitle());
         	  incidentsBundle.putString("desc", mNewIncidents.get(position).getIncidentDesc());
         	  incidentsBundle.putString("category", mNewIncidents.get(position).getIncidentCategories());
@@ -128,20 +120,31 @@ public class ListIncidents extends Activity
         mHandler.post(mDisplayIncidents);
         //mark all incidents as read
         mDb.markAllIncidentssRead();
+        //mDb.close();
     }
   
+  public void onDestory() {
+	  //mDb.close();
+	  super.onDestroy();
+  }
+  
+  //public void onTerminate() {
+	//  mDb.open();
+	 // super.onDestroy();
+  //}
+  
   public static Intent createIntent(Context context) {
-   Intent intent = new Intent(LAUNCH_ACTION);
-   intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	  Intent intent = new Intent(LAUNCH_ACTION);
+	  intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
  
-   return intent;
+	  return intent;
    }
   
   public static Intent createNewIncidentsIntent(String text) {
-   Intent intent = new Intent(NEW_INCIDENTS_ACTION);
-   intent.putExtra(EXTRA_TEXT, text);
+	  Intent intent = new Intent(NEW_INCIDENTS_ACTION);
+	  intent.putExtra(EXTRA_TEXT, text);
  
-   return intent;
+	  return intent;
    }
   
   	private void retrieveIncidentsAndCategories() {
@@ -219,7 +222,7 @@ public class ListIncidents extends Activity
     	setProgressBarIndeterminateVisibility(true);
     	retrieveIncidentsAndCategories();
       
-    	showIncidents();
+    	showIncidents("All");
     	showCategories();
       //showIncidents();
       try{
@@ -323,19 +326,26 @@ public class ListIncidents extends Activity
   }
   
   // get incidents from the db
-  public void showIncidents() {
+  public void showIncidents( String by ) {
     
-	  Cursor cursor = mDb.fetchAllIncidents();
+	  Cursor cursor;
+	  if( by.equals("All")) 
+		  cursor = mDb.fetchAllIncidents();
+	  else
+		  cursor = mDb.fetchIncidentsByCategories(by);
+	  
+	  String title;
 	  String status;
 	  String date;
 	  String description;
 	  String location;
 	  String categories;
 	  String media;
-	  int i = 0;
+	 
 	  
 	  //iIncidentDetails[][] = new String[IncidentsData.size()][6];
-	  
+	  String thumbnails [];
+	  Drawable d = null;
 	  if (cursor.moveToFirst()) {
 		  int idIndex = cursor.getColumnIndexOrThrow( 
 				  UshahidiDatabase.INCIDENT_ID);
@@ -368,10 +378,13 @@ public class ListIncidents extends Activity
 			  location = cursor.getString(locationIndex);
 			  categories = cursor.getString(categoryIndex);
 			  media= cursor.getString(mediaIndex);
+			  title = Util.capitalizeString(cursor.getString(titleIndex));
+			  thumbnails = media.split(",");
+			  //if( !thumbnails[0].equals(""))
+			  d = ImageManager.getImages( thumbnails[0]);
 			  
-			  
-			  ila.addItem( new ListIncidentText(getResources().getDrawable( R.drawable.ushahidi_icon), 
-					  cursor.getString(titleIndex), date, 
+			  ila.addItem( new ListIncidentText( d == null ? getResources().getDrawable( R.drawable.ushahidi_icon):d, 
+					  title, date, 
 					  	status,description,location,media,categories, id) );
 			  
 		  } while (cursor.moveToNext());
@@ -382,21 +395,21 @@ public class ListIncidents extends Activity
     
   }
   
+  
   @SuppressWarnings("unchecked")
   public void showCategories() {
 	  Cursor cursor = mDb.fetchAllCategories();
 	  
-	  Vector<String> vector = new Vector<String>();
-	  vector.add("All");
+	  vectorCategories.add("All");
 	  if (cursor.moveToFirst()) {
 		  int titleIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CATEGORY_TITLE);
 		  do {
-			  vector.add( cursor.getString(titleIndex).toLowerCase());
+			  vectorCategories.add( cursor.getString(titleIndex).toLowerCase());
 		  }while( cursor.moveToNext() );
 	  }
 	  cursor.close();
 	  spinnerArrayAdapter = new ArrayAdapter(this,
-			  android.R.layout.simple_spinner_item, vector );
+			  android.R.layout.simple_spinner_item, vectorCategories );
 		    
 	  spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	  spinner.setAdapter(spinnerArrayAdapter);
@@ -412,7 +425,8 @@ public class ListIncidents extends Activity
    @SuppressWarnings("unchecked")
     public void onItemSelected(AdapterView parent, View v, int position, long id) {
       showDialog(DIALOG_LOADING_INCIDENTS);
-      showIncidents();
+      //showIncidents("deaths");
+      showIncidents(vectorCategories.get(position));
       dismissDialog(DIALOG_LOADING_INCIDENTS);
    }
  

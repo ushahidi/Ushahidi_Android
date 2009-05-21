@@ -45,6 +45,7 @@ public class UshahidiService extends Service {
 	public static final String PREFS_NAME = "UshahidiService";
 	public static boolean httpRunning = false;
 	public static final DefaultHttpClient httpclient = new DefaultHttpClient();
+	public static Vector<String> mNewIncidentsImages = new Vector<String>();
 	public static String incidentsResponse = "";
 	public static String categoriesResponse = "";
 	public static String savePath = "";
@@ -66,9 +67,7 @@ public class UshahidiService extends Service {
 
     private ArrayList<IncidentsData> mNewIncidents;
     private ArrayList<CategoriesData> mNewCategories;
-
-    private UserTask<Void, Void, RetrieveResult> mRetrieveTask;
-
+ 
     private WakeLock mWakeLock;
     
     private static int INCIDENTS_NOTIFICATION_ID = 0;
@@ -131,20 +130,14 @@ public class UshahidiService extends Service {
 	    
 	    mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	    
-	    //mNewIncidents = new ArrayList<IncidentsData>();
-	    //mNewIncidents =
-	    //mNewCategories = new ArrayList<CategoriesData>();
-
-	    mRetrieveTask = new RetrieveTask().execute();
-	    
-		//queue = new QueueThread("ushahidi");
+		queue = new QueueThread("ushahidi");
 
 		// init the service here
 		//mHandler = new Handler();
-		/*if(AutoUpdateDelay > 0){
+		if(AutoUpdateDelay > 0){
 			mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
 			mHandler.postDelayed(mUpdateTimeTask, (1000 * 60 * AutoUpdateDelay));
-		}*/
+		}
 		final Thread tr = new Thread() {
 			@Override
 			public void run() {
@@ -165,16 +158,16 @@ public class UshahidiService extends Service {
 
 	    int count = getDb().addNewIncidentsAndCountUnread(mNewIncidents);
 
-	    for (IncidentsData incident : mNewIncidents) {
+	    /*for (IncidentsData incident : mNewIncidents) {
 	      if (!incident.getIncidentMedia().equals("") ) {
 	        // Fetch image to cache.
 	        try {
-	          UshahidiApplication.mImageManager.put(incident.getIncidentMedia());
+	        	//UshahidiApplication.mImageManager.put(incident.getIncidentMedia());
 	        } catch (IOException e) {
-	          Log.e(TAG, e.getMessage(), e);
+	        	Log.e(TAG, e.getMessage(), e);
 	        }
 	      }
-	    }
+	    }*/
 
 	    if (count <= 0) {
 	      return;
@@ -273,12 +266,6 @@ public class UshahidiService extends Service {
 
 	@Override
 	public void onDestroy() {
-		Log.i(TAG, "IM DYING!!!");
-
-	    if (mRetrieveTask != null
-	        && mRetrieveTask.getStatus() == UserTask.Status.RUNNING) {
-	      mRetrieveTask.cancel(true);
-	    }
 
 	    mWakeLock.release();
 		super.onDestroy();
@@ -358,50 +345,6 @@ public class UshahidiService extends Service {
 		final File dir = new File(UshahidiService.savePath);
 		dir.mkdirs();
 
-		FileInputStream fIn;
-		try {
-			fIn = new FileInputStream(savePath + "incidents.xml");
-			DataInputStream reader = new DataInputStream(new BufferedInputStream(fIn));
-			final StringBuilder sb = new StringBuilder();
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-			incidentsResponse = sb.toString();
-			fIn.close();
-		} catch (final FileNotFoundException e) {
-			//means file doesn't exist, set it to a blank array
-			incidentsResponse = ""; 
-		} catch (IOException e) {
-			incidentsResponse = "";
-		}
-		
-		if(UshahidiService.incidentsResponse == ""){
-			//don't leave a null array, create a blank one
-			incidentsResponse = "";
-		}
-		
-		try {
-			fIn = new FileInputStream(savePath + "categories.xml");
-			DataInputStream reader = new DataInputStream(new BufferedInputStream(fIn));
-			final StringBuilder sb = new StringBuilder();
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-			categoriesResponse = sb.toString();
-
-			fIn.close();
-		} catch (final FileNotFoundException e) {
-			categoriesResponse = "";
-		} catch (IOException e) {
-			categoriesResponse = "";
-		}
-		
-		if(categoriesResponse == ""){
-			//don't leave a null array, create a blank one
-			categoriesResponse = "";
-		}
 	}
 	public static void saveSettings(Context context) {
 		final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
@@ -411,36 +354,9 @@ public class UshahidiService extends Service {
 		editor.putString("savePath", savePath);
 		editor.putInt("AutoUpdateDelay", AutoUpdateDelay);
 		editor.putBoolean("AutoFetch", AutoFetch);
-		FileOutputStream fOut;
-		try {
-			fOut = new FileOutputStream(savePath + "incidents.xml");
-			final OutputStreamWriter osw = new OutputStreamWriter(fOut);
-			// Write the string to the file
-			osw.write(incidentsResponse);
-			osw.flush();
-			osw.close();
-		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		saveImages();
 
 		// Don't forget to commit your edits!!!
 		editor.commit();
-	}
-	public static void saveImages(){
-		FileOutputStream fOut;
-		try {
-			fOut = new FileOutputStream(savePath + "categories.xml");
-			final OutputStreamWriter osw = new OutputStreamWriter(fOut);
-			// Write the string to the file
-			osw.write(categoriesResponse);
-			osw.flush();
-			osw.close();
-		}  catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	public class QueueThread {
@@ -482,59 +398,4 @@ public class UshahidiService extends Service {
 	    }
 	}
 	
-	private enum RetrieveResult {
-		OK, IO_ERROR, AUTH_ERROR, CANCELLED
-	}
-	
-	private class RetrieveTask extends UserTask<Void, Void, RetrieveResult> {
-	    @Override
-	    public RetrieveResult doInBackground(Void... params) {
-	    	int maxId = getDb().fetchMaxId();
-	    	Log.i(TAG, "Max id is:" + maxId);
-	    	
-	      
-	    	//TODO http stuff to get the xml file items 
-	    	try {
-			   if(Incidents.getAllIncidentsFromWeb()){
-				   mNewIncidents =  (ArrayList<IncidentsData>) HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
-			   }
-	    	} catch (IOException e) {
-				//means there was a problem getting it
-	    	}
-	    	String i = "";
-	    	for( IncidentsData incident: mNewIncidents ) {
-	    		i += incident+" - ";
-	    	}
-	    	
-	    	Log.i(TAG, "Ushahidi incidents" +i);
-	    	//IncidentsData incidents = null;
-	    	mNewIncidents.addAll(mNewIncidents);
-	      
-	    	if (isCancelled()) {
-	    		return RetrieveResult.CANCELLED;
-	    	}
-
-	      
-	      	//TODO do the same for categories
-	        CategoriesData categories = null;
-	        mNewCategories.add(categories);
-
-	        if (isCancelled()) {
-	        	return RetrieveResult.CANCELLED;
-	        }
-
-	      return RetrieveResult.OK;
-	    }
-
-	    @Override
-	    public void onPostExecute(RetrieveResult result) {
-	      if (result == RetrieveResult.OK) {
-	        processNewIncidents();
-	        processNewCategories();
-	      }
-
-	      stopSelf();
-	    }
-	  }
-
 }

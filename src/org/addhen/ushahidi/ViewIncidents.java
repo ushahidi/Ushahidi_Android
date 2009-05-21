@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Vector;
 
 public class ViewIncidents extends Activity {
 	private ImageView mImageView;
@@ -29,8 +30,11 @@ public class ViewIncidents extends Activity {
     private TextView status;
     
     private Bundle extras = new Bundle();
-    private String URL;
+    private String media;
+    private String thumbnails [];
     private final String PREFS_NAME = "Ushahidi";
+    private Drawable d;
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +46,8 @@ public class ViewIncidents extends Activity {
         Bundle incidents = getIntent().getExtras();
         
         extras = incidents.getBundle("incidents");
+        
+        d = null;
         
         String iStatus = Util.toInt(extras.getString("status") ) == 0 ? "Unverified" : "Verified";
         title = (TextView) findViewById(R.id.title);
@@ -70,37 +76,40 @@ public class ViewIncidents extends Activity {
         status = (TextView) findViewById( R.id.status);
         status.setTextColor(Color.rgb(41, 142, 40));
         status.setText(iStatus);
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-    	this.setURL( settings.getString("Domain", "") );
+    	
+    	media = extras.getString("media");
+    	
+    	ImageAdapter imageAdapter = new ImageAdapter(this);
+    	
+    	if( !media.equals("")) {
+    		
+    		thumbnails = media.split(",");    	
+    		//if( !thumbnails[0].equals(""))
+    		d = ImageManager.getImages( thumbnails[0]);
         
-        mImageView = (ImageView) findViewById(R.id.img);
+        	mImageView = (ImageView) findViewById(R.id.img);
         
-        Drawable drawable = getResources().getDrawable(R.drawable.ushahidi_globe); 
+        	for( int i = 0; i < thumbnails.length; i++ ) {
+        		imageAdapter.mImageIds.add( ImageManager.getImages( thumbnails[i] ) );
+        	}
+    	}
+        
+        Drawable drawable = getResources().getDrawable(R.drawable.ushahidi_icon); 
         
         mImageView.setImageDrawable(
-        	drawable
+        	d == null ? drawable : d
         );
        
           
         Gallery g = (Gallery) findViewById(R.id.gallery);
         
-        g.setAdapter(new ImageAdapter(this) );
+        g.setAdapter( imageAdapter );
         
         
         
     }
     
-    public void setURL( String URL ) {
-		// set the directory where ushahidi photos are stored
-		String photoDir = "/media/uploads/";
-		this.URL = URL+photoDir;
-	}
-	
-	public String getURL() {
-		return this.URL;
-	}
-    
- // As drawable.  
+	// As drawable.  
 	public static Drawable imageOperations(String url, String saveFilename) {
 		try {
 			InputStream is = (InputStream) fetch(url);
@@ -123,12 +132,16 @@ public class ViewIncidents extends Activity {
 	}
     
     public class ImageAdapter extends BaseAdapter {
-        
+    	
+    	public Vector<Drawable> mImageIds;
+    	private Context mContext;
+    	
     	public ImageAdapter( Context context ){
     		mContext = context;
+    		mImageIds = new Vector<Drawable>();
     	}
     	public int getCount() {
-    		return mImageIds.length;
+    		return mImageIds.size();
 		}
 
 		public Object getItem(int position) {
@@ -141,8 +154,7 @@ public class ViewIncidents extends Activity {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ImageView i = new ImageView(mContext);
-			i.setImageDrawable( 
-					getResources().getDrawable( mImageIds[position] ) );
+			i.setImageDrawable( mImageIds.get( position ) );
 			
 			i.setScaleType(ImageView.ScaleType.FIT_XY);
             
@@ -151,14 +163,13 @@ public class ViewIncidents extends Activity {
 			return i;
 		}
 		
-		private Context mContext;
-
-        private Integer[] mImageIds = {
+		
+		 /* = {
         		R.drawable.ushahidi_icon,
         		R.drawable.ushahidi_icon,
         		R.drawable.ushahidi_icon,
         		R.drawable.ushahidi_icon,
-        };
+        };*/
     }
         
 }

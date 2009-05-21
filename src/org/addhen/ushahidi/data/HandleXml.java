@@ -1,11 +1,17 @@
 package org.addhen.ushahidi.data;
 
+import org.addhen.ushahidi.ImageManager;
+import org.addhen.ushahidi.UshahidiApplication;
+import org.addhen.ushahidi.UshahidiService;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import android.util.Log;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -154,6 +160,7 @@ public class HandleXml {
 						
 							Element mediaInnerThumbElement = (Element) mediaThumbList.item(0);
 							NodeList mediaThumb = mediaInnerThumbElement.getChildNodes();
+							UshahidiService.mNewIncidentsImages.add( ((Node)mediaThumb.item(0)).getNodeValue() );
 							
 							media += (j == mediaList.getLength() -1)? ( (Node)mediaThumb.item(0)).getNodeValue(): ( (Node)mediaThumb.item(0)).getNodeValue()+",";
 						}
@@ -162,12 +169,13 @@ public class HandleXml {
 				incidentData.setIncidentMedia(media);
 				
 				media = "";
-				
-				System.out.println();
-				
+					
 			}
 			
 		}
+		
+		//save images
+		ImageManager.saveImage();
 		
 		return listIncidentsData;
 		
@@ -237,6 +245,10 @@ public class HandleXml {
 		}
 	
 		return categoriesData;
+	}
+	
+	protected static ImageManager getImageManager() {
+	    return UshahidiApplication.mImageManager;
 	}
 	
 }

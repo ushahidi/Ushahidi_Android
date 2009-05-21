@@ -20,7 +20,7 @@ public class UshahidiApplication extends Application {
 	  public void onCreate() {
 	    super.onCreate();
 
-	    mImageManager = new ImageManager(this);
+	    mImageManager = new ImageManager();
 	    mDb = new UshahidiDatabase(this);
 	    mDb.open();
 	    mApi = new UshahidiHttpClient();
@@ -62,6 +62,6 @@ public class UshahidiApplication extends Application {
 	    
 		  cursor.close();
 	    
-		  mImageManager.cleanup(keepers);
+		  //mImageManager.cleanup(keepers);
 	  }
 }

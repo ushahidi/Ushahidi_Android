@@ -105,6 +105,7 @@ public class Settings extends Activity {
         rbOnSD = (RadioButton) findViewById(R.id.rbOnSD);
         chkAutoFetch = (CheckBox) findViewById(R.id.chkAutoFetch);
         spnAutoUpdateDelay = (Spinner) findViewById(R.id.spnAutoUpdateDelay);
+        
         if(busy){
         	setEnabled(false);
         } else {
@@ -200,7 +201,7 @@ public class Settings extends Activity {
 	final Runnable mInvalidDomain = new Runnable(){
 		public void run(){
 			final Toast t = Toast.makeText(Settings.this, "Enter a valid URL. It should start " +
-							"with http://!", Toast.LENGTH_SHORT);
+							"with http://", Toast.LENGTH_SHORT);
     		t.show();
     		setEnabled(true);
 		}
