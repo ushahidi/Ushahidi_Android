@@ -14,12 +14,15 @@
 
 			<LinearLayout android:orientation="vertical"
 				android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
+				android:layout_height="wrap_content"
+				android:paddingBottom="15px">
 		
 				<TextView	android:id="@+id/lbl_title" 
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
-					android:text="Event Title" />
+					android:textColor="@drawable/date_color"
+					android:textStyle="bold"
+					android:text="@string/incident_title"/>
 		
 				<EditText android:id="@+id/incident_title" 
 		  			android:layout_width="fill_parent"
@@ -27,40 +30,31 @@
 			
 			</LinearLayout>
 			
-			<LinearLayout android:orientation="horizontal"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingTop="20px"
-				android:paddingRight="20px"
-				android:paddingBottom="15px">
-				
-				<TextView	android:id="@+id/lbl_time" 
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Event Time" />
-		
-				<DigitalClock android:id="@+id/incident_time" 
-		  		android:layout_width="wrap_content"
-					android:layout_height="wrap_content" 
-					android:paddingLeft="15px"
-					android:editable="true" /> 
-			
-			</LinearLayout>
-			
 			<LinearLayout android:orientation="vertical"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:paddingBottom="15px">
-		
+					
 				<TextView	android:id="@+id/lbl_date" 
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
+					android:textStyle="bold"
 					android:textColor="@drawable/date_color" 
-					android:text="Event Date" />
-		
-				<DatePicker android:id="@+id/incident_date" 
-		  			android:layout_width="wrap_content"
-					android:layout_height="wrap_content"  /> 
+					android:text="@string/incident_current_date" />
+			 <LinearLayout android:orientation="horizontal"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:paddingBottom="15px">
+					<Button android:id="@+id/pick_date"
+        		android:layout_width="wrap_content"
+          	android:layout_height="wrap_content"
+          	android:text="@string/incident_date"/>
+
+    			<Button android:id="@+id/pick_time"
+       			android:layout_width="wrap_content"
+          	android:layout_height="wrap_content"
+          	android:text="@string/incident_time"/>
+      	</LinearLayout>
 			</LinearLayout>
 			
 			<LinearLayout android:orientation="vertical"
@@ -71,8 +65,9 @@
 				<TextView	android:id="@+id/incident_loc" 
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
+					android:textStyle="bold"
 					android:textColor="@drawable/date_color" 
-					android:text="Location " />
+					android:text="@string/incident_location" />
 
 				<EditText android:id="@+id/incident_location"
 	  				android:layout_width="fill_parent"
@@ -85,8 +80,10 @@
 				android:paddingBottom="15px">
 			<TextView	android:id="@+id/lbl_incidents_dec" 
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" 
-				android:text="Description" />
+				android:layout_height="wrap_content"
+				android:textStyle="bold"
+				android:textColor="@drawable/date_color" 
+				android:text="@string/incident_description" />
 			
 			<EditText android:id="@+id/incident_desc" 
 				android:layout_width="fill_parent"
@@ -102,7 +99,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:paddingLeft="15px"
-					android:text="Add Category" />		
+					android:text="@string/incident_add_category" />		
 			
 				<ImageButton android:id="@+id/btnPicture" 
 					android:layout_width="wrap_content"
@@ -122,15 +119,15 @@
 					android:layout_x="15px"
 					android:layout_y="15px"
 					android:layout_alignParentRight="true"
-  					android:layout_marginLeft="10px"
+  				android:layout_marginLeft="10px"
 					android:text="Save " />
        
 				<Button android:id="@+id/incident_add_cancel"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
  					android:layout_toLeftOf="@id/incident_add_btn"
-  					android:layout_alignTop="@id/incident_add_btn"
-					android:text="Cancel" />
+  				android:layout_alignTop="@id/incident_add_btn"
+					android:text="@string/btn_cancel" />
 	
 			</RelativeLayout>
 		</LinearLayout>

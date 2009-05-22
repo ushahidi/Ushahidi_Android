@@ -2,14 +2,17 @@ package org.addhen.ushahidi;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,10 +31,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.DigitalClock;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class AddIncident extends Activity {
@@ -44,14 +47,22 @@ public class AddIncident extends Activity {
 	private static final int REQUEST_CODE_IMAGE = 3;
 	private static final int REQUEST_CODE_CAMERA = 4;
 	
-	private ImageButton btnPicture;
+	// date and time
+    private int mYear;
+    private int mMonth;
+    private int mDay;
+    private int mHour;
+    private int mMinute;
+    private int mAmPm;
+    private ImageButton btnPicture;
 	private EditText incidentTitle;
-	private DigitalClock incidentTime;
-	private DatePicker incidentDate;
 	private EditText incidentLocation;
 	private EditText incidentDesc;
+	private TextView incidentDate;
 	private Button btnSave;
 	private Button btnAddCategory;
+	private Button pickTime;
+	private Button pickDate;
 	private static boolean running = false;
 	private static final int DIALOG_ERROR_NETWORK = 0;
 	private static final int DIALOG_ERROR_SAVING = 1;
@@ -60,6 +71,9 @@ public class AddIncident extends Activity {
 	private static final int DIALOG_CHOOSE_IMAGE_METHOD = 4;
 	private static final int DIALOG_POST_INCIDENTS = 5;
 	private static final int DIALOG_MULTIPLE_CATEGORY = 6;
+	private static final int TIME_DIALOG_ID = 7;
+    private static final int DATE_DIALOG_ID = 8;
+    
 	private static Geocoder gc;
 	private List<Address> foundAddresses;
 	private final static Handler mHandler = new Handler();
@@ -146,12 +160,13 @@ public class AddIncident extends Activity {
 		btnPicture = (ImageButton) findViewById(R.id.btnPicture);
 		btnAddCategory = (Button) findViewById(R.id.add_category);
 		incidentTitle = (EditText) findViewById(R.id.incident_title);
-		incidentTime = (DigitalClock) findViewById(R.id.incident_time);
-		incidentDate = (DatePicker) findViewById(R.id.incident_date);
 		incidentLocation = (EditText) findViewById(R.id.incident_location);
 		incidentDesc = (EditText) findViewById(R.id.incident_desc);
 		btnSave = (Button) findViewById(R.id.incident_add_btn);
-		final String URL = "http://192.168.10.98/ush/api";
+		incidentDate = (TextView) findViewById(R.id.lbl_date);
+		pickDate = (Button) findViewById(R.id.pick_date);
+		pickTime = (Button) findViewById(R.id.pick_time);
+		
 		final Map<String,String> params = new HashMap<String, String>();
 		
 		params.put("task","report");
@@ -207,6 +222,30 @@ public class AddIncident extends Activity {
 				showDialog(DIALOG_MULTIPLE_CATEGORY);
 			}
 		});
+		
+		pickDate.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                showDialog(DATE_DIALOG_ID);
+            }
+        });
+		
+        pickTime.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                showDialog(TIME_DIALOG_ID);
+            }
+        });
+        
+        final Calendar c = Calendar.getInstance();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+        mHour = c.get(Calendar.HOUR_OF_DAY);
+        mMinute = c.get(Calendar.MINUTE);
+        mAmPm = c.get(Calendar.AM_PM);
+        updateDisplay();
+        
 	}
 	
 	//
@@ -332,13 +371,13 @@ public class AddIncident extends Activity {
                                 /* User clicked on a check box do some stuff */
                             }
                         })
-                .setPositiveButton(R.string.btnOk, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
 
                         /* User clicked Yes so do some stuff */
                     }
                 })
-                .setNegativeButton(R.string.btnCancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
 
                         /* User clicked No so do some stuff */
@@ -347,8 +386,72 @@ public class AddIncident extends Activity {
                .create();
             }
             
+            case TIME_DIALOG_ID:
+                return new TimePickerDialog(this,
+                        mTimeSetListener, mHour, mMinute, false);
+                
+            case DATE_DIALOG_ID:
+                return new DatePickerDialog(this,
+                            mDateSetListener,
+                            mYear, mMonth, mDay);
+            
         }
         return null;
+    }
+	
+
+    @Override
+    protected void onPrepareDialog(int id, Dialog dialog) {
+        switch (id) {
+            case TIME_DIALOG_ID:
+                ((TimePickerDialog) dialog).updateTime(mHour, mMinute);
+                break;
+            case DATE_DIALOG_ID:
+                ((DatePickerDialog) dialog).updateDate(mYear, mMonth, mDay);
+                break;
+        }
+    }    
+
+    private void updateDisplay() {
+    	incidentDate.setText(
+            new StringBuilder()
+                    // Month is 0 based so add 1
+                    .append(mMonth + 1).append("/")
+                    .append(mDay).append("/")
+                    .append(mYear).append(" ")
+                    .append(pad(mHour)).append(":")
+                    .append(pad(mMinute)).append(":")
+    				.append(mAmPm == 0 ? "Am":"Pm"));
+    }
+
+    private DatePickerDialog.OnDateSetListener mDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+
+                public void onDateSet(DatePicker view, int year, int monthOfYear,
+                        int dayOfMonth) {
+                    mYear = year;
+                    mMonth = monthOfYear;
+                    mDay = dayOfMonth;
+                    updateDisplay();
+                }
+            };
+
+    private TimePickerDialog.OnTimeSetListener mTimeSetListener =
+            new TimePickerDialog.OnTimeSetListener() {
+
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    mHour = hourOfDay;
+                    mMinute = minute;
+                    
+                    updateDisplay();
+                }
+            };
+
+    private static String pad(int c) {
+        if (c >= 10)
+            return String.valueOf(c);
+        else
+            return "0" + String.valueOf(c);
     }
 	
 	public class MyLocationListener implements LocationListener { 

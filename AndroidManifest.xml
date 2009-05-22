@@ -73,7 +73,7 @@
         </activity>
         
         <!--  Image capture -->
-        <activity android:name=".ImageCapture" android:label="@string/strPostPhotos">
+        <activity android:name=".ImageCapture" android:label="@string/str_post_photos">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT"></category>

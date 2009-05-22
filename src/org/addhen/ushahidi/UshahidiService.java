@@ -182,8 +182,8 @@ public class UshahidiService extends Service {
 	      title = latestIncident.getIncidentTitle();
 	      text = latestIncident.getIncidentDate();
 	    } else {
-	      title = getString(R.string.newIncidents);
-	      text = getString(R.string.newCategories);
+	      title = getString(R.string.new_incidents);
+	      text = getString(R.string.new_categories);
 	      text = MessageFormat.format(text, count);
 	    }
 
@@ -253,8 +253,8 @@ public class UshahidiService extends Service {
 	      title = latest.getCategoryTitle();
 	      text = latest.getCategoryDescription();
 	    } else {
-	      title = getString(R.string.newCategories);
-	      text = getString(R.string.newCategories);
+	      title = getString(R.string.new_categories);
+	      text = getString(R.string.new_categories);
 	      text = MessageFormat.format(text, count);
 	    }
 

@@ -17,10 +17,10 @@
 				android:layout_height="wrap_content">
 				<TextView android:layout_width="fill_parent"
 					android:layout_height="wrap_content" 
-					android:text="@string/txtDomain" 
+					android:text="@string/txt_domain" 
 					android:textColor="@drawable/date_color"/>
 				<EditText android:id="@+id/domain" 
-			  	android:hint="@string/hintDomain"
+			  	android:hint="@string/hint_domain"
 			  	android:layout_width="fill_parent"
 					android:layout_height="wrap_content" 
 					android:layout_weight="1"/>
@@ -30,10 +30,10 @@
 				android:layout_height="wrap_content">	
 				<TextView android:layout_width="fill_parent"
 					android:layout_height="wrap_content" 
-					android:text="@string/txtCountries" 
+					android:text="@string/txt_countries" 
 					android:textColor="@drawable/date_color"/>
 					
-				<Spinner android:id="@+id/spnCountries" 
+				<Spinner android:id="@+id/spn_countries" 
 					android:layout_width="fill_parent" 
 					android:layout_height="wrap_content" />		
 			</LinearLayout>
@@ -44,22 +44,22 @@
 				<TextView android:layout_width="fill_parent"
 					android:textColor="@drawable/date_color"
 					android:layout_height="wrap_content"
-					android:text="@string/txtCache" />
-				<Button android:id="@+id/btnClearCache"
+					android:text="@string/txt_cache" />
+				<Button android:id="@+id/btn_clear_cache"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="@string/btnClearCache" />
+					android:text="@string/btn_clear_cache" />
 			</LinearLayout>
 			<LinearLayout android:layout_width="fill_parent" 
 				android:layout_height="wrap_content">
 				<RadioGroup android:layout_width="wrap_content" 
 					android:layout_height="wrap_content">
-					<RadioButton android:id="@+id/rbOnPhone" 
+					<RadioButton android:id="@+id/rb_on_phone" 
 						android:layout_width="wrap_content" 
 						android:layout_height="wrap_content"
 						android:textColor="@drawable/date_color" 
 						android:text="@string/option_save_phone" />
-					<RadioButton android:id="@+id/rbOnSD" 
+					<RadioButton android:id="@+id/rb_on_SD" 
 						android:layout_width="wrap_content" 
 						android:layout_height="wrap_content" 
 						android:textColor="@drawable/date_color"
@@ -67,43 +67,43 @@
 				</RadioGroup>
 			</LinearLayout>
 			<LinearLayout android:orientation="vertical"
-				android:id="@+id/llOnSd"
+				android:id="@+id/ll_on_sd"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content">
 				<TextView android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:textColor="@drawable/date_color"
-					android:text="@string/txtPathSD" />
-				<EditText android:id="@+id/etSdSavePath" 
+					android:text="@string/txt_path_SD" />
+				<EditText android:id="@+id/et_sd_save_path" 
 					android:layout_width="fill_parent" 
 					android:layout_height="wrap_content"
-					android:hint="@string/hintSDSavePath" />
+					android:hint="@string/hint_SD_save_path" />
 			</LinearLayout>
 			<LinearLayout android:layout_width="fill_parent"
 				android:layout_height="wrap_content">
 				<TextView android:layout_width="wrap_content"
 					android:textColor="@drawable/date_color"
 					android:layout_height="wrap_content"
-					android:text="@string/txtAutoUpdateDelay" />				
-				<Spinner android:id="@+id/spnAutoUpdateDelay" 
+					android:text="@string/txt_auto_update_delay" />				
+				<Spinner android:id="@+id/spn_auto_update_delay" 
 					android:layout_width="wrap_content" 
 					android:layout_height="wrap_content" />
 			</LinearLayout>
 			
-			<CheckBox android:id="@+id/chkAutoFetch" 
+			<CheckBox android:id="@+id/chk_auto_fetch" 
 				android:layout_width="wrap_content" 
 				android:layout_height="wrap_content"
 				android:textColor="@drawable/date_color" 
-				android:text="@string/chkAutoFetch"/>
+				android:text="@string/chk_auto_fetch"/>
 			
 			<RelativeLayout android:layout_width="fill_parent"
 				android:layout_height="wrap_content">
-				<Button android:id="@+id/btnCancel" 
-		  			android:text="@string/btnCancel"
+				<Button android:id="@+id/btn_cancel" 
+		  			android:text="@string/btn_cancel"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"  />
-				<Button android:id="@+id/btnConfirm" 
-		  			android:text="@string/btnConfirm"
+				<Button android:id="@+id/btn_confirm" 
+		  			android:text="@string/btn_confirm"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content" 
 					android:layout_alignParentRight="true" />				

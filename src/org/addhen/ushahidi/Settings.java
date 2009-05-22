@@ -88,23 +88,23 @@ public class Settings extends Activity {
     } 
     @SuppressWarnings("unchecked")
 	private void initComponents(){
-    	btnConfirm = (Button) findViewById(R.id.btnConfirm);
-    	btnCancel = (Button) findViewById(R.id.btnCancel);
-    	btnClearCache = (Button) findViewById(R.id.btnClearCache);
+    	btnConfirm = (Button) findViewById(R.id.btn_confirm);
+    	btnCancel = (Button) findViewById(R.id.btn_cancel);
+    	btnClearCache = (Button) findViewById(R.id.btn_clear_cache);
         domain = (EditText) findViewById(R.id.domain);
-        spnCountries = (Spinner) findViewById(R.id.spnCountries);
+        spnCountries = (Spinner) findViewById(R.id.spn_countries);
         
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, 
         		R.array.countries, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnCountries.setAdapter(adapter);
         
-        etSdSavePath = (EditText) findViewById(R.id.etSdSavePath);
-        llOnSd = (LinearLayout) findViewById(R.id.llOnSd);
-        rbOnPhone = (RadioButton) findViewById(R.id.rbOnPhone);
-        rbOnSD = (RadioButton) findViewById(R.id.rbOnSD);
-        chkAutoFetch = (CheckBox) findViewById(R.id.chkAutoFetch);
-        spnAutoUpdateDelay = (Spinner) findViewById(R.id.spnAutoUpdateDelay);
+        etSdSavePath = (EditText) findViewById(R.id.et_sd_save_path);
+        llOnSd = (LinearLayout) findViewById(R.id.ll_on_sd);
+        rbOnPhone = (RadioButton) findViewById(R.id.rb_on_phone);
+        rbOnSD = (RadioButton) findViewById(R.id.rb_on_SD);
+        chkAutoFetch = (CheckBox) findViewById(R.id.chk_auto_fetch);
+        spnAutoUpdateDelay = (Spinner) findViewById(R.id.spn_auto_update_delay);
         
         if(busy){
         	setEnabled(false);
