@@ -1,9 +1,7 @@
 package org.addhen.ushahidi;
  
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
  
@@ -13,21 +11,16 @@ import org.addhen.ushahidi.data.CategoriesData;
 import org.addhen.ushahidi.data.HandleXml;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
-
-import com.google.android.photostream.UserTask;
- 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +30,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
  
 public class ListIncidents extends Activity
@@ -45,9 +39,13 @@ public class ListIncidents extends Activity
   /** Called when the activity is first created. */
   private ListView listIncidents = null;
   private ListIncidentAdapter ila = new ListIncidentAdapter( this );
-  private static final int LIST_INCIDENT = Menu.FIRST+1;
-  private static final int MAP_INCIDENT = Menu.FIRST+2;
-  private static final int ADD_INCIDENT = Menu.FIRST+3;
+  private static final int HOME = Menu.FIRST+1;
+  private static final int ADD_INCIDENT = Menu.FIRST+2;
+  private static final int INCIDENT_MAP = Menu.FIRST+3;
+  private static final int INCIDENT_REFRESH= Menu.FIRST+4;
+  private static final int SETTINGS = Menu.FIRST+5;
+  private static final int ABOUT = Menu.FIRST+6;
+  private static final int GOTOHOME = 0;
   private static final int VIEW_INCIDENT = 0;
   private static final int USHAHIDI = 1;
   private static final int DIALOG_NETWORK_ERROR = 1;
@@ -55,45 +53,39 @@ public class ListIncidents extends Activity
   private static final int DIALOG_EMPTY_INCIDENTS = 3;
   private static final int LIST_INCIDENTS = 0;
   private Spinner spinner = null;
-  private ArrayAdapter spinnerArrayAdapter;
+  private ArrayAdapter<String> spinnerArrayAdapter;
   private Bundle incidentsBundle = new Bundle();
   private final Handler mHandler = new Handler();
   private static final String TAG = "ListIncidents";
   public static UshahidiDatabase mDb;
-  private static final String LAUNCH_ACTION = "org.addhen.ushahidi.INCIDENTS";
-  private static final String NEW_INCIDENTS_ACTION = "org.addhen.ushahidi.NEW";
   
   private List<IncidentsData> mNewIncidents;
+  private List<IncidentsData> mOldIncidents;
   private List<CategoriesData> mNewCategories;
   private Vector<String> vectorCategories = new Vector<String>();
- 
-  private static final String EXTRA_TEXT = "text";
-  private UserTask<Void, Void, RetrieveResult> mRetrieveTask;
   
   public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView( R.layout.list_incidents );
+	  super.onCreate(savedInstanceState);
+	  requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+	  setContentView( R.layout.list_incidents );
        
-        listIncidents = (ListView) findViewById( R.id.view_incidents );
+	  listIncidents = (ListView) findViewById( R.id.view_incidents );
         
-        mDb = new UshahidiDatabase(this);
-	    //mDb.close();
-        mDb.open();
-        
-        listIncidents.setOnItemClickListener( new OnItemClickListener(){  
+	  mDb = new UshahidiDatabase(this);
+	  mDb.open();
+	  mOldIncidents = new ArrayList<IncidentsData>();
+	  listIncidents.setOnItemClickListener( new OnItemClickListener(){  
       
-          public void onItemClick(AdapterView<?> arg0, View view, int position,
+		  public void onItemClick(AdapterView<?> arg0, View view, int position,
         		  long id) {
-        	  Log.i(TAG, " Long "+id+" Position "+position);
-        	  
-        	  incidentsBundle.putString("title",mNewIncidents.get(position).getIncidentTitle());
-        	  incidentsBundle.putString("desc", mNewIncidents.get(position).getIncidentDesc());
-        	  incidentsBundle.putString("category", mNewIncidents.get(position).getIncidentCategories());
-        	  incidentsBundle.putString("location", mNewIncidents.get(position).getIncidentLocation());
-        	  incidentsBundle.putString("date", mNewIncidents.get(position).getIncidentDate());
-        	  incidentsBundle.putString("media", mNewIncidents.get(position).getIncidentMedia());
-        	  incidentsBundle.putString("status", ""+mNewIncidents.get(position).getIncidentVerified());
+        	 
+        	  incidentsBundle.putString("title",mOldIncidents.get(position).getIncidentTitle());
+        	  incidentsBundle.putString("desc", mOldIncidents.get(position).getIncidentDesc());
+        	  incidentsBundle.putString("category", mOldIncidents.get(position).getIncidentCategories());
+        	  incidentsBundle.putString("location", mOldIncidents.get(position).getIncidentLocation());
+        	  incidentsBundle.putString("date", mOldIncidents.get(position).getIncidentDate());
+        	  incidentsBundle.putString("media", mOldIncidents.get(position).getIncidentMedia());
+        	  incidentsBundle.putString("status", ""+mOldIncidents.get(position).getIncidentVerified());
           
         	  Intent intent = new Intent( ListIncidents.this,ViewIncidents.class);
 				intent.putExtra("incidents", incidentsBundle);
@@ -102,75 +94,40 @@ public class ListIncidents extends Activity
               finish();
           }
           
-        });
-        spinner = (Spinner) findViewById(R.id.incident_cat);
-        if( UshahidiService.AutoFetch ) {
-          try {
-            mHandler.post(mDisplayIncidentsLoading);
-            if(org.addhen.ushahidi.net.Incidents.getAllIncidentsFromWeb()) {
-              UshahidiService.saveSettings(this);
-            }
-            mHandler.post(mDismissLoading);
-          }catch(IOException e) {
-            mHandler.post(mDismissLoading);
-            mHandler.post(mDisplayNetworkError);
-            return;
-          }
-        }
-        mHandler.post(mDisplayIncidents);
-        //mark all incidents as read
-        mDb.markAllIncidentssRead();
-        //mDb.close();
-    }
+      });
+      spinner = (Spinner) findViewById(R.id.incident_cat);
+        
+      //mHandler.post(mDisplayIncidents);
+	  //mark all incidents as read
+      //mDb.markAllIncidentssRead();
+  }
+  
+  protected void onResume(){
+	  mHandler.post(mDisplayIncidents);
+	  //mark all incidents as read
+      mDb.markAllIncidentssRead();
+	  super.onResume();
+  }
   
   public void onDestory() {
-	  //mDb.close();
+	  mDb.close();
 	  super.onDestroy();
   }
   
-  //public void onTerminate() {
-	//  mDb.open();
-	 // super.onDestroy();
-  //}
   
-  public static Intent createIntent(Context context) {
-	  Intent intent = new Intent(LAUNCH_ACTION);
-	  intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
- 
-	  return intent;
-   }
   
-  public static Intent createNewIncidentsIntent(String text) {
-	  Intent intent = new Intent(NEW_INCIDENTS_ACTION);
-	  intent.putExtra(EXTRA_TEXT, text);
- 
-	  return intent;
-   }
+  private void retrieveIncidentsAndCategories() {
+	  mHandler.post(mRetrieveNewIncidents);
+	 // final Thread tr = new Thread() {
+		//  public void run() {
+			  
+		 // }
+	  //};
+	  //tr.start();
+  }
   
-  	private void retrieveIncidentsAndCategories() {
-  		
-  		try {
-  			
-  			if(Incidents.getAllIncidentsFromWeb()){
-				   mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
-			}
-			   
-  			if(Categories.getAllCategoriesFromWeb() ) {
-  				Log.i(TAG,"Refreshing...");   
-  				mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
-  				Log.i(TAG,"Done Refreshing");
-  			}
-  		} catch (IOException e) {
-				//means there was a problem getting it
-  		}
- 
-  		mDb.addIncidents(mNewIncidents, false);
-	    	
-  		mDb.addCategories(mNewCategories, false);
-	    
-  	}
   @Override
-    protected Dialog onCreateDialog(int id) {
+  protected Dialog onCreateDialog(int id) {
         switch (id) {
             case DIALOG_NETWORK_ERROR: {
                 AlertDialog dialog = (new AlertDialog.Builder(this)).create();
@@ -218,16 +175,11 @@ public class ListIncidents extends Activity
   
   final Runnable mDisplayIncidents = new Runnable() {
     public void run() {
-      //showDialog(DIALOG_LOADING_INCIDENTS);
     	setProgressBarIndeterminateVisibility(true);
-    	retrieveIncidentsAndCategories();
-      
     	showIncidents("All");
     	showCategories();
-      //showIncidents();
       try{
     	  setProgressBarIndeterminateVisibility(false);
-    	  //setProgressBarIndeterminateVisibility(false);
       } catch(Exception e){
         return;  //means that the dialog is not showing, ignore please!
       }
@@ -272,6 +224,31 @@ public class ListIncidents extends Activity
       }
     }
   };
+  
+  final Runnable mRetrieveNewIncidents = new Runnable() {
+	  public void run() {
+	  try {
+		  if( Util.isInternetConnection(ListIncidents.this)) {
+			  setProgressBarIndeterminateVisibility(true);
+			  if(Incidents.getAllIncidentsFromWeb()){
+				  mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
+			  }
+	   
+			  if(Categories.getAllCategoriesFromWeb() ) {
+				  mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
+			  }
+			  mDb.addIncidents(mNewIncidents, false);
+	    	
+	  			  mDb.addCategories(mNewCategories, false);
+	  			  setProgressBarIndeterminateVisibility(false);
+		  } else {
+			  Toast.makeText(ListIncidents.this, R.string.internet_connection, Toast.LENGTH_LONG);
+		  }
+	  	} catch (IOException e) {
+					//means there was a problem getting it
+	  	}
+	  }
+  };
 
  
   //menu stuff
@@ -302,25 +279,44 @@ public class ListIncidents extends Activity
   }
   
   private void populateMenu(Menu menu) {
-    menu.add(Menu.NONE, LIST_INCIDENT, Menu.NONE, "List Incident");
-    menu.add(Menu.NONE, MAP_INCIDENT, Menu.NONE, "Map Incident");
-    menu.add(Menu.NONE, ADD_INCIDENT, Menu.NONE, "Add Incident");
+	  MenuItem i;i = menu.add( Menu.NONE, HOME, Menu.NONE, R.string.menu_home );
+		i.setIcon(R.drawable.ushahidi_home);
+		
+		i = menu.add( Menu.NONE, ADD_INCIDENT, Menu.NONE, R.string.incident_menu_add);
+		i.setIcon(R.drawable.ushahidi_add);
+		  
+		i = menu.add( Menu.NONE, INCIDENT_MAP, Menu.NONE, R.string.incident_menu_map );
+		i.setIcon(R.drawable.ushahidi_map);
+		  
+		
+		i = menu.add( Menu.NONE, INCIDENT_REFRESH, Menu.NONE, R.string.incident_menu_refresh );
+		i.setIcon(R.drawable.ushahidi_refresh);
+		  
+		i = menu.add( Menu.NONE, SETTINGS, Menu.NONE, R.string.menu_settings );
+		i.setIcon(R.drawable.ushahidi_settings);
+		  
+		i = menu.add( Menu.NONE, ABOUT, Menu.NONE, R.string.menu_about );
+		i.setIcon(R.drawable.ushahidi_settings);
+	  
   }
   
   private boolean applyMenuChoice(MenuItem item) {
     switch (item.getItemId()) {
-      case LIST_INCIDENT:
-        //TODO
+      case INCIDENT_REFRESH:
+    	  retrieveIncidentsAndCategories();
         return(true);
     
-      case MAP_INCIDENT:
+      case INCIDENT_MAP:
         //TODO
         return(true);
     
       case ADD_INCIDENT:
         //TODO
         return(true);
-    
+        
+      case SETTINGS:
+    	  return(true);
+        
     }
     return(false);
   }
@@ -341,9 +337,7 @@ public class ListIncidents extends Activity
 	  String location;
 	  String categories;
 	  String media;
-	 
-	  
-	  //iIncidentDetails[][] = new String[IncidentsData.size()][6];
+	
 	  String thumbnails [];
 	  Drawable d = null;
 	  if (cursor.moveToFirst()) {
@@ -366,21 +360,37 @@ public class ListIncidents extends Activity
 		  ila.removeItems();
 		  
 		  do {
+			  
+			  IncidentsData incidentData = new IncidentsData();
+			  mOldIncidents.add( incidentData );
+			  
 			  int id = Util.toInt(cursor.getString(idIndex));
+			  incidentData.setIncidentId(id);
+			  
+			  title = Util.capitalizeString(cursor.getString(titleIndex));
+			  incidentData.setIncidentTitle(title);
+			  
+			  description = cursor.getString(descIndex);
+			  incidentData.setIncidentDesc(description);
+			  
+			  categories = cursor.getString(categoryIndex);
+			  incidentData.setIncidentCategories(categories);
+			  
+			  location = cursor.getString(locationIndex);
+			  incidentData.setIncidentLocLongitude(location);
+			  
+			  date = Util.joinString("Date: ",cursor.getString(dateIndex));
+			  incidentData.setIncidentDate(cursor.getString(dateIndex));			  
+			  
+			  media = cursor.getString(mediaIndex);
+			  incidentData.setIncidentMedia(media);
+			  thumbnails = media.split(",");
 			  
 			  //TODO make the string readable from the string resource
 			  status = Util.toInt(cursor.getString(verifiedIndex) ) == 0 ? "Unverified" : "Verified";
+			  incidentData.setIncidentVerified(Util.toInt(cursor.getString(verifiedIndex) ));
 			  
-			  date = Util.joinString("Date: ",cursor.getString(dateIndex));
-			  
-			  description = cursor.getString(descIndex);
-			  
-			  location = cursor.getString(locationIndex);
-			  categories = cursor.getString(categoryIndex);
-			  media= cursor.getString(mediaIndex);
-			  title = Util.capitalizeString(cursor.getString(titleIndex));
-			  thumbnails = media.split(",");
-			  //if( !thumbnails[0].equals(""))
+			  //TODO do a proper check of thumbnails
 			  d = ImageManager.getImages( thumbnails[0]);
 			  
 			  ila.addItem( new ListIncidentText( d == null ? getResources().getDrawable( R.drawable.ushahidi_icon):d, 
@@ -436,30 +446,8 @@ public class ListIncidents extends Activity
   
   };
   
-  // As drawable.
-  public static Drawable imageOperations(String url, String saveFilename) {
-    try {
-      InputStream is = (InputStream) fetch(url);
-      Drawable d = Drawable.createFromStream(is, saveFilename);
-      return d;
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
-      return null;
-    } catch (IOException e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
- 
-  // Fetch image from the given URL
-  	private static Object fetch(String address) throws MalformedURLException,IOException {
-  		URL url = new URL(address);
-    	Object content = url.getContent();
-    	return content;
-  	}
- 
-  	@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         switch( requestCode ) {
       case LIST_INCIDENTS:
@@ -471,63 +459,6 @@ public class ListIncidents extends Activity
         mDb.markAllIncidentssRead();  
         break;
         }
-    }
-  
-  	private void doRetrieve() {
-	    Log.i(TAG, "Attempting retrieve.");
-
-	    if (mRetrieveTask != null
-	        && mRetrieveTask.getStatus() == UserTask.Status.RUNNING) {
-	      Log.w(TAG, "Already retrieving.");
-	    } else {
-	      mRetrieveTask = new RetrieveTask().execute();
-	    }
-	  }
-
-	  private void onRetrieveBegin() {
-		  Log.i(TAG,"Refreshing...");
-	  }
-
-
-	  private enum RetrieveResult {
-	    OK, IO_ERROR, AUTH_ERROR, CANCELLED
-	  }
-	
-	//retrieve incidents
-	private class RetrieveTask extends UserTask<Void, Void, RetrieveResult> {
-	    @Override
-	    public void onPreExecute() {
-	      onRetrieveBegin();
-	    }
-
-	    @Override
-	    public RetrieveResult doInBackground(Void... params) {
-	    	try {
-				   if(Incidents.getAllIncidentsFromWeb()){
-					   mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
-				   }
-				   
-				   if(Categories.getAllCategoriesFromWeb() ) {
-					   mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
-				   }
-		    	} catch (IOException e) {
-					//means there was a problem getting it
-		    	}
-	    
-
-		    	if (isCancelled()) {
-		    		return RetrieveResult.CANCELLED;
-		    	}
-
-		    	mDb.addIncidents(mNewIncidents, false);
-	      
-		    	if (isCancelled()) {
-		    		return RetrieveResult.CANCELLED;
-		    	}
-
-		    	return RetrieveResult.OK;
-	    	}
-
-	  }
+  }
   
 }

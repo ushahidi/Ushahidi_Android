@@ -1,17 +1,17 @@
 package org.addhen.ushahidi.data;
 
 public class IncidentsData {
-	String incidentTitle = "";
-	String incidentDesc = "";
-	String incidentLocation = "";
-	String incidentDate = "";
-	int incidentMode = 0;
-	int incidentVerified = 0;
-	String incidentLocLatitude = "";
-	String incidentLocLongitude = "";
-	String incidentCategories = "";
-	String incidentMedia = "";
-	int incidentId = 0;
+	private String incidentTitle = "";
+	private String incidentDesc = "";
+	private String incidentLocation = "";
+	private String incidentDate = "";
+	private int incidentMode = 0;
+	private int incidentVerified = 0;
+	private String incidentLocLatitude = "";
+	private String incidentLocLongitude = "";
+	private String incidentCategories = "";
+	private String incidentMedia = "";
+	private int incidentId = 0;
 	
 	public IncidentsData() {
 		

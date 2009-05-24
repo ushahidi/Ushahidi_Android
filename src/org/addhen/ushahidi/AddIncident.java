@@ -38,14 +38,20 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class AddIncident extends Activity {
-	private static final int LIST_INCIDENT = Menu.FIRST+1;
-	private static final int MAP_INCIDENT = Menu.FIRST+2;
-	private static final int ADD_INCIDENT = Menu.FIRST+3;
-	
+	private static final int HOME = Menu.FIRST+1;
+	private static final int LIST_INCIDENT = Menu.FIRST+2;
+	private static final int INCIDENT_MAP = Menu.FIRST+3;
+	private static final int INCIDENT_REFRESH= Menu.FIRST+4;
+	private static final int SETTINGS = Menu.FIRST+5;
+	private static final int ABOUT = Menu.FIRST+6;
+	private static final int GOTOHOME = 0;
+	private static final int MAP_INCIDENTS = 1;
+	private static final int LIST_INCIDENTS = 2;
 	private static final int REQUEST_CODE_PREFERENCES = 1;
-	private static final int REQUEST_CODE_ABOUT = 2;
-	private static final int REQUEST_CODE_IMAGE = 3;
-	private static final int REQUEST_CODE_CAMERA = 4;
+	private static final int REQUEST_CODE_SETTINGS = 2;
+	private static final int REQUEST_CODE_ABOUT = 3;
+	private static final int REQUEST_CODE_IMAGE = 4;
+	private static final int REQUEST_CODE_CAMERA = 5;
 	
 	// date and time
     private int mYear;
@@ -130,24 +136,56 @@ public class AddIncident extends Activity {
 	}
 	
 	private void populateMenu(Menu menu) {
-		menu.add(Menu.NONE, LIST_INCIDENT, Menu.NONE, "List Incident");
-		menu.add(Menu.NONE, MAP_INCIDENT, Menu.NONE, "Map Incident");
-		menu.add(Menu.NONE, ADD_INCIDENT, Menu.NONE, "Add Incident");
+		MenuItem i;
+		
+		i = menu.add( Menu.NONE, HOME, Menu.NONE, R.string.menu_home );
+		i.setIcon(R.drawable.ushahidi_home);
+		
+		i = menu.add( Menu.NONE, LIST_INCIDENT, Menu.NONE, R.string.incident_list );
+		i.setIcon(R.drawable.ushahidi_list);
+		  
+		i = menu.add( Menu.NONE, INCIDENT_MAP, Menu.NONE, R.string.incident_menu_map );
+		i.setIcon(R.drawable.ushahidi_map);
+		  
+		
+		i = menu.add( Menu.NONE, INCIDENT_REFRESH, Menu.NONE, R.string.incident_menu_refresh );
+		i.setIcon(R.drawable.ushahidi_refresh);
+		  
+		i = menu.add( Menu.NONE, SETTINGS, Menu.NONE, R.string.menu_settings );
+		i.setIcon(R.drawable.ushahidi_settings);
+		  
+		i = menu.add( Menu.NONE, ABOUT, Menu.NONE, R.string.menu_about );
+		i.setIcon(R.drawable.ushahidi_settings);
+		
 	}
 	
 	private boolean applyMenuChoice(MenuItem item) {
+		Intent launchPreferencesIntent;
 		switch (item.getItemId()) {
-			case LIST_INCIDENT:
-				//TODO Intent that will list incidents
-				return true;
 		
-			case MAP_INCIDENT:
-				//TODO call the intent that list map view of incidents
-				return true ;
-		
-			case ADD_INCIDENT:
-				//TODO call intent that allows addition of incidents
-				return true;
+		case LIST_INCIDENT:
+			launchPreferencesIntent = new Intent( AddIncident.this,ListIncidents.class);
+    		startActivityForResult( launchPreferencesIntent, LIST_INCIDENTS );
+    		setResult(RESULT_OK);
+			return true;
+	
+		case INCIDENT_MAP:
+			launchPreferencesIntent = new Intent( AddIncident.this, ViewIncidents.class);
+    		startActivityForResult( launchPreferencesIntent,MAP_INCIDENTS );
+			return true;
+	
+		case GOTOHOME:
+			launchPreferencesIntent = new Intent( AddIncident.this,Ushahidi.class);
+    		startActivityForResult( launchPreferencesIntent, GOTOHOME );
+    		setResult(RESULT_OK);
+			return true;
+			
+		case SETTINGS:	
+			launchPreferencesIntent = new Intent().setClass(AddIncident.this, Settings.class);
+			
+			// Make it a subactivity so we know when it returns
+			startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);
+			return true;
 		
 		}
 		return false;
@@ -413,6 +451,13 @@ public class AddIncident extends Activity {
     }    
 
     private void updateDisplay() {
+    	String amPm;
+    	
+    	if( mHour >=12 )
+    		amPm = "Pm";
+    	else
+    		amPm = "Am";
+    	
     	incidentDate.setText(
             new StringBuilder()
                     // Month is 0 based so add 1
@@ -421,7 +466,7 @@ public class AddIncident extends Activity {
                     .append(mYear).append(" ")
                     .append(pad(mHour)).append(":")
                     .append(pad(mMinute)).append(":")
-    				.append(mAmPm == 0 ? "Am":"Pm"));
+    				.append(amPm));
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener =

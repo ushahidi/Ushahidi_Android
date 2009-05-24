@@ -14,15 +14,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 
 public class Ushahidi extends Activity {
     /** Called when the activity is first created. */
-	private static final int INCIDENT_LIST  = Menu.FIRST+1;
-	private static final int INCIDENT_MAP = Menu.FIRST+2;
-	private static final int INCIDENT_ADD = Menu.FIRST+3;
-	private static final int SETTINGS = Menu.FIRST+4;
+	private static final int ADD_INCIDENT = Menu.FIRST+1;
+	private static final int LIST_INCIDENT = Menu.FIRST+2;
+	private static final int INCIDENT_MAP = Menu.FIRST+3;
+	private static final int INCIDENT_REFRESH= Menu.FIRST+4;
+	private static final int SETTINGS = Menu.FIRST+5;
+	private static final int ABOUT = Menu.FIRST+6;
 	private static final int LIST_INCIDENTS = 0;
 	private static final int MAP_INCIDENTS = 1;
 	private static final int ADD_INCIDENTS = 2;
@@ -92,13 +95,13 @@ public class Ushahidi extends Activity {
 					break;
 				}
 			break;
-			case LIST_INCIDENTS:
+			/*case LIST_INCIDENTS:
 				if( resultCode != RESULT_OK ){
 					
 					break;
 				}
 				
-			break;
+			break;*/
 		}
 	}
 	
@@ -129,16 +132,33 @@ public class Ushahidi extends Activity {
 	}
 	
 	private void populateMenu(Menu menu) {
-		menu.add(Menu.NONE, INCIDENT_LIST, Menu.NONE, "Incident List");
-		menu.add(Menu.NONE, INCIDENT_MAP, Menu.NONE, "Incident Map");
-		menu.add(Menu.NONE, INCIDENT_ADD, Menu.NONE, "Add Incident");
-		menu.add(Menu.NONE, SETTINGS, Menu.NONE, "Settings");
+		MenuItem i;
+		
+		i = menu.add( Menu.NONE, ADD_INCIDENT, Menu.NONE, R.string.incident_menu_add );
+		i.setIcon(R.drawable.ushahidi_add);
+		
+		i = menu.add( Menu.NONE, LIST_INCIDENT, Menu.NONE, R.string.incident_list );
+		i.setIcon(R.drawable.ushahidi_list);
+		  
+		i = menu.add( Menu.NONE, INCIDENT_MAP, Menu.NONE, R.string.incident_menu_map );
+		i.setIcon(R.drawable.ushahidi_map);
+		  
+		
+		i = menu.add( Menu.NONE, INCIDENT_REFRESH, Menu.NONE, R.string.menu_sync );
+		i.setIcon(R.drawable.ushahidi_refresh);
+		  
+		i = menu.add( Menu.NONE, SETTINGS, Menu.NONE, R.string.menu_settings );
+		i.setIcon(R.drawable.ushahidi_settings);
+		  
+		i = menu.add( Menu.NONE, ABOUT, Menu.NONE, R.string.menu_about );
+		i.setIcon(R.drawable.ushahidi_settings);
+		
 	}
 	
 	private boolean applyMenuChoice(MenuItem item) {
 		Intent launchPreferencesIntent;
 		switch (item.getItemId()) {
-			case INCIDENT_LIST:
+			case LIST_INCIDENT:
 				launchPreferencesIntent = new Intent( Ushahidi.this,ListIncidents.class);
         		startActivityForResult( launchPreferencesIntent, LIST_INCIDENTS );
         		setResult(RESULT_OK);
@@ -149,7 +169,7 @@ public class Ushahidi extends Activity {
         		startActivityForResult( launchPreferencesIntent,MAP_INCIDENTS );
 				return true;
 		
-			case INCIDENT_ADD:
+			case ADD_INCIDENT:
 				launchPreferencesIntent = new Intent( Ushahidi.this,AddIncident.class);
         		startActivityForResult( launchPreferencesIntent, ADD_INCIDENTS );
         		setResult(RESULT_OK);

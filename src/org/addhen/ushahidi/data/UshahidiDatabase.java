@@ -38,6 +38,25 @@ public class UshahidiDatabase {
 	public static final String CATEGORY_COLOR = "category_color";
 	public static final String CATEGORY_IS_UNREAD = "is_unread";
 	
+	public static final String ADD_INCIDENT_ID = "_id";
+	public static final String ADD_INCIDENT_TITLE = "incident_title";
+	public static final String ADD_INCIDENT_DESC = "incident_desc";
+	public static final String ADD_INCIDENT_DATE = "incident_date";
+	public static final String ADD_INCIDENT_HOUR = "incident_hour";
+	public static final String ADD_INCIDENT_MINUTE = "incident_minute";
+	public static final String ADD_INCIDENT_AMPM = "incident_ampm";
+	public static final String ADD_INCIDENT_CATEGORIES = "incident_categories";
+	public static final String ADD_INCIDENT_LOC_NAME = "incident_loc_name";
+	public static final String ADD_INCIDENT_LOC_LATITUDE = "incident_loc_latitude";
+	public static final String ADD_INCIDENT_LOC_LONGITUDE = "incident_loc_longitude";
+	public static final String ADD_INCIDENT_PHOTO = "incident_media";
+	public static final String ADD_INCIDENT_VIDEO =  "incident_video";
+	public static final String ADD_INCIDENT_NEWS = "incident_news";
+	public static final String ADD_PERSON_FIRST = "person_first";
+	public static final String ADD_PERSON_LAST = "person_last";
+	public static final String ADD_PERSON_EMAIL = "person_email";
+	
+ 	
 	public static final String[] INCIDENTS_COLUMNS = new String[] {	INCIDENT_ID,
 		INCIDENT_TITLE, INCIDENT_DESC, INCIDENT_DATE, INCIDENT_MODE, INCIDENT_VERIFIED,
 		INCIDENT_LOC_NAME,INCIDENT_LOC_LATITUDE,INCIDENT_LOC_LONGITUDE,INCIDENT_CATEGORIES,
@@ -48,13 +67,20 @@ public class UshahidiDatabase {
 		CATEGORY_TITLE,CATEGORY_DESC,CATEGORY_COLOR, CATEGORY_IS_UNREAD
 	};
 	
-  
+	public static final String[] ADD_INCIDENTS_COLUMNS = new String[] {
+		ADD_INCIDENT_ID,
+		ADD_INCIDENT_TITLE, ADD_INCIDENT_DESC, ADD_INCIDENT_DATE, ADD_INCIDENT_HOUR, ADD_INCIDENT_MINUTE,
+		ADD_INCIDENT_AMPM,ADD_INCIDENT_CATEGORIES,INCIDENT_LOC_NAME,INCIDENT_LOC_LATITUDE,INCIDENT_LOC_LONGITUDE,
+		ADD_INCIDENT_PHOTO,ADD_INCIDENT_VIDEO,ADD_INCIDENT_NEWS,ADD_PERSON_FIRST,ADD_PERSON_LAST,ADD_PERSON_EMAIL
+	};
+	
 	private DatabaseHelper mDbHelper;
 	private SQLiteDatabase mDb;
 
 	private static final String DATABASE_NAME = "ushahidi_db";
 
 	private static final String INCIDENTS_TABLE = "incidents";
+	private static final String ADD_INCIDENTS_TABLE = "add_incidents";
 	private static final String CATEGORIES_TABLE = "categories";
 
 	private static final int DATABASE_VERSION = 9;
@@ -78,6 +104,27 @@ public class UshahidiDatabase {
 		+ INCIDENT_IS_UNREAD + " BOOLEAN NOT NULL "
 		+ ")";
 	
+	private static final String ADD_INCIDENTS_TABLE_CREATE = "CREATE TABLE " + ADD_INCIDENTS_TABLE + " ("
+	+ ADD_INCIDENT_ID + " INTEGER PRIMARY KEY , "  
+	+ ADD_INCIDENT_TITLE + " TEXT NOT NULL, "
+	+ ADD_INCIDENT_DESC + " TEXT, "
+	+ INCIDENT_DATE + " DATE NOT NULL, "
+	+ ADD_INCIDENT_HOUR + " INTEGER, "
+	+ ADD_INCIDENT_MINUTE + " INTEGER, "
+	+ ADD_INCIDENT_AMPM + " TEXT NOT NULL, "
+	+ ADD_INCIDENT_CATEGORIES + " TEXT NOT NULL, "
+	+ ADD_INCIDENT_LOC_NAME + " TEXT NOT NULL, "
+	+ ADD_INCIDENT_LOC_LATITUDE + " TEXT NOT NULL, "
+	+ ADD_INCIDENT_LOC_LONGITUDE + " TEXT NOT NULL, "
+	+ ADD_INCIDENT_PHOTO + " TEXT, "
+	+ ADD_INCIDENT_VIDEO + " TEXT, "
+	+ ADD_INCIDENT_NEWS + " TEXT, "
+	+ ADD_PERSON_FIRST + " TEXT, "
+	+ ADD_PERSON_LAST + " TEXT, "
+	+ ADD_PERSON_EMAIL + " TEXT "
+	+ ")";
+	
+	
 	private static final String CATEGORIES_TABLE_CREATE = "CREATE TABLE " + CATEGORIES_TABLE + " ("
 		+ CATEGORY_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
 		+ CATEGORY_TITLE + " TEXT NOT NULL, " 
@@ -98,6 +145,7 @@ public class UshahidiDatabase {
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(INCIDENTS_TABLE_CREATE);
     		db.execSQL(CATEGORIES_TABLE_CREATE);
+    		db.execSQL(ADD_INCIDENTS_TABLE_CREATE);
 		}
 
     	@Override
@@ -106,6 +154,7 @@ public class UshahidiDatabase {
     				+ newVersion + " which destroys all old data");
     		db.execSQL("DROP TABLE IF EXISTS " + INCIDENTS_TABLE);
       		db.execSQL("DROP TABLE IF EXISTS " + CATEGORIES_TABLE);
+      		db.execSQL("DROP TABLE IF EXISTS " +ADD_INCIDENTS_TABLE);
       		onCreate(db);
     	}
 	}
@@ -143,6 +192,30 @@ public class UshahidiDatabase {
     	initialValues.put(INCIDENT_IS_UNREAD, isUnread);
 
     	return mDb.insert(INCIDENTS_TABLE, null, initialValues);
+  	}
+  	
+  	public long createAddIncident(AddIncidentData addIncident) {
+  		ContentValues initialValues = new ContentValues();
+  		
+    	initialValues.put(ADD_INCIDENT_TITLE, addIncident.getIncidentTitle());
+    	initialValues.put(ADD_INCIDENT_DESC, addIncident.getIncidentDesc());
+    	initialValues.put(ADD_INCIDENT_DATE, addIncident.getIncidentDate());
+    	initialValues.put(ADD_INCIDENT_HOUR, addIncident.getIncidentHour());
+    	initialValues.put(ADD_INCIDENT_MINUTE, addIncident.getIncidentMinute());
+    	initialValues.put(ADD_INCIDENT_AMPM, addIncident.getIncidentAmPm());
+    	initialValues
+        	.put(ADD_INCIDENT_CATEGORIES, addIncident.getIncidentCategories());
+    	initialValues.put(INCIDENT_LOC_NAME, addIncident.getIncidentLocName());
+    	initialValues.put(INCIDENT_LOC_LATITUDE, addIncident.getIncidentLocLatitude());
+    	initialValues.put(INCIDENT_LOC_LONGITUDE, addIncident.getIncidentLocLongitude());
+    	initialValues.put(ADD_INCIDENT_PHOTO, addIncident.getIncidentPhoto());
+    	initialValues.put(ADD_INCIDENT_VIDEO, addIncident.getIncidentVideo());
+    	initialValues.put(ADD_INCIDENT_NEWS, addIncident.getIncidentNews());
+    	initialValues.put(ADD_PERSON_FIRST, addIncident.getPersonFirst());
+    	initialValues.put(ADD_PERSON_LAST, addIncident.getPersonLast());
+    	initialValues.put(ADD_PERSON_EMAIL, addIncident.getPersonEmail());
+    	
+  		return mDb.insert(ADD_INCIDENTS_TABLE_CREATE, null, initialValues);
   	}
 
   	public long createCategories(CategoriesData categories, boolean isUnread) {
@@ -315,6 +388,18 @@ public class UshahidiDatabase {
   			}
 
   			limitRows(INCIDENTS_TABLE, 20, INCIDENT_ID);
+  			mDb.setTransactionSuccessful();
+  		} finally {
+  			mDb.endTransaction();
+  		}
+  	}
+  	
+  	public void addIncidents(List<AddIncidentData> addIncidents ) {
+  		try {
+  			mDb.beginTransaction();
+  			for( AddIncidentData addIncident: addIncidents ) {
+  				createAddIncident(addIncident);
+  			}
   			mDb.setTransactionSuccessful();
   		} finally {
   			mDb.endTransaction();

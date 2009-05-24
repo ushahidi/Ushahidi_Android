@@ -187,10 +187,10 @@ public class UshahidiService extends Service {
 	      text = MessageFormat.format(text, count);
 	    }
 
-	    PendingIntent intent = PendingIntent.getActivity(this, 0, ListIncidents.createIntent(this), 0);
+	   // PendingIntent intent = PendingIntent.getActivity(this, 0, ListIncidents.createIntent(this), 0);
 
-	    notify(intent, INCIDENTS_NOTIFICATION_ID, R.drawable.favicon,
-	    		latestIncident.getIncidentDate(), title, text);
+	    //notify(intent, INCIDENTS_NOTIFICATION_ID, R.drawable.favicon,
+	    		//latestIncident.getIncidentDate(), title, text);
 	}
 	
 	private void notify(PendingIntent intent, int notificationId,
@@ -258,10 +258,10 @@ public class UshahidiService extends Service {
 	      text = MessageFormat.format(text, count);
 	    }
 
-	    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ListIncidents.createIntent(this), 0);
+	    //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ListIncidents.createIntent(this), 0);
 
-	    notify(pendingIntent, CATEGORIES_NOTIFICATION_ID, R.drawable.favicon,
-	        latest.getCategoryTitle(), title, text);
+	    //notify(pendingIntent, CATEGORIES_NOTIFICATION_ID, R.drawable.favicon,
+	       // latest.getCategoryTitle(), title, text);
 	  }
 
 	@Override

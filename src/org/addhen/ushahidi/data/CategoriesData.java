@@ -3,10 +3,10 @@ package org.addhen.ushahidi.data;
 
 public class CategoriesData {
 	
-	int categoryId = 0;
-	String categoryTitle = "";
-	String categoryDescription = "";
-	String categoryColor = "";
+	private int categoryId = 0;
+	private String categoryTitle = "";
+	private String categoryDescription = "";
+	private String categoryColor = "";
 	
 	public String getCategoryTitle() {
 		return categoryTitle;

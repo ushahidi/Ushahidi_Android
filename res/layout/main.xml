@@ -34,7 +34,7 @@
         		android:layout_below="@id/title"
         		android:layout_alignParentLeft="true"
         		android:layout_marginLeft="0px"
-        		android:text="Incident List" />
+        		android:text="@string/incident_list" />
  			
  			<TextView  android:id="@+id/spacer2"
     			android:layout_width="fill_parent" 
@@ -45,7 +45,7 @@
         		android:layout_height="wrap_content"
         		android:layout_alignParentLeft="true"
         		android:layout_marginLeft="0px"
-        		android:text="Incident Map" />
+        		android:text="@string/incident_menu_map" />
     		
     		<TextView  android:id="@+id/spacer"
     			android:layout_width="fill_parent" 
@@ -56,7 +56,7 @@
         		android:layout_height="wrap_content"
         		android:layout_alignParentLeft="true"
         		android:layout_marginLeft="0px"
-        		android:text="Add Incident" />
+        		android:text="@string/incident_add_incident" />
         </LinearLayout>
 	</ScrollView>        
 </RelativeLayout>
