@@ -66,7 +66,7 @@ public class Ushahidi extends Activity {
         		Intent intent = new Intent( Ushahidi.this,ListIncidents.class);
         		startActivityForResult( intent, LIST_INCIDENTS );
         		setResult(RESULT_OK);
-				finish();
+				
         	}
         });
         

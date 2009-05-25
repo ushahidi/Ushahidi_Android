@@ -9,7 +9,7 @@ import android.util.Log;
  * This broadcast receiver is awoken after boot and registers the service that
  * checks for new tweets.
  */
-public class BootReceiver extends BroadcastReceiver {
+/*public class BootReceiver extends BroadcastReceiver {
   private static final String TAG = "BootReceiver";
   
   public void onReceive(Context context, Intent intent) {
@@ -18,4 +18,4 @@ public class BootReceiver extends BroadcastReceiver {
 		  UshahidiService.schedule(context);
 	  }
   }
-}
+}*/

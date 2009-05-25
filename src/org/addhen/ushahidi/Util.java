@@ -1,5 +1,7 @@
 package org.addhen.ushahidi;
 
+import java.util.Vector;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -28,21 +30,27 @@ public class Util {
 	/**
 	 * Capitalize any string given to it.
 	 * @param text
-	 * @return
+	 * @return capitalized string
 	 */
 	public static String capitalizeString( String text ) {
 		return text.substring(0,1).toUpperCase() + text.substring(1);
 	}
 	
 	/**
-	 * Checks if there is internet connection with the device.
+	 * Create csv
+	 * @param Vector<String> text
+	 * 
+	 * @return csv
 	 */
-	public static boolean isInternetConnection( Context context) {
-		ConnectivityManager conManager = ( ConnectivityManager) 
-			context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	public static String implode( Vector<String> text ) {
+		String implode = "";
+		int i = 0;
+		for( String value : text ) {
+			implode += i == text.size() -1 ? value : value+",";
+			i++;
+		}
 		
-		NetworkInfo networkInfo= conManager.getActiveNetworkInfo();
-		
-		return networkInfo.isConnected();
+		return implode;
 	}
+	 
 }

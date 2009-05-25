@@ -114,7 +114,7 @@ public class UshahidiHttpClient {
 
 		} catch (final Exception e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 		UshahidiService.httpRunning = false;
 		return null;
@@ -135,7 +135,7 @@ public class UshahidiHttpClient {
 				httpost.setEntity(new UrlEncodedFormEntity(data, HTTP.UTF_8));
 			} catch (final UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
-				// e.printStackTrace();
+				e.printStackTrace();
 				UshahidiService.httpRunning = false;
 				return null;
 			}

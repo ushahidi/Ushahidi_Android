@@ -37,6 +37,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -67,45 +68,37 @@ public class UshahidiService extends Service {
 
     private ArrayList<IncidentsData> mNewIncidents;
     private ArrayList<CategoriesData> mNewCategories;
- 
-    private WakeLock mWakeLock;
     
     private static int INCIDENTS_NOTIFICATION_ID = 0;
     private static int CATEGORIES_NOTIFICATION_ID = 1;
     
-    public static final String RINGTONE_DEFAULT_KEY =
-        "content://settings/system/notification_sound";
-    
-    public static final String VIBRATE_KEY = "vibrate";
-    
-    public static String RINGTONE_KEY = "ringtone";
-    
-    public static final String CHECK_UPDATE_INTERVAL_KEY =
-        "check_update_interval";
-    
-    public static final String CHECK_UPDATES_KEY = "check_updates";
     
     private UshahidiDatabase getDb() {
         return UshahidiApplication.mDb;
     }
 
 	private Runnable mUpdateTimeTask = new Runnable() {
-		   public void run() {
-			   if(AutoUpdateDelay <= 0){
-				   return;
-			   }
-			   // TODO get new incidents from the web
+		public void run() {
+			if(AutoUpdateDelay <= 0){
+				return;
+			}
+			// TODO get new incidents from the web
 			   
-			   try {
-				   if(Incidents.getAllIncidentsFromWeb()){
-					   UshahidiService.saveSettings(getApplicationContext());
-					   showNotification("New Updates!");
-				   }
-			   } catch (IOException e) {
+			try {
+				if(Incidents.getAllIncidentsFromWeb()){
+					UshahidiService.saveSettings(getApplicationContext());
+					processNewCategories();
+					processNewIncidents();
+					showNotification("New Updates!");
+				}
+			} catch (IOException e) {
 					//means there was a problem getting it
-			   }
-		   }
+			} finally {
+				mHandler.postAtTime(mUpdateTimeTask, SystemClock.uptimeMillis() + (1000 * 60 * AutoUpdateDelay));
+			}
+		}
 	};
+	
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
@@ -113,27 +106,13 @@ public class UshahidiService extends Service {
 	@Override 
 	public void onCreate() {
 		super.onCreate();
-		
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-	    mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
-	    mWakeLock.acquire();
-
-	    mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-	    if (AutoUpdateDelay <= 0 ) {
-	      Log.i(TAG, "Check update preference is false.");
-	      stopSelf();
-	      return;
-	    }
-		
-	    schedule(UshahidiService.this);
 	    
 	    mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	    
 		queue = new QueueThread("ushahidi");
 
 		// init the service here
-		//mHandler = new Handler();
+		mHandler = new Handler();
 		if(AutoUpdateDelay > 0){
 			mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
 			mHandler.postDelayed(mUpdateTimeTask, (1000 * 60 * AutoUpdateDelay));
@@ -193,7 +172,7 @@ public class UshahidiService extends Service {
 	    		//latestIncident.getIncidentDate(), title, text);
 	}
 	
-	private void notify(PendingIntent intent, int notificationId,
+	/*private void notify(PendingIntent intent, int notificationId,
 		      int notifyIconId, String tickerText, String title, String text) {
 		    Notification notification = new Notification(notifyIconId, tickerText,
 		        System.currentTimeMillis());
@@ -220,7 +199,7 @@ public class UshahidiService extends Service {
 		    }
 
 		    mNotificationManager.notify(notificationId, notification);
-	}
+	}*/
 	
 	private void processNewCategories() {
 	    if (mNewCategories.size() <= 0) {
@@ -266,12 +245,13 @@ public class UshahidiService extends Service {
 
 	@Override
 	public void onDestroy() {
-
-	    mWakeLock.release();
 		super.onDestroy();
 	}
 	
-	static void schedule(Context context) {
+	public static void AddThreadToQueue(Thread tr){
+		queue.AddQueueItem(tr);
+	}
+	/*static void schedule(Context context) {
 	    SharedPreferences preferences = PreferenceManager
 	        .getDefaultSharedPreferences(context);
 
@@ -306,11 +286,7 @@ public class UshahidiService extends Service {
 	        .getSystemService(Context.ALARM_SERVICE);
 	    Log.i(TAG, "Cancelling alarms.");
 	    alarm.cancel(pending);
-	  }
-	
-	public static void AddThreadToQueue(Thread tr){
-		queue.AddQueueItem(tr);
-	}
+	  }*/
 	
 	private void showNotification(String tickerText) {
         // This is who should be launched if the user selects our notification.

@@ -47,10 +47,6 @@ public class ListIncidents extends Activity
   private static final int ABOUT = Menu.FIRST+6;
   private static final int GOTOHOME = 0;
   private static final int VIEW_INCIDENT = 0;
-  private static final int USHAHIDI = 1;
-  private static final int DIALOG_NETWORK_ERROR = 1;
-  private static final int DIALOG_LOADING_INCIDENTS = 2;
-  private static final int DIALOG_EMPTY_INCIDENTS = 3;
   private static final int LIST_INCIDENTS = 0;
   private Spinner spinner = null;
   private ArrayAdapter<String> spinnerArrayAdapter;
@@ -91,7 +87,7 @@ public class ListIncidents extends Activity
 				intent.putExtra("incidents", incidentsBundle);
 				startActivityForResult(intent,VIEW_INCIDENT);
 				setResult( RESULT_OK, intent );
-              finish();
+              
           }
           
       });
@@ -117,61 +113,14 @@ public class ListIncidents extends Activity
   
   
   private void retrieveIncidentsAndCategories() {
-	  mHandler.post(mRetrieveNewIncidents);
-	 // final Thread tr = new Thread() {
-		//  public void run() {
-			  
-		 // }
-	  //};
-	  //tr.start();
+	  
+	 final Thread tr = new Thread() {
+		public void run() {
+			mHandler.post(mRetrieveNewIncidents);
+		}
+	  };
+	 tr.start();
   }
-  
-  @Override
-  protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case DIALOG_NETWORK_ERROR: {
-                AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-                dialog.setTitle("Network error!");
-                dialog.setMessage("Network error, please ensure you are connected to the internet");
-                dialog.setButton2("Ok", new Dialog.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-            Intent intent = new Intent( ListIncidents.this,Ushahidi.class);
-            startActivityForResult( intent,USHAHIDI );
-            setResult( RESULT_OK );
-     finish();
-          }
-            });
-                dialog.setCancelable(false);
-                return dialog;
-            }
-            
-            case DIALOG_LOADING_INCIDENTS: {
-                ProgressDialog dialog = new ProgressDialog(this);
-                dialog.setTitle("Loading incidents");
-                dialog.setMessage("Please wait while incidents are loaded...");
-                dialog.setIndeterminate(true);
-                dialog.setCancelable(true);
-                return dialog;
-            }
-            
-            case DIALOG_EMPTY_INCIDENTS: {
-              AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-              dialog.setTitle("No incidents!");
-              dialog.setMessage("No incident available for this category, please select " +
-                  "a new category to filter by.");
-              dialog.setButton2("Ok", new Dialog.OnClickListener() {
-                public void onClick( DialogInterface dialog, int which ) {
-                  dialog.dismiss();
-                }
-              });
-              dialog.setCancelable(false);
-                return dialog;
-            }
-            
-        }
-        return null;
-    }
   
   final Runnable mDisplayIncidents = new Runnable() {
     public void run() {
@@ -196,39 +145,11 @@ public class ListIncidents extends Activity
       }
     }
   };
-  
-  final Runnable mDisplayNetworkError = new Runnable(){
-    public void run(){
-      showDialog(DIALOG_NETWORK_ERROR);
-    }
-  };
-  
-  final Runnable mDisplayIncidentsLoading = new Runnable() {
-    public void run() {
-      showDialog(DIALOG_LOADING_INCIDENTS);
-    }
-  };
-  
-  final Runnable mDisplayEmptyIncident = new Runnable() {
-    public void run() {
-      showDialog(DIALOG_EMPTY_INCIDENTS);
-    }
-  };
-  
-  final Runnable mDismissLoading = new Runnable(){
-    public void run(){
-      try{
-        dismissDialog(DIALOG_LOADING_INCIDENTS);        
-      } catch(IllegalArgumentException e){
-        return;  //means that the dialog is not showing, ignore please!
-      }
-    }
-  };
-  
+
   final Runnable mRetrieveNewIncidents = new Runnable() {
 	  public void run() {
 	  try {
-		  if( Util.isInternetConnection(ListIncidents.this)) {
+		  if( UshahidiService.httpRunning) {
 			  setProgressBarIndeterminateVisibility(true);
 			  if(Incidents.getAllIncidentsFromWeb()){
 				  mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
@@ -242,10 +163,10 @@ public class ListIncidents extends Activity
 	  			  mDb.addCategories(mNewCategories, false);
 	  			  setProgressBarIndeterminateVisibility(false);
 		  } else {
-			  Toast.makeText(ListIncidents.this, R.string.internet_connection, Toast.LENGTH_LONG);
+			  Toast.makeText(ListIncidents.this, R.string.internet_connection, Toast.LENGTH_LONG).show();
 		  }
 	  	} catch (IOException e) {
-					//means there was a problem getting it
+			//means there was a problem getting it
 	  	}
 	  }
   };
@@ -433,11 +354,8 @@ public class ListIncidents extends Activity
    new Spinner.OnItemSelectedListener() {
     
    @SuppressWarnings("unchecked")
-    public void onItemSelected(AdapterView parent, View v, int position, long id) {
-      showDialog(DIALOG_LOADING_INCIDENTS);
-      //showIncidents("deaths");
-      showIncidents(vectorCategories.get(position));
-      dismissDialog(DIALOG_LOADING_INCIDENTS);
+   public void onItemSelected(AdapterView parent, View v, int position, long id) {
+	   showIncidents(vectorCategories.get(position));
    }
  
    @SuppressWarnings("unchecked")

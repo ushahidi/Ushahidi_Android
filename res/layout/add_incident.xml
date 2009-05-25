@@ -102,10 +102,9 @@
 					android:text="@string/incident_add_category" />		
 			
 				<ImageButton android:id="@+id/btnPicture" 
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content" 
-					android:src="@drawable/photo"  
-					android:layout_marginTop="3px"/>
+					android:layout_width="100px"
+					android:layout_height="wrap_content"
+					android:src="@drawable/ushahidi_camera"/>
 			
 			</LinearLayout>
 			

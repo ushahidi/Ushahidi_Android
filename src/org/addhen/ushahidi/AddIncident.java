@@ -6,6 +6,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
+
+import org.addhen.ushahidi.data.UshahidiDatabase;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,6 +20,7 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -25,14 +29,18 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -60,15 +68,21 @@ public class AddIncident extends Activity {
     private int mHour;
     private int mMinute;
     private int mAmPm;
+    private int counter = 0;
+    private String errorMessage = "";
+	private boolean error = false;
     private ImageButton btnPicture;
 	private EditText incidentTitle;
 	private EditText incidentLocation;
 	private EditText incidentDesc;
 	private TextView incidentDate;
 	private Button btnSave;
+	private Button btnCancel;
 	private Button btnAddCategory;
 	private Button pickTime;
 	private Button pickDate;
+	private HashMap<Integer,Integer> timeDigits;
+	
 	private static boolean running = false;
 	private static final int DIALOG_ERROR_NETWORK = 0;
 	private static final int DIALOG_ERROR_SAVING = 1;
@@ -79,10 +93,11 @@ public class AddIncident extends Activity {
 	private static final int DIALOG_MULTIPLE_CATEGORY = 6;
 	private static final int TIME_DIALOG_ID = 7;
     private static final int DATE_DIALOG_ID = 8;
-    
 	private static Geocoder gc;
 	private List<Address> foundAddresses;
 	private final static Handler mHandler = new Handler();
+	private Vector<String> vectorCategories = new Vector<String>();
+	private Vector<String> categoriesId = new Vector<String>();
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -201,6 +216,7 @@ public class AddIncident extends Activity {
 		incidentLocation = (EditText) findViewById(R.id.incident_location);
 		incidentDesc = (EditText) findViewById(R.id.incident_desc);
 		btnSave = (Button) findViewById(R.id.incident_add_btn);
+		btnCancel = (Button) findViewById(R.id.incident_add_cancel);
 		incidentDate = (TextView) findViewById(R.id.lbl_date);
 		pickDate = (Button) findViewById(R.id.pick_date);
 		pickTime = (Button) findViewById(R.id.pick_time);
@@ -227,27 +243,64 @@ public class AddIncident extends Activity {
 		btnSave.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v){
 				//TODO send http post with data
-				final Thread tr = new Thread() {
-					@Override
-					public void run() {
-						running = true;
-						//try {
-							/*if (UshahidiHttp.PostFileUpload(URL, FileName, params)) {
-								mHandler.post(mSentIncidentSuccess);
-							} else {*/
-								mHandler.post(mSentIncidentFail);
-							//}
-						//} catch (IOException e) {
-							//e.printStackTrace();
-							mHandler.post(mDisplayNetworkError);
-						//} finally { 
-							running = false;
-						//}
-					}
-				};
-				tr.start();
+				if( TextUtils.isEmpty(incidentTitle.getText())) {
+					//TODO look into how to user xml R.string for that
+					errorMessage ="* Enter a title for the incident.\n";
+					error = true;
 				}
-		});
+				
+				if( TextUtils.isEmpty(incidentDesc.getText())) {
+					//TODO look into how to user xml R.string for that
+					errorMessage += "* Enter a description for the incident.\n";
+					error = true;
+				}
+				
+				if( TextUtils.isEmpty(incidentLocation.getText())) {
+					//TODO look into how to user xml R.string for that
+					errorMessage += "* Enter a location for the incident.\n";
+					error = true;
+				}
+				
+				if( counter == 0 ) {
+					//TODO look into how to user xml R.string for that
+					errorMessage += "* Select at least one category.\n";
+					error = true;
+				}
+				
+				//TODO I need this code for reference +Util.implode(vectorCategories)+
+				
+				if( !error ) {
+					final Thread tr = new Thread() {
+						@Override
+						public void run() {
+							running = true;
+							//try {
+								/*if (UshahidiHttp.PostFileUpload(URL, FileName, params)) {
+									mHandler.post(mSentIncidentSuccess);
+								} else {*/
+								mHandler.post(mSentIncidentFail);
+								//}
+							//} catch (IOException e) {
+								//e.printStackTrace();
+								mHandler.post(mDisplayNetworkError);
+								//} finally { 
+									running = false;
+									//}
+						}
+					};
+					tr.start();
+				
+				}else{
+					final Toast t = Toast.makeText(AddIncident.this,
+							"Error!\n\n"+ errorMessage,
+							Toast.LENGTH_LONG);
+					t.show();
+					errorMessage = "";
+				}
+			 
+				
+				}
+			});
 		
 		btnPicture.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -255,9 +308,18 @@ public class AddIncident extends Activity {
 			}
 		});
 		
+		btnCancel.setOnClickListener( new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent( AddIncident.this,Ushahidi.class);
+        		startActivityForResult( intent, GOTOHOME );
+        		setResult(RESULT_OK);
+			}
+		});
+		
 		btnAddCategory.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				showDialog(DIALOG_MULTIPLE_CATEGORY);
+				counter++;
 			}
 		});
 		
@@ -285,6 +347,27 @@ public class AddIncident extends Activity {
         updateDisplay();
         
 	}
+	
+	//fetch categories
+	public String[] showCategories() {
+		  Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
+		  
+		  String categories[] = new String[cursor.getCount()];
+		  
+		  int i = 0;
+		  if (cursor.moveToFirst()) {
+			  int titleIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CATEGORY_TITLE);
+			  int idIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CATEGORY_ID);
+			  do {
+				  categories[i] = cursor.getString(titleIndex);
+				  categoriesId.add(String.valueOf(cursor.getInt(idIndex)));
+				  i++;
+			  }while( cursor.moveToNext() );
+		  }
+		  cursor.close();
+		  return categories;
+		  
+	  }
 	
 	//
 	final Runnable mSentIncidentSuccess = new Runnable() {
@@ -393,19 +476,20 @@ public class AddIncident extends Activity {
             case DIALOG_MULTIPLE_CATEGORY: {
             	return new AlertDialog.Builder(this)
                 .setTitle(R.string.add_categories)
-                .setMultiChoiceItems(R.array.cats,
-                        new boolean[]{false, false, false, false, false, false, false,false,false},
+                .setMultiChoiceItems(showCategories(),
+                        null,
                         new DialogInterface.OnMultiChoiceClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton,
                                     boolean isChecked) {
                             	String items = "";
                             	if( isChecked ) {
                             		 
-                            		items += "Items selected "+whichButton+",";
+                            		items += "Items selected "+categoriesId.get( whichButton )+",";
+                            		vectorCategories.add(categoriesId.get( whichButton ));
+                            	} else {
+                            		vectorCategories.remove(whichButton);
                             	}
-                            	final Toast t = Toast.makeText(AddIncident.this, "Incident "+items+"Sent!",
-                    					Toast.LENGTH_SHORT);
-                            		t.show();
+                            	
                                 /* User clicked on a check box do some stuff */
                             }
                         })
@@ -413,12 +497,6 @@ public class AddIncident extends Activity {
                     public void onClick(DialogInterface dialog, int whichButton) {
 
                         /* User clicked Yes so do some stuff */
-                    }
-                })
-                .setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-
-                        /* User clicked No so do some stuff */
                     }
                 })
                .create();
@@ -452,11 +530,38 @@ public class AddIncident extends Activity {
 
     private void updateDisplay() {
     	String amPm;
-    	
+    	timeDigits = new HashMap<Integer,Integer>();
+        
+        timeDigits.put(00, 12);
+        timeDigits.put(13, 1);
+        timeDigits.put(14, 2);
+        timeDigits.put(15, 3);
+        timeDigits.put(16, 4);
+        timeDigits.put(17, 5);
+        timeDigits.put(18, 6);
+        timeDigits.put(19, 7);
+        timeDigits.put(20, 8);
+        timeDigits.put(21, 9);
+        timeDigits.put(22, 10);
+        timeDigits.put(23, 11);
+        timeDigits.put(24, 12);
+        timeDigits.put(12, 12);
+        timeDigits.put(1, 1);
+        timeDigits.put(2, 2);
+        timeDigits.put(3, 3);
+        timeDigits.put(4, 4);
+        timeDigits.put(5, 5);
+        timeDigits.put(6, 6);
+        timeDigits.put(7, 7);
+        timeDigits.put(8, 8);
+        timeDigits.put(9, 9);
+        timeDigits.put(10, 10);
+        timeDigits.put(11, 11);
+        timeDigits.put(12, 12);
     	if( mHour >=12 )
-    		amPm = "Pm";
+    		amPm = "PM";
     	else
-    		amPm = "Am";
+    		amPm = "AM";
     	
     	incidentDate.setText(
             new StringBuilder()
@@ -464,8 +569,8 @@ public class AddIncident extends Activity {
                     .append(mMonth + 1).append("/")
                     .append(mDay).append("/")
                     .append(mYear).append(" ")
-                    .append(pad(mHour)).append(":")
-                    .append(pad(mMinute)).append(":")
+                    .append(pad(timeDigits.get(mHour))).append(":")
+                    .append(pad(mMinute)).append(" ")
     				.append(amPm));
     }
 
@@ -501,14 +606,11 @@ public class AddIncident extends Activity {
 	
 	public class MyLocationListener implements LocationListener { 
 	    public void onLocationChanged(Location location) { 
-	    	String latLongString;
 	    	double latitude = 0;
 	    	double longitude = 0;
 	    	if (location != null) { 
 	    		latitude = location.getLatitude(); 
 	  	        longitude = location.getLongitude(); 
-	  	    } else { 
-	  	      latLongString = "No Location Found"; 
 	  	    } 
 	    	
 	    	try {
