@@ -42,7 +42,7 @@
         </activity>
         
         <!-- Incidents Map -->
-        <activity android:name=".ViewIncidents" android:label="@string/view_incident">
+        <activity android:name=".IncidentMap" android:label="@string/view_incident">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT"></category>

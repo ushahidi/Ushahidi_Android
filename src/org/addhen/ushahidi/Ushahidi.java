@@ -72,7 +72,7 @@ public class Ushahidi extends Activity {
         
         mapBtn.setOnClickListener( new OnClickListener() {
         	public void onClick( View v) {
-        		Intent intent = new Intent( Ushahidi.this, ViewIncidents.class);
+        		Intent intent = new Intent( Ushahidi.this, IncidentMap.class);
         		startActivityForResult( intent,MAP_INCIDENTS );
         	}
         });
@@ -165,7 +165,7 @@ public class Ushahidi extends Activity {
 				return true;
 		
 			case INCIDENT_MAP:
-				launchPreferencesIntent = new Intent( Ushahidi.this, ViewIncidents.class);
+				launchPreferencesIntent = new Intent( Ushahidi.this, IncidentMap.class);
         		startActivityForResult( launchPreferencesIntent,MAP_INCIDENTS );
 				return true;
 		

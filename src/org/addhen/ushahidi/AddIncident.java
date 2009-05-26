@@ -1,5 +1,7 @@
 package org.addhen.ushahidi;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.addhen.ushahidi.data.AddIncidentData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
 
 import android.app.Activity;
@@ -16,31 +19,32 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -69,6 +73,8 @@ public class AddIncident extends Activity {
     private int mMinute;
     private int mAmPm;
     private int counter = 0;
+    private static double longitude;
+    private static double latitude;
     private String errorMessage = "";
 	private boolean error = false;
     private ImageButton btnPicture;
@@ -270,25 +276,24 @@ public class AddIncident extends Activity {
 				//TODO I need this code for reference +Util.implode(vectorCategories)+
 				
 				if( !error ) {
+					if(UshahidiService.httpRunning ){ 
+						//TODO post to live ushahidi instance
+					}else {
 					final Thread tr = new Thread() {
 						@Override
 						public void run() {
 							running = true;
-							//try {
-								/*if (UshahidiHttp.PostFileUpload(URL, FileName, params)) {
-									mHandler.post(mSentIncidentSuccess);
-								} else {*/
-								mHandler.post(mSentIncidentFail);
-								//}
-							//} catch (IOException e) {
-								//e.printStackTrace();
-								mHandler.post(mDisplayNetworkError);
-								//} finally { 
+							
+							try {
+								mHandler.post(mSentIncidentSuccess);
+								
+							} finally { 
 									running = false;
-									//}
+							}
 						}
 					};
 					tr.start();
+					}
 				
 				}else{
 					final Toast t = Toast.makeText(AddIncident.this,
@@ -367,14 +372,51 @@ public class AddIncident extends Activity {
 		  cursor.close();
 		  return categories;
 		  
-	  }
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		// The preferences returned if the request code is what we had given
+		// earlier in startSubActivity
+		switch(requestCode){
+			case REQUEST_CODE_CAMERA:
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);	//pull it out of landscape mode
+				break;
+	
+			case REQUEST_CODE_IMAGE:
+				if(resultCode != RESULT_OK){
+					return;
+				}
+				Uri uri = data.getData();
+				Bitmap b = null;
+				try {
+					b = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+				} catch (FileNotFoundException e) {
+					break;
+				} catch (IOException e) {
+					break;
+				}
+				ByteArrayOutputStream byteArrayos = new ByteArrayOutputStream();
+				try {
+					b.compress(CompressFormat.JPEG, 75, byteArrayos);				
+					byteArrayos.flush();
+				} catch (OutOfMemoryError e){
+					break;
+				} catch (IOException e) {
+					break;
+				}
+				SaveIncidentsImage sptr = new SaveIncidentsImage(byteArrayos.toByteArray());
+				UshahidiService.AddThreadToQueue(sptr);
+				break;
+				
+		}
+	}
 	
 	//
 	final Runnable mSentIncidentSuccess = new Runnable() {
 		public void run() {
-			final Toast t = Toast.makeText(AddIncident.this, "Incident Sent!",
-					Toast.LENGTH_SHORT);
-			t.show();
+			addToDb();
 		}
 	};
 	
@@ -484,7 +526,6 @@ public class AddIncident extends Activity {
                             	String items = "";
                             	if( isChecked ) {
                             		 
-                            		items += "Items selected "+categoriesId.get( whichButton )+",";
                             		vectorCategories.add(categoriesId.get( whichButton ));
                             	} else {
                             		vectorCategories.remove(whichButton);
@@ -603,6 +644,39 @@ public class AddIncident extends Activity {
         else
             return "0" + String.valueOf(c);
     }
+    
+    /**
+     * Insert incident data into db when app is offline.
+     * @author henryaddo
+     *
+     */
+    public void addToDb() {
+    	String dates[] = incidentDate.getText().toString().split(" ");
+    	String time[] = dates[1].split(":");
+    	Log.i("Filename", "file "+UshahidiService.fileName);
+    	
+    	List<AddIncidentData> addIncidentsData = new ArrayList<AddIncidentData>();
+    	AddIncidentData addIncidentData = new AddIncidentData();
+    	addIncidentsData.add(addIncidentData);
+    	
+    	addIncidentData.setIncidentTitle(incidentTitle.getText().toString());
+    	addIncidentData.setIncidentDesc(incidentDesc.getText().toString());
+    	addIncidentData.setIncidentDate(dates[0]);
+    	addIncidentData.setIncidentHour(Integer.parseInt(time[0]));
+    	addIncidentData.setIncidentMinute(Integer.parseInt(time[1]));
+    	addIncidentData.setIncidentAmPm(dates[2]);
+    	addIncidentData.setIncidentCategories(Util.implode(vectorCategories));
+    	addIncidentData.setIncidentLocName(incidentLocation.getText().toString());
+    	addIncidentData.setIncidentLocLatitude(String.valueOf(latitude));
+    	addIncidentData.setIncidentLocLongitude(String.valueOf(longitude));
+    	addIncidentData.setIncidentPhoto(UshahidiService.fileName);
+    	addIncidentData.setPersonFirst("Henry");
+    	addIncidentData.setPersonLast("Addo");
+    	addIncidentData.setPersonEmail("henry@ushahidi.com");
+    	
+    	//add it to database.
+    	UshahidiApplication.mDb.addIncidents(addIncidentsData);
+    }
 	
 	public class MyLocationListener implements LocationListener { 
 	    public void onLocationChanged(Location location) { 
@@ -611,6 +685,8 @@ public class AddIncident extends Activity {
 	    	if (location != null) { 
 	    		latitude = location.getLatitude(); 
 	  	        longitude = location.getLongitude(); 
+	  	        AddIncident.latitude = latitude;
+	  	        AddIncident.longitude = longitude;
 	  	    } 
 	    	
 	    	try {

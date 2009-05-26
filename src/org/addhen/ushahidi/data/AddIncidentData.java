@@ -72,7 +72,7 @@ public class AddIncidentData {
 	}
 	
 	public int getIncidentHour() {
-		return this.getIncidentHour();
+		return this.addIncidentHour;
 	}
 	
 	public void setIncidentHour(int hour) {

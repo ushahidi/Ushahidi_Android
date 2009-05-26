@@ -12,8 +12,8 @@ public class ImageCaptureCallback implements PictureCallback {
 
 	public void onPictureTaken(byte[] data, Camera camera) {
 		try {
-			//SendPictureThread tr = new SendPictureThread(data);
-			//aTweeterService.AddThreadToQueue(tr);
+			SaveIncidentsImage tr = new SaveIncidentsImage(data);
+			UshahidiService.AddThreadToQueue(tr);
 			
 		} catch (final Exception ex) {
 			ex.printStackTrace();

@@ -1,6 +1,11 @@
 package org.addhen.ushahidi;
 
+import java.io.IOException;
 import java.util.Vector;
+
+import org.addhen.ushahidi.net.UshahidiHttpClient;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -52,5 +57,33 @@ public class Util {
 		
 		return implode;
 	}
-	 
+	
+	/**
+	 * Is there internet connection
+	 */
+	public static boolean isConnected() throws IOException {
+		HttpResponse response;
+		String incidents = "";
+		
+		StringBuilder uriBuilder = new StringBuilder( UshahidiService.domain);
+		
+		response = UshahidiHttpClient.GetURL( uriBuilder.toString() );
+		
+		if( response == null ) {
+			return false;
+		}
+		
+		final int statusCode = response.getStatusLine().getStatusCode();
+		
+		if( statusCode == 200 ) {
+			incidents = UshahidiHttpClient.GetText(response);
+			UshahidiService.incidentsResponse = incidents;
+			
+			return true;
+		} else {
+			
+			return false;
+		}
+	}
+	
 }

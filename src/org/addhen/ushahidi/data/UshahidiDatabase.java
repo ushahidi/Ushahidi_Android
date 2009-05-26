@@ -1,11 +1,7 @@
 package org.addhen.ushahidi.data;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.addhen.ushahidi.net.Incidents;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -49,7 +45,7 @@ public class UshahidiDatabase {
 	public static final String ADD_INCIDENT_LOC_NAME = "incident_loc_name";
 	public static final String ADD_INCIDENT_LOC_LATITUDE = "incident_loc_latitude";
 	public static final String ADD_INCIDENT_LOC_LONGITUDE = "incident_loc_longitude";
-	public static final String ADD_INCIDENT_PHOTO = "incident_media";
+	public static final String ADD_INCIDENT_PHOTO = "incident_photo";
 	public static final String ADD_INCIDENT_VIDEO =  "incident_video";
 	public static final String ADD_INCIDENT_NEWS = "incident_news";
 	public static final String ADD_PERSON_FIRST = "person_first";
@@ -154,7 +150,7 @@ public class UshahidiDatabase {
     				+ newVersion + " which destroys all old data");
     		db.execSQL("DROP TABLE IF EXISTS " + INCIDENTS_TABLE);
       		db.execSQL("DROP TABLE IF EXISTS " + CATEGORIES_TABLE);
-      		db.execSQL("DROP TABLE IF EXISTS " +ADD_INCIDENTS_TABLE);
+      		db.execSQL("DROP TABLE IF EXISTS " + ADD_INCIDENTS_TABLE);
       		onCreate(db);
     	}
 	}
@@ -215,7 +211,7 @@ public class UshahidiDatabase {
     	initialValues.put(ADD_PERSON_LAST, addIncident.getPersonLast());
     	initialValues.put(ADD_PERSON_EMAIL, addIncident.getPersonEmail());
     	
-  		return mDb.insert(ADD_INCIDENTS_TABLE_CREATE, null, initialValues);
+  		return mDb.insert(ADD_INCIDENTS_TABLE, null, initialValues);
   	}
 
   	public long createCategories(CategoriesData categories, boolean isUnread) {
@@ -265,15 +261,23 @@ public class UshahidiDatabase {
   	}
 
   	public boolean deleteAllIncidents() {
-	  return mDb.delete(INCIDENTS_TABLE, null, null) > 0;
+  		return mDb.delete(INCIDENTS_TABLE, null, null) > 0;
   	}
 
   	public boolean deleteAllCategories() {
-	  return mDb.delete(CATEGORIES_TABLE, null, null) > 0;
+  		return mDb.delete(CATEGORIES_TABLE, null, null) > 0;
   	}
 
   	public boolean deleteCategory(int id) {
-	  return mDb.delete(CATEGORIES_TABLE, CATEGORY_ID + "=" + id, null) > 0;
+  		return mDb.delete(CATEGORIES_TABLE, CATEGORY_ID + "=" + id, null) > 0;
+  	}
+  	
+  	/**
+  	 * Clear the offline table for adding incidents
+  	 * @return boolean
+  	 */
+  	public boolean deleteAddIncidents() {
+  		return mDb.delete(ADD_INCIDENTS_TABLE, null, null ) > 0;
   	}
 
   	public void markAllIncidentssRead() {
@@ -394,6 +398,10 @@ public class UshahidiDatabase {
   		}
   	}
   	
+  	/**
+  	 * Adds new incidents to be posted online to the db.
+  	 * @param List addIncidents
+  	 */
   	public void addIncidents(List<AddIncidentData> addIncidents ) {
   		try {
   			mDb.beginTransaction();

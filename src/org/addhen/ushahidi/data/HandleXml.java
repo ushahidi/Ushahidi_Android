@@ -3,15 +3,12 @@ package org.addhen.ushahidi.data;
 import org.addhen.ushahidi.ImageManager;
 import org.addhen.ushahidi.UshahidiApplication;
 import org.addhen.ushahidi.UshahidiService;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import android.util.Log;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HandleXml {
-	private static final String TAG = "HandleXml";
 	
 	public static List<IncidentsData> processIncidentsXml( String xml ) {
 		
@@ -55,7 +51,6 @@ public class HandleXml {
 		NodeList node = doc.getElementsByTagName("incident");
 		String categories = "";
 		String media = "";
-		String locations = "";
 		
 		for( int i = 0; i < node.getLength(); i++ ) {
 			

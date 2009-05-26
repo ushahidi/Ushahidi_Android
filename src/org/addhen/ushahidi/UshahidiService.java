@@ -53,7 +53,7 @@ public class UshahidiService extends Service {
 	public static String domain = "";
 	public static int countries = 0;
 	public static int AutoUpdateDelay = 0;
-	
+	public static String fileName = "";
 	public static boolean AutoFetch = false;
 	
 	private Handler mHandler = new Handler();
@@ -113,6 +113,7 @@ public class UshahidiService extends Service {
 
 		// init the service here
 		mHandler = new Handler();
+		
 		if(AutoUpdateDelay > 0){
 			mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
 			mHandler.postDelayed(mUpdateTimeTask, (1000 * 60 * AutoUpdateDelay));
