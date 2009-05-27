@@ -195,7 +195,7 @@ public class AddIncident extends Activity {
     		startActivityForResult( launchPreferencesIntent,MAP_INCIDENTS );
 			return true;
 	
-		case GOTOHOME:
+		case HOME:
 			launchPreferencesIntent = new Intent( AddIncident.this,Ushahidi.class);
     		startActivityForResult( launchPreferencesIntent, GOTOHOME );
     		setResult(RESULT_OK);

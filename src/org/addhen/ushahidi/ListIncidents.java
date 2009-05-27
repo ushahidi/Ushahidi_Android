@@ -42,8 +42,10 @@ public class ListIncidents extends Activity
   private static final int SETTINGS = Menu.FIRST+5;
   private static final int ABOUT = Menu.FIRST+6;
   private static final int GOTOHOME = 0;
-  private static final int VIEW_INCIDENT = 0;
-  private static final int LIST_INCIDENTS = 0;
+  private static final int POST_INCIDENT = 1;
+  private static final int INCIDENTS_MAP = 2;
+  private static final int VIEW_INCIDENT = 3;
+  private static final int REQUEST_CODE_SETTINGS = 1;
   private Spinner spinner = null;
   private ArrayAdapter<String> spinnerArrayAdapter;
   private Bundle incidentsBundle = new Bundle();
@@ -215,21 +217,32 @@ public class ListIncidents extends Activity
   }
   
   private boolean applyMenuChoice(MenuItem item) {
+	  Intent intent;
     switch (item.getItemId()) {
-      case INCIDENT_REFRESH:
+    	case HOME:
+		intent = new Intent( ListIncidents.this,Ushahidi.class);
+			startActivityForResult( intent, GOTOHOME );
+			return true;
+    	case INCIDENT_REFRESH:
     	  retrieveIncidentsAndCategories();
     	  mHandler.post(mDisplayIncidents);
         return(true);
     
       case INCIDENT_MAP:
-        //TODO
+    	 intent = new Intent( ListIncidents.this, IncidentMap.class);
+  		startActivityForResult( intent,INCIDENTS_MAP );
         return(true);
     
       case ADD_INCIDENT:
-        //TODO
+    	intent = new Intent( ListIncidents.this, AddIncident.class);
+  		startActivityForResult(intent, POST_INCIDENT  );
         return(true);
         
       case SETTINGS:
+    	  intent = new Intent( ListIncidents.this,  Settings.class);
+			
+    	  // Make it a subactivity so we know when it returns
+    	  startActivityForResult(intent, REQUEST_CODE_SETTINGS);
     	  return(true);
         
     }
@@ -362,7 +375,7 @@ public class ListIncidents extends Activity
   protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         switch( requestCode ) {
-      case LIST_INCIDENTS:
+      case INCIDENTS_MAP:
         if( resultCode != RESULT_OK ){
           break;
         }

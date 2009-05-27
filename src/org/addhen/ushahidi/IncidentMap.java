@@ -4,10 +4,18 @@ package org.addhen.ushahidi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -19,49 +27,61 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.ZoomControls;
+
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 import android.location.Address;
 import android.location.Geocoder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 
+import org.addhen.ushahidi.AddIncident.MyLocationListener;
+import org.addhen.ushahidi.data.CategoriesData;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
 
 public class IncidentMap extends MapActivity {
-	MapView map = null;
-	private static final int LIST_INCIDENT = Menu.FIRST+1;
-	private static final int MAP_INCIDENT = Menu.FIRST+2;
-	private static final int ADD_INCIDENT = Menu.FIRST+3;
-	
+	private MapView mapView = null;
+	private static final int HOME = Menu.FIRST+1;
+	private static final int LIST_INCIDENT = Menu.FIRST+2;
+	private static final int INCIDENT_ADD = Menu.FIRST+3;
+	private static final int INCIDENT_REFRESH= Menu.FIRST+4;
+	private static final int SETTINGS = Menu.FIRST+5;
+	private static final int ABOUT = Menu.FIRST+6;
+	private static final int GOTOHOME = 0;
+	private static final int ADD_INCIDENTS = 1;
+	private static final int LIST_INCIDENTS = 2;
+	private static final int REQUEST_CODE_SETTINGS = 1;
 	private static final int DIALOG_NETWORK_ERROR = 0;
 	private static final int  DIALOG_LOADING_INCIDENTS = 1;
 	
-	private String settingsURL = "";
-	private int col = 5;
-	private Double latitude;
-	private Double longitude;
-	private double lat;
-	private double lon;
-	private String incidentDetails[][];
-	private String incidents[][];
+	private static double latitude;
+	private static double longitude;
 	private Handler mHandler;
-	private List<List<Address>> addresses;
-	private List<Address> foundAddresses;
+	private MapController ushMapController = null;
 	public static Geocoder gc;
-	private List<GeoPoint> points;
-	private Drawable marker;
 	private Vector<String> vectorCategories = new Vector<String>();
 	private Spinner spinner = null;
 	private ArrayAdapter<String> spinnerArrayAdapter;
+	private boolean doUpdates = true;
+	private List<IncidentsData> mNewIncidents;
+	private List<IncidentsData> mOldIncidents;
+	private List<CategoriesData> mNewCategories;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -69,30 +89,40 @@ public class IncidentMap extends MapActivity {
 		setContentView(R.layout.incidents_map);
 		
 		spinner = (Spinner) findViewById(R.id.incident_cat);
-        
-        gc = new Geocoder(this);
-        
-        mHandler = new Handler();
-        
-        addresses = new ArrayList<List<Address>>();
-        points = new ArrayList<GeoPoint>();
-        
-        marker = getResources().getDrawable(R.drawable.ushahidi_marker);
-        
-		//this.setMap();
+		mapView = (MapView) findViewById(R.id.map);
 		
-		showDialog(DIALOG_LOADING_INCIDENTS);
+		mOldIncidents = new ArrayList<IncidentsData>();
+		mNewIncidents  = showIncidents("All");
+		
+		IncidentMap.latitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLatitude());
+		IncidentMap.longitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLongitude());
+		mapView.getController().setCenter(getPoint(IncidentMap.latitude,
+				IncidentMap.longitude));
+		mapView.getController().setZoom(17);
+
+		ViewGroup zoom = (ViewGroup)findViewById(R.id.zoom);
+
+		zoom.addView(mapView.getZoomControls());
+		
+		mHandler = new Handler();
+		//mHandler.post(mDisplayCategories);
+		Drawable marker =getResources().getDrawable(R.drawable.ushahidi_circle);  
+		  
+		marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());  
+		mapView.getOverlays().add(new SitesOverlay(marker)); 
+		
 		final Thread tr = new Thread() {
-			@Override
-			public void run() {
-				//incidentDetails = showIncidents("DEATHS");
-				geoCodeLocations();
-				mHandler.post(mDisplayCategories);
-				mHandler.post(mDisplayIncidents);
-			}
+		      @Override
+		      public void run() {
+		        //incidentDetails = showIncidents("DEATHS");
+		        showCategories();
+		       
+		      }
 		};
 		tr.start();
+        
 	}
+	
 	
  	@Override
 	protected boolean isRouteDisplayed() {
@@ -101,21 +131,123 @@ public class IncidentMap extends MapActivity {
 	
  	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_S) {
-			map.setSatellite(!map.isSatellite());
-			return(true);
-		}
-		else if (keyCode == KeyEvent.KEYCODE_Z) {
-			map.displayZoomControls(true);
-			return(true);
-		}
+ 		if (keyCode == KeyEvent.KEYCODE_I) {
+	    	// Zoom not closer than possible
+        	this.ushMapController.zoomIn();
+	    	//this.myMapController.zoomInFixing(Math.min(21, this.myMapView.getZoomLevel() + 1));
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_O) {
+	    	// Zoom not farer than possible 
+        	this.ushMapController.zoomOut();
+	    	//this.myMapController.zoomInFixing(Math.max(1, this.myMapView.getZoomLevel() - 1),0);
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_T) {
+        	// Switch to satellite view
+            mapView.setSatellite(true);
+            
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_M) {
+        	// Switch to satellite view
+            mapView.setSatellite(false);
+            
+            return true;
+        }
+ 		
+        return false;
+	}
+ 	
+ // get incidents from the db
+ 	  public List<IncidentsData> showIncidents( String by ) {
+ 
+ 		  Cursor cursor;
+ 		  if( by.equals("All")) 
+ 			  cursor = UshahidiApplication.mDb.fetchAllIncidents();
+ 		  else
+ 			  cursor = UshahidiApplication.mDb.fetchIncidentsByCategories(by);
+ 		  
+ 		  String title;
+ 		  String status;
+ 		  String date;
+ 		  String description;
+ 		  String location;
+ 		  String categories;
+ 		  String media;
+ 		
+ 		  String thumbnails [];
+ 		  Drawable d = null;
+ 		  if (cursor.moveToFirst()) {
+ 			  int idIndex = cursor.getColumnIndexOrThrow( 
+ 					  UshahidiDatabase.INCIDENT_ID);
+ 			  int titleIndex = cursor.getColumnIndexOrThrow(
+ 					  UshahidiDatabase.INCIDENT_TITLE);
+ 			  int dateIndex = cursor.getColumnIndexOrThrow(
+ 					  UshahidiDatabase.INCIDENT_DATE);
+ 			  int verifiedIndex = cursor.getColumnIndexOrThrow(
+ 					  UshahidiDatabase.INCIDENT_VERIFIED);
+ 			  int locationIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_NAME);
+ 			  
+ 			  int descIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_DESC);
+ 			  
+ 			  int categoryIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_CATEGORIES);
+ 			  
+ 			  int mediaIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_MEDIA);
+ 			  
+ 			  int latitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LATITUDE);
+ 			  
+ 			  int longitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LONGITUDE);
+ 			  
+ 			  
+ 			  do {
+ 				  
+ 				  IncidentsData incidentData = new IncidentsData();
+ 				  mOldIncidents.add( incidentData );
+ 				  
+ 				  int id = Util.toInt(cursor.getString(idIndex));
+ 				  incidentData.setIncidentId(id);
+ 				  
+ 				  title = Util.capitalizeString(cursor.getString(titleIndex));
+ 				  incidentData.setIncidentTitle(title);
+ 				  
+ 				  description = cursor.getString(descIndex);
+ 				  incidentData.setIncidentDesc(description);
+ 				  
+ 				  categories = cursor.getString(categoryIndex);
+ 				  incidentData.setIncidentCategories(categories);
+ 				  
+ 				  location = cursor.getString(locationIndex);
+ 				  incidentData.setIncidentLocLongitude(location);
+ 				  
+ 				  date = Util.joinString("Date: ",cursor.getString(dateIndex));
+ 				  incidentData.setIncidentDate(cursor.getString(dateIndex));			  
+ 				  
+ 				  media = cursor.getString(mediaIndex);
+ 				  incidentData.setIncidentMedia(media);
+ 				  
+ 				  
+ 				  incidentData.setIncidentVerified(Util.toInt(cursor.getString(verifiedIndex) ));
+ 				  
+ 				  incidentData.setIncidentLocLatitude(cursor.getString(latitudeIndex));
+ 				  incidentData.setIncidentLocLongitude(cursor.getString(longitudeIndex));
+ 				  
+ 				  
+ 			  } while (cursor.moveToNext());
+ 		  }
+ 	    
+ 		  cursor.close();
+ 		  return mOldIncidents;
+ 	    
+ 	  }
+ 	
+ 	/**
+	 * Restart the receiving, when we are back on line.
+	 */
+	@Override
+	public void onResume() {
+		super.onResume();
+		this.doUpdates = true;
 		
-		return(super.onKeyDown(keyCode, event));
 	}
 
-	private GeoPoint getPoint(double lat, double lon) {
-		return(new GeoPoint((int)(lat*1000000.0), (int)(lon*1000000.0)));
-	}
 	
 	//menu stuff
 	@Override
@@ -160,7 +292,7 @@ public class IncidentMap extends MapActivity {
 		public void run() {
 			dismissDialog(DIALOG_LOADING_INCIDENTS);
 			try{
-				plotIncidentsOnMap();
+				//plotIncidentsOnMap();
 			} catch(Exception e){
 				return;	//means that the dialog is not showing, ignore please!
 			}
@@ -195,63 +327,68 @@ public class IncidentMap extends MapActivity {
     }
 	
 	private void populateMenu(Menu menu) {
-		menu.add(Menu.NONE, LIST_INCIDENT, Menu.NONE, "List Incident");
-		menu.add(Menu.NONE, MAP_INCIDENT, Menu.NONE, "Map Incident");
-		menu.add(Menu.NONE, ADD_INCIDENT, Menu.NONE, "Add Incident");
+		MenuItem i;i = menu.add( Menu.NONE, HOME, Menu.NONE, R.string.menu_home );
+		i.setIcon(R.drawable.ushahidi_home);
+		
+		i = menu.add( Menu.NONE, INCIDENT_ADD, Menu.NONE, R.string.incident_menu_add);
+		i.setIcon(R.drawable.ushahidi_add);
+		  
+		i = menu.add( Menu.NONE, LIST_INCIDENT, Menu.NONE, R.string.incident_list );
+		i.setIcon(R.drawable.ushahidi_list);
+		  
+		
+		i = menu.add( Menu.NONE, INCIDENT_REFRESH, Menu.NONE, R.string.incident_menu_refresh );
+		i.setIcon(R.drawable.ushahidi_refresh);
+		  
+		i = menu.add( Menu.NONE, SETTINGS, Menu.NONE, R.string.menu_settings );
+		i.setIcon(R.drawable.ushahidi_settings);
+		  
+		i = menu.add( Menu.NONE, ABOUT, Menu.NONE, R.string.menu_about );
+		i.setIcon(R.drawable.ushahidi_settings);
+	  
 	}
 	
 	private boolean applyMenuChoice(MenuItem item) {
-		switch (item.getItemId()) {
-			case LIST_INCIDENT:
-				//getListView().setDividerHeight(8);
-				return(true);
-		
-			case MAP_INCIDENT:
-				//getListView().setDividerHeight(16);
-				return(true);
-		
-			case ADD_INCIDENT:
-				//getListView().setDividerHeight(24);
-				return(true);
-		
-		}
-		return(false);
+		Intent intent;
+	    switch (item.getItemId()) {
+	    	case HOME:
+			intent = new Intent( IncidentMap.this,Ushahidi.class);
+				startActivityForResult( intent, GOTOHOME );
+				return true;
+	    	case INCIDENT_REFRESH:
+	    		//TODO 
+	    		//retrieveIncidentsAndCategories();
+	    		//mHandler.post(mDisplayIncidents);
+	        return(true);
+	    
+	      case LIST_INCIDENT:
+	    	 intent = new Intent( IncidentMap.this, IncidentMap.class);
+	  		startActivityForResult( intent,LIST_INCIDENTS );
+	        return(true);
+	    
+	      case INCIDENT_ADD:
+	    	intent = new Intent( IncidentMap.this, AddIncident.class);
+	  		startActivityForResult(intent, ADD_INCIDENTS  );
+	        return(true);
+	        
+	      case SETTINGS:
+	    	  intent = new Intent( IncidentMap.this,  Settings.class);
+				
+	    	  // Make it a subactivity so we know when it returns
+	    	  startActivityForResult( intent, REQUEST_CODE_SETTINGS );
+	    	  return( true );
+	    }
+	    return false;
 	}
 	
-	public String[][] showIncidents( String cat ) {
-		
-		String url = settingsURL+"/api";
-		String iIncidentDetails[][] = null;
-		try{
-			List<IncidentsData> incidentData = new ArrayList<IncidentsData>();
-			
-		String body = "";
-		iIncidentDetails = new String[incidentData.size()][col];
-		
-		int i = 0;
-		for (IncidentsData data : incidentData ) {
-			//TODO get the data needed.
-			
-			/*body = data.getTitle()+"\nLocation: "+data.iLocation+"\nCategory: "+
-				data.iCategory+"\n";			
-			iIncidentDetails[i][0] = data.getTitle();
-			iIncidentDetails[i][1] = data.iBody;
-			iIncidentDetails[i][2] = data.iCategory;
-			iIncidentDetails[i][3] = data.iLocation;
-			iIncidentDetails[i][4] = data.getThumbnail();
-			i++;*/	
-		}
-		
-		}catch( Exception e){
-			mHandler.post(mDisplayNetworkError);
-		}
-		return iIncidentDetails;
+	private GeoPoint getPoint(double lat, double lon) {
+	    return(new GeoPoint((int)(lat*1000000.0), (int)(lon*1000000.0)));
 	}
 	
 	 @SuppressWarnings("unchecked")
 	  public void showCategories() {
 		  Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
-		  
+		  vectorCategories.clear();
 		  vectorCategories.add("All");
 		  if (cursor.moveToFirst()) {
 			  int titleIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CATEGORY_TITLE);
@@ -279,7 +416,7 @@ public class IncidentMap extends MapActivity {
 	    
 	   @SuppressWarnings("unchecked")
 	   public void onItemSelected(AdapterView parent, View v, int position, long id) {
-		   showIncidents(vectorCategories.get(position));
+		   //showIncidents(vectorCategories.get(position));
 	   }
 	 
 	   @SuppressWarnings("unchecked")
@@ -287,152 +424,51 @@ public class IncidentMap extends MapActivity {
 	 
 	  
 	  };
-		
-	private class SitesOverlay extends ItemizedOverlay<OverlayItem> {
-		private List<OverlayItem> items=new ArrayList<OverlayItem>();
-		private Drawable marker=null;
-		private Geocoder gc;
-		private List<Address> foundAdd;
-		public SitesOverlay(Drawable marker,List<GeoPoint> points, String[][]locations) {
-			super(marker);
-			
-			this.marker = marker;
-			
-			
-			try{
-			for( int i =0; i < locations.length; i++ ) {	
-				//TODO get the latitude and longitude from the database.
-				
-					/*GeoPoint geopoint = new  GeoPoint(latitude.intValue() , 
-							longitude.intValue());
-					OverlayItem overlayItem = new OverlayItem( geopoint,
-							locations[i][0],locations[i][1]+"\n"+locations[i][2]);
-					items.add( overlayItem );*/
-					//latitude = (-1.2811737395587102 * 1000000);
-					//longitude = ( 36.815185546875 * 1000000);
-					//points.add(new GeoPoint( latitude.intValue() , longitude.intValue() ) );
-					
-					items.add(new OverlayItem(new GeoPoint( latitude.intValue() , 
-							longitude.intValue()),
-							locations[i][0],locations[i][1]+"\n"+locations[i][2]));
-					
-				//}
-			}
-			}catch(Exception e) {
-				Log.i("Address not found ", e.toString());
-			}
-			
-			/*int i = 0;
-			for( GeoPoint point: points ){
-				items.add(new OverlayItem(point,
-					locations[i][0],locations[i][2]+"\n"+locations[i][3]+"\n"+
-						point.getLatitudeE6()+"--"+point.getLongitudeE6()+"\n"+
-						points.size()));
-				i++;
-			}*/
-			
-			/*items.add(new OverlayItem(getPoint(-1.2811737395587102, 36.815185546875),
-					" ", "Nairobi, Kenya"));*/
-			
-			populate();
-		}
-		
-		@Override
-		protected OverlayItem createItem(int i) {
-			return(items.get(i));
-		}
-		
-		//draw marker on the map
-		@Override
-		public void draw(Canvas canvas, MapView mapView,
-											boolean shadow) {
-			super.draw(canvas, mapView, shadow);
-			
-			boundCenterBottom(marker);
-		}
- 		
-		@Override
-		protected boolean onTap(int i) {
-			Toast.makeText(IncidentMap.this,
-			items.get(i).getSnippet(),
-			Toast.LENGTH_SHORT).show();
-			
-			return(true);
-		}
-		
-		@Override
-		public int size() {
-			return(items.size());
-		}
-	}
-	
-	private void plotIncidentsOnMap() {
-		if(points.size() == 0 ){
-			
-			mHandler.post(mDisplayNetworkError);
-		} else {
-			for (int i = 0; i < addresses.size(); ++i) {
-				foundAddresses = addresses.get(i);
-				for( Address address: foundAddresses){
-					
-					lat = address.getLatitude();
-					lon = address.getLongitude();
-					latitude = (lat * 1000000);
-					longitude = (lon * 1000000);
-					points.add(new GeoPoint( latitude.intValue() , longitude.intValue() ) );
-					
-				}
-			}
-			setMap( points, incidents );
-			//setMap(points,incidents);
-		}
-	}
-	
-	
-	private void setMap( List<GeoPoint> points, String[][]locations ) {
-		
-		map = (MapView)findViewById(R.id.map);
-		
-		map.getController().setCenter(points.get(0));
-		
-		map.getController().setZoom(17);
-		
-		ViewGroup zoom=(ViewGroup)findViewById(R.id.zoom);
-		
-		zoom.addView(map.getZoomControls());
-		
-		
-		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
-				marker.getIntrinsicHeight());
-		
-		//map.getOverlays().add(new SitesOverlay(marker));
-		map.getOverlays().add(new SitesOverlay(marker,points,incidents));
-
-	}
-	
-	private void geoCodeLocations() {
-		incidents = showIncidents("DEATHS");
-		
-		try {
-			for( int i =0; i < incidents.length; i++ ) {	
-				foundAddresses = gc.getFromLocationName( incidents[i][3]+",kenya", 5);
-				for( int w =0; w < foundAddresses.size(); w++ ) {
-					Address address = foundAddresses.get(w);
-					
-					lat = address.getLatitude();
-					lon = address.getLongitude();
-					latitude = (lat * 1000000);
-					longitude = ( lon * 1000000 );
-					//latitude = (-1.2811737395587102 * 1000000);
-					//longitude = ( 36.815185546875 * 1000000);
-					points.add(new GeoPoint( latitude.intValue() , longitude.intValue() ) );
-					
-				}
-			}
-		} catch (Exception e) {
-		
-			// TODO Auto-generated catch block
-			Log.i("Address Not Found", e.toString());
-		}
+	  
+	  private class SitesOverlay extends ItemizedOverlay<OverlayItem> {  
+		  private List<OverlayItem> items=new ArrayList<OverlayItem>();  
+		  private Drawable marker=null;  
+		    
+		  public SitesOverlay(Drawable marker) {  
+			  super(marker);  
+			  this.marker=marker;  
+		  
+			  mNewIncidents  = showIncidents("All");
+		  
+			  for( IncidentsData incidentData : mNewIncidents ) {
+				  IncidentMap.latitude = Double.parseDouble( incidentData.getIncidentLocLatitude());
+				  IncidentMap.longitude = Double.parseDouble( incidentData.getIncidentLocLongitude());
+		  
+				  items.add(new OverlayItem(getPoint(latitude, longitude),  
+						  incidentData.getIncidentTitle(), incidentData.getIncidentDesc()));
+		  
+			  }
+		    
+			  populate();  
+		  }  
+		    
+		  @Override  
+		  protected OverlayItem createItem(int i) {  
+			  return items.get(i);  
+		  }  
+		    
+		  @Override  
+		  public void draw(Canvas canvas, MapView mapView, boolean shadow) {  
+			  super.draw(canvas, mapView, shadow);  
+		    
+			  boundCenterBottom(marker);  
+		  }  
+		    
+		  @Override  
+		  protected boolean onTap(int i) {  
+			  Toast.makeText(IncidentMap.this, items.get(i).getSnippet(), Toast.LENGTH_SHORT).show();  
+		    
+			  return(true);  
+		  }  
+		    
+		  @Override  
+		  public int size() {  
+			  return(items.size());  
+		  }  
 	}
 }
