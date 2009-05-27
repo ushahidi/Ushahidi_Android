@@ -61,13 +61,18 @@ public class Util {
 	/**
 	 * Is there internet connection
 	 */
-	public static boolean isConnected() throws IOException {
-		HttpResponse response;
+	public static boolean isConnected()  {
+		HttpResponse response = null;
 		String incidents = "";
 		
 		StringBuilder uriBuilder = new StringBuilder( UshahidiService.domain);
 		
-		response = UshahidiHttpClient.GetURL( uriBuilder.toString() );
+		try {
+			response = UshahidiHttpClient.GetURL( uriBuilder.toString() );
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		if( response == null ) {
 			return false;

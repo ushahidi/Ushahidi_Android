@@ -19,12 +19,16 @@
 		<string name="option_save_sdcard">Save On SD Card</string>
 		<string name="hint_SD_save_path">Type a folder name</string>
 		<string name="hint_domain">Should start with http://</string>
+		<string name="hint_email">username@somedomain.com</string>
 		<string name="chk_auto_fetch">Auto fetch new incidents on open</string>
 		<string name="txt_auto_update_delay">Auto Update Every:</string>
 		<string name="txt_path_SD">Path On SD:</string>
 		<string name="txt_cache">Cache files:</string>
 		<string name="txt_countries">Select a default country</string>
 		<string name="txt_domain">An Ushahidi website</string>
+		<string name="txt_firstname">First name</string>
+		<string name="txt_lastname">Last name</string>
+		<string name="txt_email">E-mail address</string>
 		<string name="new_incidents">{0} New Incidents </string>
 		<string name="new_categories">{0} New Categories </string>
 		<string name="incident_date">Change the date </string>

@@ -49,6 +49,14 @@
             </intent-filter>
         </activity> 
         
+        <!-- Incidents Map -->
+        <activity android:name=".ViewIncidents" android:label="@string/view_incident">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity> 
+        
         <!--  Add a new incidents -->
         <activity android:name=".AddIncident" android:label="@string/add_incident">
             <intent-filter>

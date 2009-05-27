@@ -8,7 +8,7 @@
     		
 	<ScrollView android:layout_width="fill_parent" 
 		android:layout_height="fill_parent"
-		android:scrollbars="none">
+		android:scrollbars="vertical">
 	    <LinearLayout android:layout_width="fill_parent" 
 	    	android:layout_height="fill_parent"
 	    	android:orientation="vertical">
@@ -21,6 +21,43 @@
 					android:textColor="@drawable/date_color"/>
 				<EditText android:id="@+id/domain" 
 			  	android:hint="@string/hint_domain"
+			  	android:layout_width="fill_parent"
+					android:layout_height="wrap_content" 
+					android:layout_weight="1"/>
+			</LinearLayout>
+			<LinearLayout android:orientation="vertical"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<TextView android:layout_width="fill_parent"
+					android:layout_height="wrap_content" 
+					android:text="@string/txt_firstname" 
+					android:textColor="@drawable/date_color"/>
+				<EditText android:id="@+id/firstname" 
+			  	android:layout_width="fill_parent"
+					android:layout_height="wrap_content" 
+					android:layout_weight="1"/>
+			</LinearLayout>
+			<LinearLayout android:orientation="vertical"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<TextView android:layout_width="fill_parent"
+					android:layout_height="wrap_content" 
+					android:text="@string/txt_lastname" 
+					android:textColor="@drawable/date_color"/>
+				<EditText android:id="@+id/lastname" 
+			  	android:layout_width="fill_parent"
+					android:layout_height="wrap_content" 
+					android:layout_weight="1"/>
+			</LinearLayout>
+			<LinearLayout android:orientation="vertical"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<TextView android:layout_width="fill_parent"
+					android:layout_height="wrap_content" 
+					android:text="@string/txt_email" 
+					android:textColor="@drawable/date_color"/>
+				<EditText android:id="@+id/email" 
+			  	android:hint="@string/hint_email"
 			  	android:layout_width="fill_parent"
 					android:layout_height="wrap_content" 
 					android:layout_weight="1"/>

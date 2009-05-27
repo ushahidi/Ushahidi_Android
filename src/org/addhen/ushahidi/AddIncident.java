@@ -119,12 +119,17 @@ public class AddIncident extends Activity {
         LocationManager manager = (LocationManager) 
     getSystemService(Context.LOCATION_SERVICE); 
         long updateTimeMsec = 1000L; 
-        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 
-    updateTimeMsec, 500.0f, 
-            listener); 
-        manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 
-    updateTimeMsec, 500.0f, 
-            listener); 
+        
+        //check if there is internet to know which provider to use.
+        if( !Util.isConnected() ) {
+			manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 
+   updateTimeMsec, 500.0f, 
+		    listener);
+		} else {
+			manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 
+   updateTimeMsec, 500.0f, 
+		    listener); 
+		}
         
     }
 	

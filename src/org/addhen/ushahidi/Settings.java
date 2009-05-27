@@ -39,6 +39,9 @@ public class Settings extends Activity {
 	private final int CLEAR_CACHE = 2;
 	private EditText domain;
 	private EditText etSdSavePath;
+	private EditText firstname;
+	private EditText lastname;
+	private EditText email;
 	private LinearLayout llOnSd;
 	private RadioButton rbOnPhone;
 	private RadioButton rbOnSD;
@@ -92,6 +95,9 @@ public class Settings extends Activity {
     	btnCancel = (Button) findViewById(R.id.btn_cancel);
     	btnClearCache = (Button) findViewById(R.id.btn_clear_cache);
         domain = (EditText) findViewById(R.id.domain);
+        firstname =(EditText) findViewById(R.id.firstname);
+        lastname = (EditText) findViewById(R.id.lastname);
+        email = (EditText) findViewById(R.id.email);
         spnCountries = (Spinner) findViewById(R.id.spn_countries);
         
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, 
@@ -227,6 +233,9 @@ public class Settings extends Activity {
 		btnCancel.setEnabled(value);
 		btnClearCache.setEnabled(value);
 		domain.setEnabled(value);
+		firstname.setEnabled(value);
+		lastname.setEnabled(value);
+		email.setEnabled(value);
 		spnCountries.setEnabled(value);
 		etSdSavePath.setEnabled(value);
 		rbOnPhone.setEnabled(value);
@@ -239,80 +248,25 @@ public class Settings extends Activity {
 		File f = new File(oldSavePath + "incidents.xml");
 		if(f.exists()){
 			if(!f.delete()){
-				//couldn't delete the old tweets array, could be due to it not existing
+				//couldn't delete the old images array, could be due to it not existing
 			}
 		}
 		
 		f = new File(oldSavePath + "categories.xml");
 		if(f.exists()){
 			if(!f.delete()){
-				//couldn't delete the old tweets array, could be due to it not existing
+				//couldn't delete the old images array, could be due to it not existing
 			}
 		}
-		
-		
-		/*JSONArray Images;
-		f = new File(oldSavePath + "images.json");
-		
-		if(f.exists()){
-			FileInputStream fIn;
-			Images = null;
-			try {
-				fIn = new FileInputStream(oldSavePath + "images.json");
-				DataInputStream reader = new DataInputStream(new BufferedInputStream(fIn));
-				StringBuilder sb = new StringBuilder();
-				String line = null;
-				try {
-					while((line = reader.readLine()) != null){
-						sb.append(line + "\n");
-					}
-					Images = new JSONArray(sb.toString());					
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} finally {
-					try {
-						reader.close();
-						fIn.close();
-						fIn = null;
-					} catch (IOException e) {
-						
-					}
-				}
-			} catch (FileNotFoundException e) {
-				//if you could't find the images, then just ensure Images is a new array
-				Images = new JSONArray();
-			}
-
-			for(int i = 0; i < Images.length(); i++){
-				try {
-					JSONObject image = Images.getJSONObject(i);
-					String media = image.getString("media");
-					f = new File(oldSavePath + media + ".jpg");
-					if(f.exists()){
-						if(!f.delete()){
-							//delete failed, can't do much about that.
-						} 
-					}
-				} catch (JSONException e) {
-					//could be a corrupt image array, doesn't matter file will get erased anyway.
-				}
-				
-			}
-			f = new File(oldSavePath + "images.json");
-			if(!f.delete()){
-				//delete failed, can't do much about that.
-			}		
-		}*/
 		
 	}
     
     //Settings
     protected void loadSettings(){
 		domain.setText(UshahidiService.domain);
+		firstname.setText(UshahidiService.firstname);
+		lastname.setText(UshahidiService.lastname);
+		email.setText(UshahidiService.email);
 		spnCountries.setSelection(UshahidiService.countries);
 		chkAutoFetch.setChecked(UshahidiService.AutoFetch);
 		oldSavePath = UshahidiService.savePath;
@@ -350,8 +304,10 @@ public class Settings extends Activity {
 	}
 	protected void saveSettings(){
 		UshahidiService.domain = domain.getText().toString();
+		UshahidiService.firstname = firstname.getText().toString();
+		UshahidiService.lastname = lastname.getText().toString();
+		UshahidiService.email = email.getText().toString();
 		UshahidiService.countries = spnCountries.getSelectedItemPosition();
-		
 		UshahidiService.AutoFetch = chkAutoFetch.isChecked();
 		String AutoUpdate = spnAutoUpdateDelay.getSelectedItem().toString();
 		

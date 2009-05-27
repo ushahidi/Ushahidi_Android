@@ -51,6 +51,9 @@ public class UshahidiService extends Service {
 	public static String categoriesResponse = "";
 	public static String savePath = "";
 	public static String domain = "";
+	public static String firstname = "";
+	public static String lastname = "";
+	public static String email = "";
 	public static int countries = 0;
 	public static int AutoUpdateDelay = 0;
 	public static String fileName = "";
@@ -252,6 +255,7 @@ public class UshahidiService extends Service {
 	public static void AddThreadToQueue(Thread tr){
 		queue.AddQueueItem(tr);
 	}
+	
 	/*static void schedule(Context context) {
 	    SharedPreferences preferences = PreferenceManager
 	        .getDefaultSharedPreferences(context);
@@ -312,6 +316,9 @@ public class UshahidiService extends Service {
 		savePath = settings.getString("savePath",
 				"/data/data/org.addhen.ushahidi/files/");
 		domain = settings.getString("Domain", "");
+		firstname = settings.getString("Firstname", "");
+		lastname = settings.getString("Lastname", "");
+		email = settings.getString("Lastname", "");
 		countries = settings.getInt("Countries", 0);
 		
 		AutoUpdateDelay = settings.getInt("AutoUpdateDelay", 0);
@@ -327,6 +334,9 @@ public class UshahidiService extends Service {
 		final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
 		final SharedPreferences.Editor editor = settings.edit();
 		editor.putString("Domain", domain);
+		editor.putString("Firstname", firstname);
+		editor.putString("Lastname", lastname);
+		editor.putString("Email", email);
 		editor.putInt("Countries", countries);
 		editor.putString("savePath", savePath);
 		editor.putInt("AutoUpdateDelay", AutoUpdateDelay);
