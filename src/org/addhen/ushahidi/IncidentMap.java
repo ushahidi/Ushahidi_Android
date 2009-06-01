@@ -49,7 +49,7 @@ public class IncidentMap extends MapActivity {
 	private static final int LIST_INCIDENTS = 2;
 	private static final int REQUEST_CODE_SETTINGS = 1;
 	private static final int REQUEST_CODE_ABOUT = 2;
-	private static final int DIALOG_NETWORK_ERROR = 0;
+	private static final int DIALOG_MESSAGE = 0;
 	private static final int  DIALOG_LOADING_INCIDENTS = 1;
 	
 	private static double latitude;
@@ -258,7 +258,7 @@ public class IncidentMap extends MapActivity {
 	
 	final Runnable mDisplayNetworkError = new Runnable(){
 		public void run(){
-			showDialog(DIALOG_NETWORK_ERROR);
+			showDialog(DIALOG_MESSAGE);
 		}
 	};
 	
@@ -279,26 +279,17 @@ public class IncidentMap extends MapActivity {
 		}
 	};
     
-    @Override
-    protected Dialog onCreateDialog(int id) {
+    protected Dialog onCreateDialog(int id, String message, String title) {
         switch (id) {
-            case DIALOG_NETWORK_ERROR: {
+            case DIALOG_MESSAGE: {
                 AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-                dialog.setTitle("Network error!");
-                dialog.setMessage("Please ensure you are connected to the internet.");
+                dialog.setTitle(title);
+                dialog.setMessage(message);
                 dialog.setButton2("Ok", new Dialog.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();						
 					}
         		});
-                dialog.setCancelable(false);
-                return dialog;
-            }
-            case DIALOG_LOADING_INCIDENTS: {
-                ProgressDialog dialog = new ProgressDialog(this);
-                dialog.setTitle("Translating...");
-                dialog.setMessage("Please wait while I translate for you.");
-                dialog.setIndeterminate(true);
                 dialog.setCancelable(false);
                 return dialog;
             }
@@ -402,7 +393,7 @@ public class IncidentMap extends MapActivity {
 	    
 	   @SuppressWarnings("unchecked")
 	   public void onItemSelected(AdapterView parent, View v, int position, long id) {
-		   //showIncidents(vectorCategories.get(position));
+		   mNewIncidents  = showIncidents(vectorCategories.get(position));
 	   }
 	 
 	   @SuppressWarnings("unchecked")
@@ -418,8 +409,6 @@ public class IncidentMap extends MapActivity {
 		  public SitesOverlay(Drawable marker) {  
 			  super(marker);  
 			  this.marker=marker;  
-		  
-			  mNewIncidents  = showIncidents("All");
 		  
 			  for( IncidentsData incidentData : mNewIncidents ) {
 				  IncidentMap.latitude = Double.parseDouble( incidentData.getIncidentLocLatitude());
@@ -446,8 +435,19 @@ public class IncidentMap extends MapActivity {
 		  }  
 		    
 		  @Override  
-		  protected boolean onTap(int i) {  
-			  Toast.makeText(IncidentMap.this, items.get(i).getSnippet(), Toast.LENGTH_SHORT).show();  
+		  protected boolean onTap(int i) {
+			  AlertDialog dialog = (new AlertDialog.Builder(IncidentMap.this)).create();
+              dialog.setTitle(items.get(i).getTitle());
+              dialog.setMessage(items.get(i).getSnippet());
+              dialog.setButton2("Ok", new Dialog.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();						
+					}
+      			});
+              
+              dialog.show();
+              dialog.setCancelable(false);
+              
 		    
 			  return(true);  
 		  }  

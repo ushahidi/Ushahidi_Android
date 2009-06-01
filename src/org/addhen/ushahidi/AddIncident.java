@@ -597,7 +597,10 @@ public class AddIncident extends Activity {
 						dialog.dismiss();
 					}
                 });
-                dialog.setButton3("Camera", new Dialog.OnClickListener() {
+                
+                /**
+                 * Disabling map functionality for now. we be re implemented in the next release.
+                 * dialog.setButton3("Camera", new Dialog.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 												
 						Intent launchPreferencesIntent = new Intent().setClass(AddIncident.this, ImageCapture.class);
@@ -605,7 +608,8 @@ public class AddIncident extends Activity {
 						startActivityForResult(launchPreferencesIntent, REQUEST_CODE_CAMERA);
 						dialog.dismiss();
 					}
-        		});
+        		});*/
+                
                 dialog.setCancelable(false);
                 return dialog;
             	
