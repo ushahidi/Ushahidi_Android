@@ -48,11 +48,13 @@
 					<Button android:id="@+id/pick_date"
         		android:layout_width="wrap_content"
           	android:layout_height="wrap_content"
+          	android:textStyle="bold"
           	android:text="@string/incident_date"/>
 
     			<Button android:id="@+id/pick_time"
        			android:layout_width="wrap_content"
           	android:layout_height="wrap_content"
+          	android:textStyle="bold"
           	android:text="@string/incident_time"/>
       	</LinearLayout>
 			</LinearLayout>
@@ -99,6 +101,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:paddingLeft="15px"
+					android:textStyle="bold"
 					android:text="@string/incident_add_category" />		
 			
 				<ImageButton android:id="@+id/btnPicture" 
@@ -119,13 +122,15 @@
 					android:layout_y="15px"
 					android:layout_alignParentRight="true"
   				android:layout_marginLeft="10px"
-					android:text="Save " />
+  				android:textStyle="bold"
+					android:text="@string/btn_send" />
        
 				<Button android:id="@+id/incident_add_cancel"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
  					android:layout_toLeftOf="@id/incident_add_btn"
   				android:layout_alignTop="@id/incident_add_btn"
+  				android:textStyle="bold"
 					android:text="@string/btn_cancel" />
 	
 			</RelativeLayout>

@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.addhen.ushahidi.UshahidiService;
 import org.apache.http.HttpResponse;
 
+import android.util.Log;
+
 public class Categories {
 	
 public static boolean getAllCategoriesFromWeb() throws IOException {

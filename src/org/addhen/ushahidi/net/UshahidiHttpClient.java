@@ -14,6 +14,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -32,73 +34,15 @@ import org.json.JSONObject;
 
 import org.addhen.ushahidi.UshahidiService;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 public class UshahidiHttpClient {
     
 	private static final int IO_BUFFER_SIZE = 512;
     
     final public static List<NameValuePair> blankNVPS = new ArrayList<NameValuePair>();
 	
-    public static HttpResponse PostURLWithCookies(String URL, List<NameValuePair> data,
-			String Username, String Password) throws IOException {
-    	while(UshahidiService.httpRunning){
-    		try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	}
-    	
-    	UshahidiService.httpRunning = true;
-		
-    	if ((Username.length() > 0) && (Password.length() > 0)) {
-			UshahidiService.httpclient.getCredentialsProvider().setCredentials(
-					new AuthScope(null, -1),
-					new UsernamePasswordCredentials(Username, Password));
-		}
-    	
-		final HttpGet httpget = new HttpGet(URL);
-		 HttpResponse response;
-         try {
-              response = UshahidiService.httpclient.execute(httpget);
-             HttpEntity entity = response.getEntity();
-             
-              if (entity != null) {
-                  entity.consumeContent();
-              }
-              
-         } catch (final ClientProtocolException e) {
- 			// TODO Auto-generated catch block
- 			e.printStackTrace();
- 		}
-
-		final HttpPost httpost = new HttpPost(URL);
-
-		try {
-			//NEED THIS NOW TO FIX ERROR 417 
-			httpost.getParams().setBooleanParameter( "http.protocol.expect-continue", false );	
-			httpost.setEntity(new UrlEncodedFormEntity(data, HTTP.UTF_8));
-		} catch (final UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
-			UshahidiService.httpRunning = false;
-			return null;
-		}
-
-		// Post, check and show the result (not really spectacular, but works):
-		try {
-			response =  UshahidiService.httpclient.execute(httpost);
-			UshahidiService.httpRunning = false;
-			return response;
-
-		} catch (final ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		UshahidiService.httpRunning = false;
-		return null;
-    }
-    
     public static HttpResponse GetURL(String URL) throws IOException {
     	UshahidiService.httpRunning = true;
 		
@@ -159,17 +103,38 @@ public class UshahidiHttpClient {
 		return PostURL(URL, data, "");
 	}
 	
-    public static boolean PostFileUpload(String URL, String FileName, String Username, String Password) throws IOException{
+    public static boolean PostFileUpload(String URL, HashMap<String, String> params) throws IOException{
         ClientHttpRequest req = null;
 
         try {
              URL url = new URL(URL);
              req = new ClientHttpRequest(url);
-             req.setParameter("media", new File(FileName));
+             
+             req.setParameter("task", params.get("task"));
+             req.setParameter("incident_title", params.get("incident_title"));
+             req.setParameter("incident_description", params.get("incident_description"));
+             req.setParameter("incident_date",params.get("incident_date"));
+             req.setParameter("incident_hour", params.get("incident_hour"));
+             req.setParameter("incident_minute", params.get("incident_minute"));
+             req.setParameter("incident_ampm", params.get("incident_ampm"));
+             req.setParameter("incident_category", params.get("incident_category"));
+             req.setParameter("latitude", params.get("latitude"));
+             req.setParameter("longitude", params.get("latitude"));
+             req.setParameter("location_name", params.get("location_name"));
+             req.setParameter("person_first", params.get("person_first"));
+             req.setParameter("person_last", params.get("person_last"));
+             req.setParameter("person_email", params.get("person_email"));
+             
+             if( !TextUtils.isEmpty( params.get("filename") ))
+             req.setParameter("incident_photo[]", new File(params.get("filename")));
+             
+             
              InputStream serverInput = req.post();
-             if(GetText(serverInput).contains("<rsp status=\"ok\">")){
+             
+             if(GetText(serverInput).contains("{\"payload\":{\"success\":\"true\"},\"error\":{\"code\":\"0\",\"message\":\"No Error.\"}}")){
             	 return true;
              }
+             
         } catch (MalformedURLException ex) {
         	//fall through and return false
         }

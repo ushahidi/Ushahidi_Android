@@ -71,7 +71,7 @@ public class Util {
 			response = UshahidiHttpClient.GetURL( uriBuilder.toString() );
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return false;
 		}
 		
 		if( response == null ) {

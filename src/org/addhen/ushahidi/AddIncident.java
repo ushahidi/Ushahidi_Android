@@ -1,17 +1,19 @@
 package org.addhen.ushahidi;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
 import java.util.Vector;
 
 import org.addhen.ushahidi.data.AddIncidentData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
+import org.addhen.ushahidi.net.UshahidiHttpClient;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -77,12 +79,13 @@ public class AddIncident extends Activity {
     private static double latitude;
     private String errorMessage = "";
 	private boolean error = false;
+	private boolean categoryClicked = false;
     private ImageButton btnPicture;
 	private EditText incidentTitle;
 	private EditText incidentLocation;
 	private EditText incidentDesc;
 	private TextView incidentDate;
-	private Button btnSave;
+	private Button btnSend;
 	private Button btnCancel;
 	private Button btnAddCategory;
 	private Button pickTime;
@@ -95,15 +98,16 @@ public class AddIncident extends Activity {
     private static final int DIALOG_LOADING_CATEGORIES= 2;
     private static final int DIALOG_LOADING_LOCATIONS = 3;
 	private static final int DIALOG_CHOOSE_IMAGE_METHOD = 4;
-	private static final int DIALOG_POST_INCIDENTS = 5;
 	private static final int DIALOG_MULTIPLE_CATEGORY = 6;
 	private static final int TIME_DIALOG_ID = 7;
     private static final int DATE_DIALOG_ID = 8;
 	private static Geocoder gc;
+	private String filename = "";
 	private List<Address> foundAddresses;
 	private final static Handler mHandler = new Handler();
 	private Vector<String> vectorCategories = new Vector<String>();
 	private Vector<String> categoriesId = new Vector<String>();
+	private HashMap<String,String> params = new HashMap<String, String>();
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,21 +119,7 @@ public class AddIncident extends Activity {
         foundAddresses = new ArrayList<Address>();
         gc = new Geocoder(this);
         
-        MyLocationListener listener = new MyLocationListener(); 
-        LocationManager manager = (LocationManager) 
-    getSystemService(Context.LOCATION_SERVICE); 
-        long updateTimeMsec = 1000L; 
-        
-        //check if there is internet to know which provider to use.
-        if( !Util.isConnected() ) {
-			manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 
-   updateTimeMsec, 500.0f, 
-		    listener);
-		} else {
-			manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 
-   updateTimeMsec, 500.0f, 
-		    listener); 
-		}
+        updateLocation();
         
     }
 	
@@ -161,6 +151,25 @@ public class AddIncident extends Activity {
 				super.onContextItemSelected(item));
 	}
 	
+	//update the device current location
+	private void updateLocation() {
+		MyLocationListener listener = new MyLocationListener(); 
+        LocationManager manager = (LocationManager) 
+    getSystemService(Context.LOCATION_SERVICE); 
+        long updateTimeMsec = 1000L; 
+        
+        //check if there is internet to know which provider to use.
+        if( !Util.isConnected() ) {
+			manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 
+   updateTimeMsec, 500.0f, 
+		    listener);
+		} else {
+			manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 
+   updateTimeMsec, 500.0f, 
+		    listener); 
+		}
+	}
+	
 	private void populateMenu(Menu menu) {
 		MenuItem i;
 		
@@ -181,7 +190,8 @@ public class AddIncident extends Activity {
 		i.setIcon(R.drawable.ushahidi_settings);
 		  
 		i = menu.add( Menu.NONE, ABOUT, Menu.NONE, R.string.menu_about );
-		i.setIcon(R.drawable.ushahidi_settings);
+		i.setIcon(R.drawable.ushahidi_about);
+		
 		
 	}
 	
@@ -205,6 +215,12 @@ public class AddIncident extends Activity {
     		startActivityForResult( launchPreferencesIntent, GOTOHOME );
     		setResult(RESULT_OK);
 			return true;
+		
+		case ABOUT:
+			launchPreferencesIntent = new Intent( AddIncident.this,About.class);
+    		startActivityForResult( launchPreferencesIntent, REQUEST_CODE_ABOUT );
+    		setResult(RESULT_OK);
+			return true;
 			
 		case SETTINGS:	
 			launchPreferencesIntent = new Intent().setClass(AddIncident.this, Settings.class);
@@ -226,63 +242,53 @@ public class AddIncident extends Activity {
 		incidentTitle = (EditText) findViewById(R.id.incident_title);
 		incidentLocation = (EditText) findViewById(R.id.incident_location);
 		incidentDesc = (EditText) findViewById(R.id.incident_desc);
-		btnSave = (Button) findViewById(R.id.incident_add_btn);
+		btnSend = (Button) findViewById(R.id.incident_add_btn);
 		btnCancel = (Button) findViewById(R.id.incident_add_cancel);
 		incidentDate = (TextView) findViewById(R.id.lbl_date);
 		pickDate = (Button) findViewById(R.id.pick_date);
 		pickTime = (Button) findViewById(R.id.pick_time);
 		
-		final Map<String,String> params = new HashMap<String, String>();
-		
-		params.put("task","report");
-		params.put("incident_title", incidentTitle.getText().toString());
-		params.put("incident_description",incidentDesc.getText().toString()); 
-		params.put("incident_date","03/18/2009"); 
-		params.put("incident_hour","10"); 
-		params.put("incident_minute","10");
-		params.put("incident_ampm", "pm");
-		params.put("incident_category","a:5:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;i:4;i:5;}");
-		params.put("latitude","-1.28730007");
-		params.put("longitude","36.82145118200820"); 
-		params.put("location_name","accra");
-		params.put("person_first","Henry");
-		params.put("person_last","Addo");
-		params.put("person_email", "henry@ushahidi.com");
-		
-		final String FileName = "/sdcard/dcim/Camera/1238951556779.jpg";
-		
-		btnSave.setOnClickListener(new View.OnClickListener() {
+		btnSend.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v){
 				//TODO send http post with data
 				if( TextUtils.isEmpty(incidentTitle.getText())) {
-					//TODO look into how to user xml R.string for that
+					//TODO look into how to use xml R.string for that
 					errorMessage ="* Enter a title for the incident.\n";
 					error = true;
 				}
 				
 				if( TextUtils.isEmpty(incidentDesc.getText())) {
-					//TODO look into how to user xml R.string for that
+					//TODO look into how to use xml R.string for that
 					errorMessage += "* Enter a description for the incident.\n";
 					error = true;
 				}
 				
 				if( TextUtils.isEmpty(incidentLocation.getText())) {
-					//TODO look into how to user xml R.string for that
+					//TODO look into how to use xml R.string for that
 					errorMessage += "* Enter a location for the incident.\n";
 					error = true;
 				}
 				
-				if( counter == 0 ) {
+				if(!categoryClicked) {
 					//TODO look into how to user xml R.string for that
 					errorMessage += "* Select at least one category.\n";
 					error = true;
 				}
 				
-				//TODO I need this code for reference +Util.implode(vectorCategories)+
-				
 				if( !error ) {
-					if(UshahidiService.httpRunning ){ 
-						//TODO post to live ushahidi instance
+					if( Util.isConnected() ){ 
+						if( !postToOnline() ) {
+							mHandler.post(mSentIncidentFail);
+						}else { 
+							mHandler.post(mSentIncidentSuccess);
+							clearFields();
+							
+							//after a successful upload, delete the file
+							File f = new File(UshahidiService.savePath + UshahidiService.fileName);
+							if(f.exists()){
+								f.delete();
+							}
+						}
 					}else {
 					final Thread tr = new Thread() {
 						@Override
@@ -290,7 +296,7 @@ public class AddIncident extends Activity {
 							running = true;
 							
 							try {
-								mHandler.post(mSentIncidentSuccess);
+								mHandler.post(mSentIncidentOffline);
 								
 							} finally { 
 									running = false;
@@ -364,19 +370,42 @@ public class AddIncident extends Activity {
 		  
 		  String categories[] = new String[cursor.getCount()];
 		  
+		  //TODO remove this after debugging
+		  String cats = "";
+		  
 		  int i = 0;
 		  if (cursor.moveToFirst()) {
+			  
 			  int titleIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CATEGORY_TITLE);
+			  
 			  int idIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CATEGORY_ID);
+			  
 			  do {
 				  categories[i] = cursor.getString(titleIndex);
+				  cats += cursor.getString(titleIndex)+",";
+				  
 				  categoriesId.add(String.valueOf(cursor.getInt(idIndex)));
 				  i++;
 			  }while( cursor.moveToNext() );
 		  }
+		  Log.i("database image",cats);
 		  cursor.close();
 		  return categories;
 		  
+	}
+	
+	//reset records in the field
+	private void clearFields() {
+		
+		btnPicture = (ImageButton) findViewById(R.id.btnPicture);
+		btnAddCategory = (Button) findViewById(R.id.add_category);
+		incidentTitle.setText("");
+		incidentLocation.setText("");
+		updateLocation();
+		incidentDesc.setText("");
+		counter = 0;
+		updateDisplay();
+		
 	}
 	
 	@Override
@@ -411,17 +440,29 @@ public class AddIncident extends Activity {
 				} catch (IOException e) {
 					break;
 				}
-				SaveIncidentsImage sptr = new SaveIncidentsImage(byteArrayos.toByteArray());
-				UshahidiService.AddThreadToQueue(sptr);
+				filename = "pictureupload" + randomString() + ".jpg";
+				ImageManager.writeImage(byteArrayos.toByteArray(), filename);
+				UshahidiService.fileName = filename;
 				break;
 				
 		}
 	}
 	
+	private static Random random = new Random();
+
+	protected static String randomString() {
+		return Long.toString(random.nextLong(), 10);
+	}
+	
 	//
-	final Runnable mSentIncidentSuccess = new Runnable() {
+	final Runnable mSentIncidentOffline = new Runnable() {
 		public void run() {
-			addToDb();
+			if( addToDb() == -1 ) {
+				mHandler.post(mSentIncidentFail);
+			}else { 
+				mHandler.post(mSentIncidentOfflineSuccess);
+				//clearFields();
+			}
 		}
 	};
 	
@@ -432,6 +473,56 @@ public class AddIncident extends Activity {
 					Toast.LENGTH_LONG);
 			t.show();
 			////mHandler.post(mDismissLoading);
+		}
+	};
+	
+	final Runnable mSentIncidentOfflineFail = new Runnable() {
+		public void run() {
+			final Toast t = Toast.makeText(AddIncident.this,
+					"Failed to send Incident!.Check to see if you filled all required fields",
+					Toast.LENGTH_LONG);
+			t.show();
+			////mHandler.post(mDismissLoading);
+		}
+	};
+	//
+	final Runnable mSentIncidentOfflineSuccess = new Runnable() {
+		public void run() {
+			final Toast t = Toast.makeText(AddIncident.this,
+					"Incident sent to local storage due to unvailability of internet. Remember to sync to the online instance when there " +
+					"there is internet connection.",
+					Toast.LENGTH_LONG);
+			t.show();
+			////mHandler.post(mDismissLoading);
+		}
+	};
+	
+	//
+	final Runnable mSendIncidentOnline = new Runnable() {
+		public void run() {
+			if( !postToOnline() ) {
+				mHandler.post(mSentIncidentFail);
+			}else { 
+				mHandler.post(mSentIncidentSuccess);
+				//clearFields();
+			}
+		}
+	};
+	
+	//
+	final Runnable mSentIncidentSuccess = new Runnable() {
+		public void run() {
+			final Toast t = Toast.makeText(AddIncident.this,
+					"Incident successfully posted online and entered into a moderation queue",
+					Toast.LENGTH_LONG);
+			t.show();
+			////mHandler.post(mDismissLoading);
+		}
+	};
+
+	final Runnable mUpdateLocation = new Runnable() {
+		public void run() {
+			updateLocation();
 		}
 	};
 	
@@ -528,10 +619,11 @@ public class AddIncident extends Activity {
                         new DialogInterface.OnMultiChoiceClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton,
                                     boolean isChecked) {
-                            	String items = "";
                             	if( isChecked ) {
                             		 
                             		vectorCategories.add(categoriesId.get( whichButton ));
+                            		categoryClicked = true;
+                            		error = false;
                             	} else {
                             		vectorCategories.remove(whichButton);
                             	}
@@ -612,8 +704,8 @@ public class AddIncident extends Activity {
     	incidentDate.setText(
             new StringBuilder()
                     // Month is 0 based so add 1
-                    .append(mMonth + 1).append("/")
-                    .append(mDay).append("/")
+                    .append(pad(mMonth + 1)).append("/")
+                    .append(pad(mDay)).append("/")
                     .append(mYear).append(" ")
                     .append(pad(timeDigits.get(mHour))).append(":")
                     .append(pad(mMinute)).append(" ")
@@ -655,10 +747,9 @@ public class AddIncident extends Activity {
      * @author henryaddo
      *
      */
-    public void addToDb() {
+    public long addToDb() {
     	String dates[] = incidentDate.getText().toString().split(" ");
     	String time[] = dates[1].split(":");
-    	Log.i("Filename", "file "+UshahidiService.fileName);
     	
     	List<AddIncidentData> addIncidentsData = new ArrayList<AddIncidentData>();
     	AddIncidentData addIncidentData = new AddIncidentData();
@@ -675,12 +766,55 @@ public class AddIncident extends Activity {
     	addIncidentData.setIncidentLocLatitude(String.valueOf(latitude));
     	addIncidentData.setIncidentLocLongitude(String.valueOf(longitude));
     	addIncidentData.setIncidentPhoto(UshahidiService.fileName);
-    	addIncidentData.setPersonFirst("Henry");
-    	addIncidentData.setPersonLast("Addo");
-    	addIncidentData.setPersonEmail("henry@ushahidi.com");
+    	addIncidentData.setPersonFirst(UshahidiService.firstname);
+    	addIncidentData.setPersonLast(UshahidiService.lastname);
+    	addIncidentData.setPersonEmail(UshahidiService.email);
     	
     	//add it to database.
-    	UshahidiApplication.mDb.addIncidents(addIncidentsData);
+    	return UshahidiApplication.mDb.addIncidents(addIncidentsData);
+    }
+    
+    /**
+     * Post directly to online.
+     * @author henryaddo
+     *
+     */
+    public boolean postToOnline() {
+    	
+    	Log.i("Filename", "file "+UshahidiService.savePath + UshahidiService.fileName);
+    	
+    	String dates[] = incidentDate.getText().toString().split(" ");
+    	String time[] = dates[1].split(":");
+    	String categories = Util.implode(vectorCategories);
+    	
+    	Log.i("Categories", "cats "+categories);
+    	
+    	StringBuilder urlBuilder = new StringBuilder(UshahidiService.domain);
+    	urlBuilder.append("/api");
+    	params.put("task","report");
+		params.put("incident_title", incidentTitle.getText().toString());
+		params.put("incident_description", incidentDesc.getText().toString()); 
+		params.put("incident_date", dates[0]); 
+		params.put("incident_hour", time[0]); 
+		params.put("incident_minute", time[1]);
+		params.put("incident_ampm", dates[2].toLowerCase());
+		params.put("incident_category", categories);
+		params.put("latitude", String.valueOf(latitude));
+		params.put("longitude", String.valueOf(longitude)); 
+		params.put("location_name", incidentLocation.getText().toString());
+		params.put("person_first", UshahidiService.firstname);
+		params.put("person_last", UshahidiService.lastname);
+		params.put("person_email", UshahidiService.email);
+		params.put("filename", UshahidiService.savePath + UshahidiService.fileName);
+		
+		
+		try {
+			return UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), params);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
     }
 	
 	public class MyLocationListener implements LocationListener { 
@@ -699,7 +833,7 @@ public class AddIncident extends Activity {
 	    		foundAddresses = gc.getFromLocation( latitude, longitude, 5 );
 	    		Address address = foundAddresses.get(0);
 	    		
-	    		incidentLocation.setText( "" + address.getSubAdminArea() );
+	    		incidentLocation.setText( address.getSubAdminArea().toString() );
 			
 	    	} catch (IOException e) {
 				// TODO Auto-generated catch block

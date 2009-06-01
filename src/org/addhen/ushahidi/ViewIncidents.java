@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
+import android.widget.LinearLayout.LayoutParams;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +35,7 @@ public class ViewIncidents extends Activity {
     private String thumbnails [];
     private final String PREFS_NAME = "Ushahidi";
     private Drawable d;
+    private int mGalleryItemBackground;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,7 +102,10 @@ public class ViewIncidents extends Activity {
         	d == null ? drawable : d
         );
        
-          
+        
+        //mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+      
+        //mImageView.setBackgroundResource(mGalleryItemBackground);
         Gallery g = (Gallery) findViewById(R.id.gallery);
         
         g.setAdapter( imageAdapter );
@@ -109,37 +114,23 @@ public class ViewIncidents extends Activity {
         
     }
     
-	// As drawable.  
-	public static Drawable imageOperations(String url, String saveFilename) {
-		try {
-			InputStream is = (InputStream) fetch(url);
-			Drawable d = Drawable.createFromStream(is, saveFilename);
-			return d;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	// Fetch image from the given URL
-	private static Object fetch(String address) throws MalformedURLException,IOException {
-		URL url = new URL(address);
-		Object content = url.getContent();
-		return content; 
-	}
-    
     public class ImageAdapter extends BaseAdapter {
     	
     	public Vector<Drawable> mImageIds;
     	private Context mContext;
+    	private int mGalleryItemBackground;
     	
     	public ImageAdapter( Context context ){
     		mContext = context;
     		mImageIds = new Vector<Drawable>();
+    		
+    		TypedArray a = obtainStyledAttributes(R.styleable.PhotoGallery);
+            mGalleryItemBackground = a.getResourceId(
+                    R.styleable.PhotoGallery_android_galleryItemBackground, 0);
+            a.recycle();
+    		
     	}
+    	
     	public int getCount() {
     		return mImageIds.size();
 		}
@@ -158,7 +149,10 @@ public class ViewIncidents extends Activity {
 			
 			i.setScaleType(ImageView.ScaleType.FIT_XY);
             
-			i.setLayoutParams(new Gallery.LayoutParams(180, 88));
+			i.setLayoutParams(new Gallery.LayoutParams(136, 88));
+            
+            // The preferred Gallery item background
+            i.setBackgroundResource(mGalleryItemBackground);
 
 			return i;
 		}

@@ -4,21 +4,13 @@ package org.addhen.ushahidi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
-import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -27,30 +19,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.widget.ZoomControls;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
-import android.location.Address;
 import android.location.Geocoder;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-
-import org.addhen.ushahidi.AddIncident.MyLocationListener;
 import org.addhen.ushahidi.data.CategoriesData;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
@@ -67,6 +48,7 @@ public class IncidentMap extends MapActivity {
 	private static final int ADD_INCIDENTS = 1;
 	private static final int LIST_INCIDENTS = 2;
 	private static final int REQUEST_CODE_SETTINGS = 1;
+	private static final int REQUEST_CODE_ABOUT = 2;
 	private static final int DIALOG_NETWORK_ERROR = 0;
 	private static final int  DIALOG_LOADING_INCIDENTS = 1;
 	
@@ -94,6 +76,7 @@ public class IncidentMap extends MapActivity {
 		mOldIncidents = new ArrayList<IncidentsData>();
 		mNewIncidents  = showIncidents("All");
 		
+	
 		IncidentMap.latitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLatitude());
 		IncidentMap.longitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLongitude());
 		mapView.getController().setCenter(getPoint(IncidentMap.latitude,
@@ -166,15 +149,12 @@ public class IncidentMap extends MapActivity {
  			  cursor = UshahidiApplication.mDb.fetchIncidentsByCategories(by);
  		  
  		  String title;
- 		  String status;
  		  String date;
  		  String description;
  		  String location;
  		  String categories;
  		  String media;
  		
- 		  String thumbnails [];
- 		  Drawable d = null;
  		  if (cursor.moveToFirst()) {
  			  int idIndex = cursor.getColumnIndexOrThrow( 
  					  UshahidiDatabase.INCIDENT_ID);
@@ -344,7 +324,7 @@ public class IncidentMap extends MapActivity {
 		i.setIcon(R.drawable.ushahidi_settings);
 		  
 		i = menu.add( Menu.NONE, ABOUT, Menu.NONE, R.string.menu_about );
-		i.setIcon(R.drawable.ushahidi_settings);
+		i.setIcon(R.drawable.ushahidi_about);
 	  
 	}
 	
@@ -370,6 +350,12 @@ public class IncidentMap extends MapActivity {
 	    	intent = new Intent( IncidentMap.this, AddIncident.class);
 	  		startActivityForResult(intent, ADD_INCIDENTS  );
 	        return(true);
+	      
+	      case ABOUT:
+				intent = new Intent( IncidentMap.this,About.class);
+	    		startActivityForResult( intent, REQUEST_CODE_ABOUT );
+	    		setResult(RESULT_OK);
+				return true;  
 	        
 	      case SETTINGS:
 	    	  intent = new Intent( IncidentMap.this,  Settings.class);

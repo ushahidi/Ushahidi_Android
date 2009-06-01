@@ -1,4 +1,5 @@
 package org.addhen.ushahidi;
+import java.io.File;
 import java.util.Random;
 
 public class SaveIncidentsImage extends Thread {
@@ -15,8 +16,14 @@ public class SaveIncidentsImage extends Thread {
 		}
 		
 		public void run() {
-			String filename = "PictureUpload" + randomString() + ".jpg";
+			String filename = "pictureupload" + randomString() + ".jpg";
 			ImageManager.writeImage(data, filename);
 			UshahidiService.fileName = filename;
+			
+			File f = new File(UshahidiService.savePath + filename);
+			if(f.exists()){
+				f.delete();
+			}
+			
 		}
 	}

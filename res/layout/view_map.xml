@@ -5,39 +5,37 @@ android:layout_width="fill_parent"
 android:layout_height="fill_parent"
 xmlns:android="http://schemas.android.com/apk/res/android"
 >
-<TextView
-android:id="@+id/simpleGM_tv"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:text="Enter your street address"
-android:layout_x="11px"
-android:layout_y="5px"
->
-</TextView>
-<EditText
-android:id="@+id/simpleGM_adress"
-android:layout_width="240px"
-android:layout_height="wrap_content"
-android:hint="Accra, Ghana"
-android:textSize="18sp"
-android:layout_x="12px"
-android:layout_y="30px"
->
-</EditText>
-<Button
-android:id="@+id/simpleGM_btn_search"
-android:layout_width="59px"
-android:layout_height="wrap_content"
-android:text="Go"
-android:layout_x="256px"
-android:layout_y="30px"
->
-</Button>
-<com.google.android.maps.MapView android:id="@+id/simpleGM_map"
-android:layout_width="fill_parent"
-android:layout_height="310px"
-android:apiKey="02cv5Q8Rob0AxK9cfya5gqZJEmaM0lyZsPdLrmg"
-android:layout_x="2px"
-android:layout_y="100px"
-android:clickable="true" />
+	<TextView	
+		android:id="@+id/simpleGM_tv"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Enter your street address"
+		android:layout_x="11px"
+		android:layout_y="5px"/>
+
+	<EditText
+		android:id="@+id/simpleGM_adress"
+		android:layout_width="240px"
+		android:layout_height="wrap_content"
+		android:hint="Accra, Ghana"
+		android:textSize="18sp"
+		android:layout_x="12px"
+		android:layout_y="30px"/>
+
+
+	<Button
+		android:id="@+id/simpleGM_btn_search"
+		android:layout_width="59px"
+		android:layout_height="wrap_content"
+		android:text="Go"
+		android:layout_x="256px"
+		android:layout_y="30px" />
+	
+	<com.google.android.maps.MapView android:id="@+id/simpleGM_map"
+		android:layout_width="fill_parent"
+		android:layout_height="310px"
+		android:apiKey="02cv5Q8Rob0AxK9cfya5gqZJEmaM0lyZsPdLrmg"
+		android:layout_x="2px"
+		android:layout_y="100px"
+		android:clickable="true" />
 </AbsoluteLayout>

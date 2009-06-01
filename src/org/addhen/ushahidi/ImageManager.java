@@ -11,7 +11,6 @@ import org.addhen.ushahidi.net.UshahidiHttpClient;
 
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
 
 public class ImageManager {
 	//Images

@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>    
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name= "android.permission.ACCESS_COARSE_LOCATION" /> 
     <uses-permission android:name= "android.permission.ACCESS_FINE_LOCATION" /> 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -75,6 +76,14 @@
         
         <!--  Image capture -->
         <activity android:name=".ImageCapture" android:label="@string/str_post_photos">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity>
+        
+        <!--  About -->
+        <activity android:name=".About" android:label="@string/ushahidi_about">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT"></category>

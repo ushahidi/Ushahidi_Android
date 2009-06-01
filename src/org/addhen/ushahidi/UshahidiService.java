@@ -318,7 +318,7 @@ public class UshahidiService extends Service {
 		domain = settings.getString("Domain", "");
 		firstname = settings.getString("Firstname", "");
 		lastname = settings.getString("Lastname", "");
-		email = settings.getString("Lastname", "");
+		email = settings.getString("Email", "");
 		countries = settings.getInt("Countries", 0);
 		
 		AutoUpdateDelay = settings.getInt("AutoUpdateDelay", 0);

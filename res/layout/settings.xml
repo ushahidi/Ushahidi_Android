@@ -138,11 +138,13 @@
 				<Button android:id="@+id/btn_cancel" 
 		  			android:text="@string/btn_cancel"
 					android:layout_width="wrap_content"
+					android:textStyle="bold"
 					android:layout_height="wrap_content"  />
 				<Button android:id="@+id/btn_confirm" 
 		  			android:text="@string/btn_confirm"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content" 
+					android:textStyle="bold"
 					android:layout_alignParentRight="true" />				
 			</RelativeLayout>	    		
 		</LinearLayout>	

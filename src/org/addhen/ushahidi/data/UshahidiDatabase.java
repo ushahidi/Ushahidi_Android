@@ -221,7 +221,6 @@ public class UshahidiDatabase {
   		initialValues.put(CATEGORY_DESC, categories.getCategoryDescription());
   		initialValues.put(CATEGORY_COLOR, categories.getCategoryColor());
   		initialValues.put(CATEGORY_IS_UNREAD, isUnread);
-  		
   		return mDb.insert(CATEGORIES_TABLE, null, initialValues);
   	}
 
@@ -233,6 +232,11 @@ public class UshahidiDatabase {
   public Cursor fetchAllIncidents() {
     return mDb.query(INCIDENTS_TABLE, INCIDENTS_COLUMNS, null, null, null, null, INCIDENT_ID
         + " DESC");
+  }
+  
+  public Cursor fetchAllOfflineIncidents() {
+	  return mDb.query(ADD_INCIDENTS_TABLE, ADD_INCIDENTS_COLUMNS, null, null, null, null, 
+			  ADD_INCIDENT_ID + " DESC");
   }
 
   
@@ -402,16 +406,20 @@ public class UshahidiDatabase {
   	 * Adds new incidents to be posted online to the db.
   	 * @param List addIncidents
   	 */
-  	public void addIncidents(List<AddIncidentData> addIncidents ) {
+  	public long addIncidents(List<AddIncidentData> addIncidents ) {
+  		long rowId = 0;
   		try {
   			mDb.beginTransaction();
   			for( AddIncidentData addIncident: addIncidents ) {
-  				createAddIncident(addIncident);
+  				rowId = createAddIncident(addIncident);
   			}
   			mDb.setTransactionSuccessful();
+  			
   		} finally {
   			mDb.endTransaction();
   		}
+  		
+  		return rowId;
   	}
 
   	public void addCategories(List<CategoriesData> categories, boolean isUnread) {
@@ -422,7 +430,7 @@ public class UshahidiDatabase {
   				createCategories(category, isUnread);
   			}
 
-  			limitRows(CATEGORIES_TABLE, 20, CATEGORY_ID);
+  			//limitRows(CATEGORIES_TABLE, 20, CATEGORY_ID);
   			mDb.setTransactionSuccessful();
   		} finally {
   			mDb.endTransaction();

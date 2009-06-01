@@ -10,6 +10,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import android.util.Log;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
@@ -179,7 +181,7 @@ public class HandleXml {
 	
 	public static List<CategoriesData> processCategoriesXml( String xml ) {
 		List<CategoriesData> categoriesData = new ArrayList<CategoriesData>();
-		
+		String categories = "";
 		DocumentBuilder builder = null;
 		Document doc = null;
 		try {
@@ -216,13 +218,15 @@ public class HandleXml {
 				Element idElement = (Element) idElementList.item(0);
 				
 				NodeList id = idElement.getChildNodes();
-				category.setCategoryTitle(((Node) id.item(0)).getNodeValue());
+				category.setCategoryId(Integer.parseInt(((Node) id.item(0)).getNodeValue()));
+				
 				
 				NodeList titleElementList = element.getElementsByTagName("title");
 				Element titleElement = (Element) titleElementList.item(0);
 				
 				NodeList title = titleElement.getChildNodes();
 				category.setCategoryTitle(((Node) title.item(0)).getNodeValue());
+				categories += ((Node) title.item(0)).getNodeValue()+", ";
 				
 				NodeList descElementList = element.getElementsByTagName("description");
 				Element descElement = (Element) descElementList.item(0);
@@ -238,7 +242,7 @@ public class HandleXml {
 				
 			}
 		}
-	
+		
 		return categoriesData;
 	}
 	

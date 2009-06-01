@@ -17,6 +17,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +47,7 @@ public class ListIncidents extends Activity
   private static final int INCIDENTS_MAP = 2;
   private static final int VIEW_INCIDENT = 3;
   private static final int REQUEST_CODE_SETTINGS = 1;
+  private static final int REQUEST_CODE_ABOUT = 2;
   private Spinner spinner = null;
   private ArrayAdapter<String> spinnerArrayAdapter;
   private Bundle incidentsBundle = new Bundle();
@@ -96,8 +98,10 @@ public class ListIncidents extends Activity
   protected void onResume(){
 	  
 	  mHandler.post(mDisplayIncidents);
+	  mHandler.post(mDisplayCategories);
 	  //mark all incidents as read
 	  UshahidiApplication.mDb.markAllIncidentssRead();
+	  UshahidiApplication.mDb.markAllCategoriesRead();
 	  super.onResume();
   }
   
@@ -132,12 +136,12 @@ public class ListIncidents extends Activity
   
   final Runnable mDisplayCategories = new Runnable() {
     public void run() {
-      showCategories();
-      try{
-        //dismissDialog( DIALOG_LOADING_INCIDENTS );
-      } catch(Exception e){
-        return;  //means that the dialog is not showing, ignore please!
-      }
+    	showCategories();
+    	try{
+    		//dismissDialog( DIALOG_LOADING_INCIDENTS );
+    	} catch(Exception e){
+    		return;  //means that the dialog is not showing, ignore please!
+    	}
     }
   };
 
@@ -146,17 +150,21 @@ public class ListIncidents extends Activity
 	  try {
 		  if( Util.isConnected()) {
 			  setProgressBarIndeterminateVisibility(true);
-			  if(Incidents.getAllIncidentsFromWeb()){
-				  mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
-			  }
+			  
 	   
 			  if(Categories.getAllCategoriesFromWeb() ) {
 				  mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
 			  }
-			  UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
-	    	
+			  
+			  if(Incidents.getAllIncidentsFromWeb()){
+				  mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
+			  }
+			  
 			  UshahidiApplication.mDb.addCategories(mNewCategories, false);
+			  UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
+			  
 	  			  setProgressBarIndeterminateVisibility(false);
+		  
 		  } else {
 			  Toast.makeText(ListIncidents.this, R.string.internet_connection, Toast.LENGTH_LONG).show();
 		  }
@@ -212,7 +220,7 @@ public class ListIncidents extends Activity
 		i.setIcon(R.drawable.ushahidi_settings);
 		  
 		i = menu.add( Menu.NONE, ABOUT, Menu.NONE, R.string.menu_about );
-		i.setIcon(R.drawable.ushahidi_settings);
+		i.setIcon(R.drawable.ushahidi_about);
 	  
   }
   
@@ -226,6 +234,7 @@ public class ListIncidents extends Activity
     	case INCIDENT_REFRESH:
     	  retrieveIncidentsAndCategories();
     	  mHandler.post(mDisplayIncidents);
+    	  mHandler.post(mDisplayCategories);
         return(true);
     
       case INCIDENT_MAP:
@@ -237,6 +246,12 @@ public class ListIncidents extends Activity
     	intent = new Intent( ListIncidents.this, AddIncident.class);
   		startActivityForResult(intent, POST_INCIDENT  );
         return(true);
+     
+      case ABOUT:
+			intent = new Intent( ListIncidents.this,About.class);
+			startActivityForResult( intent, REQUEST_CODE_ABOUT );
+			setResult(RESULT_OK);
+			return true;  
         
       case SETTINGS:
     	  intent = new Intent( ListIncidents.this,  Settings.class);
@@ -337,12 +352,14 @@ public class ListIncidents extends Activity
   @SuppressWarnings("unchecked")
   public void showCategories() {
 	  Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
-	  
+	  int count = UshahidiApplication.mDb.fetchCategoriesCount();
+	  Log.i("Count", "count "+count);
+	  vectorCategories.clear();
 	  vectorCategories.add("All");
 	  if (cursor.moveToFirst()) {
 		  int titleIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CATEGORY_TITLE);
 		  do {
-			  vectorCategories.add( cursor.getString(titleIndex).toLowerCase());
+			  vectorCategories.add( cursor.getString(titleIndex));
 		  }while( cursor.moveToNext() );
 	  }
 	  cursor.close();
@@ -380,6 +397,7 @@ public class ListIncidents extends Activity
           break;
         }
         mHandler.post(mDisplayIncidents);
+        mHandler.post(mDisplayCategories);
         
         //mark all incidents as read
         UshahidiApplication.mDb.markAllIncidentssRead();  

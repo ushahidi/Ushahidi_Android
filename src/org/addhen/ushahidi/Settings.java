@@ -1,17 +1,13 @@
 package org.addhen.ushahidi;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.addhen.ushahidi.data.CategoriesData;
+import org.addhen.ushahidi.data.HandleXml;
+import org.addhen.ushahidi.data.IncidentsData;
+import org.addhen.ushahidi.net.Categories;
+import org.addhen.ushahidi.net.Incidents;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -54,6 +50,8 @@ public class Settings extends Activity {
 	private Spinner spnAutoUpdateDelay;
 	private final Handler mHandler = new Handler();
 	private static boolean busy = false;
+	private List<IncidentsData> mNewIncidents;
+	private List<CategoriesData> mNewCategories;
 	
     //Load
     @Override
@@ -132,12 +130,14 @@ public class Settings extends Activity {
 				}
 			}
         });
+        
         btnCancel.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
 				setEnabled(false);
 				mHandler.post(mFinishCancel);
 			}
         });
+        
         btnClearCache.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
 				final Thread tr = new Thread() {
@@ -151,7 +151,8 @@ public class Settings extends Activity {
 				tr.start();
 			}
         });
-    	btnConfirm.setOnClickListener(new View.OnClickListener(){
+    	
+        btnConfirm.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
 				setEnabled(false);
 				final Thread tr = new Thread() {
@@ -170,6 +171,7 @@ public class Settings extends Activity {
 						}
 						
 						//TODO test if domain can connect
+						retrieveIncidentsAndCategories();
 						mHandler.post(mFinishSave);
 						busy = false;
 					}
@@ -177,11 +179,13 @@ public class Settings extends Activity {
 				tr.start();
 			}});
     }
+    
     final Runnable mDisplayClearCache = new Runnable(){
     	public void run(){
     		showDialog(CLEAR_CACHE);
     	}
     };
+    
     final Runnable mDismissClearCache = new Runnable(){
     	public void run(){
     		try{
@@ -192,11 +196,13 @@ public class Settings extends Activity {
 			}
     	}
     };
+    
     final Runnable mDisplayNetworkError = new Runnable(){
 		public void run(){
 			showDialog(DIALOG_NETWORK_ERROR);
 		}
 	};
+	
 	final Runnable mInvalidSDCardFolder = new Runnable(){
 		public void run(){
 			final Toast t = Toast.makeText(Settings.this, "If you select to save on the SD card it must be in its own subfolder!", Toast.LENGTH_SHORT);
@@ -204,6 +210,7 @@ public class Settings extends Activity {
     		setEnabled(true);
 		}
 	};
+	
 	final Runnable mInvalidDomain = new Runnable(){
 		public void run(){
 			final Toast t = Toast.makeText(Settings.this, "Enter a valid URL. It should start " +
@@ -212,6 +219,7 @@ public class Settings extends Activity {
     		setEnabled(true);
 		}
 	};
+	
 	final Runnable mFinishSave = new Runnable(){
 		public void run(){
 			saveSettings();
@@ -219,6 +227,7 @@ public class Settings extends Activity {
 			finish();
 		}
 	};
+	
 	final Runnable mFinishCancel = new Runnable(){
 		public void run(){
 			Settings.this.setResult(RESULT_CANCELED);
@@ -226,7 +235,45 @@ public class Settings extends Activity {
 		}
 	};
 	
+	 final Runnable mRetrieveNewIncidents = new Runnable() {
+		  public void run() {
+		  try {
+			  if( Util.isConnected()) {
+				  setProgressBarIndeterminateVisibility(true);
+				  
+		   
+				  if(Categories.getAllCategoriesFromWeb() ) {
+					  mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
+				  }
+				  
+				  if(Incidents.getAllIncidentsFromWeb()){
+					  mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
+				  }
+				  
+				  UshahidiApplication.mDb.addCategories(mNewCategories, false);
+				  UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
+				  
+		  			  setProgressBarIndeterminateVisibility(false);
+			  
+			  } else {
+				  Toast.makeText(Settings.this, R.string.internet_connection, Toast.LENGTH_LONG).show();
+			  }
+		  	} catch (IOException e) {
+				//means there was a problem getting it
+		  	}
+		  }
+	  };
+	
     
+	private void retrieveIncidentsAndCategories() {
+		  
+		final Thread tr = new Thread() {
+			public void run() {
+				mHandler.post(mRetrieveNewIncidents);
+			}
+		};
+	    tr.start();
+	 }  
     //Helper functions
 	void setEnabled(Boolean value){
 		btnConfirm.setEnabled(value);
@@ -245,20 +292,7 @@ public class Settings extends Activity {
 	}
     
     public void clearOldCache(){
-		File f = new File(oldSavePath + "incidents.xml");
-		if(f.exists()){
-			if(!f.delete()){
-				//couldn't delete the old images array, could be due to it not existing
-			}
-		}
-		
-		f = new File(oldSavePath + "categories.xml");
-		if(f.exists()){
-			if(!f.delete()){
-				//couldn't delete the old images array, could be due to it not existing
-			}
-		}
-		
+		//TODO clear the data from db
 	}
     
     //Settings

@@ -8,7 +8,8 @@
     android:padding="25px">
     <ScrollView android:layout_width="fill_parent" 
 		android:layout_height="fill_parent"
-		android:gravity="center">
+		android:gravity="center"
+		android:scrollbars="none">
 		<LinearLayout android:layout_width="fill_parent" 
 	    	android:layout_height="wrap_content"
 	    	android:orientation="vertical"
@@ -28,38 +29,28 @@
     			android:layout_width="fill_parent" 
     			android:layout_height="wrap_content" />      
  			
- 			<Button android:id="@+id/incident_list"
+ 			<TextView android:id="@+id/welcome_txt"
         		android:layout_width="fill_parent"
         		android:layout_height="wrap_content"
+        		android:textColor="@drawable/date_color"
+        		android:textStyle="bold"
         		android:layout_below="@id/title"
         		android:layout_alignParentLeft="true"
         		android:layout_marginLeft="0px"
-        		android:textStyle="bold"
-        		android:text="@string/incident_list" />
+        		android:text="@string/welcome_mgs" />
  			
  			<TextView  android:id="@+id/spacer2"
     			android:layout_width="fill_parent" 
     			android:layout_height="wrap_content" />
         
- 			<Button android:id="@+id/incident_map"
+ 			<Button android:id="@+id/view_website"
         		android:layout_width="fill_parent"
         		android:layout_height="wrap_content"
         		android:layout_alignParentLeft="true"
         		android:layout_marginLeft="0px"
         		android:textStyle="bold"
-        		android:text="@string/incident_menu_map" />
+        		android:text="@string/ushahidi_url" />
     		
-    		<TextView  android:id="@+id/spacer"
-    			android:layout_width="fill_parent" 
-    			android:layout_height="wrap_content" />
-    		          
- 			<Button android:id="@+id/home_add_btn"
-        		android:layout_width="fill_parent"
-        		android:layout_height="wrap_content"
-        		android:layout_alignParentLeft="true"
-        		android:layout_marginLeft="0px"
-        		android:textStyle="bold"
-        		android:text="@string/incident_add_incident" />
         </LinearLayout>
 	</ScrollView>        
 </RelativeLayout>

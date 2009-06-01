@@ -48,7 +48,8 @@ public class ListIncidentTextView extends LinearLayout{
 		this.thumbnail.setImageDrawable( listText.getThumbnail() );
 		
 		thumbnail.setPadding(2, 2, 10, 4);
-		thumbnail.setLayoutParams(new LayoutParams(48,48));
+		thumbnail.setLayoutParams(new LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		
 		addView(thumbnail, new LinearLayout.LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));

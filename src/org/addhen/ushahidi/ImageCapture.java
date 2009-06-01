@@ -42,7 +42,10 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
 	Camera.PictureCallback mPictureCallbackRaw = new Camera.PictureCallback() {
 		public void onPictureTaken(byte[] data, Camera c) {
 			camera.startPreview();
-			ImageCapture.this.finish();
+			//write file to images
+			/*SaveIncidentsImage sptr = new SaveIncidentsImage(data);
+			UshahidiService.AddThreadToQueue(sptr);
+			ImageCapture.this.finish();*/
 		}
 	};
 
