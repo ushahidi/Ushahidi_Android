@@ -48,8 +48,8 @@
 		<string name="incident_title">Title:</string>
 		<string name="incident_add_category">Add Category</string>
 		<string name="incident_add_incident">Add Incident</string>
-		<string name="incident_menu_add">Post Incident</string>
-		<string name="incident_list">List Incident</string>
+		<string name="incident_menu_add">Add Incident</string>
+		<string name="incident_list">List Incidents</string>
 		<string name="menu_home">Home</string>
 		<string name="menu_sync">Sync</string>
 		<string name="menu_settings">Settings</string>
