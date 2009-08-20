@@ -1,3 +1,7 @@
+/**
+ * This class is based on the code here
+ * http://code.google.com/p/android-phonefinder/
+ */
 package org.addhen.ushahidi;
 
 import java.io.ByteArrayOutputStream;
@@ -809,7 +813,7 @@ public class AddIncident extends Activity {
 		params.put("person_first", UshahidiService.firstname);
 		params.put("person_last", UshahidiService.lastname);
 		params.put("person_email", UshahidiService.email);
-		params.put("filename", UshahidiService.savePath + UshahidiService.fileName);
+		params.put("filename", UshahidiService.fileName);
 		
 		
 		try {

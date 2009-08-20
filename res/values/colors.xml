@@ -5,4 +5,5 @@
     <drawable name="verified_color">#25991C</drawable>
     <drawable name="background_color">#E8DBAE</drawable>
     <drawable name="thick_background_color">#DDD0A3</drawable>
+    <drawable name="white_color">#FFFFFF</drawable>
 </resources>

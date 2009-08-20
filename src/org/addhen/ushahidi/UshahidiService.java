@@ -1,31 +1,16 @@
 package org.addhen.ushahidi;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import org.addhen.ushahidi.net.Incidents;
 import org.addhen.ushahidi.data.CategoriesData;
-import org.addhen.ushahidi.data.HandleXml;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
 import org.apache.http.impl.client.DefaultHttpClient;
-
-import com.google.android.photostream.UserTask;
-
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -33,13 +18,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.os.SystemClock;
-import android.os.PowerManager.WakeLock;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class UshahidiService extends Service {
@@ -66,14 +47,8 @@ public class UshahidiService extends Service {
     
     private static final String TAG = "UshahidiService";
 
-    private SharedPreferences mPreferences;
-
-
     private ArrayList<IncidentsData> mNewIncidents;
     private ArrayList<CategoriesData> mNewCategories;
-    
-    private static int INCIDENTS_NOTIFICATION_ID = 0;
-    private static int CATEGORIES_NOTIFICATION_ID = 1;
     
     
     private UshahidiDatabase getDb() {

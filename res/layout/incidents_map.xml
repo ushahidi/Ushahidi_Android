@@ -6,7 +6,15 @@
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:apiKey="02cv5Q8Rob0AxK9cfya5gqZJEmaM0lyZsPdLrmg"
+    android:enabled="true"
 		android:clickable="true" />
+		
+	 <!--Production MapView 
+			<com.google.android.maps.MapView
+				android:id="@+id/map"
+      	android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:apiKey="06wmUaTBRvXSH4AMuZyEXgm0FShJduQJzU1hTaA"/> -->
 	<LinearLayout android:id="@+id/zoom"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

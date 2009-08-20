@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -68,6 +69,7 @@ public class IncidentMap extends MapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.incidents_map);
 		
 		spinner = (Spinner) findViewById(R.id.incident_cat);
@@ -79,6 +81,7 @@ public class IncidentMap extends MapActivity {
 	
 		IncidentMap.latitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLatitude());
 		IncidentMap.longitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLongitude());
+		
 		mapView.getController().setCenter(getPoint(IncidentMap.latitude,
 				IncidentMap.longitude));
 		mapView.getController().setZoom(17);
@@ -112,7 +115,7 @@ public class IncidentMap extends MapActivity {
 		return(false);
 	}
 	
- 	@Override
+ 	//@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
  		if (keyCode == KeyEvent.KEYCODE_I) {
 	    	// Zoom not closer than possible
@@ -134,6 +137,8 @@ public class IncidentMap extends MapActivity {
             mapView.setSatellite(false);
             
             return true;
+        } else if( keyCode == KeyEvent.KEYCODE_BACK) {
+        	return super.onKeyDown(keyCode, event); 
         }
  		
         return false;
@@ -298,7 +303,8 @@ public class IncidentMap extends MapActivity {
     }
 	
 	private void populateMenu(Menu menu) {
-		MenuItem i;i = menu.add( Menu.NONE, HOME, Menu.NONE, R.string.menu_home );
+		MenuItem i;
+		i = menu.add( Menu.NONE, HOME, Menu.NONE, R.string.menu_home );
 		i.setIcon(R.drawable.ushahidi_home);
 		
 		i = menu.add( Menu.NONE, INCIDENT_ADD, Menu.NONE, R.string.incident_menu_add);
@@ -332,23 +338,23 @@ public class IncidentMap extends MapActivity {
 	    		//mHandler.post(mDisplayIncidents);
 	        return(true);
 	    
-	      case LIST_INCIDENT:
-	    	 intent = new Intent( IncidentMap.this, IncidentMap.class);
-	  		startActivityForResult( intent,LIST_INCIDENTS );
+	    	case INCIDENT_ADD:
+	    		intent = new Intent( IncidentMap.this, AddIncident.class);
+	    		startActivityForResult(intent, ADD_INCIDENTS  );
 	        return(true);
 	    
-	      case INCIDENT_ADD:
-	    	intent = new Intent( IncidentMap.this, AddIncident.class);
-	  		startActivityForResult(intent, ADD_INCIDENTS  );
-	        return(true);
-	      
-	      case ABOUT:
-				intent = new Intent( IncidentMap.this,About.class);
+	    	case LIST_INCIDENT:
+		    	 intent = new Intent( IncidentMap.this, ListIncidents.class);
+		  		startActivityForResult( intent,LIST_INCIDENTS );
+		        return(true);
+		        
+	    	case ABOUT:
+				intent = new Intent( IncidentMap.this, About.class);
 	    		startActivityForResult( intent, REQUEST_CODE_ABOUT );
 	    		setResult(RESULT_OK);
 				return true;  
 	        
-	      case SETTINGS:
+	    	case SETTINGS:
 	    	  intent = new Intent( IncidentMap.this,  Settings.class);
 				
 	    	  // Make it a subactivity so we know when it returns
@@ -405,16 +411,17 @@ public class IncidentMap extends MapActivity {
 	  private class SitesOverlay extends ItemizedOverlay<OverlayItem> {  
 		  private List<OverlayItem> items=new ArrayList<OverlayItem>();  
 		  private Drawable marker=null;  
-		    
+		  private double longitude;
+		  private double latitude;
 		  public SitesOverlay(Drawable marker) {  
 			  super(marker);  
 			  this.marker=marker;  
 		  
 			  for( IncidentsData incidentData : mNewIncidents ) {
-				  IncidentMap.latitude = Double.parseDouble( incidentData.getIncidentLocLatitude());
-				  IncidentMap.longitude = Double.parseDouble( incidentData.getIncidentLocLongitude());
+				  this.latitude = Double.parseDouble( incidentData.getIncidentLocLatitude());
+				  this.longitude = Double.parseDouble( incidentData.getIncidentLocLongitude());
 		  
-				  items.add(new OverlayItem(getPoint(latitude, longitude),  
+				  items.add(new OverlayItem(getPoint(this.latitude, this.longitude),  
 						  incidentData.getIncidentTitle(), incidentData.getIncidentDesc()));
 		  
 			  }
