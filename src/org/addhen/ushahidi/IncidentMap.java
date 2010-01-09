@@ -9,6 +9,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.ContextMenu;
@@ -27,7 +30,10 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
+import com.google.android.maps.Projection;
+
 import android.location.Geocoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,8 +86,11 @@ public class IncidentMap extends MapActivity {
 		IncidentMap.latitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLatitude());
 		IncidentMap.longitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLongitude());
 		mapView.getController().setCenter(getPoint(IncidentMap.latitude,
-				IncidentMap.longitude));
-		mapView.getController().setZoom(17);
+			IncidentMap.longitude));
+		
+		/*mapView.getController().setCenter(getPoint(-1.2873000707050097,
+				36.821451182008204));*/
+		mapView.getController().setZoom(12);
 
 		ViewGroup zoom = (ViewGroup)findViewById(R.id.zoom);
 
@@ -92,7 +101,7 @@ public class IncidentMap extends MapActivity {
 		Drawable marker =getResources().getDrawable(R.drawable.ushahidi_circle);  
 		  
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());  
-		mapView.getOverlays().add(new SitesOverlay(marker)); 
+		mapView.getOverlays().add(new UshahidiOverlay()); 
 		
 		final Thread tr = new Thread() {
 		      @Override
@@ -358,7 +367,7 @@ public class IncidentMap extends MapActivity {
 	    return false;
 	}
 	
-	private GeoPoint getPoint(double lat, double lon) {
+	public GeoPoint getPoint(double lat, double lon) {
 	    return(new GeoPoint((int)(lat*1000000.0), (int)(lon*1000000.0)));
 	}
 	
@@ -402,6 +411,63 @@ public class IncidentMap extends MapActivity {
 	  
 	  };
 	  
+	  private class UshahidiOverlay extends Overlay {
+		  private int rad = 10;
+		  @Override
+		  public void draw(Canvas canvas, MapView mapView, boolean shadow) {
+			  super.draw(canvas, mapView, shadow);
+			  
+			  Projection projection = mapView.getProjection();
+			  
+			// Create and setup your paint brush
+			  Paint paint = new Paint();
+			  paint.setARGB(250, 255, 0, 0);
+			  paint.setAntiAlias(true);
+			  paint.setFakeBoldText(true);
+			  
+			  ArrayList<GeoPoint> geoPoints = this.incidentsLoc();
+			  
+			  if( shadow == false ) {
+				  // Draw red circles
+				  for( GeoPoint point: geoPoints  ) {
+					  
+					  Point penPoint = new Point();
+					  
+					  projection.toPixels(point, penPoint);
+					  
+					  RectF oval = new RectF( penPoint.x-rad, penPoint.y-rad, penPoint.x+rad,penPoint.y+rad);
+					  
+					  canvas.drawOval(oval, paint);
+					  
+				  }
+			  }
+		  }
+		  
+		  @Override
+		  public boolean onTap( GeoPoint point, MapView mapView ) {
+			  return true;
+		  }
+		  
+		  private ArrayList<GeoPoint> incidentsLoc() {
+			  ArrayList<GeoPoint> iLocations = new ArrayList<GeoPoint>();
+			  Double iLat;
+			  Double iLon;
+			  
+			  for( IncidentsData incidentData : mNewIncidents ) {
+				  iLat = Double.parseDouble( incidentData.getIncidentLocLatitude());
+				  iLon = Double.parseDouble( incidentData.getIncidentLocLongitude());
+				  
+				  GeoPoint geoPoint = new IncidentMap().getPoint(iLat, iLon );
+				  
+				  
+				  
+				  iLocations.add(geoPoint);
+				 
+			  }
+			  return iLocations;
+		  }
+	  }
+	  
 	  private class SitesOverlay extends ItemizedOverlay<OverlayItem> {  
 		  private List<OverlayItem> items=new ArrayList<OverlayItem>();  
 		  private Drawable marker=null;  
@@ -414,7 +480,7 @@ public class IncidentMap extends MapActivity {
 				  IncidentMap.latitude = Double.parseDouble( incidentData.getIncidentLocLatitude());
 				  IncidentMap.longitude = Double.parseDouble( incidentData.getIncidentLocLongitude());
 		  
-				  items.add(new OverlayItem(getPoint(latitude, longitude),  
+				  items.add(new OverlayItem(getPoint(IncidentMap.latitude, IncidentMap.longitude),  
 						  incidentData.getIncidentTitle(), incidentData.getIncidentDesc()));
 		  
 			  }
@@ -430,7 +496,7 @@ public class IncidentMap extends MapActivity {
 		  @Override  
 		  public void draw(Canvas canvas, MapView mapView, boolean shadow) {  
 			  super.draw(canvas, mapView, shadow);  
-		    
+			  
 			  boundCenterBottom(marker);  
 		  }  
 		    

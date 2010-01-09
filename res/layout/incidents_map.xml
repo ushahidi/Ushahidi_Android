@@ -5,7 +5,7 @@
 	<com.google.android.maps.MapView android:id="@+id/map"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
-		android:apiKey="02cv5Q8Rob0AxK9cfya5gqZJEmaM0lyZsPdLrmg"
+		android:apiKey="02cv5Q8Rob0BJheh-Mm9S4e2c6UnhIadyG0rOUA"
 		android:clickable="true" />
 	<LinearLayout android:id="@+id/zoom"
 		android:layout_width="wrap_content"
