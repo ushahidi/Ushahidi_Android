@@ -18,7 +18,10 @@ import com.google.android.maps.OverlayItem;
 /**
  * An abstract extention to the ItemizedOverlay for displaying information 
  * on a ballon upon a tap of each marker overlay.
- * @author eyedol
+ * 
+ * @credits - http://github.com/jgilfelt/android-mapviewballoons/
+ * 
+ * @author Jeff Gilfelt
  *
  */
 public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<OverlayItem> {

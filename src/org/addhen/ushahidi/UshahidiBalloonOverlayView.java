@@ -21,9 +21,13 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
 	/**
 	 * Create a new BalloonOverlayView.
 	 * 
+	 * @credits - http://github.com/jgilfelt/android-mapviewballoons/
+	 * 
 	 * @param context - The activity context.
 	 * @param balloonBottomOffset - The bottom padding (in pixels) to be applied
 	 * when rendering this view.
+	 * 
+	 * @author Jeff Gilfelt
 	 */
 	public UshahidiBalloonOverlayView(Context context, int balloonBottomOffset) {
 
