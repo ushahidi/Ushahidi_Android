@@ -4,6 +4,7 @@ package org.addhen.ushahidi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -88,25 +89,24 @@ public class IncidentMap extends MapActivity {
 		mapView.getController().setCenter(getPoint(IncidentMap.latitude,
 			IncidentMap.longitude));
 		
-		/*mapView.getController().setCenter(getPoint(-1.2873000707050097,
-				36.821451182008204));*/
 		mapView.getController().setZoom(12);
 
-		ViewGroup zoom = (ViewGroup)findViewById(R.id.zoom);
+		/*ViewGroup zoom = (ViewGroup)findViewById(R.id.zoom);
 
-		zoom.addView(mapView.getZoomControls());
+		zoom.addView(mapView.get);*/
+		mapView.setBuiltInZoomControls(true);
 		
 		mHandler = new Handler();
 		//mHandler.post(mDisplayCategories);
-		Drawable marker =getResources().getDrawable(R.drawable.ushahidi_circle);  
+		Drawable marker =getResources().getDrawable(R.drawable.marker);  
 		  
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());  
-		mapView.getOverlays().add(new UshahidiOverlay()); 
+		mapView.getOverlays().add(new SitesOverlay(marker,mapView)); 
 		
 		final Thread tr = new Thread() {
 		      @Override
 		      public void run() {
-		        //incidentDetails = showIncidents("DEATHS");
+		    	  //mNewIncidents  = showIncidents("All");
 		        showCategories();
 		       
 		      }
@@ -152,18 +152,18 @@ public class IncidentMap extends MapActivity {
  	  public List<IncidentsData> showIncidents( String by ) {
  
  		  Cursor cursor;
+ 		  String title;
+		  String date;
+		  String description;
+		  String location;
+		  String categories;
+		  String media;
+		  
  		  if( by.equals("All")) 
  			  cursor = UshahidiApplication.mDb.fetchAllIncidents();
  		  else
  			  cursor = UshahidiApplication.mDb.fetchIncidentsByCategories(by);
  		  
- 		  String title;
- 		  String date;
- 		  String description;
- 		  String location;
- 		  String categories;
- 		  String media;
- 		
  		  if (cursor.moveToFirst()) {
  			  int idIndex = cursor.getColumnIndexOrThrow( 
  					  UshahidiDatabase.INCIDENT_ID);
@@ -403,6 +403,7 @@ public class IncidentMap extends MapActivity {
 	   @SuppressWarnings("unchecked")
 	   public void onItemSelected(AdapterView parent, View v, int position, long id) {
 		   mNewIncidents  = showIncidents(vectorCategories.get(position));
+		   mapView.invalidate();
 	   }
 	 
 	   @SuppressWarnings("unchecked")
@@ -413,6 +414,7 @@ public class IncidentMap extends MapActivity {
 	  
 	  private class UshahidiOverlay extends Overlay {
 		  private int rad = 10;
+		  private List<OverlayItem> items=new ArrayList<OverlayItem>();
 		  @Override
 		  public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 			  super.draw(canvas, mapView, shadow);
@@ -445,6 +447,17 @@ public class IncidentMap extends MapActivity {
 		  
 		  @Override
 		  public boolean onTap( GeoPoint point, MapView mapView ) {
+			  AlertDialog dialog = (new AlertDialog.Builder(IncidentMap.this)).create();
+              dialog.setTitle("Hello Testing");
+              dialog.setMessage("And people were killed in kibera.");
+              dialog.setButton2("Ok", new Dialog.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();						
+					}
+      			});
+              
+              dialog.show();
+              dialog.setCancelable(false);
 			  return true;
 		  }
 		  
@@ -458,9 +471,7 @@ public class IncidentMap extends MapActivity {
 				  iLon = Double.parseDouble( incidentData.getIncidentLocLongitude());
 				  
 				  GeoPoint geoPoint = new IncidentMap().getPoint(iLat, iLon );
-				  
-				  
-				  
+				 
 				  iLocations.add(geoPoint);
 				 
 			  }
@@ -468,13 +479,13 @@ public class IncidentMap extends MapActivity {
 		  }
 	  }
 	  
-	  private class SitesOverlay extends ItemizedOverlay<OverlayItem> {  
-		  private List<OverlayItem> items=new ArrayList<OverlayItem>();  
-		  private Drawable marker=null;  
+	  private class SitesOverlay extends UshahidiItemizedOverlay<OverlayItem> {  
+		  private ArrayList<OverlayItem> items=new ArrayList<OverlayItem>();  
+		  private Context context;  
 		    
-		  public SitesOverlay(Drawable marker) {  
-			  super(marker);  
-			  this.marker=marker;  
+		  public SitesOverlay(Drawable marker, MapView mapView) {  
+			  super(boundCenter(marker),mapView);  
+			  context =  mapView.getContext();  
 		  
 			  for( IncidentsData incidentData : mNewIncidents ) {
 				  IncidentMap.latitude = Double.parseDouble( incidentData.getIncidentLocLatitude());
@@ -493,29 +504,19 @@ public class IncidentMap extends MapActivity {
 			  return items.get(i);  
 		  }  
 		    
-		  @Override  
+		  /*@Override  
 		  public void draw(Canvas canvas, MapView mapView, boolean shadow) {  
 			  super.draw(canvas, mapView, shadow);  
 			  
 			  boundCenterBottom(marker);  
-		  }  
+		  }*/  
 		    
 		  @Override  
-		  protected boolean onTap(int i) {
-			  AlertDialog dialog = (new AlertDialog.Builder(IncidentMap.this)).create();
-              dialog.setTitle(items.get(i).getTitle());
-              dialog.setMessage(items.get(i).getSnippet());
-              dialog.setButton2("Ok", new Dialog.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();						
-					}
-      			});
-              
-              dialog.show();
-              dialog.setCancelable(false);
-              
-		    
-			  return(true);  
+		  protected boolean onBalloonTap(int i) {
+			  
+			  Toast.makeText(context, items.get(i).getTitle() + i,
+						Toast.LENGTH_LONG).show();
+			  return true;
 		  }  
 		    
 		  @Override  

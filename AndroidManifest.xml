@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.addhen.ushahidi"
-    android:versionCode="1"
-      android:versionName="1.0.0">
+    android:versionCode="2"
+      android:versionName="1.0.1">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>    
@@ -11,7 +11,8 @@
     <uses-permission android:name= "android.permission.ACCESS_COARSE_LOCATION" /> 
     <uses-permission android:name= "android.permission.ACCESS_FINE_LOCATION" /> 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-   
+ 	
+ 	<uses-sdk minSdkVersion="3" />
     <application 
     	android:icon="@drawable/ushahidi_icon" 
     	android:label="@string/app_name"
@@ -89,6 +90,5 @@
                 <category android:name="android.intent.category.DEFAULT"></category>
             </intent-filter>
         </activity>
-        
     </application>
 </manifest> 
