@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
-	<LinearLayout android:id="@+id/zoom"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"> 
 	<com.google.android.maps.MapView android:id="@+id/map"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="fill_parent"
 		android:apiKey="02cv5Q8Rob0BJheh-Mm9S4e2c6UnhIadyG0rOUA"
 		android:clickable="true" />
-	</LinearLayout>
-	<LinearLayout android:id="@+id/zoom"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true"
-		android:layout_alignParentLeft="true"> 
+		
 		<Spinner android:id="@+id/incident_cat"
 	  		android:prompt="@string/prompt_mesg"
 	  		android:layout_width="fill_parent"
         	android:layout_height="wrap_content"
         	android:drawSelectorOnTop="true"/>
-    </LinearLayout>
-</LinearLayout>
+
+</RelativeLayout>
