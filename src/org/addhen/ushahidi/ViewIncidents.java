@@ -13,12 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
-import android.widget.LinearLayout.LayoutParams;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Vector;
 
 public class ViewIncidents extends Activity {
@@ -33,9 +28,8 @@ public class ViewIncidents extends Activity {
     private Bundle extras = new Bundle();
     private String media;
     private String thumbnails [];
-    private final String PREFS_NAME = "Ushahidi";
     private Drawable d;
-    private int mGalleryItemBackground;
+    
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {

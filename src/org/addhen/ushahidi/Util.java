@@ -5,11 +5,6 @@ import java.util.Vector;
 
 import org.addhen.ushahidi.net.UshahidiHttpClient;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 public class Util {
 
