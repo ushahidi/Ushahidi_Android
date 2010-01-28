@@ -126,7 +126,7 @@ public class UshahidiHttpClient {
              req.setParameter("person_email", params.get("person_email"));
              
              if( !TextUtils.isEmpty( params.get("filename") ))
-             req.setParameter("incident_photo[]", new File(params.get("filename")));
+             req.setParameter("incident_photo[]", new File(UshahidiService.savePath + params.get("filename")));
              
              
              InputStream serverInput = req.post();

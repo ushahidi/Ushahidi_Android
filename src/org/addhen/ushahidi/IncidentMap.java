@@ -1,6 +1,6 @@
 package org.addhen.ushahidi;
-	 
-
+ 
+ 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -25,7 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
-
+ 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
@@ -34,7 +34,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 import com.google.android.maps.Projection;
-
+ 
 import android.location.Geocoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ import java.util.Vector;
 import org.addhen.ushahidi.data.CategoriesData;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
-
+ 
 public class IncidentMap extends MapActivity {
 	private MapView mapView = null;
 	private static final int HOME = Menu.FIRST+1;
@@ -58,7 +58,7 @@ public class IncidentMap extends MapActivity {
 	private static final int REQUEST_CODE_ABOUT = 2;
 	private static final int DIALOG_MESSAGE = 0;
 	private static final int  DIALOG_LOADING_INCIDENTS = 1;
-	
+ 
 	private static double latitude;
 	private static double longitude;
 	private Handler mHandler;
@@ -71,56 +71,56 @@ public class IncidentMap extends MapActivity {
 	private List<IncidentsData> mNewIncidents;
 	private List<IncidentsData> mOldIncidents;
 	private List<CategoriesData> mNewCategories;
-	
+ 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.incidents_map);
-		
+ 
 		spinner = (Spinner) findViewById(R.id.incident_cat);
 		mapView = (MapView) findViewById(R.id.map);
-		
+ 
 		mOldIncidents = new ArrayList<IncidentsData>();
 		mNewIncidents  = showIncidents("All");
-		
-	
+ 
+ 
 		IncidentMap.latitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLatitude());
 		IncidentMap.longitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLongitude());
 		mapView.getController().setCenter(getPoint(IncidentMap.latitude,
 			IncidentMap.longitude));
-		
+ 
 		mapView.getController().setZoom(12);
-
+ 
 		/*ViewGroup zoom = (ViewGroup)findViewById(R.id.zoom);
-
+ 
 		zoom.addView(mapView.get);*/
 		mapView.setBuiltInZoomControls(true);
-		
+ 
 		mHandler = new Handler();
 		//mHandler.post(mDisplayCategories);
 		Drawable marker =getResources().getDrawable(R.drawable.marker);  
-		  
+ 
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());  
 		mapView.getOverlays().add(new SitesOverlay(marker,mapView)); 
-		
+ 
 		final Thread tr = new Thread() {
 		      @Override
 		      public void run() {
 		    	  //mNewIncidents  = showIncidents("All");
 		        showCategories();
-		       
+ 
 		      }
 		};
 		tr.start();
         
 	}
-	
-	
+ 
+ 
  	@Override
 	protected boolean isRouteDisplayed() {
 		return(false);
 	}
-	
+ 
  	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
  		if (keyCode == KeyEvent.KEYCODE_I) {
@@ -158,7 +158,7 @@ public class IncidentMap extends MapActivity {
 		  String location;
 		  String categories;
 		  String media;
-		  
+ 
  		  if( by.equals("All")) 
  			  cursor = UshahidiApplication.mDb.fetchAllIncidents();
  		  else
@@ -234,49 +234,49 @@ public class IncidentMap extends MapActivity {
 	public void onResume() {
 		super.onResume();
 		this.doUpdates = true;
-		
+ 
 	}
-
-	
+ 
+ 
 	//menu stuff
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo) {
 		populateMenu(menu);
 	}
-	
+ 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		populateMenu(menu);
-
+ 
 		return(super.onCreateOptionsMenu(menu));
 	}
-
+ 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		applyMenuChoice(item);
-
+ 
 		return(applyMenuChoice(item) ||
 						super.onOptionsItemSelected(item));
 	}
-
+ 
 	public boolean onContextItemSelected(MenuItem item) {
-
+ 
 		return(applyMenuChoice(item) ||
 						super.onContextItemSelected(item));
 	}
-	
+ 
 	final Runnable mDisplayNetworkError = new Runnable(){
 		public void run(){
 			showDialog(DIALOG_MESSAGE);
 		}
 	};
-	
+ 
 	final Runnable mDisplayCategories = new Runnable() {
 		public void run() {
 			showCategories();
 		}
 	};
-	
+ 
 	final Runnable mDisplayIncidents = new Runnable() {
 		public void run() {
 			dismissDialog(DIALOG_LOADING_INCIDENTS);
@@ -305,29 +305,29 @@ public class IncidentMap extends MapActivity {
         }
         return null;
     }
-	
+ 
 	private void populateMenu(Menu menu) {
 		MenuItem i;i = menu.add( Menu.NONE, HOME, Menu.NONE, R.string.menu_home );
 		i.setIcon(R.drawable.ushahidi_home);
-		
+ 
 		i = menu.add( Menu.NONE, INCIDENT_ADD, Menu.NONE, R.string.incident_menu_add);
 		i.setIcon(R.drawable.ushahidi_add);
-		  
+ 
 		i = menu.add( Menu.NONE, LIST_INCIDENT, Menu.NONE, R.string.incident_list );
 		i.setIcon(R.drawable.ushahidi_list);
-		  
-		
+ 
+ 
 		i = menu.add( Menu.NONE, INCIDENT_REFRESH, Menu.NONE, R.string.incident_menu_refresh );
 		i.setIcon(R.drawable.ushahidi_refresh);
-		  
+ 
 		i = menu.add( Menu.NONE, SETTINGS, Menu.NONE, R.string.menu_settings );
 		i.setIcon(R.drawable.ushahidi_settings);
-		  
+ 
 		i = menu.add( Menu.NONE, ABOUT, Menu.NONE, R.string.menu_about );
 		i.setIcon(R.drawable.ushahidi_about);
-	  
+ 
 	}
-	
+ 
 	private boolean applyMenuChoice(MenuItem item) {
 		Intent intent;
 	    switch (item.getItemId()) {
@@ -340,37 +340,37 @@ public class IncidentMap extends MapActivity {
 	    		//retrieveIncidentsAndCategories();
 	    		//mHandler.post(mDisplayIncidents);
 	        return(true);
-	    
+ 
 	      case LIST_INCIDENT:
 	    	 intent = new Intent( IncidentMap.this, IncidentMap.class);
 	  		startActivityForResult( intent,LIST_INCIDENTS );
 	        return(true);
-	    
+ 
 	      case INCIDENT_ADD:
 	    	intent = new Intent( IncidentMap.this, AddIncident.class);
 	  		startActivityForResult(intent, ADD_INCIDENTS  );
 	        return(true);
-	      
+ 
 	      case ABOUT:
 				intent = new Intent( IncidentMap.this,About.class);
 	    		startActivityForResult( intent, REQUEST_CODE_ABOUT );
 	    		setResult(RESULT_OK);
 				return true;  
-	        
+ 
 	      case SETTINGS:
 	    	  intent = new Intent( IncidentMap.this,  Settings.class);
-				
+ 
 	    	  // Make it a subactivity so we know when it returns
 	    	  startActivityForResult( intent, REQUEST_CODE_SETTINGS );
 	    	  return( true );
 	    }
 	    return false;
 	}
-	
+ 
 	public GeoPoint getPoint(double lat, double lon) {
 	    return(new GeoPoint((int)(lat*1000000.0), (int)(lon*1000000.0)));
 	}
-	
+ 
 	 @SuppressWarnings("unchecked")
 	  public void showCategories() {
 		  Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
@@ -381,70 +381,70 @@ public class IncidentMap extends MapActivity {
 			  do {
 				  vectorCategories.add( 
 						  Util.capitalizeString(cursor.getString(titleIndex).toLowerCase()));
-				  
+ 
 			  }while( cursor.moveToNext() );
 		  }
 		  cursor.close();
 		  spinnerArrayAdapter = new ArrayAdapter(this,
 				  android.R.layout.simple_spinner_item, vectorCategories );
-			    
+ 
 		  spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		  
+ 
 		  spinner.setAdapter(spinnerArrayAdapter);
-		  
+ 
 		  spinner.setOnItemSelectedListener(spinnerListener);
-		  
+ 
 	  }
-	  
+ 
 	  //spinner listener
 	  Spinner.OnItemSelectedListener spinnerListener =
 	   new Spinner.OnItemSelectedListener() {
-	    
+ 
 	   @SuppressWarnings("unchecked")
 	   public void onItemSelected(AdapterView parent, View v, int position, long id) {
 		   mNewIncidents  = showIncidents(vectorCategories.get(position));
 		   mapView.invalidate();
 	   }
-	 
+ 
 	   @SuppressWarnings("unchecked")
 	    public void onNothingSelected(AdapterView parent) { }
-	 
-	  
+ 
+ 
 	  };
-	  
+ 
 	  private class UshahidiOverlay extends Overlay {
 		  private int rad = 10;
 		  private List<OverlayItem> items=new ArrayList<OverlayItem>();
 		  @Override
 		  public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 			  super.draw(canvas, mapView, shadow);
-			  
+ 
 			  Projection projection = mapView.getProjection();
-			  
+ 
 			// Create and setup your paint brush
 			  Paint paint = new Paint();
 			  paint.setARGB(250, 255, 0, 0);
 			  paint.setAntiAlias(true);
 			  paint.setFakeBoldText(true);
-			  
+ 
 			  ArrayList<GeoPoint> geoPoints = this.incidentsLoc();
-			  
+ 
 			  if( shadow == false ) {
 				  // Draw red circles
 				  for( GeoPoint point: geoPoints  ) {
-					  
+ 
 					  Point penPoint = new Point();
-					  
+ 
 					  projection.toPixels(point, penPoint);
-					  
+ 
 					  RectF oval = new RectF( penPoint.x-rad, penPoint.y-rad, penPoint.x+rad,penPoint.y+rad);
-					  
+ 
 					  canvas.drawOval(oval, paint);
-					  
+ 
 				  }
 			  }
 		  }
-		  
+ 
 		  @Override
 		  public boolean onTap( GeoPoint point, MapView mapView ) {
 			  AlertDialog dialog = (new AlertDialog.Builder(IncidentMap.this)).create();
@@ -460,65 +460,65 @@ public class IncidentMap extends MapActivity {
               dialog.setCancelable(false);
 			  return true;
 		  }
-		  
+ 
 		  private ArrayList<GeoPoint> incidentsLoc() {
 			  ArrayList<GeoPoint> iLocations = new ArrayList<GeoPoint>();
 			  Double iLat;
 			  Double iLon;
-			  
+ 
 			  for( IncidentsData incidentData : mNewIncidents ) {
 				  iLat = Double.parseDouble( incidentData.getIncidentLocLatitude());
 				  iLon = Double.parseDouble( incidentData.getIncidentLocLongitude());
-				  
+ 
 				  GeoPoint geoPoint = new IncidentMap().getPoint(iLat, iLon );
-				 
+ 
 				  iLocations.add(geoPoint);
-				 
+ 
 			  }
 			  return iLocations;
 		  }
 	  }
-	  
+ 
 	  private class SitesOverlay extends UshahidiItemizedOverlay<OverlayItem> {  
 		  private ArrayList<OverlayItem> items=new ArrayList<OverlayItem>();  
 		  private Context context;  
-		    
+ 
 		  public SitesOverlay(Drawable marker, MapView mapView) {  
 			  super(boundCenter(marker),mapView);  
 			  context =  mapView.getContext();  
-		  
+ 
 			  for( IncidentsData incidentData : mNewIncidents ) {
 				  IncidentMap.latitude = Double.parseDouble( incidentData.getIncidentLocLatitude());
 				  IncidentMap.longitude = Double.parseDouble( incidentData.getIncidentLocLongitude());
-		  
+ 
 				  items.add(new OverlayItem(getPoint(IncidentMap.latitude, IncidentMap.longitude),  
 						  incidentData.getIncidentTitle(), incidentData.getIncidentDesc()));
-		  
+ 
 			  }
-		    
+ 
 			  populate();  
 		  }  
-		    
+ 
 		  @Override  
 		  protected OverlayItem createItem(int i) {  
 			  return items.get(i);  
 		  }  
-		    
+ 
 		  /*@Override  
 		  public void draw(Canvas canvas, MapView mapView, boolean shadow) {  
 			  super.draw(canvas, mapView, shadow);  
 			  
 			  boundCenterBottom(marker);  
 		  }*/  
-		    
+ 
 		  @Override  
 		  protected boolean onBalloonTap(int i) {
-			  
+ 
 			  Toast.makeText(context, items.get(i).getTitle() + i,
 						Toast.LENGTH_LONG).show();
 			  return true;
 		  }  
-		    
+ 
 		  @Override  
 		  public int size() {  
 			  return(items.size());  

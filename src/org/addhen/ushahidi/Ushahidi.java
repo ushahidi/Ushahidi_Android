@@ -96,14 +96,14 @@ public class Ushahidi extends Activity {
         mapBtn.setOnClickListener( new View.OnClickListener() {
         	public void onClick( View v) {
         		Intent intent = new Intent( Ushahidi.this, IncidentMap.class);
-        		startActivityForResult( intent,MAP_INCIDENTS );
+        		startActivityForResult( intent, MAP_INCIDENTS );
         		setResult(RESULT_OK);
         	}
         });
         
         addBtn.setOnClickListener( new View.OnClickListener()  {
         	public void onClick( View v ) {
-        		Intent intent = new Intent( Ushahidi.this,AddIncident.class);
+        		Intent intent = new Intent( Ushahidi.this, AddIncident.class);
         		startActivityForResult(intent, ADD_INCIDENTS );
         		setResult(RESULT_OK);
         	}
@@ -272,6 +272,7 @@ public class Ushahidi extends Activity {
 			case INCIDENT_MAP:
 				launchPreferencesIntent = new Intent( Ushahidi.this, IncidentMap.class);
         		startActivityForResult( launchPreferencesIntent,MAP_INCIDENTS );
+        		setResult(RESULT_OK);
 				return true;
 		
 			case ADD_INCIDENT:
@@ -291,6 +292,7 @@ public class Ushahidi extends Activity {
 				
 				// Make it a subactivity so we know when it returns
 				startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);
+				setResult(RESULT_OK);
 				return true;
 				
 			case SYNC:

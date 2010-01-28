@@ -38,4 +38,14 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_x="2px"
 		android:layout_y="100px"
 		android:clickable="true" />
+		
+		<!-- Production MapView
+			<com.google.android.maps.MapView
+                 android:layout_width="fill_parent"
+                 android:layout_height="fill_parent"
+                 android:apiKey="06wmUaTBRvXSH4AMuZyEXgm0FShJduQJzU1hTaA"
+                 />
+		
+		 -->
+		
 </AbsoluteLayout>

@@ -46,6 +46,7 @@ public final class R {
         public static final int ushahidi_settings=0x7f020017;
         public static final int ushahidi_title=0x7f020018;
         public static final int verified_color=0x7f02001c;
+        public static final int white_color=0x7f02001f;
     }
     public static final class id {
         public static final int add_category=0x7f07000e;
