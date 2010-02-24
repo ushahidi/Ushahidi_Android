@@ -83,25 +83,29 @@ public class IncidentMap extends MapActivity {
 		mOldIncidents = new ArrayList<IncidentsData>();
 		mNewIncidents  = showIncidents("All");
  
+		if( mNewIncidents.size() > 0 ) {
+			IncidentMap.latitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLatitude());
+			IncidentMap.longitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLongitude());
+			mapView.getController().setCenter(getPoint(IncidentMap.latitude,
+					IncidentMap.longitude));
  
-		IncidentMap.latitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLatitude());
-		IncidentMap.longitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLongitude());
-		mapView.getController().setCenter(getPoint(IncidentMap.latitude,
-			IncidentMap.longitude));
+			mapView.getController().setZoom(12);
  
-		mapView.getController().setZoom(12);
+			/*ViewGroup zoom = (ViewGroup)findViewById(R.id.zoom);
  
-		/*ViewGroup zoom = (ViewGroup)findViewById(R.id.zoom);
+			zoom.addView(mapView.get);*/
+			mapView.setBuiltInZoomControls(true);
  
-		zoom.addView(mapView.get);*/
-		mapView.setBuiltInZoomControls(true);
+			mHandler = new Handler();
+			//mHandler.post(mDisplayCategories);
+			Drawable marker =getResources().getDrawable(R.drawable.marker);  
  
-		mHandler = new Handler();
-		//mHandler.post(mDisplayCategories);
-		Drawable marker =getResources().getDrawable(R.drawable.marker);  
- 
-		marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());  
-		mapView.getOverlays().add(new SitesOverlay(marker,mapView)); 
+			marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());  
+			mapView.getOverlays().add(new SitesOverlay(marker,mapView));
+		} else {
+			 Toast.makeText(IncidentMap.this, "There are no reports to be showe",
+						Toast.LENGTH_LONG).show();
+		}
  
 		final Thread tr = new Thread() {
 		      @Override

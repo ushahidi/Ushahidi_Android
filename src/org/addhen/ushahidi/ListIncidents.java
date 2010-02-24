@@ -148,7 +148,7 @@ public class ListIncidents extends Activity
   final Runnable mRetrieveNewIncidents = new Runnable() {
 	  public void run() {
 	  try {
-		  if( Util.isConnected()) {
+		  if( Util.isConnected(ListIncidents.this)) {
 			  setProgressBarIndeterminateVisibility(true);
 			  
 	   

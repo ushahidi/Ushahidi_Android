@@ -13,7 +13,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -26,7 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.CompoundButton.OnCheckedChangeListener; 
 
 public class Settings extends Activity {
 	//variables
@@ -52,12 +55,17 @@ public class Settings extends Activity {
 	private static boolean busy = false;
 	private List<IncidentsData> mNewIncidents;
 	private List<CategoriesData> mNewCategories;
+	private boolean isConnected;
 	
     //Load
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		
+		isConnected = connectivity.getNetworkInfo(0).isConnectedOrConnecting(); 
+		
         initComponents();
         loadSettings();
     }
@@ -238,7 +246,7 @@ public class Settings extends Activity {
 	 final Runnable mRetrieveNewIncidents = new Runnable() {
 		  public void run() {
 		  try {
-			  if( Util.isConnected()) {
+			  if( Util.isConnected(Settings.this)) {
 				  setProgressBarIndeterminateVisibility(true);
 				  
 		   

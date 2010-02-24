@@ -163,7 +163,7 @@ public class AddIncident extends Activity {
         long updateTimeMsec = 1000L; 
         
         //check if there is internet to know which provider to use.
-        if( !Util.isConnected() ) {
+        if( !Util.isConnected(AddIncident.this) ) {
 			manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 
    updateTimeMsec, 500.0f, 
 		    listener);
@@ -280,7 +280,7 @@ public class AddIncident extends Activity {
 				}
 				
 				if( !error ) {
-					if( Util.isConnected() ){ 
+					if( Util.isConnected(AddIncident.this) ){ 
 						if( !postToOnline() ) {
 							mHandler.post(mSentIncidentFail);
 						}else { 

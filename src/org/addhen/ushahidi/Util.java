@@ -6,8 +6,18 @@ import java.util.Vector;
 import org.addhen.ushahidi.net.UshahidiHttpClient;
 import org.apache.http.HttpResponse;
 
-public class Util {
+import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo; 
+import android.os.Bundle;
 
+
+public class Util extends Activity{
+
+	private static NetworkInfo networkInfo;
+	
+	
 	/**
 	 * joins two strings together
 	 * @param first
@@ -56,8 +66,11 @@ public class Util {
 	/**
 	 * Is there internet connection
 	 */
-	public static boolean isConnected()  {
-		HttpResponse response = null;
+	public static boolean isConnected(Context context )  {
+		
+		//return networkInfo.isConnected();
+		
+		/*HttpResponse response = null;
 		String incidents = "";
 		
 		StringBuilder uriBuilder = new StringBuilder( UshahidiService.domain);
@@ -83,7 +96,20 @@ public class Util {
 		} else {
 			
 			return false;
-		}
+		}*/
+		
+		//ConnectivityManager contectivity = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE));  
+		ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		networkInfo = connectivity.getActiveNetworkInfo();
+		//NetworkInfo info
+		
+		if(networkInfo ==null || !networkInfo.isConnected()){  
+	        return false;  
+	    } 
+	    return true; 
+	     
 	}
+	
 	
 }

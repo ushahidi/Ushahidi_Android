@@ -161,7 +161,7 @@ public class Ushahidi extends Activity {
 	 final Runnable mRetrieveNewIncidents = new Runnable() {
 		  public void run() {
 		  try {
-			  if( Util.isConnected()) {
+			  if( Util.isConnected(Ushahidi.this)) {
 		   
 				  if(Categories.getAllCategoriesFromWeb() ) {
 					  mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
