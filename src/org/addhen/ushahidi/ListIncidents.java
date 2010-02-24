@@ -391,7 +391,7 @@ public class ListIncidents extends Activity
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        switch( requestCode ) {
+       /* switch( requestCode ) {
       case INCIDENTS_MAP:
         if( resultCode != RESULT_OK ){
           break;
@@ -402,7 +402,7 @@ public class ListIncidents extends Activity
         //mark all incidents as read
         UshahidiApplication.mDb.markAllIncidentssRead();  
         break;
-        }
+        }*/
   }
   
 }

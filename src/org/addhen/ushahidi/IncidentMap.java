@@ -125,33 +125,6 @@ public class IncidentMap extends MapActivity {
 		return(false);
 	}
  
- 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
- 		if (keyCode == KeyEvent.KEYCODE_I) {
-	    	// Zoom not closer than possible
-        	this.ushMapController.zoomIn();
-	    	//this.myMapController.zoomInFixing(Math.min(21, this.myMapView.getZoomLevel() + 1));
-            return true;
-        } else if (keyCode == KeyEvent.KEYCODE_O) {
-	    	// Zoom not farer than possible 
-        	this.ushMapController.zoomOut();
-	    	//this.myMapController.zoomInFixing(Math.max(1, this.myMapView.getZoomLevel() - 1),0);
-            return true;
-        } else if (keyCode == KeyEvent.KEYCODE_T) {
-        	// Switch to satellite view
-            mapView.setSatellite(true);
-            
-            return true;
-        } else if (keyCode == KeyEvent.KEYCODE_M) {
-        	// Switch to satellite view
-            mapView.setSatellite(false);
-            
-            return true;
-        }
- 		
-        return false;
-	}
- 	
  // get incidents from the db
  	  public List<IncidentsData> showIncidents( String by ) {
  
@@ -346,7 +319,7 @@ public class IncidentMap extends MapActivity {
 	        return(true);
  
 	      case LIST_INCIDENT:
-	    	 intent = new Intent( IncidentMap.this, IncidentMap.class);
+	    	 intent = new Intent( IncidentMap.this, ListIncidents.class);
 	  		startActivityForResult( intent,LIST_INCIDENTS );
 	        return(true);
  
@@ -416,73 +389,6 @@ public class IncidentMap extends MapActivity {
  
 	  };
  
-	  private class UshahidiOverlay extends Overlay {
-		  private int rad = 10;
-		  private List<OverlayItem> items=new ArrayList<OverlayItem>();
-		  @Override
-		  public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-			  super.draw(canvas, mapView, shadow);
- 
-			  Projection projection = mapView.getProjection();
- 
-			// Create and setup your paint brush
-			  Paint paint = new Paint();
-			  paint.setARGB(250, 255, 0, 0);
-			  paint.setAntiAlias(true);
-			  paint.setFakeBoldText(true);
- 
-			  ArrayList<GeoPoint> geoPoints = this.incidentsLoc();
- 
-			  if( shadow == false ) {
-				  // Draw red circles
-				  for( GeoPoint point: geoPoints  ) {
- 
-					  Point penPoint = new Point();
- 
-					  projection.toPixels(point, penPoint);
- 
-					  RectF oval = new RectF( penPoint.x-rad, penPoint.y-rad, penPoint.x+rad,penPoint.y+rad);
- 
-					  canvas.drawOval(oval, paint);
- 
-				  }
-			  }
-		  }
- 
-		  @Override
-		  public boolean onTap( GeoPoint point, MapView mapView ) {
-			  AlertDialog dialog = (new AlertDialog.Builder(IncidentMap.this)).create();
-              dialog.setTitle("Hello Testing");
-              dialog.setMessage("And people were killed in kibera.");
-              dialog.setButton2("Ok", new Dialog.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();						
-					}
-      			});
-              
-              dialog.show();
-              dialog.setCancelable(false);
-			  return true;
-		  }
- 
-		  private ArrayList<GeoPoint> incidentsLoc() {
-			  ArrayList<GeoPoint> iLocations = new ArrayList<GeoPoint>();
-			  Double iLat;
-			  Double iLon;
- 
-			  for( IncidentsData incidentData : mNewIncidents ) {
-				  iLat = Double.parseDouble( incidentData.getIncidentLocLatitude());
-				  iLon = Double.parseDouble( incidentData.getIncidentLocLongitude());
- 
-				  GeoPoint geoPoint = new IncidentMap().getPoint(iLat, iLon );
- 
-				  iLocations.add(geoPoint);
- 
-			  }
-			  return iLocations;
-		  }
-	  }
- 
 	  private class SitesOverlay extends UshahidiItemizedOverlay<OverlayItem> {  
 		  private ArrayList<OverlayItem> items=new ArrayList<OverlayItem>();  
 		  private Context context;  
@@ -518,8 +424,8 @@ public class IncidentMap extends MapActivity {
 		  @Override  
 		  protected boolean onBalloonTap(int i) {
  
-			  Toast.makeText(context, items.get(i).getTitle() + i,
-						Toast.LENGTH_LONG).show();
+			 /* Toast.makeText(context, items.get(i).getTitle() + i,
+						Toast.LENGTH_LONG).show();*/
 			  return true;
 		  }  
  
