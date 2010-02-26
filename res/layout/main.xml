@@ -59,7 +59,7 @@
         		android:layout_alignParentLeft="true"
         		android:layout_marginLeft="0px"
         		android:textStyle="bold"
-        		android:text="@string/incident_add_incident" />
+        		android:text="@string/incident_menu_add" />
         </LinearLayout>
 	</ScrollView>        
 </RelativeLayout>

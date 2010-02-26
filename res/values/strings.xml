@@ -2,9 +2,9 @@
 <resources>
     <string name="title">Ushahidi Logo here</string>
     <string name="app_name">Ushahidi</string>
-    <string name="add_incident">Ushahidi | Add Incident</string>
-    <string name="view_incident">Ushahidi | View Incident</string>
-    <string name="incident_details">Ushahidi | Incident Detail</string>
+    <string name="add_incident">Ushahidi | Add Report</string>
+    <string name="view_incident">Ushahidi | View Report</string>
+    <string name="incident_details">Ushahidi | Report Detail</string>
     <string name="app_settings">Ushahidi | Settings </string>
     <string name="ushahidi_about">Ushahidi | About </string>
     <string name="ushahidi_sync">Ushahidi | Synchronize </string>
@@ -37,7 +37,7 @@
 		<string name="txt_firstname">First name</string>
 		<string name="txt_lastname">Last name</string>
 		<string name="txt_email">E-mail address</string>
-		<string name="new_incidents">{0} New Incidents </string>
+		<string name="new_incidents">{0} New Reports </string>
 		<string name="new_categories">{0} New Categories </string>
 		<string name="incident_date">Change the date </string>
 		<string name="incident_current_date"></string>
@@ -48,13 +48,12 @@
 		<string name="incident_time">Change the time</string>
 		<string name="incident_title">Title:</string>
 		<string name="incident_add_category">Add Category</string>
-		<string name="incident_add_incident">Add Incident</string>
-		<string name="incident_menu_add">Add Incident</string>
-		<string name="incident_list">List Incidents</string>
+		<string name="incident_menu_add">Add Report</string>
+		<string name="incident_list">List Reports</string>
 		<string name="menu_home">Home</string>
 		<string name="menu_sync">Sync</string>
 		<string name="menu_settings">Settings</string>
-		<string name="incident_menu_map">Incident Map</string>
+		<string name="incident_menu_map">Report Map</string>
 		<string name="incident_menu_refresh">Refresh</string>
 		<string name="menu_about">About</string>
 		<string name="ushahidi_url">Ushahidi.com</string>
