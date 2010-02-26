@@ -4,8 +4,6 @@ package org.addhen.ushahidi;
 import java.util.List;
 
 import org.addhen.ushahidi.data.IncidentsData;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +15,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.maps.OverlayItem;
 

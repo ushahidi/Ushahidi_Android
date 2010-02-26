@@ -8,6 +8,7 @@
     <string name="app_settings">Ushahidi | Settings </string>
     <string name="ushahidi_about">Ushahidi | About </string>
     <string name="ushahidi_sync">Ushahidi | Synchronize </string>
+    <string name="ushahidi_splash_screen">Ushahidi | Splash Screen"</string>
     <string name="date_time">Event Title</string>
     <string name="prompt_mesg">Choose A Category to Filter</string>
     <string name="btn_country">Default location</string>

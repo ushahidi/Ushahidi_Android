@@ -1,17 +1,10 @@
 package org.addhen.ushahidi;
 
-import java.io.IOException;
 import java.util.Vector;
-
-import org.addhen.ushahidi.net.UshahidiHttpClient;
-import org.apache.http.HttpResponse;
-
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo; 
-import android.os.Bundle;
-
 
 public class Util extends Activity{
 
@@ -73,7 +66,7 @@ public class Util extends Activity{
 		networkInfo = connectivity.getActiveNetworkInfo();
 		//NetworkInfo info
 		
-		if(networkInfo ==null || !networkInfo.isConnected()){  
+		if(networkInfo == null || !networkInfo.isConnected()){  
 	        return false;  
 	    } 
 	    return true; 

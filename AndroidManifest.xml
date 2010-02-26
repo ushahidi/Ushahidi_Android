@@ -18,11 +18,19 @@
     	android:name="UshahidiApplication">
     <service android:name=".UshahidiService" />       
     	<uses-library android:name="com.google.android.maps" />
-        <activity android:name=".Ushahidi" 
+        <activity android:name=".UshahidiSplashScreen" 
         	android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".Ushahidi" 
+        	android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         
