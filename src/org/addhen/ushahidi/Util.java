@@ -67,38 +67,7 @@ public class Util extends Activity{
 	 * Is there internet connection
 	 */
 	public static boolean isConnected(Context context )  {
-		
-		//return networkInfo.isConnected();
-		
-		/*HttpResponse response = null;
-		String incidents = "";
-		
-		StringBuilder uriBuilder = new StringBuilder( UshahidiService.domain);
-		
-		try {
-			response = UshahidiHttpClient.GetURL( uriBuilder.toString() );
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			return false;
-		}
-		
-		if( response == null ) {
-			return false;
-		}
-		
-		final int statusCode = response.getStatusLine().getStatusCode();
-		
-		if( statusCode == 200 ) {
-			incidents = UshahidiHttpClient.GetText(response);
-			UshahidiService.incidentsResponse = incidents;
-			
-			return true;
-		} else {
-			
-			return false;
-		}*/
-		
-		//ConnectivityManager contectivity = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE));  
+		  
 		ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		networkInfo = connectivity.getActiveNetworkInfo();
@@ -111,5 +80,19 @@ public class Util extends Activity{
 	     
 	}
 	
+	/**
+	 * Limit a string to defined length
+	 * 
+	 * @param int limit - the total length 
+	 * @param string limited - the limited string
+	 */
+	public static String limitString( String value, int length ) {
+		StringBuilder buf = new StringBuilder(value);
+		if( buf.length() > length ) {
+			buf.setLength(length);
+			buf.append(" ...");
+		}
+		return buf.toString();
+	}
 	
 }

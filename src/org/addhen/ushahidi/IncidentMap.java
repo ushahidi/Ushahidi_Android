@@ -69,9 +69,10 @@ public class IncidentMap extends MapActivity {
 	private ArrayAdapter<String> spinnerArrayAdapter;
 	private boolean doUpdates = true;
 	private List<IncidentsData> mNewIncidents;
+	private Integer index;
 	private List<IncidentsData> mOldIncidents;
 	private List<CategoriesData> mNewCategories;
- 
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -79,10 +80,9 @@ public class IncidentMap extends MapActivity {
  
 		spinner = (Spinner) findViewById(R.id.incident_cat);
 		mapView = (MapView) findViewById(R.id.map);
- 
+		index = new Integer(0);
 		mOldIncidents = new ArrayList<IncidentsData>();
 		mNewIncidents  = showIncidents("All");
- 
 		if( mNewIncidents.size() > 0 ) {
 			IncidentMap.latitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLatitude());
 			IncidentMap.longitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLongitude());
@@ -90,20 +90,17 @@ public class IncidentMap extends MapActivity {
 					IncidentMap.longitude));
  
 			mapView.getController().setZoom(12);
- 
-			/*ViewGroup zoom = (ViewGroup)findViewById(R.id.zoom);
- 
-			zoom.addView(mapView.get);*/
+
 			mapView.setBuiltInZoomControls(true);
  
 			mHandler = new Handler();
-			//mHandler.post(mDisplayCategories);
+			
 			Drawable marker =getResources().getDrawable(R.drawable.marker);  
  
 			marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());  
 			mapView.getOverlays().add(new SitesOverlay(marker,mapView));
 		} else {
-			 Toast.makeText(IncidentMap.this, "There are no reports to be showe",
+			 Toast.makeText(IncidentMap.this, "There are no reports to be shown",
 						Toast.LENGTH_LONG).show();
 		}
  
@@ -214,7 +211,23 @@ public class IncidentMap extends MapActivity {
  
 	}
  
- 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+	        /* switch( requestCode ) {
+	       case INCIDENTS_MAP:
+	         if( resultCode != RESULT_OK ){
+	           break;
+	         }
+	         mHandler.post(mDisplayIncidents);
+	         mHandler.post(mDisplayCategories);
+	         
+	         //mark all incidents as read
+	         UshahidiApplication.mDb.markAllIncidentssRead();  
+	         break;
+	         }*/
+	}
+	
 	//menu stuff
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo) {
@@ -394,7 +407,7 @@ public class IncidentMap extends MapActivity {
 		  private Context context;  
  
 		  public SitesOverlay(Drawable marker, MapView mapView) {  
-			  super(boundCenter(marker),mapView);  
+			  super(boundCenter(marker),mapView, IncidentMap.this,mNewIncidents);  
 			  context =  mapView.getContext();  
  
 			  for( IncidentsData incidentData : mNewIncidents ) {
@@ -402,7 +415,7 @@ public class IncidentMap extends MapActivity {
 				  IncidentMap.longitude = Double.parseDouble( incidentData.getIncidentLocLongitude());
  
 				  items.add(new OverlayItem(getPoint(IncidentMap.latitude, IncidentMap.longitude),  
-						  incidentData.getIncidentTitle(), incidentData.getIncidentDesc()));
+						  incidentData.getIncidentTitle(), Util.limitString(incidentData.getIncidentDesc(),30)));
  
 			  }
  
@@ -412,20 +425,10 @@ public class IncidentMap extends MapActivity {
 		  @Override  
 		  protected OverlayItem createItem(int i) {  
 			  return items.get(i);  
-		  }  
- 
-		  /*@Override  
-		  public void draw(Canvas canvas, MapView mapView, boolean shadow) {  
-			  super.draw(canvas, mapView, shadow);  
-			  
-			  boundCenterBottom(marker);  
-		  }*/  
+		  }    
  
 		  @Override  
 		  protected boolean onBalloonTap(int i) {
- 
-			 /* Toast.makeText(context, items.get(i).getTitle() + i,
-						Toast.LENGTH_LONG).show();*/
 			  return true;
 		  }  
  

@@ -1,7 +1,15 @@
 package org.addhen.ushahidi;
 
 
+import java.util.List;
+
+import org.addhen.ushahidi.data.IncidentsData;
+
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.maps.OverlayItem;
 
@@ -16,7 +25,10 @@ import com.google.android.maps.OverlayItem;
 public class UshahidiBalloonOverlayView extends FrameLayout {
 	private LinearLayout layout;
 	private TextView title;
+	private TextView readmore;
 	private TextView snippet;
+	private Bundle incidentsBundle = new Bundle();
+	private static final int VIEW_INCIDENT = 1;
 	
 	/**
 	 * Create a new BalloonOverlayView.
@@ -29,20 +41,43 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
 	 * 
 	 * @author Jeff Gilfelt
 	 */
-	public UshahidiBalloonOverlayView(Context context, int balloonBottomOffset) {
+	public UshahidiBalloonOverlayView( final IncidentMap iMap,final Context context, final int balloonBottomOffset,final List<IncidentsData> mNewIncidents, final int index) {
 
 		super(context);
 
 		setPadding(10, 0, 10, balloonBottomOffset);
 		layout = new LinearLayout(context);
 		layout.setVisibility(VISIBLE);
-
+		
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflater.inflate(R.layout.balloon_map_overlay, layout);
 		title = (TextView) v.findViewById(R.id.balloon_item_title);
 		snippet = (TextView) v.findViewById(R.id.balloon_item_snippet);
-
+		readmore = (TextView) v.findViewById(R.id.balloon_item_readmore);
+		
+		
+		readmore.setText("Read more..");
+		readmore.setOnClickListener(new OnClickListener() { 
+			public void onClick(View view) {
+				Log.i("Pop item", " "+index);
+				incidentsBundle.putString("title",mNewIncidents.get(index).getIncidentTitle());
+	        	incidentsBundle.putString("desc", mNewIncidents.get(index).getIncidentDesc());
+	        	incidentsBundle.putString("category", mNewIncidents.get(index).getIncidentCategories());
+	        	incidentsBundle.putString("location", mNewIncidents.get(index).getIncidentLocation());
+	        	incidentsBundle.putString("date", mNewIncidents.get(index).getIncidentDate());
+	        	incidentsBundle.putString("media", mNewIncidents.get(index).getIncidentMedia());
+	        	incidentsBundle.putString("status", ""+mNewIncidents.get(index).getIncidentVerified());
+	        	
+	        	Intent intent = new Intent( context, ViewIncidents.class);
+				intent.putExtra("incidents", incidentsBundle);
+				
+				iMap.startActivityForResult(intent,VIEW_INCIDENT);
+				iMap.setResult(iMap.RESULT_OK );
+				
+			}
+		} );
+		
 		ImageView close = (ImageView) v.findViewById(R.id.close_img_button);
 		close.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

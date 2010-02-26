@@ -1,6 +1,9 @@
 package org.addhen.ushahidi;
 
 import java.lang.reflect.Method;
+import java.util.List;
+
+import org.addhen.ushahidi.data.IncidentsData;
 
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -28,6 +31,8 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
 	
 	private MapView mapView;
 	private UshahidiBalloonOverlayView balloonView;
+	private IncidentMap iMap;
+	private List<IncidentsData> mNewIncidents;
 	private int viewOffset;
 	private View clickRegion;
 	final MapController mc;
@@ -37,11 +42,13 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
 	 * @param marker -  An icon to be drawn on the map for each item in the overlay.
 	 * @param mapView - The map view upon which the overlay item will be drawn.
 	 */
-	public UshahidiItemizedOverlay(Drawable marker, MapView mapView ) {
+	public UshahidiItemizedOverlay(Drawable marker, MapView mapView, IncidentMap iMap,List<IncidentsData> mNewIncidents ) {
 		super(marker);
 		
 		this.mapView = mapView;
 		this.viewOffset = 0;
+		this.iMap = iMap;
+		this.mNewIncidents = mNewIncidents;
 		this.mc = mapView.getController();
 		
 	}
@@ -75,7 +82,6 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
 	/* (non-Javadoc)
 	 * @see com.google.android.maps.ItemizedOverlay#onTap(int)
 	 */
-	@Override
 	protected final boolean onTap(int index) {
 		boolean isRecycled;
 		final int thisIndex;
@@ -85,7 +91,7 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
 		
 		if( balloonView == null ) {
 			
-			balloonView = new UshahidiBalloonOverlayView(mapView.getContext(),viewOffset);
+			balloonView = new UshahidiBalloonOverlayView(this.iMap,mapView.getContext(),viewOffset,this.mNewIncidents, thisIndex);
 			clickRegion = (View) balloonView.findViewById(R.id.balloon_inner_layout);
 			isRecycled = false;
 			
