@@ -29,9 +29,9 @@ public class UshahidiSplashScreen extends Activity {
                 } catch(InterruptedException e) {
                     // do nothing
                 } finally {
-                    finish();
+                    //finish();
                     startActivity(new Intent(UshahidiSplashScreen.this,Ushahidi.class));
-                    stop();
+                    //stop();
                 }
             }
         };

@@ -50,6 +50,7 @@ public class UshahidiService extends Service {
 	public static String email = "";
 	public static int countries = 0;
 	public static int AutoUpdateDelay = 0;
+	public static String totalReports = "";
 	public static String fileName = "";
 	public static boolean AutoFetch = false;
  
@@ -312,7 +313,7 @@ public class UshahidiService extends Service {
 		AutoUpdateDelay = settings.getInt("AutoUpdateDelay", 0);
  
 		AutoFetch = settings.getBoolean("AutoFetch", false);
- 
+		totalReports = settings.getString("TotalReports", "");
 		// make sure folder exists
 		final File dir = new File(UshahidiService.savePath);
 		dir.mkdirs();
@@ -329,7 +330,7 @@ public class UshahidiService extends Service {
 		editor.putString("savePath", savePath);
 		editor.putInt("AutoUpdateDelay", AutoUpdateDelay);
 		editor.putBoolean("AutoFetch", AutoFetch);
- 
+		editor.putString("TotalReports", totalReports);
 		// Don't forget to commit your edits!!!
 		editor.commit();
 	}

@@ -30,7 +30,7 @@
 				android:layout_height="wrap_content">
 				<TextView android:layout_width="fill_parent"
 					android:layout_height="wrap_content" 
-					android:text="@string/txt_firstname" 
+					android:text="@string/txt_first_name" 
 					android:textColor="@drawable/date_color"/>
 				<EditText android:id="@+id/firstname" 
 			  	android:layout_width="fill_parent"
@@ -42,7 +42,7 @@
 				android:layout_height="wrap_content">
 				<TextView android:layout_width="fill_parent"
 					android:layout_height="wrap_content" 
-					android:text="@string/txt_lastname" 
+					android:text="@string/txt_last_name" 
 					android:textColor="@drawable/date_color"/>
 				<EditText android:id="@+id/lastname" 
 			  	android:layout_width="fill_parent"
@@ -82,10 +82,10 @@
 					android:textColor="@drawable/date_color"
 					android:layout_height="wrap_content"
 					android:text="@string/txt_cache" />
-				<Button android:id="@+id/btn_clear_cache"
+				<Button android:id="@+id/btn_cache"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="@string/btn_clear_cache" />
+					android:text="@string/txt_clear_cache" />
 			</LinearLayout>
 			<LinearLayout android:layout_width="fill_parent" 
 				android:layout_height="wrap_content">
@@ -95,12 +95,12 @@
 						android:layout_width="wrap_content" 
 						android:layout_height="wrap_content"
 						android:textColor="@drawable/date_color" 
-						android:text="@string/option_save_phone" />
+						android:text="@string/hint_option_location" />
 					<RadioButton android:id="@+id/rb_on_SD" 
 						android:layout_width="wrap_content" 
 						android:layout_height="wrap_content" 
 						android:textColor="@drawable/date_color"
-						android:text="@string/option_save_sdcard" />
+						android:text="@string/hint_option_location" />
 				</RadioGroup>
 			</LinearLayout>
 			<LinearLayout android:orientation="vertical"
