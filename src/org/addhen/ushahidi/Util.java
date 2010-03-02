@@ -1,15 +1,26 @@
 package org.addhen.ushahidi;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Vector;
-import android.app.Activity;
+
+import org.addhen.ushahidi.data.CategoriesData;
+import org.addhen.ushahidi.data.HandleXml;
+import org.addhen.ushahidi.data.IncidentsData;
+import org.addhen.ushahidi.net.Categories;
+import org.addhen.ushahidi.net.Incidents;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo; 
+import android.os.Handler;
 
-public class Util extends Activity{
+public class Util{
 
 	private static NetworkInfo networkInfo;
-	
+	private static List<IncidentsData> mNewIncidents;
+	private static List<CategoriesData> mNewCategories;
+	private static Handler mHandler;
 	
 	/**
 	 * joins two strings together
@@ -88,4 +99,40 @@ public class Util extends Activity{
 		return buf.toString();
 	}
 	
+	/**
+	 * Fetch reports details from the internet
+	 */
+	public static void fetchReports( final Context context ) {
+		
+		mHandler = new Handler();
+		
+		final Runnable mRetrieveNewIncidents = new Runnable() {
+			  public void run() {
+			  try {
+				  if( Util.isConnected(context)) {
+	 
+					  if(Categories.getAllCategoriesFromWeb() ) {
+						  mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
+					  }
+	 
+					  if(Incidents.getAllIncidentsFromWeb()){
+						  mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
+					  }
+	 
+					  UshahidiApplication.mDb.addCategories(mNewCategories, false);
+					  UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
+					  
+				  } else {
+					  return;
+				  }
+			  	} catch (IOException e) {
+					//means there was a problem getting it
+			  	}
+			  }
+		  };
+		  
+		  mHandler.post(mRetrieveNewIncidents);
+		  
+	}
+	 
 }

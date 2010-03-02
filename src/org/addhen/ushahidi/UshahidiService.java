@@ -29,6 +29,7 @@ import android.os.IBinder;
  
 import android.os.SystemClock;
 import android.util.Log;
+import android.widget.Toast;
  
 public class UshahidiService extends Service {
 	public static final String PREFS_NAME = "UshahidiService";
@@ -50,7 +51,7 @@ public class UshahidiService extends Service {
  
 	private Handler mHandler = new Handler();
 	 
-	private static final String TAG = "UshahidiService";
+	private static final String TAG = "Ushahidi";
 	 
     private ArrayList<IncidentsData> mNewIncidents;
     private ArrayList<CategoriesData> mNewCategories;
@@ -73,21 +74,13 @@ public class UshahidiService extends Service {
 			if(AutoUpdateDelay <= 0){
 				return;
 			}
-			// TODO get new incidents from the web
- 
-			try {
-				if(Incidents.getAllIncidentsFromWeb()){
-					UshahidiService.saveSettings(getApplicationContext());
-					processNewCategories();
-					processNewIncidents();
-					showNotification("New Updates!");
-					
-				}
-			} catch (IOException e) {
-					//means there was a problem getting it
-			} finally {
-				mHandler.postAtTime(mUpdateTimeTask, SystemClock.uptimeMillis() + (1000 * 60 * AutoUpdateDelay));
-			}
+			Log.i(TAG, "Auto update "+ AutoUpdateDelay);
+			UshahidiService.saveSettings(getApplicationContext());
+			Util.fetchReports(UshahidiService.this);
+				
+			showNotification("New Updates!");
+			mHandler.postAtTime(mUpdateTimeTask, SystemClock.uptimeMillis() + (1000 * 60 * AutoUpdateDelay));	
+				
 		}
 	};
 	
@@ -136,7 +129,7 @@ public class UshahidiService extends Service {
         newUshahidiReportNotification.contentIntent = contentIntent;
         newUshahidiReportNotification.flags = Notification.FLAG_AUTO_CANCEL;
         newUshahidiReportNotification.defaults = Notification.DEFAULT_ALL;
-        newUshahidiReportNotification.setLatestEventInfo(this, PREFS_NAME, tickerText, contentIntent);
+        newUshahidiReportNotification.setLatestEventInfo(this, TAG, tickerText, contentIntent);
         
         //set the ringer
 		Uri ringURI = Uri.fromFile(new File("/system/media/audio/ringtones/ringer.mp3"));
@@ -164,8 +157,7 @@ public class UshahidiService extends Service {
 	    Log.i(TAG, mNewIncidents.size() + " new incidents.");
  
 	    int count = getDb().addNewIncidentsAndCountUnread(mNewIncidents);
- 
-	   
+ 	   
 	    if (count <= 0) {
 	      return;
 	    }
