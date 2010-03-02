@@ -1,24 +1,16 @@
 package org.addhen.ushahidi;
  
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.text.DateFormat;
+
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Vector;
  
 import org.addhen.ushahidi.net.Incidents;
 import org.addhen.ushahidi.data.CategoriesData;
-import org.addhen.ushahidi.data.HandleXml;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -30,6 +22,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
  
@@ -55,20 +49,25 @@ public class UshahidiService extends Service {
 	public static boolean AutoFetch = false;
  
 	private Handler mHandler = new Handler();
-	private NotificationManager mNotificationManager;
-    private static final int YOURAPP_NOTIFICATION_ID = 500; 
-    private static QueueThread queue;
-    
-    private static final String TAG = "UshahidiService";
- 
+	 
+	private static final String TAG = "UshahidiService";
+	 
     private ArrayList<IncidentsData> mNewIncidents;
     private ArrayList<CategoriesData> mNewCategories;
     
+    public static final String NEW_USHAHIDI_REPORT_FOUND = "New_Ushahidi_Report_Found";
+    public static final int NOTIFICATION_ID = 1;
+    
+    private Notification newUshahidiReportNotification;
+    private NotificationManager mNotificationManager;
+    private static QueueThread queue;
+    private String title = "";
+    private String text = "";
     
     private UshahidiDatabase getDb() {
         return UshahidiApplication.mDb;
     }
- 
+    
 	private Runnable mUpdateTimeTask = new Runnable() {
 		public void run() {
 			if(AutoUpdateDelay <= 0){
@@ -82,6 +81,7 @@ public class UshahidiService extends Service {
 					processNewCategories();
 					processNewIncidents();
 					showNotification("New Updates!");
+					
 				}
 			} catch (IOException e) {
 					//means there was a problem getting it
@@ -90,22 +90,17 @@ public class UshahidiService extends Service {
 			}
 		}
 	};
- 
+	
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
- 
+	
 	@Override 
 	public void onCreate() {
 		super.onCreate();
- 
-	    mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
- 
 		queue = new QueueThread("ushahidi");
- 
-		// init the service here
 		mHandler = new Handler();
- 
+		
 		if(AutoUpdateDelay > 0){
 			mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
 			mHandler.postDelayed(mUpdateTimeTask, (1000 * 60 * AutoUpdateDelay));
@@ -120,7 +115,47 @@ public class UshahidiService extends Service {
 		};
 		tr.start();
 	}
- 
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+	}
+	
+	public static void AddThreadToQueue(Thread tr){
+		queue.AddQueueItem(tr);
+	}
+	
+	private void showNotification(String tickerText) {
+        // This is who should be launched if the user selects our notification.
+        Intent baseIntent = new Intent(this, ListIncidents.class);
+        baseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, baseIntent, 0);
+
+        // choose the ticker text
+        newUshahidiReportNotification = new Notification(R.drawable.ushahidi_icon, tickerText, System.currentTimeMillis());
+        newUshahidiReportNotification.contentIntent = contentIntent;
+        newUshahidiReportNotification.flags = Notification.FLAG_AUTO_CANCEL;
+        newUshahidiReportNotification.defaults = Notification.DEFAULT_ALL;
+        newUshahidiReportNotification.setLatestEventInfo(this, PREFS_NAME, tickerText, contentIntent);
+        
+        //set the ringer
+		Uri ringURI = Uri.fromFile(new File("/system/media/audio/ringtones/ringer.mp3"));
+		newUshahidiReportNotification.sound = ringURI; 
+
+		double vibrateLength = 100*Math.exp(0.53*20);
+		long[] vibrate = new long[] {100, 100, (long)vibrateLength };
+		newUshahidiReportNotification.vibrate = vibrate;
+		    
+		int color = Color.BLUE;
+		     
+		newUshahidiReportNotification.ledARGB = color;
+		newUshahidiReportNotification.ledOffMS = (int)vibrateLength;
+		newUshahidiReportNotification.ledOnMS = (int)vibrateLength;
+		newUshahidiReportNotification.flags = newUshahidiReportNotification.flags |  Notification.FLAG_SHOW_LIGHTS;
+        
+        mNotificationManager.notify(NOTIFICATION_ID, newUshahidiReportNotification);
+	}
+	
 	private void processNewIncidents() {
 	    if (mNewIncidents.size() <= 0) {
 	    	return;
@@ -130,25 +165,12 @@ public class UshahidiService extends Service {
  
 	    int count = getDb().addNewIncidentsAndCountUnread(mNewIncidents);
  
-	    /*for (IncidentsData incident : mNewIncidents) {
-	      if (!incident.getIncidentMedia().equals("") ) {
-	        // Fetch image to cache.
-	        try {
-	        	//UshahidiApplication.mImageManager.put(incident.getIncidentMedia());
-	        } catch (IOException e) {
-	        	Log.e(TAG, e.getMessage(), e);
-	        }
-	      }
-	    }*/
- 
+	   
 	    if (count <= 0) {
 	      return;
 	    }
  
 	    IncidentsData latestIncident = mNewIncidents.get(0);
- 
-	    String title;
-	    String text;
  
 	    if (count == 1) {
 	      title = latestIncident.getIncidentTitle();
@@ -158,41 +180,7 @@ public class UshahidiService extends Service {
 	      text = getString(R.string.new_categories);
 	      text = MessageFormat.format(text, count);
 	    }
- 
-	   // PendingIntent intent = PendingIntent.getActivity(this, 0, ListIncidents.createIntent(this), 0);
- 
-	    //notify(intent, INCIDENTS_NOTIFICATION_ID, R.drawable.favicon,
-	    		//latestIncident.getIncidentDate(), title, text);
 	}
- 
-	/*private void notify(PendingIntent intent, int notificationId,
-		      int notifyIconId, String tickerText, String title, String text) {
-		    Notification notification = new Notification(notifyIconId, tickerText,
-		        System.currentTimeMillis());
- 
-		    notification.setLatestEventInfo(this, title, text, intent);
- 
-		    notification.flags = Notification.FLAG_AUTO_CANCEL
-		        | Notification.FLAG_ONLY_ALERT_ONCE | Notification.FLAG_SHOW_LIGHTS;
- 
-		    notification.ledARGB = 0xFF84E4FA;
-		    notification.ledOnMS = 5000;
-		    notification.ledOffMS = 5000;
- 
-		    String ringtoneUri = mPreferences.getString(RINGTONE_KEY, null);
- 
-		    if (ringtoneUri == null) {
-		      notification.defaults |= Notification.DEFAULT_SOUND;
-		    } else {
-		      notification.sound = Uri.parse(ringtoneUri);
-		    }
- 
-		    if (mPreferences.getBoolean(VIBRATE_KEY, false)) {
-		      notification.defaults |= Notification.DEFAULT_VIBRATE;
-		    }
- 
-		    mNotificationManager.notify(notificationId, notification);
-	}*/
  
 	private void processNewCategories() {
 	    if (mNewCategories.size() <= 0) {
@@ -218,9 +206,6 @@ public class UshahidiService extends Service {
  
 	    CategoriesData latest = mNewCategories.get(0);
  
-	    String title;
-	    String text;
- 
 	    if (count == 1) {
 	      title = latest.getCategoryTitle();
 	      text = latest.getCategoryDescription();
@@ -230,75 +215,8 @@ public class UshahidiService extends Service {
 	      text = MessageFormat.format(text, count);
 	    }
  
-	    //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ListIncidents.createIntent(this), 0);
- 
-	    //notify(pendingIntent, CATEGORIES_NOTIFICATION_ID, R.drawable.favicon,
-	       // latest.getCategoryTitle(), title, text);
-	  }
- 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
 	}
- 
-	public static void AddThreadToQueue(Thread tr){
-		queue.AddQueueItem(tr);
-	}
- 
-	/*static void schedule(Context context) {
-	    SharedPreferences preferences = PreferenceManager
-	        .getDefaultSharedPreferences(context);
- 
-	    if (!preferences.getBoolean(CHECK_UPDATES_KEY, false)) {
-	      Log.i(TAG, "Check update preference is false.");
-	      return;
-	    }
- 
-	    String intervalPref = preferences.getString(
-	        CHECK_UPDATE_INTERVAL_KEY, context
-	            .getString(UshahidiService.AutoUpdateDelay));
-	    int interval = Integer.parseInt(intervalPref);
- 
-	    Intent intent = new Intent(context, UshahidiService.class);
-	    PendingIntent pending = PendingIntent.getService(context, 0, intent, 0);
-	    Calendar c = new GregorianCalendar();
-	    c.add(Calendar.MINUTE, interval);
- 
-	    DateFormat df = new SimpleDateFormat("h:mm a");
-	    Log.i(TAG, "Scheduling alarm at " + df.format(c.getTime()));
- 
-	    AlarmManager alarm = (AlarmManager) context
-	        .getSystemService(Context.ALARM_SERVICE);
-	    alarm.cancel(pending);
-	    alarm.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pending);
-	  }
- 
-	  static void unschedule(Context context) {
-	    Intent intent = new Intent(context, UshahidiService.class);
-	    PendingIntent pending = PendingIntent.getService(context, 0, intent, 0);
-	    AlarmManager alarm = (AlarmManager) context
-	        .getSystemService(Context.ALARM_SERVICE);
-	    Log.i(TAG, "Cancelling alarms.");
-	    alarm.cancel(pending);
-	  }*/
- 
-	private void showNotification(String tickerText) {
-        // This is who should be launched if the user selects our notification.
-        Intent baseIntent = new Intent(this, ListIncidents.class);
-        baseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, baseIntent, 0);
- 
-        // choose the ticker text
-        Notification not = new Notification(R.drawable.icon, tickerText, System.currentTimeMillis());
-        not.contentIntent = contentIntent;
-        not.flags = Notification.FLAG_AUTO_CANCEL;
-        not.defaults = Notification.DEFAULT_ALL;
-        not.setLatestEventInfo(this, PREFS_NAME, tickerText, contentIntent);
- 
-        mNotificationManager.notify(
-                   YOURAPP_NOTIFICATION_ID, not);
-    }
- 
+	
 	public static void loadSettings(Context context) {
 		final SharedPreferences settings = context.getSharedPreferences(
 				PREFS_NAME, 0);
@@ -319,6 +237,7 @@ public class UshahidiService extends Service {
 		dir.mkdirs();
  
 	}
+	
 	public static void saveSettings(Context context) {
 		final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
 		final SharedPreferences.Editor editor = settings.edit();
@@ -334,7 +253,7 @@ public class UshahidiService extends Service {
 		// Don't forget to commit your edits!!!
 		editor.commit();
 	}
- 
+	
 	public class QueueThread {
 	    protected Vector<Thread>    queue;
 	    protected int       itemcount;
