@@ -71,7 +71,7 @@ private Context iContext;
 			iTv.setMedia(iItems.get(position).getMedia());
 			iTv.setCategories(iItems.get(position).getCategories());
 			iTv.setId( iItems.get( position ).getId() );
-		
+			iTv.setArrow(iItems.get(position).getArrow());
 		}
 		return iTv;
 	}

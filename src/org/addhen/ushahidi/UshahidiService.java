@@ -48,10 +48,10 @@ public class UshahidiService extends Service {
 	public static String totalReports = "";
 	public static String fileName = "";
 	public static boolean AutoFetch = false;
- 
+	public static String total_reports = "";
 	private Handler mHandler = new Handler();
 	 
-	private static final String TAG = "Ushahidi";
+	private static final String TAG = "Ushahidi - New Updates";
 	 
     private ArrayList<IncidentsData> mNewIncidents;
     private ArrayList<CategoriesData> mNewCategories;
@@ -71,14 +71,15 @@ public class UshahidiService extends Service {
     
 	private Runnable mUpdateTimeTask = new Runnable() {
 		public void run() {
-			if(AutoUpdateDelay <= 0){
+			if(AutoUpdateDelay <= 0 &&  !AutoFetch ){
 				return;
 			}
-			Log.i(TAG, "Auto update "+ AutoUpdateDelay);
+			
 			UshahidiService.saveSettings(getApplicationContext());
+			
 			Util.fetchReports(UshahidiService.this);
 				
-			showNotification("New Updates!");
+			showNotification(total_reports);
 			mHandler.postAtTime(mUpdateTimeTask, SystemClock.uptimeMillis() + (1000 * 60 * AutoUpdateDelay));	
 				
 		}
@@ -125,7 +126,7 @@ public class UshahidiService extends Service {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, baseIntent, 0);
 
         // choose the ticker text
-        newUshahidiReportNotification = new Notification(R.drawable.ushahidi_icon, tickerText, System.currentTimeMillis());
+        newUshahidiReportNotification = new Notification(R.drawable.favicon, tickerText, System.currentTimeMillis());
         newUshahidiReportNotification.contentIntent = contentIntent;
         newUshahidiReportNotification.flags = Notification.FLAG_AUTO_CANCEL;
         newUshahidiReportNotification.defaults = Notification.DEFAULT_ALL;

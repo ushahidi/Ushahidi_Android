@@ -2,9 +2,11 @@ package org.addhen.ushahidi;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -17,19 +19,23 @@ import android.widget.Gallery;
 import java.util.Vector;
 
 public class ViewIncidents extends Activity {
-	private ImageView mImageView;
+	private Button viewMap;
     private TextView title;
     private TextView body;
     private TextView date;
     private TextView location;
     private TextView category;
     private TextView status;
-    
     private Bundle extras = new Bundle();
+    private Bundle incidentsBundle = new Bundle();
     private String media;
     private String thumbnails [];
-    private Drawable d;
-    
+    private int id;
+    private String reportLatitude;
+    private String reportLongitude; 
+    private String reportTitle;
+    private String reportDescription;
+    private static final int VIEW_MAP = 1;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,14 +43,17 @@ public class ViewIncidents extends Activity {
         
         setContentView(R.layout.view_incidents);
         
-        mImageView = (ImageView) findViewById(R.id.img);
+        viewMap = (Button) findViewById(R.id.view_map);
         
         Bundle incidents = getIntent().getExtras();
         
         extras = incidents.getBundle("incidents");
         
-        d = null;
-        
+        id = extras.getInt("id");
+        reportTitle = extras.getString("title");
+        reportDescription = extras.getString("desc");
+        reportLatitude = extras.getString("latitude");
+        reportLongitude = extras.getString("longitude");
         String iStatus = Util.toInt(extras.getString("status") ) == 0 ? "Unverified" : "Verified";
         title = (TextView) findViewById(R.id.title);
         title.setTypeface(Typeface.DEFAULT_BOLD);
@@ -58,12 +67,12 @@ public class ViewIncidents extends Activity {
         
         date = (TextView) findViewById(R.id.date);
         date.setTextColor(Color.BLACK);
-        date.setText( Util.joinString("Date:",extras.getString("date")));
+        date.setText( Util.joinString("Date: ",extras.getString("date")));
         
         
         location = (TextView) findViewById(R.id.location);
         location.setTextColor(Color.BLACK);
-        location.setText(extras.getString("location"));
+        location.setText(Util.joinString("Location: ", extras.getString("location")));
         
         body = (TextView) findViewById(R.id.webview);
         body.setTextColor(Color.BLACK);
@@ -81,30 +90,43 @@ public class ViewIncidents extends Activity {
     		
     		thumbnails = media.split(",");    	
     
-    		d = ImageManager.getImages( thumbnails[0]);
-        
-        	mImageView = (ImageView) findViewById(R.id.img);
-        
         	for( int i = 0; i < thumbnails.length; i++ ) {
         		imageAdapter.mImageIds.add( ImageManager.getImages( thumbnails[i] ) );
         	}
     	}
         
-        Drawable drawable = getResources().getDrawable(R.drawable.ushahidi_icon); 
-        
-        mImageView.setImageDrawable(
-        	d == null ? drawable : d
-        );
-       
-        
-        //mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-      
-        //mImageView.setBackgroundResource(mGalleryItemBackground);
         Gallery g = (Gallery) findViewById(R.id.gallery);
         
         g.setAdapter( imageAdapter );
         
-        
+        viewMap.setOnClickListener( new View.OnClickListener() {  
+            
+        	public void onClick( View v ) {
+				
+				incidentsBundle.putInt("id", id);
+				reportTitle = extras.getString("title");
+		        reportDescription = extras.getString("desc");
+		        reportLatitude = extras.getString("latitude");
+		        reportLongitude = extras.getString("longitude");
+		        
+				incidentsBundle.putString("title",reportTitle);
+				incidentsBundle.putString("desc", reportDescription);
+				incidentsBundle.putString("longitude",reportLongitude);
+				incidentsBundle.putString("latitude",reportLatitude);
+				incidentsBundle.putString("category", extras.getString("category"));
+				incidentsBundle.putString("location", extras.getString("location"));
+				incidentsBundle.putString("date", extras.getString("date"));
+				incidentsBundle.putString("media", extras.getString("media"));
+				incidentsBundle.putString("status", extras.getString("status"));
+				
+				Intent intent = new Intent( ViewIncidents.this,IncidentMap.class);
+				intent.putExtra("report", incidentsBundle);
+				startActivityForResult(intent,VIEW_MAP);
+				setResult( RESULT_OK, intent );
+              
+			}
+          
+		});
         
     }
     

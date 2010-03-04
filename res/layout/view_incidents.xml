@@ -3,60 +3,67 @@
   
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  android:background="@drawable/thick_background_color"
+  android:background="@drawable/background_color"
   >
-    <RelativeLayout android:id="@+id/top_items"
+    <LinearLayout android:id="@+id/top_items"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:paddingTop="8px"              
     android:paddingBottom="7px"          
     android:paddingLeft="7px"
     android:paddingRight="9px"        
+    >
+    <LinearLayout android:id="@+id/top_items"
+    android:layout_width="250px"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     >    
-      <ImageView
-        android:id="@+id/img"        
-        android:layout_marginTop="2px"
-        android:layout_marginLeft="2px"
-        android:layout_marginBottom="2px"
-        android:layout_marginRight="4px"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-      />
+      
       <TextView      
-        android:id="@+id/title"
-        android:layout_toRightOf="@id/img"        
+        android:id="@+id/title"       
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
       />
       <TextView
-        android:id="@+id/category"            
-        android:layout_toRightOf="@id/img"      
+        android:id="@+id/category"                  
         android:layout_below="@+id/title"        
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
       />                    
       <TextView  
-				android:id="@+id/location"
-				android:layout_toRightOf="@id/img"
-				android:layout_below="@+id/category"
+			android:id="@+id/location"
+			android:layout_below="@+id/category"
 	    	android:layout_width="wrap_content" 
 	    	android:layout_height="wrap_content"/>
 	    
 	    <TextView  
-				android:id="@+id/date"
-				android:layout_toRightOf="@id/img"
-				android:layout_below="@+id/location"
+			android:id="@+id/date"
+			android:layout_below="@+id/location"
 	    	android:layout_width="wrap_content" 
 	    	android:layout_height="wrap_content"/>
 	    	
 	    <TextView  
-				android:id="@+id/status"
-				android:layout_toRightOf="@id/img"
-				android:layout_below="@+id/date"
+			android:id="@+id/status"
+			android:layout_below="@+id/date"
 	    	android:layout_width="wrap_content" 
 	    	android:layout_height="wrap_content"/>
-	    	          
-    </RelativeLayout>
+		</LinearLayout>
+		<LinearLayout android:id="@+id/top_items"
+    		android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:orientation="horizontal"
+    		android:paddingTop="20px">
+    		
+			<Button android:id="@+id/view_map"
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:layout_alignParentRight="true"
+        		android:layout_marginLeft="0px"
+        		android:textStyle="bold"
+        		android:text="@string/view_map" />
+    	</LinearLayout>
+    </LinearLayout>
 
     <!-- Main content area. -->
     	<ScrollView android:id="@+id/description" 

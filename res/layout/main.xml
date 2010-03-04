@@ -27,7 +27,18 @@
  			<TextView  android:id="@+id/spacer"
     			android:layout_width="fill_parent" 
     			android:layout_height="wrap_content" />      
- 			
+ 			<Button android:id="@+id/home_add_btn"
+        		android:layout_width="fill_parent"
+        		android:layout_height="wrap_content"
+        		android:layout_alignParentLeft="true"
+        		android:layout_marginLeft="0px"
+        		android:textStyle="bold"
+        		android:text="@string/incident_menu_add" />
+        	
+        	<TextView  android:id="@+id/spacer"
+    			android:layout_width="fill_parent" 
+    			android:layout_height="wrap_content" />
+    		          
  			<Button android:id="@+id/incident_list"
         		android:layout_width="fill_parent"
         		android:layout_height="wrap_content"
@@ -49,17 +60,6 @@
         		android:textStyle="bold"
         		android:text="@string/incident_menu_map" />
     		
-    		<TextView  android:id="@+id/spacer"
-    			android:layout_width="fill_parent" 
-    			android:layout_height="wrap_content" />
-    		          
- 			<Button android:id="@+id/home_add_btn"
-        		android:layout_width="fill_parent"
-        		android:layout_height="wrap_content"
-        		android:layout_alignParentLeft="true"
-        		android:layout_marginLeft="0px"
-        		android:textStyle="bold"
-        		android:text="@string/incident_menu_add" />
         </LinearLayout>
 	</ScrollView>        
 </RelativeLayout>

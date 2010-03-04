@@ -1,8 +1,12 @@
 package org.addhen.ushahidi;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.addhen.ushahidi.data.CategoriesData;
 import org.addhen.ushahidi.data.HandleXml;
@@ -12,15 +16,15 @@ import org.addhen.ushahidi.net.Incidents;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo; 
-import android.os.Handler;
+import android.net.NetworkInfo;
+
+
 
 public class Util{
 
 	private static NetworkInfo networkInfo;
 	private static List<IncidentsData> mNewIncidents;
 	private static List<CategoriesData> mNewCategories;
-	private static Handler mHandler;
 	
 	/**
 	 * joins two strings together
@@ -101,38 +105,55 @@ public class Util{
 	
 	/**
 	 * Fetch reports details from the internet
+	 * 
+	 * @param context - the activity calling this method.
 	 */
 	public static void fetchReports( final Context context ) {
-		
-		mHandler = new Handler();
-		
-		final Runnable mRetrieveNewIncidents = new Runnable() {
-			  public void run() {
-			  try {
-				  if( Util.isConnected(context)) {
-	 
-					  if(Categories.getAllCategoriesFromWeb() ) {
-						  mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
-					  }
-	 
-					  if(Incidents.getAllIncidentsFromWeb()){
-						  mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
-					  }
-	 
-					  UshahidiApplication.mDb.addCategories(mNewCategories, false);
-					  UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
-					  
-				  } else {
-					  return;
+		try {
+			  if( Util.isConnected(context)) {
+
+				  if(Categories.getAllCategoriesFromWeb() ) {
+					  mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
 				  }
-			  	} catch (IOException e) {
-					//means there was a problem getting it
-			  	}
+
+				  if(Incidents.getAllIncidentsFromWeb()){
+					  mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
+				  }
+				  
+				  UshahidiService.total_reports = mNewCategories.size()+" Categories -- " +  mNewIncidents.size()+ " Reports";
+				  
+				  UshahidiApplication.mDb.addCategories(mNewCategories, false);
+				  UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
+				  
+			  } else {
+				  return;
 			  }
-		  };
-		  
-		  mHandler.post(mRetrieveNewIncidents);
-		  
+		  	} catch (IOException e) {
+				//means there was a problem getting it
+		  	} 
 	}
-	 
+	
+	/**
+	 * Format date into more readable format.
+	 * 
+	 * @param  date - the date to be formatted.
+	 * @return 
+	 */
+	public static String formatDate( String date ) {
+	
+		String formatted = "";
+		
+		DateFormat formatter = new SimpleDateFormat(
+        "MMMMM dd, yyyy 'at' hh:mm:ss aaa");
+		
+		try {
+			
+			formatted = formatter.format(formatter.parse(date));
+		
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return formatted;
+	}
 }

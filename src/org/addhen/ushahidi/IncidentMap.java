@@ -15,6 +15,7 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -72,7 +73,14 @@ public class IncidentMap extends MapActivity {
 	private Integer index;
 	private List<IncidentsData> mOldIncidents;
 	private List<CategoriesData> mNewCategories;
-	
+	private Bundle extras;
+	private int id;
+	private String reportLatitude;
+    private String reportLongitude; 
+    private String reportTitle;
+    private String reportDescription;
+    
+    
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -83,12 +91,33 @@ public class IncidentMap extends MapActivity {
 		index = new Integer(0);
 		mOldIncidents = new ArrayList<IncidentsData>();
 		mNewIncidents  = showIncidents("All");
+		
+		Bundle incidents = getIntent().getExtras();
+		
+		if( incidents != null ){
+			extras = incidents.getBundle("report");
+			id = extras.getInt("id");
+			reportTitle = extras.getString("title");
+			reportDescription = extras.getString("desc");
+			reportLatitude = extras.getString("latitude");
+			reportLongitude = extras.getString("longitude");
+		}
+		
+		Log.i("longitude", "longitude "+reportLongitude);
+		
 		if( mNewIncidents.size() > 0 ) {
-			IncidentMap.latitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLatitude());
-			IncidentMap.longitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLongitude());
+			if( id > 0 ) {
+				IncidentMap.latitude = Double.parseDouble( reportLatitude );
+				IncidentMap.longitude = Double.parseDouble( reportLongitude );
+			} else {
+				IncidentMap.latitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLatitude());
+				IncidentMap.longitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLongitude());
+				
+			}
+			
 			mapView.getController().setCenter(getPoint(IncidentMap.latitude,
 					IncidentMap.longitude));
- 
+			
 			mapView.getController().setZoom(12);
 
 			mapView.setBuiltInZoomControls(true);
@@ -407,16 +436,25 @@ public class IncidentMap extends MapActivity {
 		  private Context context;  
  
 		  public SitesOverlay(Drawable marker, MapView mapView) {  
-			  super(boundCenter(marker),mapView, IncidentMap.this,mNewIncidents);  
+			  super(boundCenter(marker),mapView, IncidentMap.this,mNewIncidents, extras);  
 			  context =  mapView.getContext();  
- 
-			  for( IncidentsData incidentData : mNewIncidents ) {
-				  IncidentMap.latitude = Double.parseDouble( incidentData.getIncidentLocLatitude());
-				  IncidentMap.longitude = Double.parseDouble( incidentData.getIncidentLocLongitude());
- 
+			  
+			  if( id > 0 ) {
+				  IncidentMap.latitude = Double.parseDouble( reportLatitude);
+				  IncidentMap.longitude = Double.parseDouble( reportLongitude);
+
 				  items.add(new OverlayItem(getPoint(IncidentMap.latitude, IncidentMap.longitude),  
+						  reportTitle, Util.limitString(reportDescription,30)));
+			  }else {
+			  
+				  for( IncidentsData incidentData : mNewIncidents ) {
+					  IncidentMap.latitude = Double.parseDouble( incidentData.getIncidentLocLatitude());
+					  IncidentMap.longitude = Double.parseDouble( incidentData.getIncidentLocLongitude());
+ 
+					  items.add(new OverlayItem(getPoint(IncidentMap.latitude, IncidentMap.longitude),  
 						  incidentData.getIncidentTitle(), Util.limitString(incidentData.getIncidentDesc(),30)));
  
+				  }
 			  }
  
 			  populate();  

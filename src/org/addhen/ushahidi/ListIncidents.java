@@ -71,9 +71,12 @@ public class ListIncidents extends Activity
       
 			public void onItemClick(AdapterView<?> arg0, View view, int position,
         		  long id) {
-        	 
+				
+				incidentsBundle.putInt("id", mOldIncidents.get(position).getIncidentId());
 				incidentsBundle.putString("title",mOldIncidents.get(position).getIncidentTitle());
 				incidentsBundle.putString("desc", mOldIncidents.get(position).getIncidentDesc());
+				incidentsBundle.putString("longitude",mOldIncidents.get(position).getIncidentLocLongitude());
+				incidentsBundle.putString("latitude",mOldIncidents.get(position).getIncidentLocLatitude());
 				incidentsBundle.putString("category", mOldIncidents.get(position).getIncidentCategories());
 				incidentsBundle.putString("location", mOldIncidents.get(position).getIncidentLocation());
 				incidentsBundle.putString("date", mOldIncidents.get(position).getIncidentDate());
@@ -90,9 +93,6 @@ public class ListIncidents extends Activity
 		});
 		spinner = (Spinner) findViewById(R.id.incident_cat);
         
-		//mHandler.post(mDisplayIncidents);
-		//mark all incidents as read
-		//mDb.markAllIncidentssRead();
 	}
   
 	protected void onResume(){
@@ -299,7 +299,11 @@ public class ListIncidents extends Activity
 				int categoryIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_CATEGORIES);
 		  
 				int mediaIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_MEDIA);
-		  
+				
+				int latitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LATITUDE);
+				
+				int longitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LONGITUDE);
+				
 				ila.removeItems();
 		  
 				do {
@@ -309,7 +313,8 @@ public class ListIncidents extends Activity
 			  
 					int id = Util.toInt(cursor.getString(idIndex));
 					incidentData.setIncidentId(id);
-			  
+					incidentData.setIncidentLocLatitude(cursor.getString(latitudeIndex));
+					incidentData.setIncidentLocLongitude(cursor.getString(longitudeIndex));
 					title = Util.capitalizeString(cursor.getString(titleIndex));
 					incidentData.setIncidentTitle(title);
 			  
@@ -320,10 +325,12 @@ public class ListIncidents extends Activity
 					incidentData.setIncidentCategories(categories);
 			  
 					location = cursor.getString(locationIndex);
-					incidentData.setIncidentLocLongitude(location);
-			  
-					date = Util.joinString("Date: ",cursor.getString(dateIndex));
-					incidentData.setIncidentDate(cursor.getString(dateIndex));			  
+					incidentData.setIncidentLocation(location);
+					
+					//TODO format the date to the appropriate format
+					date = cursor.getString(dateIndex);
+					
+					incidentData.setIncidentDate(date);			  
 			  
 					media = cursor.getString(mediaIndex);
 					incidentData.setIncidentMedia(media);
@@ -333,12 +340,18 @@ public class ListIncidents extends Activity
 					status = Util.toInt(cursor.getString(verifiedIndex) ) == 0 ? "Unverified" : "Verified";
 					incidentData.setIncidentVerified(Util.toInt(cursor.getString(verifiedIndex) ));
 			  
-					//TODO do a proper check of thumbnails
+					//TODO do a proper check for thumbnails
 					d = ImageManager.getImages( thumbnails[0]);
 			  
-					ila.addItem( new ListIncidentText( d == null ? getResources().getDrawable( R.drawable.ushahidi_icon):d, 
+					ila.addItem( new ListIncidentText( d == null ? getResources().getDrawable( R.drawable.ushahidi_report_icon):d, 
 							title, date, 
-							status,description,location,media,categories, id) );
+							status,
+							description,
+							location,
+							media,
+							categories, 
+							id,
+							getResources().getDrawable( R.drawable.ushahidi_arrow)) );
 			  
 				} while (cursor.moveToNext());
 			}

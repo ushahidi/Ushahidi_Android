@@ -7,7 +7,6 @@ import org.addhen.ushahidi.data.IncidentsData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +37,12 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
 	 * 
 	 * @author Jeff Gilfelt
 	 */
-	public UshahidiBalloonOverlayView( final IncidentMap iMap,final Context context, final int balloonBottomOffset,final List<IncidentsData> mNewIncidents, final int index) {
+	public UshahidiBalloonOverlayView( final IncidentMap iMap,
+			final Context context, 
+			final int balloonBottomOffset,
+			final List<IncidentsData> mNewIncidents, 
+			final int index,
+			final Bundle extras) {
 
 		super(context);
 
@@ -57,15 +61,26 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
 		readmore.setText("Read more..");
 		readmore.setOnClickListener(new OnClickListener() { 
 			public void onClick(View view) {
-				Log.i("Pop item", " "+index);
-				incidentsBundle.putString("title",mNewIncidents.get(index).getIncidentTitle());
-	        	incidentsBundle.putString("desc", mNewIncidents.get(index).getIncidentDesc());
-	        	incidentsBundle.putString("category", mNewIncidents.get(index).getIncidentCategories());
-	        	incidentsBundle.putString("location", mNewIncidents.get(index).getIncidentLocation());
-	        	incidentsBundle.putString("date", mNewIncidents.get(index).getIncidentDate());
-	        	incidentsBundle.putString("media", mNewIncidents.get(index).getIncidentMedia());
-	        	incidentsBundle.putString("status", ""+mNewIncidents.get(index).getIncidentVerified());
-	        	
+				
+				if( extras != null ) {
+					
+					incidentsBundle.putString("title",extras.getString("title"));
+					incidentsBundle.putString("desc", extras.getString("desc"));
+					incidentsBundle.putString("category", extras.getString("category"));
+					incidentsBundle.putString("location", extras.getString("location"));
+					incidentsBundle.putString("date", extras.getString("date"));
+					incidentsBundle.putString("media", extras.getString("media"));
+					incidentsBundle.putString("status", ""+extras.getString("status"));
+					
+				} else {
+					incidentsBundle.putString("title",mNewIncidents.get(index).getIncidentTitle());
+					incidentsBundle.putString("desc", mNewIncidents.get(index).getIncidentDesc());
+					incidentsBundle.putString("category", mNewIncidents.get(index).getIncidentCategories());
+					incidentsBundle.putString("location", mNewIncidents.get(index).getIncidentLocation());
+					incidentsBundle.putString("date", mNewIncidents.get(index).getIncidentDate());
+					incidentsBundle.putString("media", mNewIncidents.get(index).getIncidentMedia());
+					incidentsBundle.putString("status", ""+mNewIncidents.get(index).getIncidentVerified());
+				}
 	        	Intent intent = new Intent( context, ViewIncidents.class);
 				intent.putExtra("incidents", incidentsBundle);
 				

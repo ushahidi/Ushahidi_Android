@@ -29,12 +29,13 @@
 	<string name="incident_verified">Verified</string>
 	<string name="incident_unverified">Unverified</string>
 	<string name="incident_location">Location:</string>
+	<string name="view_map">Map</string>
 	<string name="incident_description">Description:</string>
 	<string name="incident_time">Change the time</string>
 	<string name="incident_title">Title:</string>
 	<string name="incident_add_category">Add Category</string>
 	<string name="incident_menu_add">Add Report</string>
-	<string name="incident_list">List Reports</string>
+	<string name="incident_list">View Reports</string>
 	<string name="menu_home">Home</string>
 	<string name="menu_sync">Sync</string>
 	<!--  Settings -->
@@ -65,7 +66,7 @@
 	<string name="total_reports">Show</string>
 	<string name="hint_total_reports">Total number of recent reports to show.</string>
 	<!-- Menu -->
-	<string name="incident_menu_map">Report Map</string>
+	<string name="incident_menu_map">View Map</string>
 	<string name="incident_menu_refresh">Refresh</string>
 	<!--  about screen -->
 	<string name="menu_about">About</string>

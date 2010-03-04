@@ -9,6 +9,7 @@ public class ListIncidentText {
 	private String status;
 	private int id;
 	private Drawable thumbnail;
+	private Drawable arrow;
 	private Uri thumbnailUri;
 	private String description;
 	private String location;
@@ -18,8 +19,13 @@ public class ListIncidentText {
 	
 	public ListIncidentText(Drawable thumbnail, 
 			String title, String date, 
-				String status, 
-				String description, String location,String media, String categories,int id) {
+			String status, 
+			String description, 
+			String location,
+			String media, 
+			String categories,
+			int id,
+			Drawable arrow) {
 		
 		this.thumbnail = thumbnail;
 		this.title = title;
@@ -29,10 +35,20 @@ public class ListIncidentText {
 		this.location = location;
 		this.media = media;
 		this.id = id;
+		this.arrow = arrow;
 	}
 	
-	public ListIncidentText(Uri uri, String title, String date, String status,
-			String description, String location,String media, String categories, int id) {
+	public ListIncidentText(Uri uri, 
+			String title, 
+			String date, 
+			String status,
+			String description, 
+			String location,
+			String media, 
+			String categories, 
+			int id, 
+			Drawable arrow) {
+		
 		this.thumbnailUri = uri;
 		this.title = title;
 		this.date = date;
@@ -41,6 +57,7 @@ public class ListIncidentText {
 		this.location = location;
 		this.media = media;
 		this.id = id;
+		this.arrow = arrow;
 	}
 	
 	public boolean isSelectable() {
@@ -76,6 +93,7 @@ public class ListIncidentText {
 	}
 	
 	public void setDate( String date ) {
+		
 		this.date = date;
 	}
 	
@@ -129,5 +147,13 @@ public class ListIncidentText {
 	
 	public int getId() {
 		return this.id;
+	}
+	
+	public void setArrow( Drawable arrow) {
+		this.arrow = arrow;
+	}
+	
+	public Drawable getArrow() {
+		return this.arrow;
 	}
 }
