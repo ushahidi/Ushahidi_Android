@@ -120,7 +120,9 @@ public class Ushahidi extends Activity {
                 }
             }
         };
-        startService(new Intent(this, UshahidiService.class));
+        
+        //if(UshahidiService.AutoFetch)
+        	//startService(new Intent(Ushahidi.this, UshahidiService.class));
        
 	}
  

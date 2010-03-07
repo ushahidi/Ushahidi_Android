@@ -2,9 +2,12 @@ package org.addhen.ushahidi;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -12,31 +15,42 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
-public class Settings extends PreferenceActivity {
+public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 	private EditTextPreference ushahidiInstancePref;
 	private EditTextPreference firstNamePref;
 	private EditTextPreference lastNamePref;
 	private EditTextPreference emailAddressPref;
+	private EditTextPreference userNamePref;
+	private EditTextPreference passwordPref;
 	private CheckBoxPreference autoFetchCheckBoxPref;
 	private CheckBoxPreference clearCacheCheckBoxPref;
+	private CheckBoxPreference smsCheckBoxPref;
 	private ListPreference autoUpdateTimePref;
 	private ListPreference saveItemsPref;
 	private ListPreference totalReportsPref;
+	private Handler mHandler;
+	public static final String AUTO_FETCH_PREFERENCE = "auto_fetch_preference";
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		
+		mHandler = new Handler();
 		ushahidiInstancePref = new EditTextPreference(this);
 		firstNamePref = new EditTextPreference(this);
 		lastNamePref = new EditTextPreference(this);
+		userNamePref = new EditTextPreference(this);
+		passwordPref = new EditTextPreference(this);
 		emailAddressPref = new EditTextPreference(this);
 		autoFetchCheckBoxPref = new CheckBoxPreference(this);
 		clearCacheCheckBoxPref = new CheckBoxPreference(this);
 		autoUpdateTimePref = new ListPreference(this);
 		saveItemsPref = new ListPreference(this);
 		totalReportsPref = new ListPreference(this);
+		smsCheckBoxPref = new CheckBoxPreference(this);
 		
 		setPreferenceScreen(createPreferenceHierarchy());
 		this.saveSettings();
@@ -99,7 +113,7 @@ public class Settings extends PreferenceActivity {
 		
         // Auto update reports time interval
         //set list values
-        CharSequence[] autoUpdateEntries = {"Off", "5 Minutes", "10 Minutes", "15 Minutes", "30 Minutes", "60 Minutes"}; 
+        CharSequence[] autoUpdateEntries = {"5 Minutes", "10 Minutes", "15 Minutes", "30 Minutes", "60 Minutes"}; 
         CharSequence[] autoUpdateValues = {"0","5","10","15","30","60"};
         autoUpdateTimePref.setEntries(autoUpdateEntries);
         autoUpdateTimePref.setEntryValues(autoUpdateValues);
@@ -144,6 +158,32 @@ public class Settings extends PreferenceActivity {
         clearCacheCheckBoxPref.setSummary(R.string.hint_clear_cache);
         advancedScreenPref.addPreference(clearCacheCheckBoxPref);
         
+        //SMS Preferences
+      
+		PreferenceCategory smsPrefCat = new PreferenceCategory(this);
+		smsPrefCat.setTitle(R.string.sms_settings);
+		root.addPreference(smsPrefCat);
+		
+	    //Auto fetch reports
+        smsCheckBoxPref.setKey("sms_preference");
+        smsCheckBoxPref.setTitle(R.string.chk_sms_send);
+        smsCheckBoxPref.setSummary(R.string.hint_sms_send);
+        smsPrefCat.addPreference(smsCheckBoxPref);
+        
+        //First name entry field
+		userNamePref.setDialogTitle(R.string.txt_user_name);
+		userNamePref.setKey("user_name_preference");
+		userNamePref.setTitle(R.string.txt_user_name);
+		userNamePref.setSummary(R.string.hint_user_name);
+		smsPrefCat.addPreference(userNamePref);
+		
+		//Last name entry field
+		passwordPref.setDialogTitle(R.string.txt_password);
+		passwordPref.setKey("password_preference");
+		passwordPref.setTitle(R.string.txt_password);
+		passwordPref.setSummary(R.string.hint_password);
+		smsPrefCat.addPreference(passwordPref);
+        
 		return root;
 	}
 	
@@ -158,9 +198,7 @@ public class Settings extends PreferenceActivity {
 		String totalReports = totalReportsPref.getValue();
 		
 		//"5 Minutes", "10 Minutes", "15 Minutes", "c", "60 Minutes" 
-		if(autoUpdate.matches("Off")){
-			UshahidiService.AutoUpdateDelay = 0;
-		} else if(autoUpdate.matches("5")){
+		if(autoUpdate.matches("5")){
 			UshahidiService.AutoUpdateDelay = 5;
 		} else if(autoUpdate.matches("10")){
 			UshahidiService.AutoUpdateDelay = 10;
@@ -186,6 +224,34 @@ public class Settings extends PreferenceActivity {
 		
 		UshahidiService.saveSettings(this);
 	}
+	
+	 @Override
+	 protected void onResume() {
+		 super.onResume();
+		 // Set up a listener whenever a key changes
+		 getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+		 
+	 }
+
+	 @Override
+	 protected void onPause() {
+		 super.onPause();
+
+	        // Unregister the listener whenever a key changes
+	        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+	        
+	 }
+	 public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+	        // Let's do something when my counter preference value changes
+		 
+		 if( sharedPreferences.getBoolean(AUTO_FETCH_PREFERENCE, false) ) {
+			 
+			 startService(new Intent(Settings.this, UshahidiService.class));
+		 } else {
+			 stopService(new Intent(Settings.this, UshahidiService.class));
+		 }
+		 
+	 }
 	
 	/**
 	 * Clear stored data

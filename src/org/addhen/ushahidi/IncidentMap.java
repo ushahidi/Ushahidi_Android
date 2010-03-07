@@ -103,8 +103,6 @@ public class IncidentMap extends MapActivity {
 			reportLongitude = extras.getString("longitude");
 		}
 		
-		Log.i("longitude", "longitude "+reportLongitude);
-		
 		if( mNewIncidents.size() > 0 ) {
 			if( id > 0 ) {
 				IncidentMap.latitude = Double.parseDouble( reportLatitude );

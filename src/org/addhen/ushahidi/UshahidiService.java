@@ -3,8 +3,6 @@ package org.addhen.ushahidi;
 
 import java.io.File;
 
-import java.io.IOException;
-
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -24,12 +22,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
  
 import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
+
  
 public class UshahidiService extends Service {
 	public static final String PREFS_NAME = "UshahidiService";
@@ -50,7 +50,11 @@ public class UshahidiService extends Service {
 	public static boolean AutoFetch = false;
 	public static String total_reports = "";
 	private Handler mHandler = new Handler();
-	 
+	
+	private static String AUTO_UPDATE_TIME_KEY = "auto_update_time_preference";
+	private static String AUTO_FETCH_KEY = "auto_fetch_preference";
+	private static String SAVE_ITEMS_KEY = "save_items_preference";
+	
 	private static final String TAG = "Ushahidi - New Updates";
 	 
     private ArrayList<IncidentsData> mNewIncidents;
@@ -69,11 +73,20 @@ public class UshahidiService extends Service {
         return UshahidiApplication.mDb;
     }
     
+    /**
+     * Local services Binder.
+     * @author eyedol
+     *
+     */
+    public class LocalBinder extends Binder {
+        UshahidiService getService() {
+            return UshahidiService.this;
+        }
+    }
+
+    
 	private Runnable mUpdateTimeTask = new Runnable() {
 		public void run() {
-			if(AutoUpdateDelay <= 0 &&  !AutoFetch ){
-				return;
-			}
 			
 			UshahidiService.saveSettings(getApplicationContext());
 			
@@ -85,9 +98,12 @@ public class UshahidiService extends Service {
 		}
 	};
 	
+	
 	public IBinder onBind(Intent intent) {
-		return null;
+		return mBinder;
 	}
+	
+	private final IBinder mBinder = new LocalBinder();
 	
 	@Override 
 	public void onCreate() {
@@ -95,10 +111,13 @@ public class UshahidiService extends Service {
 		queue = new QueueThread("ushahidi");
 		mHandler = new Handler();
 		
-		if(AutoUpdateDelay > 0){
+		//if(AutoFetch){
+			Log.i("Auto Update", "yes autoupdate "+ AutoFetch );
 			mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
 			mHandler.postDelayed(mUpdateTimeTask, (1000 * 60 * AutoUpdateDelay));
-		}
+		
+		//}
+		
 		final Thread tr = new Thread() {
 			@Override
 			public void run() {
@@ -110,9 +129,17 @@ public class UshahidiService extends Service {
 		tr.start();
 	}
 	
+	 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		
+		mNotificationManager.cancel(NOTIFICATION_ID);
+		// Tell the user we stopped.
+        Toast.makeText(this, "Service stopped", Toast.LENGTH_SHORT).show();
+        
+		stopService(new Intent(UshahidiService.this, UshahidiService.class));
+		
 	}
 	
 	public static void AddThreadToQueue(Thread tr){
@@ -220,9 +247,7 @@ public class UshahidiService extends Service {
 		lastname = settings.getString("Lastname", "");
 		email = settings.getString("Email", "");
 		countries = settings.getInt("Countries", 0);
- 
-		AutoUpdateDelay = settings.getInt("AutoUpdateDelay", 0);
- 
+		AutoUpdateDelay = settings.getInt("AutoUpdateDelay", 5);
 		AutoFetch = settings.getBoolean("AutoFetch", false);
 		totalReports = settings.getString("TotalReports", "");
 		// make sure folder exists
@@ -243,7 +268,6 @@ public class UshahidiService extends Service {
 		editor.putInt("AutoUpdateDelay", AutoUpdateDelay);
 		editor.putBoolean("AutoFetch", AutoFetch);
 		editor.putString("TotalReports", totalReports);
-		// Don't forget to commit your edits!!!
 		editor.commit();
 	}
 	
