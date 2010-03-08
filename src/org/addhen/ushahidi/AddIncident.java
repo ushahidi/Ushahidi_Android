@@ -84,7 +84,6 @@ public class AddIncident extends Activity {
     private String errorMessage = "";
 	private boolean error = false;
 	private boolean categoryClicked = false;
-    private ImageButton btnPicture;
 	private EditText incidentTitle;
 	private EditText incidentLocation;
 	private EditText incidentDesc;
@@ -94,6 +93,7 @@ public class AddIncident extends Activity {
 	private Button btnAddCategory;
 	private Button pickTime;
 	private Button pickDate;
+	private Button btnPicture;
 	private HashMap<Integer,Integer> timeDigits;
 	
 	private static boolean running = false;
@@ -241,7 +241,7 @@ public class AddIncident extends Activity {
 	 * Initialize UI components
 	 */
 	private void initComponents(){
-		btnPicture = (ImageButton) findViewById(R.id.btnPicture);
+		btnPicture = (Button) findViewById(R.id.btnPicture);
 		btnAddCategory = (Button) findViewById(R.id.add_category);
 		incidentTitle = (EditText) findViewById(R.id.incident_title);
 		incidentLocation = (EditText) findViewById(R.id.incident_location);
@@ -400,8 +400,7 @@ public class AddIncident extends Activity {
 	
 	//reset records in the field
 	private void clearFields() {
-		
-		btnPicture = (ImageButton) findViewById(R.id.btnPicture);
+		btnPicture = (Button) findViewById(R.id.btnPicture);
 		btnAddCategory = (Button) findViewById(R.id.add_category);
 		incidentTitle.setText("");
 		incidentLocation.setText("");
@@ -814,7 +813,6 @@ public class AddIncident extends Activity {
 		params.put("person_last", UshahidiService.lastname);
 		params.put("person_email", UshahidiService.email);
 		params.put("filename", UshahidiService.fileName);
-		
 		
 		try {
 			return UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), params);

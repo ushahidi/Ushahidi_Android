@@ -19,6 +19,7 @@ public class Incidents {
 		StringBuilder uriBuilder = new StringBuilder( UshahidiService.domain);
 		uriBuilder.append("/api?task=incidents");
 		uriBuilder.append("&by=all");
+		uriBuilder.append("&limit="+UshahidiService.totalReports);
 		uriBuilder.append("&resp=xml");
 		
 		response = UshahidiHttpClient.GetURL( uriBuilder.toString());

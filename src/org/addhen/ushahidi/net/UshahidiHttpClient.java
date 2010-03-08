@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.addhen.ushahidi.UshahidiService;
+import org.addhen.ushahidi.Util;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -131,7 +132,9 @@ public class UshahidiHttpClient {
              
              InputStream serverInput = req.post();
              
-             if(GetText(serverInput).contains("{\"payload\":{\"success\":\"true\"},\"error\":{\"code\":\"0\",\"message\":\"No Error.\"}}")){
+             
+             if( Util.extractPayloadJSON(GetText(serverInput)) ){
+            	 
             	 return true;
              }
              

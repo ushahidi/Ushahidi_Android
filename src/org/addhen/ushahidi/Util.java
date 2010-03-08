@@ -1,7 +1,6 @@
 package org.addhen.ushahidi;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import java.text.DateFormat;
@@ -18,6 +17,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class Util{
@@ -25,6 +26,7 @@ public class Util{
 	private static NetworkInfo networkInfo;
 	private static List<IncidentsData> mNewIncidents;
 	private static List<CategoriesData> mNewCategories;
+	private static JSONObject jsonObject;
 	
 	/**
 	 * joins two strings together
@@ -137,7 +139,7 @@ public class Util{
 	 * Format date into more readable format.
 	 * 
 	 * @param  date - the date to be formatted.
-	 * @return 
+	 * @return String
 	 */
 	public static String formatDate( String date ) {
 	
@@ -151,9 +153,31 @@ public class Util{
 			formatted = formatter.format(formatter.parse(date));
 		
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		return formatted;
+	}
+	
+	/**
+	 * extrat JSON data
+	 * 
+	 * @apram json_data - the json data to be formatted.
+	 * @return String 
+	 */
+	public static boolean extractPayloadJSON( String json_data ) {
+		
+		
+		
+		try {
+			jsonObject = new JSONObject(json_data);
+			return jsonObject.getJSONObject("payload").getBoolean("success");
+		
+		} catch (JSONException e) {
+			
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 }

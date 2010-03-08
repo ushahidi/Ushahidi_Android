@@ -74,7 +74,7 @@ public final class R {
         public static final int firstname=0x7f07001f;
         public static final int gallery=0x7f07003a;
         public static final int header_title=0x7f07002e;
-        public static final int home_add_btn=0x7f07001b;
+        public static final int incident_add=0x7f07001b;
         public static final int incident_add_btn=0x7f070010;
         public static final int incident_add_cancel=0x7f070011;
         public static final int incident_cat=0x7f070019;

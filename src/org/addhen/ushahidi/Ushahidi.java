@@ -78,7 +78,7 @@ public class Ushahidi extends Activity {
         }
         
         listBtn = (Button) findViewById(R.id.incident_list);
-        addBtn = (Button) findViewById(R.id.home_add_btn );
+        addBtn = (Button) findViewById(R.id.incident_add );
         mapBtn = (Button) findViewById(R.id.incident_map);
         
         listBtn.setOnClickListener( new View.OnClickListener() {

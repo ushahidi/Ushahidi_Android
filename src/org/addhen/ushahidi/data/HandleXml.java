@@ -10,6 +10,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import android.util.Log;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
@@ -178,6 +180,7 @@ public class HandleXml {
 	}
 	
 	public static List<CategoriesData> processCategoriesXml( String xml ) {
+		Log.i("xml ",xml);
 		List<CategoriesData> categoriesData = new ArrayList<CategoriesData>();
 		String categories = "";
 		DocumentBuilder builder = null;

@@ -27,7 +27,7 @@
  			<TextView  android:id="@+id/spacer"
     			android:layout_width="fill_parent" 
     			android:layout_height="wrap_content" />      
- 			<Button android:id="@+id/home_add_btn"
+ 			<Button android:id="@+id/incident_add"
         		android:layout_width="fill_parent"
         		android:layout_height="wrap_content"
         		android:layout_alignParentLeft="true"
@@ -42,7 +42,6 @@
  			<Button android:id="@+id/incident_list"
         		android:layout_width="fill_parent"
         		android:layout_height="wrap_content"
-        		android:layout_below="@id/title"
         		android:layout_alignParentLeft="true"
         		android:layout_marginLeft="0px"
         		android:textStyle="bold"

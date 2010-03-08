@@ -159,9 +159,12 @@ public class ListIncidents extends Activity
 					if(Incidents.getAllIncidentsFromWeb()){
 						mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
 					}
-			  
-					UshahidiApplication.mDb.addCategories(mNewCategories, false);
-					UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
+					
+					if( mNewCategories.size() >  0 )
+						UshahidiApplication.mDb.addCategories(mNewCategories, false);
+					
+					if( mNewIncidents.size() > 0 )
+						UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
 			  
 	  			  	setProgressBarIndeterminateVisibility(false);
 		  
