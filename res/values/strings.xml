@@ -39,6 +39,7 @@
 	<string name="incident_list">View Reports</string>
 	<string name="menu_home">Home</string>
 	<string name="menu_sync">Sync</string>
+	<string name="sms_to_ushahidi_failed">Failed to post SMS to Ushahidi. Make sure username and password are correct</string>
 	<!--  Settings -->
 	<string name="menu_settings">Settings</string>
 	<string name ="basic_settings">Basic settings</string>

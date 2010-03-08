@@ -49,6 +49,9 @@ public class UshahidiService extends Service {
 	public static String fileName = "";
 	public static boolean AutoFetch = false;
 	public static String total_reports = "";
+	public static boolean smsUpdate = false;
+	public static String username = "";
+	public static String password = "";
 	private Handler mHandler = new Handler();
 	
 	private static String AUTO_UPDATE_TIME_KEY = "auto_update_time_preference";
@@ -250,6 +253,9 @@ public class UshahidiService extends Service {
 		AutoUpdateDelay = settings.getInt("AutoUpdateDelay", 5);
 		AutoFetch = settings.getBoolean("AutoFetch", false);
 		totalReports = settings.getString("TotalReports", "");
+		smsUpdate = settings.getBoolean("smsUpdate",false);
+		username = settings.getString("username", "");
+		password = settings.getString("password","");
 		// make sure folder exists
 		final File dir = new File(UshahidiService.savePath);
 		dir.mkdirs();
@@ -263,11 +269,13 @@ public class UshahidiService extends Service {
 		editor.putString("Firstname", firstname);
 		editor.putString("Lastname", lastname);
 		editor.putString("Email", email);
-		editor.putInt("Countries", countries);
 		editor.putString("savePath", savePath);
 		editor.putInt("AutoUpdateDelay", AutoUpdateDelay);
 		editor.putBoolean("AutoFetch", AutoFetch);
 		editor.putString("TotalReports", totalReports);
+		editor.putBoolean("smsUpdate", smsUpdate);
+		editor.putString("username", username);
+		editor.putString("password", password);
 		editor.commit();
 	}
 	

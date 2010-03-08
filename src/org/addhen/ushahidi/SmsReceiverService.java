@@ -1,5 +1,10 @@
 package org.addhen.ushahidi;
 
+import java.io.IOException;
+import java.util.HashMap;
+
+import org.addhen.ushahidi.net.UshahidiHttpClient;
+
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -25,9 +30,11 @@ public class SmsReceiverService extends Service {
 	private ServiceHandler mServiceHandler;
 	private Looper mServiceLooper;
 	private int mResultCode;
-
+	private String fromAddress = "";
+    private String messageBody = "";
 	private static final Object mStartingServiceSync = new Object();
 	private static PowerManager.WakeLock mStartingService;
+	private HashMap<String,String> params = new HashMap<String, String>();
 
 	@Override
 	public void onCreate() {
@@ -89,9 +96,6 @@ public class SmsReceiverService extends Service {
 	 */
 	private void handleSmsReceived(Intent intent) {
 		Log.i("Handle SMS Received called ", "Yep!");
-	    String fromAddress = "";
-	    String messageBody = "";
-	    String fromEmailGateway = "";
 	    
 		//TODO send the message to ushahidi via the api
 	    Bundle bundle = intent.getExtras();
@@ -115,14 +119,37 @@ public class SmsReceiverService extends Service {
 	    		messageBody = body;
 	    	}
 	    }
-	    Log.i("Msg ", "Message: "+messageBody + "No: "+fromAddress);
+	    // post sms message to ushahidi
+	    if( UshahidiService.smsUpdate ) {
+	    	if( Util.isConnected(SmsReceiverService.this) ){ 
+	    		if( !this.postToUshahidi() ) {
+	    			Toast.makeText(SmsReceiverService.this, R.string.sms_to_ushahidi_failed, Toast.LENGTH_SHORT).show();
+	    		}
+	    	}
+	    }
 	}
 
 	private void notifyMessageReceived(SmsMessage message) {
 		//TODO decide whether to notify users or not.
 	}
 
-	  
+	private boolean postToUshahidi() {
+		StringBuilder urlBuilder = new StringBuilder(UshahidiService.domain);
+    	urlBuilder.append("/api");
+    	params.put("task","sms");
+		params.put("username", UshahidiService.username);
+		params.put("password", UshahidiService.password); 
+		params.put("message_from", fromAddress); 
+		params.put("message_description",messageBody); 
+		params.put("message_date", "");
+		
+		try {
+			return UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), params);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	/**
 	 * Handle receiving an arbitrary message (potentially coming from a 3rd party app)

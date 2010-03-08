@@ -222,6 +222,11 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		//Total reports
 		UshahidiService.totalReports = totalReports;
 		
+		//sms
+		UshahidiService.smsUpdate = smsCheckBoxPref.isChecked();
+		UshahidiService.username = userNamePref.getText();
+		UshahidiService.password = passwordPref.getText();
+		
 		UshahidiService.saveSettings(this);
 	}
 	

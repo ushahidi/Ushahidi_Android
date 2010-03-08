@@ -50,7 +50,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -787,8 +786,6 @@ public class AddIncident extends Activity {
      *
      */
     public boolean postToOnline() {
-    	
-    	Log.i("Filename", "file "+UshahidiService.savePath + UshahidiService.fileName);
     	
     	String dates[] = incidentDate.getText().toString().split(" ");
     	String time[] = dates[1].split(":");
