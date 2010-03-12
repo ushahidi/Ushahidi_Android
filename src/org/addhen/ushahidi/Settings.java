@@ -14,6 +14,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -32,7 +33,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	private ListPreference totalReportsPref;
 	private Handler mHandler;
 	public static final String AUTO_FETCH_PREFERENCE = "auto_fetch_preference";
-
+	public static final String SMS_PREFERENCE = "sms_preference";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -254,6 +255,17 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 			 startService(new Intent(Settings.this, UshahidiService.class));
 		 } else {
 			 stopService(new Intent(Settings.this, UshahidiService.class));
+		 }
+		 
+		 //Reset the 
+		 if( sharedPreferences.getBoolean(SMS_PREFERENCE, false)) {
+			
+			 UshahidiService.smsUpdate = true;
+			 
+		 } else {
+		
+			 UshahidiService.smsUpdate = false;	
+			 
 		 }
 		 
 	 }

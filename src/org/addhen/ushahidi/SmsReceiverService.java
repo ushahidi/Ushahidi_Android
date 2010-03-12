@@ -50,7 +50,6 @@ public class SmsReceiverService extends Service {
 	public void onStart(Intent intent, int startId) {
 	    
 		mResultCode = intent != null ? intent.getIntExtra("result", 0) : 0;
-
 	    Message msg = mServiceHandler.obtainMessage();
 	    msg.arg1 = startId;
 	    msg.obj = intent;
@@ -75,7 +74,7 @@ public class SmsReceiverService extends Service {
 
 		@Override
 	    public void handleMessage(Message msg) {
-			Log.i("Handle Message called ", "Yay!");
+			
 			int serviceId = msg.arg1;
 			Intent intent = (Intent) msg.obj;
 			String action = intent.getAction();
@@ -95,8 +94,7 @@ public class SmsReceiverService extends Service {
 	 * Handle receiving a SMS message
 	 */
 	private void handleSmsReceived(Intent intent) {
-		Log.i("Handle SMS Received called ", "Yep!");
-	    
+		
 		//TODO send the message to ushahidi via the api
 	    Bundle bundle = intent.getExtras();
 	    if (bundle != null) {
@@ -119,11 +117,13 @@ public class SmsReceiverService extends Service {
 	    		messageBody = body;
 	    	}
 	    }
+	    
 	    // post sms message to ushahidi
 	    if( UshahidiService.smsUpdate ) {
-	    	if( Util.isConnected(SmsReceiverService.this) ){ 
+	    	if( Util.isConnected(SmsReceiverService.this) ){
+	    		Log.i("Handle SMS Received called ", "Yep!");
 	    		if( !this.postToUshahidi() ) {
-	    			Toast.makeText(SmsReceiverService.this, R.string.sms_to_ushahidi_failed, Toast.LENGTH_SHORT).show();
+	    			Log.i("SMS sending failed","Sending failed");
 	    		}
 	    	}
 	    }
@@ -134,6 +134,7 @@ public class SmsReceiverService extends Service {
 	}
 
 	private boolean postToUshahidi() {
+		
 		StringBuilder urlBuilder = new StringBuilder(UshahidiService.domain);
     	urlBuilder.append("/api");
     	params.put("task","sms");
@@ -141,10 +142,9 @@ public class SmsReceiverService extends Service {
 		params.put("password", UshahidiService.password); 
 		params.put("message_from", fromAddress); 
 		params.put("message_description",messageBody); 
-		params.put("message_date", "");
 		
 		try {
-			return UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), params);
+			return UshahidiHttpClient.postSmsToUshahidi(urlBuilder.toString(), params);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -153,7 +153,7 @@ public class SmsReceiverService extends Service {
 
 	/**
 	 * Handle receiving an arbitrary message (potentially coming from a 3rd party app)
-	 */
+	 *
 	private void handleMessageReceived(Intent intent) {
 	    
 		Bundle bundle = intent.getExtras();
@@ -166,12 +166,12 @@ public class SmsReceiverService extends Service {
 	     * QUICK REPLY INTENT:
 	     * REPLY INTENT:
 	     * DELETE INTENT:
-	     */
+	     *
 
 	    if (bundle != null) {
 	    	//notifySmsReceived(new SmsMmsMessage(context, messages, System.currentTimeMillis()));
 	    }
-	}
+	}*/
 
 	  /*
 	   * Handler to deal with showing Toast messages for message sent status

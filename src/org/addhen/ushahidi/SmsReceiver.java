@@ -9,7 +9,7 @@ public class SmsReceiver extends BroadcastReceiver{
 
 	@Override
 	 public void onReceive(Context context, Intent intent) {
-		Log.i("Sms hits receiver", "Sms came in");
+		
 		intent.setClass(context, SmsReceiverService.class);
 		intent.putExtra("result", getResultCode());
 

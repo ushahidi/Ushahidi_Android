@@ -166,9 +166,7 @@ public class Util{
 	 * @return String 
 	 */
 	public static boolean extractPayloadJSON( String json_data ) {
-		
-		
-		
+	
 		try {
 			jsonObject = new JSONObject(json_data);
 			return jsonObject.getJSONObject("payload").getBoolean("success");

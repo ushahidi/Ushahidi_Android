@@ -27,6 +27,7 @@ import org.apache.http.protocol.HTTP;
 import org.addhen.ushahidi.UshahidiService;
 import org.addhen.ushahidi.Util;
 import android.text.TextUtils;
+import android.util.Log;
 
 
 public class UshahidiHttpClient {
@@ -133,15 +134,52 @@ public class UshahidiHttpClient {
         	//fall through and return false
         }
         return false;
+    }
+    
+    /**
+     * Upload sms to ushahidi
+     * @param address
+     * @return
+     * @throws MalformedURLException
+     * @throws IOException
+     * TODO Think through this method and make it more generic.
+     */
+    public static boolean postSmsToUshahidi(String URL, HashMap<String, String> params) throws IOException{
+        ClientHttpRequest req = null;
+
+        try {
+             URL url = new URL(URL);
+             req = new ClientHttpRequest(url);
+             
+             req.setParameter("task", params.get("task"));
+             req.setParameter("username", params.get("username"));
+             req.setParameter("password", params.get("password"));
+             req.setParameter("message_from",params.get("message_from"));
+             req.setParameter("message_description", params.get("message_description"));
+             
+             InputStream serverInput = req.post();
+             
+             //Log.i("Send output ","There its "+GetText(serverInput));
+             
+             if( Util.extractPayloadJSON(GetText(serverInput)) ){
+            	 
+            	 return true;
+             }
+             
+        } catch (MalformedURLException ex) {
+        	//fall through and return false
+        }
+        return false;
    }
-	public static byte[] fetchImage(String address) throws MalformedURLException, IOException {
+    
+    public static byte[] fetchImage(String address) throws MalformedURLException, IOException {
         InputStream in = null;
         OutputStream out = null;
 
         try {
             in = new BufferedInputStream(new URL(address).openStream(),
                     IO_BUFFER_SIZE);
-
+            
             final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
             out = new BufferedOutputStream(dataStream, 4 * 1024);
             copy(in, out);
@@ -150,6 +188,8 @@ public class UshahidiHttpClient {
             return dataStream.toByteArray();
         } catch (IOException e) {
             //android.util.Log.e("IO", "Could not load buddy icon: " + this, e);
+        	
+
         } finally {
             closeStream(in);
             closeStream(out);

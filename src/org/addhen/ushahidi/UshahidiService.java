@@ -138,9 +138,8 @@ public class UshahidiService extends Service {
 		super.onDestroy();
 		
 		mNotificationManager.cancel(NOTIFICATION_ID);
+		
 		// Tell the user we stopped.
-        Toast.makeText(this, "Service stopped", Toast.LENGTH_SHORT).show();
-        
 		stopService(new Intent(UshahidiService.this, UshahidiService.class));
 		
 	}
@@ -253,9 +252,9 @@ public class UshahidiService extends Service {
 		AutoUpdateDelay = settings.getInt("AutoUpdateDelay", 5);
 		AutoFetch = settings.getBoolean("AutoFetch", false);
 		totalReports = settings.getString("TotalReports", "");
-		smsUpdate = settings.getBoolean("smsUpdate",false);
-		username = settings.getString("username", "");
-		password = settings.getString("password","");
+		smsUpdate = settings.getBoolean("SmsUpdate",false);
+		username = settings.getString("Username", "");
+		password = settings.getString("Password","");
 		// make sure folder exists
 		final File dir = new File(UshahidiService.savePath);
 		dir.mkdirs();
@@ -273,9 +272,9 @@ public class UshahidiService extends Service {
 		editor.putInt("AutoUpdateDelay", AutoUpdateDelay);
 		editor.putBoolean("AutoFetch", AutoFetch);
 		editor.putString("TotalReports", totalReports);
-		editor.putBoolean("smsUpdate", smsUpdate);
-		editor.putString("username", username);
-		editor.putString("password", password);
+		editor.putBoolean("SmsUpdate", smsUpdate);
+		editor.putString("Username", username);
+		editor.putString("Password", password);
 		editor.commit();
 	}
 	
