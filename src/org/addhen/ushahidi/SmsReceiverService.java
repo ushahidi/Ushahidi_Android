@@ -5,10 +5,10 @@ import java.util.HashMap;
 
 import org.addhen.ushahidi.net.UshahidiHttpClient;
 
-import android.app.Activity;
-import android.app.PendingIntent;
+//import android.app.Activity;
+//import android.app.PendingIntent;
 import android.app.Service;
-import android.app.PendingIntent.CanceledException;
+//import android.app.PendingIntent.CanceledException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,10 +19,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.Process;
-import android.telephony.PhoneNumberUtils;
+//import android.telephony.PhoneNumberUtils;
 import android.telephony.gsm.SmsMessage;
 import android.util.Log;
-import android.widget.Toast;
+//import android.widget.Toast;
 
 public class SmsReceiverService extends Service {
 	private static final String ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
@@ -78,7 +78,7 @@ public class SmsReceiverService extends Service {
 			int serviceId = msg.arg1;
 			Intent intent = (Intent) msg.obj;
 			String action = intent.getAction();
-			String dataType = intent.getType();
+			//String dataType = intent.getType();
 
 			if (ACTION_SMS_RECEIVED.equals(action)) {
 				handleSmsReceived(intent);
@@ -129,10 +129,7 @@ public class SmsReceiverService extends Service {
 	    }
 	}
 
-	private void notifyMessageReceived(SmsMessage message) {
-		//TODO decide whether to notify users or not.
-	}
-
+	
 	private boolean postToUshahidi() {
 		
 		StringBuilder urlBuilder = new StringBuilder(UshahidiService.domain);

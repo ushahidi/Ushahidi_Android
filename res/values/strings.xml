@@ -46,7 +46,8 @@
 	<string name="advanced_settings">Advanced settings</string>
 	<string name="hint_advanced_settings">For more advanced settings</string>
 	<string name="sms_settings">SMS settings</string>
-	<string name="txt_clear_cache">Clear cached files</string>
+	<string name="txt_clear_cache">Clear cache</string>
+	<string name="txt_confirm_clear_cache">Are you sure you want to clear the cache?</string>
 	<string name="hint_clear_cache">Clear all stored data.</string>
     <string name="option_location">Default folder</string>
 	<string name="hint_option_location">The location where you want to store items saved from the selected instance.

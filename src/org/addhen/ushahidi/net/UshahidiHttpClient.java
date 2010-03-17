@@ -27,7 +27,6 @@ import org.apache.http.protocol.HTTP;
 import org.addhen.ushahidi.UshahidiService;
 import org.addhen.ushahidi.Util;
 import android.text.TextUtils;
-import android.util.Log;
 
 
 public class UshahidiHttpClient {

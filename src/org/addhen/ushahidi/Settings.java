@@ -1,6 +1,9 @@
 package org.addhen.ushahidi;
 
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -9,11 +12,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
+import android.preference.DialogPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.provider.MediaStore;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
@@ -26,20 +32,24 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	private EditTextPreference userNamePref;
 	private EditTextPreference passwordPref;
 	private CheckBoxPreference autoFetchCheckBoxPref;
-	private CheckBoxPreference clearCacheCheckBoxPref;
+	private DialogPreference clearCacheCheckBoxPref;
 	private CheckBoxPreference smsCheckBoxPref;
 	private ListPreference autoUpdateTimePref;
 	private ListPreference saveItemsPref;
 	private ListPreference totalReportsPref;
+	private AttributeSet attrs;
 	private Handler mHandler;
+	private static final int DIALOG_CLEAR_CACHE = 1;
 	public static final String AUTO_FETCH_PREFERENCE = "auto_fetch_preference";
 	public static final String SMS_PREFERENCE = "sms_preference";
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		
 		mHandler = new Handler();
+		addPreferencesFromResource(R.xml.preferences);
 		ushahidiInstancePref = new EditTextPreference(this);
 		firstNamePref = new EditTextPreference(this);
 		lastNamePref = new EditTextPreference(this);
@@ -47,7 +57,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		passwordPref = new EditTextPreference(this);
 		emailAddressPref = new EditTextPreference(this);
 		autoFetchCheckBoxPref = new CheckBoxPreference(this);
-		clearCacheCheckBoxPref = new CheckBoxPreference(this);
+		clearCacheCheckBoxPref = (DialogPreference) getPreferenceScreen().findPreference("clear_cache_preference");
 		autoUpdateTimePref = new ListPreference(this);
 		saveItemsPref = new ListPreference(this);
 		totalReportsPref = new ListPreference(this);
@@ -154,9 +164,12 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         advancedScreenPref.addPreference(totalReportsPref);
         
         //clear cache
-        clearCacheCheckBoxPref.setKey("clear_cache_preference");
-        clearCacheCheckBoxPref.setTitle(R.string.txt_clear_cache);
-        clearCacheCheckBoxPref.setSummary(R.string.hint_clear_cache);
+        //clearCacheCheckBoxPref.setKey("clear_cache_preference");
+        
+        /*PreferenceScreen clearCache = getPreferenceManager().createPreferenceScreen(this);
+        clearCache.setKey("clear_cache_preference");
+        clearCache.setTitle(R.string.txt_clear_cache);
+        clearCache.setSummary(R.string.hint_clear_cache);*/
         advancedScreenPref.addPreference(clearCacheCheckBoxPref);
         
         //SMS Preferences
@@ -268,12 +281,38 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 			 
 		 }
 		 
+		 //cache 
+		 if(key.equals("clear_cache_preference")) {
+			 Log.i("Tag","clear cache was clicked");
+			 showDialog(DIALOG_CLEAR_CACHE);
+		 }
+		 
+	 }
+	 
+	 @Override
+	 protected Dialog onCreateDialog( int id ) {
+		 switch (id) {
+		 	case DIALOG_CLEAR_CACHE: {
+		 		AlertDialog dialog = (new AlertDialog.Builder(this)).create();
+                dialog.setTitle("Clear cache");
+                dialog.setMessage("Are you sure you want to clear the cache?");
+                dialog.setButton("Ok", new Dialog.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						//clear cache
+						dialog.dismiss();
+					}
+                });
+                dialog.setButton2("Cancel", new Dialog.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+                });
+                
+                dialog.setCancelable(false);
+                return dialog;
+		 	}
+		 }
+		 return null;
 	 }
 	
-	/**
-	 * Clear stored data
-	 */
-	private void clearCache() {
-		//TODO write necessary code to achieve that.
-	}
 }

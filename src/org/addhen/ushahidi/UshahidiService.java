@@ -203,6 +203,15 @@ public class UshahidiService extends Service {
 	      text = MessageFormat.format(text, count);
 	    }
 	}
+	
+	/**
+	 * Clear stored data
+	 */
+	public boolean clearCache() {
+		
+		return getDb().clearData();
+	
+	}
  
 	private void processNewCategories() {
 	    if (mNewCategories.size() <= 0) {

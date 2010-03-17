@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+<org.addhen.ushahidi.DialogPreference
+	android:key="clear_cache_preference"
+   	android:title="@string/txt_clear_cache"
+   	android:dialogTitle="@string/txt_clear_cache"
+   	android:dialogMessage="@string/txt_confirm_clear_cache"
+   	android:summary="@string/hint_clear_cache"
+   	android:positiveButtonText="@string/btn_ok"
+   	android:negativeButtonText="@string/btn_cancel" />
+</PreferenceScreen>

@@ -258,10 +258,12 @@ public class UshahidiDatabase {
   		return mDb.rawQuery(sql, new String[] { id } );
   	}
 
-  	public void clearData() {
+  	public boolean clearData() {
   		// TODO: just wipe the database.
   		deleteAllIncidents();
-    	deleteAllCategories();
+  		deleteAllCategories();
+  		return true;
+  		
   	}
 
   	public boolean deleteAllIncidents() {
