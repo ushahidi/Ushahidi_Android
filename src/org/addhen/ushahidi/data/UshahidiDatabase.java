@@ -230,7 +230,7 @@ public class UshahidiDatabase {
   	}
 
   public Cursor fetchAllIncidents() {
-    return mDb.query(INCIDENTS_TABLE, INCIDENTS_COLUMNS, null, null, null, null, INCIDENT_ID
+    return mDb.query(INCIDENTS_TABLE, INCIDENTS_COLUMNS, null, null, null, null, INCIDENT_DATE
         + " DESC");
   }
   

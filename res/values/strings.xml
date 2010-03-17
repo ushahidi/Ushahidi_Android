@@ -3,7 +3,7 @@
     <string name="title">Ushahidi Logo here</string>
     <string name="app_name">Ushahidi</string>
     <string name="add_incident">Ushahidi | Add Report</string>
-    <string name="view_incident">Ushahidi | View Report</string>
+    <string name="view_incident">Ushahidi | View Reports</string>
     <string name="incident_details">Ushahidi | Report Detail</string>
     <string name="app_settings">Ushahidi | Settings </string>
     <string name="ushahidi_about">Ushahidi | About </string>
