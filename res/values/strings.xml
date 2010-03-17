@@ -74,7 +74,7 @@
 	<string name="hint_password">Your Ushahidi password.</string>
 	<string name="txt_email">E-mail address</string>
 	<string name="hint_email">For contact purposes only.</string>
-	<string name="total_reports">Report quantity</string>
+	<string name="total_reports">Number of reports</string>
 	<string name="hint_total_reports">The total number of reports to fetch from the selected instance.</string>
 	<!-- Menu -->
 	<string name="incident_menu_map">View Map</string>
