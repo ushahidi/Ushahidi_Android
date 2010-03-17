@@ -7,8 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.TypedArray;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -18,11 +16,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.provider.MediaStore;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 	private EditTextPreference ushahidiInstancePref;
@@ -37,7 +31,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	private ListPreference autoUpdateTimePref;
 	private ListPreference saveItemsPref;
 	private ListPreference totalReportsPref;
-	private AttributeSet attrs;
 	private Handler mHandler;
 	private static final int DIALOG_CLEAR_CACHE = 1;
 	public static final String AUTO_FETCH_PREFERENCE = "auto_fetch_preference";
@@ -275,9 +268,12 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		 }
 		 
 		 //cache 
-		 if(key.equals("clear_cache_preference")) {
-			 Log.i("Tag","clear cache was clicked");
-			 showDialog(DIALOG_CLEAR_CACHE);
+		 if(key.equals("ushahidi_instance_preference")) {
+			 if( !sharedPreferences.getString("ushahidi_instance_preference","").equals(UshahidiService.domain) ) {
+				 new UshahidiService().clearCache();
+				 UshahidiService.domain = sharedPreferences.getString("ushahidi_instance_preference","");
+			 }
+			 
 		 }
 		 
 	 }

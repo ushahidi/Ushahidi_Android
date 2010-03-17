@@ -25,7 +25,7 @@ import java.util.List;
 public class HandleXml {
 	
 	public static List<IncidentsData> processIncidentsXml( String xml ) {
-		
+
 		DocumentBuilder builder = null;
 		Document doc = null;
 		try {
@@ -180,7 +180,7 @@ public class HandleXml {
 	}
 	
 	public static List<CategoriesData> processCategoriesXml( String xml ) {
-		Log.i("xml ",xml);
+		
 		List<CategoriesData> categoriesData = new ArrayList<CategoriesData>();
 		String categories = "";
 		DocumentBuilder builder = null;
