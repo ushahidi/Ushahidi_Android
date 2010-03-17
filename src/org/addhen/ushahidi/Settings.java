@@ -86,8 +86,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		
 		//Total reports to fetch at a time
         //set list values
-        CharSequence[] totalReportsEntries = {"20 Recent Reports", "40 Recent Reports", "60 Recent Reports", "80 Recent Reports", "100 Recent Reports"}; 
-        CharSequence[] totalReportsValues = {"20","40","60","80","100"};
+        CharSequence[] totalReportsEntries = {"100 Recent Reports", "250 Recent Reports", "500 Recent Reports", "1000 Recent Reports"}; 
+        CharSequence[] totalReportsValues = {"100","250","500","1000"};
         
         totalReportsPref.setEntries(totalReportsEntries);
         totalReportsPref.setEntryValues(totalReportsValues);
