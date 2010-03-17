@@ -84,6 +84,20 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		ushahidiInstancePref.setSummary(R.string.hint_domain);
 		basicPrefCat.addPreference(ushahidiInstancePref);
 		
+		//Total reports to fetch at a time
+        //set list values
+        CharSequence[] totalReportsEntries = {"20 Recent Reports", "40 Recent Reports", "60 Recent Reports", "80 Recent Reports", "100 Recent Reports"}; 
+        CharSequence[] totalReportsValues = {"20","40","60","80","100"};
+        
+        totalReportsPref.setEntries(totalReportsEntries);
+        totalReportsPref.setEntryValues(totalReportsValues);
+        totalReportsPref.setDefaultValue(totalReportsValues[0]);
+        totalReportsPref.setDialogTitle(R.string.total_reports);
+        totalReportsPref.setKey("total_reports_preference");
+        totalReportsPref.setTitle(R.string.total_reports);
+        totalReportsPref.setSummary(R.string.hint_total_reports);
+        basicPrefCat.addPreference(totalReportsPref);
+		
 		//First name entry field
 		firstNamePref.setDialogTitle(R.string.txt_first_name);
 		firstNamePref.setKey("first_name_preference");
@@ -149,31 +163,10 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         saveItemsPref.setSummary(R.string.hint_option_location);
         advancedScreenPref.addPreference(saveItemsPref);
         
-        //Total reports to fetch at a time
-        //set list values
-        CharSequence[] totalReportsEntries = {"20 Recent Reports", "40 Recent Reports", "60 Recent Reports", "80 Recent Reports", "100 Recent Reports"}; 
-        CharSequence[] totalReportsValues = {"20","40","60","80","100"};
-        
-        totalReportsPref.setEntries(totalReportsEntries);
-        totalReportsPref.setEntryValues(totalReportsValues);
-        totalReportsPref.setDefaultValue(totalReportsValues[0]);
-        totalReportsPref.setDialogTitle(R.string.total_reports);
-        totalReportsPref.setKey("total_reports_preference");
-        totalReportsPref.setTitle(R.string.total_reports);
-        totalReportsPref.setSummary(R.string.hint_total_reports);
-        advancedScreenPref.addPreference(totalReportsPref);
-        
         //clear cache
-        //clearCacheCheckBoxPref.setKey("clear_cache_preference");
-        
-        /*PreferenceScreen clearCache = getPreferenceManager().createPreferenceScreen(this);
-        clearCache.setKey("clear_cache_preference");
-        clearCache.setTitle(R.string.txt_clear_cache);
-        clearCache.setSummary(R.string.hint_clear_cache);*/
         advancedScreenPref.addPreference(clearCacheCheckBoxPref);
         
         //SMS Preferences
-      
 		PreferenceCategory smsPrefCat = new PreferenceCategory(this);
 		smsPrefCat.setTitle(R.string.sms_settings);
 		root.addPreference(smsPrefCat);
