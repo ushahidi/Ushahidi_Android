@@ -34,7 +34,7 @@
 	<string name="incident_description">Description:</string>
 	<string name="incident_time">Change the time</string>
 	<string name="incident_title">Title:</string>
-	<string name="incident_add_category">Add Category</string>
+	<string name="incident_add_category">Select Category</string>
 	<string name="incident_menu_add">Add Report</string>
 	<string name="incident_list">View Reports</string>
 	<string name="menu_home">Home</string>
