@@ -77,7 +77,7 @@ public final class R {
         public static final int incident_add=0x7f08001b;
         public static final int incident_add_btn=0x7f080010;
         public static final int incident_add_cancel=0x7f080011;
-        public static final int incident_cat=0x7f080019;
+        public static final int incident_cat=0x7f08001a;
         public static final int incident_desc=0x7f08000d;
         public static final int incident_list=0x7f08001c;
         public static final int incident_loc=0x7f08000a;
@@ -111,7 +111,7 @@ public final class R {
         public static final int tabhost=0x7f08002c;
         public static final int title=0x7f080000;
         public static final int top_items=0x7f080032;
-        public static final int view_incidents=0x7f08001a;
+        public static final int view_incidents=0x7f080019;
         public static final int view_map=0x7f080037;
         public static final int view_website=0x7f080004;
         public static final int webview=0x7f080039;

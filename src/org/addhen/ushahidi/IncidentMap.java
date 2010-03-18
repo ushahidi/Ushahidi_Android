@@ -74,8 +74,9 @@ public class IncidentMap extends MapActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.incidents_map);
- 
-		spinner = (Spinner) findViewById(R.id.incident_cat);
+		
+		// commmenting out the spinner for now. will get it to work in the next release
+		//spinner = (Spinner) findViewById(R.id.incident_cat);
 		mapView = (MapView) findViewById(R.id.map);
 		index = new Integer(0);
 		mOldIncidents = new ArrayList<IncidentsData>();
@@ -379,7 +380,7 @@ public class IncidentMap extends MapActivity {
  
 	 @SuppressWarnings("unchecked")
 	  public void showCategories() {
-		  Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
+		  /*Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
 		  vectorCategories.clear();
 		  vectorCategories.add("All");
 		  if (cursor.moveToFirst()) {
@@ -398,7 +399,7 @@ public class IncidentMap extends MapActivity {
  
 		  spinner.setAdapter(spinnerArrayAdapter);
  
-		  spinner.setOnItemSelectedListener(spinnerListener);
+		  spinner.setOnItemSelectedListener(spinnerListener);*/
  
 	  }
  
@@ -423,7 +424,7 @@ public class IncidentMap extends MapActivity {
 		  private Context context;  
  
 		  public SitesOverlay(Drawable marker, MapView mapView) {  
-			  super(boundCenter(marker),mapView, IncidentMap.this,mNewIncidents, extras);  
+			  super(boundCenterBottom(marker),mapView, IncidentMap.this,mNewIncidents, extras);  
 			  context =  mapView.getContext();  
 			  
 			  if( id > 0 ) {

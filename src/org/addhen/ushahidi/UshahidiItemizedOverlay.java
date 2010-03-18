@@ -85,7 +85,6 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
 	protected boolean onBalloonTap(int index) {
 		return false;
 	}
-
 	
 	/* (non-Javadoc)
 	 * @see com.google.android.maps.ItemizedOverlay#onTap(int)
@@ -128,7 +127,6 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
 		}
 		
 		mc.animateTo(point);
-		
 		return true;
 	}
 	

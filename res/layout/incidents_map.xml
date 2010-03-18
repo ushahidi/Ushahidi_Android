@@ -8,10 +8,10 @@
 		android:apiKey="02cv5Q8Rob0BJheh-Mm9S4e2c6UnhIadyG0rOUA"
 		android:clickable="true" />
  
-		<Spinner android:id="@+id/incident_cat"
+		<!--  <Spinner android:id="@+id/incident_cat"
 	  		android:prompt="@string/prompt_mesg"
 	  		android:layout_width="fill_parent"
         	android:layout_height="wrap_content"
-        	android:drawSelectorOnTop="true"/>
+        	android:drawSelectorOnTop="true"/> -->
  
 </RelativeLayout>
