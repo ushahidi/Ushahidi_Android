@@ -50,13 +50,12 @@ public class UshahidiService extends Service {
 	public static boolean AutoFetch = false;
 	public static String total_reports = "";
 	public static boolean smsUpdate = false;
+	public static boolean vibrate = false;
+	public static boolean ringtone = false;
+	public static boolean flashLed = false;
 	public static String username = "";
 	public static String password = "";
 	private Handler mHandler = new Handler();
-	
-	private static String AUTO_UPDATE_TIME_KEY = "auto_update_time_preference";
-	private static String AUTO_FETCH_KEY = "auto_fetch_preference";
-	private static String SAVE_ITEMS_KEY = "save_items_preference";
 	
 	private static final String TAG = "Ushahidi - New Updates";
 	 
@@ -160,21 +159,26 @@ public class UshahidiService extends Service {
         newUshahidiReportNotification.flags = Notification.FLAG_AUTO_CANCEL;
         newUshahidiReportNotification.defaults = Notification.DEFAULT_ALL;
         newUshahidiReportNotification.setLatestEventInfo(this, TAG, tickerText, contentIntent);
+        if( ringtone ){ 
+        	//set the ringer
+        	Uri ringURI = Uri.fromFile(new File("/system/media/audio/ringtones/ringer.mp3"));
+        	newUshahidiReportNotification.sound = ringURI; 
+        }
         
-        //set the ringer
-		Uri ringURI = Uri.fromFile(new File("/system/media/audio/ringtones/ringer.mp3"));
-		newUshahidiReportNotification.sound = ringURI; 
-
-		double vibrateLength = 100*Math.exp(0.53*20);
-		long[] vibrate = new long[] {100, 100, (long)vibrateLength };
-		newUshahidiReportNotification.vibrate = vibrate;
-		    
-		int color = Color.BLUE;
-		     
-		newUshahidiReportNotification.ledARGB = color;
-		newUshahidiReportNotification.ledOffMS = (int)vibrateLength;
-		newUshahidiReportNotification.ledOnMS = (int)vibrateLength;
-		newUshahidiReportNotification.flags = newUshahidiReportNotification.flags |  Notification.FLAG_SHOW_LIGHTS;
+        if( vibrate ){
+        	double vibrateLength = 100*Math.exp(0.53*20);
+        	long[] vibrate = new long[] {100, 100, (long)vibrateLength };
+        	newUshahidiReportNotification.vibrate = vibrate;
+        	
+        	if( flashLed ){
+        		int color = Color.BLUE;    
+        		newUshahidiReportNotification.ledARGB = color;
+        	}
+        	
+        	newUshahidiReportNotification.ledOffMS = (int)vibrateLength;
+        	newUshahidiReportNotification.ledOnMS = (int)vibrateLength;
+        	newUshahidiReportNotification.flags = newUshahidiReportNotification.flags |  Notification.FLAG_SHOW_LIGHTS;
+        }
         
         mNotificationManager.notify(NOTIFICATION_ID, newUshahidiReportNotification);
 	}

@@ -26,8 +26,12 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	private EditTextPreference userNamePref;
 	private EditTextPreference passwordPref;
 	private CheckBoxPreference autoFetchCheckBoxPref;
-	private DialogPreference clearCacheCheckBoxPref;
+	private CheckBoxPreference vibrateCheckBoxPref;
+	private CheckBoxPreference ringtoneCheckBoxPref;
+	private CheckBoxPreference flashLedCheckBoxPref;
 	private CheckBoxPreference smsCheckBoxPref;
+	private DialogPreference clearCacheCheckBoxPref;
+	private ListPreference selectRingtonePref;
 	private ListPreference autoUpdateTimePref;
 	private ListPreference saveItemsPref;
 	private ListPreference totalReportsPref;
@@ -35,6 +39,9 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	private static final int DIALOG_CLEAR_CACHE = 1;
 	public static final String AUTO_FETCH_PREFERENCE = "auto_fetch_preference";
 	public static final String SMS_PREFERENCE = "sms_preference";
+	public static final String VIBRATE_PREFERENCE = "vibrate_preference";
+	public static final String RINGTONE_PREFERENCE = "ringtone_preference";
+	public static final String FLASH_LED_PREFERENCE = "flash_led_preference";
 	
 	
 	@Override
@@ -50,11 +57,15 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		passwordPref = new EditTextPreference(this);
 		emailAddressPref = new EditTextPreference(this);
 		autoFetchCheckBoxPref = new CheckBoxPreference(this);
+		vibrateCheckBoxPref = new CheckBoxPreference(this);
+		ringtoneCheckBoxPref =  new CheckBoxPreference(this);
+		flashLedCheckBoxPref = new CheckBoxPreference(this);
+		smsCheckBoxPref = new CheckBoxPreference(this);
 		clearCacheCheckBoxPref = (DialogPreference) getPreferenceScreen().findPreference("clear_cache_preference");
 		autoUpdateTimePref = new ListPreference(this);
 		saveItemsPref = new ListPreference(this);
 		totalReportsPref = new ListPreference(this);
-		smsCheckBoxPref = new CheckBoxPreference(this);
+		selectRingtonePref = new ListPreference(this);
 		
 		setPreferenceScreen(createPreferenceHierarchy());
 		this.saveSettings();
@@ -159,6 +170,29 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         //clear cache
         advancedScreenPref.addPreference(clearCacheCheckBoxPref);
         
+        // notification Preferences
+		PreferenceCategory notificationPrefCat = new PreferenceCategory(this);
+		notificationPrefCat.setTitle(R.string.bg_notification);
+		advancedScreenPref.addPreference(notificationPrefCat);
+		
+		//vibrate
+		vibrateCheckBoxPref.setKey("vibrate_preference");
+		vibrateCheckBoxPref.setTitle(R.string.vibrate);
+		vibrateCheckBoxPref.setSummary(R.string.hint_vibrate);
+        notificationPrefCat.addPreference(vibrateCheckBoxPref);
+        
+        //ringtone
+		ringtoneCheckBoxPref.setKey("ringtone_preference");
+		ringtoneCheckBoxPref.setTitle(R.string.ringtone);
+		ringtoneCheckBoxPref.setSummary(R.string.hint_ringtone);
+        notificationPrefCat.addPreference(ringtoneCheckBoxPref);
+      
+        //flash led
+		flashLedCheckBoxPref.setKey("flash_led_preference");
+		flashLedCheckBoxPref.setTitle(R.string.flash_led);
+		flashLedCheckBoxPref.setSummary(R.string.hint_flash_led);
+        notificationPrefCat.addPreference(flashLedCheckBoxPref);
+        
         //SMS Preferences
 		PreferenceCategory smsPrefCat = new PreferenceCategory(this);
 		smsPrefCat.setTitle(R.string.sms_settings);
@@ -209,7 +243,9 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		} else if(autoUpdate.matches("60")){
 			UshahidiService.AutoUpdateDelay = 60;
 		}
+		
 		String newSavePath = "";
+		
 		if( saveItems.equalsIgnoreCase("phone")){
 			newSavePath = "/data/data/org.addhen.ushahidi/files/";
 		
@@ -226,6 +262,9 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		UshahidiService.smsUpdate = smsCheckBoxPref.isChecked();
 		UshahidiService.username = userNamePref.getText();
 		UshahidiService.password = passwordPref.getText();
+		UshahidiService.vibrate = vibrateCheckBoxPref.isChecked();
+		UshahidiService.ringtone = ringtoneCheckBoxPref.isChecked();
+		UshahidiService.flashLed = flashLedCheckBoxPref.isChecked();
 		
 		UshahidiService.saveSettings(this);
 	}
@@ -256,7 +295,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 			 stopService(new Intent(Settings.this, UshahidiService.class));
 		 }
 		 
-		 //Reset the 
+		 //Reset sms update
 		 if( sharedPreferences.getBoolean(SMS_PREFERENCE, false)) {
 			
 			 UshahidiService.smsUpdate = true;
@@ -267,41 +306,36 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 			 
 		 }
 		 
+		 //Reset vibrate
+		 if( sharedPreferences.getBoolean(VIBRATE_PREFERENCE, false)) {
+			 UshahidiService.vibrate = true;
+		 } else {
+			 UshahidiService.vibrate = false;
+		 }
+		 
+		 //Reset ringtone
+		 if( sharedPreferences.getBoolean(RINGTONE_PREFERENCE, false)) {
+			 
+			 UshahidiService.ringtone = true;
+		 }else {
+			 
+			UshahidiService.ringtone = false; 
+		 }
+		 
+		 //Reset flash led
+		 if( sharedPreferences.getBoolean(FLASH_LED_PREFERENCE, false)) {
+			 
+			 UshahidiService.flashLed = true;
+		 }else {
+			 UshahidiService.flashLed = false;
+		 }
+		 
 		 //cache 
 		 if(key.equals("ushahidi_instance_preference")) {
 			 if( !sharedPreferences.getString("ushahidi_instance_preference","").equals(UshahidiService.domain) ) {
 				 new UshahidiService().clearCache();
 				 UshahidiService.domain = sharedPreferences.getString("ushahidi_instance_preference","");
 			 }
-			 
 		 }
-		 
 	 }
-	 
-	 @Override
-	 protected Dialog onCreateDialog( int id ) {
-		 switch (id) {
-		 	case DIALOG_CLEAR_CACHE: {
-		 		AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-                dialog.setTitle("Clear cache");
-                dialog.setMessage("Are you sure you want to clear the cache?");
-                dialog.setButton("Ok", new Dialog.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						//clear cache
-						dialog.dismiss();
-					}
-                });
-                dialog.setButton2("Cancel", new Dialog.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-                });
-                
-                dialog.setCancelable(false);
-                return dialog;
-		 	}
-		 }
-		 return null;
-	 }
-	
 }
