@@ -1,44 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AbsoluteLayout
-android:id="@+id/simpleGM_layout"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-xmlns:android="http://schemas.android.com/apk/res/android"
->
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" 
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:paddingLeft="5px"
+	android:paddingRight="5px"
+	android:background="@drawable/background_color">	
+	<AbsoluteLayout
+		android:id="@+id/simpleGM_layout"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
 	<TextView	
-		android:id="@+id/simpleGM_tv"
+		android:id="@+id/title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Enter your street address"
+		android:text="Enter your location name"
+		android:textColor="@drawable/date_color"
+		android:textStyle="bold"
 		android:layout_x="11px"
 		android:layout_y="5px"/>
 
 	<EditText
-		android:id="@+id/simpleGM_adress"
+		android:id="@+id/location_name"
 		android:layout_width="240px"
 		android:layout_height="wrap_content"
-		android:hint="Accra, Ghana"
 		android:textSize="18sp"
 		android:layout_x="12px"
 		android:layout_y="30px"/>
 
-
-	<Button
-		android:id="@+id/simpleGM_btn_search"
-		android:layout_width="59px"
+	<!--  <Button
+		android:id="@+id/btn_search"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="Go"
 		android:layout_x="256px"
-		android:layout_y="30px" />
-	
-	<com.google.android.maps.MapView android:id="@+id/simpleGM_map"
-		android:layout_width="fill_parent"
-		android:layout_height="310px"
-		android:apiKey="02cv5Q8Rob0AxK9cfya5gqZJEmaM0lyZsPdLrmg"
-		android:layout_x="2px"
-		android:layout_y="100px"
-		android:clickable="true" />
+		android:layout_y="30px" /> -->
 		
+	<com.google.android.maps.MapView android:id="@+id/location_map"
+		android:layout_width="fill_parent"
+		android:layout_height="290px"
+		android:apiKey="02cv5Q8Rob0BJheh-Mm9S4e2c6UnhIadyG0rOUA"
+		android:layout_x="2px"
+		android:layout_y="80px"
+		android:enabled="true"
+		android:paddingBottom="10px"
+		android:clickable="true" />
+	</AbsoluteLayout>
+	
+	<LinearLayout 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingTop="5px"
+		android:orientation="horizontal">
+		<Button
+			android:id="@+id/btn_back"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="back" />
+	</LinearLayout>	
+
+</LinearLayout>
 		<!-- Production MapView
 			<com.google.android.maps.MapView
                  android:layout_width="fill_parent"
@@ -48,4 +70,3 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 		
 		 -->
 		
-</AbsoluteLayout>

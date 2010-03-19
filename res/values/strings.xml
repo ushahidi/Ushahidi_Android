@@ -30,6 +30,7 @@
 	<string name="incident_verified">Verified</string>
 	<string name="incident_unverified">Unverified</string>
 	<string name="incident_location">Location:</string>
+	<string name="add_location">Add a location</string>
 	<string name="view_map">Map</string>
 	<string name="incident_description">Description:</string>
 	<string name="incident_time">Change the time</string>

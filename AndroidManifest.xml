@@ -83,6 +83,13 @@
             </intent-filter>
         </activity>
         
+        <!-- Add location  -->
+        <activity android:name=".LocationMap" android:label="@string/add_location">
+        	<intent-filter>
+        		<action android:name="android.intent.action.VIEW" />
+        		<category android:name="android.intent.category.DEFAULT"></category>
+        	</intent-filter>
+        </activity>
         <!-- Settings  -->
         <activity android:name=".Settings" android:label="@string/app_settings">
             <intent-filter>

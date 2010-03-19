@@ -28,6 +28,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -69,6 +70,7 @@ public class AddIncident extends Activity {
 	private static final int REQUEST_CODE_ABOUT = 3;
 	private static final int REQUEST_CODE_IMAGE = 4;
 	private static final int REQUEST_CODE_CAMERA = 5;
+	private static final int VIEW_MAP = 1;
 	
 	// date and time
     private int mYear;
@@ -93,7 +95,10 @@ public class AddIncident extends Activity {
 	private Button pickTime;
 	private Button pickDate;
 	private Button btnPicture;
+	private Button addLocation;
 	private HashMap<Integer,Integer> timeDigits;
+	private Bundle bundle;
+	private Bundle extras;
 	
 	private static boolean running = false;
 	private static final int DIALOG_ERROR_NETWORK = 0;
@@ -122,8 +127,8 @@ public class AddIncident extends Activity {
         foundAddresses = new ArrayList<Address>();
         gc = new Geocoder(this);
         
-        updateLocation();
-        
+        //updateLocation();
+         
     }
 	
 	//menu stuff
@@ -155,7 +160,7 @@ public class AddIncident extends Activity {
 	}
 	
 	//update the device current location
-	private void updateLocation() {
+	/*private void updateLocation() {
 		MyLocationListener listener = new MyLocationListener(); 
         LocationManager manager = (LocationManager) 
     getSystemService(Context.LOCATION_SERVICE); 
@@ -171,7 +176,7 @@ public class AddIncident extends Activity {
    updateTimeMsec, 500.0f, 
 		    listener); 
 		}
-	}
+	}*/
 	
 	private void populateMenu(Menu menu) {
 		MenuItem i;
@@ -250,6 +255,27 @@ public class AddIncident extends Activity {
 		incidentDate = (TextView) findViewById(R.id.lbl_date);
 		pickDate = (Button) findViewById(R.id.pick_date);
 		pickTime = (Button) findViewById(R.id.pick_time);
+		addLocation = (Button) findViewById(R.id.location);
+		bundle = new Bundle();
+		extras = this.getIntent().getExtras();
+		
+		if( extras != null ) {
+			bundle = extras.getBundle("locations");
+			incidentLocation.setText( bundle.getString("location"));
+		
+			AddIncident.latitude = bundle.getDouble("latitude");
+			AddIncident.longitude = bundle.getDouble("longitude");
+		}
+		//open location map window
+		addLocation.setOnClickListener( new View.OnClickListener(){
+			public void onClick( View v ) {
+				
+				Intent intent = new Intent( AddIncident.this,LocationMap.class);
+				startActivityForResult(intent,VIEW_MAP);
+				setResult( RESULT_OK, intent );
+				
+			}
+		});
 		
 		btnSend.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v){
@@ -329,9 +355,11 @@ public class AddIncident extends Activity {
 		
 		btnCancel.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
+				clearFields();
 				Intent intent = new Intent( AddIncident.this,Ushahidi.class);
         		startActivityForResult( intent, GOTOHOME );
         		setResult(RESULT_OK);
+        		finish();
 			}
 		});
 		
@@ -403,10 +431,17 @@ public class AddIncident extends Activity {
 		btnAddCategory = (Button) findViewById(R.id.add_category);
 		incidentTitle.setText("");
 		incidentLocation.setText("");
-		updateLocation();
+		//updateLocation();
 		incidentDesc.setText("");
 		counter = 0;
 		updateDisplay();
+		
+		//clear persistent data
+		 SharedPreferences.Editor editor = getPreferences(0).edit();
+	     editor.putString("title", "");
+	     editor.putString("desc", "");
+	     editor.putString("date", "");
+	     editor.commit();
 		
 	}
 	
@@ -522,11 +557,11 @@ public class AddIncident extends Activity {
 		}
 	};
 
-	final Runnable mUpdateLocation = new Runnable() {
+	/*final Runnable mUpdateLocation = new Runnable() {
 		public void run() {
 			updateLocation();
 		}
-	};
+	};*/
 	
 	final Runnable mDisplayNetworkError = new Runnable(){
 		public void run(){
@@ -820,7 +855,7 @@ public class AddIncident extends Activity {
 		
     }
 	
-	public class MyLocationListener implements LocationListener { 
+	/*public class MyLocationListener implements LocationListener { 
 	    public void onLocationChanged(Location location) { 
 	    	double latitude = 0;
 	    	double longitude = 0;
@@ -854,6 +889,45 @@ public class AddIncident extends Activity {
 	    { 
 	      // TODO Auto-generated method stub 
 	    } 
-	  } 
+	  }*/ 
 	
+	 /**
+     * Upon being resumed we can retrieve the current state.  This allows us
+     * to update the state if it was changed at any time while paused.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences prefs = getPreferences(0); 
+        String title = prefs.getString("title", null);
+        String desc = prefs.getString("desc", null);
+        String date = prefs.getString("date", null);
+    	
+        if ( title  != null) 
+            incidentTitle.setText(title, TextView.BufferType.EDITABLE);
+           
+        if( desc != null )
+            incidentDesc.setText(desc, TextView.BufferType.EDITABLE);
+        
+        if( date != null )
+            incidentDate.setText(date, TextView.BufferType.EDITABLE);
+           
+    }
+
+    /**
+     * Any time we are paused we need to save away the current state, so it
+     * will be restored correctly when we are resumed.
+     */
+    @Override
+    protected void onPause() {
+    	super.onPause();
+
+        SharedPreferences.Editor editor = getPreferences(0).edit();
+        editor.putString("title", incidentTitle.getText().toString());
+        editor.putString("desc", incidentDesc.getText().toString());
+        editor.putString("date", incidentDate.getText().toString());
+        editor.commit();
+    }
+    
 }
