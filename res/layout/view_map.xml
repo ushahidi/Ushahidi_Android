@@ -40,7 +40,7 @@
 	<com.google.android.maps.MapView android:id="@+id/location_map"
 		android:layout_width="fill_parent"
 		android:layout_height="290px"
-		android:apiKey="02cv5Q8Rob0BJheh-Mm9S4e2c6UnhIadyG0rOUA"
+		android:apiKey="02cv5Q8Rob0DwsGxgLYHnxbh_k2aYtk4ewHfFAg"
 		android:layout_x="2px"
 		android:layout_y="80px"
 		android:enabled="true"
@@ -54,10 +54,20 @@
 		android:paddingTop="5px"
 		android:orientation="horizontal">
 		<Button
-			android:id="@+id/btn_back"
+			android:id="@+id/btn_save"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="back" />
+			android:text="@string/btn_save" />
+		<Button
+			android:id="@+id/btn_find"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/btn_find" />
+		<Button
+			android:id="@+id/btn_reset"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/btn_reset" />
 	</LinearLayout>	
 
 </LinearLayout>

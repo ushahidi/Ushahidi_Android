@@ -19,6 +19,9 @@
     <string name="alert_dialog_hide">Hide</string>
     <string name="alert_dialog_something">Something</string>
     <string name="alert_dialog_cancel">Cancel</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_find">Find me</string>
+    <string name="btn_reset">Reset</string>
     <string name="btn_ok">Ok</string>
     <string name="btn_add_photo">Add a Photo</string>
     <string name="btn_cancel">Cancel</string>
@@ -89,6 +92,7 @@
 	<!-- Menu -->
 	<string name="incident_menu_map">View Map</string>
 	<string name="incident_menu_refresh">Refresh</string>
+	<string name="reports">Reports</string>
 	<!--  about screen -->
 	<string name="menu_about">About</string>
 	<string name="ushahidi_url">Ushahidi.com</string>

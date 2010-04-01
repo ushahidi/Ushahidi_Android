@@ -57,7 +57,7 @@
         		android:layout_alignParentLeft="true"
         		android:layout_marginLeft="0px"
         		android:textStyle="bold"
-        		android:text="@string/incident_menu_map" />
+        		android:text="@string/menu_settings" />
     		
         </LinearLayout>
 	</ScrollView>        

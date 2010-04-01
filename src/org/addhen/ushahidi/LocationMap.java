@@ -1,23 +1,31 @@
 package org.addhen.ushahidi;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.addhen.ushahidi.AddIncident.MyLocationListener;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -37,9 +45,11 @@ public class LocationMap extends MapActivity {
 	private List<IncidentsData> mNewIncidents;
 	private List<IncidentsData> mOldIncidents;
 	private EditText locationName;
-	//private Button btnSearch;
-	private Button btnBack;
+	private Button btnReset;
+	private Button btnSave;
+	private Button btnFind;
 	private Bundle bundle = new Bundle();
+	public List<Address> foundAddresses;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,17 +59,11 @@ public class LocationMap extends MapActivity {
 		mapView = (MapView) findViewById(R.id.location_map);
 		locationName = (EditText) findViewById(R.id.location_name);
 		
-		//btnSearch = (Button) findViewById(R.id.btn_search);
+		foundAddresses = new ArrayList<Address>();
+		gc = new Geocoder(this);
 		
-		//centre map
-		/*btnSearch.setOnClickListener( new View.OnClickListener(){
-			public void onClick( View v ) {
-				getLatLon( locationName.getText().toString());
-			}
-		});*/
-		
-		btnBack = (Button) findViewById(R.id.btn_back);
-		btnBack.setOnClickListener( new View.OnClickListener(){
+		btnSave = (Button) findViewById(R.id.btn_save);
+		btnSave.setOnClickListener( new View.OnClickListener(){
 			public void onClick( View v ) {
 				
 				bundle.putDouble("latitude", latitude);
@@ -74,17 +78,33 @@ public class LocationMap extends MapActivity {
 			}
 		});
 		
+		btnFind = (Button) findViewById(R.id.btn_find);
+		btnFind.setOnClickListener( new View.OnClickListener(){
+			public void onClick( View v ) {
+				Toast.makeText(LocationMap.this, "Finding you...", Toast.LENGTH_SHORT).show();
+				updateLocation();
+			}
+		});
+		
 		mapController = mapView.getController();
 		
 		mOldIncidents = new ArrayList<IncidentsData>();
 		mNewIncidents  = showIncidents("All");
 		
-		latitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLatitude());
-		longitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLongitude());
+		if( mNewIncidents.size() > 0 ) {
+			latitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLatitude());
+			longitude = Double.parseDouble( mNewIncidents.get(0).getIncidentLocLongitude());
+		}
 		
 		defaultLocation = getPoint( latitude, longitude);
 		centerLocation(defaultLocation);
 		
+		btnReset = (Button) findViewById(R.id.btn_reset);
+		btnReset.setOnClickListener( new View.OnClickListener(){
+			public void onClick( View v ) {
+				centerLocation(defaultLocation);
+			}
+		});
 	}
 	
 	@Override
@@ -249,6 +269,67 @@ public class LocationMap extends MapActivity {
 		return mOldIncidents;
 	    
 	}
+	
+	//update the device current location
+	private void updateLocation() {
+		MyLocationListener listener = new MyLocationListener(); 
+        LocationManager manager = (LocationManager) 
+    getSystemService(Context.LOCATION_SERVICE); 
+        long updateTimeMsec = 1000L; 
+        
+        //check if there is internet to know which provider to use.
+        if( !Util.isConnected(LocationMap.this) ) {
+			manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 
+   updateTimeMsec, 500.0f, 
+		    listener);
+		} else {
+			manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 
+   updateTimeMsec, 500.0f, 
+		    listener); 
+		}
+	}
+	
+	// get the current location of the user
+	public class MyLocationListener implements LocationListener { 
+	    public void onLocationChanged(Location location) { 
+	    	double latitude = 0;
+	    	double longitude = 0;
+	    	if (location != null) { 
+	    		latitude = location.getLatitude(); 
+	  	        longitude = location.getLongitude(); 
+	
+	  	        centerLocation(getPoint(latitude, longitude));
+	  	    } 
+	    	
+	    	try {
+				
+	    		foundAddresses = gc.getFromLocation( latitude, longitude, 5 );
+	    		Address address = foundAddresses.get(0);
+	    		if( address.getLocality().toString().equals("") ) {
+	    			locationName.setText("Location "+address.getLocality().toString());
+	    			Toast.makeText(LocationMap.this, "No location found", Toast.LENGTH_SHORT).show();
+	    		}else {
+	    			locationName.setText("Loc "+address.getLocality().toString());
+	    			Toast.makeText(LocationMap.this, "Location "+address.getLocality().toString(), Toast.LENGTH_SHORT).show();
+	    		}
+			
+	    	} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	     
+	    } 
+	    public void onProviderDisabled(String provider) { 
+	      // TODO Auto-generated method stub 
+	    } 
+	    public void onProviderEnabled(String provider) { 
+	      // TODO Auto-generated method stub 
+	    } 
+	    public void onStatusChanged(String provider, int status, Bundle extras) 
+	    { 
+	      // TODO Auto-generated method stub 
+	    } 
+	  }
 	
 	private class MapMarker extends ItemizedOverlay<OverlayItem> {
 		

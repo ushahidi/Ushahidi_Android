@@ -24,8 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
- 
- 
+  
 public class Ushahidi extends Activity {
     /** Called when the activity is first created. */
 	private static final int ADD_INCIDENT = Menu.FIRST+1;
@@ -38,6 +37,8 @@ public class Ushahidi extends Activity {
 	private static final int LIST_INCIDENTS = 0;
 	private static final int MAP_INCIDENTS = 1;
 	private static final int ADD_INCIDENTS = 2;
+	private static final int INCIDENTS = 3;
+	private static final int VIEW_SETTINGS = 4;
  
 	private static final int REQUEST_CODE_SETTINGS = 1;
 	private static final int REQUEST_CODE_ABOUT = 2; 
@@ -55,7 +56,7 @@ public class Ushahidi extends Activity {
  
 	private Button listBtn;
 	private Button addBtn;
-	private Button mapBtn;
+	private Button settingsBtn;
  
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,22 +80,22 @@ public class Ushahidi extends Activity {
         
         listBtn = (Button) findViewById(R.id.incident_list);
         addBtn = (Button) findViewById(R.id.incident_add );
-        mapBtn = (Button) findViewById(R.id.incident_map);
+        settingsBtn = (Button) findViewById(R.id.incident_map);
         
         listBtn.setOnClickListener( new View.OnClickListener() {
         	public void onClick( View v ){
         		
-        		Intent intent = new Intent( Ushahidi.this,ListIncidents.class);
-        		startActivityForResult( intent, LIST_INCIDENTS );
+        		Intent intent = new Intent( Ushahidi.this,IncidentsTab.class);
+        		startActivityForResult( intent, INCIDENTS );
         		setResult(RESULT_OK);
  
         	}
         });
         
-        mapBtn.setOnClickListener( new View.OnClickListener() {
+        settingsBtn.setOnClickListener( new View.OnClickListener() {
         	public void onClick( View v) {
-        		Intent intent = new Intent( Ushahidi.this, IncidentMap.class);
-        		startActivityForResult( intent, MAP_INCIDENTS );
+        		Intent intent = new Intent( Ushahidi.this, Settings.class);
+        		startActivityForResult( intent, VIEW_SETTINGS );
         		setResult(RESULT_OK);
         	}
         });

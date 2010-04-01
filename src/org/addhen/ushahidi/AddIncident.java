@@ -127,7 +127,7 @@ public class AddIncident extends Activity {
         foundAddresses = new ArrayList<Address>();
         gc = new Geocoder(this);
         
-        //updateLocation();
+        updateLocation();
          
     }
 	
@@ -160,7 +160,7 @@ public class AddIncident extends Activity {
 	}
 	
 	//update the device current location
-	/*private void updateLocation() {
+	private void updateLocation() {
 		MyLocationListener listener = new MyLocationListener(); 
         LocationManager manager = (LocationManager) 
     getSystemService(Context.LOCATION_SERVICE); 
@@ -176,7 +176,7 @@ public class AddIncident extends Activity {
    updateTimeMsec, 500.0f, 
 		    listener); 
 		}
-	}*/
+	}
 	
 	private void populateMenu(Menu menu) {
 		MenuItem i;
@@ -431,7 +431,7 @@ public class AddIncident extends Activity {
 		btnAddCategory = (Button) findViewById(R.id.add_category);
 		incidentTitle.setText("");
 		incidentLocation.setText("");
-		//updateLocation();
+		updateLocation();
 		incidentDesc.setText("");
 		counter = 0;
 		updateDisplay();
@@ -557,11 +557,11 @@ public class AddIncident extends Activity {
 		}
 	};
 
-	/*final Runnable mUpdateLocation = new Runnable() {
+	final Runnable mUpdateLocation = new Runnable() {
 		public void run() {
 			updateLocation();
 		}
-	};*/
+	};
 	
 	final Runnable mDisplayNetworkError = new Runnable(){
 		public void run(){
@@ -855,7 +855,7 @@ public class AddIncident extends Activity {
 		
     }
 	
-	/*public class MyLocationListener implements LocationListener { 
+	public class MyLocationListener implements LocationListener { 
 	    public void onLocationChanged(Location location) { 
 	    	double latitude = 0;
 	    	double longitude = 0;
@@ -871,7 +871,7 @@ public class AddIncident extends Activity {
 	    		foundAddresses = gc.getFromLocation( latitude, longitude, 5 );
 	    		Address address = foundAddresses.get(0);
 	    		
-	    		incidentLocation.setText( address.getSubAdminArea().toString() );
+	    		incidentLocation.setText( address.getLocality().toString() );
 			
 	    	} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -889,7 +889,7 @@ public class AddIncident extends Activity {
 	    { 
 	      // TODO Auto-generated method stub 
 	    } 
-	  }*/ 
+	  }
 	
 	 /**
      * Upon being resumed we can retrieve the current state.  This allows us
