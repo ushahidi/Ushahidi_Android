@@ -255,7 +255,9 @@ public class ListIncidents extends Activity
     			return(true);
     
     		case INCIDENT_MAP:
-    			intent = new Intent( ListIncidents.this, IncidentMap.class);
+    			incidentsBundle.putInt("tab_index", 1);
+    			intent = new Intent( ListIncidents.this, IncidentsTab.class);
+    			intent.putExtra("tab", incidentsBundle);
     			startActivityForResult( intent,INCIDENTS_MAP );
     			return(true);
     

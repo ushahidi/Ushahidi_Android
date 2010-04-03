@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" 
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:paddingLeft="5px"
-	android:paddingRight="5px"
-	android:background="@drawable/background_color">	
+	android:background="@drawable/background_color"
+	>
 	<LinearLayout
 		android:orientation="vertical"
 		android:id="@+id/loc_map_layout"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:padding="5px">
+		android:paddingBottom="15px"
+		android:paddingLeft="10px"
+		android:paddingRight="10px"
+		android:paddingTop="15px">
 	<TextView	
 		android:id="@+id/title"
 		android:layout_width="wrap_content"
@@ -21,21 +21,20 @@
 		android:textColor="@drawable/date_color"
 		android:textStyle="bold" />
 		
-		
-	<com.google.android.maps.MapView 
-		android:id="@+id/location_map"
+		<com.google.android.maps.MapView 
+			android:id="@+id/location_map"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/title"
+			android:apiKey="@string/google_map_api_key"
+			android:enabled="true"
+			android:clickable="true" />
+	</LinearLayout>
+	<LinearLayout 
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:apiKey="@string/google_map_api_key"
-		android:enabled="true"
-		android:paddingBottom="10px"
-		android:clickable="true" />
-	</LinearLayout>
-	
-	<LinearLayout 
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:paddingTop="5px"
+		android:padding="10px"
+		android:layout_alignParentBottom="true"
 		android:orientation="horizontal">
 		<Button
 			android:id="@+id/btn_save"
@@ -53,5 +52,5 @@
 			android:layout_height="wrap_content"
 			android:text="@string/btn_reset" />
 	</LinearLayout>	
-
-</LinearLayout>
+		
+</RelativeLayout>

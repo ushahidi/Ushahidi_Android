@@ -61,15 +61,17 @@ public class Ushahidi extends Activity {
 	private Button listBtn;
 	private Button addBtn;
 	private Button settingsBtn;
-	
 	private String dialogErrorMsg = "An error occurred fetching the reports. Make sure you have entered an Ushahidi instance.";
  
+	private Bundle bundle;
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         setContentView( R.layout.main );
         mHandler = new Handler();
+        bundle = new Bundle();
         //load settings
         if( UshahidiService.domain.length() == 0 ) {
         	UshahidiService.loadSettings(this);
@@ -263,37 +265,42 @@ public class Ushahidi extends Activity {
 	}
  
 	private boolean applyMenuChoice(MenuItem item) {
-		Intent launchPreferencesIntent;
+		Intent launchIntent;
 		switch (item.getItemId()) {
 			case LIST_INCIDENT:
-				launchPreferencesIntent = new Intent( Ushahidi.this,ListIncidents.class);
-        		startActivityForResult( launchPreferencesIntent, LIST_INCIDENTS );
+				bundle.putInt("tab_index", 0);
+				launchIntent = new Intent( Ushahidi.this,IncidentsTab.class);
+				launchIntent.putExtra("tab", bundle);
+        		startActivityForResult( launchIntent, LIST_INCIDENTS );
+        		finish();
         		setResult(RESULT_OK);
 				return true;
  
 			case INCIDENT_MAP:
-				launchPreferencesIntent = new Intent( Ushahidi.this, IncidentMap.class);
-        		startActivityForResult( launchPreferencesIntent,MAP_INCIDENTS );
+				bundle.putInt("tab_index", 1);
+				launchIntent = new Intent( Ushahidi.this, IncidentsTab.class);
+				launchIntent.putExtra("tab", bundle);
+        		startActivityForResult( launchIntent,MAP_INCIDENTS );
         		setResult(RESULT_OK);
 				return true;
  
 			case ADD_INCIDENT:
-				launchPreferencesIntent = new Intent( Ushahidi.this,AddIncident.class);
-        		startActivityForResult( launchPreferencesIntent, ADD_INCIDENTS );
+				launchIntent = new Intent( Ushahidi.this,AddIncident.class);
+        		startActivityForResult( launchIntent, ADD_INCIDENTS );
         		setResult(RESULT_OK);
 				return true;
  
 			case ABOUT:
-				launchPreferencesIntent = new Intent( Ushahidi.this,About.class);
-	    		startActivityForResult( launchPreferencesIntent, REQUEST_CODE_ABOUT );
+				launchIntent = new Intent( Ushahidi.this,About.class);
+	    		startActivityForResult( launchIntent, REQUEST_CODE_ABOUT );
 	    		setResult(RESULT_OK);
 				return true;
  
 			case SETTINGS:	
-				launchPreferencesIntent = new Intent().setClass(Ushahidi.this, Settings.class);
+				launchIntent = new Intent().setClass(Ushahidi.this, Settings.class);
  
 				// Make it a subactivity so we know when it returns
-				startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);
+				startActivityForResult(launchIntent, REQUEST_CODE_SETTINGS);
 				setResult(RESULT_OK);
 				return true;
  

@@ -690,7 +690,6 @@ public class AddIncident extends Activity {
                 return new DatePickerDialog(this,
                             mDateSetListener,
                             mYear, mMonth, mDay);
-            
         }
         return null;
     }

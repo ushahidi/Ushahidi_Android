@@ -339,69 +339,76 @@ public class IncidentMap extends MapActivity {
 		Intent intent;
 	    switch (item.getItemId()) {
 	    	case HOME:
-			intent = new Intent( IncidentMap.this,Ushahidi.class);
+	    		intent = new Intent( IncidentMap.this,Ushahidi.class);
 				startActivityForResult( intent, GOTOHOME );
 				return true;
 	    	case INCIDENT_REFRESH:
 	    		//TODO 
 	    		//retrieveIncidentsAndCategories();
 	    		//mHandler.post(mDisplayIncidents);
-	        return(true);
+	    		return(true);
  
-	      case LIST_INCIDENT:
-	    	 intent = new Intent( IncidentMap.this, ListIncidents.class);
-	  		startActivityForResult( intent,LIST_INCIDENTS );
-	        return(true);
+	    	case LIST_INCIDENT:
+	    		extras = new Bundle();
+	    		extras.putInt("tab_index", 0);
+	    		intent = new Intent( IncidentMap.this, IncidentsTab.class);
+	    		intent.putExtra("tab", extras);
+	    		startActivityForResult( intent,LIST_INCIDENTS );
+	    		return(true);
  
-	      case INCIDENT_ADD:
-	    	intent = new Intent( IncidentMap.this, AddIncident.class);
-	  		startActivityForResult(intent, ADD_INCIDENTS  );
-	        return(true);
+	    	case INCIDENT_ADD:
+	    		intent = new Intent( IncidentMap.this, AddIncident.class);
+	    		startActivityForResult(intent, ADD_INCIDENTS  );
+	    		return(true);
  
-	      case ABOUT:
+	    	case ABOUT:
 				intent = new Intent( IncidentMap.this,About.class);
 	    		startActivityForResult( intent, REQUEST_CODE_ABOUT );
 	    		setResult(RESULT_OK);
 				return true;  
  
-	      case SETTINGS:
-	    	  intent = new Intent( IncidentMap.this,  Settings.class);
+	    	case SETTINGS:
+	    		intent = new Intent( IncidentMap.this,  Settings.class);
  
-	    	  // Make it a subactivity so we know when it returns
-	    	  startActivityForResult( intent, REQUEST_CODE_SETTINGS );
-	    	  return( true );
-	    }
-	    return false;
+	    		// Make it a subactivity so we know when it returns
+	    		startActivityForResult( intent, REQUEST_CODE_SETTINGS );
+	    		return( true );
+	    	}
+	    	return false;
 	}
  
 	public GeoPoint getPoint(double lat, double lon) {
 	    return(new GeoPoint((int)(lat*1000000.0), (int)(lon*1000000.0)));
 	}
  
-	 @SuppressWarnings("unchecked")
-	  public void showCategories() {
-		  /*Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
-		  vectorCategories.clear();
-		  vectorCategories.add("All");
-		  if (cursor.moveToFirst()) {
+	@SuppressWarnings("unchecked")
+	
+	/**
+	 * Reimplement this feature in the next release.
+	 */
+	public void showCategories() {
+		/*Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
+		vectorCategories.clear();
+		vectorCategories.add("All");
+		if (cursor.moveToFirst()) {
 			  int titleIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CATEGORY_TITLE);
 			  do {
 				  vectorCategories.add( 
 						  Util.capitalizeString(cursor.getString(titleIndex).toLowerCase()));
  
 			  }while( cursor.moveToNext() );
-		  }
-		  cursor.close();
-		  spinnerArrayAdapter = new ArrayAdapter(this,
-				  android.R.layout.simple_spinner_item, vectorCategories );
+		}
+		cursor.close();
+		spinnerArrayAdapter = new ArrayAdapter(this,
+			android.R.layout.simple_spinner_item, vectorCategories );
  
-		  spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
  
-		  spinner.setAdapter(spinnerArrayAdapter);
+		spinner.setAdapter(spinnerArrayAdapter);
  
-		  spinner.setOnItemSelectedListener(spinnerListener);*/
+		spinner.setOnItemSelectedListener(spinnerListener);*/
  
-	  }
+	}
  
 	  //spinner listener
 	  Spinner.OnItemSelectedListener spinnerListener =
