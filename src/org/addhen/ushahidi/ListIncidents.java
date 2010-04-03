@@ -12,9 +12,12 @@ import org.addhen.ushahidi.data.HandleXml;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -249,9 +252,9 @@ public class ListIncidents extends Activity
     			startActivityForResult( intent, GOTOHOME );
     			return true;
     		case INCIDENT_REFRESH:
-    			retrieveIncidentsAndCategories();
-    			mHandler.post(mDisplayIncidents);
-    			mHandler.post(mDisplayCategories);
+    			ReportsTask reportsTask = new ReportsTask();
+	            reportsTask.appContext = this;
+	            reportsTask.execute();
     			return(true);
     
     		case INCIDENT_MAP:
@@ -281,6 +284,37 @@ public class ListIncidents extends Activity
         
 		}
 		return(false);
+	}
+	
+	//thread class
+	private class ReportsTask extends AsyncTask <Void, Void, Integer> {
+		
+		protected Integer status;
+		private ProgressDialog dialog;
+		protected Context appContext;
+		@Override
+		protected void onPreExecute() {
+			this.dialog = ProgressDialog.show(appContext, "Please wait...",
+					"Fetching new reports", true);
+
+		}
+		
+		@Override 
+		protected Integer doInBackground(Void... params) {
+			status = Util.processReports(appContext);
+			return status;
+		}
+		
+		@Override
+		protected void onPostExecute(Integer result)
+		{
+			if( result == 4 ){
+				Util.showToast(appContext, R.string.internet_connection);
+			}
+			this.dialog.cancel();
+		}
+
+		
 	}
   
 	// get incidents from the db
