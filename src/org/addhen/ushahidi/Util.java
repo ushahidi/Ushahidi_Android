@@ -12,10 +12,16 @@ import org.addhen.ushahidi.data.HandleXml;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.net.Categories;
 import org.addhen.ushahidi.net.Incidents;
+import org.addhen.ushahidi.net.UshahidiHttpClient;
+import org.apache.http.HttpResponse;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +33,11 @@ public class Util{
 	private static List<IncidentsData> mNewIncidents;
 	private static List<CategoriesData> mNewCategories;
 	private static JSONObject jsonObject;
+	private static Pattern pattern;
+	private static Matcher matcher;
+
+	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@" +
+			"[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	
 	/**
 	 * joins two strings together
@@ -159,8 +170,10 @@ public class Util{
 		return formatted;
 	}
 	
+	
+	
 	/**
-	 * extrat JSON data
+	 * Extract Ushahidi payload JSON data
 	 * 
 	 * @apram json_data - the json data to be formatted.
 	 * @return String 
@@ -178,4 +191,163 @@ public class Util{
 		
 		return false;
 	}
+	
+	/**
+	 * Extract Google geocode JSON data
+	 * 
+	 * @apram json_data - the json data to be formatted.
+	 * @return String 
+	 */
+	public static boolean extractGeocodeJSON( String json_data ) {
+	
+		try {
+			jsonObject = new JSONObject(json_data);
+			return jsonObject.getJSONObject("payload").getBoolean("success");
+		
+		} catch (JSONException e) {
+			
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * process reports
+	 * 0 - successful
+	 * 1 - failed fetching categories
+	 * 2 - failed fetching reports
+	 * 3 - non ushahidi instance
+	 * 4 - No internet connection
+	 * 
+	 * @return int - status
+	 */
+	public static int processReports( Context context ) {
+		
+		try {
+			if( Util.isConnected(context)) {
+				 
+				if(Categories.getAllCategoriesFromWeb()) {
+						
+					mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse); 
+				} else {
+					return 1;
+				}
+				
+				if( Incidents.getAllIncidentsFromWeb() ){
+					mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse );
+					
+				} else {
+					return 1;
+				}
+				
+				if(mNewCategories != null && mNewIncidents != null ) {
+					 UshahidiApplication.mDb.addCategories(mNewCategories, false);
+					 UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
+					 return 0;
+				 
+				 } else {
+					 return 1;
+				 }
+				  
+
+				} else {
+					return 4;
+				}
+		} catch (IOException e) {
+			//means there was a problem getting it
+		}
+		return 0;
+	}
+	
+	/**
+	 * Show toast
+	 * 
+	 * @param Context - the application's context
+	 * @param Int - string resource id
+	 * 
+	 * @return void
+	 */
+	public static void showToast(Context context, int i ) {
+		int duration = Toast.LENGTH_SHORT;
+		Toast.makeText(context, i, duration).show();
+	}
+	
+	/**
+	 * Validates an email address
+	 * Credits: http://www.mkyong.com/regular-expressions/how-to-validate-email-address-with-regular-expression/
+	 * 
+	 * @param String - email address to be validated
+	 * 
+	 * @return boolean
+	 */
+	public static boolean validateEmail( String emailAddress) {
+		if( !emailAddress.equals("") ) {
+			pattern = Pattern.compile(EMAIL_PATTERN);
+			matcher = pattern.matcher(emailAddress);
+			return matcher.matches();
+		}
+		return true;
+	}
+	
+	/**
+	 * Validate an Ushahidi instance
+	 * 
+	 * @param String - URL to be validated.
+	 * 
+	 * @return boolean
+	 */
+	public static boolean validateUshahidiInstance( String ushahidiUrl ) {
+		//make an http get request to a dummy api call
+		//TODO improve on how to do this
+		boolean status = false;
+		if( ushahidiUrl == null ) {
+			return false;
+		}
+		
+		HttpResponse response;
+		String json_string = "";
+		String message = "";
+		StringBuilder uriBuilder = new StringBuilder( ushahidiUrl );
+		uriBuilder.append("/api");
+
+		try {
+			response = UshahidiHttpClient.GetURL( uriBuilder.toString() );
+			if( response == null ) {
+				status = false;
+			}
+			
+			final int statusCode = response.getStatusLine().getStatusCode();
+			
+			if( statusCode == 200 ) {
+				json_string = UshahidiHttpClient.GetText(response);
+				
+				//extrac data from json object
+				try {
+					jsonObject = new JSONObject(json_string);
+					
+					message = jsonObject.getJSONObject("error").getString("message");
+					if( message.equals("Not Found") ) {
+						status = true;
+					
+					}else {
+						status = false;
+					}
+				
+				} catch (JSONException e) {
+					
+					e.printStackTrace();
+				}
+				
+			} else {
+				status = false;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			status = false;
+		}
+		
+		return status;
+	}
+	
 }

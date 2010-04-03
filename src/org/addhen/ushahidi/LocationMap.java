@@ -3,12 +3,9 @@ package org.addhen.ushahidi;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import org.addhen.ushahidi.AddIncident.MyLocationListener;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,11 +17,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
@@ -44,12 +42,19 @@ public class LocationMap extends MapActivity {
 	private double longitude;
 	private List<IncidentsData> mNewIncidents;
 	private List<IncidentsData> mOldIncidents;
-	private EditText locationName;
 	private Button btnReset;
 	private Button btnSave;
 	private Button btnFind;
 	private Bundle bundle = new Bundle();
 	public List<Address> foundAddresses;
+	private String locationName;
+	private String title;
+	private String date;
+	private String description;
+	private String location;
+	private String categories;
+	private String media;
+	private final Handler mHandler = new Handler();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,18 +62,19 @@ public class LocationMap extends MapActivity {
 		setContentView(R.layout.view_map);
 		
 		mapView = (MapView) findViewById(R.id.location_map);
-		locationName = (EditText) findViewById(R.id.location_name);
+		locationName ="";
 		
 		foundAddresses = new ArrayList<Address>();
 		gc = new Geocoder(this);
 		
 		btnSave = (Button) findViewById(R.id.btn_save);
+		
 		btnSave.setOnClickListener( new View.OnClickListener(){
 			public void onClick( View v ) {
 				
 				bundle.putDouble("latitude", latitude);
 				bundle.putDouble("longitude", longitude);
-				bundle.putString("location", locationName.getText().toString());
+				bundle.putString("location", locationName);
 				
 				Intent intent = new Intent( LocationMap.this,AddIncident.class);
 				intent.putExtra("locations",bundle);
@@ -113,9 +119,10 @@ public class LocationMap extends MapActivity {
 	}
 	
 	private void placeMarker( int markerLatitude, int markerLongitude ) {
-		Drawable marker=getResources().getDrawable( R.drawable.marker);
+		
+		Drawable marker = getResources().getDrawable( R.drawable.marker);
 		 
-		 marker.setBounds(0, 0, marker.getIntrinsicWidth(),
+		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
 				 marker.getIntrinsicHeight());
 		mapView.getController().setZoom(12);
 
@@ -129,79 +136,56 @@ public class LocationMap extends MapActivity {
 	}
 	
 	private void centerLocation(GeoPoint centerGeoPoint) {
+		
 		mapController.animateTo(centerGeoPoint);
-
-		/*locationName.setText("Longitude: "+
-				String.valueOf((float)centerGeoPoint.getLongitudeE6()/1000000) + "Latitude: "+
-				String.valueOf((float)centerGeoPoint.getLatitudeE6()/1000000));*/
+		String locName;
 		
-		//myLatitude.setText("Latitude: "+
-				//String.valueOf((float)centerGeoPoint.getLatitudeE6()/1000000));
+		//locName = getLocationFromLatLon(centerGeoPoint.getLatitudeE6(),centerGeoPoint.getLongitudeE6());
 		
-		latitude = centerGeoPoint.getLongitudeE6()/1000000;
-		longitude = centerGeoPoint.getLatitudeE6()/1000000;
+		GeocodeTask geocode = new GeocodeTask();
+		geocode.execute(Double.valueOf(centerGeoPoint.getLatitudeE6()),
+				Double.valueOf(centerGeoPoint.getLongitudeE6()));
 		
-		locationName.setText(getLocationName(centerGeoPoint.getLongitudeE6()/1000000 , 
-				centerGeoPoint.getLongitudeE6()/1000000));
+		if( locationName == "" ) {
+			
+    		Toast.makeText(LocationMap.this, "No location found", Toast.LENGTH_SHORT).show();
+    	
+		}else {
+    			
+    		//locationName = locName;
+    		Toast.makeText(LocationMap.this, "Location "+locationName, Toast.LENGTH_SHORT).show();
+    	
+		}
 		
 		placeMarker(centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6());
-	 }
+	}
 	
 	/**
 	 * get the real location name from
 	 * the latitude and longitude.
 	 */
-	private String getLocationName( double lat, double lon ) {
-		//
-	    //  Write the location name.
-	    //
-	    try {
-	        Geocoder geo = new Geocoder(this, Locale.getDefault());
-	        List<Address> addresses = geo.getFromLocation(lat, lon, 1);
-	        if (addresses.size() > 0) {
-	        	return addresses.get(0).getLocality();
-	        }
-	    }
-	    catch (Exception e) {
-	        e.printStackTrace(); 
-	    }
+	private String getLocationFromLatLon( double lat, double lon ) {
+		
+		try {
+			
+    		foundAddresses = gc.getFromLocation( latitude, longitude, 5 );
+    		
+    		Address address = foundAddresses.get(0);
+    		
+    		return address.getLocality();
+		
+    	} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return "";
 	}
 	
-	/**
-	 * Get latitude and logitude
-	 * @param String locName: the location name
-	 * @return void
-	 *
-	private void getLatLon( String locName ) {
-		double lat = 0;
-		double lon = 0;
-		try {
-	        Geocoder geo = new Geocoder(this, Locale.getDefault());
-	        List<Address> addresses = geo.getFromLocationName(locName, 1);
-	        
-	        if (addresses.size() > 0) {
-	        	lat = addresses.get(0).getLatitude();
-	        	lon = addresses.get(0).getLongitude();
-	        	centerLocation(getPoint(lat,lon));
-	        }
-	    }
-	    catch (Exception e) {
-	        e.printStackTrace(); 
-	    }
-	    
-	}*/
 	
 	// get incidents from the db
 	public List<IncidentsData> showIncidents( String by ) {
 		Cursor cursor;
-		String title;
-		String date;
-		String description;
-		String location;
-		String categories;
-		String media;
-
+	
 		if( by.equals("All")) 
 			cursor = UshahidiApplication.mDb.fetchAllIncidents();
 		else
@@ -294,6 +278,8 @@ public class LocationMap extends MapActivity {
 	    public void onLocationChanged(Location location) { 
 	    	double latitude = 0;
 	    	double longitude = 0;
+	    	String locName = "";
+	    	
 	    	if (location != null) { 
 	    		latitude = location.getLatitude(); 
 	  	        longitude = location.getLongitude(); 
@@ -301,22 +287,16 @@ public class LocationMap extends MapActivity {
 	  	        centerLocation(getPoint(latitude, longitude));
 	  	    } 
 	    	
-	    	try {
-				
-	    		foundAddresses = gc.getFromLocation( latitude, longitude, 5 );
-	    		Address address = foundAddresses.get(0);
-	    		if( address.getLocality().toString().equals("") ) {
-	    			locationName.setText("Location "+address.getLocality().toString());
-	    			Toast.makeText(LocationMap.this, "No location found", Toast.LENGTH_SHORT).show();
-	    		}else {
-	    			locationName.setText("Loc "+address.getLocality().toString());
-	    			Toast.makeText(LocationMap.this, "Location "+address.getLocality().toString(), Toast.LENGTH_SHORT).show();
-	    		}
-			
-	    	} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	    	locName = getLocationFromLatLon(latitude,longitude);
+	    	
+	    	if( locName.equals("") ) {
+	    			
+	    		Toast.makeText(LocationMap.this, "No location found", Toast.LENGTH_SHORT).show();
+	    	}else {
+	    			
+	    		locationName = locName;
+	    		Toast.makeText(LocationMap.this, "Location "+locName, Toast.LENGTH_SHORT).show();
+	    	}
 	     
 	    } 
 	    public void onProviderDisabled(String provider) { 
@@ -329,14 +309,38 @@ public class LocationMap extends MapActivity {
 	    { 
 	      // TODO Auto-generated method stub 
 	    } 
-	  }
+	}
+	
+	//thread class
+	private class GeocodeTask extends AsyncTask <Double, Void, String> {
+		
+		protected String localityName;
+		
+		@Override 
+		protected String doInBackground(Double... params) {
+			localityName = getLocationFromLatLon(params[0], params[1]);
+			return localityName;
+		}
+		
+		@Override
+		protected void onPostExecute(String result)
+		{
+			
+			if( result.equals(""))
+				locationName = "";
+			else
+				locationName = result;
+		}
+
+		
+	}
 	
 	private class MapMarker extends ItemizedOverlay<OverlayItem> {
 		
 		private List<OverlayItem> locations =new ArrayList<OverlayItem>();
 		private Drawable marker;
 		private OverlayItem myOverlayItem;
-		private boolean MoveMap;
+		private boolean MoveMap = false;
 		
 		public MapMarker( Drawable defaultMarker, int LatitudeE6, int LongitudeE6 ) {
 			super(defaultMarker);
@@ -370,36 +374,54 @@ public class LocationMap extends MapActivity {
 		   
 			boundCenterBottom(marker);
 		}
+		
+		/*@Override
+		protected boolean onTap(int index) {
+			Toast.makeText(LocationMap.this, "Location ", Toast.LENGTH_SHORT).show();
+		  return true;
+		}*/
+		
 
 		@Override
 		public boolean onTouchEvent(MotionEvent motionEvent, MapView mapview) {
 			
-		   int Action = motionEvent.getAction();
-		   if (Action == MotionEvent.ACTION_UP){
-		 
-		    if(!MoveMap)
-		    {
-		     Projection proj = mapView.getProjection();
-		     GeoPoint loc = proj.fromPixels((int)motionEvent.getX(), (int)motionEvent.getY());
+			int Action = motionEvent.getAction();
+			if (Action == MotionEvent.ACTION_UP){
+			
+				/*if(!MoveMap)
+				{
+					
+					Projection proj = mapView.getProjection();
+					GeoPoint loc = proj.fromPixels((int)motionEvent.getX(), (int)motionEvent.getY());
 		              
-		     //remove the last marker
-		     mapView.getOverlays().remove(0);
-		              
-		     centerLocation(loc);
-		    }
+					//remove the last marker
+					mapView.getOverlays().remove(0);  
+					centerLocation(loc);
+					
+				}*/
+				MoveMap = false;
 		    
 		   }
-		   else if (Action == MotionEvent.ACTION_DOWN){
-		    
-		    MoveMap = false;
+		   else if (Action == MotionEvent.ACTION_DOWN) {
+			   if(!MoveMap ) {
+				   Projection proj = mapView.getProjection();
+				   GeoPoint loc = proj.fromPixels((int)motionEvent.getX(), (int)motionEvent.getY());
+	              
+				   //remove the last marker
+			   		mapView.getOverlays().remove(0);  
+			   		centerLocation(loc);
+			   }
+			   
+			   MoveMap = false;
 
 		   }
-		   else if (Action == MotionEvent.ACTION_MOVE){    
-		    MoveMap = true;
+		   else if (Action == MotionEvent.ACTION_MOVE){
+			   
+			   MoveMap = true;
 		   }
 
 		   return super.onTouchEvent(motionEvent, mapview);
-		   //return false;
-		  }
+		   
+		}
 	}
 }

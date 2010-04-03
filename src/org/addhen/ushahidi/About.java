@@ -88,7 +88,6 @@ public class About extends Activity {
 	      case ABOUT:
 				intent = new Intent( About.this, About.class);
 	    		startActivityForResult( intent, REQUEST_CODE_ABOUT );
-	    		setResult(RESULT_OK);
 				return true;  
 	        
 	      case SETTINGS:

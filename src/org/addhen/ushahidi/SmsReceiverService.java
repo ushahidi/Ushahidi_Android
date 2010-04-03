@@ -5,10 +5,7 @@ import java.util.HashMap;
 
 import org.addhen.ushahidi.net.UshahidiHttpClient;
 
-//import android.app.Activity;
-//import android.app.PendingIntent;
 import android.app.Service;
-//import android.app.PendingIntent.CanceledException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,10 +16,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.Process;
-//import android.telephony.PhoneNumberUtils;
-import android.telephony.gsm.SmsMessage;
+import android.telephony.SmsMessage;
 import android.util.Log;
-//import android.widget.Toast;
 
 public class SmsReceiverService extends Service {
 	private static final String ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
@@ -148,57 +143,6 @@ public class SmsReceiverService extends Service {
 		}
 	}
 
-	/**
-	 * Handle receiving an arbitrary message (potentially coming from a 3rd party app)
-	 *
-	private void handleMessageReceived(Intent intent) {
-	    
-		Bundle bundle = intent.getExtras();
-
-	    /*
-	     * FROM: ContactURI -or- display name and display address -or- display address
-	     * MESSAGE BODY: message body
-	     * TIMESTAMP: optional (will use system timestamp)
-	     * 
-	     * QUICK REPLY INTENT:
-	     * REPLY INTENT:
-	     * DELETE INTENT:
-	     *
-
-	    if (bundle != null) {
-	    	//notifySmsReceived(new SmsMmsMessage(context, messages, System.currentTimeMillis()));
-	    }
-	}*/
-
-	  /*
-	   * Handler to deal with showing Toast messages for message sent status
-	   *
-	  public Handler mToastHandler = new Handler() {
-	    @Override
-	    public void handleMessage(Message msg) {
-
-	      if (msg != null) {
-	        switch (msg.what) {
-	          case TOAST_HANDLER_MESSAGE_SENT:
-	            Toast.makeText(SmsReceiverService.this,
-	                SmsReceiverService.this.getString(R.string.quickreply_sent_toast),
-	                Toast.LENGTH_SHORT).show();
-	            break;
-	          case TOAST_HANDLER_MESSAGE_SEND_LATER:
-	            Toast.makeText(SmsReceiverService.this,
-	                SmsReceiverService.this.getString(R.string.quickreply_failed_send_later),
-	                Toast.LENGTH_SHORT).show();
-	            break;
-	          case TOAST_HANDLER_MESSAGE_FAILED:
-	            Toast.makeText(SmsReceiverService.this,
-	                SmsReceiverService.this.getString(R.string.quickreply_failed),
-	                Toast.LENGTH_SHORT).show();
-	            break;
-	        }
-	      }
-	    }
-	  };*/
-	
 	public static final SmsMessage[] getMessagesFromIntent(Intent intent) {
 		Object[] messages = (Object[]) intent.getSerializableExtra("pdus");
 	    if (messages == null) {

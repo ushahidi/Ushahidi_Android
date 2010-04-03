@@ -1,9 +1,6 @@
 package org.addhen.ushahidi;
 
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -16,7 +13,6 @@ import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.util.Log;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 	private EditTextPreference ushahidiInstancePref;
@@ -36,7 +32,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	private ListPreference saveItemsPref;
 	private ListPreference totalReportsPref;
 	private Handler mHandler;
-	private static final int DIALOG_CLEAR_CACHE = 1;
 	public static final String AUTO_FETCH_PREFERENCE = "auto_fetch_preference";
 	public static final String SMS_PREFERENCE = "sms_preference";
 	public static final String VIBRATE_PREFERENCE = "vibrate_preference";
@@ -222,6 +217,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	}
 	
 	protected void saveSettings(){
+		
 		UshahidiService.domain = ushahidiInstancePref.getText().toString();
 		UshahidiService.firstname = firstNamePref.getText();
 		UshahidiService.lastname = lastNamePref.getText();
@@ -337,5 +333,20 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 				 UshahidiService.domain = sharedPreferences.getString("ushahidi_instance_preference","");
 			 }
 		 }
+		 
+		 //validate email address
+		 if( key.equals("email_address_preference")) {
+			if( !Util.validateEmail(sharedPreferences.getString("email_address_preference",""))) {
+				Util.showToast(this, R.string.invalid_email_address);
+			}
+		 }
+		 
+		 // validate ushahidi instance
+		 if(key.equals("ushahidi_instance_preference")) {
+			if(!Util.validateUshahidiInstance(sharedPreferences.getString("ushahidi_instance_preference",""))) {
+				Util.showToast(this, R.string.invalid_ushahidi_instance);
+			}
+		 }
+		 
 	 }
 }

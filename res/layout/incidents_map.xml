@@ -6,20 +6,6 @@
 	<com.google.android.maps.MapView android:id="@+id/map"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
-		android:apiKey="02cv5Q8Rob0DwsGxgLYHnxbh_k2aYtk4ewHfFAg"
+		android:apiKey="@string/google_map_api_key"
 		android:clickable="true" />
-		
-		<!--  production  google map api key 
-		<com.google.android.maps.MapView android:id="@+id/map"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:apiKey="02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA" 
-		android:clickable="true" /> -->
- 
-		<!--  <Spinner android:id="@+id/incident_cat"
-	  		android:prompt="@string/prompt_mesg"
-	  		android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
-        	android:drawSelectorOnTop="true"/> -->
- 
 </RelativeLayout>

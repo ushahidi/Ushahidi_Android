@@ -7,46 +7,30 @@
 	android:paddingLeft="5px"
 	android:paddingRight="5px"
 	android:background="@drawable/background_color">	
-	<AbsoluteLayout
-		android:id="@+id/simpleGM_layout"
+	<LinearLayout
+		android:orientation="vertical"
+		android:id="@+id/loc_map_layout"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
+		android:layout_height="wrap_content"
+		android:padding="5px">
 	<TextView	
 		android:id="@+id/title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Enter your location name"
+		android:text="@string/instructions"
 		android:textColor="@drawable/date_color"
-		android:textStyle="bold"
-		android:layout_x="11px"
-		android:layout_y="5px"/>
-
-	<EditText
-		android:id="@+id/location_name"
-		android:layout_width="240px"
-		android:layout_height="wrap_content"
-		android:textSize="18sp"
-		android:layout_x="12px"
-		android:layout_y="30px"/>
-
-	<!--  <Button
-		android:id="@+id/btn_search"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="Go"
-		android:layout_x="256px"
-		android:layout_y="30px" /> -->
+		android:textStyle="bold" />
 		
-	<com.google.android.maps.MapView android:id="@+id/location_map"
+		
+	<com.google.android.maps.MapView 
+		android:id="@+id/location_map"
 		android:layout_width="fill_parent"
-		android:layout_height="290px"
-		android:apiKey="02cv5Q8Rob0DwsGxgLYHnxbh_k2aYtk4ewHfFAg"
-		android:layout_x="2px"
-		android:layout_y="80px"
+		android:layout_height="wrap_content"
+		android:apiKey="@string/google_map_api_key"
 		android:enabled="true"
 		android:paddingBottom="10px"
 		android:clickable="true" />
-	</AbsoluteLayout>
+	</LinearLayout>
 	
 	<LinearLayout 
 		android:layout_width="wrap_content"
@@ -71,12 +55,3 @@
 	</LinearLayout>	
 
 </LinearLayout>
-		<!-- Production MapView
-			<com.google.android.maps.MapView
-                 android:layout_width="fill_parent"
-                 android:layout_height="fill_parent"
-                 android:apiKey="06wmUaTBRvXSH4AMuZyEXgm0FShJduQJzU1hTaA"
-                 />
-		
-		 -->
-		

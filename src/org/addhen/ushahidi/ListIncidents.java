@@ -153,11 +153,13 @@ public class ListIncidents extends Activity
 			  
 	   
 					if(Categories.getAllCategoriesFromWeb() ) {
-						mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
+						mHandler.post(mProcessCategoriesXML);
+						//mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
 					}
 			  
 					if(Incidents.getAllIncidentsFromWeb()){
-						mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
+						mHandler.post(mProcessIncidentsXML);
+						//mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
 					}
 					
 					if( mNewCategories.size() >  0 )
@@ -174,6 +176,18 @@ public class ListIncidents extends Activity
 			} catch (IOException e) {
 				//means there was a problem getting it
 			}
+		}
+	};
+	
+	final Runnable mProcessIncidentsXML = new Runnable() {
+		public void run() {
+			mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
+		}
+	};
+	
+	final Runnable mProcessCategoriesXML = new Runnable() {
+		public void run() {
+			mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
 		}
 	};
 

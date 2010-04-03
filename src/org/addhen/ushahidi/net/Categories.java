@@ -5,11 +5,9 @@ import java.io.IOException;
 import org.addhen.ushahidi.UshahidiService;
 import org.apache.http.HttpResponse;
 
-import android.util.Log;
-
 public class Categories {
 	
-public static boolean getAllCategoriesFromWeb() throws IOException {
+	public static boolean getAllCategoriesFromWeb() throws IOException {
 		
 		HttpResponse response;
 		String categories = "";
@@ -21,7 +19,7 @@ public static boolean getAllCategoriesFromWeb() throws IOException {
 		response = UshahidiHttpClient.GetURL( uriBuilder.toString() );
 		
 		if( response == null ) {
-			return true;
+			return false;
 		}
 		
 		final int statusCode = response.getStatusLine().getStatusCode();
@@ -30,10 +28,11 @@ public static boolean getAllCategoriesFromWeb() throws IOException {
 			categories = UshahidiHttpClient.GetText(response);
 			UshahidiService.categoriesResponse = categories;
 			return true;
-		
+			
 		} else {
 			return false;
 		}
+		
 	}
 
 }

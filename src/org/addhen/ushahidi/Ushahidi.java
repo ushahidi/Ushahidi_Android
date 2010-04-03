@@ -1,5 +1,6 @@
 package org.addhen.ushahidi;
- 
+
+
 import java.io.IOException;
 import java.util.List;
  
@@ -13,11 +14,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,6 +48,7 @@ public class Ushahidi extends Activity {
 	private static final int REQUEST_CODE_ABOUT = 2; 
 	private static final int DIALOG_PROMPT = 0;
 	private static final int DIALOG_PROGRESS = 1;
+	private static final int DIALOG_ERROR = 2;
  
 	private static final int MAX_PROGRESS = 100;
     
@@ -57,6 +62,8 @@ public class Ushahidi extends Activity {
 	private Button listBtn;
 	private Button addBtn;
 	private Button settingsBtn;
+	
+	private String dialogErrorMsg = "An error occurred fetching the reports. Make sure you have entered an Ushahidi instance.";
  
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +119,7 @@ public class Ushahidi extends Activity {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
+                
                 if (mProgress >= MAX_PROGRESS) {
                     mProgressDialog.dismiss();
                 } else {
@@ -122,9 +130,6 @@ public class Ushahidi extends Activity {
             }
         };
         
-        //if(UshahidiService.AutoFetch)
-        	//startService(new Intent(Ushahidi.this, UshahidiService.class));
-       
 	}
  
 	 @Override
@@ -138,6 +143,26 @@ public class Ushahidi extends Activity {
 	            	public void onClick(DialogInterface dialog, int which) {
 	            		Intent launchPreferencesIntent = new Intent().setClass(Ushahidi.this, 
 	            				Settings.class);
+ 
+	    				// Make it a subactivity so we know when it returns
+	    				startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);
+							dialog.dismiss();						
+						}
+	        		});
+	                dialog.setCancelable(false);
+	                return dialog;
+	     	}
+	     	
+	     	case DIALOG_ERROR: {
+	     		AlertDialog dialog = (new AlertDialog.Builder(this)).create();
+	     		dialog.setTitle(R.string.alert_dialog_error_title);
+	            dialog.setMessage(dialogErrorMsg);
+	            dialog.setButton2("Ok", new Dialog.OnClickListener() {
+	            	public void onClick(DialogInterface dialog, int which) {
+	            		
+	            		Intent launchPreferencesIntent = new Intent().setClass(Ushahidi.this, 
+	            				Settings.class);
+	            		
  
 	    				// Make it a subactivity so we know when it returns
 	    				startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);
@@ -161,29 +186,54 @@ public class Ushahidi extends Activity {
 	  }
  
 	 final Runnable mRetrieveNewIncidents = new Runnable() {
-		  public void run() {
-		  try {
-			  if( Util.isConnected(Ushahidi.this)) {
+		 public void run() {
+			 try {
+			  
+				 if( Util.isConnected(Ushahidi.this)) {
  
-				  if(Categories.getAllCategoriesFromWeb() ) {
-					  mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
-				  }
+					 if(Categories.getAllCategoriesFromWeb() && Incidents.getAllIncidentsFromWeb() ) {
+						 showDialog(DIALOG_PROGRESS);
+						 mHandler.post(mProcessCategoriesXML);
+						 mHandler.post(mProcessIncidentsXML);
+						 //mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
+						 //mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
+					 } else {
+						 mHandler.post(mDisplayErrorPrompt);
+					 }
+					  
+					 if(mNewCategories != null && mNewIncidents != null ) {
+						 UshahidiApplication.mDb.addCategories(mNewCategories, false);
+						 UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
+						 mProgress = 0;
+						 mProgressDialog.setProgress(0);
+						 mHandler.sendEmptyMessage(0);
+					 
+					 } else {
+						 mHandler.post(mDisplayErrorPrompt);
+					 }
+					  
  
-				  if(Incidents.getAllIncidentsFromWeb()){
-					  mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
-				  }
- 
-				  UshahidiApplication.mDb.addCategories(mNewCategories, false);
-				  UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
- 
-			  } else {
-				  Toast.makeText(Ushahidi.this, R.string.internet_connection, Toast.LENGTH_LONG).show();
-			  }
+				 } else {
+					 Toast.makeText(Ushahidi.this, R.string.internet_connection, Toast.LENGTH_LONG).show();
+				 }
 		  	} catch (IOException e) {
 				//means there was a problem getting it
 		  	}
-		  }
-	  }; 
+		 }
+	}; 
+	
+	
+	final Runnable mProcessIncidentsXML = new Runnable() {
+		public void run() {
+			mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
+		}
+	};
+	
+	final Runnable mProcessCategoriesXML = new Runnable() {
+		public void run() {
+			mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
+		}
+	};
  
 	final Runnable mDisplayPrompt = new Runnable(){
 		public void run(){
@@ -191,7 +241,11 @@ public class Ushahidi extends Activity {
 		}
 	};
  
- 
+	final Runnable mDisplayErrorPrompt = new Runnable() {
+		public void run() {
+			showDialog(DIALOG_ERROR);
+		}
+	};
  
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -298,14 +352,45 @@ public class Ushahidi extends Activity {
 				return true;
  
 			case SYNC:
-				showDialog(DIALOG_PROGRESS);
-				mHandler.post(mRetrieveNewIncidents);
-	            mProgress = 0;
-	            mProgressDialog.setProgress(0);
-	            mHandler.sendEmptyMessage(0);
+	            ReportsTask reportsTask = new ReportsTask();
+	            reportsTask.appContext = this;
+	            reportsTask.execute();
 	            return true;
  
 		}
 		return false;
+	}
+	
+	//thread class
+	private class ReportsTask extends AsyncTask <Void, Void, Integer> {
+		
+		protected Integer status;
+		private ProgressDialog dialog;
+		protected Context appContext;
+		@Override
+		protected void onPreExecute() {
+			this.dialog = ProgressDialog.show(appContext, "Please wait...",
+					"Fetching new reports", true);
+
+		}
+		
+		@Override 
+		protected Integer doInBackground(Void... params) {
+			status = Util.processReports(appContext);
+			return status;
+		}
+		
+		@Override
+		protected void onPostExecute(Integer result)
+		{
+			if( result == 1){
+				showDialog(DIALOG_ERROR);
+			} else if( result == 4 ){
+				Util.showToast(appContext, R.string.internet_connection);
+			}
+			this.dialog.cancel();
+		}
+
+		
 	}
 }

@@ -19,6 +19,10 @@
     <string name="alert_dialog_hide">Hide</string>
     <string name="alert_dialog_something">Something</string>
     <string name="alert_dialog_cancel">Cancel</string>
+    <string name="alert_dialog_error_title">Oops</string>
+    <string name="alert_dialog_error_msg">An error occurred fetching the reports. Make sure you entered an Ushahidi instance.</string>
+    <string name="invalid_email_address">An invalid email address was entered</string>
+    <string name="invalid_ushahidi_instance">Looks like the URL entered is not an Ushahidi instance.</string>
     <string name="btn_save">Save</string>
     <string name="btn_find">Find me</string>
     <string name="btn_reset">Reset</string>
@@ -41,9 +45,12 @@
 	<string name="incident_add_category">Select Category</string>
 	<string name="incident_menu_add">Add Report</string>
 	<string name="incident_list">View Reports</string>
+	<string name="google_map_api_key">02cv5Q8Rob0DwsGxgLYHnxbh_k2aYtk4ewHfFAg</string>
+	<string name="google_map_api_key_pro">06wmUaTBRvXSH4AMuZyEXgm0FShJduQJzU1hTaA</string>
 	<string name="menu_home">Home</string>
 	<string name="menu_sync">Sync</string>
 	<string name="sms_to_ushahidi_failed">Failed to post SMS to Ushahidi. Make sure username and password are correct</string>
+	<string name="instructions">Tap your location on the map</string>
 	<!--  Settings -->
 	<string name="menu_settings">Settings</string>
 	<string name ="basic_settings">Basic settings</string>

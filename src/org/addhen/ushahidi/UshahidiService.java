@@ -280,7 +280,11 @@ public class UshahidiService extends Service {
 		editor.putString("Domain", domain);
 		editor.putString("Firstname", firstname);
 		editor.putString("Lastname", lastname);
-		editor.putString("Email", email);
+		
+		if( Util.validateEmail(settings.getString("Email", ""))) {
+			editor.putString("Email", email);
+		}
+		
 		editor.putString("savePath", savePath);
 		editor.putInt("AutoUpdateDelay", AutoUpdateDelay);
 		editor.putBoolean("AutoFetch", AutoFetch);
