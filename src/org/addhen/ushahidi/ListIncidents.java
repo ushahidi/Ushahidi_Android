@@ -345,7 +345,7 @@ public class ListIncidents extends Activity
 					incidentData.setIncidentLocation(location);
 					
 					//TODO format the date to the appropriate format
-					date = cursor.getString(dateIndex);
+					date = Util.formatDate("yyyy-MM-dd hh:mm:ss", cursor.getString(dateIndex), "MMMM dd, yyyy 'at' hh:mm:ss aaa" );
 					
 					incidentData.setIncidentDate(date);			  
 			  

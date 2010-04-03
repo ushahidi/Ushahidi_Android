@@ -1,6 +1,7 @@
 package org.addhen.ushahidi;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import java.text.DateFormat;
@@ -152,16 +153,17 @@ public class Util{
 	 * @param  date - the date to be formatted.
 	 * @return String
 	 */
-	public static String formatDate( String date ) {
+	public static String formatDate( String dateFormat, String date, String toFormat ) {
 	
 		String formatted = "";
 		
-		DateFormat formatter = new SimpleDateFormat(
-        "MMMMM dd, yyyy 'at' hh:mm:ss aaa");
-		
+		DateFormat formatter = new SimpleDateFormat(dateFormat);
 		try {
-			
-			formatted = formatter.format(formatter.parse(date));
+			Date dateStr = formatter.parse(date);
+			formatted = formatter.format(dateStr);
+			Date formatDate = formatter.parse(formatted);
+			formatter = new SimpleDateFormat(toFormat);
+			formatted = formatter.format(formatDate);
 		
 		} catch (ParseException e) {
 			

@@ -106,7 +106,7 @@ public class IncidentMap extends MapActivity {
 			mapView.getController().setCenter(getPoint(IncidentMap.latitude,
 					IncidentMap.longitude));
 			
-			mapView.getController().setZoom(12);
+			mapView.getController().setZoom(10);
 
 			mapView.setBuiltInZoomControls(true);
  

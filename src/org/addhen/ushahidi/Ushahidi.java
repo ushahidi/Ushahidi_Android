@@ -47,8 +47,7 @@ public class Ushahidi extends Activity {
 	private static final int REQUEST_CODE_SETTINGS = 1;
 	private static final int REQUEST_CODE_ABOUT = 2; 
 	private static final int DIALOG_PROMPT = 0;
-	private static final int DIALOG_PROGRESS = 1;
-	private static final int DIALOG_ERROR = 2;
+	private static final int DIALOG_ERROR = 1;
  
 	private static final int MAX_PROGRESS = 100;
     
@@ -172,57 +171,11 @@ public class Ushahidi extends Activity {
 	                dialog.setCancelable(false);
 	                return dialog;
 	     	}
- 
-	     	case DIALOG_PROGRESS:
-	            mProgressDialog = new ProgressDialog(Ushahidi.this);
-	            mProgressDialog.setIcon(R.drawable.alert_dialog_icon);
-	            mProgressDialog.setTitle(R.string.ushahidi_sync);
-	            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-	            mProgressDialog.setMax(MAX_PROGRESS);
- 
-	            return mProgressDialog;
 		 }
 		 return null;
 	  }
  
-	 final Runnable mRetrieveNewIncidents = new Runnable() {
-		 public void run() {
-			 try {
-			  
-				 if( Util.isConnected(Ushahidi.this)) {
- 
-					 if(Categories.getAllCategoriesFromWeb() && Incidents.getAllIncidentsFromWeb() ) {
-						 showDialog(DIALOG_PROGRESS);
-						 mHandler.post(mProcessCategoriesXML);
-						 mHandler.post(mProcessIncidentsXML);
-						 //mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
-						 //mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
-					 } else {
-						 mHandler.post(mDisplayErrorPrompt);
-					 }
-					  
-					 if(mNewCategories != null && mNewIncidents != null ) {
-						 UshahidiApplication.mDb.addCategories(mNewCategories, false);
-						 UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
-						 mProgress = 0;
-						 mProgressDialog.setProgress(0);
-						 mHandler.sendEmptyMessage(0);
-					 
-					 } else {
-						 mHandler.post(mDisplayErrorPrompt);
-					 }
-					  
- 
-				 } else {
-					 Toast.makeText(Ushahidi.this, R.string.internet_connection, Toast.LENGTH_LONG).show();
-				 }
-		  	} catch (IOException e) {
-				//means there was a problem getting it
-		  	}
-		 }
-	}; 
-	
-	
+		
 	final Runnable mProcessIncidentsXML = new Runnable() {
 		public void run() {
 			mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
@@ -256,13 +209,6 @@ public class Ushahidi extends Activity {
 					break;
 				}
 			break;
-			/*case LIST_INCIDENTS:
-				if( resultCode != RESULT_OK ){
-					
-					break;
-				}
-				
-			break;*/
 		}
 	}
  
@@ -383,9 +329,7 @@ public class Ushahidi extends Activity {
 		@Override
 		protected void onPostExecute(Integer result)
 		{
-			if( result == 1){
-				showDialog(DIALOG_ERROR);
-			} else if( result == 4 ){
+			if( result == 4 ){
 				Util.showToast(appContext, R.string.internet_connection);
 			}
 			this.dialog.cancel();

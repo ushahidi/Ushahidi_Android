@@ -83,6 +83,7 @@ public class AddIncident extends Activity {
     private static double longitude;
     private static double latitude;
     private String errorMessage = "";
+    private String dateToSubmit = "";
 	private boolean error = false;
 	private boolean categoryClicked = false;
 	private EditText incidentTitle;
@@ -419,7 +420,7 @@ public class AddIncident extends Activity {
 				  i++;
 			  }while( cursor.moveToNext() );
 		  }
-		  Log.i("database image",cats);
+		 
 		  cursor.close();
 		  return categories;
 		  
@@ -636,7 +637,7 @@ public class AddIncident extends Activity {
                 });
                 
                 /**
-                 * Disabling map functionality for now. we be re implemented in the next release.
+                 * Disabling camera functionality for now. we be re implemented in the next release.
                  * dialog.setButton3("Camera", new Dialog.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 												
@@ -741,16 +742,32 @@ public class AddIncident extends Activity {
     		amPm = "PM";
     	else
     		amPm = "AM";
+    	String dateStr = new StringBuilder()
+        // Month is 0 based so add 1
+    	.append(mYear).append("-")
+    	.append(pad(mMonth + 1)).append("-")
+        .append(pad(mDay)).append(" ")
+        .append(pad(timeDigits.get(mHour))).append(":")
+        .append(pad(mMinute)).toString();
     	
-    	incidentDate.setText(
-            new StringBuilder()
-                    // Month is 0 based so add 1
-                    .append(pad(mMonth + 1)).append("/")
-                    .append(pad(mDay)).append("/")
-                    .append(mYear).append(" ")
-                    .append(pad(timeDigits.get(mHour))).append(":")
-                    .append(pad(mMinute)).append(" ")
-    				.append(amPm));
+    	String strDate = new StringBuilder()
+        // Month is 0 based so add 1
+    	.append(mYear).append("-")
+    	.append(pad(mMonth + 1)).append("-")
+        .append(pad(mDay)).toString();
+    	
+    	String dateTime = Util.formatDate("yyyy-MM-dd",strDate,"MMMM dd, yyyy");
+    	
+    	incidentDate.setText( dateTime + " at "+pad(timeDigits.get(mHour))+":"+pad(mMinute) +" "+amPm);
+    	
+    	dateToSubmit =  new StringBuilder()
+        // Month is 0 based so add 1
+        .append(pad(mMonth + 1)).append("/")
+        .append(pad(mDay)).append("/")
+        .append(mYear).append(" ")
+        .append(pad(timeDigits.get(mHour))).append(":")
+        .append(pad(mMinute)).append(" ")
+		.append(amPm).toString();
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener =
@@ -789,7 +806,7 @@ public class AddIncident extends Activity {
      *
      */
     public long addToDb() {
-    	String dates[] = incidentDate.getText().toString().split(" ");
+    	String dates[] = dateToSubmit.split(" ");
     	String time[] = dates[1].split(":");
     	
     	List<AddIncidentData> addIncidentsData = new ArrayList<AddIncidentData>();
@@ -822,7 +839,8 @@ public class AddIncident extends Activity {
      */
     public boolean postToOnline() {
     	
-    	String dates[] = incidentDate.getText().toString().split(" ");
+    	//String dates[] = incidentDate.getText().toString().split(" ");
+    	String dates[] = dateToSubmit.split(" ");
     	String time[] = dates[1].split(":");
     	String categories = Util.implode(vectorCategories);
     	
@@ -910,8 +928,8 @@ public class AddIncident extends Activity {
         if( desc != null )
             incidentDesc.setText(desc, TextView.BufferType.EDITABLE);
         
-        if( date != null )
-            incidentDate.setText(date, TextView.BufferType.EDITABLE);
+        //if( date != null )
+          //  incidentDate.setText(date, TextView.BufferType.EDITABLE);
            
     }
 
@@ -926,7 +944,7 @@ public class AddIncident extends Activity {
         SharedPreferences.Editor editor = getPreferences(0).edit();
         editor.putString("title", incidentTitle.getText().toString());
         editor.putString("desc", incidentDesc.getText().toString());
-        editor.putString("date", incidentDate.getText().toString());
+        //editor.putString("date", incidentDate.getText().toString());
         editor.commit();
     }
     
