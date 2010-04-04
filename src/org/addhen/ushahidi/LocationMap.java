@@ -17,9 +17,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -54,7 +52,6 @@ public class LocationMap extends MapActivity {
 	private String location;
 	private String categories;
 	private String media;
-	private final Handler mHandler = new Handler();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -138,7 +135,6 @@ public class LocationMap extends MapActivity {
 	private void centerLocation(GeoPoint centerGeoPoint) {
 		
 		mapController.animateTo(centerGeoPoint);
-		String locName;
 		
 		//locName = getLocationFromLatLon(centerGeoPoint.getLatitudeE6(),centerGeoPoint.getLongitudeE6());
 		
@@ -233,8 +229,8 @@ public class LocationMap extends MapActivity {
 				location = cursor.getString(locationIndex);
 				incidentData.setIncidentLocLongitude(location);
 				  
-				date = Util.joinString("Date: ",cursor.getString(dateIndex));
-				incidentData.setIncidentDate(cursor.getString(dateIndex));			  
+				date = Util.joinString("Date: ",Util.formatDate("yyyy-MM-dd hh:mm:ss", cursor.getString(dateIndex), "MMMM dd, yyyy 'at' hh:mm:ss aaa" ));
+				incidentData.setIncidentDate(date);			  
 				  
 				media = cursor.getString(mediaIndex);
 				incidentData.setIncidentMedia(media);

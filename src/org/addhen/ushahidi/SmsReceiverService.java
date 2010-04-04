@@ -17,14 +17,13 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.os.Process;
 import android.telephony.SmsMessage;
-import android.util.Log;
+
 
 public class SmsReceiverService extends Service {
 	private static final String ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 	
 	private ServiceHandler mServiceHandler;
 	private Looper mServiceLooper;
-	private int mResultCode;
 	private String fromAddress = "";
     private String messageBody = "";
 	private static final Object mStartingServiceSync = new Object();
@@ -44,7 +43,7 @@ public class SmsReceiverService extends Service {
 	@Override
 	public void onStart(Intent intent, int startId) {
 	    
-		mResultCode = intent != null ? intent.getIntExtra("result", 0) : 0;
+		//int mResultCode = intent != null ? intent.getIntExtra("result", 0) : 0;
 	    Message msg = mServiceHandler.obtainMessage();
 	    msg.arg1 = startId;
 	    msg.obj = intent;

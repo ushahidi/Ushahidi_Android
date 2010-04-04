@@ -1,15 +1,9 @@
 package org.addhen.ushahidi;
 
 import android.app.TabActivity;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.widget.TabHost;
-import android.content.Context;
 import android.content.Intent;
 
 

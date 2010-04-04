@@ -2,17 +2,11 @@ package org.addhen.ushahidi;
  
 
 import java.io.File;
-
-import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Vector;
- 
-import org.addhen.ushahidi.net.Incidents;
-import org.addhen.ushahidi.data.CategoriesData;
-import org.addhen.ushahidi.data.IncidentsData;
+
 import org.addhen.ushahidi.data.UshahidiDatabase;
 import org.apache.http.impl.client.DefaultHttpClient;
- 
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -25,10 +19,8 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
- 
 import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
 
  
 public class UshahidiService extends Service {
@@ -59,8 +51,8 @@ public class UshahidiService extends Service {
 	
 	private static final String TAG = "Ushahidi - New Updates";
 	 
-    private ArrayList<IncidentsData> mNewIncidents;
-    private ArrayList<CategoriesData> mNewCategories;
+    //private ArrayList<IncidentsData> mNewIncidents;
+    //private ArrayList<CategoriesData> mNewCategories;
     
     public static final String NEW_USHAHIDI_REPORT_FOUND = "New_Ushahidi_Report_Found";
     public static final int NOTIFICATION_ID = 1;
@@ -68,8 +60,8 @@ public class UshahidiService extends Service {
     private Notification newUshahidiReportNotification;
     private NotificationManager mNotificationManager;
     private static QueueThread queue;
-    private String title = "";
-    private String text = "";
+    //private String title = "";
+    //private String text = "";
     
     private UshahidiDatabase getDb() {
         return UshahidiApplication.mDb;
@@ -149,7 +141,7 @@ public class UshahidiService extends Service {
 	
 	private void showNotification(String tickerText) {
         // This is who should be launched if the user selects our notification.
-        Intent baseIntent = new Intent(this, ListIncidents.class);
+        Intent baseIntent = new Intent(this, IncidentsTab.class);
         baseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, baseIntent, 0);
 
@@ -183,7 +175,7 @@ public class UshahidiService extends Service {
         mNotificationManager.notify(NOTIFICATION_ID, newUshahidiReportNotification);
 	}
 	
-	private void processNewIncidents() {
+	/*private void processNewIncidents() {
 	    if (mNewIncidents.size() <= 0) {
 	    	return;
 	    }
@@ -206,7 +198,7 @@ public class UshahidiService extends Service {
 	      text = getString(R.string.new_categories);
 	      text = MessageFormat.format(text, count);
 	    }
-	}
+	}*/
 	
 	/**
 	 * Clear stored data
@@ -217,7 +209,7 @@ public class UshahidiService extends Service {
 	
 	}
  
-	private void processNewCategories() {
+	/*private void processNewCategories() {
 	    if (mNewCategories.size() <= 0) {
 	      return;
 	    }
@@ -250,7 +242,7 @@ public class UshahidiService extends Service {
 	      text = MessageFormat.format(text, count);
 	    }
  
-	}
+	}*/
 	
 	public static void loadSettings(Context context) {
 		final SharedPreferences settings = context.getSharedPreferences(

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.DialogPreference;
 import android.preference.EditTextPreference;
@@ -27,11 +26,9 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	private CheckBoxPreference flashLedCheckBoxPref;
 	private CheckBoxPreference smsCheckBoxPref;
 	private DialogPreference clearCacheCheckBoxPref;
-	private ListPreference selectRingtonePref;
 	private ListPreference autoUpdateTimePref;
 	private ListPreference saveItemsPref;
 	private ListPreference totalReportsPref;
-	private Handler mHandler;
 	public static final String AUTO_FETCH_PREFERENCE = "auto_fetch_preference";
 	public static final String SMS_PREFERENCE = "sms_preference";
 	public static final String VIBRATE_PREFERENCE = "vibrate_preference";
@@ -43,7 +40,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		
-		mHandler = new Handler();
 		addPreferencesFromResource(R.xml.preferences);
 		ushahidiInstancePref = new EditTextPreference(this);
 		firstNamePref = new EditTextPreference(this);
@@ -60,7 +56,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		autoUpdateTimePref = new ListPreference(this);
 		saveItemsPref = new ListPreference(this);
 		totalReportsPref = new ListPreference(this);
-		selectRingtonePref = new ListPreference(this);
+		new ListPreference(this);
 		
 		setPreferenceScreen(createPreferenceHierarchy());
 		this.saveSettings();

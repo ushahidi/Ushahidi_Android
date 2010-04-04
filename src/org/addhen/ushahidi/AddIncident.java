@@ -745,13 +745,13 @@ public class AddIncident extends Activity {
     		amPm = "PM";
     	else
     		amPm = "AM";
-    	String dateStr = new StringBuilder()
+    	/*String dateStr = new StringBuilder()
         // Month is 0 based so add 1
     	.append(mYear).append("-")
     	.append(pad(mMonth + 1)).append("-")
         .append(pad(mDay)).append(" ")
         .append(pad(timeDigits.get(mHour))).append(":")
-        .append(pad(mMinute)).toString();
+        .append(pad(mMinute)).toString();*/
     	
     	String strDate = new StringBuilder()
         // Month is 0 based so add 1
