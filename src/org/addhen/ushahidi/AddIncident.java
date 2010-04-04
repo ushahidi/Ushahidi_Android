@@ -65,7 +65,6 @@ public class AddIncident extends Activity {
 	private static final int GOTOHOME = 0;
 	private static final int MAP_INCIDENTS = 1;
 	private static final int LIST_INCIDENTS = 2;
-	private static final int REQUEST_CODE_PREFERENCES = 1;
 	private static final int REQUEST_CODE_SETTINGS = 2;
 	private static final int REQUEST_CODE_ABOUT = 3;
 	private static final int REQUEST_CODE_IMAGE = 4;
@@ -101,7 +100,7 @@ public class AddIncident extends Activity {
 	private Bundle bundle;
 	private Bundle extras;
 	
-	private static boolean running = false;
+	private static boolean running;
 	private static final int DIALOG_ERROR_NETWORK = 0;
 	private static final int DIALOG_ERROR_SAVING = 1;
     private static final int DIALOG_LOADING_CATEGORIES= 2;
@@ -124,7 +123,7 @@ public class AddIncident extends Activity {
         
         setContentView(R.layout.add_incident);
         initComponents();
-        
+        running = false;
         foundAddresses = new ArrayList<Address>();
         gc = new Geocoder(this);
         
@@ -167,12 +166,21 @@ public class AddIncident extends Activity {
     getSystemService(Context.LOCATION_SERVICE); 
         long updateTimeMsec = 1000L; 
         
-        //check if there is internet to know which provider to use.
-        if( !Util.isConnected(AddIncident.this) ) {
+        //DIPO Fix
+        List<String> providers = manager.getProviders(true);
+        boolean gps_provider = false, network_provider = false;
+        
+        for (String name : providers) {
+        	if (name.equals(LocationManager.GPS_PROVIDER)) gps_provider = true;
+        	if (name.equals(LocationManager.NETWORK_PROVIDER)) network_provider = true;        	
+        }
+        
+        //Register for GPS location if enabled or if neither is enabled
+        if( gps_provider || (!gps_provider && !network_provider) ) {
 			manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 
    updateTimeMsec, 500.0f, 
 		    listener);
-		} else {
+		} else if (network_provider) {
 			manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 
    updateTimeMsec, 500.0f, 
 		    listener); 
@@ -280,7 +288,8 @@ public class AddIncident extends Activity {
 		
 		btnSend.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v){
-				//TODO send http post with data
+				//Dipo Fix
+				error = false;
 				if( TextUtils.isEmpty(incidentTitle.getText())) {
 					//TODO look into how to use xml R.string for that
 					errorMessage ="* Enter a title for the incident.\n";
@@ -299,8 +308,9 @@ public class AddIncident extends Activity {
 					error = true;
 				}
 				
-				if(!categoryClicked) {
-					//TODO look into how to user xml R.string for that
+				//Dipo Fix
+				if(vectorCategories.size() == 0) {
+					//TODO look into how to use xml R.string for that
 					errorMessage += "* Select at least one category.\n";
 					error = true;
 				}
@@ -401,10 +411,7 @@ public class AddIncident extends Activity {
 		  Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
 		  
 		  String categories[] = new String[cursor.getCount()];
-		  
-		  //TODO remove this after debugging
-		  String cats = "";
-		  
+	
 		  int i = 0;
 		  if (cursor.moveToFirst()) {
 			  
@@ -414,7 +421,6 @@ public class AddIncident extends Activity {
 			  
 			  do {
 				  categories[i] = cursor.getString(titleIndex);
-				  cats += cursor.getString(titleIndex)+",";
 				  
 				  categoriesId.add(String.valueOf(cursor.getInt(idIndex)));
 				  i++;
@@ -510,7 +516,6 @@ public class AddIncident extends Activity {
 					"Failed to send Incident! Hope there is internet.",
 					Toast.LENGTH_LONG);
 			t.show();
-			////mHandler.post(mDismissLoading);
 		}
 	};
 	
@@ -520,10 +525,9 @@ public class AddIncident extends Activity {
 					"Failed to send Incident!.Check to see if you filled all required fields",
 					Toast.LENGTH_LONG);
 			t.show();
-			////mHandler.post(mDismissLoading);
 		}
 	};
-	//
+	
 	final Runnable mSentIncidentOfflineSuccess = new Runnable() {
 		public void run() {
 			final Toast t = Toast.makeText(AddIncident.this,
@@ -531,7 +535,7 @@ public class AddIncident extends Activity {
 					"there is internet connection.",
 					Toast.LENGTH_LONG);
 			t.show();
-			////mHandler.post(mDismissLoading);
+	
 		}
 	};
 	
@@ -542,7 +546,7 @@ public class AddIncident extends Activity {
 				mHandler.post(mSentIncidentFail);
 			}else { 
 				mHandler.post(mSentIncidentSuccess);
-				//clearFields();
+				
 			}
 		}
 	};
@@ -554,7 +558,7 @@ public class AddIncident extends Activity {
 					"Incident successfully posted online and entered into a moderation queue",
 					Toast.LENGTH_LONG);
 			t.show();
-			////mHandler.post(mDismissLoading);
+			
 		}
 	};
 
@@ -877,27 +881,36 @@ public class AddIncident extends Activity {
 	    	double latitude = 0;
 	    	double longitude = 0;
 	    	if (location != null) { 
+	  	        //Dipo Fix
+	  	        //Stop asking for updates when location has been retrieved
+	    		((LocationManager)getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
+	  	      
 	    		latitude = location.getLatitude(); 
 	  	        longitude = location.getLongitude(); 
 	  	        AddIncident.latitude = latitude;
 	  	        AddIncident.longitude = longitude;
+	  	        
+				try {
+								
+		    		foundAddresses = gc.getFromLocation( latitude, longitude, 5 );
+		    		Address address = foundAddresses.get(0);
+		    		
+		    		incidentLocation.setText( address.getSubAdminArea().toString() );
+							
+		    	} catch (IOException e) {
+					// TODO Auto-generated catch block
+		    		Toast.makeText(AddIncident.this.getBaseContext(), 
+			    			"Could not locate your current city via GeoCoding.", Toast.LENGTH_SHORT).show();
+					e.printStackTrace();
+				}
 	  	    } 
-	    	
-	    	try {
-				
-	    		foundAddresses = gc.getFromLocation( latitude, longitude, 5 );
-	    		Address address = foundAddresses.get(0);
-	    		
-	    		incidentLocation.setText( address.getLocality().toString() );
-			
-	    	} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 	     
 	    } 
 	    public void onProviderDisabled(String provider) { 
-	      // TODO Auto-generated method stub 
+	    	Toast.makeText(AddIncident.this.getBaseContext(), 
+	    			"A location can not currently be determined. Enable more " +
+	    			"location sources i.e. GPS Satellites in Security and Location " +
+	    			"Settings.", Toast.LENGTH_LONG).show(); 
 	    } 
 	    public void onProviderEnabled(String provider) { 
 	      // TODO Auto-generated method stub 

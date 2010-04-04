@@ -1,14 +1,5 @@
 package org.addhen.ushahidi;
 
-
-import java.io.IOException;
-import java.util.List;
- 
-import org.addhen.ushahidi.data.CategoriesData;
-import org.addhen.ushahidi.data.HandleXml;
-import org.addhen.ushahidi.data.IncidentsData;
-import org.addhen.ushahidi.net.Categories;
-import org.addhen.ushahidi.net.Incidents;
  
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,13 +12,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
   
 public class Ushahidi extends Activity {
     /** Called when the activity is first created. */
@@ -53,15 +42,16 @@ public class Ushahidi extends Activity {
     
     private ProgressDialog mProgressDialog;
     private int mProgress;
-    private List<IncidentsData> mNewIncidents;
-	private List<CategoriesData> mNewCategories;
+    //private List<IncidentsData> mNewIncidents;
+	//private List<CategoriesData> mNewCategories;
     
 	private Handler mHandler;
  
 	private Button listBtn;
 	private Button addBtn;
 	private Button settingsBtn;
-	private String dialogErrorMsg = "An error occurred fetching the reports. Make sure you have entered an Ushahidi instance.";
+	private String dialogErrorMsg = "An error occurred fetching the reports. " +
+			"Make sure you have entered an Ushahidi instance.";
  
 	private Bundle bundle;
 	
@@ -176,19 +166,6 @@ public class Ushahidi extends Activity {
 		 }
 		 return null;
 	  }
- 
-		
-	final Runnable mProcessIncidentsXML = new Runnable() {
-		public void run() {
-			mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
-		}
-	};
-	
-	final Runnable mProcessCategoriesXML = new Runnable() {
-		public void run() {
-			mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
-		}
-	};
  
 	final Runnable mDisplayPrompt = new Runnable(){
 		public void run(){
