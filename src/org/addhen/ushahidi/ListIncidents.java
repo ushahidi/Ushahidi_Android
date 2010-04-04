@@ -93,18 +93,20 @@ public class ListIncidents extends Activity
 			}
           
 		});
+		
 		spinner = (Spinner) findViewById(R.id.incident_cat);
-        
+		
 	}
   
 	protected void onResume(){
-	  
+		super.onResume();
 		mHandler.post(mDisplayIncidents);
 		mHandler.post(mDisplayCategories);
+		
 		//mark all incidents as read
 		UshahidiApplication.mDb.markAllIncidentssRead();
 		UshahidiApplication.mDb.markAllCategoriesRead();
-		super.onResume();
+			
 	}
   
 	public void onDestory() {
@@ -306,11 +308,13 @@ public class ListIncidents extends Activity
 		protected void onPostExecute(Integer result)
 		{
 			if( result == 4 ){
+				
 				Util.showToast(appContext, R.string.internet_connection);
+			} else if( result == 0 ) {
+				showIncidents("All");
+				showCategories();
+				setProgressBarIndeterminateVisibility(false);
 			}
-			showIncidents("All");
-			showCategories();
-			setProgressBarIndeterminateVisibility(false);
 		}
 
 		
@@ -412,9 +416,6 @@ public class ListIncidents extends Activity
 			cursor.close();
 			ila.notifyDataSetChanged();
 			listIncidents.setAdapter( ila );
-			Log.i("cats ", "categories ");
-			
-    
 	}
   
   
