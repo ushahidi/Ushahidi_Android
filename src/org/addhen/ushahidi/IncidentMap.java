@@ -27,7 +27,6 @@ import com.google.android.maps.OverlayItem;
 import android.location.Geocoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
@@ -51,6 +50,7 @@ public class IncidentMap extends MapActivity {
 	public static Geocoder gc;
 	private List<IncidentsData> mNewIncidents;
 	private List<IncidentsData> mOldIncidents;
+	private Handler mHandler;
 	private Bundle extras;
 	private int id;
 	private String reportLatitude;
@@ -65,13 +65,12 @@ public class IncidentMap extends MapActivity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.incidents_map);
 		mapView = (MapView) findViewById(R.id.map);
-		new Integer(0);
+		
 		mOldIncidents = new ArrayList<IncidentsData>();
 		mNewIncidents = new ArrayList<IncidentsData>();
 		
 		mNewIncidents  = showIncidents("All");
-		new Vector<String>();
-		new Handler();
+		mHandler = new Handler();
 		
 		Bundle incidents = getIntent().getExtras();
 		
@@ -100,10 +99,9 @@ public class IncidentMap extends MapActivity {
 			mapView.getController().setZoom(10);
 
 			mapView.setBuiltInZoomControls(true);
- 
-			new Handler();
 			
-			populateMap();
+			mHandler.post(mMarkersOnMap);
+			
 		} else {
 			 Toast.makeText(IncidentMap.this, "There are no reports to be shown",
 						Toast.LENGTH_LONG).show();
@@ -115,11 +113,17 @@ public class IncidentMap extends MapActivity {
 	 * add marker to the map
 	 */
 	private void populateMap() {
-		Drawable marker =getResources().getDrawable(R.drawable.marker);  
-		 
+		Drawable marker =getResources().getDrawable(R.drawable.marker);   
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());  
 		mapView.getOverlays().add(new SitesOverlay(marker,mapView));
 	}
+	
+	// put this stuff in a seperate thread 
+	final Runnable mMarkersOnMap = new Runnable() {
+		public void run() {
+			populateMap();
+		}
+	};
  
  
  	@Override
@@ -238,7 +242,9 @@ public class IncidentMap extends MapActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		populateMap();
+		if(mNewIncidents.size() == 0 ){
+			mHandler.post(mMarkersOnMap);
+		}
 	}
  
 	@Override
