@@ -12,7 +12,6 @@ import org.addhen.ushahidi.data.HandleXml;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -195,6 +194,128 @@ public class ListIncidents extends Activity
 	};
 
  
+	//menu stuff
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo) {
+		populateMenu(menu);
+	}
+  
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		populateMenu(menu);
+ 
+		return(super.onCreateOptionsMenu(menu));
+	}
+ 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		applyMenuChoice(item);
+ 
+		return(applyMenuChoice(item) ||
+				super.onOptionsItemSelected(item));
+	}
+ 
+	public boolean onContextItemSelected(MenuItem item) {
+ 
+		return(applyMenuChoice(item) ||
+        super.onContextItemSelected(item));
+	}
+  
+	private void populateMenu(Menu menu) {
+		MenuItem i;i = menu.add( Menu.NONE, HOME, Menu.NONE, R.string.menu_home );
+		i.setIcon(R.drawable.ushahidi_home);
+		
+		i = menu.add( Menu.NONE, ADD_INCIDENT, Menu.NONE, R.string.incident_menu_add);
+		i.setIcon(R.drawable.ushahidi_add);
+		  
+		i = menu.add( Menu.NONE, INCIDENT_MAP, Menu.NONE, R.string.incident_menu_map );
+		i.setIcon(R.drawable.ushahidi_map);
+		  
+		
+		i = menu.add( Menu.NONE, INCIDENT_REFRESH, Menu.NONE, R.string.incident_menu_refresh );
+		i.setIcon(R.drawable.ushahidi_refresh);
+		  
+		i = menu.add( Menu.NONE, SETTINGS, Menu.NONE, R.string.menu_settings );
+		i.setIcon(R.drawable.ushahidi_settings);
+		  
+		i = menu.add( Menu.NONE, ABOUT, Menu.NONE, R.string.menu_about );
+		i.setIcon(R.drawable.ushahidi_about);
+	  
+	}
+  
+	private boolean applyMenuChoice(MenuItem item) {
+		Intent intent;
+		switch (item.getItemId()) {
+    		case HOME:
+    			intent = new Intent( ListIncidents.this,Ushahidi.class);
+    			startActivityForResult( intent, GOTOHOME );
+    			return true;
+    		case INCIDENT_REFRESH:
+    			ReportsTask reportsTask = new ReportsTask();
+	            reportsTask.appContext = this;
+	            reportsTask.execute();
+    			return(true);
+    
+    		case INCIDENT_MAP:
+    			incidentsBundle.putInt("tab_index", 1);
+    			intent = new Intent( ListIncidents.this, IncidentsTab.class);
+    			intent.putExtra("tab", incidentsBundle);
+    			startActivityForResult( intent,INCIDENTS_MAP );
+    			return(true);
+    
+    		case ADD_INCIDENT:
+    			intent = new Intent( ListIncidents.this, AddIncident.class);
+    			startActivityForResult(intent, POST_INCIDENT  );
+    			return(true);
+     
+    		case ABOUT:
+    			intent = new Intent( ListIncidents.this,About.class);
+    			startActivityForResult( intent, REQUEST_CODE_ABOUT );
+    			setResult(RESULT_OK);
+    			return true;  
+        
+    		case SETTINGS:
+    			intent = new Intent( ListIncidents.this,  Settings.class);
+			
+    			// Make it a subactivity so we know when it returns
+    			startActivityForResult(intent, REQUEST_CODE_SETTINGS);
+    			return(true);
+        
+		}
+		return(false);
+	}
+	
+	 //thread class
+	private class ReportsTask extends AsyncTask <Void, Void, Integer> {
+		
+		protected Integer status;
+		protected Context appContext;
+		@Override
+		protected void onPreExecute() {
+			setProgressBarIndeterminateVisibility(true);
+
+		}
+		
+		@Override 
+		protected Integer doInBackground(Void... params) {
+			status = Util.processReports(appContext);
+			return status;
+		}
+		
+		@Override
+		protected void onPostExecute(Integer result)
+		{
+			if( result == 4 ){
+				Util.showToast(appContext, R.string.internet_connection);
+			}
+			showIncidents("All");
+			showCategories();
+			setProgressBarIndeterminateVisibility(false);
+		}
+
+		
+	}
+  
 	// get incidents from the db
 	public void showIncidents( String by ) {
     
@@ -236,6 +357,7 @@ public class ListIncidents extends Activity
 				int longitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LONGITUDE);
 				
 				ila.removeItems();
+				ila.notifyDataSetChanged();
 		  
 				do {
 			  
@@ -288,7 +410,10 @@ public class ListIncidents extends Activity
 			}
     
 			cursor.close();
+			ila.notifyDataSetChanged();
 			listIncidents.setAdapter( ila );
+			Log.i("cats ", "categories ");
+			
     
 	}
   
@@ -297,7 +422,7 @@ public class ListIncidents extends Activity
 	public void showCategories() {
 		Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
 		int count = UshahidiApplication.mDb.fetchCategoriesCount();
-		Log.i("Count", "count "+count);
+		
 		vectorCategories.clear();
 		vectorCategories.add("All");
 		if (cursor.moveToFirst()) {
@@ -333,6 +458,18 @@ public class ListIncidents extends Activity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
+       /* switch( requestCode ) {
+      case INCIDENTS_MAP:
+        if( resultCode != RESULT_OK ){
+          break;
+        }
+        mHandler.post(mDisplayIncidents);
+        mHandler.post(mDisplayCategories);
+        
+        //mark all incidents as read
+        UshahidiApplication.mDb.markAllIncidentssRead();  
+        break;
+        }*/
 	}
   
 }

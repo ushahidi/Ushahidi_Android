@@ -31,7 +31,8 @@ public class IncidentsTab extends TabActivity {
 	private TabHost tabHost;
 	private Bundle bundle;
 	private Bundle extras;
-    @Override
+    
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -54,7 +55,7 @@ public class IncidentsTab extends TabActivity {
         
     }
     
-  //menu stuff
+  /*menu stuff
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo) {
 		populateMenu(menu);
@@ -160,11 +161,11 @@ public class IncidentsTab extends TabActivity {
 			if( result == 4 ){
 				Util.showToast(appContext, R.string.internet_connection);
 			}
-			tabHost.setCurrentTab(1);
+			
 			setProgressBarIndeterminateVisibility(false);
 		}
 
 		
-	}
+	}*/
     
 }
