@@ -3,7 +3,6 @@ package org.addhen.ushahidi;
  
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,14 +13,10 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
  
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
  
@@ -29,7 +24,6 @@ import android.location.Geocoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import org.addhen.ushahidi.data.CategoriesData;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
  
@@ -47,21 +41,11 @@ public class IncidentMap extends MapActivity {
 	private static final int REQUEST_CODE_SETTINGS = 1;
 	private static final int REQUEST_CODE_ABOUT = 2;
 	private static final int DIALOG_MESSAGE = 0;
-	private static final int  DIALOG_LOADING_INCIDENTS = 1;
- 
 	private static double latitude;
 	private static double longitude;
-	private Handler mHandler;
-	private MapController ushMapController = null;
 	public static Geocoder gc;
-	private Vector<String> vectorCategories = new Vector<String>();
-	private Spinner spinner = null;
-	private ArrayAdapter<String> spinnerArrayAdapter;
-	private boolean doUpdates = true;
 	private List<IncidentsData> mNewIncidents;
-	private Integer index;
 	private List<IncidentsData> mOldIncidents;
-	private List<CategoriesData> mNewCategories;
 	private Bundle extras;
 	private int id;
 	private String reportLatitude;
@@ -75,12 +59,12 @@ public class IncidentMap extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.incidents_map);
 		
-		// commmenting out the spinner for now. will get it to work in the next release
-		//spinner = (Spinner) findViewById(R.id.incident_cat);
 		mapView = (MapView) findViewById(R.id.map);
-		index = new Integer(0);
+		new Integer(0);
 		mOldIncidents = new ArrayList<IncidentsData>();
 		mNewIncidents  = showIncidents("All");
+		new Vector<String>();
+		new Handler();
 		
 		Bundle incidents = getIntent().getExtras();
 		
@@ -110,7 +94,7 @@ public class IncidentMap extends MapActivity {
 
 			mapView.setBuiltInZoomControls(true);
  
-			mHandler = new Handler();
+			new Handler();
 			
 			Drawable marker =getResources().getDrawable(R.drawable.marker);  
  
@@ -121,16 +105,6 @@ public class IncidentMap extends MapActivity {
 						Toast.LENGTH_LONG).show();
 		}
  
-		final Thread tr = new Thread() {
-		      @Override
-		      public void run() {
-		    	  //mNewIncidents  = showIncidents("All");
-		        showCategories();
- 
-		      }
-		};
-		tr.start();
-        
 	}
  
  
@@ -139,84 +113,83 @@ public class IncidentMap extends MapActivity {
 		return(false);
 	}
  
- // get incidents from the db
- 	  public List<IncidentsData> showIncidents( String by ) {
+ 	//get incidents from the db
+ 	public List<IncidentsData> showIncidents( String by ) {
  
- 		  Cursor cursor;
- 		  String title;
-		  String date;
-		  String description;
-		  String location;
-		  String categories;
-		  String media;
+ 		Cursor cursor;
+ 		String title;
+ 		String description;
+ 		String location;
+ 		String categories;
+ 		String media;
  
- 		  if( by.equals("All")) 
- 			  cursor = UshahidiApplication.mDb.fetchAllIncidents();
- 		  else
- 			  cursor = UshahidiApplication.mDb.fetchIncidentsByCategories(by);
+ 		if( by.equals("All")) 
+ 			cursor = UshahidiApplication.mDb.fetchAllIncidents();
+ 		else
+ 			cursor = UshahidiApplication.mDb.fetchIncidentsByCategories(by);
  		  
- 		  if (cursor.moveToFirst()) {
- 			  int idIndex = cursor.getColumnIndexOrThrow( 
+ 		if (cursor.moveToFirst()) {
+ 			int idIndex = cursor.getColumnIndexOrThrow( 
  					  UshahidiDatabase.INCIDENT_ID);
- 			  int titleIndex = cursor.getColumnIndexOrThrow(
- 					  UshahidiDatabase.INCIDENT_TITLE);
- 			  int dateIndex = cursor.getColumnIndexOrThrow(
+ 			int titleIndex = cursor.getColumnIndexOrThrow(
+ 					UshahidiDatabase.INCIDENT_TITLE);
+ 			int dateIndex = cursor.getColumnIndexOrThrow(
  					  UshahidiDatabase.INCIDENT_DATE);
- 			  int verifiedIndex = cursor.getColumnIndexOrThrow(
- 					  UshahidiDatabase.INCIDENT_VERIFIED);
- 			  int locationIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_NAME);
+ 			int verifiedIndex = cursor.getColumnIndexOrThrow(
+ 					UshahidiDatabase.INCIDENT_VERIFIED);
+ 			int locationIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_NAME);
  			  
- 			  int descIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_DESC);
+ 			int descIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_DESC);
  			  
- 			  int categoryIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_CATEGORIES);
+ 			int categoryIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_CATEGORIES);
  			  
- 			  int mediaIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_MEDIA);
+ 			int mediaIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_MEDIA);
  			  
- 			  int latitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LATITUDE);
+ 			int latitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LATITUDE);
  			  
- 			  int longitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LONGITUDE);
+ 			int longitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LONGITUDE);
  			  
  			  
- 			  do {
+ 			do {
  				  
- 				  IncidentsData incidentData = new IncidentsData();
- 				  mOldIncidents.add( incidentData );
+ 				IncidentsData incidentData = new IncidentsData();
+ 				mOldIncidents.add( incidentData );
  				  
- 				  int id = Util.toInt(cursor.getString(idIndex));
- 				  incidentData.setIncidentId(id);
+ 				int id = Util.toInt(cursor.getString(idIndex));
+ 				incidentData.setIncidentId(id);
  				  
- 				  title = Util.capitalizeString(cursor.getString(titleIndex));
- 				  incidentData.setIncidentTitle(title);
+ 				title = Util.capitalizeString(cursor.getString(titleIndex));
+ 				incidentData.setIncidentTitle(title);
  				  
- 				  description = cursor.getString(descIndex);
- 				  incidentData.setIncidentDesc(description);
+ 				description = cursor.getString(descIndex);
+ 				incidentData.setIncidentDesc(description);
  				  
- 				  categories = cursor.getString(categoryIndex);
- 				  incidentData.setIncidentCategories(categories);
+ 				categories = cursor.getString(categoryIndex);
+ 				incidentData.setIncidentCategories(categories);
  				  
- 				  location = cursor.getString(locationIndex);
- 				  incidentData.setIncidentLocLongitude(location);
+ 				location = cursor.getString(locationIndex);
+ 				incidentData.setIncidentLocLongitude(location);
  				  
- 				  date = Util.joinString("Date: ",cursor.getString(dateIndex));
- 				  incidentData.setIncidentDate(cursor.getString(dateIndex));			  
+ 				Util.joinString("Date: ",cursor.getString(dateIndex));
+ 				incidentData.setIncidentDate(cursor.getString(dateIndex));			  
  				  
- 				  media = cursor.getString(mediaIndex);
- 				  incidentData.setIncidentMedia(media);
- 				  
- 				  
- 				  incidentData.setIncidentVerified(Util.toInt(cursor.getString(verifiedIndex) ));
- 				  
- 				  incidentData.setIncidentLocLatitude(cursor.getString(latitudeIndex));
- 				  incidentData.setIncidentLocLongitude(cursor.getString(longitudeIndex));
+ 				media = cursor.getString(mediaIndex);
+ 				incidentData.setIncidentMedia(media);
  				  
  				  
- 			  } while (cursor.moveToNext());
- 		  }
+ 				incidentData.setIncidentVerified(Util.toInt(cursor.getString(verifiedIndex) ));
+ 				  
+ 				incidentData.setIncidentLocLatitude(cursor.getString(latitudeIndex));
+ 				incidentData.setIncidentLocLongitude(cursor.getString(longitudeIndex));
+ 				  
+ 				  
+ 			} while (cursor.moveToNext());
+ 		}
  	    
- 		  cursor.close();
- 		  return mOldIncidents;
+ 		cursor.close();
+ 		return mOldIncidents;
  	    
- 	  }
+ 	}
  	
  	/**
 	 * Restart the receiving, when we are back on line.
@@ -224,25 +197,12 @@ public class IncidentMap extends MapActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		this.doUpdates = true;
  
 	}
  
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
-	        /* switch( requestCode ) {
-	       case INCIDENTS_MAP:
-	         if( resultCode != RESULT_OK ){
-	           break;
-	         }
-	         mHandler.post(mDisplayIncidents);
-	         mHandler.post(mDisplayCategories);
-	         
-	         //mark all incidents as read
-	         UshahidiApplication.mDb.markAllIncidentssRead();  
-	         break;
-	         }*/
 	}
 	
 	//menu stuff
@@ -271,29 +231,6 @@ public class IncidentMap extends MapActivity {
 		return(applyMenuChoice(item) ||
 						super.onContextItemSelected(item));
 	}
- 
-	final Runnable mDisplayNetworkError = new Runnable(){
-		public void run(){
-			showDialog(DIALOG_MESSAGE);
-		}
-	};
- 
-	final Runnable mDisplayCategories = new Runnable() {
-		public void run() {
-			showCategories();
-		}
-	};
- 
-	final Runnable mDisplayIncidents = new Runnable() {
-		public void run() {
-			dismissDialog(DIALOG_LOADING_INCIDENTS);
-			try{
-				//plotIncidentsOnMap();
-			} catch(Exception e){
-				return;	//means that the dialog is not showing, ignore please!
-			}
-		}
-	};
     
     protected Dialog onCreateDialog(int id, String message, String title) {
         switch (id) {
@@ -381,58 +318,11 @@ public class IncidentMap extends MapActivity {
 	    return(new GeoPoint((int)(lat*1000000.0), (int)(lon*1000000.0)));
 	}
  
-	@SuppressWarnings("unchecked")
-	
-	/**
-	 * Reimplement this feature in the next release.
-	 */
-	public void showCategories() {
-		/*Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
-		vectorCategories.clear();
-		vectorCategories.add("All");
-		if (cursor.moveToFirst()) {
-			  int titleIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CATEGORY_TITLE);
-			  do {
-				  vectorCategories.add( 
-						  Util.capitalizeString(cursor.getString(titleIndex).toLowerCase()));
- 
-			  }while( cursor.moveToNext() );
-		}
-		cursor.close();
-		spinnerArrayAdapter = new ArrayAdapter(this,
-			android.R.layout.simple_spinner_item, vectorCategories );
- 
-		spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
- 
-		spinner.setAdapter(spinnerArrayAdapter);
- 
-		spinner.setOnItemSelectedListener(spinnerListener);*/
- 
-	}
- 
-	  //spinner listener
-	  Spinner.OnItemSelectedListener spinnerListener =
-	   new Spinner.OnItemSelectedListener() {
- 
-	   @SuppressWarnings("unchecked")
-	   public void onItemSelected(AdapterView parent, View v, int position, long id) {
-		   mNewIncidents  = showIncidents(vectorCategories.get(position));
-		   mapView.invalidate();
-	   }
- 
-	   @SuppressWarnings("unchecked")
-	    public void onNothingSelected(AdapterView parent) { }
- 
- 
-	  };
- 
 	  private class SitesOverlay extends UshahidiItemizedOverlay<OverlayItem> {  
 		  private ArrayList<OverlayItem> items=new ArrayList<OverlayItem>();  
-		  private Context context;  
- 
 		  public SitesOverlay(Drawable marker, MapView mapView) {  
 			  super(boundCenterBottom(marker),mapView, IncidentMap.this,mNewIncidents, extras);  
-			  context =  mapView.getContext();  
+			  mapView.getContext();  
 			  
 			  if( id > 0 ) {
 				  IncidentMap.latitude = Double.parseDouble( reportLatitude);

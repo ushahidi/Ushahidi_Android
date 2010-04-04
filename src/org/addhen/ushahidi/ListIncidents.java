@@ -1,14 +1,9 @@
 package org.addhen.ushahidi;
  
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
  
-import org.addhen.ushahidi.net.Categories;
-import org.addhen.ushahidi.net.Incidents;
-import org.addhen.ushahidi.data.CategoriesData;
-import org.addhen.ushahidi.data.HandleXml;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
 import android.app.Activity;
@@ -19,7 +14,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
  
 public class ListIncidents extends Activity
@@ -56,9 +49,7 @@ public class ListIncidents extends Activity
 	private final Handler mHandler = new Handler();
 	public static UshahidiDatabase mDb;
   
-	private List<IncidentsData> mNewIncidents;
 	private List<IncidentsData> mOldIncidents;
-	private List<CategoriesData> mNewCategories;
 	private Vector<String> vectorCategories = new Vector<String>();
   
 	public void onCreate(Bundle savedInstanceState) {
@@ -96,33 +87,23 @@ public class ListIncidents extends Activity
 		
 		spinner = (Spinner) findViewById(R.id.incident_cat);
 		
-	}
-  
-	protected void onResume(){
-		super.onResume();
 		mHandler.post(mDisplayIncidents);
 		mHandler.post(mDisplayCategories);
 		
 		//mark all incidents as read
 		UshahidiApplication.mDb.markAllIncidentssRead();
 		UshahidiApplication.mDb.markAllCategoriesRead();
-			
+		
 	}
   
-	public void onDestory() {
+	@Override
+	protected void onResume(){
+		super.onResume();
+	}
+  
+	@Override
+	public void onDestroy() {
 		super.onDestroy();
-	}
-  
-  
-  
-	private void retrieveIncidentsAndCategories() {
-	  
-		final Thread tr = new Thread() {
-		public void run() {
-			mHandler.post(mRetrieveNewIncidents);
-			}
-		};
-		tr.start();
 	}
   
 	final Runnable mDisplayIncidents = new Runnable() {
@@ -141,61 +122,9 @@ public class ListIncidents extends Activity
 	final Runnable mDisplayCategories = new Runnable() {
 		public void run() {
 			showCategories();
-			try{
-				//dismissDialog( DIALOG_LOADING_INCIDENTS );
-			} catch(Exception e){
-				return;  //means that the dialog is not showing, ignore please!
-			}
 		}
 	};
 
-	final Runnable mRetrieveNewIncidents = new Runnable() {
-		public void run() {
-			try {
-				if( Util.isConnected(ListIncidents.this)) {
-					setProgressBarIndeterminateVisibility(true);
-			  
-	   
-					if(Categories.getAllCategoriesFromWeb() ) {
-						mHandler.post(mProcessCategoriesXML);
-						//mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
-					}
-			  
-					if(Incidents.getAllIncidentsFromWeb()){
-						mHandler.post(mProcessIncidentsXML);
-						//mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
-					}
-					
-					if( mNewCategories.size() >  0 )
-						UshahidiApplication.mDb.addCategories(mNewCategories, false);
-					
-					if( mNewIncidents.size() > 0 )
-						UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
-			  
-	  			  	setProgressBarIndeterminateVisibility(false);
-		  
-				} else {
-					Toast.makeText(ListIncidents.this, R.string.internet_connection, Toast.LENGTH_LONG).show();
-				}
-			} catch (IOException e) {
-				//means there was a problem getting it
-			}
-		}
-	};
-	
-	final Runnable mProcessIncidentsXML = new Runnable() {
-		public void run() {
-			mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
-		}
-	};
-	
-	final Runnable mProcessCategoriesXML = new Runnable() {
-		public void run() {
-			mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
-		}
-	};
-
- 
 	//menu stuff
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo) {
@@ -362,7 +291,8 @@ public class ListIncidents extends Activity
 				
 				ila.removeItems();
 				ila.notifyDataSetChanged();
-		  
+				mOldIncidents.clear();
+				
 				do {
 			  
 					IncidentsData incidentData = new IncidentsData();
@@ -422,7 +352,7 @@ public class ListIncidents extends Activity
 	@SuppressWarnings("unchecked")
 	public void showCategories() {
 		Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
-		int count = UshahidiApplication.mDb.fetchCategoriesCount();
+		UshahidiApplication.mDb.fetchCategoriesCount();
 		
 		vectorCategories.clear();
 		vectorCategories.add("All");
@@ -459,18 +389,6 @@ public class ListIncidents extends Activity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
-       /* switch( requestCode ) {
-      case INCIDENTS_MAP:
-        if( resultCode != RESULT_OK ){
-          break;
-        }
-        mHandler.post(mDisplayIncidents);
-        mHandler.post(mDisplayCategories);
-        
-        //mark all incidents as read
-        UshahidiApplication.mDb.markAllIncidentssRead();  
-        break;
-        }*/
 	}
   
 }
