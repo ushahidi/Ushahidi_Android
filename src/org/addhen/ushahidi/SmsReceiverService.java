@@ -79,8 +79,6 @@ public class SmsReceiverService extends Service {
 				handleSmsReceived(intent);
 			} 
 
-			// NOTE: We MUST not call stopSelf() directly, since we need to
-			// make sure the wake lock acquired by AlertReceiver is released.
 			finishStartingService(SmsReceiverService.this, serviceId);
 	    }
 	}
@@ -116,9 +114,8 @@ public class SmsReceiverService extends Service {
 	    // post sms message to ushahidi
 	    if( UshahidiService.smsUpdate ) {
 	    	if( Util.isConnected(SmsReceiverService.this) ){
-	    		Log.i("Handle SMS Received called ", "Yep!");
 	    		if( !this.postToUshahidi() ) {
-	    			Log.i("SMS sending failed","Sending failed");
+	    			Util.showToast(this, R.string.invalid_email_address);
 	    		}
 	    	}
 	    }

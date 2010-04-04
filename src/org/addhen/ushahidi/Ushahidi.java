@@ -272,7 +272,6 @@ public class Ushahidi extends Activity {
 				launchIntent = new Intent( Ushahidi.this,IncidentsTab.class);
 				launchIntent.putExtra("tab", bundle);
         		startActivityForResult( launchIntent, LIST_INCIDENTS );
-        		finish();
         		setResult(RESULT_OK);
 				return true;
  
