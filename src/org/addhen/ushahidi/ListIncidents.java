@@ -88,8 +88,7 @@ public class ListIncidents extends Activity
 		spinner = (Spinner) findViewById(R.id.incident_cat);
 		
 		mHandler.post(mDisplayIncidents);
-		mHandler.post(mDisplayCategories);
-		
+		mHandler.post(mDisplayCategories);		
 		//mark all incidents as read
 		UshahidiApplication.mDb.markAllIncidentssRead();
 		UshahidiApplication.mDb.markAllCategoriesRead();
@@ -99,6 +98,15 @@ public class ListIncidents extends Activity
 	@Override
 	protected void onResume(){
 		super.onResume();
+		
+		if(ila.getCount() == 0 ) {
+			mHandler.post(mDisplayIncidents);
+			mHandler.post(mDisplayCategories);
+			
+			//mark all incidents as read
+			UshahidiApplication.mDb.markAllIncidentssRead();
+			UshahidiApplication.mDb.markAllCategoriesRead();
+		}
 	}
   
 	@Override

@@ -3,16 +3,20 @@ package org.addhen.ushahidi;
  
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
  
 import com.google.android.maps.GeoPoint;
@@ -24,6 +28,7 @@ import android.location.Geocoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
  
@@ -57,11 +62,13 @@ public class IncidentMap extends MapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.incidents_map);
-		
 		mapView = (MapView) findViewById(R.id.map);
 		new Integer(0);
 		mOldIncidents = new ArrayList<IncidentsData>();
+		mNewIncidents = new ArrayList<IncidentsData>();
+		
 		mNewIncidents  = showIncidents("All");
 		new Vector<String>();
 		new Handler();
@@ -96,21 +103,55 @@ public class IncidentMap extends MapActivity {
  
 			new Handler();
 			
-			Drawable marker =getResources().getDrawable(R.drawable.marker);  
- 
-			marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());  
-			mapView.getOverlays().add(new SitesOverlay(marker,mapView));
+			populateMap();
 		} else {
 			 Toast.makeText(IncidentMap.this, "There are no reports to be shown",
 						Toast.LENGTH_LONG).show();
 		}
  
 	}
+	
+	/**
+	 * add marker to the map
+	 */
+	private void populateMap() {
+		Drawable marker =getResources().getDrawable(R.drawable.marker);  
+		 
+		marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());  
+		mapView.getOverlays().add(new SitesOverlay(marker,mapView));
+	}
  
  
  	@Override
 	protected boolean isRouteDisplayed() {
 		return(false);
+	}
+ 	
+ 	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+ 		if (keyCode == KeyEvent.KEYCODE_I) {
+	    	// Zoom not closer than possible
+        	mapView.getController().zoomIn();
+	    	//this.myMapController.zoomInFixing(Math.min(21, this.myMapView.getZoomLevel() + 1));
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_O) {
+	    	// Zoom not farer than possible 
+        	mapView.getController().zoomOut();
+	    	//this.myMapController.zoomInFixing(Math.max(1, this.myMapView.getZoomLevel() - 1),0);
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_T) {
+        	// Switch to satellite view
+            mapView.setSatellite(true);
+            
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_M) {
+        	// Switch to satellite view
+            mapView.setSatellite(false);
+            
+            return true;
+        }
+ 		
+        return super.onKeyDown(keyCode, event);
 	}
  
  	//get incidents from the db
@@ -197,7 +238,7 @@ public class IncidentMap extends MapActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
- 
+		populateMap();
 	}
  
 	@Override
@@ -271,6 +312,38 @@ public class IncidentMap extends MapActivity {
 		i.setIcon(R.drawable.ushahidi_about);
  
 	}
+	
+	 //thread class
+	private class ReportsTask extends AsyncTask <Void, Void, Integer> {
+		
+		protected Integer status;
+		protected Context appContext;
+		@Override
+		protected void onPreExecute() {
+			setProgressBarIndeterminateVisibility(true);
+
+		}
+		
+		@Override 
+		protected Integer doInBackground(Void... params) {
+			status = Util.processReports(appContext);
+			return status;
+		}
+		
+		@Override
+		protected void onPostExecute(Integer result)
+		{
+			if( result == 4 ){
+				
+				Util.showToast(appContext, R.string.internet_connection);
+			} else if( result == 0 ) {
+				mNewIncidents = showIncidents("All");
+				populateMap();
+				setProgressBarIndeterminateVisibility(false);
+			}
+		}
+
+	}
  
 	private boolean applyMenuChoice(MenuItem item) {
 		Intent intent;
@@ -280,9 +353,9 @@ public class IncidentMap extends MapActivity {
 				startActivityForResult( intent, GOTOHOME );
 				return true;
 	    	case INCIDENT_REFRESH:
-	    		//TODO 
-	    		//retrieveIncidentsAndCategories();
-	    		//mHandler.post(mDisplayIncidents);
+	    		ReportsTask reportsTask = new ReportsTask();
+	            reportsTask.appContext = this;
+	            reportsTask.execute();
 	    		return(true);
  
 	    	case LIST_INCIDENT:
