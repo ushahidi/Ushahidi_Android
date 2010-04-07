@@ -84,7 +84,6 @@ public class AddIncident extends Activity {
     private String errorMessage = "";
     private String dateToSubmit = "";
 	private boolean error = false;
-	private boolean categoryClicked = false;
 	private EditText incidentTitle;
 	private EditText incidentLocation;
 	private EditText incidentDesc;
@@ -147,7 +146,7 @@ public class AddIncident extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		applyMenuChoice(item);
+		//applyMenuChoice(item);
 
 		return(applyMenuChoice(item) ||
 				super.onOptionsItemSelected(item));
@@ -265,6 +264,9 @@ public class AddIncident extends Activity {
 		pickDate = (Button) findViewById(R.id.pick_date);
 		pickTime = (Button) findViewById(R.id.pick_time);
 		addLocation = (Button) findViewById(R.id.location);
+		
+		//this piece of code is no longer needed here and has been moved to onActivityResult
+		/*
 		bundle = new Bundle();
 		extras = this.getIntent().getExtras();
 		
@@ -275,6 +277,8 @@ public class AddIncident extends Activity {
 			AddIncident.latitude = bundle.getDouble("latitude");
 			AddIncident.longitude = bundle.getDouble("longitude");
 		}
+		*/
+		
 		//open location map window
 		addLocation.setOnClickListener( new View.OnClickListener(){
 			public void onClick( View v ) {
@@ -489,6 +493,22 @@ public class AddIncident extends Activity {
 				UshahidiService.fileName = filename;
 				break;
 				
+			case VIEW_MAP:
+				if(resultCode != RESULT_OK){
+					return;
+				}
+				
+				bundle = null;
+				extras = data.getExtras();
+				if( extras != null ) bundle = extras.getBundle("locations");
+				
+				if( bundle != null && !bundle.isEmpty() ) {
+					incidentLocation.setText( bundle.getString("location"));
+				
+					AddIncident.latitude = bundle.getDouble("latitude");
+					AddIncident.longitude = bundle.getDouble("longitude");
+				}
+				break;
 		}
 	}
 	
@@ -668,10 +688,10 @@ public class AddIncident extends Activity {
                             	if( isChecked ) {
                             		 
                             		vectorCategories.add(categoriesId.get( whichButton ));
-                            		categoryClicked = true;
                             		error = false;
                             	} else {
-                            		vectorCategories.remove(whichButton);
+                            		//fixed a crash here.
+                            		vectorCategories.remove(categoriesId.get( whichButton ));
                             	}
                             	
                                 /* User clicked on a check box do some stuff */
@@ -895,9 +915,9 @@ public class AddIncident extends Activity {
 		    		foundAddresses = gc.getFromLocation( latitude, longitude, 5 );
 		    		Address address = foundAddresses.get(0);
 		    		
-		    		incidentLocation.setText( address.getSubAdminArea().toString() );
+		    		incidentLocation.setText( address.getLocality().toString() );
 							
-		    	} catch (IOException e) {
+		    	} catch (Exception e) { //Grab all Exceptions
 					// TODO Auto-generated catch block
 		    		Toast.makeText(AddIncident.this.getBaseContext(), 
 			    			"Could not locate your current city via GeoCoding.", Toast.LENGTH_SHORT).show();

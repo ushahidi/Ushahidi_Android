@@ -148,7 +148,7 @@ public class ListIncidents extends Activity
  
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		applyMenuChoice(item);
+		//applyMenuChoice(item);
  
 		return(applyMenuChoice(item) ||
 				super.onOptionsItemSelected(item));

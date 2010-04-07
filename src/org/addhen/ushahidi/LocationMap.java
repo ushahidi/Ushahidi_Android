@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.addhen.ushahidi.AddIncident.MyLocationListener;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
 import android.content.Context;
@@ -73,9 +74,14 @@ public class LocationMap extends MapActivity {
 				bundle.putDouble("longitude", longitude);
 				bundle.putString("location", locationName);
 				
-				Intent intent = new Intent( LocationMap.this,AddIncident.class);
+				//this will launch an extra activity
+				/*Intent intent = new Intent( LocationMap.this,AddIncident.class);
 				intent.putExtra("locations",bundle);
-				startActivityForResult(intent,1);
+				startActivityForResult(intent,1);*/
+				
+				//Solution pass the data to the calling activity
+				Intent intent = new Intent();
+				intent.putExtra("locations",bundle);
 				setResult( RESULT_OK, intent );
 				finish();
 			}
@@ -257,12 +263,21 @@ public class LocationMap extends MapActivity {
     getSystemService(Context.LOCATION_SERVICE); 
         long updateTimeMsec = 1000L; 
         
-        //check if there is internet to know which provider to use.
-        if( !Util.isConnected(LocationMap.this) ) {
+        //DIPO Fix
+        List<String> providers = manager.getProviders(true);
+        boolean gps_provider = false, network_provider = false;
+        
+        for (String name : providers) {
+        	if (name.equals(LocationManager.GPS_PROVIDER)) gps_provider = true;
+        	if (name.equals(LocationManager.NETWORK_PROVIDER)) network_provider = true;        	
+        }
+        
+        //Register for GPS location if enabled or if neither is enabled
+        if( gps_provider || (!gps_provider && !network_provider) ) {
 			manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 
    updateTimeMsec, 500.0f, 
 		    listener);
-		} else {
+		} else if (network_provider) {
 			manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 
    updateTimeMsec, 500.0f, 
 		    listener); 
@@ -277,26 +292,33 @@ public class LocationMap extends MapActivity {
 	    	String locName = "";
 	    	
 	    	if (location != null) { 
+	    		//Dipo Fix
+	  	        //Stop asking for updates when location has been retrieved
+	    		((LocationManager)getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
+	  	      
 	    		latitude = location.getLatitude(); 
 	  	        longitude = location.getLongitude(); 
 	
+	  	      locName = getLocationFromLatLon(latitude,longitude);
 	  	        centerLocation(getPoint(latitude, longitude));
-	  	    } 
-	    	
-	    	locName = getLocationFromLatLon(latitude,longitude);
-	    	
-	    	if( locName.equals("") ) {
-	    			
-	    		Toast.makeText(LocationMap.this, "No location found", Toast.LENGTH_SHORT).show();
-	    	}else {
-	    			
-	    		locationName = locName;
-	    		Toast.makeText(LocationMap.this, "Location "+locName, Toast.LENGTH_SHORT).show();
-	    	}
-	     
+	  	        
+	  	        //This is already handled in the centerLocation method.
+		    	/*
+		    	if( locName.equals("") ) {
+		    			
+		    		Toast.makeText(LocationMap.this, "No location found", Toast.LENGTH_SHORT).show();
+		    	}else {
+		    			
+		    		locationName = locName;
+		    		Toast.makeText(LocationMap.this, "Location "+locName, Toast.LENGTH_SHORT).show();
+		    	}*/
+	  	    }	     
 	    } 
 	    public void onProviderDisabled(String provider) { 
-	      // TODO Auto-generated method stub 
+	    	Toast.makeText(LocationMap.this.getBaseContext(), 
+	    			"A location can not currently be determined. Enable more " +
+	    			"location sources i.e. GPS Satellites in Security and Location " +
+	    			"Settings.", Toast.LENGTH_LONG).show(); 
 	    } 
 	    public void onProviderEnabled(String provider) { 
 	      // TODO Auto-generated method stub 

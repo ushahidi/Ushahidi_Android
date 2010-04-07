@@ -72,7 +72,9 @@ public class Ushahidi extends Activity {
         	
         	//means this is a new install or the settings have been corrupted, prompt them!
 			mHandler.post(mDisplayPrompt);
-			return;
+			//This return statement had to be commented out bcos it will not
+			//allow the initialisation of the buttons below.
+			//return;
  
         }
         
@@ -205,7 +207,7 @@ public class Ushahidi extends Activity {
  
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		applyMenuChoice(item);
+		//applyMenuChoice(item);
  
 		return(applyMenuChoice(item) ||
 				super.onOptionsItemSelected(item));
