@@ -151,12 +151,12 @@ public class Ushahidi extends Activity {
 	            dialog.setButton2("Ok", new Dialog.OnClickListener() {
 	            	public void onClick(DialogInterface dialog, int which) {
 	            		
-	            		Intent launchPreferencesIntent = new Intent().setClass(Ushahidi.this, 
+	            		Intent launchPreferencesIntent = new Intent(Ushahidi.this, 
 	            				Settings.class);
-	            		
- 
+	      
 	    				// Make it a subactivity so we know when it returns
 	    				startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);
+	    				
 							dialog.dismiss();						
 						}
 	        		});
