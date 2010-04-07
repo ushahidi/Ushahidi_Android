@@ -267,7 +267,7 @@ public class IncidentMap extends MapActivity {
  
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		applyMenuChoice(item);
+		//applyMenuChoice(item);
  
 		return(applyMenuChoice(item) ||
 						super.onOptionsItemSelected(item));

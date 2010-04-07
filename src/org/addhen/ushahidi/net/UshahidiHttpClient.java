@@ -38,11 +38,12 @@ public class UshahidiHttpClient {
     public static HttpResponse GetURL(String URL) throws IOException {
     	UshahidiService.httpRunning = true;
 		
-		final HttpGet httpget = new HttpGet(URL);
-		httpget.addHeader("User-Agent", "Ushahidi-Android/1.0)");
-
-		// Post, check and show the result (not really spectacular, but works):
 		try {
+			//wrap try around because this constructor can throw Error
+			final HttpGet httpget = new HttpGet(URL);
+			httpget.addHeader("User-Agent", "Ushahidi-Android/1.0)");
+
+			// Post, check and show the result (not really spectacular, but works):
 			HttpResponse response =  UshahidiService.httpclient.execute(httpget);
 			UshahidiService.httpRunning = false;
 			
@@ -59,34 +60,41 @@ public class UshahidiHttpClient {
 	public static HttpResponse PostURL(String URL, List<NameValuePair> data,
 			String Referer) throws IOException {
 		UshahidiService.httpRunning = true;
-
-		final HttpPost httpost = new HttpPost(URL);
-		//org.apache.http.client.methods.
-		if(Referer.length() > 0){
-			httpost.addHeader("Referer", Referer);
-		}
-		if(data != null){
-			try {
-				//NEED THIS NOW TO FIX ERROR 417
-				httpost.getParams().setBooleanParameter( "http.protocol.expect-continue", false ); 
-				httpost.setEntity(new UrlEncodedFormEntity(data, HTTP.UTF_8));
-			} catch (final UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				UshahidiService.httpRunning = false;
-				return null;
+		//Dipo Fix
+    	try {
+    		//wrap try around because this constructor can throw Error 
+			final HttpPost httpost = new HttpPost(URL);
+			//org.apache.http.client.methods.
+			if(Referer.length() > 0){
+				httpost.addHeader("Referer", Referer);
 			}
-		}
-
-		// Post, check and show the result (not really spectacular, but works):
-		try {
-			HttpResponse response =  UshahidiService.httpclient.execute(httpost);
-			UshahidiService.httpRunning = false;
-			return response;
-
-		} catch (final Exception e) {
-
-		} 
+			if(data != null){
+				try {
+					//NEED THIS NOW TO FIX ERROR 417
+					httpost.getParams().setBooleanParameter( "http.protocol.expect-continue", false ); 
+					httpost.setEntity(new UrlEncodedFormEntity(data, HTTP.UTF_8));
+				} catch (final UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					UshahidiService.httpRunning = false;
+					return null;
+				}
+			}
+	
+			// Post, check and show the result (not really spectacular, but works):
+			try {
+				HttpResponse response =  UshahidiService.httpclient.execute(httpost);
+				UshahidiService.httpRunning = false;
+				return response;
+	
+			} catch (final Exception e) {
+	
+			} 
+    	}
+    	catch (final Exception e) {
+    		e.printStackTrace();
+    	}
+    	
 		UshahidiService.httpRunning = false;
 		return null;
 	}
@@ -184,6 +192,10 @@ public class UshahidiHttpClient {
             copy(in, out);
             out.flush();
 
+            //need to close stream before return statement
+            closeStream(in);
+            closeStream(out);
+            
             return dataStream.toByteArray();
         } catch (IOException e) {
             //android.util.Log.e("IO", "Could not load buddy icon: " + this, e);

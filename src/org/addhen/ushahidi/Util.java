@@ -318,31 +318,34 @@ public class Util{
 			if( response == null ) {
 				status = false;
 			}
-			
-			final int statusCode = response.getStatusLine().getStatusCode();
-			
-			if( statusCode == 200 ) {
-				json_string = UshahidiHttpClient.GetText(response);
+			//Fixed Bug.
+			//Added this else so that it wont attempt to access a null object
+			else {
+				final int statusCode = response.getStatusLine().getStatusCode();
 				
-				//extrac data from json object
-				try {
-					jsonObject = new JSONObject(json_string);
+				if( statusCode == 200 ) {
+					json_string = UshahidiHttpClient.GetText(response);
 					
-					message = jsonObject.getJSONObject("error").getString("message");
-					if( message.equals("Not Found") ) {
-						status = true;
+					//extrac data from json object
+					try {
+						jsonObject = new JSONObject(json_string);
+						
+						message = jsonObject.getJSONObject("error").getString("message");
+						if( message.equals("Not Found") ) {
+							status = true;
+						
+						}else {
+							status = false;
+						}
 					
-					}else {
-						status = false;
+					} catch (JSONException e) {
+						
+						e.printStackTrace();
 					}
-				
-				} catch (JSONException e) {
 					
-					e.printStackTrace();
+				} else {
+					status = false;
 				}
-				
-			} else {
-				status = false;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
