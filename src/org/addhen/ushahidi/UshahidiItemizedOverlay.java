@@ -53,7 +53,7 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
 		super(marker);
 		
 		this.mapView = mapView;
-		this.viewOffset = 0;
+		this.viewOffset = 32;
 		this.iMap = iMap;
 		this.mNewIncidents = mNewIncidents;
 		this.extras = extras;
@@ -170,7 +170,6 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
 			});
 			
 		} catch (SecurityException e) {
-			Log.e("BalloonItemizedOverlay", "setBalloonTouchListener reflection SecurityException");
 			return;
 		} catch (NoSuchMethodException e) {
 			// method not overridden - do nothing
