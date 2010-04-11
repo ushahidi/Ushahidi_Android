@@ -153,6 +153,15 @@ public final class R {
         public static final int chk_auto_fetch=0x7f060048;
         public static final int chk_sms_send=0x7f060049;
         public static final int date_time=0x7f060009;
+        public static final int empty_report_categories=0x7f06006d;
+        public static final int empty_report_description=0x7f06006b;
+        public static final int empty_report_location=0x7f06006c;
+        public static final int empty_report_title=0x7f06006a;
+        public static final int failed_to_add_report_offline=0x7f060068;
+        public static final int failed_to_add_report_online=0x7f060069;
+        /**   Add location screen 
+         */
+        public static final int find_location=0x7f06006e;
         public static final int flash_led=0x7f060045;
         public static final int google_map_api_key=0x7f06002d;
         public static final int google_map_api_key_pro=0x7f06002e;
@@ -194,6 +203,7 @@ public final class R {
         public static final int internet_connection=0x7f060064;
         public static final int invalid_email_address=0x7f060015;
         public static final int invalid_ushahidi_instance=0x7f060016;
+        public static final int location_not_found=0x7f06006f;
         /**   about screen 
          */
         public static final int menu_about=0x7f060061;
@@ -207,6 +217,10 @@ public final class R {
         public static final int option_location=0x7f06003b;
         public static final int preferences_notifications=0x7f060065;
         public static final int prompt_mesg=0x7f06000a;
+        public static final int report_successfully_added_offline=0x7f060067;
+        /**  Add Report Screen 
+         */
+        public static final int report_successfully_added_online=0x7f060066;
         public static final int reports=0x7f060060;
         public static final int ringtone=0x7f060041;
         public static final int select_ringtone=0x7f060043;

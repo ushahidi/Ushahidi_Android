@@ -152,8 +152,7 @@ public class AddIncident extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		//applyMenuChoice(item);
-
+		
 		return(applyMenuChoice(item) ||
 				super.onOptionsItemSelected(item));
 	}
@@ -234,8 +233,41 @@ public class AddIncident extends Activity {
 		btnPicture = (Button) findViewById(R.id.btnPicture);
 		btnAddCategory = (Button) findViewById(R.id.add_category);
 		incidentTitle = (EditText) findViewById(R.id.incident_title);
+		incidentTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(TextUtils.isEmpty(incidentTitle.getText())) {
+					incidentTitle.setError(getString(R.string.empty_report_title));
+				}
+				
+			}
+			
+		});
+		
 		incidentLocation = (EditText) findViewById(R.id.incident_location);
+		incidentLocation.setOnFocusChangeListener( new View.OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if( TextUtils.isEmpty(incidentLocation.getText())) {
+					incidentLocation.setError(getString(R.string.empty_report_location));
+				}
+			}
+		});
+		
 		incidentDesc = (EditText) findViewById(R.id.incident_desc);
+		incidentDesc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(TextUtils.isEmpty(incidentDesc.getText())) {
+					incidentDesc.setError(getString(R.string.empty_report_description));
+				}
+			}
+			
+		});
+		
 		btnSend = (Button) findViewById(R.id.incident_add_btn);
 		btnCancel = (Button) findViewById(R.id.incident_add_cancel);
 		incidentDate = (TextView) findViewById(R.id.lbl_date);
@@ -259,27 +291,23 @@ public class AddIncident extends Activity {
 				//Dipo Fix
 				error = false;
 				if( TextUtils.isEmpty(incidentTitle.getText())) {
-					//TODO look into how to use xml R.string for that
-					errorMessage ="* Enter a title for the incident.\n";
+					errorMessage =getString(R.string.empty_report_title);
 					error = true;
 				}
 				
 				if( TextUtils.isEmpty(incidentDesc.getText())) {
-					//TODO look into how to use xml R.string for that
-					errorMessage += "* Enter a description for the incident.\n";
+					errorMessage += getString(R.string.empty_report_description);
 					error = true;
 				}
 				
 				if( TextUtils.isEmpty(incidentLocation.getText())) {
-					//TODO look into how to use xml R.string for that
-					errorMessage += "* Enter a location for the incident.\n";
+					errorMessage += getString(R.string.empty_report_location);
 					error = true;
 				}
 				
 				//Dipo Fix
 				if(vectorCategories.size() == 0) {
-					//TODO look into how to use xml R.string for that
-					errorMessage += "* Select at least one category.\n";
+					errorMessage += getString(R.string.empty_report_categories);
 					error = true;
 				}
 				
@@ -403,8 +431,8 @@ public class AddIncident extends Activity {
 		btnAddCategory = (Button) findViewById(R.id.add_category);
 		incidentTitle.setText("");
 		incidentLocation.setText("");
-		//updateLocation();
 		incidentDesc.setText("");
+		vectorCategories.clear();
 		counter = 0;
 		updateDisplay();
 		
@@ -493,29 +521,19 @@ public class AddIncident extends Activity {
 	
 	final Runnable mSentIncidentFail = new Runnable() {
 		public void run() {
-			final Toast t = Toast.makeText(AddIncident.this,
-					"Failed to send Incident! Hope there is internet.",
-					Toast.LENGTH_LONG);
-			t.show();
+			Util.showToast(AddIncident.this, R.string.failed_to_add_report_online);
 		}
 	};
 	
 	final Runnable mSentIncidentOfflineFail = new Runnable() {
 		public void run() {
-			final Toast t = Toast.makeText(AddIncident.this,
-					"Failed to send Incident!.Check to see if you filled all required fields",
-					Toast.LENGTH_LONG);
-			t.show();
+			Util.showToast(AddIncident.this, R.string.failed_to_add_report_offline);
 		}
 	};
 	
 	final Runnable mSentIncidentOfflineSuccess = new Runnable() {
 		public void run() {
-			final Toast t = Toast.makeText(AddIncident.this,
-					"Incident sent to local storage due to unvailability of internet. Remember to sync to the online instance when there " +
-					"there is internet connection.",
-					Toast.LENGTH_LONG);
-			t.show();
+			Util.showToast(AddIncident.this, R.string.report_successfully_added_offline);
 	
 		}
 	};
@@ -535,26 +553,11 @@ public class AddIncident extends Activity {
 	//
 	final Runnable mSentIncidentSuccess = new Runnable() {
 		public void run() {
-			final Toast t = Toast.makeText(AddIncident.this,
-					"Incident successfully posted online and entered into a moderation queue",
-					Toast.LENGTH_LONG);
-			t.show();
+			Util.showToast(AddIncident.this, R.string.report_successfully_added_online);
 			
 		}
 	};
 
-	final Runnable mUpdateLocation = new Runnable() {
-		public void run() {
-			//updateLocation();
-		}
-	};
-	
-	final Runnable mDisplayNetworkError = new Runnable(){
-		public void run(){
-			showDialog(DIALOG_ERROR_NETWORK);
-		}
-	};
-	
 	/**
 	 * Create various dialog
 	 */

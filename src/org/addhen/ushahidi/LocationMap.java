@@ -41,6 +41,7 @@ import android.os.Bundle;
 import android.os.AsyncTask;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -77,6 +78,7 @@ public class LocationMap extends MapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.view_map);
 		
 		mapView = (MapView) findViewById(R.id.location_map);
@@ -94,12 +96,7 @@ public class LocationMap extends MapActivity {
 				bundle.putDouble("longitude", longitude);
 				bundle.putString("location", locationName);
 				
-				//this will launch an extra activity
-				/*Intent intent = new Intent( LocationMap.this,AddIncident.class);
-				intent.putExtra("locations",bundle);
-				startActivityForResult(intent,1);*/
-				
-				//Solution pass the data to the calling activity
+				//Pass the data to the calling activity
 				Intent intent = new Intent();
 				intent.putExtra("locations",bundle);
 				setResult( RESULT_OK, intent );
@@ -110,7 +107,7 @@ public class LocationMap extends MapActivity {
 		btnFind = (Button) findViewById(R.id.btn_find);
 		btnFind.setOnClickListener( new View.OnClickListener(){
 			public void onClick( View v ) {
-				Toast.makeText(LocationMap.this, "Finding you...", Toast.LENGTH_SHORT).show();
+				Util.showToast(LocationMap.this, R.string.find_location);
 				updateLocation();
 			}
 		});
@@ -161,24 +158,6 @@ public class LocationMap extends MapActivity {
 	private void centerLocation(GeoPoint centerGeoPoint) {
 		
 		mapController.animateTo(centerGeoPoint);
-		
-		//locName = getLocationFromLatLon(centerGeoPoint.getLatitudeE6(),centerGeoPoint.getLongitudeE6());
-		
-		GeocodeTask geocode = new GeocodeTask();
-		geocode.execute(Double.valueOf(centerGeoPoint.getLatitudeE6()),
-				Double.valueOf(centerGeoPoint.getLongitudeE6()));
-		
-		if( locationName == "" ) {
-			
-    		Toast.makeText(LocationMap.this, "No location found", Toast.LENGTH_SHORT).show();
-    	
-		}else {
-    			
-    		//locationName = locName;
-    		Toast.makeText(LocationMap.this, "Location "+locationName, Toast.LENGTH_SHORT).show();
-    	
-		}
-		
 		placeMarker(centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6());
 	}
 	
@@ -190,14 +169,13 @@ public class LocationMap extends MapActivity {
 		
 		try {
 			
-    		foundAddresses = gc.getFromLocation( latitude, longitude, 5 );
+    		foundAddresses = gc.getFromLocation( lat, lon, 5 );
     		
     		Address address = foundAddresses.get(0);
     		
     		return address.getLocality();
 		
     	} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return "";
@@ -310,7 +288,6 @@ public class LocationMap extends MapActivity {
 	    	double latitude = 0;
 	    	double longitude = 0;
 	    	String locName = "";
-	    	
 	    	if (location != null) { 
 	    		//Dipo Fix
 	  	        //Stop asking for updates when location has been retrieved
@@ -319,33 +296,26 @@ public class LocationMap extends MapActivity {
 	    		latitude = location.getLatitude(); 
 	  	        longitude = location.getLongitude(); 
 	
-	  	      locName = getLocationFromLatLon(latitude,longitude);
+	  	        locName = getLocationFromLatLon(latitude,longitude);
 	  	        centerLocation(getPoint(latitude, longitude));
 	  	        
-	  	        //This is already handled in the centerLocation method.
-		    	/*
-		    	if( locName.equals("") ) {
-		    			
-		    		Toast.makeText(LocationMap.this, "No location found", Toast.LENGTH_SHORT).show();
-		    	}else {
-		    			
-		    		locationName = locName;
-		    		Toast.makeText(LocationMap.this, "Location "+locName, Toast.LENGTH_SHORT).show();
-		    	}*/
+	  	        if( locName == null ) {
+	  	        	Toast.makeText(LocationMap.this, "Location not found", Toast.LENGTH_SHORT).show();
+	  	        }else {
+	  	        	locationName = locName;
+	  	        	Toast.makeText(LocationMap.this, "Location "+locationName, Toast.LENGTH_SHORT).show();
+	  	        }
 	  	    }	     
 	    } 
 	    public void onProviderDisabled(String provider) { 
-	    	Toast.makeText(LocationMap.this.getBaseContext(), 
-	    			"A location can not currently be determined. Enable more " +
-	    			"location sources i.e. GPS Satellites in Security and Location " +
-	    			"Settings.", Toast.LENGTH_LONG).show(); 
+	    	Util.showToast(LocationMap.this, R.string.location_not_found);
 	    } 
 	    public void onProviderEnabled(String provider) { 
-	      // TODO Auto-generated method stub 
+	   
 	    } 
 	    public void onStatusChanged(String provider, int status, Bundle extras) 
 	    { 
-	      // TODO Auto-generated method stub 
+	      
 	    } 
 	}
 	
@@ -353,6 +323,12 @@ public class LocationMap extends MapActivity {
 	private class GeocodeTask extends AsyncTask <Double, Void, String> {
 		
 		protected String localityName;
+		protected Context appContext;
+		@Override
+		protected void onPreExecute() {
+			setProgressBarIndeterminateVisibility(true);
+
+		}
 		
 		@Override 
 		protected String doInBackground(Double... params) {
@@ -364,15 +340,17 @@ public class LocationMap extends MapActivity {
 		protected void onPostExecute(String result)
 		{
 			
-			if( result.equals(""))
+			if( result.equals("")) {
 				locationName = "";
-			else
+			} else {
 				locationName = result;
+				Toast.makeText(appContext, locationName, Toast.LENGTH_SHORT).show();
+			}
+			setProgressBarIndeterminateVisibility(false);
 		}
-
 		
 	}
-	
+		
 	private class MapMarker extends ItemizedOverlay<OverlayItem> {
 		
 		private List<OverlayItem> locations =new ArrayList<OverlayItem>();
@@ -388,7 +366,7 @@ public class LocationMap extends MapActivity {
 			// create locations of interest
 			GeoPoint myPlace = new GeoPoint(LatitudeE6,LongitudeE6);
 			
-			myOverlayItem = new OverlayItem(myPlace, "Location ", "Location");
+			myOverlayItem = new OverlayItem(myPlace, " ", " ");
 			
 			locations.add(myOverlayItem);
 			   
@@ -412,13 +390,6 @@ public class LocationMap extends MapActivity {
 		   
 			boundCenterBottom(marker);
 		}
-		
-		/*@Override
-		protected boolean onTap(int index) {
-			Toast.makeText(LocationMap.this, "Location ", Toast.LENGTH_SHORT).show();
-		  return true;
-		}*/
-		
 
 		@Override
 		public boolean onTouchEvent(MotionEvent motionEvent, MapView mapview) {
@@ -466,7 +437,4 @@ public class LocationMap extends MapActivity {
 		}
 	}
 	
-	public void onTap(int index) {
-		
-	}
 }

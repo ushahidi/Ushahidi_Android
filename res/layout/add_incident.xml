@@ -44,7 +44,9 @@
 		
 				<EditText android:id="@+id/incident_title" 
 		  			android:layout_width="fill_parent"
-					android:layout_height="wrap_content"  /> 
+					android:layout_height="wrap_content"
+					android:capitalize="words"
+					android:autoText="true"  /> 
 			
 			</LinearLayout>
 			
@@ -63,17 +65,17 @@
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:paddingBottom="15px">
-					<Button android:id="@+id/pick_date"
-        		android:layout_width="wrap_content"
-          	android:layout_height="wrap_content"
-          	android:textStyle="bold"
-          	android:text="@string/incident_date"/>
+				<Button android:id="@+id/pick_date"
+        			android:layout_width="wrap_content"
+          			android:layout_height="wrap_content"
+          			android:textStyle="bold"
+          			android:text="@string/incident_date"/>
 
     			<Button android:id="@+id/pick_time"
-       			android:layout_width="wrap_content"
-          	android:layout_height="wrap_content"
-          	android:textStyle="bold"
-          	android:text="@string/incident_time"/>
+       				android:layout_width="wrap_content"
+          			android:layout_height="wrap_content"
+          			android:textStyle="bold"
+          			android:text="@string/incident_time"/>
       	</LinearLayout>
 			</LinearLayout>
 			
@@ -89,18 +91,20 @@
 					android:textColor="@drawable/date_color" 
 					android:text="@string/incident_location" />
 				<LinearLayout android:orientation="horizontal"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:paddingBottom="15px">
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:paddingBottom="15px">
 					<EditText android:id="@+id/incident_location"
-	  				android:layout_width="170px"
-        		android:layout_height="wrap_content"/>
+	  					android:layout_width="170px"
+	  					android:capitalize="words"
+	  					android:autoText="true"
+        				android:layout_height="wrap_content"/>
 
     			<Button android:id="@+id/location"
-       			android:layout_width="wrap_content"
-          	android:layout_height="wrap_content"
-          	android:textStyle="bold"
-          	android:text="@string/add_location"/>
+       				android:layout_width="wrap_content"
+          			android:layout_height="wrap_content"
+          			android:textStyle="bold"
+          			android:text="@string/add_location"/>
       	</LinearLayout>
 				
 			</LinearLayout>
@@ -119,6 +123,7 @@
 			<EditText android:id="@+id/incident_desc" 
 				android:layout_width="fill_parent"
 				android:layout_height="100px"
+				android:autoText="true"
 				android:scrollbars="vertical" />
 			</LinearLayout>
 			<LinearLayout android:orientation="horizontal"
@@ -151,16 +156,16 @@
 					android:layout_x="15px"
 					android:layout_y="15px"
 					android:layout_alignParentRight="true"
-  				android:layout_marginLeft="10px"
-  				android:textStyle="bold"
+  					android:layout_marginLeft="10px"
+  					android:textStyle="bold"
 					android:text="@string/btn_send" />
        
 				<Button android:id="@+id/incident_add_cancel"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
  					android:layout_toLeftOf="@id/incident_add_btn"
-  				android:layout_alignTop="@id/incident_add_btn"
-  				android:textStyle="bold"
+  					android:layout_alignTop="@id/incident_add_btn"
+  					android:textStyle="bold"
 					android:text="@string/btn_cancel" />
 	
 			</RelativeLayout>
