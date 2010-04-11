@@ -1,6 +1,5 @@
 package org.addhen.ushahidi;
 
-
 import java.util.List;
 
 import org.addhen.ushahidi.data.IncidentsData;
