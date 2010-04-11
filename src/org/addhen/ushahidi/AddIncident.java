@@ -126,7 +126,8 @@ public class AddIncident extends Activity {
         foundAddresses = new ArrayList<Address>();
         gc = new Geocoder(this);
         
-        updateLocation();
+        //load settings
+        UshahidiService.loadSettings(AddIncident.this);
          
     }
 	
@@ -159,14 +160,14 @@ public class AddIncident extends Activity {
 	}
 	
 	//update the device current location
-	private void updateLocation() {
-		MyLocationListener listener = new MyLocationListener(); 
-        LocationManager manager = (LocationManager) 
+	/*private void updateLocation() {
+		//MyLocationListener listener = new MyLocationListener(); 
+        /*LocationManager manager = (LocationManager) 
     getSystemService(Context.LOCATION_SERVICE); 
-        long updateTimeMsec = 1000L; 
+        long updateTimeMsec = 1000L; */
         
         //DIPO Fix
-        List<String> providers = manager.getProviders(true);
+        /*List<String> providers = manager.getProviders(true);
         boolean gps_provider = false, network_provider = false;
         
         for (String name : providers) {
@@ -184,7 +185,7 @@ public class AddIncident extends Activity {
    updateTimeMsec, 500.0f, 
 		    listener); 
 		}
-	}
+	}*/
 	
 	private void populateMenu(Menu menu) {
 		MenuItem i;
@@ -442,7 +443,7 @@ public class AddIncident extends Activity {
 		btnAddCategory = (Button) findViewById(R.id.add_category);
 		incidentTitle.setText("");
 		incidentLocation.setText("");
-		updateLocation();
+		//updateLocation();
 		incidentDesc.setText("");
 		counter = 0;
 		updateDisplay();
@@ -584,7 +585,7 @@ public class AddIncident extends Activity {
 
 	final Runnable mUpdateLocation = new Runnable() {
 		public void run() {
-			updateLocation();
+			//updateLocation();
 		}
 	};
 	
@@ -867,8 +868,6 @@ public class AddIncident extends Activity {
     	String time[] = dates[1].split(":");
     	String categories = Util.implode(vectorCategories);
     	
-    	Log.i("Categories", "cats "+categories);
-    	
     	StringBuilder urlBuilder = new StringBuilder(UshahidiService.domain);
     	urlBuilder.append("/api");
     	params.put("task","report");
@@ -896,7 +895,7 @@ public class AddIncident extends Activity {
 		
     }
 	
-	public class MyLocationListener implements LocationListener { 
+	/*public class MyLocationListener implements LocationListener { 
 	    public void onLocationChanged(Location location) { 
 	    	double latitude = 0;
 	    	double longitude = 0;
@@ -939,7 +938,7 @@ public class AddIncident extends Activity {
 	    { 
 	      // TODO Auto-generated method stub 
 	    } 
-	  }
+	  }*/
 	
 	 /**
      * Upon being resumed we can retrieve the current state.  This allows us

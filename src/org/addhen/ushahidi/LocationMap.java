@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.addhen.ushahidi.AddIncident.MyLocationListener;
+//import org.addhen.ushahidi.AddIncident.MyLocationListener;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.data.UshahidiDatabase;
 import android.content.Context;
@@ -404,11 +404,11 @@ public class LocationMap extends MapActivity {
 		public boolean onTouchEvent(MotionEvent motionEvent, MapView mapview) {
 			
 			int Action = motionEvent.getAction();
+			
 			if (Action == MotionEvent.ACTION_UP){
 			
-				/*if(!MoveMap)
-				{
-					
+				if(!MoveMap)
+				{	
 					Projection proj = mapView.getProjection();
 					GeoPoint loc = proj.fromPixels((int)motionEvent.getX(), (int)motionEvent.getY());
 		              
@@ -416,30 +416,37 @@ public class LocationMap extends MapActivity {
 					mapView.getOverlays().remove(0);  
 					centerLocation(loc);
 					
-				}*/
-				MoveMap = false;
+				}
+				//Util.showToast(LocationMap.this, R.string.str_post_photos);
 		    
 		   }
 		   else if (Action == MotionEvent.ACTION_DOWN) {
-			   if(!MoveMap ) {
+			   /*if(!MoveMap ) {
 				   Projection proj = mapView.getProjection();
 				   GeoPoint loc = proj.fromPixels((int)motionEvent.getX(), (int)motionEvent.getY());
 	              
 				   //remove the last marker
 			   		mapView.getOverlays().remove(0);  
 			   		centerLocation(loc);
-			   }
+			   }*/
+			   
+			   //Util.showToast(LocationMap.this, R.string.add_categories);
 			   
 			   MoveMap = false;
-
 		   }
 		   else if (Action == MotionEvent.ACTION_MOVE){
+			   //Util.showToast(LocationMap.this, R.string.invalid_email_address);
 			   
 			   MoveMap = true;
+			   //MotionEvent.
 		   }
 
 		   return super.onTouchEvent(motionEvent, mapview);
 		   
 		}
+	}
+	
+	public void onTap(int index) {
+		
 	}
 }

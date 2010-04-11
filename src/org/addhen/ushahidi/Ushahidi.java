@@ -320,6 +320,5 @@ public class Ushahidi extends Activity {
 			this.dialog.cancel();
 		}
 
-		
 	}
 }

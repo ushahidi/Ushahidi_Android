@@ -20,7 +20,6 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.util.Log;
 
  
 public class UshahidiService extends Service {
@@ -49,19 +48,13 @@ public class UshahidiService extends Service {
 	public static String password = "";
 	private Handler mHandler = new Handler();
 	
-	private static final String TAG = "Ushahidi - New Updates";
-	 
-    //private ArrayList<IncidentsData> mNewIncidents;
-    //private ArrayList<CategoriesData> mNewCategories;
-    
+	private static final String TAG = "Ushahidi - New Updates"; 
     public static final String NEW_USHAHIDI_REPORT_FOUND = "New_Ushahidi_Report_Found";
     public static final int NOTIFICATION_ID = 1;
     
     private Notification newUshahidiReportNotification;
     private NotificationManager mNotificationManager;
     private static QueueThread queue;
-    //private String title = "";
-    //private String text = "";
     
     private UshahidiDatabase getDb() {
         return UshahidiApplication.mDb;
@@ -106,7 +99,6 @@ public class UshahidiService extends Service {
 		mHandler = new Handler();
 		
 		//if(AutoFetch){
-			Log.i("Auto Update", "yes autoupdate "+ AutoFetch );
 			mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
 			mHandler.postDelayed(mUpdateTimeTask, (1000 * 60 * AutoUpdateDelay));
 		
@@ -175,30 +167,6 @@ public class UshahidiService extends Service {
         mNotificationManager.notify(NOTIFICATION_ID, newUshahidiReportNotification);
 	}
 	
-	/*private void processNewIncidents() {
-	    if (mNewIncidents.size() <= 0) {
-	    	return;
-	    }
- 
-	    Log.i(TAG, mNewIncidents.size() + " new incidents.");
- 
-	    int count = getDb().addNewIncidentsAndCountUnread(mNewIncidents);
- 	   
-	    if (count <= 0) {
-	      return;
-	    }
- 
-	    IncidentsData latestIncident = mNewIncidents.get(0);
- 
-	    if (count == 1) {
-	      title = latestIncident.getIncidentTitle();
-	      text = latestIncident.getIncidentDate();
-	    } else {
-	      title = getString(R.string.new_incidents);
-	      text = getString(R.string.new_categories);
-	      text = MessageFormat.format(text, count);
-	    }
-	}*/
 	
 	/**
 	 * Clear stored data
@@ -206,43 +174,7 @@ public class UshahidiService extends Service {
 	public boolean clearCache() {
 		
 		return getDb().clearData();
-	
 	}
- 
-	/*private void processNewCategories() {
-	    if (mNewCategories.size() <= 0) {
-	      return;
-	    }
- 
-	    Log.i(TAG, mNewCategories.size() + " new categories.");
- 
-	    int count = 0;
- 
-	    UshahidiDatabase db = getDb();
- 
-	    if (db.fetchCategoriesCount() > 0) {
-	      count = db.addNewCategoryAndCountUnread(mNewCategories);
-	    } else {
-	      Log.i(TAG, "No existing categories. Don't notify.");
-	      db.addCategories(mNewCategories, false);
-	    }
- 
-	    if (count <= 0) {
-	      return;
-	    }
- 
-	    CategoriesData latest = mNewCategories.get(0);
- 
-	    if (count == 1) {
-	      title = latest.getCategoryTitle();
-	      text = latest.getCategoryDescription();
-	    } else {
-	      title = getString(R.string.new_categories);
-	      text = getString(R.string.new_categories);
-	      text = MessageFormat.format(text, count);
-	    }
- 
-	}*/
 	
 	public static void loadSettings(Context context) {
 		final SharedPreferences settings = context.getSharedPreferences(
@@ -260,6 +192,7 @@ public class UshahidiService extends Service {
 		smsUpdate = settings.getBoolean("SmsUpdate",false);
 		username = settings.getString("Username", "");
 		password = settings.getString("Password","");
+		
 		// make sure folder exists
 		final File dir = new File(UshahidiService.savePath);
 		dir.mkdirs();
