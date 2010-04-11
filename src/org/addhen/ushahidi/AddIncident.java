@@ -45,7 +45,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -53,17 +52,11 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -97,7 +90,6 @@ public class AddIncident extends Activity {
     private int mDay;
     private int mHour;
     private int mMinute;
-    private int mAmPm;
     private int counter = 0;
     private static double longitude;
     private static double latitude;
@@ -118,8 +110,6 @@ public class AddIncident extends Activity {
 	private HashMap<Integer,Integer> timeDigits;
 	private Bundle bundle;
 	private Bundle extras;
-	
-	private static boolean running;
 	private static final int DIALOG_ERROR_NETWORK = 0;
 	private static final int DIALOG_ERROR_SAVING = 1;
     private static final int DIALOG_LOADING_CATEGORIES= 2;
@@ -128,9 +118,7 @@ public class AddIncident extends Activity {
 	private static final int DIALOG_MULTIPLE_CATEGORY = 6;
 	private static final int TIME_DIALOG_ID = 7;
     private static final int DATE_DIALOG_ID = 8;
-	private static Geocoder gc;
 	private String filename = "";
-	private List<Address> foundAddresses;
 	private final static Handler mHandler = new Handler();
 	private Vector<String> vectorCategories = new Vector<String>();
 	private Vector<String> categoriesId = new Vector<String>();
@@ -142,9 +130,6 @@ public class AddIncident extends Activity {
         
         setContentView(R.layout.add_incident);
         initComponents();
-        running = false;
-        foundAddresses = new ArrayList<Address>();
-        gc = new Geocoder(this);
         
         //load settings
         UshahidiService.loadSettings(AddIncident.this);
@@ -178,34 +163,6 @@ public class AddIncident extends Activity {
 		return(applyMenuChoice(item) ||
 				super.onContextItemSelected(item));
 	}
-	
-	//update the device current location
-	/*private void updateLocation() {
-		//MyLocationListener listener = new MyLocationListener(); 
-        /*LocationManager manager = (LocationManager) 
-    getSystemService(Context.LOCATION_SERVICE); 
-        long updateTimeMsec = 1000L; */
-        
-        //DIPO Fix
-        /*List<String> providers = manager.getProviders(true);
-        boolean gps_provider = false, network_provider = false;
-        
-        for (String name : providers) {
-        	if (name.equals(LocationManager.GPS_PROVIDER)) gps_provider = true;
-        	if (name.equals(LocationManager.NETWORK_PROVIDER)) network_provider = true;        	
-        }
-        
-        //Register for GPS location if enabled or if neither is enabled
-        if( gps_provider || (!gps_provider && !network_provider) ) {
-			manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 
-   updateTimeMsec, 500.0f, 
-		    listener);
-		} else if (network_provider) {
-			manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 
-   updateTimeMsec, 500.0f, 
-		    listener); 
-		}
-	}*/
 	
 	private void populateMenu(Menu menu) {
 		MenuItem i;
@@ -286,20 +243,6 @@ public class AddIncident extends Activity {
 		pickTime = (Button) findViewById(R.id.pick_time);
 		addLocation = (Button) findViewById(R.id.location);
 		
-		//this piece of code is no longer needed here and has been moved to onActivityResult
-		/*
-		bundle = new Bundle();
-		extras = this.getIntent().getExtras();
-		
-		if( extras != null ) {
-			bundle = extras.getBundle("locations");
-			incidentLocation.setText( bundle.getString("location"));
-		
-			AddIncident.latitude = bundle.getDouble("latitude");
-			AddIncident.longitude = bundle.getDouble("longitude");
-		}
-		*/
-		
 		//open location map window
 		addLocation.setOnClickListener( new View.OnClickListener(){
 			public void onClick( View v ) {
@@ -358,13 +301,10 @@ public class AddIncident extends Activity {
 					final Thread tr = new Thread() {
 						@Override
 						public void run() {
-							running = true;
-							
 							try {
 								mHandler.post(mSentIncidentOffline);
 								
-							} finally { 
-									running = false;
+							} finally {
 							}
 						}
 					};
@@ -426,7 +366,7 @@ public class AddIncident extends Activity {
         mDay = c.get(Calendar.DAY_OF_MONTH);
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
-        mAmPm = c.get(Calendar.AM_PM);
+        c.get(Calendar.AM_PM);
         updateDisplay();
         
 	}
@@ -915,51 +855,6 @@ public class AddIncident extends Activity {
 		
     }
 	
-	/*public class MyLocationListener implements LocationListener { 
-	    public void onLocationChanged(Location location) { 
-	    	double latitude = 0;
-	    	double longitude = 0;
-	    	if (location != null) { 
-	  	        //Dipo Fix
-	  	        //Stop asking for updates when location has been retrieved
-	    		((LocationManager)getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
-	  	      
-	    		latitude = location.getLatitude(); 
-	  	        longitude = location.getLongitude(); 
-	  	        AddIncident.latitude = latitude;
-	  	        AddIncident.longitude = longitude;
-	  	        
-				try {
-								
-		    		foundAddresses = gc.getFromLocation( latitude, longitude, 5 );
-		    		Address address = foundAddresses.get(0);
-		    		
-		    		incidentLocation.setText( address.getLocality().toString() );
-							
-		    	} catch (Exception e) { //Grab all Exceptions
-					// TODO Auto-generated catch block
-		    		Toast.makeText(AddIncident.this.getBaseContext(), 
-			    			"Could not locate your current city via GeoCoding.", Toast.LENGTH_SHORT).show();
-					e.printStackTrace();
-				}
-	  	    } 
-	     
-	    } 
-	    public void onProviderDisabled(String provider) { 
-	    	Toast.makeText(AddIncident.this.getBaseContext(), 
-	    			"A location can not currently be determined. Enable more " +
-	    			"location sources i.e. GPS Satellites in Security and Location " +
-	    			"Settings.", Toast.LENGTH_LONG).show(); 
-	    } 
-	    public void onProviderEnabled(String provider) { 
-	      // TODO Auto-generated method stub 
-	    } 
-	    public void onStatusChanged(String provider, int status, Bundle extras) 
-	    { 
-	      // TODO Auto-generated method stub 
-	    } 
-	  }*/
-	
 	 /**
      * Upon being resumed we can retrieve the current state.  This allows us
      * to update the state if it was changed at any time while paused.
@@ -971,7 +866,7 @@ public class AddIncident extends Activity {
         SharedPreferences prefs = getPreferences(0); 
         String title = prefs.getString("title", null);
         String desc = prefs.getString("desc", null);
-        String date = prefs.getString("date", null);
+        //String date = prefs.getString("date", null);
     	
         if ( title  != null) 
             incidentTitle.setText(title, TextView.BufferType.EDITABLE);
