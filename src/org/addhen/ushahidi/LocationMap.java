@@ -144,7 +144,7 @@ public class LocationMap extends MapActivity {
 		 
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
 				 marker.getIntrinsicHeight());
-		mapView.getController().setZoom(12);
+		mapView.getController().setZoom(14);
 
 		mapView.setBuiltInZoomControls(true);
 		mapView.getOverlays().add(new MapMarker(marker,
@@ -332,7 +332,7 @@ public class LocationMap extends MapActivity {
 		
 		@Override 
 		protected String doInBackground(Double... params) {
-			localityName = getLocationFromLatLon(params[0], params[1]);
+			localityName = Util.getFromLocation(params[0], params[1], appContext);
 			return localityName;
 		}
 		
@@ -340,8 +340,9 @@ public class LocationMap extends MapActivity {
 		protected void onPostExecute(String result)
 		{
 			
-			if( result.equals("")) {
+			if( result == "") {
 				locationName = "";
+				Toast.makeText(appContext, " Location not found "+locationName, Toast.LENGTH_SHORT).show();
 			} else {
 				locationName = result;
 				Toast.makeText(appContext, locationName, Toast.LENGTH_SHORT).show();
@@ -364,7 +365,7 @@ public class LocationMap extends MapActivity {
 			this.marker = defaultMarker;
 			
 			// create locations of interest
-			GeoPoint myPlace = new GeoPoint(LatitudeE6,LongitudeE6);
+			GeoPoint myPlace = new GeoPoint(LatitudeE6 ,LongitudeE6);
 			
 			myOverlayItem = new OverlayItem(myPlace, " ", " ");
 			
@@ -393,22 +394,22 @@ public class LocationMap extends MapActivity {
 
 		@Override
 		public boolean onTouchEvent(MotionEvent motionEvent, MapView mapview) {
-			
+			String locName = "";
 			int Action = motionEvent.getAction();
 			
 			if (Action == MotionEvent.ACTION_UP){
 			
-				if(!MoveMap)
-				{	
-					Projection proj = mapView.getProjection();
-					GeoPoint loc = proj.fromPixels((int)motionEvent.getX(), (int)motionEvent.getY());
+				Projection proj = mapView.getProjection();
+				GeoPoint loc = proj.fromPixels((int)motionEvent.getX(), (int)motionEvent.getY());
 		              
-					//remove the last marker
-					mapView.getOverlays().remove(0);  
-					centerLocation(loc);
 					
-				}
-				//Util.showToast(LocationMap.this, R.string.str_post_photos);
+				GeocodeTask geoCodeTask = new GeocodeTask();
+				geoCodeTask.appContext = LocationMap.this;
+				geoCodeTask.execute(loc.getLatitudeE6() / 1.0E6, loc.getLongitudeE6()/1.0E6);
+					
+				//remove the last marker
+				mapView.getOverlays().remove(0);
+				centerLocation(loc);
 		    
 		   }
 		   else if (Action == MotionEvent.ACTION_DOWN) {

@@ -33,17 +33,20 @@ import org.addhen.ushahidi.data.HandleXml;
 import org.addhen.ushahidi.data.IncidentsData;
 import org.addhen.ushahidi.net.Categories;
 import org.addhen.ushahidi.net.Incidents;
+import org.addhen.ushahidi.net.UshahidiGeocoder;
 import org.addhen.ushahidi.net.UshahidiHttpClient;
 import org.apache.http.HttpResponse;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -220,18 +223,41 @@ public class Util{
 	 * @apram json_data - the json data to be formatted.
 	 * @return String 
 	 */
-	public static boolean extractGeocodeJSON( String json_data ) {
-	
+	public static String getFromLocation( double latitude, double longitude, Context context ) {
+		String json_data = "";
+		int status =  0;
+		JSONArray jsonArray;
 		try {
+			if( Util.isConnected(context)) {
+				json_data = UshahidiGeocoder.reverseGeocode(latitude, longitude);
+			} else {
+				return "No internet";
+			}
+			Log.i("JSON", "json "+json_data);
 			jsonObject = new JSONObject(json_data);
-			return jsonObject.getJSONObject("payload").getBoolean("success");
-		
+			
+			status = jsonObject.getJSONObject("Status").getInt("code");
+			
+			if( status == 200 ) {
+				jsonArray = jsonObject.getJSONArray("Placemark");
+			
+				return jsonArray.getJSONObject(0).getJSONObject("AddressDetails").getJSONObject("Country").
+					getJSONObject("AdministrativeArea").
+					getJSONObject("Locality").getString("LocalityName");
+				
+			} else {
+				return "Unsuccessful";
+			}
+			
 		} catch (JSONException e) {
 			
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-		return false;
+		return "";
 	}
 	
 	/**
