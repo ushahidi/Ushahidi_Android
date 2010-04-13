@@ -143,4 +143,6 @@
 	<string name="location_not_found">A location can not currently be determined. Enable more
 	    			 location sources i.e. GPS Satellites in Security and Location  
 	    			Settings.</string>
+	<string name="loc_not_found">Your location could not be determined. Make sure you have 
+		pin point the exact location on the map.</string>
 </resources>

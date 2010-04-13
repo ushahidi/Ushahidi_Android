@@ -203,6 +203,7 @@ public final class R {
         public static final int internet_connection=0x7f060064;
         public static final int invalid_email_address=0x7f060015;
         public static final int invalid_ushahidi_instance=0x7f060016;
+        public static final int loc_not_found=0x7f060070;
         public static final int location_not_found=0x7f06006f;
         /**   about screen 
          */

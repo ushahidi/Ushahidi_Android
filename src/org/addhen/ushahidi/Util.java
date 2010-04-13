@@ -40,7 +40,6 @@ import org.apache.http.HttpResponse;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.util.regex.Matcher;
@@ -231,9 +230,9 @@ public class Util{
 			if( Util.isConnected(context)) {
 				json_data = UshahidiGeocoder.reverseGeocode(latitude, longitude);
 			} else {
-				return "No internet";
+				return "";
 			}
-			Log.i("JSON", "json "+json_data);
+			
 			jsonObject = new JSONObject(json_data);
 			
 			status = jsonObject.getJSONObject("Status").getInt("code");
@@ -246,15 +245,15 @@ public class Util{
 					getJSONObject("Locality").getString("LocalityName");
 				
 			} else {
-				return "Unsuccessful";
+				return "";
 			}
 			
 		} catch (JSONException e) {
-			
-			e.printStackTrace();
+			return "";
+			//e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 		return "";

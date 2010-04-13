@@ -158,7 +158,13 @@ public class LocationMap extends MapActivity {
 	private void centerLocation(GeoPoint centerGeoPoint) {
 		
 		mapController.animateTo(centerGeoPoint);
+		
+		//initilaize latitude and longitude for them to be passed to the AddIncident Activity.
+		this.latitude = centerGeoPoint.getLatitudeE6() / 1.0E6;
+		this.longitude = centerGeoPoint.getLongitudeE6() / 1.0E6;
+		
 		placeMarker(centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6());
+	
 	}
 	
 	/**
@@ -258,7 +264,7 @@ public class LocationMap extends MapActivity {
 	private void updateLocation() {
 		MyLocationListener listener = new MyLocationListener(); 
         LocationManager manager = (LocationManager) 
-    getSystemService(Context.LOCATION_SERVICE); 
+        	getSystemService(Context.LOCATION_SERVICE); 
         long updateTimeMsec = 1000L; 
         
         //DIPO Fix
@@ -300,7 +306,7 @@ public class LocationMap extends MapActivity {
 	  	        centerLocation(getPoint(latitude, longitude));
 	  	        
 	  	        if( locName == null ) {
-	  	        	Toast.makeText(LocationMap.this, "Location not found", Toast.LENGTH_SHORT).show();
+	  	        	Util.showToast(LocationMap.this, R.string.location_not_found);
 	  	        }else {
 	  	        	locationName = locName;
 	  	        	Toast.makeText(LocationMap.this, "Location "+locationName, Toast.LENGTH_SHORT).show();
@@ -332,6 +338,10 @@ public class LocationMap extends MapActivity {
 		
 		@Override 
 		protected String doInBackground(Double... params) {
+			
+			// for some reason, Geocoder couldn't reverse geocode latitude and longitude 
+			// so had to implement that using google geocde webservice.
+			
 			localityName = Util.getFromLocation(params[0], params[1], appContext);
 			return localityName;
 		}
@@ -342,7 +352,7 @@ public class LocationMap extends MapActivity {
 			
 			if( result == "") {
 				locationName = "";
-				Toast.makeText(appContext, " Location not found "+locationName, Toast.LENGTH_SHORT).show();
+				Util.showToast(appContext, R.string.loc_not_found);
 			} else {
 				locationName = result;
 				Toast.makeText(appContext, locationName, Toast.LENGTH_SHORT).show();
@@ -387,54 +397,41 @@ public class LocationMap extends MapActivity {
 		@Override
 		public void draw(Canvas canvas, MapView mapView,
 				boolean shadow) {
-			super.draw(canvas, mapView, shadow);
-		   
+			super.draw(canvas, mapView, shadow);   
 			boundCenterBottom(marker);
 		}
 
 		@Override
 		public boolean onTouchEvent(MotionEvent motionEvent, MapView mapview) {
-			String locName = "";
+			
 			int Action = motionEvent.getAction();
 			
 			if (Action == MotionEvent.ACTION_UP){
-			
-				Projection proj = mapView.getProjection();
-				GeoPoint loc = proj.fromPixels((int)motionEvent.getX(), (int)motionEvent.getY());
+				if(!MoveMap ) {
+					Projection proj = mapView.getProjection();
+					GeoPoint loc = proj.fromPixels((int)motionEvent.getX(), (int)motionEvent.getY());
 		              
+					GeocodeTask geoCodeTask = new GeocodeTask();
+					geoCodeTask.appContext = LocationMap.this;
+					geoCodeTask.execute(loc.getLatitudeE6() / 1.0E6, 
+							loc.getLatitudeE6() / 1.0E6);
 					
-				GeocodeTask geoCodeTask = new GeocodeTask();
-				geoCodeTask.appContext = LocationMap.this;
-				geoCodeTask.execute(loc.getLatitudeE6() / 1.0E6, loc.getLongitudeE6()/1.0E6);
-					
-				//remove the last marker
-				mapView.getOverlays().remove(0);
-				centerLocation(loc);
+					//remove the last marker
+					mapView.getOverlays().remove(0);
+					centerLocation(loc);
+				}
 		    
 		   }
 		   else if (Action == MotionEvent.ACTION_DOWN) {
-			   /*if(!MoveMap ) {
-				   Projection proj = mapView.getProjection();
-				   GeoPoint loc = proj.fromPixels((int)motionEvent.getX(), (int)motionEvent.getY());
-	              
-				   //remove the last marker
-			   		mapView.getOverlays().remove(0);  
-			   		centerLocation(loc);
-			   }*/
-			   
-			   //Util.showToast(LocationMap.this, R.string.add_categories);
 			   
 			   MoveMap = false;
 		   }
 		   else if (Action == MotionEvent.ACTION_MOVE){
-			   //Util.showToast(LocationMap.this, R.string.invalid_email_address);
-			   
 			   MoveMap = true;
-			   //MotionEvent.
+			   
 		   }
 
 		   return super.onTouchEvent(motionEvent, mapview);
-		   
 		}
 	}
 	
