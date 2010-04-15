@@ -100,6 +100,7 @@ public class AddIncident extends Activity {
 	private EditText incidentLocation;
 	private EditText incidentDesc;
 	private TextView incidentDate;
+	private TextView selectedPhoto;
 	private Button btnSend;
 	private Button btnCancel;
 	private Button btnAddCategory;
@@ -232,6 +233,8 @@ public class AddIncident extends Activity {
 	private void initComponents(){
 		btnPicture = (Button) findViewById(R.id.btnPicture);
 		btnAddCategory = (Button) findViewById(R.id.add_category);
+		selectedPhoto = (TextView) findViewById(R.id.lbl_photo);
+		
 		incidentTitle = (EditText) findViewById(R.id.incident_title);
 		incidentTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
@@ -291,7 +294,7 @@ public class AddIncident extends Activity {
 				//Dipo Fix
 				error = false;
 				if( TextUtils.isEmpty(incidentTitle.getText())) {
-					errorMessage =getString(R.string.empty_report_title);
+					errorMessage = getString(R.string.empty_report_title);
 					error = true;
 				}
 				
@@ -433,6 +436,7 @@ public class AddIncident extends Activity {
 		incidentLocation.setText("");
 		incidentDesc.setText("");
 		vectorCategories.clear();
+		selectedPhoto.setText("");
 		counter = 0;
 		updateDisplay();
 		
@@ -480,6 +484,7 @@ public class AddIncident extends Activity {
 				filename = "pictureupload" + randomString() + ".jpg";
 				ImageManager.writeImage(byteArrayos.toByteArray(), filename);
 				UshahidiService.fileName = filename;
+				selectedPhoto.setText(UshahidiService.fileName);
 				break;
 				
 			case VIEW_MAP:
@@ -611,10 +616,10 @@ public class AddIncident extends Activity {
                 dialog.setMessage("Please choose how you would like to get the picture.");
                 dialog.setButton("Gallery", new Dialog.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						Intent test = new Intent();
-						test.setAction(Intent.ACTION_PICK);
-						test.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-						startActivityForResult(test, REQUEST_CODE_IMAGE);
+						Intent intent = new Intent();
+						intent.setAction(Intent.ACTION_PICK);
+						intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+						startActivityForResult(intent, REQUEST_CODE_IMAGE);
 						dialog.dismiss();
 					}
                 });

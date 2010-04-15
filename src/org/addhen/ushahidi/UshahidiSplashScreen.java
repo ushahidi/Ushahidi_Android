@@ -29,6 +29,7 @@ import android.view.Window;
 public class UshahidiSplashScreen extends Activity {
 	private boolean active = true;
     private int splashTime = 5000;
+    
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

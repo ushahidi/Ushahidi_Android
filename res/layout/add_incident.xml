@@ -119,13 +119,6 @@
 				android:textStyle="bold"
 				android:textColor="@drawable/date_color" 
 				android:text="@string/incident_description" />
-			
-			<EditText android:id="@+id/incident_desc" 
-				android:layout_width="fill_parent"
-				android:layout_height="100px"
-				android:autoText="true"
-				android:scrollbars="vertical" />
-			</LinearLayout>
 			<LinearLayout android:orientation="horizontal"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
@@ -137,12 +130,29 @@
 					android:paddingLeft="15px"
 					android:textStyle="bold"
 					android:text="@string/incident_add_category" />		
-			
+			</LinearLayout>
+			<EditText android:id="@+id/incident_desc" 
+				android:layout_width="fill_parent"
+				android:layout_height="100px"
+				android:autoText="true"
+				android:scrollbars="vertical" />
+			</LinearLayout>
+			<LinearLayout android:orientation="horizontal"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:padding="15px">
+						
 				<Button android:id="@+id/btnPicture" 
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textStyle="bold" 
-					android:text="@string/btn_add_photo" />
+					android:text="@string/btn_add_photo" />		
+			
+				<TextView android:id="@+id/lbl_photo" 
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textStyle="bold"
+				android:textColor="@drawable/date_color" />
 			
 			</LinearLayout>
 			
