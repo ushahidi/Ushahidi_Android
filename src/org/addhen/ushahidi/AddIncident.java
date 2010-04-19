@@ -52,6 +52,8 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -83,6 +85,9 @@ public class AddIncident extends Activity {
 	private static final int REQUEST_CODE_IMAGE = 4;
 	private static final int REQUEST_CODE_CAMERA = 5;
 	private static final int VIEW_MAP = 1;
+	
+	private Geocoder gc;
+	private List<Address> foundAddresses;
 	
 	// date and time
     private int mYear;
@@ -130,6 +135,9 @@ public class AddIncident extends Activity {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.add_incident);
+        foundAddresses = new ArrayList<Address>();
+		gc = new Geocoder(this);
+        
         initComponents();
         
         //load settings
@@ -236,12 +244,15 @@ public class AddIncident extends Activity {
 		selectedPhoto = (TextView) findViewById(R.id.lbl_photo);
 		
 		incidentTitle = (EditText) findViewById(R.id.incident_title);
+		
 		incidentTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if(TextUtils.isEmpty(incidentTitle.getText())) {
-					incidentTitle.setError(getString(R.string.empty_report_title));
+				if( !hasFocus ) {
+					if(TextUtils.isEmpty(incidentTitle.getText())) {
+						incidentTitle.setError(getString(R.string.empty_report_title));
+					}
 				}
 				
 			}
@@ -253,8 +264,10 @@ public class AddIncident extends Activity {
 
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if( TextUtils.isEmpty(incidentLocation.getText())) {
-					incidentLocation.setError(getString(R.string.empty_report_location));
+				if( !hasFocus ) {
+					if( TextUtils.isEmpty(incidentLocation.getText())) {
+						incidentLocation.setError(getString(R.string.empty_report_location));
+					}
 				}
 			}
 		});
@@ -264,8 +277,10 @@ public class AddIncident extends Activity {
 
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if(TextUtils.isEmpty(incidentDesc.getText())) {
-					incidentDesc.setError(getString(R.string.empty_report_description));
+				if( !hasFocus ) {
+					if(TextUtils.isEmpty(incidentDesc.getText())) {
+						incidentDesc.setError(getString(R.string.empty_report_description));
+					}
 				}
 			}
 			
@@ -481,7 +496,7 @@ public class AddIncident extends Activity {
 				} catch (IOException e) {
 					break;
 				}
-				filename = "pictureupload" + randomString() + ".jpg";
+				filename = "android_pic_upload" + randomString() + ".jpg";
 				ImageManager.writeImage(byteArrayos.toByteArray(), filename);
 				UshahidiService.fileName = filename;
 				selectedPhoto.setText(UshahidiService.fileName);
@@ -630,7 +645,7 @@ public class AddIncident extends Activity {
                 });
                 
                 /**
-                 * Disabling camera functionality for now. we be re implemented in the next release.
+                 * Disabling camera functionality for now. will be re implemented in the next release.
                  * dialog.setButton3("Camera", new Dialog.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 												
@@ -734,16 +749,10 @@ public class AddIncident extends Activity {
     		amPm = "PM";
     	else
     		amPm = "AM";
-    	/*String dateStr = new StringBuilder()
-        // Month is 0 based so add 1
-    	.append(mYear).append("-")
-    	.append(pad(mMonth + 1)).append("-")
-        .append(pad(mDay)).append(" ")
-        .append(pad(timeDigits.get(mHour))).append(":")
-        .append(pad(mMinute)).toString();*/
     	
     	String strDate = new StringBuilder()
-        // Month is 0 based so add 1
+        
+    	// Month is 0 based so add 1
     	.append(mYear).append("-")
     	.append(pad(mMonth + 1)).append("-")
         .append(pad(mDay)).toString();
@@ -900,6 +909,28 @@ public class AddIncident extends Activity {
         editor.putString("desc", incidentDesc.getText().toString());
         //editor.putString("date", incidentDate.getText().toString());
         editor.commit();
+    }
+    
+    /**
+     * Geocode user entered location name.
+     * 
+     * @param String - the location to be geocoded
+     * 
+     * @return int - 0 on success, 1 network failure, 2 couldn't geocode wrong location name
+     */
+    public int geocodeLocationName( String locationName ) {
+    	if(Util.isConnected(AddIncident.this)) {
+    		try {
+				foundAddresses = gc.getFromLocationName(locationName,5);
+				Address address = foundAddresses.get(0);
+				AddIncident.latitude = address.getLatitude();
+				AddIncident.longitude = address.getLongitude();
+				
+			} catch (IOException e) {
+				return 2;
+			}
+    	} 
+    	return 1;
     }
     
 }

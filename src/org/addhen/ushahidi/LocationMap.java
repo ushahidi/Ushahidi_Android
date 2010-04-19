@@ -406,7 +406,7 @@ public class LocationMap extends MapActivity {
 			int Action = motionEvent.getAction();
 			
 			if (Action == MotionEvent.ACTION_UP){
-				if(!MoveMap ) {
+				//if(!MoveMap ) {
 					Projection proj = mapView.getProjection();
 					GeoPoint loc = proj.fromPixels((int)motionEvent.getX(), (int)motionEvent.getY());
 		              
@@ -418,7 +418,7 @@ public class LocationMap extends MapActivity {
 					//remove the last marker
 					mapView.getOverlays().remove(0);
 					centerLocation(loc);
-				}
+				//}
 		    
 		   }
 		   else if (Action == MotionEvent.ACTION_DOWN) {
