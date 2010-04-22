@@ -371,21 +371,14 @@ public class Util{
 				if( statusCode == 200 ) {
 					json_string = UshahidiHttpClient.GetText(response);
 					
-					//extrac data from json object
+					//extract data from json object
 					try {
 						jsonObject = new JSONObject(json_string);
 						
-						message = jsonObject.getJSONObject("error").getString("message");
-						if( message.equals("Not Found") ) {
-							status = true;
+						jsonObject.getJSONObject("error").getString("message");
 						
-						}else {
-							status = false;
-						}
-					
 					} catch (JSONException e) {
-						
-						e.printStackTrace();
+						status = false;
 					}
 					
 				} else {
@@ -393,7 +386,6 @@ public class Util{
 				}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			status = false;
 		}
 		

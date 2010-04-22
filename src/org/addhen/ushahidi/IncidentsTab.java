@@ -37,18 +37,21 @@ public class IncidentsTab extends TabActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        
         bundle = new Bundle();
 		extras = this.getIntent().getExtras();
 		
         tabHost = getTabHost();
+        
         tabHost.addTab(tabHost.newTabSpec("list_reports")
-        		.setIndicator("List ",getResources().getDrawable(R.drawable.ushahidi_list))
+        		.setIndicator("List ",getResources().getDrawable(R.drawable.ushahidi_list_tab))
                 .setContent(new Intent(this, ListIncidents.class)));
 
         tabHost.addTab(tabHost.newTabSpec("map")
-                .setIndicator("Map ",getResources().getDrawable(R.drawable.ushahidi_map))
+                .setIndicator("Map ",getResources().getDrawable(R.drawable.ushahidi_map_tab))
                 .setContent(new Intent(this, IncidentMap.class)));
         tabHost.setCurrentTab(0);
+        
         if( extras != null ) {
         	bundle = extras.getBundle("tab");
         	tabHost.setCurrentTab(bundle.getInt("tab_index"));
