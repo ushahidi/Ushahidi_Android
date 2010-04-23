@@ -30,7 +30,7 @@ import android.view.ViewGroup;
 
 public class ListIncidentAdapter extends BaseAdapter {
 	
-private Context iContext;
+	private Context iContext;
 	
 	private List<ListIncidentText> iItems = new ArrayList<ListIncidentText>();
 	

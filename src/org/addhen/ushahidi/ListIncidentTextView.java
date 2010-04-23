@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.Layout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -42,13 +43,13 @@ public class ListIncidentTextView extends LinearLayout{
 						LayoutParams.FILL_PARENT,
 						LayoutParams.WRAP_CONTENT)
 		);
-		
+		this.textLayout.setGravity(0x11);
 		this.thumbnail = new ImageView(context);
 		
 		this.thumbnail.setImageURI( listText.getThumbnailUri() );
 		
 		this.thumbnail.setImageDrawable( listText.getThumbnail() );
-		
+		this.thumbnail.
 		thumbnail.setPadding(2, 2, 10, 4);
 		thumbnail.setLayoutParams(new LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -113,6 +114,7 @@ public class ListIncidentTextView extends LinearLayout{
 		
 		addView(arrow, new LinearLayout.LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+		
 	}
 	
 	public void setThumbnail( Drawable thumbnail) {

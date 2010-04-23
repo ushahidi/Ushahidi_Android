@@ -1,13 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:orientation="horizontal"
-  android:layout_height="wrap_content">
-  
-  <TableLayout android:id="@+id/list_tbl" 
-  	android:layout_width="fill_parent" 
-  	android:layout_height="wrap_content"  
-  	android:stretchColumns="0">
-  </TableLayout>
+	xmlns:android="http://schemas.android.com/apk/res/android"
+  	android:layout_width="fill_parent"
+  	android:layout_height="fill_parent"
+  	android:orientation="horizontal">
+  	<LinearLayout
+  		android:id="@+id/thumbnail_layout" 
+  		android:layout_width="fill_parent"
+  		android:layout_height="fill_parent"
+  		android:orientation="vertical"
+  		android:gravity="right"> 
+		<ImageView 
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" 
+			android:id="@+id/thumbnail" 
+			android:paddingLeft="2px"
+			android:paddingTop="2px"
+			android:paddingRight="10px"
+			android:paddingBottom="4px"
+			android:gravity="right"/>
+	</LinearLayout>
+		
+	<LinearLayout
+		android:id="@+id/desc_layout" 
+  		android:layout_width="fill_parent"
+  		android:layout_height="fill_parent"
+  		android:layout_weight="1"
+  		android:orientation="vertical"
+  		android:gravity="center">
+  		
+  		<TextView
+  			android:id="@+id/title" 
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content" 
+			android:textColor="#7C2811" 
+			android:textStyle="bold"
+			android:textSize="12dip" />
+			
+		<TextView
+  			android:id="@+id/location" 
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content" 
+			android:textColor="#7C2811" 
+			android:textStyle="bold"
+			android:textSize="12dip" />
+			
+		<TextView
+  			android:id="@+id/date" 
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content" />
+			
+		<TextView
+  			android:id="@+id/status" 
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>		 
+  		
+  	</LinearLayout>	
+  	<LinearLayout
+  		android:id="@+id/arrow_layout" 
+  		android:layout_width="fill_parent"
+  		android:layout_height="fill_parent"
+  		android:orientation="horizontal"
+  		android:gravity="right"> 
+		<ImageView 
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" 
+			android:id="@+id/thumbnail" 
+			android:paddingLeft="2px"
+			android:paddingTop="2px"
+			android:paddingRight="10px"
+			android:paddingBottom="4px"
+			android:gravity="right"/>
+		</LinearLayout>
 </LinearLayout>
