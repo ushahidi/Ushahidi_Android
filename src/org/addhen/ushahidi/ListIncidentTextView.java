@@ -30,7 +30,6 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
 
 public class ListIncidentTextView extends LinearLayout{
 	private TextView title;
@@ -63,8 +62,8 @@ public class ListIncidentTextView extends LinearLayout{
 		this.tblLayout = new TableLayout(context);
 		
 		this.tblLayout.setLayoutParams(new TableLayout.LayoutParams(
-				TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
-		
+				TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+		this.tblLayout.setColumnStretchable(1, true);
 		this.tblRow =  new TableRow(context);
 		this.tblRow.setLayoutParams(new TableRow.LayoutParams(
 				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -74,7 +73,7 @@ public class ListIncidentTextView extends LinearLayout{
 		
 		this.textLayout.setLayoutParams(
 				new TableRow.LayoutParams(
-						TableRow.LayoutParams.WRAP_CONTENT,
+						TableRow.LayoutParams.FILL_PARENT,
 						TableRow.LayoutParams.WRAP_CONTENT)
 		);
 		
@@ -95,7 +94,7 @@ public class ListIncidentTextView extends LinearLayout{
 		
 		title.setTextColor(Color.rgb(144, 80, 62));
 		title.setTextSize(fontSize);
-		
+		title.setSingleLine(false);
 		title.setTypeface(Typeface.DEFAULT_BOLD);
 		title.setPadding(5, 5, 10, 2);
 		title.setText( listText.getTitle() );
@@ -103,7 +102,7 @@ public class ListIncidentTextView extends LinearLayout{
 				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
 		
 		textLayout.addView(title, new TableRow.LayoutParams( 
-				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+				TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 		
 		iLocation = new TextView( context );
 		//iLocation.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
@@ -111,7 +110,7 @@ public class ListIncidentTextView extends LinearLayout{
 		iLocation.setText(listText.getLocation());
 		
 		textLayout.addView(iLocation, new TableRow.LayoutParams( 
-				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+				TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 		
 		
 		date = new TextView( context);
@@ -122,7 +121,7 @@ public class ListIncidentTextView extends LinearLayout{
 		date.setText( listText.getDate() );
 		
 		textLayout.addView( date, new TableRow.LayoutParams( 
-				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT) );
+				TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT) );
 		
 		status = new TextView( context);
 		
@@ -138,7 +137,7 @@ public class ListIncidentTextView extends LinearLayout{
 		
 		
 		textLayout.addView( status, new TableRow.LayoutParams( TableRow.LayoutParams.WRAP_CONTENT,
-				TableRow.LayoutParams.WRAP_CONTENT));
+				TableRow.LayoutParams.FILL_PARENT));
 		
 		tblRow.addView( textLayout);
 		
@@ -148,7 +147,8 @@ public class ListIncidentTextView extends LinearLayout{
 		
 		this.arrow.setImageDrawable( listText.getArrow() );
 		
-		arrow.setPadding(20, 25, 2, 2);
+		arrow.setPadding(2, 25, 10, 2);
+		
 		arrow.setLayoutParams(new TableRow.LayoutParams(
 			TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
 		
@@ -157,7 +157,7 @@ public class ListIncidentTextView extends LinearLayout{
 		tblLayout.addView(tblRow);
 		
 		addView(tblLayout, new LinearLayout.LayoutParams(
-				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+				LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 		
 	}
 	
