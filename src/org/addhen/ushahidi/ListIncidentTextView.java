@@ -1,26 +1,7 @@
-/** 
- ** Copyright (c) 2010 Ushahidi Inc
- ** All rights reserved
- ** Contact: team@ushahidi.com
- ** Website: http://www.ushahidi.com
- ** 
- ** GNU Lesser General Public License Usage
- ** This file may be used under the terms of the GNU Lesser
- ** General Public License version 3 as published by the Free Software
- ** Foundation and appearing in the file LICENSE.LGPL included in the
- ** packaging of this file. Please review the following information to
- ** ensure the GNU Lesser General Public License version 3 requirements
- ** will be met: http://www.gnu.org/licenses/lgpl.html.	
- **	
- **
- ** If you have questions regarding the use of this file, please contact
- ** Ushahidi developers at team@ushahidi.com.
- ** 
- **/
-
 package org.addhen.ushahidi;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -28,9 +9,7 @@ import android.net.Uri;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
 
 public class ListIncidentTextView extends LinearLayout{
 	private TextView title;
@@ -46,36 +25,22 @@ public class ListIncidentTextView extends LinearLayout{
 	private int id;
 	private float fontSize = 13.5f;
 	private LinearLayout textLayout;
-	private TableLayout tblLayout;
-	private TableRow tblRow;
-	
 	public ListIncidentTextView( Context context, ListIncidentText listText ) {
 		super(context);
 		
-		this.setOrientation(VERTICAL);
+		this.setOrientation(HORIZONTAL);
 		this.initComponent( context, listText);
 		
 	}
 	
 	public void initComponent( Context context, ListIncidentText listText ) {
 		this.textLayout = new LinearLayout(context);
-		
-		this.tblLayout = new TableLayout(context);
-		
-		this.tblLayout.setLayoutParams(new TableLayout.LayoutParams(
-				TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
-		
-		this.tblRow =  new TableRow(context);
-		this.tblRow.setLayoutParams(new TableRow.LayoutParams(
-				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
-		
 		textLayout.setOrientation(VERTICAL);
 		textLayout.setPadding(0, 2, 0, 2);
-		
 		this.textLayout.setLayoutParams(
-				new TableRow.LayoutParams(
-						TableRow.LayoutParams.WRAP_CONTENT,
-						TableRow.LayoutParams.WRAP_CONTENT)
+				new LayoutParams(
+						LayoutParams.FILL_PARENT,
+						LayoutParams.WRAP_CONTENT)
 		);
 		
 		this.thumbnail = new ImageView(context);
@@ -85,44 +50,39 @@ public class ListIncidentTextView extends LinearLayout{
 		this.thumbnail.setImageDrawable( listText.getThumbnail() );
 		
 		thumbnail.setPadding(2, 2, 10, 4);
-		thumbnail.setLayoutParams(new TableRow.LayoutParams(
-				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+		thumbnail.setLayoutParams(new LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		
-		tblRow.addView(thumbnail);
+		addView(thumbnail, new LinearLayout.LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 	
 		
 		title = new TextView( context);
+		title.setLayoutParams( new LayoutParams( LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 		
 		title.setTextColor(Color.rgb(144, 80, 62));
 		title.setTextSize(fontSize);
-		
+		title.setSingleLine(false);
 		title.setTypeface(Typeface.DEFAULT_BOLD);
-		title.setPadding(5, 5, 10, 2);
 		title.setText( listText.getTitle() );
-		title.setLayoutParams( new TableRow.LayoutParams( 
-				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
 		
-		textLayout.addView(title, new TableRow.LayoutParams( 
-				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+		textLayout.addView(title, new LayoutParams( LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		
 		iLocation = new TextView( context );
-		//iLocation.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+		iLocation.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 		iLocation.setTextColor(Color.BLACK);
 		iLocation.setText(listText.getLocation());
-		
-		textLayout.addView(iLocation, new TableRow.LayoutParams( 
-				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+		iLocation.setSingleLine(false);
+		textLayout.addView(iLocation, new LayoutParams( LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		
 		
 		date = new TextView( context);
 		date.setTextColor(Color.BLACK);
-		date.setLayoutParams( new LayoutParams( TableRow.LayoutParams.WRAP_CONTENT, 
-				TableRow.LayoutParams.WRAP_CONTENT));
+		date.setLayoutParams( new LayoutParams( LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		
 		date.setText( listText.getDate() );
-		
-		textLayout.addView( date, new TableRow.LayoutParams( 
-				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT) );
+		date.setSingleLine(false);
+		textLayout.addView( date, new LayoutParams( LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT) );
 		
 		status = new TextView( context);
 		
@@ -136,11 +96,9 @@ public class ListIncidentTextView extends LinearLayout{
 		status.setTextSize(fontSize);
 		status.setText( listText.getStatus() );
 		
+		textLayout.addView( status, new LayoutParams( LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
 		
-		textLayout.addView( status, new TableRow.LayoutParams( TableRow.LayoutParams.WRAP_CONTENT,
-				TableRow.LayoutParams.WRAP_CONTENT));
-		
-		tblRow.addView( textLayout);
+		addView( textLayout, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		
 		this.id = listText.getId();
 		
@@ -149,16 +107,12 @@ public class ListIncidentTextView extends LinearLayout{
 		this.arrow.setImageDrawable( listText.getArrow() );
 		
 		arrow.setPadding(20, 25, 2, 2);
-		arrow.setLayoutParams(new TableRow.LayoutParams(
-			TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
 		
-		tblRow.addView(arrow);
-		
-		tblLayout.addView(tblRow);
-		
-		addView(tblLayout, new LinearLayout.LayoutParams(
+		arrow.setLayoutParams(new LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		
+		addView(arrow, new LinearLayout.LayoutParams(
+				LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 	}
 	
 	public void setThumbnail( Drawable thumbnail) {
