@@ -67,19 +67,19 @@ public final class R {
         public static final int btn_cache=0x7f080025;
         public static final int btn_cancel=0x7f08002c;
         public static final int btn_confirm=0x7f08002d;
-        public static final int btn_find=0x7f08003a;
-        public static final int btn_reset=0x7f08003b;
-        public static final int btn_save=0x7f080039;
-        public static final int category=0x7f080030;
+        public static final int btn_find=0x7f08003b;
+        public static final int btn_reset=0x7f08003c;
+        public static final int btn_save=0x7f08003a;
+        public static final int category=0x7f080031;
         public static final int chk_auto_fetch=0x7f08002b;
         public static final int close_img_button=0x7f080019;
-        public static final int date=0x7f080031;
-        public static final int description=0x7f080034;
+        public static final int date=0x7f080032;
+        public static final int description=0x7f080035;
         public static final int domain=0x7f080020;
         public static final int email=0x7f080023;
         public static final int et_sd_save_path=0x7f080029;
         public static final int firstname=0x7f080021;
-        public static final int gallery=0x7f080036;
+        public static final int gallery=0x7f080037;
         public static final int incident_add=0x7f08001d;
         public static final int incident_add_btn=0x7f080012;
         public static final int incident_add_cancel=0x7f080013;
@@ -96,9 +96,9 @@ public final class R {
         public static final int lbl_photo=0x7f080011;
         public static final int lbl_title=0x7f080005;
         public static final int ll_on_sd=0x7f080028;
-        public static final int loc_map_layout=0x7f080037;
+        public static final int loc_map_layout=0x7f080038;
         public static final int location=0x7f08000c;
-        public static final int location_map=0x7f080038;
+        public static final int location_map=0x7f080039;
         public static final int map=0x7f08001a;
         public static final int pick_date=0x7f080008;
         public static final int pick_time=0x7f080009;
@@ -108,14 +108,15 @@ public final class R {
         public static final int spacer2=0x7f080003;
         public static final int spn_auto_update_delay=0x7f08002a;
         public static final int spn_countries=0x7f080024;
-        public static final int status=0x7f080032;
+        public static final int status=0x7f080033;
         public static final int surCamera=0x7f08002e;
         public static final int title=0x7f080000;
         public static final int top_items=0x7f08002f;
+        public static final int top_items_layout=0x7f080030;
         public static final int view_incidents=0x7f08001b;
-        public static final int view_map=0x7f080033;
+        public static final int view_map=0x7f080034;
         public static final int view_website=0x7f080004;
-        public static final int webview=0x7f080035;
+        public static final int webview=0x7f080036;
         public static final int welcome_txt=0x7f080002;
     }
     public static final class layout {
