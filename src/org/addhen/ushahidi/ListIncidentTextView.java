@@ -96,7 +96,7 @@ public class ListIncidentTextView extends LinearLayout{
 		title.setTextSize(fontSize);
 		title.setSingleLine(false);
 		title.setTypeface(Typeface.DEFAULT_BOLD);
-		title.setPadding(5, 5, 10, 2);
+		title.setPadding(0, 0, 2, 2);
 		title.setText( listText.getTitle() );
 		title.setLayoutParams( new TableRow.LayoutParams( 
 				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -105,7 +105,6 @@ public class ListIncidentTextView extends LinearLayout{
 				TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 		
 		iLocation = new TextView( context );
-		//iLocation.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 		iLocation.setTextColor(Color.BLACK);
 		iLocation.setText(listText.getLocation());
 		

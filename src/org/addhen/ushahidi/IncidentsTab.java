@@ -44,11 +44,11 @@ public class IncidentsTab extends TabActivity {
         tabHost = getTabHost();
         
         tabHost.addTab(tabHost.newTabSpec("list_reports")
-        		.setIndicator("List ",getResources().getDrawable(R.drawable.ushahidi_list_tab))
+        		.setIndicator("List",getResources().getDrawable(R.drawable.ushahidi_tab_list_selected))
                 .setContent(new Intent(this, ListIncidents.class)));
 
         tabHost.addTab(tabHost.newTabSpec("map")
-                .setIndicator("Map ",getResources().getDrawable(R.drawable.ushahidi_map_tab))
+                .setIndicator("Map",getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
                 .setContent(new Intent(this, IncidentMap.class)));
         tabHost.setCurrentTab(0);
         

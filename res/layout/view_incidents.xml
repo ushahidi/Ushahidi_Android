@@ -18,88 +18,88 @@
   Ushahidi developers at team@ushahidi.com. 
  -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:background="@drawable/background_color"
-  >
+	android:layout_width="fill_parent"
+  	android:layout_height="fill_parent"
+  	android:background="@drawable/background_color">
     <LinearLayout android:id="@+id/top_items"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingTop="8px"              
-    android:paddingBottom="7px"          
-    android:paddingLeft="7px"
-    android:paddingRight="9px"        
-    >
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="horizontal"
+    	android:paddingTop="8px"              
+    	android:paddingBottom="7px"          
+    	android:paddingLeft="7px"
+    	android:paddingRight="9px">
     <LinearLayout android:id="@+id/top_items"
-    android:layout_width="250px"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >    
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical">    
       
-      <TextView      
-        android:id="@+id/title"       
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-      />
-      <TextView
-        android:id="@+id/category"                  
-        android:layout_below="@+id/title"        
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-      />                    
-      <TextView  
+		<TextView      
+        	android:id="@+id/title"
+        	android:singleLine="false"       
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"/>
+  		<TextView
+        	android:id="@+id/category"
+        	android:singleLine="false"                  
+        	android:layout_below="@+id/title"        
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"/>                    
+    	<TextView  
 			android:id="@+id/location"
+			android:singleLine="false"
 			android:layout_below="@+id/category"
-	    	android:layout_width="wrap_content" 
-	    	android:layout_height="wrap_content"/>
+	   		android:layout_width="wrap_content" 
+	   		android:layout_height="wrap_content"/>
 	    
-	    <TextView  
+		<TextView  
 			android:id="@+id/date"
 			android:layout_below="@+id/location"
-	    	android:layout_width="wrap_content" 
-	    	android:layout_height="wrap_content"/>
+	   		android:layout_width="wrap_content" 
+	   		android:layout_height="wrap_content"/>
 	    	
-	    <TextView  
+		<TextView  
 			android:id="@+id/status"
+			android:singleLine="false"
 			android:layout_below="@+id/date"
-	    	android:layout_width="wrap_content" 
-	    	android:layout_height="wrap_content"/>
-		</LinearLayout>
-		<LinearLayout android:id="@+id/top_items"
-    		android:layout_width="wrap_content"
-    		android:layout_height="wrap_content"
-    		android:orientation="horizontal"
-    		android:paddingTop="20px">
+	   		android:layout_width="wrap_content" 
+	   		android:layout_height="wrap_content"/>
+	</LinearLayout>
+	<LinearLayout android:id="@+id/top_items"
+		android:singleLine="false"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="horizontal"
+    	android:paddingTop="20px">
     		
-			<Button android:id="@+id/view_map"
-        		android:layout_width="wrap_content"
-        		android:layout_height="wrap_content"
-        		android:layout_alignParentRight="true"
-        		android:layout_marginLeft="0px"
-        		android:textStyle="bold"
-        		android:text="@string/view_map" />
+		<Button android:id="@+id/view_map"
+    		android:layout_width="wrap_content"
+       		android:layout_height="wrap_content"
+       		android:layout_alignParentRight="true"
+      		android:layout_marginLeft="0px"
+       		android:textStyle="bold"
+       		android:text="@string/view_map" />
     	</LinearLayout>
     </LinearLayout>
 
     <!-- Main content area. -->
-    	<ScrollView android:id="@+id/description" 
+	<ScrollView android:id="@+id/description" 
+   		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:paddingTop="5px"    
+    	android:paddingBottom="100px"    	    
+    	android:paddingLeft="10px"
+    	android:paddingRight="10px"    
+    	android:fadingEdge="none"
+		android:layout_below="@id/top_items">
+   		<TextView
+       		android:id="@+id/webview"
     		android:layout_width="fill_parent" 
-				android:layout_height="wrap_content"
-				android:paddingTop="5px"    
-    		android:paddingBottom="100px"    	    
-    		android:paddingLeft="10px"
-    		android:paddingRight="10px"    
-    		android:fadingEdge="none"
-				android:layout_below="@id/top_items">
-    		<TextView
-        	android:id="@+id/webview"
-    			android:layout_width="fill_parent" 
-    			android:layout_height="wrap_content"    
-    			android:fadingEdge="none"/>
-	   	</ScrollView>
-	   	<LinearLayout
+    		android:layout_height="wrap_content"
+    		android:autoLink="all"    
+    		android:fadingEdge="none"/>
+	</ScrollView>
+	<LinearLayout
     	android:orientation="vertical"
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
@@ -107,17 +107,17 @@
     	android:paddingBottom="5px"    	    
     	android:paddingLeft="7px"
     	android:paddingRight="9px">    
-    	<LinearLayout
+   		<LinearLayout
     		android:orientation="horizontal"
     		android:layout_width="fill_parent"
     		android:layout_height="wrap_content">
     		
-				<Gallery 
+			<Gallery 
 				android:id="@+id/gallery"
 				android:layout_below="@id/description"
 				android:layout_width="fill_parent"
 				android:layout_height="fill_parent"/>
-				</LinearLayout>
 		</LinearLayout>
-	
+	</LinearLayout>
+
 </RelativeLayout>
