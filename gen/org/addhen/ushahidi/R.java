@@ -16,20 +16,20 @@ public final class R {
     }
     public static final class drawable {
         public static final int alert_dialog_icon=0x7f020000;
-        public static final int background_color=0x7f020023;
+        public static final int background_color=0x7f020025;
         public static final int balloon_overlay_bg_selector=0x7f020001;
         public static final int balloon_overlay_close=0x7f020002;
         public static final int balloon_overlay_focused=0x7f020003;
         public static final int balloon_overlay_unfocused=0x7f020004;
-        public static final int date_color=0x7f020020;
+        public static final int date_color=0x7f020022;
         public static final int favicon=0x7f020005;
-        public static final int header_color=0x7f020021;
+        public static final int header_color=0x7f020023;
         public static final int icon=0x7f020006;
         public static final int marker=0x7f020007;
         public static final int marker2=0x7f020008;
         public static final int photo=0x7f020009;
-        public static final int thick_background_color=0x7f020024;
-        public static final int title_color=0x7f02001f;
+        public static final int thick_background_color=0x7f020026;
+        public static final int title_color=0x7f020021;
         public static final int ushahidi_about=0x7f02000a;
         public static final int ushahidi_add=0x7f02000b;
         public static final int ushahidi_android_logo=0x7f02000c;
@@ -43,16 +43,18 @@ public final class R {
         public static final int ushahidi_home=0x7f020014;
         public static final int ushahidi_icon=0x7f020015;
         public static final int ushahidi_list=0x7f020016;
-        public static final int ushahidi_list_tab=0x7f020017;
-        public static final int ushahidi_map=0x7f020018;
-        public static final int ushahidi_map_tab=0x7f020019;
-        public static final int ushahidi_plane=0x7f02001a;
-        public static final int ushahidi_refresh=0x7f02001b;
-        public static final int ushahidi_report_icon=0x7f02001c;
-        public static final int ushahidi_settings=0x7f02001d;
-        public static final int ushahidi_title=0x7f02001e;
-        public static final int verified_color=0x7f020022;
-        public static final int white_color=0x7f020025;
+        public static final int ushahidi_map=0x7f020017;
+        public static final int ushahidi_plane=0x7f020018;
+        public static final int ushahidi_refresh=0x7f020019;
+        public static final int ushahidi_report_icon=0x7f02001a;
+        public static final int ushahidi_settings=0x7f02001b;
+        public static final int ushahidi_tab_list_selected=0x7f02001c;
+        public static final int ushahidi_tab_list_unselected=0x7f02001d;
+        public static final int ushahidi_tab_map_selected=0x7f02001e;
+        public static final int ushahidi_tab_map_unselected=0x7f02001f;
+        public static final int ushahidi_title=0x7f020020;
+        public static final int verified_color=0x7f020024;
+        public static final int white_color=0x7f020027;
     }
     public static final class id {
         public static final int add_category=0x7f08000e;
@@ -168,8 +170,8 @@ public final class R {
          */
         public static final int find_location=0x7f06006e;
         public static final int flash_led=0x7f060045;
-        public static final int google_map_api_key=0x7f06002d;
-        public static final int google_map_api_key_pro=0x7f06002e;
+        public static final int google_map_api_key=0x7f06002e;
+        public static final int google_map_api_key_pro=0x7f06002d;
         public static final int hint_SD_save_path=0x7f06003d;
         public static final int hint_advanced_settings=0x7f060036;
         public static final int hint_auto_fetch=0x7f06004b;
