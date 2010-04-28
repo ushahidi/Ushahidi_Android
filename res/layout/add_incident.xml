@@ -23,14 +23,18 @@
 	android:orientation="vertical"
 	android:padding="10px"
 	android:background="@drawable/background_color">
-	<ScrollView android:layout_width="fill_parent" 
+	<ScrollView 
+		android:layout_width="fill_parent" 
 		android:layout_height="fill_parent">
-	    <LinearLayout android:layout_width="fill_parent" 
+	    <!-- Parent layout starts -->
+	    <LinearLayout 
+	    	android:layout_width="fill_parent" 
 	    	android:layout_height="fill_parent"
 	    	android:orientation="vertical"
 	    	android:paddingRight="10px">
-
-			<LinearLayout android:orientation="vertical"
+			<!-- Title layout begins -->
+			<LinearLayout 
+				android:orientation="vertical"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:paddingBottom="15px">
@@ -49,7 +53,9 @@
 					android:autoText="true"  /> 
 			
 			</LinearLayout>
+			<!-- Title layout ends. -->
 			
+			<!-- Date layout starts. -->
 			<LinearLayout android:orientation="vertical"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
@@ -61,30 +67,33 @@
 					android:textStyle="bold"
 					android:textColor="@drawable/date_color" 
 					android:text="@string/incident_current_date" />
-			 <LinearLayout android:orientation="horizontal"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:paddingBottom="15px">
-				<Button android:id="@+id/pick_date"
-        			android:layout_width="wrap_content"
-          			android:layout_height="wrap_content"
-          			android:textStyle="bold"
-          			android:text="@string/incident_date"/>
+			 	<LinearLayout android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:paddingBottom="15px">
+					<Button android:id="@+id/pick_date"
+        				android:layout_width="wrap_content"
+          				android:layout_height="wrap_content"
+          				android:textStyle="bold"
+          				android:text="@string/incident_date"/>
 
-    			<Button android:id="@+id/pick_time"
-       				android:layout_width="wrap_content"
-          			android:layout_height="wrap_content"
-          			android:textStyle="bold"
-          			android:text="@string/incident_time"/>
-      	</LinearLayout>
+    				<Button android:id="@+id/pick_time"
+       					android:layout_width="wrap_content"
+          				android:layout_height="wrap_content"
+          				android:textStyle="bold"
+          				android:text="@string/incident_time"/>
+      			</LinearLayout>
 			</LinearLayout>
+			<!-- Date layout ends. -->
 			
+			<!-- Location layout starts. -->
 			<LinearLayout android:orientation="vertical"
 				android:layout_width="fill_parent" 
 				android:layout_height="wrap_content"
 				android:paddingBottom="15px">
 
-				<TextView	android:id="@+id/incident_loc" 
+				<TextView	
+					android:id="@+id/incident_loc" 
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:textStyle="bold"
@@ -107,20 +116,12 @@
           				android:textStyle="bold"
           				android:gravity="right"
           				android:text="@string/add_location"/>
-      	</LinearLayout>
+      			</LinearLayout>
 				
 			</LinearLayout>
+			<!-- Location layout ends. -->
 			
-			<LinearLayout android:orientation="vertical"
-				android:layout_width="fill_parent" 
-				android:layout_height="fill_parent"
-				android:paddingBottom="15px">
-			<TextView	android:id="@+id/lbl_incidents_dec" 
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textStyle="bold"
-				android:textColor="@drawable/date_color" 
-				android:text="@string/incident_description" />
+			<!-- Categories layout starts -->
 			<LinearLayout android:orientation="horizontal"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
@@ -139,12 +140,30 @@
 					android:singleLine="false"
 					android:textColor="@drawable/date_color" />		
 			</LinearLayout>
-			<EditText android:id="@+id/incident_desc" 
-				android:layout_width="fill_parent"
-				android:layout_height="100px"
-				android:autoText="true"
-				android:scrollbars="vertical" />
+			<!-- Categories layout ends.  -->
+			
+			<!-- Description layout starts -->
+			<LinearLayout android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="fill_parent"
+				android:paddingBottom="15px">
+				
+				<TextView	android:id="@+id/lbl_incidents_dec" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textStyle="bold"
+					android:textColor="@drawable/date_color" 
+					android:text="@string/incident_description" />
+				
+				<EditText android:id="@+id/incident_desc" 
+					android:layout_width="fill_parent"
+					android:layout_height="100px"
+					android:autoText="true"
+					android:scrollbars="vertical" />
 			</LinearLayout>
+			<!-- Description layout ends. -->
+			
+			<!-- Photo layout starts. -->
 			<LinearLayout android:orientation="horizontal"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
@@ -157,14 +176,16 @@
 					android:text="@string/btn_add_photo" />		
 			
 				<TextView android:id="@+id/lbl_photo" 
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:singleLine="false"
-				android:textStyle="bold"
-				android:textColor="@drawable/date_color" />
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:singleLine="false"
+					android:textStyle="bold"
+					android:textColor="@drawable/date_color" />
 			
 			</LinearLayout>
+			<!-- Photo layout ends. -->
 			
+			<!-- Buttons layout starts.  -->
 			<RelativeLayout android:orientation="horizontal"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content">
@@ -188,6 +209,8 @@
 					android:text="@string/btn_cancel" />
 	
 			</RelativeLayout>
+			<!-- Buttons layout ends. -->
 		</LinearLayout>
+		<!--  Parent layout ends.  -->
 	</ScrollView>
 </LinearLayout>

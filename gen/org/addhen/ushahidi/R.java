@@ -57,7 +57,7 @@ public final class R {
         public static final int white_color=0x7f020027;
     }
     public static final class id {
-        public static final int add_category=0x7f08000e;
+        public static final int add_category=0x7f08000d;
         public static final int balloon_inner_layout=0x7f080016;
         public static final int balloon_item_readmore=0x7f080019;
         public static final int balloon_item_snippet=0x7f080018;
@@ -91,9 +91,9 @@ public final class R {
         public static final int incident_map=0x7f080020;
         public static final int incident_title=0x7f080006;
         public static final int lastname=0x7f080023;
-        public static final int lbl_category=0x7f08000f;
+        public static final int lbl_category=0x7f08000e;
         public static final int lbl_date=0x7f080007;
-        public static final int lbl_incidents_dec=0x7f08000d;
+        public static final int lbl_incidents_dec=0x7f08000f;
         public static final int lbl_photo=0x7f080012;
         public static final int lbl_title=0x7f080005;
         public static final int ll_on_sd=0x7f080029;
