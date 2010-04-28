@@ -40,6 +40,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.util.Log;
 
  
 public class UshahidiService extends Service {
@@ -80,19 +81,74 @@ public class UshahidiService extends Service {
         return UshahidiApplication.mDb;
     }
     
+    private Runnable mUpdateTimeTask = new Runnable() {
+    	public void run() {
+    		if(!AutoFetch){
+    			return;
+    		}
+    		
+    		try {
+    			UshahidiService.saveSettings(getApplicationContext());
+			
+				Util.fetchReports(UshahidiService.this);
+				
+				showNotification(total_reports);
+    		
+    		}finally {
+    			mHandler.postAtTime(mUpdateTimeTask, SystemClock.uptimeMillis() + (1000 * 60 * AutoUpdateDelay));
+    		}
+    		
+    	}
+    };
+    
+    public IBinder onBind(Intent intent) {
+		return null;
+	}
+    
+    @Override 
+	public void onCreate() {
+		super.onCreate();
+		queue = new QueueThread("ushahidi");
+		mHandler = new Handler();
+		
+		//if(AutoFetch){
+			Log.i("Service ","Service is checked to start.");
+			mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
+			mHandler.postDelayed(mUpdateTimeTask, (1000 * 60 * AutoUpdateDelay));
+		
+		//} else {
+			//Log.i("Service ","Service is unchecked.");
+		//}
+		
+		final Thread tr = new Thread() {
+			@Override
+			public void run() {
+				while(true){
+					queue.GetQueueItem().start();
+				}
+			}
+		};
+		tr.start();
+	}
+    
+    @Override
+	public void onDestroy() {
+    	super.onDestroy();
+	}
+    
     /**
      * Local services Binder.
      * @author eyedol
      *
      */
-    public class LocalBinder extends Binder {
+    /*public class LocalBinder extends Binder {
         UshahidiService getService() {
             return UshahidiService.this;
         }
-    }
+    }*/
 
     
-	private Runnable mUpdateTimeTask = new Runnable() {
+	/*private Runnable mUpdateTimeTask = new Runnable() {
 		public void run() {
 			
 			UshahidiService.saveSettings(getApplicationContext());
@@ -118,11 +174,14 @@ public class UshahidiService extends Service {
 		queue = new QueueThread("ushahidi");
 		mHandler = new Handler();
 		
-		//if(AutoFetch){
+		if(AutoFetch){
+			Log.i("Service ","Service is checked to start.");
 			mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
 			mHandler.postDelayed(mUpdateTimeTask, (1000 * 60 * AutoUpdateDelay));
 		
-		//}
+		} else {
+			Log.i("Service ","Service is unchecked.");
+		}
 		
 		final Thread tr = new Thread() {
 			@Override
@@ -149,10 +208,10 @@ public class UshahidiService extends Service {
 	
 	public static void AddThreadToQueue(Thread tr){
 		queue.AddQueueItem(tr);
-	}
+	}*/
 	
 	private void showNotification(String tickerText) {
-        // This is who should be launched if the user selects our notification.
+        // This is what should be launched if the user selects our notification.
         Intent baseIntent = new Intent(this, IncidentsTab.class);
         baseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, baseIntent, 0);

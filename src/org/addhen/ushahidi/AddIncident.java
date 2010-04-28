@@ -106,6 +106,7 @@ public class AddIncident extends Activity {
 	private EditText incidentDesc;
 	private TextView incidentDate;
 	private TextView selectedPhoto;
+	private TextView selectedCategories;
 	private Button btnSend;
 	private Button btnCancel;
 	private Button btnAddCategory;
@@ -128,6 +129,7 @@ public class AddIncident extends Activity {
 	private final static Handler mHandler = new Handler();
 	private Vector<String> vectorCategories = new Vector<String>();
 	private Vector<String> categoriesId = new Vector<String>();
+	private HashMap<String, String> categoriesTitle = new HashMap<String, String>();
 	private HashMap<String,String> params = new HashMap<String, String>();
 	
 	@Override
@@ -242,6 +244,7 @@ public class AddIncident extends Activity {
 		btnPicture = (Button) findViewById(R.id.btnPicture);
 		btnAddCategory = (Button) findViewById(R.id.add_category);
 		selectedPhoto = (TextView) findViewById(R.id.lbl_photo);
+		selectedCategories = (TextView) findViewById(R.id.lbl_category);
 		
 		incidentTitle = (EditText) findViewById(R.id.incident_title);
 		
@@ -432,7 +435,8 @@ public class AddIncident extends Activity {
 			  
 			  do {
 				  categories[i] = cursor.getString(titleIndex);
-				  
+				  categoriesTitle.put(String.valueOf(cursor.getInt(idIndex)), 
+						  cursor.getString(titleIndex));
 				  categoriesId.add(String.valueOf(cursor.getInt(idIndex)));
 				  i++;
 			  }while( cursor.moveToNext() );
@@ -452,6 +456,7 @@ public class AddIncident extends Activity {
 		incidentDesc.setText("");
 		vectorCategories.clear();
 		selectedPhoto.setText("");
+		selectedCategories.setText("");
 		counter = 0;
 		updateDisplay();
 		
@@ -669,13 +674,25 @@ public class AddIncident extends Activity {
                         new DialogInterface.OnMultiChoiceClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton,
                                     boolean isChecked) {
+                            	
                             	if( isChecked ) {
                             		 
                             		vectorCategories.add(categoriesId.get( whichButton ));
+                            		if( !vectorCategories.isEmpty()){
+                            			selectedCategories.setText(Util.limitString(
+                            					categoriesTitle.get(vectorCategories.get(0)), 15));
+                            		}
                             		error = false;
                             	} else {
                             		//fixed a crash here.
                             		vectorCategories.remove(categoriesId.get( whichButton ));
+                            		
+                            		if( vectorCategories.isEmpty()){
+                            			selectedCategories.setText("");
+                            		} else {
+                            			selectedCategories.setText(Util.limitString(
+                            					categoriesTitle.get(vectorCategories.get(0)), 15));
+                            		}
                             	}
                             	
                                 /* User clicked on a check box do some stuff */
@@ -683,7 +700,7 @@ public class AddIncident extends Activity {
                         })
                 .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-
+                    	
                         /* User clicked Yes so do some stuff */
                     }
                 })

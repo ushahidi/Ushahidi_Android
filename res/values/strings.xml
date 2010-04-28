@@ -138,6 +138,7 @@
 	<string name="empty_report_description">Enter a description for the incident.</string>
 	<string name="empty_report_location">The location name field is required.</string>
 	<string name="empty_report_categories">Select at least one category.</string>
+	<string name="hint_location">Location here</string>
 	<!--  Add location screen -->
 	<string name="find_location">Finding you...</string>
 	<string name="location_not_found">A location can not currently be determined. Enable more

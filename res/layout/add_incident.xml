@@ -85,7 +85,7 @@
 				android:paddingBottom="15px">
 
 				<TextView	android:id="@+id/incident_loc" 
-					android:layout_width="wrap_content"
+					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:textStyle="bold"
 					android:textColor="@drawable/date_color" 
@@ -95,16 +95,18 @@
 					android:layout_height="wrap_content"
 					android:paddingBottom="15px">
 					<EditText android:id="@+id/incident_location"
-	  					android:layout_width="170px"
+	  					android:layout_width="wrap_content"
+	  					android:layout_height="wrap_content"
+	  					android:hint="@string/hint_location"
 	  					android:capitalize="words"
-	  					android:autoText="true"
-        				android:layout_height="wrap_content"/>
+	  					android:autoText="true"/>
 
-    			<Button android:id="@+id/location"
-       				android:layout_width="wrap_content"
-          			android:layout_height="wrap_content"
-          			android:textStyle="bold"
-          			android:text="@string/add_location"/>
+    				<Button android:id="@+id/location"
+       					android:layout_width="wrap_content"
+          				android:layout_height="wrap_content"
+          				android:textStyle="bold"
+          				android:gravity="right"
+          				android:text="@string/add_location"/>
       	</LinearLayout>
 				
 			</LinearLayout>
@@ -129,7 +131,13 @@
 					android:layout_height="wrap_content"
 					android:paddingLeft="15px"
 					android:textStyle="bold"
-					android:text="@string/incident_add_category" />		
+					android:text="@string/incident_add_category" />
+				<TextView android:id="@+id/lbl_category" 
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:textStyle="bold"
+					android:singleLine="false"
+					android:textColor="@drawable/date_color" />		
 			</LinearLayout>
 			<EditText android:id="@+id/incident_desc" 
 				android:layout_width="fill_parent"
@@ -149,8 +157,9 @@
 					android:text="@string/btn_add_photo" />		
 			
 				<TextView android:id="@+id/lbl_photo" 
-				android:layout_width="wrap_content"
+				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
+				android:singleLine="false"
 				android:textStyle="bold"
 				android:textColor="@drawable/date_color" />
 			
