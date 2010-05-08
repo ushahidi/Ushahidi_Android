@@ -354,7 +354,7 @@ public class Util{
 		
 		HttpResponse response;
 		String json_string = "";
-		String message = "";
+		//String message = "";
 		StringBuilder uriBuilder = new StringBuilder( ushahidiUrl );
 		uriBuilder.append("/api");
 
