@@ -19,7 +19,7 @@
  -->
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
-<org.addhen.ushahidi.DialogPreference
+<com.ushahidi.android.app.DialogPreference
 	android:key="clear_cache_preference"
    	android:title="@string/txt_clear_cache"
    	android:dialogTitle="@string/txt_clear_cache"
