@@ -76,6 +76,7 @@ public class LocationMap extends MapActivity {
 	private String categories;
 	private String media;
 	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -369,10 +370,11 @@ public class LocationMap extends MapActivity {
 		private Drawable marker;
 		private OverlayItem myOverlayItem;
 		private boolean MoveMap = false;
+		private long timer;
 		
 		public MapMarker( Drawable defaultMarker, int LatitudeE6, int LongitudeE6 ) {
 			super(defaultMarker);
-			
+			this.timer = 0;
 			this.marker = defaultMarker;
 			
 			// create locations of interest
@@ -401,14 +403,20 @@ public class LocationMap extends MapActivity {
 			super.draw(canvas, mapView, shadow);   
 			boundCenterBottom(marker);
 		}
-
+		
+		/**
+		 * Fixed by Joey 
+		 * at http://goo.gl/UUiN
+		 */
 		@Override
 		public boolean onTouchEvent(MotionEvent motionEvent, MapView mapview) {
 			
 			int Action = motionEvent.getAction();
 			
-			if (Action == MotionEvent.ACTION_UP){
-				//if(!MoveMap ) {
+			if (Action == MotionEvent.ACTION_UP) {
+				
+				
+				if(!MoveMap && (System.currentTimeMillis()-timer <= 1000)) {
 					Projection proj = mapView.getProjection();
 					GeoPoint loc = proj.fromPixels((int)motionEvent.getX(), (int)motionEvent.getY());
 		              
@@ -420,16 +428,29 @@ public class LocationMap extends MapActivity {
 					//remove the last marker
 					mapView.getOverlays().remove(0);
 					centerLocation(loc);
-				//}
+				}
 		    
 		   }
 		   else if (Action == MotionEvent.ACTION_DOWN) {
-			   
+			   timer = System.currentTimeMillis();
 			   MoveMap = false;
 		   }
 		   else if (Action == MotionEvent.ACTION_MOVE){
-			   MoveMap = true;
+			   float difX = 0.0f;
+			   float difY = 0.0f;
 			   
+			   if(motionEvent.getHistorySize() >= 2){
+
+				   difX = motionEvent.getHistoricalX(0) - motionEvent.getHistoricalX(motionEvent.getHistorySize()-1);
+
+				   difY = motionEvent.getHistoricalY(0) - motionEvent.getHistoricalY(motionEvent.getHistorySize()-1);
+			   }
+			   if(difX >= 5 || difX <= -5|| difY >= 5 || difY <= -5){
+
+			        MoveMap = true;
+
+			   }               
+
 		   }
 
 		   return super.onTouchEvent(motionEvent, mapview);

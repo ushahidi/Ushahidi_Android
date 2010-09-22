@@ -362,6 +362,9 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		 // validate ushahidi instance
 		 if(key.equals("ushahidi_instance_preference")) {
 			if(!Util.validateUshahidiInstance(sharedPreferences.getString("ushahidi_instance_preference",""))) {
+				//reset whatever was entered in that field.
+				ushahidiInstancePref.setText("");
+				UshahidiService.domain = "";
 				Util.showToast(this, R.string.invalid_ushahidi_instance);
 			}
 		 }

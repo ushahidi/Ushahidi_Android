@@ -21,14 +21,15 @@
 package com.ushahidi.android.app;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-import org.apache.http.HttpResponse;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -48,7 +49,6 @@ import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.net.Categories;
 import com.ushahidi.android.app.net.Incidents;
 import com.ushahidi.android.app.net.UshahidiGeocoder;
-import com.ushahidi.android.app.net.UshahidiHttpClient;
 
 
 public class Util{
@@ -349,47 +349,17 @@ public class Util{
 		//make an http get request to a dummy api call
 		//TODO improve on how to do this
 		boolean status = false;
-		if( ushahidiUrl == null ) {
-			return false;
-		}
-		
-		HttpResponse response;
-		String json_string = "";
-		//String message = "";
-		StringBuilder uriBuilder = new StringBuilder( ushahidiUrl );
-		uriBuilder.append("/api");
-
 		try {
-			response = UshahidiHttpClient.GetURL( uriBuilder.toString() );
-			if( response == null ) {
-				status = false;
-			}
-			//Fixed Bug.
-			//Added this else so that it wont attempt to access a null object
-			else {
-				final int statusCode = response.getStatusLine().getStatusCode();
-				
-				if( statusCode == 200 ) {
-					json_string = UshahidiHttpClient.GetText(response);
-					
-					//extract data from json object
-					try {
-						jsonObject = new JSONObject(json_string);
-						
-						jsonObject.getJSONObject("error").getString("message");
-						
-					} catch (JSONException e) {
-						status = false;
-					}
-					
-				} else {
-					status = false;
-				}
-			}
+		    URL url = new URL(ushahidiUrl);
+		    URLConnection conn = url.openConnection();
+		    conn.connect();
+		    status = true;
+		} catch (MalformedURLException e) {
+		    status = false;
 		} catch (IOException e) {
-			status = false;
+		    status = true;
 		}
-		
+
 		return status;
 	}
 	
