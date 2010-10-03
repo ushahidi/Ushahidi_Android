@@ -123,18 +123,18 @@ public class ListIncidentTextView extends LinearLayout{
 				TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT) );
 		
 		status = new TextView( context);
-		
-		//change colored to red if text is not Verified
-		if( listText.getStatus() == "Verified" ) {
-			status.setTextColor(Color.rgb(41, 142, 40));
-		} else {
-			status.setTextColor(Color.rgb(237, 0, 0));
+		//change color to red if text is not Verified
+		if( listText.getStatus().equalsIgnoreCase("Verified") ) {
+			status.setTextColor(Color.rgb(41, 142, 40)); //green color
+			status.setText( listText.getStatus() );
+		} else if(listText.getStatus().equalsIgnoreCase("Unverified")){
+			status.setTextColor(Color.rgb(237, 0, 0)); // red color
+			status.setText( listText.getStatus() );
 		}
-		
 		status.setTextSize(fontSize);
-		status.setText( listText.getStatus() );
 		
 		
+
 		textLayout.addView( status, new TableRow.LayoutParams( TableRow.LayoutParams.WRAP_CONTENT,
 				TableRow.LayoutParams.FILL_PARENT));
 		
