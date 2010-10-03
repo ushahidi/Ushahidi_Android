@@ -207,31 +207,7 @@ public class UshahidiHttpClient {
             return false;
         }
         
-    	/*ClientHttpRequest req = null;
-
-        try {
-             URL url = new URL(URL);
-             req = new ClientHttpRequest(url);
-             
-             req.setParameter("task", params.get("task"));
-             req.setParameter("username", params.get("username"));
-             req.setParameter("password", params.get("password"));
-             req.setParameter("message_from",params.get("message_from"));
-             req.setParameter("message_description", params.get("message_description"));
-             
-             InputStream serverInput = req.post();
-             
-             //Log.i("Send output ","There its "+GetText(serverInput));
-             
-             if( Util.extractPayloadJSON(GetText(serverInput)) ){
-            	 
-            	 return true;
-             }
-             
-        } catch (MalformedURLException ex) {
-        	//fall through and return false
-        }
-        return false;*/
+    	
    }
     
     public static byte[] fetchImage(String address) throws MalformedURLException, IOException {
@@ -262,9 +238,7 @@ public class UshahidiHttpClient {
             
         } 
         return null;
-		/*final URL url = new URL(address);
-		final Object content = url.getContent();
-		return content;*/
+		
 	}
 	/**
      * Copy the content of the input stream into the output stream,
