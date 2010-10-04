@@ -34,6 +34,8 @@ import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.text.method.PasswordTransformationMethod;
+import android.widget.EditText;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 	private EditTextPreference ushahidiInstancePref;
@@ -42,6 +44,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	private EditTextPreference emailAddressPref;
 	private EditTextPreference userNamePref;
 	private EditTextPreference passwordPref;
+	private EditText passwordEditText;
+	private PasswordTransformationMethod transMethod;
 	private CheckBoxPreference autoFetchCheckBoxPref;
 	private CheckBoxPreference vibrateCheckBoxPref;
 	private CheckBoxPreference ringtoneCheckBoxPref;
@@ -229,6 +233,13 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		passwordPref.setKey("password_preference");
 		passwordPref.setTitle(R.string.txt_password);
 		passwordPref.setSummary(R.string.hint_password);
+		
+		
+		passwordEditText = passwordPref.getEditText();
+	    transMethod = new PasswordTransformationMethod();
+	    passwordEditText.setTransformationMethod(transMethod);
+	      
+	       // Edit text preference
 		smsPrefCat.addPreference(passwordPref);
         
 		return root;
