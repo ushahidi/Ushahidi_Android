@@ -110,7 +110,8 @@ public class LocationMap extends MapActivity {
 		btnFind.setOnClickListener( new View.OnClickListener(){
 			public void onClick( View v ) {
 				Util.showToast(LocationMap.this, R.string.find_location);
-				updateLocation();
+				FindMeTask findMeTask = new FindMeTask();
+				findMeTask.execute();
 			}
 		});
 		
@@ -311,7 +312,7 @@ public class LocationMap extends MapActivity {
 	  	        	Util.showToast(LocationMap.this, R.string.location_not_found);
 	  	        }else {
 	  	        	locationName = locName;
-	  	        	Toast.makeText(LocationMap.this, "Location "+locationName, Toast.LENGTH_SHORT).show();
+	  	        	Toast.makeText(LocationMap.this, "Find you at "+locationName, Toast.LENGTH_SHORT).show();
 	  	        }
 	  	    }	     
 	    } 
@@ -455,6 +456,31 @@ public class LocationMap extends MapActivity {
 
 		   return super.onTouchEvent(motionEvent, mapview);
 		}
+	}
+	
+	
+	//thread class
+	private class FindMeTask extends AsyncTask <Void, Void, Integer> {
+		
+		protected Integer status;
+		@Override
+		protected void onPreExecute() {
+			setProgressBarIndeterminateVisibility(true);
+
+		}
+		
+		@Override 
+		protected Integer doInBackground(Void... params) {
+			updateLocation();
+			return 0;
+		}
+		
+		@Override
+		protected void onPostExecute(Integer result)
+		{
+			setProgressBarIndeterminateVisibility(false);
+		}
+
 	}
 	
 }

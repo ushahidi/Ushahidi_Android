@@ -157,12 +157,10 @@ public class IncidentMap extends MapActivity {
  		if (keyCode == KeyEvent.KEYCODE_I) {
 	    	// Zoom not closer than possible
         	mapView.getController().zoomIn();
-	    	//this.myMapController.zoomInFixing(Math.min(21, this.myMapView.getZoomLevel() + 1));
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_O) {
 	    	// Zoom not farer than possible 
         	mapView.getController().zoomOut();
-	    	//this.myMapController.zoomInFixing(Math.max(1, this.myMapView.getZoomLevel() - 1),0);
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_T) {
         	// Switch to satellite view

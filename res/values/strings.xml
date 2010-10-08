@@ -133,7 +133,7 @@
 		unvailability of internet. Remember to sync to the online 
 		instance when there there is internet connection.</string>
 	<string name="failed_to_add_report_offline">Failed to send report.Check to see if you filled all required fields.</string>
-	<string name="failed_to_add_report_online">Connection failure, cannot submit your report.</string>
+	<string name="failed_to_add_report_online">Connection failure, cannot submit your report. Probably you are on a slow connection.</string>
 	<string name="empty_report_title">Enter a title for the incident.</string>
 	<string name="empty_report_description">Enter a description for the incident.</string>
 	<string name="empty_report_location">The location name field is required.</string>

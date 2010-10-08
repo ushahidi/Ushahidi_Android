@@ -18,10 +18,6 @@
  ** 
  **/
 
-/**
- * This class is based on the code here
- * http://code.google.com/p/android-phonefinder/
- */
 package com.ushahidi.android.app;
 
 import java.io.ByteArrayOutputStream;
@@ -47,6 +43,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -57,6 +54,7 @@ import android.graphics.Bitmap.CompressFormat;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -65,6 +63,7 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -137,7 +136,7 @@ public class AddIncident extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.add_incident);
         foundAddresses = new ArrayList<Address>();
 		gc = new Geocoder(this);
@@ -335,33 +334,11 @@ public class AddIncident extends Activity {
 				}
 				
 				if( !error ) {
-					if( Util.isConnected(AddIncident.this) ){ 
-						if( !postToOnline() ) {
-							mHandler.post(mSentIncidentFail);
-						}else { 
-							mHandler.post(mSentIncidentSuccess);
-							clearFields();
-							
-							//after a successful upload, delete the file
-							File f = new File(UshahidiService.savePath + UshahidiService.fileName);
-							if(f.exists()){
-								f.delete();
-							}
-						}
-					}else {
-					final Thread tr = new Thread() {
-						@Override
-						public void run() {
-							try {
-								mHandler.post(mSentIncidentOffline);
-								
-							} finally {
-							}
-						}
-					};
-					tr.start();
-					}
-				
+					
+					AddReportsTask addReportsTask = new AddReportsTask();
+					addReportsTask.appContext = AddIncident.this;
+					addReportsTask.execute();
+					
 				}else{
 					final Toast t = Toast.makeText(AddIncident.this,
 							"Error!\n\n"+ errorMessage,
@@ -951,5 +928,53 @@ public class AddIncident extends Activity {
     	} 
     	return 1;
     }
+    
+    //thread class
+	private class AddReportsTask extends AsyncTask <Void, Void, Integer> {
+		
+		protected Integer status;
+		protected Context appContext;
+		@Override
+		protected void onPreExecute() {
+			setProgressBarIndeterminateVisibility(true);
+
+		}
+		
+		@Override 
+		protected Integer doInBackground(Void... params) {
+			if( Util.isConnected(AddIncident.this) ){
+				
+				if( !postToOnline() ) {
+					status = 1; // fail
+				}else { 
+					clearFields();
+					//after a successful upload, delete the file
+					File f = new File(UshahidiService.savePath + UshahidiService.fileName);
+					if(f.exists()){
+						f.delete();
+					}
+					status = 0; // success
+				}
+			}else {
+				addToDb();
+				status = 2; // no internet connection
+			}
+			return status;
+		}
+		
+		@Override
+		protected void onPostExecute(Integer result)
+		{
+			if( result == 2 ){
+				Util.showToast(appContext, R.string.report_successfully_added_offline);
+			}else if( result == 1 ) { 
+				Util.showToast(appContext, R.string.failed_to_add_report_online);
+			}else if( result == 0 ) {
+				Util.showToast(appContext, R.string.report_successfully_added_online);
+			}
+			setProgressBarIndeterminateVisibility(false);
+		}
+
+	}
     
 }
