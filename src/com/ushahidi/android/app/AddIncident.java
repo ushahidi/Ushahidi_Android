@@ -947,12 +947,7 @@ public class AddIncident extends Activity {
 				if( !postToOnline() ) {
 					status = 1; // fail
 				}else { 
-					clearFields();
-					//after a successful upload, delete the file
-					File f = new File(UshahidiService.savePath + UshahidiService.fileName);
-					if(f.exists()){
-						f.delete();
-					}
+					
 					status = 0; // success
 				}
 			}else {
@@ -970,6 +965,12 @@ public class AddIncident extends Activity {
 			}else if( result == 1 ) { 
 				Util.showToast(appContext, R.string.failed_to_add_report_online);
 			}else if( result == 0 ) {
+				clearFields();
+				//after a successful upload, delete the file
+				File f = new File(UshahidiService.savePath + UshahidiService.fileName);
+				if(f.exists()){
+					f.delete();
+				}
 				Util.showToast(appContext, R.string.report_successfully_added_online);
 			}
 			setProgressBarIndeterminateVisibility(false);
