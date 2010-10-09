@@ -38,6 +38,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -75,7 +76,8 @@ public class LocationMap extends MapActivity {
 	private String location;
 	private String categories;
 	private String media;
-	
+	// Need handler for callbacks to the UI thread
+    final Handler mHandler = new Handler();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -110,8 +112,7 @@ public class LocationMap extends MapActivity {
 		btnFind.setOnClickListener( new View.OnClickListener(){
 			public void onClick( View v ) {
 				Util.showToast(LocationMap.this, R.string.find_location);
-				FindMeTask findMeTask = new FindMeTask();
-				findMeTask.execute();
+				updateLocation();
 			}
 		});
 		
@@ -135,6 +136,31 @@ public class LocationMap extends MapActivity {
 			}
 		});
 	}
+	
+	
+    // Create runnable for posting
+    final Runnable mUpdateResults = new Runnable() {
+        public void run() {
+        	updateResultsInUi();
+        }
+    };
+
+    protected void startLongRunningOperation() {
+
+        // Fire off a thread to do some work that we shouldn't do directly in the UI thread
+        Thread t = new Thread() {
+            public void run() {
+            	updateLocation();
+                mHandler.post(mUpdateResults);
+            }
+        };
+        t.start();
+    }
+
+    private void updateResultsInUi() {
+
+    	Toast.makeText(LocationMap.this, "Find you at "+locationName, Toast.LENGTH_SHORT).show();
+    }
 	
 	@Override
 	protected boolean isRouteDisplayed() {
@@ -182,7 +208,7 @@ public class LocationMap extends MapActivity {
     		
     		Address address = foundAddresses.get(0);
     		
-    		return address.getLocality();
+    		return address.getSubAdminArea();
 		
     	} catch (IOException e) {
 			e.printStackTrace();
@@ -309,8 +335,10 @@ public class LocationMap extends MapActivity {
 	  	        centerLocation(getPoint(latitude, longitude));
 	  	        
 	  	        if( locName == null ) {
+	  	        	
 	  	        	Util.showToast(LocationMap.this, R.string.location_not_found);
 	  	        }else {
+	  	        	
 	  	        	locationName = locName;
 	  	        	Toast.makeText(LocationMap.this, "Find you at "+locationName, Toast.LENGTH_SHORT).show();
 	  	        }
@@ -413,6 +441,7 @@ public class LocationMap extends MapActivity {
 		public boolean onTouchEvent(MotionEvent motionEvent, MapView mapview) {
 			
 			int Action = motionEvent.getAction();
+			String foundLoc = "";
 			
 			if (Action == MotionEvent.ACTION_UP) {
 				
@@ -421,11 +450,15 @@ public class LocationMap extends MapActivity {
 					Projection proj = mapView.getProjection();
 					GeoPoint loc = proj.fromPixels((int)motionEvent.getX(), (int)motionEvent.getY());
 		              
-					GeocodeTask geoCodeTask = new GeocodeTask();
-					geoCodeTask.appContext = LocationMap.this;
-					geoCodeTask.execute(loc.getLatitudeE6() / 1.0E6, 
+					foundLoc = getLocationFromLatLon(loc.getLatitudeE6() / 1.0E6, 
 							loc.getLatitudeE6() / 1.0E6);
-					
+					if( foundLoc == "") {
+						locationName = "";
+						Util.showToast(LocationMap.this, R.string.loc_not_found);
+					} else {
+						locationName = foundLoc;
+						Toast.makeText(LocationMap.this, locationName, Toast.LENGTH_SHORT).show();
+					}
 					//remove the last marker
 					mapView.getOverlays().remove(0);
 					centerLocation(loc);
@@ -456,31 +489,6 @@ public class LocationMap extends MapActivity {
 
 		   return super.onTouchEvent(motionEvent, mapview);
 		}
-	}
-	
-	
-	//thread class
-	private class FindMeTask extends AsyncTask <Void, Void, Integer> {
-		
-		protected Integer status;
-		@Override
-		protected void onPreExecute() {
-			setProgressBarIndeterminateVisibility(true);
-
-		}
-		
-		@Override 
-		protected Integer doInBackground(Void... params) {
-			updateLocation();
-			return 0;
-		}
-		
-		@Override
-		protected void onPostExecute(Integer result)
-		{
-			setProgressBarIndeterminateVisibility(false);
-		}
-
 	}
 	
 }
