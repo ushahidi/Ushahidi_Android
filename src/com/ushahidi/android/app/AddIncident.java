@@ -59,6 +59,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -140,12 +141,11 @@ public class AddIncident extends Activity {
         setContentView(R.layout.add_incident);
         foundAddresses = new ArrayList<Address>();
 		gc = new Geocoder(this);
-        
+		
+		//load settings
+        //UshahidiService.loadSettings(AddIncident.this);
         initComponents();
-        
-        //load settings
-        UshahidiService.loadSettings(AddIncident.this);
-         
+       
     }
 	
 	//menu stuff
@@ -837,6 +837,8 @@ public class AddIncident extends Activity {
     public boolean postToOnline() {
     	
     	//String dates[] = incidentDate.getText().toString().split(" ");
+    	//load settings
+        Log.i("Domain name ", "Domain : "+UshahidiService.domain);
     	String dates[] = dateToSubmit.split(" ");
     	String time[] = dates[1].split(":");
     	String categories = Util.implode(vectorCategories);
@@ -858,6 +860,8 @@ public class AddIncident extends Activity {
 		params.put("person_last", UshahidiService.lastname);
 		params.put("person_email", UshahidiService.email);
 		params.put("filename", UshahidiService.fileName);
+		
+		Log.i("Ushahidi URL: ",urlBuilder.toString());
 		
 		try {
 			return UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), params);

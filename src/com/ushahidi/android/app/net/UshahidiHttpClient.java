@@ -60,6 +60,7 @@ public class UshahidiHttpClient {
 	private static final int IO_BUFFER_SIZE = 512;
     
     final public static List<NameValuePair> blankNVPS = new ArrayList<NameValuePair>();
+        
 	
     public static HttpResponse GetURL(String URL) throws IOException {
     	UshahidiService.httpRunning = true;
