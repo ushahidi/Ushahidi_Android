@@ -37,6 +37,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -252,6 +253,7 @@ public class ListIncidents extends Activity
 		
 		protected Integer status;
 		protected Context appContext;
+		
 		@Override
 		protected void onPreExecute() {
 			setProgressBarIndeterminateVisibility(true);
@@ -360,7 +362,7 @@ public class ListIncidents extends Activity
 			  
 					//TODO do a proper check for thumbnails
 					d = ImageManager.getImages( thumbnails[0]);
-			  
+					Log.i("What", "categories: "+categories+" title "+title);
 					ila.addItem( new ListIncidentText( d == null ? getResources().getDrawable( R.drawable.ushahidi_report_icon):d, 
 							title, date, 
 							status,
@@ -410,6 +412,11 @@ public class ListIncidents extends Activity
     
 		@SuppressWarnings("unchecked")
 		public void onItemSelected(AdapterView parent, View v, int position, long id) {
+			
+			// clear data in the list
+			ila.removeItems();
+			ila.notifyDataSetChanged();
+			mOldIncidents.clear();
 			showIncidents(vectorCategories.get(position));
 		}
  

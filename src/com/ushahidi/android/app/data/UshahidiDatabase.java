@@ -266,6 +266,7 @@ public class UshahidiDatabase {
   }
 
   	public Cursor fetchIncidentsByCategories( String filter ) {
+  	    
   		String likeFilter = '%' + filter + '%';
   		String sql = "SELECT * FROM "+INCIDENTS_TABLE+" WHERE "+INCIDENT_CATEGORIES+" LIKE ? ORDER BY "
   			+INCIDENT_TITLE+" COLLATE NOCASE";

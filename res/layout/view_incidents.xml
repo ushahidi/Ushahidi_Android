@@ -17,61 +17,79 @@
   If you have questions regarding the use of this file, please contact
   Ushahidi developers at team@ushahidi.com. 
  -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
   	android:layout_height="fill_parent"
+  	android:orientation="vertical"
   	android:background="@drawable/background_color">
-    <TableLayout android:id="@+id/top_items"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:stretchColumns="0"
-    	android:paddingTop="8px"              
-    	android:paddingBottom="7px"          
-    	android:paddingLeft="7px"
-    	android:paddingRight="9px">
-    <TableRow 
-    	android:layout_width="wrap_content"
-    	android:layout_height="wrap_content">
+  	<ScrollView android:id="@+id/view_report" 
+   		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content">
     <LinearLayout android:id="@+id/top_items_layout"
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
-    	android:orientation="vertical">    
+    	android:orientation="vertical">
+    	    
 		<TextView      
         	android:id="@+id/title"
         	android:singleLine="false"       
         	android:layout_width="fill_parent"
         	android:layout_height="wrap_content"/>
+  	</LinearLayout>
+  	<LinearLayout android:id="@+id/top_items_layout"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical">	
   		<TextView
         	android:id="@+id/category"
         	android:singleLine="false"                          
         	android:layout_width="fill_parent"
         	android:layout_height="wrap_content"/>                    
+    </LinearLayout>
+    <LinearLayout android:id="@+id/top_items_layout"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical">
     	<TextView  
 			android:id="@+id/location"
 			android:singleLine="false"
 	   		android:layout_width="fill_parent" 
 	   		android:layout_height="wrap_content"/>
-	    
+	</LinearLayout>
+	<LinearLayout android:id="@+id/top_items_layout"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical">    
 		<TextView  
 			android:id="@+id/date"
 			android:singleLine="false"
 	   		android:layout_width="fill_parent" 
 	   		android:layout_height="wrap_content"/>
-	    	
+	</LinearLayout>
+	<LinearLayout android:id="@+id/top_items_layout"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical">    	
 		<TextView  
 			android:id="@+id/status"
 			android:singleLine="false"
 	   		android:layout_width="wrap_content" 
 	   		android:layout_height="wrap_content"/>
 	</LinearLayout>
+	<LinearLayout android:id="@+id/top_items_layout"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical">
 		<Button android:id="@+id/view_map"
     		android:layout_width="wrap_content"
        		android:layout_height="wrap_content"
        		android:textStyle="bold"
        		android:text="@string/view_map" />
-    </TableRow>	
-    </TableLayout>
-	
+	</LinearLayout>
+	<LinearLayout android:id="@+id/top_items_layout"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical">
     <!-- Main content area. -->
 	<ScrollView android:id="@+id/description" 
    		android:layout_width="fill_parent" 
@@ -81,7 +99,7 @@
     	android:paddingLeft="10px"
     	android:paddingRight="10px"    
     	android:fadingEdge="none"
-		android:layout_below="@id/top_items">
+		android:layout_below="@id/view_map">
    		<TextView
        		android:id="@+id/webview"
        		android:singleLine="false"
@@ -90,6 +108,7 @@
     		android:autoLink="all"    
     		android:fadingEdge="none"/>
 	</ScrollView>
+	</LinearLayout>
 	<LinearLayout
     	android:orientation="vertical"
     	android:layout_width="fill_parent"
@@ -110,5 +129,5 @@
 				android:layout_height="fill_parent"/>
 		</LinearLayout>
 	</LinearLayout>
-
-</RelativeLayout>
+</ScrollView>
+</LinearLayout>
