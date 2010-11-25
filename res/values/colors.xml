@@ -20,9 +20,11 @@
 <resources>
     <drawable name="title_color">#7C2811</drawable>
     <drawable name="date_color">#262321</drawable>
+    <drawable name="report_lable">#f6f6ee</drawable>
     <drawable name="header_color">#3E51BC</drawable>
     <drawable name="verified_color">#25991C</drawable>
     <drawable name="background_color">#E8DBAE</drawable>
     <drawable name="thick_background_color">#DDD0A3</drawable>
     <drawable name="white_color">#FFFFFF</drawable>
+    <drawable name="black_color">#000000</drawable>
 </resources>
