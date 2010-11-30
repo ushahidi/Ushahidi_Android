@@ -163,36 +163,36 @@ public class ViewIncidents extends MapActivity {
 		});*/
        
         mapController = mapView.getController();
-        defaultLocation = getPoint( Double.parseDouble(reportLongitude), Double.parseDouble(reportLatitude));
-		centerLocation(defaultLocation);
+        defaultLocation = getPoint( Double.parseDouble( reportLatitude ), Double.parseDouble( reportLongitude ) );
+		centerLocation( defaultLocation );
     }
     
 	private void placeMarker( int markerLatitude, int markerLongitude ) {
 		
-		Drawable marker = getResources().getDrawable( R.drawable.marker);
+		Drawable marker = getResources().getDrawable( R.drawable.marker );
 		 
-		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
-				 marker.getIntrinsicHeight());
-		mapView.getController().setZoom(14);
+		marker.setBounds( 0, 0, marker.getIntrinsicWidth(),
+				 marker.getIntrinsicHeight() );
+		mapView.getController().setZoom( 14 );
 
-		mapView.setBuiltInZoomControls(true);
-		mapView.getOverlays().add(new MapMarker(marker,
-				    markerLatitude, markerLongitude));
+		mapView.setBuiltInZoomControls( true );
+		mapView.getOverlays().add( new MapMarker( marker,
+				    markerLatitude, markerLongitude ) );
 	}
 	
-	public GeoPoint getPoint(double lat, double lon) {
-	    return(new GeoPoint((int)(lat*1000000.0), (int)(lon*1000000.0)));
+	public GeoPoint getPoint( double lat, double lon ) {
+	    return( new GeoPoint( ( int )( lat*1000000.0 ), ( int )( lon*1000000.0 ) ) );
 	}
 	
-	private void centerLocation(GeoPoint centerGeoPoint) {
+	private void centerLocation( GeoPoint centerGeoPoint ) {
 		
-		mapController.animateTo(centerGeoPoint);
+		mapController.animateTo( centerGeoPoint );
 		
 		//initilaize latitude and longitude for them to be passed to the AddIncident Activity.
 		//this.latitude = centerGeoPoint.getLatitudeE6() / 1.0E6;
 		//this.longitude = centerGeoPoint.getLongitudeE6() / 1.0E6;
 		
-		placeMarker(centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6());
+		placeMarker( centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6() );
 	
 	}
 	

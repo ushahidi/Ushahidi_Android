@@ -63,8 +63,8 @@
 	<string name="incident_add_category">Select Category</string>
 	<string name="incident_menu_add">Add Report</string>
 	<string name="incident_list">View Reports</string>
-	<string name="google_map_api_key_dev">02cv5Q8Rob0B9QwsyFTBuBhIIGewEvMT4pE_Y3g</string>
-	<string name="google_map_api_key">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string>
+	<string name="google_map_api_key">02cv5Q8Rob0B9QwsyFTBuBhIIGewEvMT4pE_Y3g</string>
+	<string name="google_map_api_key_pro">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string>
 	<string name="menu_home">Home</string>
 	<string name="menu_sync">Sync</string>
 	<string name="sms_to_ushahidi_failed">Failed to post SMS to Ushahidi. Make sure username and password are correct</string>
