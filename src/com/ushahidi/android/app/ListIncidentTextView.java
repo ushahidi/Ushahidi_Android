@@ -66,7 +66,7 @@ public class ListIncidentTextView extends LinearLayout{
 		this.tblLayout.setColumnStretchable(1, true);
 		this.tblRow =  new TableRow(context);
 		this.tblRow.setLayoutParams(new TableRow.LayoutParams(
-				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+				TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 		
 		textLayout.setOrientation(VERTICAL);
 		textLayout.setPadding(0, 2, 0, 2);
@@ -78,14 +78,13 @@ public class ListIncidentTextView extends LinearLayout{
 		);
 		
 		this.thumbnail = new ImageView(context);
-		
 		this.thumbnail.setImageURI( listText.getThumbnailUri() );
 		
 		this.thumbnail.setImageDrawable( listText.getThumbnail() );
 		
 		thumbnail.setPadding(2, 2, 10, 4);
 		thumbnail.setLayoutParams(new TableRow.LayoutParams(
-				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+				TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 		
 		tblRow.addView(thumbnail);
 	

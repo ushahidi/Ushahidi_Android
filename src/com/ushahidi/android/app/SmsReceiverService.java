@@ -27,6 +27,9 @@ import com.ushahidi.android.app.R;
 
 import com.ushahidi.android.app.net.UshahidiHttpClient;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +41,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.Process;
+import android.provider.Settings;
 import android.telephony.SmsMessage;
 
 
@@ -136,7 +140,9 @@ public class SmsReceiverService extends Service {
 	    if( UshahidiService.smsUpdate ) {
 	    	if( Util.isConnected(SmsReceiverService.this) ){
 	    		if( !this.postToUshahidi() ) {
-	    			Util.showToast(this, R.string.invalid_email_address);
+	    			this.showNotification(messageBody, R.string.sms_failed);
+	    		} else {
+	    			this.showNotification(messageBody, R.string.sms_sent);
 	    		}
 	    	}
 	    }
@@ -218,5 +224,26 @@ public class SmsReceiverService extends Service {
 	      		}
 	      	}
 		}
+	}
+	
+	/**
+	 * Show a notification
+	 * 
+	 * @param String message to display
+	 * @param String notification title
+	 */
+	private void showNotification(String message, int notification_title ) {
+		
+		Intent baseIntent = new Intent(this, Settings.class);
+        baseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		NotificationManager notificationManager =
+		    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		
+		Notification notification = new Notification(R.drawable.favicon, getString(R.string.sms_status), System.currentTimeMillis());
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, baseIntent, 0);
+		notification.setLatestEventInfo(this, getString(notification_title), message, pendingIntent);
+		notificationManager.notify(1, notification);
+	
 	}
 }
