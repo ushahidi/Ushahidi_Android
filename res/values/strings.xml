@@ -157,4 +157,6 @@
 	<string name="sms_status">Status</string>
 	<string name="sms_sent">SMSSync Message Sent.</string>
 	<string name="sms_failed">SMSSync Message Sending failed.</string>
+	<string name="status_no">No</string>
+	<string name="status_yes">Yes</string>
 </resources>

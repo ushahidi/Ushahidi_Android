@@ -77,14 +77,11 @@ public class ListIncidentTextView extends LinearLayout{
 						TableRow.LayoutParams.WRAP_CONTENT)
 		);
 		
-		this.thumbnail = new ImageView(context);
-		this.thumbnail.setImageURI( listText.getThumbnailUri() );
-		
-		this.thumbnail.setImageDrawable( listText.getThumbnail() );
-		
-		thumbnail.setPadding(2, 2, 10, 4);
-		thumbnail.setLayoutParams(new TableRow.LayoutParams(
-				TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+		thumbnail = new ImageView(context);
+		thumbnail.setImageURI( listText.getThumbnailUri() );
+		thumbnail.setImageDrawable( listText.getThumbnail() );
+		thumbnail.setPadding(2, 0, 10, 4);
+		thumbnail.setLayoutParams(new TableRow.LayoutParams(87, TableRow.LayoutParams.FILL_PARENT));
 		
 		tblRow.addView(thumbnail);
 	

@@ -21,8 +21,11 @@
 package com.ushahidi.android.app;
 
 import android.os.Bundle;
+import android.widget.AdapterView;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -31,8 +34,10 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
+import android.widget.Gallery.LayoutParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +51,9 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.R;
 
-public class ViewIncidents extends MapActivity {
+public class ViewIncidents extends MapActivity implements
+	AdapterView.OnItemSelectedListener, ViewSwitcher.ViewFactory {
+	
 	private MapView mapView;
 	private MapController mapController;
 	private GeoPoint defaultLocation;
@@ -58,7 +65,6 @@ public class ViewIncidents extends MapActivity {
     private TextView status;
     private TextView photos;
     private Bundle extras = new Bundle();
-    //private Bundle incidentsBundle = new Bundle();
     private String media;
     private String thumbnails [];
     private int id;
@@ -67,6 +73,8 @@ public class ViewIncidents extends MapActivity {
     private String reportTitle;
     private String reportDescription;
     private static final int VIEW_MAP = 1;
+    private ImageSwitcher mSwitcher;
+    private ImageAdapter imageAdapter;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,10 +93,9 @@ public class ViewIncidents extends MapActivity {
         reportDescription = extras.getString("desc");
         reportLatitude = extras.getString("latitude");
         reportLongitude = extras.getString("longitude");
-        String iStatus = Util.toInt(extras.getString("status") ) == 0 ? "No" : "Yes";
+        String iStatus = Util.toInt(extras.getString("status") ) == 0 ? getString(R.string.status_no) : getString(R.string.status_yes);
         title = (TextView) findViewById(R.id.title);
         title.setTypeface(Typeface.DEFAULT_BOLD);
-        //title.setTextColor(Color.rgb(144, 80, 62));
 		title.setText(extras.getString("title"));
         
         category = (TextView) findViewById(R.id.category);
@@ -110,12 +117,18 @@ public class ViewIncidents extends MapActivity {
         body.setText(extras.getString("desc"));
         
         status = (TextView) findViewById( R.id.status);
-        //status.setTextColor(Color.rgb(41, 142, 40));
         status.setText(iStatus);
     	
     	media = extras.getString("media");
     	
-    	ImageAdapter imageAdapter = new ImageAdapter(this);
+    	 imageAdapter = new ImageAdapter(this);
+    	
+    	mSwitcher = (ImageSwitcher) findViewById(R.id.switcher);
+        mSwitcher.setFactory(this);
+        mSwitcher.setInAnimation(AnimationUtils.loadAnimation(this,
+                android.R.anim.fade_in));
+        mSwitcher.setOutAnimation(AnimationUtils.loadAnimation(this,
+                android.R.anim.fade_out));
     	
     	if( !media.equals("")) {
     		
@@ -132,41 +145,16 @@ public class ViewIncidents extends MapActivity {
         Gallery g = (Gallery) findViewById(R.id.gallery);
         
         g.setAdapter( imageAdapter );
+        g.setOnItemSelectedListener(this);
         
-        /*viewMap.setOnClickListener( new View.OnClickListener() {  
-            
-        	public void onClick( View v ) {
-				
-				incidentsBundle.putInt("id", id);
-				reportTitle = extras.getString("title");
-		        reportDescription = extras.getString("desc");
-		        reportLatitude = extras.getString("latitude");
-		        reportLongitude = extras.getString("longitude");
-		        
-				incidentsBundle.putString("title",reportTitle);
-				incidentsBundle.putString("desc", reportDescription);
-				incidentsBundle.putString("longitude",reportLongitude);
-				incidentsBundle.putString("latitude",reportLatitude);
-				incidentsBundle.putString("category", extras.getString("category"));
-				incidentsBundle.putString("location", extras.getString("location"));
-				incidentsBundle.putString("date", extras.getString("date"));
-				incidentsBundle.putString("media", extras.getString("media"));
-				incidentsBundle.putString("status", extras.getString("status"));
-				
-				Intent intent = new Intent( ViewIncidents.this,IncidentMap.class);
-				intent.putExtra("report", incidentsBundle);
-				startActivityForResult(intent,VIEW_MAP);
-				setResult( RESULT_OK, intent );
-              
-			}
-          
-		});*/
-       
         mapController = mapView.getController();
         defaultLocation = getPoint( Double.parseDouble( reportLatitude ), Double.parseDouble( reportLongitude ) );
 		centerLocation( defaultLocation );
+		
     }
     
+	
+	
 	private void placeMarker( int markerLatitude, int markerLongitude ) {
 		
 		Drawable marker = getResources().getDrawable( R.drawable.marker );
@@ -187,14 +175,42 @@ public class ViewIncidents extends MapActivity {
 	private void centerLocation( GeoPoint centerGeoPoint ) {
 		
 		mapController.animateTo( centerGeoPoint );
-		
-		//initilaize latitude and longitude for them to be passed to the AddIncident Activity.
-		//this.latitude = centerGeoPoint.getLatitudeE6() / 1.0E6;
-		//this.longitude = centerGeoPoint.getLongitudeE6() / 1.0E6;
-		
 		placeMarker( centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6() );
 	
 	}
+	
+	@Override
+	protected boolean isRouteDisplayed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public View makeView() {
+		ImageView i = new ImageView(this);
+        //i.setBackgroundColor(0xFF000000);
+        i.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        i.setLayoutParams(new ImageSwitcher.LayoutParams(LayoutParams.FILL_PARENT,
+                LayoutParams.FILL_PARENT));
+        return i;
+	}
+	
+	public void onItemSelected(AdapterView parent, View v, int position, long id) {
+        mSwitcher.setImageDrawable(imageAdapter.mImageIds.get(position));
+        
+    }
+
+    public void onNothingSelected(AdapterView parent) {
+    }
+    
+    public int imageBackgroundColor(){
+    	TypedArray a = obtainStyledAttributes(R.styleable.PhotoGallery);
+        int mGalleryItemBackground = a.getResourceId(
+                R.styleable.PhotoGallery_android_galleryItemBackground, 0);
+        a.recycle();
+        
+        return mGalleryItemBackground;
+    }
 	
 	private class MapMarker extends ItemizedOverlay<OverlayItem> {
 		
@@ -249,11 +265,6 @@ public class ViewIncidents extends MapActivity {
     		mContext = context;
     		mImageIds = new Vector<Drawable>();
     		
-    		TypedArray a = obtainStyledAttributes(R.styleable.PhotoGallery);
-            mGalleryItemBackground = a.getResourceId(
-                    R.styleable.PhotoGallery_android_galleryItemBackground, 0);
-            a.recycle();
-    		
     	}
     	
     	public int getCount() {
@@ -274,21 +285,15 @@ public class ViewIncidents extends MapActivity {
 			
 			i.setScaleType(ImageView.ScaleType.FIT_XY);
             
-			i.setLayoutParams(new Gallery.LayoutParams(136, 88));
+			i.setLayoutParams(new Gallery.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             
             // The preferred Gallery item background
-            i.setBackgroundResource(mGalleryItemBackground);
+            i.setBackgroundResource(imageBackgroundColor());
 
 			return i;
 		}
 		
     }
 
-	@Override
-	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-        
 }
 
