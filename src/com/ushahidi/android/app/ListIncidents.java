@@ -97,7 +97,8 @@ public class ListIncidents extends Activity
 				incidentsBundle.putString("category", mOldIncidents.get(position).getIncidentCategories());
 				incidentsBundle.putString("location", mOldIncidents.get(position).getIncidentLocation());
 				incidentsBundle.putString("date", mOldIncidents.get(position).getIncidentDate());
-				incidentsBundle.putString("media", mOldIncidents.get(position).getIncidentMedia());
+				incidentsBundle.putString("media", mOldIncidents.get(position).getIncidentThumbnail());
+				incidentsBundle.putString("image", mOldIncidents.get(position).getIncidentImage());
 				incidentsBundle.putString("status", ""+mOldIncidents.get(position).getIncidentVerified());
           
 				Intent intent = new Intent( ListIncidents.this,ViewIncidents.class);
@@ -298,9 +299,11 @@ public class ListIncidents extends Activity
 			String location;
 			String categories;
 			String media;
-	
+			String image;
+			String images [];
 			String thumbnails [];
 			Drawable d = null;
+			
 			if (cursor.moveToFirst()) {
 				int idIndex = cursor.getColumnIndexOrThrow( 
 						UshahidiDatabase.INCIDENT_ID);
@@ -318,12 +321,15 @@ public class ListIncidents extends Activity
 		  
 				int mediaIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_MEDIA);
 				
+				int imageIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_IMAGE);
+				
 				int latitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LATITUDE);
 				
 				int longitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LONGITUDE);
 				
 				ila.removeItems();
 				ila.notifyDataSetChanged();
+				
 				mOldIncidents.clear();
 				
 				do {
@@ -347,22 +353,24 @@ public class ListIncidents extends Activity
 					location = cursor.getString(locationIndex);
 					incidentData.setIncidentLocation(location);
 					
-					//TODO format the date to the appropriate format
 					date = Util.formatDate("yyyy-MM-dd hh:mm:ss", cursor.getString(dateIndex), "MMMM dd, yyyy 'at' hh:mm:ss aaa" );
 					
 					incidentData.setIncidentDate(date);			  
 			  
 					media = cursor.getString(mediaIndex);
-					incidentData.setIncidentMedia(media);
+					incidentData.setIncidentThumbnail(media);
 					thumbnails = media.split(",");
-			  
-					//TODO make the string readable from the string resource
-					status = Util.toInt(cursor.getString(verifiedIndex) ) == 0 ? "Unverified" : "Verified";
+					
+					image = cursor.getString(imageIndex);
+					incidentData.setIncidentImage(image);
+					images = image.split(",");
+					
+					status = Util.toInt(cursor.getString(verifiedIndex) ) == 0 ? getString(R.string.report_unverified) : getString(R.string.report_verified);
 					incidentData.setIncidentVerified(Util.toInt(cursor.getString(verifiedIndex) ));
 			  
 					//TODO do a proper check for thumbnails
 					d = ImageManager.getImages( thumbnails[0]);
-					Log.i("What", "categories: "+categories+" title "+title);
+					
 					ila.addItem( new ListIncidentText( d == null ? getResources().getDrawable( R.drawable.ushahidi_report_icon):d, 
 							title, date, 
 							status,

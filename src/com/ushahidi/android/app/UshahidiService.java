@@ -50,6 +50,7 @@ public class UshahidiService extends Service {
 	public static boolean httpRunning = false;
 	public static final DefaultHttpClient httpclient = new DefaultHttpClient();
 	public static Vector<String> mNewIncidentsImages = new Vector<String>();
+	public static Vector<String> mNewIncidentsThumbnails = new Vector<String>();
 	public static String incidentsResponse = "";
 	public static String categoriesResponse = "";
 	public static String savePath = "";

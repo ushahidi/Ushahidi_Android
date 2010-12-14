@@ -30,7 +30,8 @@ public class IncidentsData {
 	private String incidentLocLatitude = "";
 	private String incidentLocLongitude = "";
 	private String incidentCategories = "";
-	private String incidentMedia = "";
+	private String incidentThumbnail = "";
+	private String incidentImage = "";
 	private int incidentId = 0;
 	
 	public IncidentsData() {
@@ -61,12 +62,20 @@ public class IncidentsData {
 		this.incidentDesc = description;
 	}
 	
-	public String getIncidentMedia() {
-		return incidentMedia;
+	public String getIncidentThumbnail() {
+		return incidentThumbnail;
 	}
 	
-	public void setIncidentMedia(String media ) {
-		this.incidentMedia = media;
+	public void setIncidentThumbnail(String thumbnail ) {
+		this.incidentThumbnail = thumbnail;
+	}
+	
+	public String getIncidentImage() {
+		return incidentImage;
+	}
+	
+	public void setIncidentImage(String image ) {
+		this.incidentImage = image;
 	}
 	
 	public String getIncidentCategories() {

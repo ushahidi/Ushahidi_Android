@@ -23,6 +23,8 @@ package com.ushahidi.android.app.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ushahidi.android.app.UshahidiService;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -45,6 +47,7 @@ public class UshahidiDatabase {
 	public static final String INCIDENT_LOC_LONGITUDE = "incident_loc_longitude";
 	public static final String INCIDENT_CATEGORIES = "incident_categories";
 	public static final String INCIDENT_MEDIA = "incident_media";
+	public static final String INCIDENT_IMAGE = "incident_image";
 	public static final String INCIDENT_IS_UNREAD = "is_unread";
 	
 	
@@ -76,7 +79,7 @@ public class UshahidiDatabase {
 	public static final String[] INCIDENTS_COLUMNS = new String[] {	INCIDENT_ID,
 		INCIDENT_TITLE, INCIDENT_DESC, INCIDENT_DATE, INCIDENT_MODE, INCIDENT_VERIFIED,
 		INCIDENT_LOC_NAME,INCIDENT_LOC_LATITUDE,INCIDENT_LOC_LONGITUDE,INCIDENT_CATEGORIES,
-		INCIDENT_MEDIA,INCIDENT_IS_UNREAD
+		INCIDENT_MEDIA,INCIDENT_IMAGE, INCIDENT_IS_UNREAD
 	};
 	
 	public static final String[] CATEGORIES_COLUMNS = new String[] { CATEGORY_ID,
@@ -99,7 +102,7 @@ public class UshahidiDatabase {
 	private static final String ADD_INCIDENTS_TABLE = "add_incidents";
 	private static final String CATEGORIES_TABLE = "categories";
 
-	private static final int DATABASE_VERSION = 9;
+	private static final int DATABASE_VERSION = 10;
 
   // NOTE: the incident ID is used as the row ID.
   // Furthermore, if a row already exists, an insert will replace
@@ -117,6 +120,7 @@ public class UshahidiDatabase {
 		+ INCIDENT_LOC_LONGITUDE + " TEXT NOT NULL, "
 		+ INCIDENT_CATEGORIES + " TEXT NOT NULL, "
 		+ INCIDENT_MEDIA + " TEXT, "
+		+ INCIDENT_IMAGE + " TEXT, "
 		+ INCIDENT_IS_UNREAD + " BOOLEAN NOT NULL "
 		+ ")";
 	
@@ -204,7 +208,9 @@ public class UshahidiDatabase {
         	.put(INCIDENT_LOC_LATITUDE, incidents.getIncidentLocLatitude());
     	initialValues.put(INCIDENT_LOC_LONGITUDE, incidents.getIncidentLocLongitude());
     	initialValues.put(INCIDENT_CATEGORIES, incidents.getIncidentCategories());
-    	initialValues.put(INCIDENT_MEDIA, incidents.getIncidentMedia());
+    	initialValues.put(INCIDENT_MEDIA, incidents.getIncidentThumbnail());
+    	
+    	initialValues.put(INCIDENT_IMAGE, incidents.getIncidentImage());
     	initialValues.put(INCIDENT_IS_UNREAD, isUnread);
 
     	return mDb.insert(INCIDENTS_TABLE, null, initialValues);
@@ -418,7 +424,7 @@ public class UshahidiDatabase {
   				createIncidents(incident, isUnread);
   			}
 
-  			limitRows(INCIDENTS_TABLE, 20, INCIDENT_ID);
+  			limitRows(INCIDENTS_TABLE, Integer.parseInt(UshahidiService.totalReports), INCIDENT_ID);
   			mDb.setTransactionSuccessful();
   		} finally {
   			mDb.endTransaction();

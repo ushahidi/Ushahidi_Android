@@ -75,7 +75,7 @@ public class LocationMap extends MapActivity {
 	private String description;
 	private String location;
 	private String categories;
-	private String media;
+	private String thumbnail;
 	// Need handler for callbacks to the UI thread
     final Handler mHandler = new Handler();
 	
@@ -271,8 +271,8 @@ public class LocationMap extends MapActivity {
 				date = Util.joinString("Date: ",Util.formatDate("yyyy-MM-dd hh:mm:ss", cursor.getString(dateIndex), "MMMM dd, yyyy 'at' hh:mm:ss aaa" ));
 				incidentData.setIncidentDate(date);			  
 				  
-				media = cursor.getString(mediaIndex);
-				incidentData.setIncidentMedia(media);
+				thumbnail = cursor.getString(mediaIndex);
+				incidentData.setIncidentThumbnail(thumbnail);
 				  
 				  
 				incidentData.setIncidentVerified(Util.toInt(cursor.getString(verifiedIndex) ));

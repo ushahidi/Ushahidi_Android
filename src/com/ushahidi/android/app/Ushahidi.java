@@ -63,8 +63,6 @@ public class Ushahidi extends Activity {
     
     private ProgressDialog mProgressDialog;
     private int mProgress;
-    //private List<IncidentsData> mNewIncidents;
-	//private List<CategoriesData> mNewCategories;
     
 	private Handler mHandler;
  
@@ -321,8 +319,8 @@ public class Ushahidi extends Activity {
 		protected Context appContext;
 		@Override
 		protected void onPreExecute() {
-			this.dialog = ProgressDialog.show(appContext, "Please wait...",
-					"Fetching new reports", true);
+			this.dialog = ProgressDialog.show(appContext, getString(R.string.please_wait),
+					getString(R.string.fetching_new_reports), true);
 
 		}
 		

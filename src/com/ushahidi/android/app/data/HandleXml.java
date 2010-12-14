@@ -44,7 +44,10 @@ import java.util.List;
 public class HandleXml {
 	
 	public static List<IncidentsData> processIncidentsXml( String xml ) {
-
+		String categories = "";
+		String thumbnail = "";
+		String image = "";
+		
 		DocumentBuilder builder = null;
 		Document doc = null;
 		try {
@@ -70,8 +73,6 @@ public class HandleXml {
 		List<IncidentsData> listIncidentsData = new ArrayList<IncidentsData>();
 		
 		NodeList node = doc.getElementsByTagName("incident");
-		String categories = "";
-		String media = "";
 		
 		for( int i = 0; i < node.getLength(); i++ ) {
 			
@@ -176,21 +177,41 @@ public class HandleXml {
 						
 							Element mediaInnerThumbElement = (Element) mediaThumbList.item(0);
 							NodeList mediaThumb = mediaInnerThumbElement.getChildNodes();
-							UshahidiService.mNewIncidentsImages.add( ((Node)mediaThumb.item(0)).getNodeValue() );
 							
-							media += (j == mediaList.getLength() -1)? ( (Node)mediaThumb.item(0)).getNodeValue(): ( (Node)mediaThumb.item(0)).getNodeValue()+",";
+							if( !((Node)mediaThumb.item(0)).getNodeValue().equals("") ) { 
+								UshahidiService.mNewIncidentsThumbnails.add( ((Node)mediaThumb.item(0)).getNodeValue() );
+							}
+							
+							thumbnail += (j == mediaList.getLength() -1)? ( (Node)mediaThumb.item(0)).getNodeValue(): ( (Node)mediaThumb.item(0)).getNodeValue()+",";
+						}
+						
+						NodeList mediaImageList = mediaElement.getElementsByTagName("link");
+						
+						if( mediaImageList.getLength() != 0 ) {
+							Element mediaInnerImageElement = (Element) mediaImageList.item(0);
+							NodeList mediaImage = mediaInnerImageElement.getChildNodes();
+							if ( !( ( Node ) mediaImage.item( 0 ) ).getNodeValue().equals( "" ) ) {
+								UshahidiService.mNewIncidentsImages.add( ((Node) mediaImage.item(0)).getNodeValue());
+							}
+							//if( j != 0) {
+								image += ( (Node)mediaImage.item(0)).getNodeValue()+",";
+							//}
+							//image += (j == mediaImageList.getLength() -1)? ( (Node)mediaImage.item(0)).getNodeValue(): ( (Node)mediaImage.item(0)).getNodeValue()+",";
+							
 						}
 					}
 				}
-				incidentData.setIncidentMedia(media);
-				
-				media = "";
+				incidentData.setIncidentThumbnail(thumbnail);
+				incidentData.setIncidentImage(image);
+				thumbnail = "";
+				image = "";
 					
 			}
 			
 		}
 		
 		//save images
+		ImageManager.saveThumbnail();
 		ImageManager.saveImage();
 		
 		return listIncidentsData;

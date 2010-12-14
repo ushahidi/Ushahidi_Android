@@ -71,6 +71,7 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
 					incidentsBundle.putString("location", extras.getString("location"));
 					incidentsBundle.putString("date", extras.getString("date"));
 					incidentsBundle.putString("media", extras.getString("media"));
+					incidentsBundle.putString("image", extras.getString("image"));
 					incidentsBundle.putString("status", ""+extras.getString("status"));
 					
 				} else {
@@ -79,7 +80,8 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
 					incidentsBundle.putString("category", mNewIncidents.get(index).getIncidentCategories());
 					incidentsBundle.putString("location", mNewIncidents.get(index).getIncidentLocation());
 					incidentsBundle.putString("date", mNewIncidents.get(index).getIncidentDate());
-					incidentsBundle.putString("media", mNewIncidents.get(index).getIncidentMedia());
+					incidentsBundle.putString("media", mNewIncidents.get(index).getIncidentThumbnail());
+					incidentsBundle.putString("image", mNewIncidents.get(index).getIncidentImage());
 					incidentsBundle.putString("status", ""+mNewIncidents.get(index).getIncidentVerified());
 				}
 	        	Intent intent = new Intent( context, ViewIncidents.class);

@@ -32,7 +32,7 @@ public class Incidents {
 		HttpResponse response;
 		String incidents = "";
 		
-		StringBuilder uriBuilder = new StringBuilder( UshahidiService.domain);
+		StringBuilder uriBuilder = new StringBuilder( UshahidiService.domain.trim() );
 		uriBuilder.append("/api?task=incidents");
 		uriBuilder.append("&by=all");
 		uriBuilder.append("&limit="+UshahidiService.totalReports);

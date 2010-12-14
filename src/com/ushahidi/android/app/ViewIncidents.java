@@ -32,6 +32,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -66,7 +67,9 @@ public class ViewIncidents extends MapActivity implements
     private TextView photos;
     private Bundle extras = new Bundle();
     private String media;
+    private String image;
     private String thumbnails [];
+    private String images [];
     private int id;
     private String reportLatitude;
     private String reportLongitude; 
@@ -75,6 +78,7 @@ public class ViewIncidents extends MapActivity implements
     private static final int VIEW_MAP = 1;
     private ImageSwitcher mSwitcher;
     private ImageAdapter imageAdapter;
+	private ImageAdapter thumbnailAdapter;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -121,9 +125,13 @@ public class ViewIncidents extends MapActivity implements
     	
     	media = extras.getString("media");
     	
-    	 imageAdapter = new ImageAdapter(this);
+    	image = extras.getString("image");
     	
-    	mSwitcher = (ImageSwitcher) findViewById(R.id.switcher);
+    	imageAdapter = new ImageAdapter(this);
+    	
+    	thumbnailAdapter = new ImageAdapter(this);
+    	
+    	mSwitcher = ( ImageSwitcher ) findViewById( R.id.switcher );
         mSwitcher.setFactory(this);
         mSwitcher.setInAnimation(AnimationUtils.loadAnimation(this,
                 android.R.anim.fade_in));
@@ -133,19 +141,26 @@ public class ViewIncidents extends MapActivity implements
     	if( !media.equals("")) {
     		
     		thumbnails = media.split(",");    	
-    
         	for( int i = 0; i < thumbnails.length; i++ ) {
-        		imageAdapter.mImageIds.add( ImageManager.getImages( thumbnails[i] ) );
+        		thumbnailAdapter.mImageIds.add( ImageManager.getImages( thumbnails[i] ) );
         	}
+        	
+        	images = image.split(",");
+        	
+        	for( int i = 0; i < images.length; i++) {
+        		
+        		imageAdapter.mImageIds.add(ImageManager.getImages(images[i]));
+        	}
+        	
     	} else {
-    		photos = (TextView) findViewById(R.id.report_photo);
-    		photos.setText("");
+    		photos = ( TextView ) findViewById( R.id.report_photo );
+    		photos.setText( "" );
     	}
         
-        Gallery g = (Gallery) findViewById(R.id.gallery);
+        Gallery g = ( Gallery ) findViewById( R.id.gallery );
         
-        g.setAdapter( imageAdapter );
-        g.setOnItemSelectedListener(this);
+        g.setAdapter( thumbnailAdapter );
+        g.setOnItemSelectedListener( this );
         
         mapController = mapView.getController();
         defaultLocation = getPoint( Double.parseDouble( reportLatitude ), Double.parseDouble( reportLongitude ) );
@@ -259,7 +274,6 @@ public class ViewIncidents extends MapActivity implements
     	
     	public Vector<Drawable> mImageIds;
     	private Context mContext;
-    	private int mGalleryItemBackground;
     	
     	public ImageAdapter( Context context ){
     		mContext = context;
@@ -296,4 +310,3 @@ public class ViewIncidents extends MapActivity implements
     }
 
 }
-

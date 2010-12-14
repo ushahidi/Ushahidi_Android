@@ -33,7 +33,7 @@ public class Categories {
 		HttpResponse response;
 		String categories = "";
 		
-		StringBuilder uriBuilder = new StringBuilder( UshahidiService.domain);
+		StringBuilder uriBuilder = new StringBuilder( UshahidiService.domain.trim() );
 		uriBuilder.append("/api?task=categories");
 		uriBuilder.append("&resp=xml");
 		

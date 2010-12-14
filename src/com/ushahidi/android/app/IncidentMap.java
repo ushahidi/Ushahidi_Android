@@ -185,7 +185,8 @@ public class IncidentMap extends MapActivity {
  		String description;
  		String location;
  		String categories;
- 		String media;
+ 		String thumbnail;
+ 		String image;
  
  		if( by.equals("All")) 
  			cursor = UshahidiApplication.mDb.fetchAllIncidents();
@@ -208,7 +209,9 @@ public class IncidentMap extends MapActivity {
  			int categoryIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_CATEGORIES);
  			  
  			int mediaIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_MEDIA);
- 			  
+ 			
+ 			int imageIndex = cursor.getColumnIndex(UshahidiDatabase.INCIDENT_IMAGE);
+ 			
  			int latitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LATITUDE);
  			  
  			int longitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LONGITUDE);
@@ -237,9 +240,11 @@ public class IncidentMap extends MapActivity {
  				Util.joinString("Date: ",cursor.getString(dateIndex));
  				incidentData.setIncidentDate(cursor.getString(dateIndex));			  
  				  
- 				media = cursor.getString(mediaIndex);
- 				incidentData.setIncidentMedia(media);
- 				  
+ 				thumbnail = cursor.getString(mediaIndex);
+ 				incidentData.setIncidentThumbnail(thumbnail);
+ 				
+ 				image = cursor.getString(imageIndex);
+ 				incidentData.setIncidentImage(image);
  				  
  				incidentData.setIncidentVerified(Util.toInt(cursor.getString(verifiedIndex) ));
  				  

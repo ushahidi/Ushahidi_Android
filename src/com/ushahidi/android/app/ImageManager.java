@@ -44,7 +44,7 @@ public class ImageManager {
 				fIn = new FileInputStream(UshahidiService.savePath + fileName );
 				d = Drawable.createFromStream(fIn, "src");
 			} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 				e.printStackTrace();
 			}
 		}
@@ -65,10 +65,35 @@ public class ImageManager {
 							writeImage( is, image );
 						}
 					} catch (MalformedURLException e) {
-						// TODO Auto-generated catch block
+						
 						e.printStackTrace();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
+						
+						e.printStackTrace();
+					}
+				
+				}
+			}
+		}
+		
+	}
+	
+	public static void saveThumbnail() {
+		byte[] is;
+		for( String image : UshahidiService.mNewIncidentsThumbnails) {
+			if(!TextUtils.isEmpty(image )) {
+				File f = new File( UshahidiService.savePath + image );
+				if(!f.exists()) {
+					try {
+						is = UshahidiHttpClient.fetchImage(UshahidiService.domain+"/media/uploads/"+image);
+						if( is != null ) {
+							writeImage( is, image );
+						}
+					} catch (MalformedURLException e) {
+						
+						e.printStackTrace();
+					} catch (IOException e) {
+						
 						e.printStackTrace();
 					}
 				
@@ -91,10 +116,10 @@ public class ImageManager {
 			fOut.flush();
 			fOut.close();
 		} catch (final FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}

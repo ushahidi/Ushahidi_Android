@@ -23,9 +23,12 @@ package com.ushahidi.android.app;
 
 import com.ushahidi.android.app.R;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.DialogPreference;
@@ -107,8 +110,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		
 		//Total reports to fetch at a time
         //set list values
-        CharSequence[] totalReportsEntries = {"100 Recent Reports", "250 Recent Reports", "500 Recent Reports", "1000 Recent Reports"}; 
-        CharSequence[] totalReportsValues = {"100","250","500","1000"};
+        CharSequence[] totalReportsEntries = {"20 Recent Reports","40 Recent Reports","60 Recent Reports","80 Recent Reports","100 Recent Reports", "250 Recent Reports", "500 Recent Reports", "1000 Recent Reports"}; 
+        CharSequence[] totalReportsValues = {"20","40","60","80","100","250","500","1000"};
         
         totalReportsPref.setEntries(totalReportsEntries);
         totalReportsPref.setEntryValues(totalReportsValues);
@@ -372,13 +375,48 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		 
 		 // validate ushahidi instance
 		 if(key.equals("ushahidi_instance_preference")) {
-			if(!Util.validateUshahidiInstance(sharedPreferences.getString("ushahidi_instance_preference",""))) {
-				//reset whatever was entered in that field.
-				ushahidiInstancePref.setText("");
-				UshahidiService.domain = "";
-				Util.showToast(this, R.string.invalid_ushahidi_instance);
-			}
+			 
+			 ReportsTask reportsTask = new ReportsTask();
+	         reportsTask.appContext = this;
+	         reportsTask.execute();
+			 
+			 if(!Util.validateUshahidiInstance(sharedPreferences.getString("ushahidi_instance_preference",""))) {
+				 //reset whatever was entered in that field.
+				 ushahidiInstancePref.setText("");
+				 UshahidiService.domain = "";
+				 Util.showToast(this, R.string.invalid_ushahidi_instance);
+			 }
 		 }
 		 
 	 }
+	 
+	//thread class
+		private class ReportsTask extends AsyncTask <Void, Void, Integer> {
+			
+			protected Integer status;
+			private ProgressDialog dialog;
+			protected Context appContext;
+			@Override
+			protected void onPreExecute() {
+				this.dialog = ProgressDialog.show(appContext, getString(R.string.please_wait),
+						getString(R.string.fetching_new_reports), true);
+
+			}
+			
+			@Override 
+			protected Integer doInBackground(Void... params) {
+				status = Util.processReports(appContext);
+				return status;
+			}
+			
+			@Override
+			protected void onPostExecute(Integer result)
+			{
+				if( result == 4 ){
+					Util.showToast(appContext, R.string.internet_connection);
+				}
+				this.dialog.cancel();
+			}
+
+		}
 }

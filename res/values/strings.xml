@@ -90,7 +90,7 @@
 	<string name="select_ringtone">Select Ringtone</string>
 	<string name="hint_select_ringtone">Change which ringtone to use</string>
 	<string name="flash_led">Flashing led</string>
-	<string name="hint_flash_led">Cause phone's LED to flash</string>
+	<string name="hint_flash_led">Cause phone\'s LED to flash</string>
 	<string name="hint_domain">Select the Ushahidi instance that you wish to interact with.</string>
 	<string name="chk_auto_fetch">Auto sync</string>
 	<string name="chk_sms_send">Send SMS to Ushahidi</string>
@@ -149,6 +149,7 @@
 	<string name="version">0.9.3</string>
 	<string name="report_title">Title</string>
 	<string name="report_verified">Verified</string>
+	<string name="report_unverified">Unverified</string>
 	<string name="report_desc">Description</string>
 	<string name="report_category">Category</string>
 	<string name="report_date">Date</string>
@@ -159,4 +160,6 @@
 	<string name="sms_failed">SMSSync Message Sending failed.</string>
 	<string name="status_no">No</string>
 	<string name="status_yes">Yes</string>
+	<string name="please_wait">Please wait...</string>
+	<string name="fetching_new_reports">Fetching new reports</string>
 </resources>

@@ -309,10 +309,9 @@
         			android:text="@string/report_photo" />
         	</LinearLayout>
 			<LinearLayout
-    			android:orientation="vertical"
+				android:orientation="vertical"
     			android:layout_width="fill_parent"
-    			android:layout_height="wrap_content"
-    			android:layout_alignParentBottom="true"    
+    			android:layout_height="fill_parent" 
     			android:paddingBottom="5px"    	    
     			android:paddingLeft="7px"
     			android:paddingRight="9px">    
@@ -326,16 +325,22 @@
 						android:layout_below="@id/description"
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-        				android:spacing="2dp"/>
+						android:layout_alignParentBottom="true"
+        				android:layout_alignParentLeft="true"
+        				android:spacing="0dp"/>
 				</LinearLayout>
 				<LinearLayout
-    				android:orientation="vertical"
+    				android:orientation="horizontal"
     				android:layout_width="fill_parent"
     				android:layout_height="wrap_content">
-					<ImageSwitcher android:id="@+id/switcher"
-        				android:layout_width="fill_parent"
-        				android:layout_height="fill_parent"/>
-        		</LinearLayout>
+				<ImageSwitcher android:id="@+id/switcher"
+        				android:layout_width="wrap_content"
+        				android:layout_height="wrap_content"
+        				android:layout_alignParentBottom="true"
+        				android:layout_alignParentLeft="true"
+        				android:paddingTop="0dp"
+        				android:paddingBottom="0dp"/>
+        				</LinearLayout>
 			</LinearLayout>
 			<!-- Photo ends -->
 		</LinearLayout>
