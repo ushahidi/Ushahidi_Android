@@ -21,6 +21,7 @@
 package com.ushahidi.android.app.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.ushahidi.android.app.UshahidiService;
@@ -50,7 +51,6 @@ public class UshahidiDatabase {
 	public static final String INCIDENT_IMAGE = "incident_image";
 	public static final String INCIDENT_IS_UNREAD = "is_unread";
 	
-	
 	public static final String CATEGORY_ID = "_id";
 	public static final String CATEGORY_TITLE = "category_title";
 	public static final String CATEGORY_DESC = "category_desc";
@@ -74,7 +74,6 @@ public class UshahidiDatabase {
 	public static final String ADD_PERSON_FIRST = "person_first";
 	public static final String ADD_PERSON_LAST = "person_last";
 	public static final String ADD_PERSON_EMAIL = "person_email";
-	
  	
 	public static final String[] INCIDENTS_COLUMNS = new String[] {	INCIDENT_ID,
 		INCIDENT_TITLE, INCIDENT_DESC, INCIDENT_DATE, INCIDENT_MODE, INCIDENT_VERIFIED,
@@ -95,20 +94,17 @@ public class UshahidiDatabase {
 	
 	private DatabaseHelper mDbHelper;
 	private SQLiteDatabase mDb;
-
 	private static final String DATABASE_NAME = "ushahidi_db";
-
 	private static final String INCIDENTS_TABLE = "incidents";
 	private static final String ADD_INCIDENTS_TABLE = "add_incidents";
 	private static final String CATEGORIES_TABLE = "categories";
-
 	private static final int DATABASE_VERSION = 10;
 
   // NOTE: the incident ID is used as the row ID.
   // Furthermore, if a row already exists, an insert will replace
   // the old row upon conflict.
 	
-	private static final String INCIDENTS_TABLE_CREATE = "CREATE TABLE " + INCIDENTS_TABLE + " ("
+	private static final String INCIDENTS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + INCIDENTS_TABLE + " ("
 		+ INCIDENT_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "  
 		+ INCIDENT_TITLE + " TEXT NOT NULL, "
 		+ INCIDENT_DESC + " TEXT, "
@@ -124,7 +120,7 @@ public class UshahidiDatabase {
 		+ INCIDENT_IS_UNREAD + " BOOLEAN NOT NULL "
 		+ ")";
 	
-	private static final String ADD_INCIDENTS_TABLE_CREATE = "CREATE TABLE " + ADD_INCIDENTS_TABLE + " ("
+	private static final String ADD_INCIDENTS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + ADD_INCIDENTS_TABLE + " ("
 	+ ADD_INCIDENT_ID + " INTEGER PRIMARY KEY , "  
 	+ ADD_INCIDENT_TITLE + " TEXT NOT NULL, "
 	+ ADD_INCIDENT_DESC + " TEXT, "
@@ -145,7 +141,7 @@ public class UshahidiDatabase {
 	+ ")";
 	
 	
-	private static final String CATEGORIES_TABLE_CREATE = "CREATE TABLE " + CATEGORIES_TABLE + " ("
+	private static final String CATEGORIES_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + CATEGORIES_TABLE + " ("
 		+ CATEGORY_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
 		+ CATEGORY_TITLE + " TEXT NOT NULL, " 
 		+ CATEGORY_DESC + " TEXT, " 
@@ -172,13 +168,83 @@ public class UshahidiDatabase {
     	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     		Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
     				+ newVersion + " which destroys all old data");
-    		db.execSQL("DROP TABLE IF EXISTS " + INCIDENTS_TABLE);
-      		db.execSQL("DROP TABLE IF EXISTS " + CATEGORIES_TABLE);
-      		db.execSQL("DROP TABLE IF EXISTS " + ADD_INCIDENTS_TABLE);
+    		List<String> incidentsColumns;
+    		List<String> categoriesColumns;
+    		List<String> addIncidentColumns;
+    		// upgrade incident table
+    		db.execSQL(INCIDENTS_TABLE_CREATE);
+    		incidentsColumns = UshahidiDatabase.getColumns(db, INCIDENTS_TABLE);
+    		db.execSQL("ALTER TABLE "  + INCIDENTS_TABLE + " RENAME TO temp_" + INCIDENTS_TABLE);
+    		db.execSQL(INCIDENTS_TABLE_CREATE);
+    		incidentsColumns.retainAll(UshahidiDatabase.getColumns(db, INCIDENTS_TABLE));
+    		String cols = UshahidiDatabase.join(incidentsColumns, ",");
+    		db.execSQL(String.format( "INSERT INTO %s (%s) SELECT %s FROM temp_%s", INCIDENTS_TABLE, cols, cols, INCIDENTS_TABLE));
+    		db.execSQL("DROP TABLE IF EXISTS temp_" + INCIDENTS_TABLE);
+    		
+    		// upgrade category table
+    		db.execSQL(CATEGORIES_TABLE_CREATE);
+    		categoriesColumns = UshahidiDatabase.getColumns(db, CATEGORIES_TABLE);
+    		db.execSQL("ALTER TABLE "  + CATEGORIES_TABLE + " RENAME TO temp_" + CATEGORIES_TABLE);
+    		db.execSQL(CATEGORIES_TABLE_CREATE);
+    		categoriesColumns.retainAll(UshahidiDatabase.getColumns(db, CATEGORIES_TABLE));
+    		String catsCols = UshahidiDatabase.join(categoriesColumns, ",");
+    		db.execSQL(String.format( "INSERT INTO %s (%s) SELECT %s FROM temp_%s", CATEGORIES_TABLE, catsCols, catsCols, CATEGORIES_TABLE));
+    		db.execSQL("DROP TABLE IF EXISTS temp_" + CATEGORIES_TABLE);
+    		
+    		// upgrade add incident table
+    		db.execSQL(ADD_INCIDENTS_TABLE_CREATE);
+    		addIncidentColumns = UshahidiDatabase.getColumns(db, ADD_INCIDENTS_TABLE);
+    		db.execSQL("ALTER TABLE "  + ADD_INCIDENTS_TABLE + " RENAME TO temp_" + ADD_INCIDENTS_TABLE);
+    		db.execSQL(ADD_INCIDENTS_TABLE_CREATE);
+    		addIncidentColumns.retainAll(UshahidiDatabase.getColumns(db, ADD_INCIDENTS_TABLE));
+    		String addIncidentCols = UshahidiDatabase.join(addIncidentColumns, ",");
+    		db.execSQL(String.format( "INSERT INTO %s (%s) SELECT %s FROM temp_%s", ADD_INCIDENTS_TABLE, addIncidentCols, addIncidentCols, ADD_INCIDENTS_TABLE));
+    		db.execSQL("DROP TABLE IF EXISTS temp_" + ADD_INCIDENTS_TABLE);
+    		
       		onCreate(db);
     	}
+    	
+    	
 	}
 
+	/**
+	 * Credits http://goo.gl/7kOpU
+	 * @param db
+	 * @param tableName
+	 * @return
+	 */
+	public static List<String> getColumns(SQLiteDatabase db, String tableName) {
+		List<String> ar = null;
+		Cursor c = null;
+		
+		try {
+			c = db.rawQuery("SELECT * FROM "+tableName+" LIMIT 1", null);
+			
+			if ( c!= null) {
+				ar = new ArrayList<String>(Arrays.asList(c.getColumnNames()));
+			}
+			
+		}catch(Exception e){	
+			Log.v(tableName, e.getMessage(), e);
+			e.printStackTrace();
+		} finally {
+			if (c!= null)
+				c.close();
+		}
+		return ar;
+	}
+	
+	public static String join(List<String> list, String delim) {
+		StringBuilder buf = new StringBuilder();
+		int num = list.size();
+		for ( int i = 0; i < num; i++){
+			if (i != 0)
+				buf.append(delim);
+			buf.append((String) list.get(i));
+		}
+		return buf.toString();
+	}
+	
 	public UshahidiDatabase(Context context) {
 		this.mContext = context;
 	}
@@ -204,8 +270,7 @@ public class UshahidiDatabase {
     	initialValues.put(INCIDENT_MODE, incidents.getIncidentMode());
     	initialValues.put(INCIDENT_VERIFIED, incidents.getIncidentVerified());
     	initialValues.put(INCIDENT_LOC_NAME, incidents.getIncidentLocation());
-    	initialValues
-        	.put(INCIDENT_LOC_LATITUDE, incidents.getIncidentLocLatitude());
+    	initialValues.put(INCIDENT_LOC_LATITUDE, incidents.getIncidentLocLatitude());
     	initialValues.put(INCIDENT_LOC_LONGITUDE, incidents.getIncidentLocLongitude());
     	initialValues.put(INCIDENT_CATEGORIES, incidents.getIncidentCategories());
     	initialValues.put(INCIDENT_MEDIA, incidents.getIncidentThumbnail());
@@ -225,8 +290,7 @@ public class UshahidiDatabase {
     	initialValues.put(ADD_INCIDENT_HOUR, addIncident.getIncidentHour());
     	initialValues.put(ADD_INCIDENT_MINUTE, addIncident.getIncidentMinute());
     	initialValues.put(ADD_INCIDENT_AMPM, addIncident.getIncidentAmPm());
-    	initialValues
-        	.put(ADD_INCIDENT_CATEGORIES, addIncident.getIncidentCategories());
+    	initialValues.put(ADD_INCIDENT_CATEGORIES, addIncident.getIncidentCategories());
     	initialValues.put(INCIDENT_LOC_NAME, addIncident.getIncidentLocName());
     	initialValues.put(INCIDENT_LOC_LATITUDE, addIncident.getIncidentLocLatitude());
     	initialValues.put(INCIDENT_LOC_LONGITUDE, addIncident.getIncidentLocLongitude());
@@ -286,7 +350,7 @@ public class UshahidiDatabase {
   	}
 
   	public boolean clearData() {
-  		// TODO: just wipe the database.
+  		
   		deleteAllIncidents();
   		deleteAllCategories();
   		return true;
@@ -459,7 +523,6 @@ public class UshahidiDatabase {
   				createCategories(category, isUnread);
   			}
 
-  			//limitRows(CATEGORIES_TABLE, 20, CATEGORY_ID);
   			mDb.setTransactionSuccessful();
   		} finally {
   			mDb.endTransaction();
