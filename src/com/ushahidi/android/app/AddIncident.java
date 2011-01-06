@@ -133,6 +133,7 @@ public class AddIncident extends Activity {
 	private Vector<String> categoriesId = new Vector<String>();
 	private HashMap<String, String> categoriesTitle = new HashMap<String, String>();
 	private HashMap<String,String> params = new HashMap<String, String>();
+	public static final String PREFS_NAME = "UshahidiService";
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,7 +144,7 @@ public class AddIncident extends Activity {
 		gc = new Geocoder(this);
 		
 		//load settings
-        //UshahidiService.loadSettings(AddIncident.this);
+        UshahidiService.loadSettings(AddIncident.this);
         initComponents();
        
     }
@@ -836,15 +837,16 @@ public class AddIncident extends Activity {
      */
     public boolean postToOnline() {
     	
-    	//String dates[] = incidentDate.getText().toString().split(" ");
-    	//load settings
-        Log.i("Domain name ", "Domain : "+UshahidiService.domain);
     	String dates[] = dateToSubmit.split(" ");
     	String time[] = dates[1].split(":");
     	String categories = Util.implode(vectorCategories);
     	
-    	StringBuilder urlBuilder = new StringBuilder(UshahidiService.domain);
+    	final SharedPreferences settings = getSharedPreferences(
+				PREFS_NAME, 0);
+    	
+    	StringBuilder urlBuilder = new StringBuilder(settings.getString("Domain", ""));
     	urlBuilder.append("/api");
+    	
     	params.put("task","report");
 		params.put("incident_title", incidentTitle.getText().toString());
 		params.put("incident_description", incidentDesc.getText().toString()); 
@@ -860,8 +862,6 @@ public class AddIncident extends Activity {
 		params.put("person_last", UshahidiService.lastname);
 		params.put("person_email", UshahidiService.email);
 		params.put("filename", UshahidiService.fileName);
-		
-		Log.i("Ushahidi URL: ",urlBuilder.toString());
 		
 		try {
 			return UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), params);

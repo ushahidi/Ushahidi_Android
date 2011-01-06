@@ -229,7 +229,7 @@ public class UshahidiService extends Service {
 	public static void saveSettings(Context context) {
 		final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
 		final SharedPreferences.Editor editor = settings.edit();
-		editor.putString("Domain", domain);
+		editor.putString("Domain", domain.trim());
 		editor.putString("Firstname", firstname);
 		editor.putString("Lastname", lastname);
 		

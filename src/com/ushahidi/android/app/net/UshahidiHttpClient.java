@@ -146,7 +146,7 @@ public class UshahidiHttpClient {
              req.setParameter("incident_ampm", params.get("incident_ampm"));
              req.setParameter("incident_category", params.get("incident_category"));
              req.setParameter("latitude", params.get("latitude"));
-             req.setParameter("longitude", params.get("latitude"));
+             req.setParameter("longitude", params.get("longitude"));
              req.setParameter("location_name", params.get("location_name"));
              req.setParameter("person_first", params.get("person_first"));
              req.setParameter("person_last", params.get("person_last"));

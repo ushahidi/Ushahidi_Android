@@ -146,7 +146,7 @@
 	    			Settings.</string>
 	<string name="loc_not_found">Your location could not be determined. Make sure you have 
 		pin point the exact location on the map.</string>
-	<string name="version">0.9.3</string>
+	<string name="version">0.9.4</string>
 	<string name="report_title">Title</string>
 	<string name="report_verified">Verified</string>
 	<string name="report_unverified">Unverified</string>
