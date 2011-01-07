@@ -4,4 +4,5 @@ bin/*
 gen/*
 .classpath
 *.swp
-
+test/bin/*
+test/gen/*
