@@ -2,7 +2,6 @@ bin
 gen
 bin/*
 gen/*
-.classpath
 *.swp
 test/bin/*
 test/gen/*
