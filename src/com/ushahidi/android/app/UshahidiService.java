@@ -121,7 +121,7 @@ public class UshahidiService extends Service {
 		super.onCreate();
 		queue = new QueueThread("ushahidi");
 		mHandler = new Handler();
-		
+		loadSettings(UshahidiService.this);
 		if(AutoFetch){
 			Log.i("Service ","Service is checked to start.");
 			mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 

@@ -43,6 +43,7 @@ import android.os.PowerManager;
 import android.os.Process;
 import android.provider.Settings;
 import android.telephony.SmsMessage;
+import android.util.Log;
 
 
 public class SmsReceiverService extends Service {
@@ -53,15 +54,18 @@ public class SmsReceiverService extends Service {
 	private String fromAddress = "";
     private String messageBody = "";
 	private static final Object mStartingServiceSync = new Object();
+	private static final String TAG = "Ushahidi";
 	private static PowerManager.WakeLock mStartingService;
 	private HashMap<String,String> params = new HashMap<String, String>();
+	private Context mContext;
 
 	@Override
 	public void onCreate() {
 	    
-	    HandlerThread thread = new HandlerThread("Message sending starts", Process.THREAD_PRIORITY_BACKGROUND);
+		HandlerThread thread = new HandlerThread(TAG, Process.THREAD_PRIORITY_BACKGROUND);
 	    thread.start();
-	    getApplicationContext();
+	    mContext = getApplicationContext();
+	    UshahidiService.loadSettings(mContext);
 	    mServiceLooper = thread.getLooper();
 	    mServiceHandler = new ServiceHandler(mServiceLooper);
 	}
@@ -113,8 +117,9 @@ public class SmsReceiverService extends Service {
 	 */
 	private void handleSmsReceived(Intent intent) {
 		
-		//TODO send the message to ushahidi via the api
 	    Bundle bundle = intent.getExtras();
+	    UshahidiService.loadSettings(mContext);
+	    
 	    if (bundle != null) {
 	    	SmsMessage[] messages = getMessagesFromIntent(intent);
 	    	SmsMessage sms = messages[0];
@@ -150,8 +155,9 @@ public class SmsReceiverService extends Service {
 
 	
 	private boolean postToUshahidi() {
-		
+		UshahidiService.loadSettings(mContext);
 		StringBuilder urlBuilder = new StringBuilder(UshahidiService.domain);
+		
     	urlBuilder.append("/api");
     	params.put("task","sms");
 		params.put("username", UshahidiService.username);
