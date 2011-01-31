@@ -381,42 +381,43 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	         reportsTask.execute();
 			 
 			 if(!Util.validateUshahidiInstance(sharedPreferences.getString("ushahidi_instance_preference",""))) {
+				 
 				 //reset whatever was entered in that field.
 				 ushahidiInstancePref.setText("");
 				 UshahidiService.domain = "";
 				 Util.showToast(this, R.string.invalid_ushahidi_instance);
 			 }
 		 }
-		 
 	 }
 	 
 	//thread class
-		private class ReportsTask extends AsyncTask <Void, Void, Integer> {
+	private class ReportsTask extends AsyncTask <Void, Void, Integer> {
 			
-			protected Integer status;
-			private ProgressDialog dialog;
-			protected Context appContext;
-			@Override
-			protected void onPreExecute() {
-				this.dialog = ProgressDialog.show(appContext, getString(R.string.please_wait),
+		protected Integer status;
+		private ProgressDialog dialog;
+		protected Context appContext;
+		
+		@Override
+		protected void onPreExecute() {
+			this.dialog = ProgressDialog.show(appContext, getString(R.string.please_wait),
 						getString(R.string.fetching_new_reports), true);
 
-			}
-			
-			@Override 
-			protected Integer doInBackground(Void... params) {
-				status = Util.processReports(appContext);
-				return status;
-			}
-			
-			@Override
-			protected void onPostExecute(Integer result)
-			{
-				if( result == 4 ){
-					Util.showToast(appContext, R.string.internet_connection);
-				}
-				this.dialog.cancel();
-			}
-
 		}
+			
+		@Override 
+		protected Integer doInBackground(Void... params) {
+			status = Util.processReports(appContext);
+			return status;
+		}
+			
+		@Override
+		protected void onPostExecute(Integer result)
+		{
+			if( result == 4 ){
+				Util.showToast(appContext, R.string.internet_connection);
+			}
+			this.dialog.cancel();
+		}
+
+	}
 }

@@ -43,7 +43,6 @@ import android.os.PowerManager;
 import android.os.Process;
 import android.provider.Settings;
 import android.telephony.SmsMessage;
-import android.util.Log;
 
 
 public class SmsReceiverService extends Service {

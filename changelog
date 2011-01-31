@@ -1,5 +1,9 @@
+1.0
+
+0.9.4
+ * Fixed issue with the app not sending the longitude when submitting a report but sends the latitude value as longitude value.
+
 0.9.3
  * Added the app version number to the about page.
  
- 0.9.4
- * Fixed issue with the app not sending the longitude when submitting a report but sends the latitude value as longitude value.
+ 
