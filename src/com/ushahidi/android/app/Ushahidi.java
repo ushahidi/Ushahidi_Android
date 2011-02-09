@@ -20,7 +20,17 @@
 
 package com.ushahidi.android.app;
  
-import com.ushahidi.android.app.R;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import com.ushahidi.android.app.GPSData;
+import com.ushahidi.android.app.Ushahidi;
+import com.ushahidi.android.app.UshahidiService;
+import com.ushahidi.android.app.net.UshahidiHttpClient;
+
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -29,15 +39,22 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
   
 public class Ushahidi extends Activity {
     /** Called when the activity is first created. */
@@ -69,10 +86,132 @@ public class Ushahidi extends Activity {
 	private Button listBtn;
 	private Button addBtn;
 	private Button settingsBtn;
+	private Button checkinBtn;
 	private String dialogErrorMsg = "An error occurred fetching the reports. " +
 			"Make sure you have entered an Ushahidi instance.";
  
 	private Bundle bundle;
+	
+	// Checkin specific variables and functions
+	private ProgressDialog pd = null;
+	
+	private String checkinDetails = "";
+	
+	private boolean postToOnline(String checkinDetails) {
+		// Time formating
+		String dateFormat = "MM/dd/yyyy";
+		String timeFormat = "HH:mm:ss a";
+		
+		SimpleDateFormat dateSdf = new SimpleDateFormat(dateFormat);
+		SimpleDateFormat timeSdf = new SimpleDateFormat(timeFormat);
+
+		// Variables
+		Date currentDate = new Date();
+		HashMap<String,String> myParams = new HashMap<String, String>();
+		StringBuilder dateToSubmit =  new StringBuilder()
+	        .append(dateSdf.format(currentDate)).append(" ")
+	        .append(timeSdf.format(currentDate));
+		
+    	String dates[] = dateToSubmit.toString().split(" ");
+    	String time[] = dates[1].split(":");
+    	String categories = "N/A"; // TODO establish a means to define a category
+        	        	
+    	Log.i("Domain name ", "Domain : " + UshahidiService.domain);
+    	Log.i("Dates 0: ", dates[0]);
+    	Log.i("Dates 2: ", dates[2]);
+    	
+    	// Build the HTTP response
+    	StringBuilder urlBuilder = new StringBuilder(UshahidiService.domain);
+    	urlBuilder.append("/api");
+    	myParams.put("task","report");
+		myParams.put("incident_title", "Check In");
+		myParams.put("incident_description", checkinDetails); 
+		myParams.put("incident_date", dates[0]); 
+		myParams.put("incident_hour", time[0]); 
+		myParams.put("incident_minute", time[1]);
+		myParams.put("incident_ampm", dates[2].toLowerCase());
+		myParams.put("incident_category", categories);
+		myParams.put("latitude", String.valueOf(GPSData.location.getLatitude()));
+		myParams.put("longitude", String.valueOf(GPSData.location.getLongitude())); 
+		myParams.put("location_name", "N/A");
+		myParams.put("person_first", UshahidiService.firstname);
+		myParams.put("person_last", UshahidiService.lastname);
+		myParams.put("person_email", UshahidiService.email);
+		myParams.put("filename", UshahidiService.fileName);
+		
+		Log.i("Ushahidi URL: ",urlBuilder.toString());
+		
+		try {
+			UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), myParams);
+			
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			
+			return false;
+		}
+	}
+	
+	private void getLocationData() {
+		pd = ProgressDialog.show(this, "Working...", "Getting location data...");
+		
+		GPSData.locationSet = false;
+		
+		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		
+		List<String> providers = locationManager.getProviders(true);
+        boolean gps_provider = false, network_provider = false;
+        
+        for (String name : providers) {
+        	if (name.equals(LocationManager.GPS_PROVIDER)) gps_provider = true;
+        	if (name.equals(LocationManager.NETWORK_PROVIDER)) network_provider = true;        	
+        }
+		
+		LocationListener locationListener = new LocationListener() {
+			public void onLocationChanged(Location location) {
+				// TODO Auto-generated method stub
+				setLocationData(location);
+				postToOnline(checkinDetails);
+				dismissCheckinProgressDialog();
+			}
+
+			public void onProviderDisabled(String provider) {
+				// TODO Auto-generated method stub
+			}
+
+			public void onProviderEnabled(String provider) {
+				// TODO Auto-generated method stub				
+			}
+
+			public void onStatusChanged(String provider, int status,
+					Bundle extras) {
+				// TODO Auto-generated method stub				
+			}
+		};
+		
+		if( gps_provider || (!gps_provider && !network_provider) ) {
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, locationListener);
+		} else if (network_provider) {
+			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000L, 500.0f, locationListener);
+		}
+	}
+	
+	private void setCheckinDetails(String checkinDetails) {
+		this.checkinDetails = checkinDetails;
+	}
+	
+	private void setLocationData(Location location) {
+		GPSData.locationSet = true;
+		GPSData.location = location;
+	}
+	
+	private void dismissCheckinProgressDialog() {
+		if(pd != null) {
+			pd.dismiss();
+		}
+		
+		pd = null;
+	}
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,6 +239,7 @@ public class Ushahidi extends Activity {
         listBtn = (Button) findViewById(R.id.incident_list);
         addBtn = (Button) findViewById(R.id.incident_add );
         settingsBtn = (Button) findViewById(R.id.incident_map);
+        checkinBtn = (Button) findViewById(R.id.checkin);
         
         listBtn.setOnClickListener( new View.OnClickListener() {
         	public void onClick( View v ){
@@ -125,6 +265,44 @@ public class Ushahidi extends Activity {
         		startActivityForResult(intent, ADD_INCIDENTS );
         		setResult(RESULT_OK);
         	}
+        });
+        
+        checkinBtn.setOnClickListener( new View.OnClickListener()  {
+			public void onClick( View v ) {
+				// Build the report addition alert box
+				AlertDialog.Builder builder = new AlertDialog.Builder(Ushahidi.this);
+
+				LayoutInflater inflater = (LayoutInflater) Ushahidi.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+				final View layout = inflater.inflate(R.layout.checkin_text,
+				                               (ViewGroup) findViewById(R.id.layout_root));
+				
+				builder.setMessage("You've checked in! Add more details?")
+				.setCancelable(false)
+				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						// Action for "Yes"
+						EditText descriptionText = (EditText)layout.findViewById(R.id.text);
+						setCheckinDetails(descriptionText.getText().toString());
+						getLocationData();
+						
+						dialog.cancel();
+					}
+				})
+				.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						// Action for "No"
+						setCheckinDetails("");
+						getLocationData();
+						
+		            	dialog.cancel();
+					}
+				});
+				
+				builder.setView(layout);			
+				AlertDialog alert = builder.create();
+				alert.show();
+				setResult(RESULT_OK);
+			}
         });
         
         mHandler = new Handler() {

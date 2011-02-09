@@ -162,4 +162,5 @@
 	<string name="status_yes">Yes</string>
 	<string name="please_wait">Please wait...</string>
 	<string name="fetching_new_reports">Fetching new reports</string>
+	<string name="checkin_menu">Checkin</string>
 </resources>
