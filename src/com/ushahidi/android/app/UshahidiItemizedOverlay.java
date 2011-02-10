@@ -3,8 +3,6 @@ package com.ushahidi.android.app;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import com.ushahidi.android.app.R;
-
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -89,6 +87,7 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
 	/* (non-Javadoc)
 	 * @see com.google.android.maps.ItemizedOverlay#onTap(int)
 	 */
+	@Override
 	protected final boolean onTap(int index) {
 		boolean isRecycled;
 		final int thisIndex;
@@ -100,7 +99,7 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
 			
 			balloonView = new UshahidiBalloonOverlayView(this.iMap,mapView.getContext(),viewOffset,
 					this.mNewIncidents, thisIndex, extras);
-			clickRegion = (View) balloonView.findViewById(R.id.balloon_inner_layout);
+			clickRegion = balloonView.findViewById(R.id.balloon_inner_layout);
 			isRecycled = false;
 			
 		} else {

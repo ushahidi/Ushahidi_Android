@@ -20,8 +20,6 @@
 
 package com.ushahidi.android.app;
 
-import com.ushahidi.android.app.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -62,6 +60,7 @@ public class About extends Activity {
 	private String dialogErrorMsg = "An error occurred fetching the reports. " +
 		"Make sure you have entered an Ushahidi instance.";
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         

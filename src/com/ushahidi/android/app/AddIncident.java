@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-import com.ushahidi.android.app.R;
-
 import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
@@ -59,7 +57,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,6 +70,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class AddIncident extends Activity {
+	
 	private static final int HOME = Menu.FIRST+1;
 	private static final int LIST_INCIDENT = Menu.FIRST+2;
 	private static final int INCIDENT_MAP = Menu.FIRST+3;
@@ -88,8 +86,8 @@ public class AddIncident extends Activity {
 	private static final int REQUEST_CODE_CAMERA = 5;
 	private static final int VIEW_MAP = 1;
 	
-	private Geocoder gc;
-	private List<Address> foundAddresses;
+	private Geocoder mGc;
+	private List<Address> mFoundAddresses;
 	
 	// date and time
     private int mYear;
@@ -97,28 +95,38 @@ public class AddIncident extends Activity {
     private int mDay;
     private int mHour;
     private int mMinute;
-    private int counter = 0;
-    private static double longitude;
-    private static double latitude;
-    private String errorMessage = "";
-    private String dateToSubmit = "";
-	private boolean error = false;
-	private EditText incidentTitle;
-	private EditText incidentLocation;
-	private EditText incidentDesc;
-	private TextView incidentDate;
-	private TextView selectedPhoto;
-	private TextView selectedCategories;
-	private Button btnSend;
-	private Button btnCancel;
-	private Button btnAddCategory;
-	private Button pickTime;
-	private Button pickDate;
-	private Button btnPicture;
-	private Button addLocation;
-	private HashMap<Integer,Integer> timeDigits;
-	private Bundle bundle;
-	private Bundle extras;
+    private int mCounter = 0;
+    
+    private static double sLongitude;
+    private static double sLatitude;
+    
+    private String mErrorMessage = "";
+    private String mDateToSubmit = "";
+    private String mFilename = "";
+    
+    private boolean mError = false;
+	
+    private EditText mIncidentTitle;
+	private EditText mIncidentLocation;
+	private EditText mIncidentDesc;
+	
+	private TextView mIncidentDate;
+	private TextView mSelectedPhoto;
+	private TextView mSelectedCategories;
+	
+	private Button mBtnSend;
+	private Button mBtnCancel;
+	private Button mBtnAddCategory;
+	private Button mPickTime;
+	private Button mPickDate;
+	private Button mBtnPicture;
+	private Button mAddLocation;
+	
+	private HashMap<Integer,Integer> mTimeDigits;
+	
+	private Bundle mBundle;
+	private Bundle mExtras;
+	
 	private static final int DIALOG_ERROR_NETWORK = 0;
 	private static final int DIALOG_ERROR_SAVING = 1;
     private static final int DIALOG_LOADING_CATEGORIES= 2;
@@ -127,12 +135,15 @@ public class AddIncident extends Activity {
 	private static final int DIALOG_MULTIPLE_CATEGORY = 6;
 	private static final int TIME_DIALOG_ID = 7;
     private static final int DATE_DIALOG_ID = 8;
-	private String filename = "";
+	
 	private final static Handler mHandler = new Handler();
-	private Vector<String> vectorCategories = new Vector<String>();
-	private Vector<String> categoriesId = new Vector<String>();
-	private HashMap<String, String> categoriesTitle = new HashMap<String, String>();
-	private HashMap<String,String> params = new HashMap<String, String>();
+	
+	private Vector<String> mVectorCategories = new Vector<String>();
+	private Vector<String> mCategoriesId = new Vector<String>();
+	
+	private HashMap<String, String> mCategoriesTitle = new HashMap<String, String>();
+	private HashMap<String,String> mParams = new HashMap<String, String>();
+	
 	public static final String PREFS_NAME = "UshahidiService";
 	
 	@Override
@@ -140,8 +151,8 @@ public class AddIncident extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.add_incident);
-        foundAddresses = new ArrayList<Address>();
-		gc = new Geocoder(this);
+        mFoundAddresses = new ArrayList<Address>();
+		mGc = new Geocoder(this);
 		
 		//load settings
         UshahidiService.loadSettings(AddIncident.this);
@@ -170,6 +181,7 @@ public class AddIncident extends Activity {
 				super.onOptionsItemSelected(item));
 	}
 
+	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
 		return(applyMenuChoice(item) ||
@@ -243,20 +255,27 @@ public class AddIncident extends Activity {
 	 * Initialize UI components
 	 */
 	private void initComponents(){
-		btnPicture = (Button) findViewById(R.id.btnPicture);
-		btnAddCategory = (Button) findViewById(R.id.add_category);
-		selectedPhoto = (TextView) findViewById(R.id.lbl_photo);
-		selectedCategories = (TextView) findViewById(R.id.lbl_category);
+		mBtnPicture = (Button) findViewById(R.id.btnPicture);
+		mBtnAddCategory = (Button) findViewById(R.id.add_category);
+		mBtnSend = (Button) findViewById(R.id.incident_add_btn);
+		mBtnCancel = (Button) findViewById(R.id.incident_add_cancel);
+		mIncidentDate = (TextView) findViewById(R.id.lbl_date);
+		mPickDate = (Button) findViewById(R.id.pick_date);
+		mPickTime = (Button) findViewById(R.id.pick_time);
+		mAddLocation = (Button) findViewById(R.id.location);
+	
+		mSelectedPhoto = (TextView) findViewById(R.id.lbl_photo);
+		mSelectedCategories = (TextView) findViewById(R.id.lbl_category);
 		
-		incidentTitle = (EditText) findViewById(R.id.incident_title);
+		mIncidentTitle = (EditText) findViewById(R.id.incident_title);
+		mIncidentLocation = (EditText) findViewById(R.id.incident_location);
 		
-		incidentTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+		mIncidentTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
-			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if( !hasFocus ) {
-					if(TextUtils.isEmpty(incidentTitle.getText())) {
-						incidentTitle.setError(getString(R.string.empty_report_title));
+					if(TextUtils.isEmpty(mIncidentTitle.getText())) {
+						mIncidentTitle.setError(getString(R.string.empty_report_title));
 					}
 				}
 				
@@ -264,42 +283,32 @@ public class AddIncident extends Activity {
 			
 		});
 		
-		incidentLocation = (EditText) findViewById(R.id.incident_location);
-		incidentLocation.setOnFocusChangeListener( new View.OnFocusChangeListener() {
+		mIncidentLocation.setOnFocusChangeListener( new View.OnFocusChangeListener() {
 
-			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if( !hasFocus ) {
-					if( TextUtils.isEmpty(incidentLocation.getText())) {
-						incidentLocation.setError(getString(R.string.empty_report_location));
+					if( TextUtils.isEmpty(mIncidentLocation.getText())) {
+						mIncidentLocation.setError(getString(R.string.empty_report_location));
 					}
 				}
 			}
 		});
 		
-		incidentDesc = (EditText) findViewById(R.id.incident_desc);
-		incidentDesc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+		mIncidentDesc = (EditText) findViewById(R.id.incident_desc);
+		mIncidentDesc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
-			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if( !hasFocus ) {
-					if(TextUtils.isEmpty(incidentDesc.getText())) {
-						incidentDesc.setError(getString(R.string.empty_report_description));
+					if(TextUtils.isEmpty(mIncidentDesc.getText())) {
+						mIncidentDesc.setError(getString(R.string.empty_report_description));
 					}
 				}
 			}
 			
 		});
 		
-		btnSend = (Button) findViewById(R.id.incident_add_btn);
-		btnCancel = (Button) findViewById(R.id.incident_add_cancel);
-		incidentDate = (TextView) findViewById(R.id.lbl_date);
-		pickDate = (Button) findViewById(R.id.pick_date);
-		pickTime = (Button) findViewById(R.id.pick_time);
-		addLocation = (Button) findViewById(R.id.location);
-		
 		//open location map window
-		addLocation.setOnClickListener( new View.OnClickListener(){
+		mAddLocation.setOnClickListener( new View.OnClickListener(){
 			public void onClick( View v ) {
 				
 				Intent intent = new Intent( AddIncident.this,LocationMap.class);
@@ -309,32 +318,32 @@ public class AddIncident extends Activity {
 			}
 		});
 		
-		btnSend.setOnClickListener(new View.OnClickListener() {
+		mBtnSend.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v){
 				//Dipo Fix
-				error = false;
-				if( TextUtils.isEmpty(incidentTitle.getText())) {
-					errorMessage = getString(R.string.empty_report_title);
-					error = true;
+				mError = false;
+				if( TextUtils.isEmpty(mIncidentTitle.getText())) {
+					mErrorMessage = getString(R.string.empty_report_title);
+					mError = true;
 				}
 				
-				if( TextUtils.isEmpty(incidentDesc.getText())) {
-					errorMessage += getString(R.string.empty_report_description);
-					error = true;
+				if( TextUtils.isEmpty(mIncidentDesc.getText())) {
+					mErrorMessage += getString(R.string.empty_report_description);
+					mError = true;
 				}
 				
-				if( TextUtils.isEmpty(incidentLocation.getText())) {
-					errorMessage += getString(R.string.empty_report_location);
-					error = true;
+				if( TextUtils.isEmpty(mIncidentLocation.getText())) {
+					mErrorMessage += getString(R.string.empty_report_location);
+					mError = true;
 				}
 				
 				//Dipo Fix
-				if(vectorCategories.size() == 0) {
-					errorMessage += getString(R.string.empty_report_categories);
-					error = true;
+				if(mVectorCategories.size() == 0) {
+					mErrorMessage += getString(R.string.empty_report_categories);
+					mError = true;
 				}
 				
-				if( !error ) {
+				if( !mError ) {
 					
 					AddReportsTask addReportsTask = new AddReportsTask();
 					addReportsTask.appContext = AddIncident.this;
@@ -342,23 +351,23 @@ public class AddIncident extends Activity {
 					
 				}else{
 					final Toast t = Toast.makeText(AddIncident.this,
-							"Error!\n\n"+ errorMessage,
+							"Error!\n\n"+ mErrorMessage,
 							Toast.LENGTH_LONG);
 					t.show();
-					errorMessage = "";
+					mErrorMessage = "";
 				}
 			 
 				
 				}
 			});
 		
-		btnPicture.setOnClickListener(new View.OnClickListener() {
+		mBtnPicture.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
 			}
 		});
 		
-		btnCancel.setOnClickListener( new View.OnClickListener() {
+		mBtnCancel.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				clearFields();
 				Intent intent = new Intent( AddIncident.this,Ushahidi.class);
@@ -368,21 +377,21 @@ public class AddIncident extends Activity {
 			}
 		});
 		
-		btnAddCategory.setOnClickListener(new View.OnClickListener() {
+		mBtnAddCategory.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				showDialog(DIALOG_MULTIPLE_CATEGORY);
-				counter++;
+				mCounter++;
 			}
 		});
 		
-		pickDate.setOnClickListener(new View.OnClickListener() {
+		mPickDate.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 showDialog(DATE_DIALOG_ID);
             }
         });
 		
-        pickTime.setOnClickListener(new View.OnClickListener() {
+        mPickTime.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 showDialog(TIME_DIALOG_ID);
@@ -415,9 +424,9 @@ public class AddIncident extends Activity {
 			  
 			  do {
 				  categories[i] = cursor.getString(titleIndex);
-				  categoriesTitle.put(String.valueOf(cursor.getInt(idIndex)), 
+				  mCategoriesTitle.put(String.valueOf(cursor.getInt(idIndex)), 
 						  cursor.getString(titleIndex));
-				  categoriesId.add(String.valueOf(cursor.getInt(idIndex)));
+				  mCategoriesId.add(String.valueOf(cursor.getInt(idIndex)));
 				  i++;
 			  }while( cursor.moveToNext() );
 		  }
@@ -429,15 +438,15 @@ public class AddIncident extends Activity {
 	
 	//reset records in the field
 	private void clearFields() {
-		btnPicture = (Button) findViewById(R.id.btnPicture);
-		btnAddCategory = (Button) findViewById(R.id.add_category);
-		incidentTitle.setText("");
-		incidentLocation.setText("");
-		incidentDesc.setText("");
-		vectorCategories.clear();
-		selectedPhoto.setText("");
-		selectedCategories.setText("");
-		counter = 0;
+		mBtnPicture = (Button) findViewById(R.id.btnPicture);
+		mBtnAddCategory = (Button) findViewById(R.id.add_category);
+		mIncidentTitle.setText("");
+		mIncidentLocation.setText("");
+		mIncidentDesc.setText("");
+		mVectorCategories.clear();
+		mSelectedPhoto.setText("");
+		mSelectedCategories.setText("");
+		mCounter = 0;
 		updateDisplay();
 		
 		//clear persistent data
@@ -454,17 +463,33 @@ public class AddIncident extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 		// The preferences returned if the request code is what we had given
 		// earlier in startSubActivity
-		switch(requestCode){
+		switch(requestCode) {
+		
 			case REQUEST_CODE_CAMERA:
-				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);	//pull it out of landscape mode
-				break;
-	
-			case REQUEST_CODE_IMAGE:
 				if(resultCode != RESULT_OK){
 					return;
 				}
+				
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);	//pull it out of landscape mode
+				mBundle = null;
+				mExtras = data.getExtras();
+				if ( mExtras != null ) mBundle = mExtras.getBundle("filename");
+				
+				if ( mBundle != null && !mBundle.isEmpty() ) {
+					UshahidiService.fileName = mBundle.getString("name");
+					mSelectedPhoto.setText(UshahidiService.fileName);
+				}
+				break;
+	
+			case REQUEST_CODE_IMAGE:
+				
+				if(resultCode != RESULT_OK){
+					return;
+				}
+				
 				Uri uri = data.getData();
 				Bitmap b = null;
+				
 				try {
 					b = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
 				} catch (FileNotFoundException e) {
@@ -472,7 +497,9 @@ public class AddIncident extends Activity {
 				} catch (IOException e) {
 					break;
 				}
+				
 				ByteArrayOutputStream byteArrayos = new ByteArrayOutputStream();
+				
 				try {
 					b.compress(CompressFormat.JPEG, 75, byteArrayos);				
 					byteArrayos.flush();
@@ -481,10 +508,11 @@ public class AddIncident extends Activity {
 				} catch (IOException e) {
 					break;
 				}
-				filename = "android_pic_upload" + randomString() + ".jpg";
-				ImageManager.writeImage(byteArrayos.toByteArray(), filename);
-				UshahidiService.fileName = filename;
-				selectedPhoto.setText(UshahidiService.fileName);
+				
+				mFilename = "android_pic_upload" + randomString() + ".jpg";
+				ImageManager.writeImage(byteArrayos.toByteArray(), mFilename);
+				UshahidiService.fileName = mFilename;
+				mSelectedPhoto.setText(UshahidiService.fileName);
 				break;
 				
 			case VIEW_MAP:
@@ -492,15 +520,15 @@ public class AddIncident extends Activity {
 					return;
 				}
 				
-				bundle = null;
-				extras = data.getExtras();
-				if( extras != null ) bundle = extras.getBundle("locations");
+				mBundle = null;
+				mExtras = data.getExtras();
+				if( mExtras != null ) mBundle = mExtras.getBundle("locations");
 				
-				if( bundle != null && !bundle.isEmpty() ) {
-					incidentLocation.setText( bundle.getString("location"));
+				if( mBundle != null && !mBundle.isEmpty() ) {
+					mIncidentLocation.setText( mBundle.getString("location"));
 				
-					AddIncident.latitude = bundle.getDouble("latitude");
-					AddIncident.longitude = bundle.getDouble("longitude");
+					AddIncident.sLatitude = mBundle.getDouble("latitude");
+					AddIncident.sLongitude = mBundle.getDouble("longitude");
 				}
 				break;
 		}
@@ -571,8 +599,8 @@ public class AddIncident extends Activity {
         switch (id) {
             case DIALOG_ERROR_NETWORK: {
                 AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-                dialog.setTitle("Network error!");
-                dialog.setMessage("Network error, please ensure you are connected to the internet");
+                dialog.setTitle("Network Error!");
+                dialog.setMessage("Network Error, please ensure you are connected to the internet");
                 dialog.setButton2("Ok", new Dialog.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();						
@@ -583,8 +611,8 @@ public class AddIncident extends Activity {
             }
             case DIALOG_ERROR_SAVING:{
            	 	AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-                dialog.setTitle("File System error!");
-                dialog.setMessage("File System error, please ensure your save path is correct!");
+                dialog.setTitle("File System mError!");
+                dialog.setMessage("File System mError, please ensure your save path is correct!");
                 dialog.setButton2("Ok", new Dialog.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();						
@@ -612,9 +640,10 @@ public class AddIncident extends Activity {
             }
             case DIALOG_CHOOSE_IMAGE_METHOD:{
             	AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-                dialog.setTitle("Choose Method");
-                dialog.setMessage("Please choose how you would like to get the picture.");
-                dialog.setButton("Gallery", new Dialog.OnClickListener() {
+                dialog.setTitle(getString(R.string.choose_method));
+                dialog.setMessage(getString(R.string.how_to_select_pic));
+                dialog.setButton(getString(R.string.gallery_option), new Dialog.OnClickListener() {
+                	
 					public void onClick(DialogInterface dialog, int which) {
 						Intent intent = new Intent();
 						intent.setAction(Intent.ACTION_PICK);
@@ -623,23 +652,23 @@ public class AddIncident extends Activity {
 						dialog.dismiss();
 					}
                 });
-                dialog.setButton2("Cancel", new Dialog.OnClickListener() {
+                dialog.setButton2(getString(R.string.btn_cancel), new Dialog.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 					}
                 });
                 
-                /**
-                 * Disabling camera functionality for now. will be re implemented in the next release.
-                 * dialog.setButton3("Camera", new Dialog.OnClickListener() {
+                dialog.setButton3(getString(R.string.camera_option), new Dialog.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 												
-						Intent launchPreferencesIntent = new Intent().setClass(AddIncident.this, ImageCapture.class);
+						Intent launchPreferencesIntent = new Intent().setClass(AddIncident.this, 
+								ImageCapture.class);
+						
 						// Make it a subactivity so we know when it returns
 						startActivityForResult(launchPreferencesIntent, REQUEST_CODE_CAMERA);
 						dialog.dismiss();
 					}
-        		});*/
+        		});
                 
                 dialog.setCancelable(false);
                 return dialog;
@@ -657,21 +686,21 @@ public class AddIncident extends Activity {
                             	
                             	if( isChecked ) {
                             		 
-                            		vectorCategories.add(categoriesId.get( whichButton ));
-                            		if( !vectorCategories.isEmpty()){
-                            			selectedCategories.setText(Util.limitString(
-                            					categoriesTitle.get(vectorCategories.get(0)), 15));
+                            		mVectorCategories.add(mCategoriesId.get( whichButton ));
+                            		if( !mVectorCategories.isEmpty()){
+                            			mSelectedCategories.setText(Util.limitString(
+                            					mCategoriesTitle.get(mVectorCategories.get(0)), 15));
                             		}
-                            		error = false;
+                            		mError = false;
                             	} else {
                             		//fixed a crash here.
-                            		vectorCategories.remove(categoriesId.get( whichButton ));
+                            		mVectorCategories.remove(mCategoriesId.get( whichButton ));
                             		
-                            		if( vectorCategories.isEmpty()){
-                            			selectedCategories.setText("");
+                            		if( mVectorCategories.isEmpty()){
+                            			mSelectedCategories.setText("");
                             		} else {
-                            			selectedCategories.setText(Util.limitString(
-                            					categoriesTitle.get(vectorCategories.get(0)), 15));
+                            			mSelectedCategories.setText(Util.limitString(
+                            					mCategoriesTitle.get(mVectorCategories.get(0)), 15));
                             		}
                             	}
                             	
@@ -714,34 +743,34 @@ public class AddIncident extends Activity {
 
     private void updateDisplay() {
     	String amPm;
-    	timeDigits = new HashMap<Integer,Integer>();
+    	mTimeDigits = new HashMap<Integer,Integer>();
         
-        timeDigits.put(00, 12);
-        timeDigits.put(13, 1);
-        timeDigits.put(14, 2);
-        timeDigits.put(15, 3);
-        timeDigits.put(16, 4);
-        timeDigits.put(17, 5);
-        timeDigits.put(18, 6);
-        timeDigits.put(19, 7);
-        timeDigits.put(20, 8);
-        timeDigits.put(21, 9);
-        timeDigits.put(22, 10);
-        timeDigits.put(23, 11);
-        timeDigits.put(24, 12);
-        timeDigits.put(12, 12);
-        timeDigits.put(1, 1);
-        timeDigits.put(2, 2);
-        timeDigits.put(3, 3);
-        timeDigits.put(4, 4);
-        timeDigits.put(5, 5);
-        timeDigits.put(6, 6);
-        timeDigits.put(7, 7);
-        timeDigits.put(8, 8);
-        timeDigits.put(9, 9);
-        timeDigits.put(10, 10);
-        timeDigits.put(11, 11);
-        timeDigits.put(12, 12);
+        mTimeDigits.put(00, 12);
+        mTimeDigits.put(13, 1);
+        mTimeDigits.put(14, 2);
+        mTimeDigits.put(15, 3);
+        mTimeDigits.put(16, 4);
+        mTimeDigits.put(17, 5);
+        mTimeDigits.put(18, 6);
+        mTimeDigits.put(19, 7);
+        mTimeDigits.put(20, 8);
+        mTimeDigits.put(21, 9);
+        mTimeDigits.put(22, 10);
+        mTimeDigits.put(23, 11);
+        mTimeDigits.put(24, 12);
+        mTimeDigits.put(12, 12);
+        mTimeDigits.put(1, 1);
+        mTimeDigits.put(2, 2);
+        mTimeDigits.put(3, 3);
+        mTimeDigits.put(4, 4);
+        mTimeDigits.put(5, 5);
+        mTimeDigits.put(6, 6);
+        mTimeDigits.put(7, 7);
+        mTimeDigits.put(8, 8);
+        mTimeDigits.put(9, 9);
+        mTimeDigits.put(10, 10);
+        mTimeDigits.put(11, 11);
+        mTimeDigits.put(12, 12);
     	if( mHour >=12 )
     		amPm = "PM";
     	else
@@ -756,14 +785,14 @@ public class AddIncident extends Activity {
     	
     	String dateTime = Util.formatDate("yyyy-MM-dd",strDate,"MMMM dd, yyyy");
     	
-    	incidentDate.setText( dateTime + " at "+pad(timeDigits.get(mHour))+":"+pad(mMinute) +" "+amPm);
+    	mIncidentDate.setText( dateTime + " at "+pad(mTimeDigits.get(mHour))+":"+pad(mMinute) +" "+amPm);
     	
-    	dateToSubmit =  new StringBuilder()
+    	mDateToSubmit =  new StringBuilder()
         // Month is 0 based so add 1
         .append(pad(mMonth + 1)).append("/")
         .append(pad(mDay)).append("/")
         .append(mYear).append(" ")
-        .append(pad(timeDigits.get(mHour))).append(":")
+        .append(pad(mTimeDigits.get(mHour))).append(":")
         .append(pad(mMinute)).append(" ")
 		.append(amPm).toString();
     }
@@ -804,23 +833,23 @@ public class AddIncident extends Activity {
      *
      */
     public long addToDb() {
-    	String dates[] = dateToSubmit.split(" ");
+    	String dates[] = mDateToSubmit.split(" ");
     	String time[] = dates[1].split(":");
     	
     	List<AddIncidentData> addIncidentsData = new ArrayList<AddIncidentData>();
     	AddIncidentData addIncidentData = new AddIncidentData();
     	addIncidentsData.add(addIncidentData);
     	
-    	addIncidentData.setIncidentTitle(incidentTitle.getText().toString());
-    	addIncidentData.setIncidentDesc(incidentDesc.getText().toString());
+    	addIncidentData.setIncidentTitle(mIncidentTitle.getText().toString());
+    	addIncidentData.setIncidentDesc(mIncidentDesc.getText().toString());
     	addIncidentData.setIncidentDate(dates[0]);
     	addIncidentData.setIncidentHour(Integer.parseInt(time[0]));
     	addIncidentData.setIncidentMinute(Integer.parseInt(time[1]));
     	addIncidentData.setIncidentAmPm(dates[2]);
-    	addIncidentData.setIncidentCategories(Util.implode(vectorCategories));
-    	addIncidentData.setIncidentLocName(incidentLocation.getText().toString());
-    	addIncidentData.setIncidentLocLatitude(String.valueOf(latitude));
-    	addIncidentData.setIncidentLocLongitude(String.valueOf(longitude));
+    	addIncidentData.setIncidentCategories(Util.implode(mVectorCategories));
+    	addIncidentData.setIncidentLocName(mIncidentLocation.getText().toString());
+    	addIncidentData.setIncidentLocLatitude(String.valueOf(sLatitude));
+    	addIncidentData.setIncidentLocLongitude(String.valueOf(sLongitude));
     	addIncidentData.setIncidentPhoto(UshahidiService.fileName);
     	addIncidentData.setPersonFirst(UshahidiService.firstname);
     	addIncidentData.setPersonLast(UshahidiService.lastname);
@@ -837,9 +866,9 @@ public class AddIncident extends Activity {
      */
     public boolean postToOnline() {
     	
-    	String dates[] = dateToSubmit.split(" ");
+    	String dates[] = mDateToSubmit.split(" ");
     	String time[] = dates[1].split(":");
-    	String categories = Util.implode(vectorCategories);
+    	String categories = Util.implode(mVectorCategories);
     	
     	final SharedPreferences settings = getSharedPreferences(
 				PREFS_NAME, 0);
@@ -847,24 +876,24 @@ public class AddIncident extends Activity {
     	StringBuilder urlBuilder = new StringBuilder(settings.getString("Domain", ""));
     	urlBuilder.append("/api");
     	
-    	params.put("task","report");
-		params.put("incident_title", incidentTitle.getText().toString());
-		params.put("incident_description", incidentDesc.getText().toString()); 
-		params.put("incident_date", dates[0]); 
-		params.put("incident_hour", time[0]); 
-		params.put("incident_minute", time[1]);
-		params.put("incident_ampm", dates[2].toLowerCase());
-		params.put("incident_category", categories);
-		params.put("latitude", String.valueOf(latitude));
-		params.put("longitude", String.valueOf(longitude)); 
-		params.put("location_name", incidentLocation.getText().toString());
-		params.put("person_first", UshahidiService.firstname);
-		params.put("person_last", UshahidiService.lastname);
-		params.put("person_email", UshahidiService.email);
-		params.put("filename", UshahidiService.fileName);
+    	mParams.put("task","report");
+		mParams.put("incident_title", mIncidentTitle.getText().toString());
+		mParams.put("incident_description", mIncidentDesc.getText().toString()); 
+		mParams.put("incident_date", dates[0]); 
+		mParams.put("incident_hour", time[0]); 
+		mParams.put("incident_minute", time[1]);
+		mParams.put("incident_ampm", dates[2].toLowerCase());
+		mParams.put("incident_category", categories);
+		mParams.put("latitude", String.valueOf(sLatitude));
+		mParams.put("longitude", String.valueOf(sLongitude)); 
+		mParams.put("location_name", mIncidentLocation.getText().toString());
+		mParams.put("person_first", UshahidiService.firstname);
+		mParams.put("person_last", UshahidiService.lastname);
+		mParams.put("person_email", UshahidiService.email);
+		mParams.put("filename", UshahidiService.fileName);
 		
 		try {
-			return UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), params);
+			return UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), mParams);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -886,13 +915,13 @@ public class AddIncident extends Activity {
         //String date = prefs.getString("date", null);
     	
         if ( title  != null) 
-            incidentTitle.setText(title, TextView.BufferType.EDITABLE);
+            mIncidentTitle.setText(title, TextView.BufferType.EDITABLE);
            
         if( desc != null )
-            incidentDesc.setText(desc, TextView.BufferType.EDITABLE);
+            mIncidentDesc.setText(desc, TextView.BufferType.EDITABLE);
         
         //if( date != null )
-          //  incidentDate.setText(date, TextView.BufferType.EDITABLE);
+          //  mIncidentDate.setText(date, TextView.BufferType.EDITABLE);
            
     }
 
@@ -905,9 +934,9 @@ public class AddIncident extends Activity {
     	super.onPause();
 
         SharedPreferences.Editor editor = getPreferences(0).edit();
-        editor.putString("title", incidentTitle.getText().toString());
-        editor.putString("desc", incidentDesc.getText().toString());
-        //editor.putString("date", incidentDate.getText().toString());
+        editor.putString("title", mIncidentTitle.getText().toString());
+        editor.putString("desc", mIncidentDesc.getText().toString());
+        //editor.putString("date", mIncidentDate.getText().toString());
         editor.commit();
     }
     
@@ -921,10 +950,10 @@ public class AddIncident extends Activity {
     public int geocodeLocationName( String locationName ) {
     	if(Util.isConnected(AddIncident.this)) {
     		try {
-				foundAddresses = gc.getFromLocationName(locationName,5);
-				Address address = foundAddresses.get(0);
-				AddIncident.latitude = address.getLatitude();
-				AddIncident.longitude = address.getLongitude();
+				mFoundAddresses = mGc.getFromLocationName(locationName,5);
+				Address address = mFoundAddresses.get(0);
+				AddIncident.sLatitude = address.getLatitude();
+				AddIncident.sLongitude = address.getLongitude();
 				
 			} catch (IOException e) {
 				return 2;
@@ -945,7 +974,7 @@ public class AddIncident extends Activity {
 		}
 		
 		@Override 
-		protected Integer doInBackground(Void... params) {
+		protected Integer doInBackground(Void... mParams) {
 			if( Util.isConnected(AddIncident.this) ){
 				
 				if( !postToOnline() ) {

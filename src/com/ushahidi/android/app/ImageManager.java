@@ -41,7 +41,7 @@ public class ImageManager {
 		FileInputStream fIn;
 		if( !TextUtils.isEmpty( fileName) ) {
 			try {
-				fIn = new FileInputStream(UshahidiService.savePath + fileName );
+				fIn = new FileInputStream(UshahidiService.savePath + fileName);
 				d = Drawable.createFromStream(fIn, "src");
 			} catch (FileNotFoundException e) {
 			
@@ -55,10 +55,10 @@ public class ImageManager {
 	
 	public static void saveImage() {
 		byte[] is;
-		for( String image : UshahidiService.mNewIncidentsImages) {
-			if(!TextUtils.isEmpty(image )) {
-				File f = new File( UshahidiService.savePath + image );
-				if(!f.exists()) {
+		for (String image : UshahidiService.mNewIncidentsImages) {
+			if (!TextUtils.isEmpty(image)) {
+				File f = new File(UshahidiService.savePath + image);
+				if (!f.exists()) {
 					try {
 						is = UshahidiHttpClient.fetchImage(UshahidiService.domain+"/media/uploads/"+image);
 						if( is != null ) {
@@ -80,14 +80,14 @@ public class ImageManager {
 	
 	public static void saveThumbnail() {
 		byte[] is;
-		for( String image : UshahidiService.mNewIncidentsThumbnails) {
+		for (String image : UshahidiService.mNewIncidentsThumbnails) {
 			if(!TextUtils.isEmpty(image )) {
-				File f = new File( UshahidiService.savePath + image );
+				File f = new File(UshahidiService.savePath + image);
 				if(!f.exists()) {
 					try {
 						is = UshahidiHttpClient.fetchImage(UshahidiService.domain+"/media/uploads/"+image);
 						if( is != null ) {
-							writeImage( is, image );
+							writeImage(is, image);
 						}
 					} catch (MalformedURLException e) {
 						
@@ -105,22 +105,32 @@ public class ImageManager {
 	
 	public static void writeImage(byte[] data, String filename) {
 		
+		deleteImage(filename);
+		
+		if( data != null ) {
+			FileOutputStream fOut;	
+			try {
+				fOut = new FileOutputStream(UshahidiService.savePath + filename);
+				fOut.write(data);
+				fOut.flush();
+				fOut.close();
+			} catch (final FileNotFoundException e) {
+			
+				e.printStackTrace();
+			} catch (final IOException e) {
+			
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public static void deleteImage(String filename) {
+		
 		File f = new File(UshahidiService.savePath + filename);
-		if(f.exists()){
+		if (f.exists()){
 			f.delete();
 		}
-		FileOutputStream fOut;
-		try {
-			fOut = new FileOutputStream(UshahidiService.savePath + filename);
-			fOut.write(data);
-			fOut.flush();
-			fOut.close();
-		} catch (final FileNotFoundException e) {
-			
-			e.printStackTrace();
-		} catch (final IOException e) {
-			
-			e.printStackTrace();
-		}
 	}
+	
 }

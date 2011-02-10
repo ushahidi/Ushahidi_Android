@@ -28,7 +28,7 @@ import android.hardware.Camera.PictureCallback;
 public class ImageCaptureCallback implements PictureCallback {
 
 	private static Random random = new Random();
-
+	
 	protected static String randomString() {
 		return Long.toString(random.nextLong(), 10);
 	}
@@ -38,14 +38,17 @@ public class ImageCaptureCallback implements PictureCallback {
 	}
 	
 	public void onPictureTaken(byte[] data, Camera camera) {
-		try {	
-			String filename = "ushandroid" + randomString() + ".jpg";
+		
+		try {
+			
+			String filename = "ushandroid_" + randomString() + ".jpg";
 			ImageManager.writeImage(data, filename);
 			UshahidiService.fileName = filename;
 			
 		} catch (final Exception ex) {
 			ex.printStackTrace();
 		}
+		
 	}
 
 }

@@ -20,9 +20,6 @@
 
 package com.ushahidi.android.app;
 
-
-import com.ushahidi.android.app.R;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +27,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.CheckBoxPreference;
 import android.preference.DialogPreference;
 import android.preference.EditTextPreference;
@@ -258,6 +256,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		String autoUpdate = autoUpdateTimePref.getValue();
 		String saveItems = saveItemsPref.getValue();
 		String totalReports = totalReportsPref.getValue();
+		String newSavePath;
 		
 		//"5 Minutes", "10 Minutes", "15 Minutes", "c", "60 Minutes" 
 		if(autoUpdate.matches("5")){
@@ -272,15 +271,13 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 			UshahidiService.AutoUpdateDelay = 60;
 		}
 		
-		String newSavePath = "";
-		
 		if( saveItems.equalsIgnoreCase("phone")){
-			newSavePath = "/data/data/com.ushahidi.android.app/files/";
+			newSavePath = this.getDir("",MODE_PRIVATE).toString();
 		
 		} else {	//means on sd is checked
-			
-			newSavePath = "/sdcard" + "ushahidi";
+			newSavePath = Environment.getExternalStorageDirectory().toString() + "ushahidi"; 
 		}
+		
 		UshahidiService.savePath = newSavePath;
 		
 		//Total reports
@@ -293,8 +290,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 		UshahidiService.vibrate = vibrateCheckBoxPref.isChecked();
 		UshahidiService.ringtone = ringtoneCheckBoxPref.isChecked();
 		UshahidiService.flashLed = flashLedCheckBoxPref.isChecked();
-		
 		UshahidiService.saveSettings(this);
+		
 	}
 	
 	 @Override

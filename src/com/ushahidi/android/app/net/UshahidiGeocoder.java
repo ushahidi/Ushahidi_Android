@@ -22,8 +22,9 @@ package com.ushahidi.android.app.net;
 
 import java.io.IOException;
 
-import com.ushahidi.android.app.R;
 import org.apache.http.HttpResponse;
+
+import com.ushahidi.android.app.R;
 
 public class UshahidiGeocoder {
 	

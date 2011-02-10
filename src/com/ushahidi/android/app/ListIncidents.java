@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
  
-import com.ushahidi.android.app.R;
-
 import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 
@@ -37,7 +35,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -76,6 +73,7 @@ public class ListIncidents extends Activity
 	private List<IncidentsData> mOldIncidents;
 	private Vector<String> vectorCategories = new Vector<String>();
   
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -179,6 +177,7 @@ public class ListIncidents extends Activity
 				super.onOptionsItemSelected(item));
 	}
  
+	@Override
 	public boolean onContextItemSelected(MenuItem item) {
  
 		return(applyMenuChoice(item) ||
@@ -365,13 +364,15 @@ public class ListIncidents extends Activity
 					incidentData.setIncidentImage(image);
 					images = image.split(",");
 					
-					status = Util.toInt(cursor.getString(verifiedIndex) ) == 0 ? getString(R.string.report_unverified) : getString(R.string.report_verified);
+					status = Util.toInt(cursor.getString(verifiedIndex) ) == 0 ? getString(
+							R.string.report_unverified) : getString(R.string.report_verified);
 					incidentData.setIncidentVerified(Util.toInt(cursor.getString(verifiedIndex) ));
 			  
 					//TODO do a proper check for thumbnails
 					d = ImageManager.getImages( thumbnails[0]);
 					
-					ila.addItem( new ListIncidentText( d == null ? getResources().getDrawable( R.drawable.ushahidi_report_icon):d, 
+					ila.addItem( new ListIncidentText( d == null ? getResources().getDrawable( 
+							R.drawable.ushahidi_report_icon):d, 
 							title, date, 
 							status,
 							description,

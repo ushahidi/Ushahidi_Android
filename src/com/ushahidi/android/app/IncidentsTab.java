@@ -20,8 +20,6 @@
 
 package com.ushahidi.android.app;
 
-import com.ushahidi.android.app.R;
-
 import android.app.TabActivity;
 import android.os.Bundle;
 import android.view.Window;

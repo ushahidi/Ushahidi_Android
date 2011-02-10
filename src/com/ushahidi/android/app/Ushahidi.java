@@ -20,8 +20,6 @@
 
 package com.ushahidi.android.app;
  
-import com.ushahidi.android.app.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -232,6 +230,7 @@ public class Ushahidi extends Activity {
 				super.onOptionsItemSelected(item));
 	}
  
+	@Override
 	public boolean onContextItemSelected(MenuItem item) {
  
 		return(applyMenuChoice(item) ||

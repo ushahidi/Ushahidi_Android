@@ -17,12 +17,23 @@
   If you have questions regarding the use of this file, please contact
   Ushahidi developers at team@ushahidi.com. 
  -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" 
-	android:layout_height="fill_parent" 
-	android:orientation="vertical">  
-	<SurfaceView android:id="@+id/surCamera" 
-		android:layout_width="fill_parent" 
-		android:layout_height="10dip" 
-		android:layout_weight="1" />  
-</LinearLayout>  
+	android:layout_height="fill_parent"
+	android:id="@+id/snap_photo">
+    <SurfaceView android:id="@+id/sur_camera"
+        android:layout_width="fill_parent"  
+        android:layout_height="fill_parent" />
+    <com.ushahidi.android.app.ShutterButton 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom|right" 
+        android:src="@drawable/btn_ic_camera_shutter" 
+        android:focusable="true" 
+        android:background="@drawable/btn_shutter" 
+        android:scaleType="center" 
+        android:clickable="true" 
+        android:id="@+id/shutter_button"/>    		  
+</RelativeLayout> 

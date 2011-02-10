@@ -49,8 +49,6 @@ import com.ushahidi.android.app.data.UshahidiDatabase;
 import android.location.Geocoder;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.ushahidi.android.app.R;
  
 public class IncidentMap extends MapActivity {
 	private MapView mapView = null;
@@ -297,6 +295,7 @@ public class IncidentMap extends MapActivity {
 						super.onOptionsItemSelected(item));
 	}
  
+	@Override
 	public boolean onContextItemSelected(MenuItem item) {
  
 		return(applyMenuChoice(item) ||

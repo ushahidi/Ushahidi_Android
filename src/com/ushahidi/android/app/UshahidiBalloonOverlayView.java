@@ -2,8 +2,7 @@ package com.ushahidi.android.app;
 
 import java.util.List;
 
-import com.ushahidi.android.app.R;
-
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -88,7 +87,7 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
 				intent.putExtra("incidents", incidentsBundle);
 				
 				iMap.startActivityForResult(intent,VIEW_INCIDENT);
-				iMap.setResult(iMap.RESULT_OK );
+				iMap.setResult(Activity.RESULT_OK );
 				
 			}
 		} );
@@ -101,7 +100,7 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
 		});
 
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		params.gravity = Gravity.NO_GRAVITY;
 
 		addView(layout, params);
