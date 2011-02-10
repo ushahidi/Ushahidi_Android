@@ -26,9 +26,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import com.ushahidi.android.app.GPSData;
-import com.ushahidi.android.app.Ushahidi;
-import com.ushahidi.android.app.UshahidiService;
+import com.ushahidi.android.app.checkin.LocationServices;
+import com.ushahidi.android.app.checkin.NetworkServices;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
 
 
@@ -97,112 +96,18 @@ public class Ushahidi extends Activity {
 	
 	private String checkinDetails = "";
 	
-	private boolean postToOnline(String checkinDetails) {
-		// Time formating
-		String dateFormat = "MM/dd/yyyy";
-		String timeFormat = "HH:mm:ss a";
-		
-		SimpleDateFormat dateSdf = new SimpleDateFormat(dateFormat);
-		SimpleDateFormat timeSdf = new SimpleDateFormat(timeFormat);
-
-		// Variables
-		Date currentDate = new Date();
-		HashMap<String,String> myParams = new HashMap<String, String>();
-		StringBuilder dateToSubmit =  new StringBuilder()
-	        .append(dateSdf.format(currentDate)).append(" ")
-	        .append(timeSdf.format(currentDate));
-		
-    	String dates[] = dateToSubmit.toString().split(" ");
-    	String time[] = dates[1].split(":");
-    	String categories = "N/A"; // TODO establish a means to define a category
-        	        	
-    	Log.i("Domain name ", "Domain : " + UshahidiService.domain);
-    	Log.i("Dates 0: ", dates[0]);
-    	Log.i("Dates 2: ", dates[2]);
-    	
-    	// Build the HTTP response
-    	StringBuilder urlBuilder = new StringBuilder(UshahidiService.domain);
-    	urlBuilder.append("/api");
-    	myParams.put("task","report");
-		myParams.put("incident_title", "Check In");
-		myParams.put("incident_description", checkinDetails); 
-		myParams.put("incident_date", dates[0]); 
-		myParams.put("incident_hour", time[0]); 
-		myParams.put("incident_minute", time[1]);
-		myParams.put("incident_ampm", dates[2].toLowerCase());
-		myParams.put("incident_category", categories);
-		myParams.put("latitude", String.valueOf(GPSData.location.getLatitude()));
-		myParams.put("longitude", String.valueOf(GPSData.location.getLongitude())); 
-		myParams.put("location_name", "N/A");
-		myParams.put("person_first", UshahidiService.firstname);
-		myParams.put("person_last", UshahidiService.lastname);
-		myParams.put("person_email", UshahidiService.email);
-		myParams.put("filename", UshahidiService.fileName);
-		
-		Log.i("Ushahidi URL: ",urlBuilder.toString());
-		
-		try {
-			UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), myParams);
-			
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			
-			return false;
-		}
-	}
-	
-	private void getLocationData() {
+	private void performCheckin(String checkinDetails) {
+        // Initialize Progress dialog
 		pd = ProgressDialog.show(this, "Working...", "Getting location data...");
-		
-		GPSData.locationSet = false;
-		
-		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		
-		List<String> providers = locationManager.getProviders(true);
-        boolean gps_provider = false, network_provider = false;
-        
-        for (String name : providers) {
-        	if (name.equals(LocationManager.GPS_PROVIDER)) gps_provider = true;
-        	if (name.equals(LocationManager.NETWORK_PROVIDER)) network_provider = true;        	
+        LocationServices.getLocation(this);
+
+        while(!LocationServices.locationSet) {
+            // Do nothing for the meantime
         }
-		
-		LocationListener locationListener = new LocationListener() {
-			public void onLocationChanged(Location location) {
-				// TODO Auto-generated method stub
-				setLocationData(location);
-				postToOnline(checkinDetails);
-				dismissCheckinProgressDialog();
-			}
 
-			public void onProviderDisabled(String provider) {
-				// TODO Auto-generated method stub
-			}
-
-			public void onProviderEnabled(String provider) {
-				// TODO Auto-generated method stub				
-			}
-
-			public void onStatusChanged(String provider, int status,
-					Bundle extras) {
-				// TODO Auto-generated method stub				
-			}
-		};
-		
-		if( gps_provider || (!gps_provider && !network_provider) ) {
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, locationListener);
-		} else if (network_provider) {
-			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000L, 500.0f, locationListener);
-		}
-	}
-	
-	private void setCheckinDetails(String checkinDetails) {
-		this.checkinDetails = checkinDetails;
-	}
-	
-	private void setLocationData(Location location) {
-		GPSData.locationSet = true;
-		GPSData.location = location;
+        // Post data online and close the progress dialog
+        NetworkServices.postToOnline(checkinDetails, LocationServices.location);
+        dismissCheckinProgressDialog();
 	}
 	
 	private void dismissCheckinProgressDialog() {
@@ -282,8 +187,7 @@ public class Ushahidi extends Activity {
 					public void onClick(DialogInterface dialog, int id) {
 						// Action for "Yes"
 						EditText descriptionText = (EditText)layout.findViewById(R.id.text);
-						setCheckinDetails(descriptionText.getText().toString());
-						getLocationData();
+						performCheckin(descriptionText.getText().toString());
 						
 						dialog.cancel();
 					}
@@ -291,8 +195,7 @@ public class Ushahidi extends Activity {
 				.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						// Action for "No"
-						setCheckinDetails("");
-						getLocationData();
+						performCheckin("");
 						
 		            	dialog.cancel();
 					}
