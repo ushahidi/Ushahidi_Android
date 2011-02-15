@@ -151,7 +151,7 @@ public class UshahidiHttpClient {
              req.setParameter("person_first", params.get("person_first"));
              req.setParameter("person_last", params.get("person_last"));
              req.setParameter("person_email", params.get("person_email"));
-             
+             Log.i("HTTP Client:", "filename:"+UshahidiService.savePath + params.get("filename"));
              if( !TextUtils.isEmpty( params.get("filename") ))
              req.setParameter("incident_photo[]", new File(UshahidiService.savePath + params.get("filename")));
              

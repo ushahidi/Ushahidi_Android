@@ -24,8 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ushahidi.android.app.R;
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -149,7 +147,8 @@ public class LocationMap extends MapActivity {
 
         // Fire off a thread to do some work that we shouldn't do directly in the UI thread
         Thread t = new Thread() {
-            public void run() {
+            @Override
+			public void run() {
             	updateLocation();
                 mHandler.post(mUpdateResults);
             }

@@ -23,8 +23,6 @@ package com.ushahidi.android.app;
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.ushahidi.android.app.R;
-
 import com.ushahidi.android.app.net.UshahidiHttpClient;
 
 import android.app.Notification;

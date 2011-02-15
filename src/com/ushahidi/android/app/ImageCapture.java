@@ -23,74 +23,142 @@ package com.ushahidi.android.app;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.ushahidi.android.app.R;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.hardware.Camera.AutoFocusCallback;
+import android.hardware.Camera.ShutterCallback;
+import android.hardware.Camera.PictureCallback;
 import android.os.Bundle;
-import android.provider.MediaStore.Images.Media;
+import android.provider.MediaStore.Images.ImageColumns;
+import android.provider.MediaStore.MediaColumns;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 public class ImageCapture extends Activity implements SurfaceHolder.Callback {
-	private Camera camera;
-	private boolean isPreviewRunning = false;
-	private SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyyMMddHHmmssSS");
-
-	private SurfaceView surfaceView;
-	private SurfaceHolder surfaceHolder;
-
+	private Camera mCamera;
+	private boolean mIsPreviewRunning = false;
+	private SimpleDateFormat mTimeStampFormat = new SimpleDateFormat("yyyyMMddHHmmssSS");
+	
+	private SurfaceView mSurfaceView;
+	private SurfaceHolder mSurfaceHolder;
+	private RelativeLayout mRelativeLayout;
+	
+	private ShutterButton mShutterButton;
+	
+	private Bundle mBundle;
+	private Intent mIntent;
+	
+	@Override
 	public void onCreate(Bundle bundle){
 		super.onCreate(bundle);
-		
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		getWindow().setFormat(PixelFormat.TRANSLUCENT);
 		setContentView(R.layout.take_picture);
-		surfaceView = (SurfaceView)findViewById(R.id.surCamera);
-		surfaceHolder = surfaceView.getHolder();
-		surfaceHolder.addCallback(this);
-		surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		
+		mSurfaceView = (SurfaceView)findViewById(R.id.sur_camera);
+		mShutterButton = (ShutterButton) findViewById(R.id.shutter_button);
+		mRelativeLayout = (RelativeLayout) findViewById(R.id.snap_photo);
+		
+		mSurfaceHolder = mSurfaceView.getHolder();
+		mSurfaceHolder.addCallback(this);
+		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		
+		mBundle = new Bundle();
+		mIntent = new Intent();
+		
+		mShutterButton.setOnShutterButtonListener(new ShutterButton.OnShutterButtonListener() {
+			
+			public void onShutterButtonClick(ShutterButton b) {
+				switch (b.getId()) {
+	            	case R.id.shutter_button:
+	            		onSnap();	
+	            		break;
+				}	
+			}
+
+			public void onShutterButtonFocus(ShutterButton b, boolean pressed) {
+				// TODO: Auto-generated method stub
+				
+			}
+		});
+		
+		mRelativeLayout.setOnClickListener(new RelativeLayout.OnClickListener(){
+
+			public void onClick(View v) {
+				mShutterButton.setEnabled(false);
+				mCamera.autoFocus(mAutoFocusCallback);
+			}
+			
+		});
+		
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState){
 		super.onRestoreInstanceState(savedInstanceState);
 	}
-
-	Camera.PictureCallback mPictureCallbackRaw = new Camera.PictureCallback() {
+	
+	private static Random random = new Random();
+	protected static String randomString() {
+		return Long.toString(random.nextLong(), 10);
+	}
+	
+	PictureCallback mPictureCallbackRaw = new PictureCallback() {
 		public void onPictureTaken(byte[] data, Camera c) {
-			camera.startPreview();
-			//write file to images
-			/*SaveIncidentsImage sptr = new SaveIncidentsImage(data);
-			UshahidiService.AddThreadToQueue(sptr);
-			ImageCapture.this.finish();*/
+			//TODO: do something with raw image
 		}
 	};
 
-	Camera.PictureCallback mPictureCallbackJpeg= new Camera.PictureCallback() {
+	PictureCallback mPictureCallbackJpeg = new PictureCallback() {
+		
 		public void onPictureTaken(byte[] data, Camera c) {
+			
+			mCamera.startPreview();
+			String filename = "ushandroid_" + randomString() + ".jpg";
+			ImageManager.writeImage(data, filename);
+			mBundle.putString("name",filename);
+			mIntent.putExtra("filename",mBundle);
+			
+			ImageCapture.this.setResult(RESULT_OK, mIntent);
+			ImageCapture.this.finish();
+
 		}
 	};
 
-	Camera.ShutterCallback mShutterCallback = new Camera.ShutterCallback() {
+	ShutterCallback mShutterCallback = new ShutterCallback() {
 		public void onShutter() {
+			//TODO: Do something when button is pressed.
 		}
 	};
 
+	//Implement auto focus
+	AutoFocusCallback mAutoFocusCallback = new AutoFocusCallback() {
 
+		public void onAutoFocus(boolean success, Camera camera) {
+			mShutterButton.setEnabled(true);
+		}
+		
+	};
+
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event){
 		
 		ImageCaptureCallback iccb = null;
 		if(keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_CAMERA) {
 			try {
-				String filename = timeStampFormat.format(new Date());
+				String filename = mTimeStampFormat.format(new Date());
 				ContentValues values = new ContentValues();
-				values.put(Media.TITLE, filename);
-				values.put(Media.DESCRIPTION, "Image capture by camera");
+				values.put(MediaColumns.TITLE, filename);
+				values.put(ImageColumns.DESCRIPTION, "Image capture by camera");
 				iccb = new ImageCaptureCallback();
 			} catch(Exception ex ){
 				ex.printStackTrace();
@@ -101,52 +169,60 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
 		}
 
 		if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_CAMERA) {
-			camera.takePicture(mShutterCallback, mPictureCallbackRaw, iccb);
+			mCamera.takePicture(mShutterCallback, mPictureCallbackRaw, mPictureCallbackJpeg);
 			return true;
 		}
 
 		return false;
 	}
 
+	@Override
 	protected void onResume(){
+		
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		super.onResume();
 	}
 
+	@Override
 	protected void onSaveInstanceState(Bundle outState){
 		super.onSaveInstanceState(outState);
 	}
 
+	@Override
 	protected void onStop(){
 		super.onStop();
 	}
 
 	public void surfaceCreated(SurfaceHolder holder){
-		camera = Camera.open();
+		mCamera = Camera.open();
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h){
-		if (isPreviewRunning) {
-			camera.stopPreview();
+		if (mIsPreviewRunning) {
+			mCamera.stopPreview();
 		}
-		Camera.Parameters p = camera.getParameters();
+		Camera.Parameters p = mCamera.getParameters();
 		p.setPreviewSize(w, h);
-		camera.setParameters(p);
+		mCamera.setParameters(p);
 		try {
-			camera.setPreviewDisplay(holder);
+			mCamera.setPreviewDisplay(holder);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		camera.startPreview();
-		isPreviewRunning = true;
+		mCamera.startPreview();
+		mIsPreviewRunning = true;
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder)
 	{
-		camera.stopPreview();
-		isPreviewRunning = false;
-		camera.release();
+		mCamera.stopPreview();
+		mIsPreviewRunning = false;
+		mCamera.release();
+	}
+	
+	public void onSnap() {
+		mCamera.takePicture(mShutterCallback, mPictureCallbackRaw, mPictureCallbackJpeg);
 	}
 }
 

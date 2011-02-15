@@ -62,26 +62,26 @@ public class ListIncidentTextView extends LinearLayout{
 		this.tblLayout = new TableLayout(context);
 		
 		this.tblLayout.setLayoutParams(new TableLayout.LayoutParams(
-				TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+				android.view.ViewGroup.LayoutParams.FILL_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 		this.tblLayout.setColumnStretchable(1, true);
 		this.tblRow =  new TableRow(context);
 		this.tblRow.setLayoutParams(new TableRow.LayoutParams(
-				TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+				android.view.ViewGroup.LayoutParams.FILL_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 		
 		textLayout.setOrientation(VERTICAL);
 		textLayout.setPadding(0, 2, 0, 2);
 		
 		this.textLayout.setLayoutParams(
 				new TableRow.LayoutParams(
-						TableRow.LayoutParams.FILL_PARENT,
-						TableRow.LayoutParams.WRAP_CONTENT)
+						android.view.ViewGroup.LayoutParams.FILL_PARENT,
+						android.view.ViewGroup.LayoutParams.WRAP_CONTENT)
 		);
 		
 		thumbnail = new ImageView(context);
 		thumbnail.setImageURI( listText.getThumbnailUri() );
 		thumbnail.setImageDrawable( listText.getThumbnail() );
 		thumbnail.setPadding(2, 0, 10, 4);
-		thumbnail.setLayoutParams(new TableRow.LayoutParams(87, TableRow.LayoutParams.FILL_PARENT));
+		thumbnail.setLayoutParams(new TableRow.LayoutParams(87, android.view.ViewGroup.LayoutParams.FILL_PARENT));
 		
 		tblRow.addView(thumbnail);
 	
@@ -95,28 +95,28 @@ public class ListIncidentTextView extends LinearLayout{
 		title.setPadding(0, 0, 2, 2);
 		title.setText( listText.getTitle() );
 		title.setLayoutParams( new TableRow.LayoutParams( 
-				TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+				android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 		
 		textLayout.addView(title, new TableRow.LayoutParams( 
-				TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+				android.view.ViewGroup.LayoutParams.FILL_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 		
 		iLocation = new TextView( context );
 		iLocation.setTextColor(Color.BLACK);
 		iLocation.setText(listText.getLocation());
 		
 		textLayout.addView(iLocation, new TableRow.LayoutParams( 
-				TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+				android.view.ViewGroup.LayoutParams.FILL_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 		
 		
 		date = new TextView( context);
 		date.setTextColor(Color.BLACK);
-		date.setLayoutParams( new LayoutParams( TableRow.LayoutParams.WRAP_CONTENT, 
-				TableRow.LayoutParams.WRAP_CONTENT));
+		date.setLayoutParams( new LayoutParams( android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 
+				android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 		
 		date.setText( listText.getDate() );
 		
 		textLayout.addView( date, new TableRow.LayoutParams( 
-				TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT) );
+				android.view.ViewGroup.LayoutParams.FILL_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT) );
 		
 		status = new TextView( context);
 		//change color to red if text is not Verified
@@ -131,8 +131,8 @@ public class ListIncidentTextView extends LinearLayout{
 		
 		
 
-		textLayout.addView( status, new TableRow.LayoutParams( TableRow.LayoutParams.WRAP_CONTENT,
-				TableRow.LayoutParams.FILL_PARENT));
+		textLayout.addView( status, new TableRow.LayoutParams( android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+				android.view.ViewGroup.LayoutParams.FILL_PARENT));
 		
 		tblRow.addView( textLayout);
 		
@@ -145,14 +145,14 @@ public class ListIncidentTextView extends LinearLayout{
 		arrow.setPadding(2, 25, 10, 2);
 		
 		arrow.setLayoutParams(new TableRow.LayoutParams(
-			TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+			android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 		
 		tblRow.addView(arrow);
 		
 		tblLayout.addView(tblRow);
 		
 		addView(tblLayout, new LinearLayout.LayoutParams(
-				LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+				android.view.ViewGroup.LayoutParams.FILL_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 		
 	}
 	
@@ -192,6 +192,7 @@ public class ListIncidentTextView extends LinearLayout{
 		this.media = media;
 	}
 	
+	@Override
 	public void setId( int id ) {
 		this.id = id;
 	}

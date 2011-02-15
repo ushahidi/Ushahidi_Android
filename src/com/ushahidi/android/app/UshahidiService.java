@@ -24,7 +24,6 @@ package com.ushahidi.android.app;
 import java.io.File;
 import java.util.Vector;
 
-import com.ushahidi.android.app.R;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.ushahidi.android.app.data.UshahidiDatabase;
@@ -46,11 +45,19 @@ import android.util.Log;
 
  
 public class UshahidiService extends Service {
-	public static final String PREFS_NAME = "UshahidiService";
+	
 	public static boolean httpRunning = false;
-	public static final DefaultHttpClient httpclient = new DefaultHttpClient();
-	public static Vector<String> mNewIncidentsImages = new Vector<String>();
-	public static Vector<String> mNewIncidentsThumbnails = new Vector<String>();
+	public static boolean AutoFetch = false;
+	public static boolean smsUpdate = false;
+	public static boolean vibrate = false;
+	public static boolean ringtone = false;
+	public static boolean flashLed = false;
+	
+	public static int countries = 0;
+	public static int AutoUpdateDelay = 0;
+	public static final int NOTIFICATION_ID = 1;
+	
+	public static final String PREFS_NAME = "UshahidiService";
 	public static String incidentsResponse = "";
 	public static String categoriesResponse = "";
 	public static String savePath = "";
@@ -58,24 +65,20 @@ public class UshahidiService extends Service {
 	public static String firstname = "";
 	public static String lastname = "";
 	public static String email = "";
-	public static int countries = 0;
-	public static int AutoUpdateDelay = 0;
 	public static String totalReports = "";
 	public static String fileName = "";
-	public static boolean AutoFetch = false;
 	public static String total_reports = "";
-	public static boolean smsUpdate = false;
-	public static boolean vibrate = false;
-	public static boolean ringtone = false;
-	public static boolean flashLed = false;
 	public static String username = "";
 	public static String password = "";
-	private Handler mHandler = new Handler();
-	
 	private static final String TAG = "Ushahidi - New Updates"; 
     public static final String NEW_USHAHIDI_REPORT_FOUND = "New_Ushahidi_Report_Found";
-    public static final int NOTIFICATION_ID = 1;
-    
+	
+    public static Vector<String> mNewIncidentsImages = new Vector<String>();
+	public static Vector<String> mNewIncidentsThumbnails = new Vector<String>();
+
+	public static final DefaultHttpClient httpclient = new DefaultHttpClient();
+	
+    private Handler mHandler = new Handler();
     private Notification newUshahidiReportNotification;
     private NotificationManager mNotificationManager;
     private static QueueThread queue;
@@ -110,6 +113,7 @@ public class UshahidiService extends Service {
 	};
 	
 	
+	@Override
 	public IBinder onBind(Intent intent) {
 		return mBinder;
 	}
@@ -155,7 +159,8 @@ public class UshahidiService extends Service {
 	}
 	
 	public static void AddThreadToQueue(Thread tr){
-		queue.AddQueueItem(tr);
+		//	if( tr != null)
+		//queue.AddQueueItem(tr);
 	}
 	
 	private void showNotification(String tickerText) {
@@ -204,10 +209,12 @@ public class UshahidiService extends Service {
 	}
 	
 	public static void loadSettings(Context context) {
-		final SharedPreferences settings = context.getSharedPreferences(
-				PREFS_NAME, 0);
-		savePath = settings.getString("savePath",
-				"/data/data/com.ushahidi.android.app/files/");
+		final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
+		
+		final String path = context.getDir("",MODE_PRIVATE).toString();
+		
+		savePath = settings.getString("savePath",path);
+		
 		domain = settings.getString("Domain", "");
 		firstname = settings.getString("Firstname", "");
 		lastname = settings.getString("Lastname", "");
@@ -268,7 +275,7 @@ public class UshahidiService extends Service {
 	            }
 	        }
 	        // Get first item from vector, remove it and decrement item count.
-	        item = (Thread)queue.firstElement();
+	        item = queue.firstElement();
 	        queue.removeElement(item);
 	        itemcount--;
 	        // Send it back

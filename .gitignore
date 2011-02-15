@@ -5,3 +5,4 @@ gen/*
 *.swp
 test/bin/*
 test/gen/*
+.settings/*

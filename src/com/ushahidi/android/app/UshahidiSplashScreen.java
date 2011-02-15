@@ -20,8 +20,6 @@
 
 package com.ushahidi.android.app;
 
-import com.ushahidi.android.app.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

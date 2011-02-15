@@ -32,6 +32,7 @@ import android.util.Log;
 public class BootReceiver extends BroadcastReceiver {
 	private static final String TAG = "BootReceiver";
   
+	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.i(TAG, "Ushahidi BootReceiver is receiving.");
 	  	if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {      

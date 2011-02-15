@@ -32,13 +32,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
-import android.widget.Gallery.LayoutParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +48,6 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
-import com.ushahidi.android.app.R;
 
 public class ViewIncidents extends MapActivity implements
 	AdapterView.OnItemSelectedListener, ViewSwitcher.ViewFactory {
@@ -200,13 +197,12 @@ public class ViewIncidents extends MapActivity implements
 		return false;
 	}
 
-	@Override
 	public View makeView() {
 		ImageView i = new ImageView(this);
         //i.setBackgroundColor(0xFF000000);
         i.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        i.setLayoutParams(new ImageSwitcher.LayoutParams(LayoutParams.FILL_PARENT,
-                LayoutParams.FILL_PARENT));
+        i.setLayoutParams(new ImageSwitcher.LayoutParams(android.view.ViewGroup.LayoutParams.FILL_PARENT,
+                android.view.ViewGroup.LayoutParams.FILL_PARENT));
         return i;
 	}
 	
@@ -299,7 +295,7 @@ public class ViewIncidents extends MapActivity implements
 			
 			i.setScaleType(ImageView.ScaleType.FIT_XY);
             
-			i.setLayoutParams(new Gallery.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			i.setLayoutParams(new Gallery.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
             
             // The preferred Gallery item background
             i.setBackgroundResource(imageBackgroundColor());
