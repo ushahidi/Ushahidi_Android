@@ -219,24 +219,24 @@ public class AddIncident extends Activity {
 		
 		case LIST_INCIDENT:
 			launchPreferencesIntent = new Intent( AddIncident.this,ListIncidents.class);
-    		startActivityForResult( launchPreferencesIntent, LIST_INCIDENTS );
+    		startActivityForResult(launchPreferencesIntent, LIST_INCIDENTS);
     		setResult(RESULT_OK);
 			return true;
 	
 		case INCIDENT_MAP:
 			launchPreferencesIntent = new Intent( AddIncident.this, ViewIncidents.class);
-    		startActivityForResult( launchPreferencesIntent,MAP_INCIDENTS );
+    		startActivityForResult(launchPreferencesIntent,MAP_INCIDENTS);
 			return true;
 	
 		case HOME:
 			launchPreferencesIntent = new Intent( AddIncident.this,Ushahidi.class);
-    		startActivityForResult( launchPreferencesIntent, GOTOHOME );
+    		startActivityForResult(launchPreferencesIntent, GOTOHOME);
     		setResult(RESULT_OK);
 			return true;
 		
 		case ABOUT:
 			launchPreferencesIntent = new Intent( AddIncident.this,About.class);
-    		startActivityForResult( launchPreferencesIntent, REQUEST_CODE_ABOUT );
+    		startActivityForResult(launchPreferencesIntent, REQUEST_CODE_ABOUT);
     		setResult(RESULT_OK);
 			return true;
 			
@@ -599,9 +599,9 @@ public class AddIncident extends Activity {
         switch (id) {
             case DIALOG_ERROR_NETWORK: {
                 AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-                dialog.setTitle("Network Error!");
-                dialog.setMessage("Network Error, please ensure you are connected to the internet");
-                dialog.setButton2("Ok", new Dialog.OnClickListener() {
+                dialog.setTitle(getString(R.string.network_error));
+                dialog.setMessage(getString(R.string.network_error_msg));
+                dialog.setButton2(getString(R.string.btn_ok), new Dialog.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();						
 					}
@@ -611,9 +611,9 @@ public class AddIncident extends Activity {
             }
             case DIALOG_ERROR_SAVING:{
            	 	AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-                dialog.setTitle("File System mError!");
-                dialog.setMessage("File System mError, please ensure your save path is correct!");
-                dialog.setButton2("Ok", new Dialog.OnClickListener() {
+                dialog.setTitle(getString(R.string.network_error));
+                dialog.setMessage(getString(R.string.file_system_error_msg));
+                dialog.setButton2(getString(R.string.btn_ok), new Dialog.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();						
 					}
@@ -621,24 +621,8 @@ public class AddIncident extends Activity {
                 dialog.setCancelable(false);
                 return dialog;
            }
-            case DIALOG_LOADING_CATEGORIES: {
-                ProgressDialog dialog = new ProgressDialog(this);
-                dialog.setTitle("Loading Categories");
-                dialog.setMessage("Please wait while categories are loaded...");
-                dialog.setIndeterminate(true);
-                dialog.setCancelable(false);
-                return dialog;
-            }
-            
-            case DIALOG_LOADING_LOCATIONS: {
-                ProgressDialog dialog = new ProgressDialog(this);
-                dialog.setTitle("Loading Categories");
-                dialog.setMessage("Please wait while categories are loaded...");
-                dialog.setIndeterminate(true);
-                dialog.setCancelable(false);
-                return dialog;
-            }
-            case DIALOG_CHOOSE_IMAGE_METHOD:{
+          
+           case DIALOG_CHOOSE_IMAGE_METHOD:{
             	AlertDialog dialog = (new AlertDialog.Builder(this)).create();
                 dialog.setTitle(getString(R.string.choose_method));
                 dialog.setMessage(getString(R.string.how_to_select_pic));
@@ -660,13 +644,14 @@ public class AddIncident extends Activity {
                 
                 dialog.setButton3(getString(R.string.camera_option), new Dialog.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-												
+						
 						Intent launchPreferencesIntent = new Intent().setClass(AddIncident.this, 
 								ImageCapture.class);
 						
 						// Make it a subactivity so we know when it returns
 						startActivityForResult(launchPreferencesIntent, REQUEST_CODE_CAMERA);
 						dialog.dismiss();
+						
 					}
         		});
                 
