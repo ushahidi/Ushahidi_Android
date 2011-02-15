@@ -162,12 +162,9 @@
 	<string name="status_yes">Yes</string>
 	<string name="please_wait">Please wait...</string>
 	<string name="fetching_new_reports">Fetching new reports</string>
-<<<<<<< HEAD
 	<string name="checkin_menu">Checkin</string>
-=======
 	<string name="choose_method">Choose Method</string>
 	<string name="how_to_select_pic">Please choose how you would like to get the picture.</string>
 	<string name="camera_option">Camera</string>
 	<string name="gallery_option">Gallery</string>
->>>>>>> 34a7f35297f818ab13000696ea594a010766232e
 </resources>

@@ -19,8 +19,7 @@
  **/
 
 package com.ushahidi.android.app;
- 
-<<<<<<< HEAD
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,9 +30,6 @@ import com.ushahidi.android.app.checkin.LocationServices;
 import com.ushahidi.android.app.checkin.NetworkServices;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
 
-
-=======
->>>>>>> 34a7f35297f818ab13000696ea594a010766232e
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
