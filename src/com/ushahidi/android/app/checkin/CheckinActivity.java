@@ -167,7 +167,7 @@ public class CheckinActivity extends Activity {
         }
 
         // Post data online and close the progress dialog
-        NetworkServices.postToOnline(checkinDetails, LocationServices.location);
+        NetworkServices.postToOnline(checkinDetails, LocationServices.location, NetworkServices.fileName);
         dismissCheckinProgressDialog();
 	}
 

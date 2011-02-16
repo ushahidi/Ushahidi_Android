@@ -25,7 +25,7 @@ import java.util.HashMap;
 public class NetworkServices {
     public static String fileName;
 
-    public static boolean postToOnline(String checkinDetails, Location location) {
+    public static boolean postToOnline(String checkinDetails, Location location, String filename) {
 		HashMap<String,String> myParams = new HashMap<String, String>();
 
     	// Build the HTTP response
@@ -39,7 +39,7 @@ public class NetworkServices {
         myParams.put("message", checkinDetails);
 
         // Specify the file name
-        myParams.put("filename", "");
+        myParams.put("filename", filename);
 
 		Log.i("Ushahidi URL: ",urlBuilder.toString());
 
@@ -62,22 +62,16 @@ public class NetworkServices {
              req = new ClientHttpRequest(url);
 
              req.setParameter("task", params.get("task"));
-             req.setParameter("incident_title", params.get("incident_title"));
-             req.setParameter("incident_description", params.get("incident_description"));
-             req.setParameter("incident_date",params.get("incident_date"));
-             req.setParameter("incident_hour", params.get("incident_hour"));
-             req.setParameter("incident_minute", params.get("incident_minute"));
-             req.setParameter("incident_ampm", params.get("incident_ampm"));
-             req.setParameter("incident_category", params.get("incident_category"));
-             req.setParameter("latitude", params.get("latitude"));
-             req.setParameter("longitude", params.get("longitude"));
-             req.setParameter("location_name", params.get("location_name"));
-             req.setParameter("person_first", params.get("person_first"));
-             req.setParameter("person_last", params.get("person_last"));
-             req.setParameter("person_email", params.get("person_email"));
+             req.setParameter("action", params.get("action"));
+             req.setParameter("mobileid", params.get("mobileid"));
+             req.setParameter("lat",params.get("lat"));
+             req.setParameter("lon", params.get("lon"));
+             req.setParameter("message", params.get("message"));
+
              Log.i("HTTP Client:", "filename:"+UshahidiService.savePath + params.get("filename"));
-             if( !TextUtils.isEmpty(params.get("filename")))
-             req.setParameter("incident_photo[]", new File(UshahidiService.savePath + params.get("filename")));
+
+             if( !TextUtils.isEmpty(params.get("filename")) || !(params.get("filename").equals("")))
+                req.setParameter("message[]", new File(UshahidiService.savePath + params.get("filename")));
 
              InputStream serverInput = req.post();
 

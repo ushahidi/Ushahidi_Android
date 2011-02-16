@@ -139,6 +139,8 @@ public class Ushahidi extends Activity {
         checkinBtn.setOnClickListener( new View.OnClickListener()  {
 			public void onClick( View v ) {
 				// Build the report addition alert box
+                NetworkServices.fileName = "";
+
 				Intent checkinActivityIntent = new Intent().setClass(Ushahidi.this, CheckinActivity.class);
                 startActivity(checkinActivityIntent);
 
