@@ -20,15 +20,9 @@
 
 package com.ushahidi.android.app;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
+import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.checkin.LocationServices;
 import com.ushahidi.android.app.checkin.NetworkServices;
-import com.ushahidi.android.app.net.UshahidiHttpClient;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,14 +31,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -91,32 +81,7 @@ public class Ushahidi extends Activity {
 	private Bundle bundle;
 	
 	// Checkin specific variables and functions
-	private ProgressDialog pd = null;
-	
-	private String checkinDetails = "";
-	
-	private void performCheckin(String checkinDetails) {
-        // Initialize Progress dialog
-		pd = ProgressDialog.show(this, "Working...", "Getting location data...");
-        LocationServices.getLocation(this);
 
-        while(!LocationServices.locationSet) {
-            // Do nothing for the meantime
-        }
-
-        // Post data online and close the progress dialog
-        NetworkServices.postToOnline(checkinDetails, LocationServices.location);
-        dismissCheckinProgressDialog();
-	}
-	
-	private void dismissCheckinProgressDialog() {
-		if(pd != null) {
-			pd.dismiss();
-		}
-		
-		pd = null;
-	}
-	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,35 +139,9 @@ public class Ushahidi extends Activity {
         checkinBtn.setOnClickListener( new View.OnClickListener()  {
 			public void onClick( View v ) {
 				// Build the report addition alert box
-				AlertDialog.Builder builder = new AlertDialog.Builder(Ushahidi.this);
+				Intent checkinActivityIntent = new Intent().setClass(Ushahidi.this, CheckinActivity.class);
+                startActivity(checkinActivityIntent);
 
-				LayoutInflater inflater = (LayoutInflater) Ushahidi.this.getSystemService(LAYOUT_INFLATER_SERVICE);
-				final View layout = inflater.inflate(R.layout.checkin_text,
-				                               (ViewGroup) findViewById(R.id.layout_root));
-				
-				builder.setMessage("You've checked in! Add more details?")
-				.setCancelable(false)
-				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						// Action for "Yes"
-						EditText descriptionText = (EditText)layout.findViewById(R.id.text);
-						performCheckin(descriptionText.getText().toString());
-						
-						dialog.cancel();
-					}
-				})
-				.setNegativeButton("No", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						// Action for "No"
-						performCheckin("");
-						
-		            	dialog.cancel();
-					}
-				});
-				
-				builder.setView(layout);			
-				AlertDialog alert = builder.create();
-				alert.show();
 				setResult(RESULT_OK);
 			}
         });

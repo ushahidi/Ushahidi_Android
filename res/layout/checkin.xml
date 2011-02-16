@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <TextView android:id="@+id/checkin_message_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/checkin_message" />
+    <EditText android:id="@+id/checkin_message_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    <TextView android:id="@+id/checkin_selected_photo_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/checkin_selected_photo" />
+    <EditText android:id="@+id/checkin_selected_photo_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    <Button android:id="@+id/upload_checkin_photo_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/checkin_upload_photo" />
+    <Button android:id="@+id/perform_checkin_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/checkin_menu" />
+</LinearLayout>

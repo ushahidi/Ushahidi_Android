@@ -164,6 +164,7 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
 				ex.printStackTrace();
 			}
 		}
+
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			return super.onKeyDown(keyCode, event);
 		}

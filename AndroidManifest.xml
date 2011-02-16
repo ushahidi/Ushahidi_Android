@@ -141,5 +141,6 @@
                 <category android:name="android.intent.category.DEFAULT"></category>
             </intent-filter>
         </activity>
+        <activity android:name=".checkin.CheckinActivity" android:label="Does the checkin"/>
     </application>
 </manifest>

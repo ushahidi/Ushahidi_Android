@@ -1,11 +1,16 @@
 package com.ushahidi.android.app.checkin;
 
 import android.location.Location;
+import android.text.TextUtils;
 import android.util.Log;
 import com.ushahidi.android.app.UshahidiService;
+import com.ushahidi.android.app.Util;
+import com.ushahidi.android.app.net.ClientHttpRequest;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,52 +23,28 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class NetworkServices {
+    public static String fileName;
+
     public static boolean postToOnline(String checkinDetails, Location location) {
-		// Time formating
-		String dateFormat = "MM/dd/yyyy";
-		String timeFormat = "HH:mm:ss a";
-
-		SimpleDateFormat dateSdf = new SimpleDateFormat(dateFormat);
-		SimpleDateFormat timeSdf = new SimpleDateFormat(timeFormat);
-
-		// Variables
-		Date currentDate = new Date();
 		HashMap<String,String> myParams = new HashMap<String, String>();
-		StringBuilder dateToSubmit =  new StringBuilder()
-	        .append(dateSdf.format(currentDate)).append(" ")
-	        .append(timeSdf.format(currentDate));
-
-    	String dates[] = dateToSubmit.toString().split(" ");
-    	String time[] = dates[1].split(":");
-    	String categories = "N/A"; // TODO establish a means to define a category
-
-    	Log.i("Domain name ", "Domain : " + UshahidiService.domain);
-    	Log.i("Dates 0: ", dates[0]);
-    	Log.i("Dates 2: ", dates[2]);
 
     	// Build the HTTP response
     	StringBuilder urlBuilder = new StringBuilder(UshahidiService.domain);
     	urlBuilder.append("/api");
-    	myParams.put("task","report");
-		myParams.put("incident_title", "Check In");
-		myParams.put("incident_description", checkinDetails);
-		myParams.put("incident_date", dates[0]);
-		myParams.put("incident_hour", time[0]);
-		myParams.put("incident_minute", time[1]);
-		myParams.put("incident_ampm", dates[2].toLowerCase());
-		myParams.put("incident_category", categories);
-		myParams.put("latitude", String.valueOf(location.getLatitude()));
-		myParams.put("longitude", String.valueOf(location.getLongitude()));
-		myParams.put("location_name", "N/A");
-		myParams.put("person_first", UshahidiService.firstname);
-		myParams.put("person_last", UshahidiService.lastname);
-		myParams.put("person_email", UshahidiService.email);
-		myParams.put("filename", UshahidiService.fileName);
+    	myParams.put("task","checkin");
+		myParams.put("action", "ci");
+		myParams.put("mobileid", "testingmobileid439234");
+		myParams.put("lat", String.valueOf(location.getLatitude()));
+		myParams.put("lon", String.valueOf(location.getLongitude()));
+        myParams.put("message", checkinDetails);
+
+        // Specify the file name
+        myParams.put("filename", "");
 
 		Log.i("Ushahidi URL: ",urlBuilder.toString());
 
 		try {
-			UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), myParams);
+			PostFileUpload(urlBuilder.toString(), myParams);
 
 			return true;
 		} catch (IOException e) {
@@ -71,5 +52,63 @@ public class NetworkServices {
 
 			return false;
 		}
+	}
+
+    public static boolean PostFileUpload(String URL, HashMap<String, String> params) throws IOException{
+        ClientHttpRequest req = null;
+
+        try {
+             URL url = new URL(URL);
+             req = new ClientHttpRequest(url);
+
+             req.setParameter("task", params.get("task"));
+             req.setParameter("incident_title", params.get("incident_title"));
+             req.setParameter("incident_description", params.get("incident_description"));
+             req.setParameter("incident_date",params.get("incident_date"));
+             req.setParameter("incident_hour", params.get("incident_hour"));
+             req.setParameter("incident_minute", params.get("incident_minute"));
+             req.setParameter("incident_ampm", params.get("incident_ampm"));
+             req.setParameter("incident_category", params.get("incident_category"));
+             req.setParameter("latitude", params.get("latitude"));
+             req.setParameter("longitude", params.get("longitude"));
+             req.setParameter("location_name", params.get("location_name"));
+             req.setParameter("person_first", params.get("person_first"));
+             req.setParameter("person_last", params.get("person_last"));
+             req.setParameter("person_email", params.get("person_email"));
+             Log.i("HTTP Client:", "filename:"+UshahidiService.savePath + params.get("filename"));
+             if( !TextUtils.isEmpty(params.get("filename")))
+             req.setParameter("incident_photo[]", new File(UshahidiService.savePath + params.get("filename")));
+
+             InputStream serverInput = req.post();
+
+             if( Util.extractPayloadJSON(GetText(serverInput)) ){
+            	 return true;
+             }
+
+        } catch (MalformedURLException ex) {
+        	//fall through and return false
+        }
+        return false;
+    }
+
+    public static String GetText(InputStream in) {
+		String text = "";
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(
+				in), 1024);
+		final StringBuilder sb = new StringBuilder();
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			text = sb.toString();
+		} catch (final Exception ex) {
+		} finally {
+			try {
+				in.close();
+			} catch (final Exception ex) {
+			}
+		}
+		return text;
 	}
 }
