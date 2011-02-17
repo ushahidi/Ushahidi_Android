@@ -85,7 +85,15 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT"></category>
             </intent-filter>
-        </activity> 
+        </activity>
+
+        <!-- Checkins Map -->
+        <activity android:name=".checkin.CheckinMap" android:label="@string/view_checkins">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity>
         
         <!-- View Incidents -->
         <activity android:name=".ViewIncidents" android:label="@string/view_incident">
@@ -141,6 +149,6 @@
                 <category android:name="android.intent.category.DEFAULT"></category>
             </intent-filter>
         </activity>
-        <activity android:name=".checkin.CheckinActivity" android:label="Does the checkin"/>
+        <activity android:name=".checkin.CheckinActivity" android:label="Checkin"/>
     </application>
 </manifest>

@@ -68,7 +68,7 @@ public class NetworkServices {
              req.setParameter("lon", params.get("lon"));
              req.setParameter("message", params.get("message"));
 
-             Log.i("HTTP Client:", "filename:"+UshahidiService.savePath + params.get("filename"));
+             Log.i("HTTP Client:", "filename:" + UshahidiService.savePath + params.get("filename"));
 
              if( !TextUtils.isEmpty(params.get("filename")) || !(params.get("filename").equals("")))
                 req.setParameter("message[]", new File(UshahidiService.savePath + params.get("filename")));

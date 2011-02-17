@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.widget.TabHost;
 import android.content.Intent;
+import com.ushahidi.android.app.checkin.CheckinMap;
 
 
 public class IncidentsTab extends TabActivity {
@@ -42,14 +43,23 @@ public class IncidentsTab extends TabActivity {
 		extras = this.getIntent().getExtras();
 		
         tabHost = getTabHost();
-        
+
+        // List of reports
         tabHost.addTab(tabHost.newTabSpec("list_reports")
         		.setIndicator("List",getResources().getDrawable(R.drawable.ushahidi_tab_list_selected))
                 .setContent(new Intent(this, ListIncidents.class)));
 
+        // Reports map
         tabHost.addTab(tabHost.newTabSpec("map")
                 .setIndicator("Map",getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
                 .setContent(new Intent(this, IncidentMap.class)));
+
+        // Checkins map
+        // TODO: Place the checkins map here
+        tabHost.addTab(tabHost.newTabSpec("checkin")
+                .setIndicator("Checkin",getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
+                .setContent(new Intent(this, CheckinMap.class)));
+
         tabHost.setCurrentTab(0);
         
         if( extras != null ) {
