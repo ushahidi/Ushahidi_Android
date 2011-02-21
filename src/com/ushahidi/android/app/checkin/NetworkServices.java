@@ -25,7 +25,7 @@ import java.util.HashMap;
 public class NetworkServices {
     public static String fileName;
 
-    public static boolean postToOnline(String checkinDetails, Location location, String filename) {
+    public static boolean postToOnline(String IMEI, String checkinDetails, Location location, String filename) {
 		HashMap<String,String> myParams = new HashMap<String, String>();
 
     	// Build the HTTP response
@@ -33,7 +33,7 @@ public class NetworkServices {
     	urlBuilder.append("/api");
     	myParams.put("task","checkin");
 		myParams.put("action", "ci");
-		myParams.put("mobileid", "testingmobileid439234");
+		myParams.put("mobileid", IMEI);
 		myParams.put("lat", String.valueOf(location.getLatitude()));
 		myParams.put("lon", String.valueOf(location.getLongitude()));
         myParams.put("message", checkinDetails);

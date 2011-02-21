@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import com.ushahidi.android.app.ImageCapture;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.UshahidiService;
 
 /**
  * Created by IntelliJ IDEA.
@@ -158,8 +159,11 @@ public class CheckinActivity extends Activity {
 	}
 
     private void performCheckin(String checkinDetails) {
+        // Initialize the settings
+        UshahidiService.loadSettings(CheckinActivity.this);
+
         // Initialize Progress dialog
-		pd = ProgressDialog.show(this, "Working...", "Getting location data...");
+		pd = ProgressDialog.show(this, getString(R.string.checkin_progress_title), getString(R.string.checkin_progress_message));
         LocationServices.getLocation(this);
 
         while(!LocationServices.locationSet) {
@@ -167,7 +171,7 @@ public class CheckinActivity extends Activity {
         }
 
         // Post data online and close the progress dialog
-        NetworkServices.postToOnline(checkinDetails, LocationServices.location, NetworkServices.fileName);
+        NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this), checkinDetails, LocationServices.location, NetworkServices.fileName);
         dismissCheckinProgressDialog();
 	}
 
