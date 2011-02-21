@@ -6,7 +6,9 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import com.google.android.maps.*;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.UshahidiService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +27,9 @@ public class CheckinMap extends MapActivity {
     CheckinItemizedOverlay itemizedOverlay;
 
     protected void onCreate(Bundle savedInstance) {
+        boolean firstPoint = true;
+        GeoPoint centerGeoPoint = new GeoPoint(0,0);
+
         super.onCreate(savedInstance);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.checkin_map);
@@ -37,13 +42,32 @@ public class CheckinMap extends MapActivity {
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
         itemizedOverlay = new CheckinItemizedOverlay(drawable);
 
-        GeoPoint point = new GeoPoint(19240000,-99120000);
-        OverlayItem overlayitem = new OverlayItem(point, "", "");
+        UshahidiService.loadSettings(CheckinMap.this);
 
-        itemizedOverlay.addOverlay(overlayitem);
+        String strCheckinsJSON = NetworkServices.getCheckins(UshahidiService.domain, null, null);
+        JSONServices checkinsJSON = new JSONServices(strCheckinsJSON);
+        ArrayList checkinsList = checkinsJSON.getCheckinsList();
+        int numCheckins = checkinsList.size();
+
+        for(int checkinsLoop = 0; checkinsLoop < numCheckins; checkinsLoop ++) {
+            Checkin currentCheckin = (Checkin)checkinsList.get(checkinsLoop);
+
+            Double latitude = Double.valueOf(currentCheckin.getLat())*1E6;
+            Double longitude = Double.valueOf(currentCheckin.getLon())*1E6;
+
+            GeoPoint point = new GeoPoint(latitude.intValue(), longitude.intValue());
+            OverlayItem overlayitem = new OverlayItem(point, currentCheckin.getUser(), currentCheckin.getMsg());
+
+            itemizedOverlay.addOverlay(overlayitem);
+
+            if(firstPoint) {
+                firstPoint = false;
+                centerGeoPoint = point;
+            }
+        }
+
         mapOverlays.add(itemizedOverlay);
-
-        mapView.getController().setCenter(point);
+        mapView.getController().setCenter(centerGeoPoint);
     }
 
     @Override

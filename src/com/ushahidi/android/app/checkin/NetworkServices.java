@@ -85,6 +85,32 @@ public class NetworkServices {
         return false;
     }
 
+    public static String getCheckins(String URL, String mobileId, String checkinId)
+    {
+        StringBuilder fullUrl = new StringBuilder(URL);
+    	fullUrl.append("/api");
+
+        try {
+            URL url = new URL(fullUrl.toString());
+            ClientHttpRequest req = new ClientHttpRequest(url);
+            req.setParameter("task", "checkin");
+            req.setParameter("action", "get_ci");
+
+            if(mobileId != null)
+                req.setParameter("mobileid", mobileId);
+            if(checkinId != null)
+                req.setParameter("id", checkinId);
+
+            InputStream inputStream = req.post();
+
+            return GetText(inputStream);
+        } catch (MalformedURLException e) {
+            return null;
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
     public static String GetText(InputStream in) {
 		String text = "";
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(

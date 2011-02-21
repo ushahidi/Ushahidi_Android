@@ -37,7 +37,7 @@
     <application 
     	android:icon="@drawable/ushahidi_icon" 
     	android:label="@string/app_name"
-    	android:name="UshahidiApplication">
+    	android:name="UshahidiApplication" android:debuggable="true">
     	<service android:name=".UshahidiService" />       
     	<service android:name=".SmsReceiverService" />
     	<uses-library android:name="com.google.android.maps" />
