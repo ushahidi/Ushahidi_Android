@@ -20,9 +20,16 @@ public class LocationServices
 {
     public static boolean locationSet = false;
     public static Location location;
+    public static CheckinActivity checkin_activity;
 
-    public static void getLocation(Activity activity)
+    public static void dismissActionDialog()
     {
+        checkin_activity.dismissCheckinProgressDialog();
+    }
+
+    public static void getLocation(CheckinActivity activity)
+    {
+        checkin_activity = activity;
         LocationServices.locationSet = false;
         LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
 
@@ -39,6 +46,7 @@ public class LocationServices
 				// TODO Auto-generated method stub
 				LocationServices.location = location;
                 LocationServices.locationSet = true;
+                dismissActionDialog();
 			}
 
 			public void onProviderDisabled(String provider) {

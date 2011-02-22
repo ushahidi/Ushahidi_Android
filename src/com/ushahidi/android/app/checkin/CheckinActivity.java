@@ -34,6 +34,8 @@ public class CheckinActivity extends Activity {
     private EditText checkinMessageText;
     private EditText mSelectedPhoto;
 
+    private String checkinDetails;
+
     // Used for the camera
     private static final int REQUEST_CODE_CAMERA = 5;
 
@@ -150,7 +152,10 @@ public class CheckinActivity extends Activity {
 
     // Progress dialog functionality
 
-    private void dismissCheckinProgressDialog() {
+    public void dismissCheckinProgressDialog() {
+        // Post data online and close the progress dialog
+        NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this), checkinDetails, LocationServices.location, NetworkServices.fileName);
+
 		if(pd != null) {
 			pd.dismiss();
 		}
@@ -162,17 +167,11 @@ public class CheckinActivity extends Activity {
         // Initialize the settings
         UshahidiService.loadSettings(CheckinActivity.this);
 
+        this.checkinDetails = checkinDetails;
+
         // Initialize Progress dialog
 		pd = ProgressDialog.show(this, getString(R.string.checkin_progress_title), getString(R.string.checkin_progress_message));
         LocationServices.getLocation(this);
-
-        while(!LocationServices.locationSet) {
-            // Do nothing for the meantime
-        }
-
-        // Post data online and close the progress dialog
-        NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this), checkinDetails, LocationServices.location, NetworkServices.fileName);
-        dismissCheckinProgressDialog();
 	}
 
     private void populateMenu(Menu menu) {
