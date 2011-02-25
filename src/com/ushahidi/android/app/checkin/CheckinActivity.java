@@ -219,6 +219,10 @@ public class CheckinActivity extends Activity {
 		}
 
 		pd = null;
+
+        // Display checkin status and return back to main screen
+        com.ushahidi.android.app.Util.showToast(CheckinActivity.this, R.string.checkin_success_toast);
+        CheckinActivity.this.finish();
 	}
 
     private void performCheckin(String checkinDetails) {
