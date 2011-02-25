@@ -72,7 +72,7 @@ public class NetworkServices {
              Log.i("HTTP Client:", "filename:" + UshahidiService.savePath + params.get("filename"));
 
              if( !TextUtils.isEmpty(params.get("filename")) || !(params.get("filename").equals("")))
-                req.setParameter("message[]", new File(UshahidiService.savePath + params.get("filename")));
+                req.setParameter("photo", new File(UshahidiService.savePath + params.get("filename")));
 
              InputStream serverInput = req.post();
 
