@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -154,6 +155,10 @@ public class CheckinActivity extends Activity {
 
     public void dismissCheckinProgressDialog() {
         // Post data online and close the progress dialog
+
+        // Initialize the settings
+        UshahidiService.loadSettings(CheckinActivity.this);
+
         NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this), checkinDetails, LocationServices.location, NetworkServices.fileName);
 
 		if(pd != null) {
@@ -164,9 +169,6 @@ public class CheckinActivity extends Activity {
 	}
 
     private void performCheckin(String checkinDetails) {
-        // Initialize the settings
-        UshahidiService.loadSettings(CheckinActivity.this);
-
         this.checkinDetails = checkinDetails;
 
         // Initialize Progress dialog

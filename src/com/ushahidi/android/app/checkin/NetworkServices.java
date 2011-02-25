@@ -26,6 +26,7 @@ public class NetworkServices {
     public static String fileName;
 
     public static boolean postToOnline(String IMEI, String checkinDetails, Location location, String filename) {
+
 		HashMap<String,String> myParams = new HashMap<String, String>();
 
     	// Build the HTTP response

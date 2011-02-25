@@ -95,7 +95,8 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
 
 			public void onClick(View v) {
 				mShutterButton.setEnabled(false);
-				mCamera.autoFocus(mAutoFocusCallback);
+                // For auto-focus:
+				// mCamera.autoFocus(mAutoFocusCallback);
 			}
 			
 		});
@@ -141,6 +142,7 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
 	};
 
 	//Implement auto focus
+    /*
 	AutoFocusCallback mAutoFocusCallback = new AutoFocusCallback() {
 
 		public void onAutoFocus(boolean success, Camera camera) {
@@ -148,6 +150,7 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
 		}
 		
 	};
+	*/
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event){
