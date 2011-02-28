@@ -25,12 +25,12 @@ import java.util.HashMap;
 public class NetworkServices {
     public static String fileName;
 
-    public static boolean postToOnline(String IMEI, String checkinDetails, Location location, String filename) {
+    public static boolean postToOnline(String IMEI, String domainName, String checkinDetails, Location location, String filename) {
 
 		HashMap<String,String> myParams = new HashMap<String, String>();
 
     	// Build the HTTP response
-    	StringBuilder urlBuilder = new StringBuilder(UshahidiService.domain);
+    	StringBuilder urlBuilder = new StringBuilder(domainName);
     	urlBuilder.append("/api");
     	myParams.put("task","checkin");
 		myParams.put("action", "ci");

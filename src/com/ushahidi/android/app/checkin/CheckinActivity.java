@@ -211,8 +211,9 @@ public class CheckinActivity extends Activity {
 
         // Initialize the settings
         UshahidiService.loadSettings(CheckinActivity.this);
+        String ushahidiDomain = UshahidiService.domain;
 
-        NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this), checkinDetails, LocationServices.location, selectedPhoto);
+        NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this), ushahidiDomain, checkinDetails, LocationServices.location, selectedPhoto);
 
 		if(pd != null) {
 			pd.dismiss();
