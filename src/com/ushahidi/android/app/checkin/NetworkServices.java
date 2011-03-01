@@ -25,10 +25,12 @@ import java.util.HashMap;
 public class NetworkServices {
     public static String fileName;
 
-    public static boolean postToOnline(String IMEI, String domainName, String checkinDetails, Location location, String filename) {
+    public static boolean postToOnline(String IMEI, String domainName, String checkinDetails, 
+    		Location location, String filename, String firstname, String lastname, String email) {
 
 		HashMap<String,String> myParams = new HashMap<String, String>();
-
+		
+		
     	// Build the HTTP response
     	StringBuilder urlBuilder = new StringBuilder(domainName);
     	urlBuilder.append("/api");
@@ -38,6 +40,9 @@ public class NetworkServices {
 		myParams.put("lat", String.valueOf(location.getLatitude()));
 		myParams.put("lon", String.valueOf(location.getLongitude()));
         myParams.put("message", checkinDetails);
+        myParams.put("firstname", firstname);
+        myParams.put("lastname", lastname);
+        myParams.put("email", email);
 
         // Specify the file name
         myParams.put("filename", filename);
@@ -68,6 +73,9 @@ public class NetworkServices {
              req.setParameter("lat",params.get("lat"));
              req.setParameter("lon", params.get("lon"));
              req.setParameter("message", params.get("message"));
+             req.setParameter("firstname", params.get("firstname"));
+             req.setParameter("lastname", params.get("lastname"));
+             req.setParameter("email", params.get("email"));
 
              Log.i("HTTP Client:", "filename:" + UshahidiService.savePath + params.get("filename"));
 

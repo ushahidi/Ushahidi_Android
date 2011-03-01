@@ -12,7 +12,8 @@ import android.telephony.TelephonyManager;
  */
 public class Util {
     public static String IMEI(Context appContext) {
-        TelephonyManager TelephonyMgr = (TelephonyManager)appContext.getSystemService(appContext.TELEPHONY_SERVICE);
+        TelephonyManager TelephonyMgr = (TelephonyManager)appContext.getSystemService(
+                appContext.TELEPHONY_SERVICE);
         return TelephonyMgr.getDeviceId(); // Requires READ_PHONE_STATE
     }
 }

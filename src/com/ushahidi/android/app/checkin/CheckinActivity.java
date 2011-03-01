@@ -211,9 +211,14 @@ public class CheckinActivity extends Activity {
 
         // Initialize the settings
         UshahidiService.loadSettings(CheckinActivity.this);
+        
         String ushahidiDomain = UshahidiService.domain;
-
-        NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this), ushahidiDomain, checkinDetails, LocationServices.location, selectedPhoto);
+        String firstname = UshahidiService.firstname;
+        String lastname = UshahidiService.lastname;
+        String email = UshahidiService.email;
+        Log.i("Name: ","first name: "+firstname+ " Last name: "+lastname);
+        NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this), ushahidiDomain, checkinDetails, 
+        		LocationServices.location, selectedPhoto,firstname,lastname,email);
 
 		if(pd != null) {
 			pd.dismiss();
@@ -230,7 +235,8 @@ public class CheckinActivity extends Activity {
         this.checkinDetails = checkinDetails;
 
         // Initialize Progress dialog
-		pd = ProgressDialog.show(this, getString(R.string.checkin_progress_title), getString(R.string.checkin_progress_message));
+		pd = ProgressDialog.show(this, getString(R.string.checkin_progress_title), getString(
+				R.string.checkin_progress_message));
         LocationServices.getLocation(this);
 	}
 

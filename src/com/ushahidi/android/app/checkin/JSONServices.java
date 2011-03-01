@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class JSONServices {
-    private JSONObject jsonObject;
+	private JSONObject jsonObject;
     private boolean processingResult;
 
     public JSONServices(String JSONString) {

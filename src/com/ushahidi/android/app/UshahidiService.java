@@ -234,8 +234,10 @@ public class UshahidiService extends Service {
 	}
 	
 	public static void saveSettings(Context context) {
+	    
 		final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
 		final SharedPreferences.Editor editor = settings.edit();
+		
 		editor.putString("Domain", domain.trim());
 		editor.putString("Firstname", firstname);
 		editor.putString("Lastname", lastname);
@@ -252,6 +254,7 @@ public class UshahidiService extends Service {
 		editor.putString("Username", username);
 		editor.putString("Password", password);
 		editor.commit();
+		
 	}
 	
 	public class QueueThread {
