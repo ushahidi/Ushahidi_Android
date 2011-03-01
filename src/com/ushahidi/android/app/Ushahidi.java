@@ -21,7 +21,6 @@
 package com.ushahidi.android.app;
 
 import com.ushahidi.android.app.checkin.CheckinActivity;
-import com.ushahidi.android.app.checkin.LocationServices;
 import com.ushahidi.android.app.checkin.NetworkServices;
 
 import android.app.Activity;
@@ -31,18 +30,16 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
   
 public class Ushahidi extends Activity {
     /** Called when the activity is first created. */
@@ -85,7 +82,7 @@ public class Ushahidi extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView( R.layout.main );
         mHandler = new Handler();
         bundle = new Bundle();
