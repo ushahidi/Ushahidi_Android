@@ -216,7 +216,7 @@ public class CheckinActivity extends Activity {
         String firstname = UshahidiService.firstname;
         String lastname = UshahidiService.lastname;
         String email = UshahidiService.email;
-        Log.i("Name: ","first name: "+firstname+ " Last name: "+lastname);
+        
         NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this), ushahidiDomain, checkinDetails, 
         		LocationServices.location, selectedPhoto,firstname,lastname,email);
 
