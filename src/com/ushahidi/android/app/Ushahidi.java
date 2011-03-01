@@ -19,7 +19,11 @@
  **/
 
 package com.ushahidi.android.app;
- 
+
+import com.ushahidi.android.app.checkin.CheckinActivity;
+import com.ushahidi.android.app.checkin.LocationServices;
+import com.ushahidi.android.app.checkin.NetworkServices;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -32,10 +36,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
   
 public class Ushahidi extends Activity {
     /** Called when the activity is first created. */
@@ -67,11 +74,14 @@ public class Ushahidi extends Activity {
 	private Button listBtn;
 	private Button addBtn;
 	private Button settingsBtn;
+	private Button checkinBtn;
 	private String dialogErrorMsg = "An error occurred fetching the reports. " +
 			"Make sure you have entered an Ushahidi instance.";
  
 	private Bundle bundle;
 	
+	// Checkin specific variables and functions
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +108,7 @@ public class Ushahidi extends Activity {
         listBtn = (Button) findViewById(R.id.incident_list);
         addBtn = (Button) findViewById(R.id.incident_add );
         settingsBtn = (Button) findViewById(R.id.incident_map);
+        checkinBtn = (Button) findViewById(R.id.checkin);
         
         listBtn.setOnClickListener( new View.OnClickListener() {
         	public void onClick( View v ){
@@ -123,6 +134,18 @@ public class Ushahidi extends Activity {
         		startActivityForResult(intent, ADD_INCIDENTS );
         		setResult(RESULT_OK);
         	}
+        });
+        
+        checkinBtn.setOnClickListener( new View.OnClickListener()  {
+			public void onClick( View v ) {
+				// Build the report addition alert box
+                NetworkServices.fileName = "";
+
+				Intent checkinActivityIntent = new Intent().setClass(Ushahidi.this, CheckinActivity.class);
+                startActivity(checkinActivityIntent);
+
+				setResult(RESULT_OK);
+			}
         });
         
         mHandler = new Handler() {

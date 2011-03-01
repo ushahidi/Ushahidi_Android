@@ -44,7 +44,18 @@
  			
  			<TextView  android:id="@+id/spacer"
     			android:layout_width="fill_parent" 
-    			android:layout_height="wrap_content" />      
+    			android:layout_height="wrap_content" />
+   			<Button android:id="@+id/checkin"
+        		android:layout_width="fill_parent"
+        		android:layout_height="wrap_content"
+        		android:layout_alignParentLeft="true"
+        		android:layout_marginLeft="0px"
+        		android:textStyle="bold"
+        		android:text="@string/checkin_menu" />
+       		<TextView  android:id="@+id/spacer"
+    			android:layout_width="fill_parent" 
+    			android:layout_height="wrap_content" />
+    		      
  			<Button android:id="@+id/incident_add"
         		android:layout_width="fill_parent"
         		android:layout_height="wrap_content"
