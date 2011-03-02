@@ -87,12 +87,12 @@ public class Ushahidi extends Activity {
         mHandler = new Handler();
         bundle = new Bundle();
         //load settings
-        if( UshahidiService.domain.length() == 0 ) {
-        	UshahidiService.loadSettings(this);
+        if( UshahidiPref.domain.length() == 0 ) {
+        	UshahidiPref.loadSettings(this);
         }
         
         //check if domain has been set
-        if(UshahidiService.domain.length() == 0 ) {
+        if(UshahidiPref.domain.length() == 0 ) {
         	
         	//means this is a new install or the settings have been corrupted, prompt them!
 			mHandler.post(mDisplayPrompt);

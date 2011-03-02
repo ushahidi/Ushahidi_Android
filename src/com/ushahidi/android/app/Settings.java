@@ -286,7 +286,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
     protected void saveSettings() {
 
-        settings = getSharedPreferences(UshahidiService.PREFS_NAME, 0);
+        settings = getSharedPreferences(UshahidiPref.PREFS_NAME, 0);
         editor = settings.edit();
 
         String autoUpdate = autoUpdateTimePref.getValue();
@@ -357,52 +357,52 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
         if (sharedPreferences.getBoolean(AUTO_FETCH_PREFERENCE, false)) {
 
-            startService(new Intent(Settings.this, UshahidiService.class));
+            startService(new Intent(Settings.this, UshahidiPref.class));
         } else {
-            stopService(new Intent(Settings.this, UshahidiService.class));
+            stopService(new Intent(Settings.this, UshahidiPref.class));
         }
 
         // Reset sms update
         if (sharedPreferences.getBoolean(SMS_PREFERENCE, false)) {
 
-            UshahidiService.smsUpdate = true;
+            UshahidiPref.smsUpdate = true;
 
         } else {
 
-            UshahidiService.smsUpdate = false;
+            UshahidiPref.smsUpdate = false;
 
         }
 
         // Reset vibrate
         if (sharedPreferences.getBoolean(VIBRATE_PREFERENCE, false)) {
-            UshahidiService.vibrate = true;
+            UshahidiPref.vibrate = true;
         } else {
-            UshahidiService.vibrate = false;
+            UshahidiPref.vibrate = false;
         }
 
         // Reset ringtone
         if (sharedPreferences.getBoolean(RINGTONE_PREFERENCE, false)) {
 
-            UshahidiService.ringtone = true;
+            UshahidiPref.ringtone = true;
         } else {
 
-            UshahidiService.ringtone = false;
+            UshahidiPref.ringtone = false;
         }
 
         // Reset flash led
         if (sharedPreferences.getBoolean(FLASH_LED_PREFERENCE, false)) {
 
-            UshahidiService.flashLed = true;
+            UshahidiPref.flashLed = true;
         } else {
-            UshahidiService.flashLed = false;
+            UshahidiPref.flashLed = false;
         }
 
         // cache
         if (key.equals("ushahidi_instance_preference")) {
             if (!sharedPreferences.getString("ushahidi_instance_preference", "").equals(
-                    UshahidiService.domain)) {
+                    UshahidiPref.domain)) {
                 new UshahidiService().clearCache();
-                UshahidiService.domain = sharedPreferences.getString(
+                UshahidiPref.domain = sharedPreferences.getString(
                         "ushahidi_instance_preference", "");
             }
         }
@@ -426,7 +426,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
                 // reset whatever was entered in that field.
                 ushahidiInstancePref.setText("");
-                UshahidiService.domain = "";
+                UshahidiPref.domain = "";
                 Util.showToast(this, R.string.invalid_ushahidi_instance);
             }
         }

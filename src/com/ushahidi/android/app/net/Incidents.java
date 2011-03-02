@@ -24,7 +24,7 @@ import java.io.IOException;
 
 import org.apache.http.HttpResponse;
 
-import com.ushahidi.android.app.UshahidiService;
+import com.ushahidi.android.app.UshahidiPref;
 
 public class Incidents {
 	
@@ -32,10 +32,10 @@ public class Incidents {
 		HttpResponse response;
 		String incidents = "";
 		
-		StringBuilder uriBuilder = new StringBuilder( UshahidiService.domain );
+		StringBuilder uriBuilder = new StringBuilder( UshahidiPref.domain );
 		uriBuilder.append("/api?task=incidents");
 		uriBuilder.append("&by=all");
-		uriBuilder.append("&limit="+UshahidiService.totalReports);
+		uriBuilder.append("&limit="+UshahidiPref.totalReports);
 		uriBuilder.append("&resp=xml");
 		
 		response = UshahidiHttpClient.GetURL( uriBuilder.toString());
@@ -49,7 +49,7 @@ public class Incidents {
 		if( statusCode == 200 ) {
 			
 			incidents = UshahidiHttpClient.GetText(response);
-			UshahidiService.incidentsResponse = incidents;
+			UshahidiPref.incidentsResponse = incidents;
 			return true;
 		} else {
 			return false;

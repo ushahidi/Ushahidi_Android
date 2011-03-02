@@ -117,7 +117,8 @@
 			</intent-filter>
 		</activity>
 		<!-- Settings -->
-		<activity android:name=".Settings" android:label="@string/app_settings">
+		<activity android:name=".Settings" android:configChanges="orientation|keyboardHidden" 
+		  android:label="@string/app_settings">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.ACTION_VIEW" />

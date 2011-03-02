@@ -3,16 +3,13 @@ package com.ushahidi.android.app.checkin;
 import android.location.Location;
 import android.text.TextUtils;
 import android.util.Log;
-import com.ushahidi.android.app.UshahidiService;
+import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.Util;
 import com.ushahidi.android.app.net.ClientHttpRequest;
-import com.ushahidi.android.app.net.UshahidiHttpClient;
 
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -77,10 +74,10 @@ public class NetworkServices {
              req.setParameter("lastname", params.get("lastname"));
              req.setParameter("email", params.get("email"));
 
-             Log.i("HTTP Client:", "filename:" + UshahidiService.savePath + params.get("filename"));
+             Log.i("HTTP Client:", "filename:" + UshahidiPref.savePath + params.get("filename"));
 
              if( !TextUtils.isEmpty(params.get("filename")) || !(params.get("filename").equals("")))
-                req.setParameter("photo", new File(UshahidiService.savePath + params.get("filename")));
+                req.setParameter("photo", new File(UshahidiPref.savePath + params.get("filename")));
 
              InputStream serverInput = req.post();
 
@@ -98,7 +95,7 @@ public class NetworkServices {
     {
         StringBuilder fullUrl = new StringBuilder(URL);
     	fullUrl.append("/api");
-
+    	Log.i("Domain URL: ", "URL: "+fullUrl);
         try {
             URL url = new URL(fullUrl.toString());
             ClientHttpRequest req = new ClientHttpRequest(url);

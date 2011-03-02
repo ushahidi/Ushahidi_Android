@@ -144,7 +144,7 @@ public class AddIncident extends Activity {
 	private HashMap<String, String> mCategoriesTitle = new HashMap<String, String>();
 	private HashMap<String,String> mParams = new HashMap<String, String>();
 	
-	public static final String PREFS_NAME = "UshahidiService";
+	public static final String PREFS_NAME = "UshahidiPref";
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,7 +155,7 @@ public class AddIncident extends Activity {
 		mGc = new Geocoder(this);
 		
 		//load settings
-        UshahidiService.loadSettings(AddIncident.this);
+        UshahidiPref.loadSettings(AddIncident.this);
         initComponents();
        
     }
@@ -476,8 +476,8 @@ public class AddIncident extends Activity {
 				if ( mExtras != null ) mBundle = mExtras.getBundle("filename");
 				
 				if ( mBundle != null && !mBundle.isEmpty() ) {
-					UshahidiService.fileName = mBundle.getString("name");
-					mSelectedPhoto.setText(UshahidiService.fileName);
+					UshahidiPref.fileName = mBundle.getString("name");
+					mSelectedPhoto.setText(UshahidiPref.fileName);
 				}
 				break;
 	
@@ -511,8 +511,8 @@ public class AddIncident extends Activity {
 				
 				mFilename = "android_pic_upload" + randomString() + ".jpg";
 				ImageManager.writeImage(byteArrayos.toByteArray(), mFilename);
-				UshahidiService.fileName = mFilename;
-				mSelectedPhoto.setText(UshahidiService.fileName);
+				UshahidiPref.fileName = mFilename;
+				mSelectedPhoto.setText(UshahidiPref.fileName);
 				break;
 				
 			case VIEW_MAP:
@@ -835,10 +835,10 @@ public class AddIncident extends Activity {
     	addIncidentData.setIncidentLocName(mIncidentLocation.getText().toString());
     	addIncidentData.setIncidentLocLatitude(String.valueOf(sLatitude));
     	addIncidentData.setIncidentLocLongitude(String.valueOf(sLongitude));
-    	addIncidentData.setIncidentPhoto(UshahidiService.fileName);
-    	addIncidentData.setPersonFirst(UshahidiService.firstname);
-    	addIncidentData.setPersonLast(UshahidiService.lastname);
-    	addIncidentData.setPersonEmail(UshahidiService.email);
+    	addIncidentData.setIncidentPhoto(UshahidiPref.fileName);
+    	addIncidentData.setPersonFirst(UshahidiPref.firstname);
+    	addIncidentData.setPersonLast(UshahidiPref.lastname);
+    	addIncidentData.setPersonEmail(UshahidiPref.email);
     	
     	//add it to database.
     	return UshahidiApplication.mDb.addIncidents(addIncidentsData);
@@ -872,10 +872,10 @@ public class AddIncident extends Activity {
 		mParams.put("latitude", String.valueOf(sLatitude));
 		mParams.put("longitude", String.valueOf(sLongitude)); 
 		mParams.put("location_name", mIncidentLocation.getText().toString());
-		mParams.put("person_first", UshahidiService.firstname);
-		mParams.put("person_last", UshahidiService.lastname);
-		mParams.put("person_email", UshahidiService.email);
-		mParams.put("filename", UshahidiService.fileName);
+		mParams.put("person_first", UshahidiPref.firstname);
+		mParams.put("person_last", UshahidiPref.lastname);
+		mParams.put("person_email", UshahidiPref.email);
+		mParams.put("filename", UshahidiPref.fileName);
 		
 		try {
 			return UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), mParams);
@@ -985,7 +985,7 @@ public class AddIncident extends Activity {
 			}else if( result == 0 ) {
 				clearFields();
 				//after a successful upload, delete the file
-				File f = new File(UshahidiService.savePath + UshahidiService.fileName);
+                File f = new File(UshahidiPref.savePath + UshahidiPref.fileName);
 				if(f.exists()){
 					f.delete();
 				}

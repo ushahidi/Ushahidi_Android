@@ -48,6 +48,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 
+import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.UshahidiService;
 import com.ushahidi.android.app.Util;
 
@@ -63,7 +64,7 @@ public class UshahidiHttpClient {
         
 	
     public static HttpResponse GetURL(String URL) throws IOException {
-    	UshahidiService.httpRunning = true;
+    	UshahidiPref.httpRunning = true;
 		
 		try {
 			//wrap try around because this constructor can throw Error
@@ -72,7 +73,7 @@ public class UshahidiHttpClient {
 
 			// Post, check and show the result (not really spectacular, but works):
 			HttpResponse response =  UshahidiService.httpclient.execute(httpget);
-			UshahidiService.httpRunning = false;
+			UshahidiPref.httpRunning = false;
 			
 			return response;
 
@@ -80,13 +81,13 @@ public class UshahidiHttpClient {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		UshahidiService.httpRunning = false;
+		UshahidiPref.httpRunning = false;
 		return null;
     }
     
 	public static HttpResponse PostURL(String URL, List<NameValuePair> data,
 			String Referer) throws IOException {
-		UshahidiService.httpRunning = true;
+		UshahidiPref.httpRunning = true;
 		//Dipo Fix
     	try {
     		//wrap try around because this constructor can throw Error 
@@ -103,7 +104,7 @@ public class UshahidiHttpClient {
 				} catch (final UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					UshahidiService.httpRunning = false;
+					UshahidiPref.httpRunning = false;
 					return null;
 				}
 			}
@@ -111,7 +112,7 @@ public class UshahidiHttpClient {
 			// Post, check and show the result (not really spectacular, but works):
 			try {
 				HttpResponse response =  UshahidiService.httpclient.execute(httpost);
-				UshahidiService.httpRunning = false;
+				UshahidiPref.httpRunning = false;
 				return response;
 	
 			} catch (final Exception e) {
@@ -122,7 +123,7 @@ public class UshahidiHttpClient {
     		e.printStackTrace();
     	}
     	
-		UshahidiService.httpRunning = false;
+		UshahidiPref.httpRunning = false;
 		return null;
 	}
 	
@@ -151,9 +152,9 @@ public class UshahidiHttpClient {
              req.setParameter("person_first", params.get("person_first"));
              req.setParameter("person_last", params.get("person_last"));
              req.setParameter("person_email", params.get("person_email"));
-             Log.i("HTTP Client:", "filename:"+UshahidiService.savePath + params.get("filename"));
+             Log.i("HTTP Client:", "filename:"+UshahidiPref.savePath + params.get("filename"));
              if( !TextUtils.isEmpty( params.get("filename") ))
-             req.setParameter("incident_photo[]", new File(UshahidiService.savePath + params.get("filename")));
+             req.setParameter("incident_photo[]", new File(UshahidiPref.savePath + params.get("filename")));
              
              
              InputStream serverInput = req.post();

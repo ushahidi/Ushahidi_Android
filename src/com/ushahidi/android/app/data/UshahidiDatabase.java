@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.ushahidi.android.app.UshahidiService;
+import com.ushahidi.android.app.UshahidiPref;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -488,7 +488,7 @@ public class UshahidiDatabase {
   				createIncidents(incident, isUnread);
   			}
 
-  			limitRows(INCIDENTS_TABLE, Integer.parseInt(UshahidiService.totalReports), INCIDENT_ID);
+  			limitRows(INCIDENTS_TABLE, Integer.parseInt(UshahidiPref.totalReports), INCIDENT_ID);
   			mDb.setTransactionSuccessful();
   		} finally {
   			mDb.endTransaction();

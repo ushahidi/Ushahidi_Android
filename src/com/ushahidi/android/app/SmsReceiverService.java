@@ -62,7 +62,7 @@ public class SmsReceiverService extends Service {
 		HandlerThread thread = new HandlerThread(TAG, Process.THREAD_PRIORITY_BACKGROUND);
 	    thread.start();
 	    mContext = getApplicationContext();
-	    UshahidiService.loadSettings(mContext);
+	    UshahidiPref.loadSettings(mContext);
 	    mServiceLooper = thread.getLooper();
 	    mServiceHandler = new ServiceHandler(mServiceLooper);
 	}
@@ -115,7 +115,7 @@ public class SmsReceiverService extends Service {
 	private void handleSmsReceived(Intent intent) {
 		
 	    Bundle bundle = intent.getExtras();
-	    UshahidiService.loadSettings(mContext);
+	    UshahidiPref.loadSettings(mContext);
 	    
 	    if (bundle != null) {
 	    	SmsMessage[] messages = getMessagesFromIntent(intent);
@@ -139,7 +139,7 @@ public class SmsReceiverService extends Service {
 	    }
 	    
 	    // post sms message to ushahidi
-	    if( UshahidiService.smsUpdate ) {
+	    if( UshahidiPref.smsUpdate ) {
 	    	if( Util.isConnected(SmsReceiverService.this) ){
 	    		if( !this.postToUshahidi() ) {
 	    			this.showNotification(messageBody, R.string.sms_failed);
@@ -152,13 +152,13 @@ public class SmsReceiverService extends Service {
 
 	
 	private boolean postToUshahidi() {
-		UshahidiService.loadSettings(mContext);
-		StringBuilder urlBuilder = new StringBuilder(UshahidiService.domain);
+		UshahidiPref.loadSettings(mContext);
+		StringBuilder urlBuilder = new StringBuilder(UshahidiPref.domain);
 		
     	urlBuilder.append("/api");
     	params.put("task","sms");
-		params.put("username", UshahidiService.username);
-		params.put("password", UshahidiService.password); 
+		params.put("username", UshahidiPref.username);
+		params.put("password", UshahidiPref.password); 
 		params.put("message_from", fromAddress); 
 		params.put("message_description",messageBody); 
 		

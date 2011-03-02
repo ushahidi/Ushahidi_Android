@@ -32,9 +32,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Binder;
@@ -46,30 +44,7 @@ import android.util.Log;
  
 public class UshahidiService extends Service {
 	
-	public static boolean httpRunning = false;
-	public static boolean AutoFetch = false;
-	public static boolean smsUpdate = false;
-	public static boolean vibrate = false;
-	public static boolean ringtone = false;
-	public static boolean flashLed = false;
 	
-	public static int countries = 0;
-	public static int AutoUpdateDelay = 0;
-	public static final int NOTIFICATION_ID = 1;
-	
-	public static final String PREFS_NAME = "UshahidiService";
-	public static String incidentsResponse = "";
-	public static String categoriesResponse = "";
-	public static String savePath = "";
-	public static String domain = "";
-	public static String firstname = "";
-	public static String lastname = "";
-	public static String email = "";
-	public static String totalReports = "";
-	public static String fileName = "";
-	public static String total_reports = "";
-	public static String username = "";
-	public static String password = "";
 	private static final String TAG = "Ushahidi - New Updates"; 
     public static final String NEW_USHAHIDI_REPORT_FOUND = "New_Ushahidi_Report_Found";
 	
@@ -102,12 +77,13 @@ public class UshahidiService extends Service {
 	private Runnable mUpdateTimeTask = new Runnable() {
 		public void run() {
 			
-			UshahidiService.saveSettings(getApplicationContext());
+			UshahidiPref.saveSettings(getApplicationContext());
 			
 			Util.fetchReports(UshahidiService.this);
 				
-			showNotification(total_reports);
-			mHandler.postAtTime(mUpdateTimeTask, SystemClock.uptimeMillis() + (1000 * 60 * AutoUpdateDelay));	
+			showNotification(UshahidiPref.total_reports);
+			mHandler.postAtTime(mUpdateTimeTask, SystemClock.uptimeMillis() + (
+			        1000 * 60 * UshahidiPref.AutoUpdateDelay));	
 				
 		}
 	};
@@ -125,11 +101,11 @@ public class UshahidiService extends Service {
 		super.onCreate();
 		queue = new QueueThread("ushahidi");
 		mHandler = new Handler();
-		loadSettings(UshahidiService.this);
-		if(AutoFetch){
+		UshahidiPref.loadSettings(UshahidiService.this);
+		if(UshahidiPref.AutoFetch){
 			Log.i("Service ","Service is checked to start.");
 			mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
-			mHandler.postDelayed(mUpdateTimeTask, (1000 * 60 * AutoUpdateDelay));
+			mHandler.postDelayed(mUpdateTimeTask, (1000 * 60 * UshahidiPref.AutoUpdateDelay));
 		
 		} else {
 			Log.i("Service ","Service is unchecked.");
@@ -151,7 +127,7 @@ public class UshahidiService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 		
-		mNotificationManager.cancel(NOTIFICATION_ID);
+		mNotificationManager.cancel(UshahidiPref.NOTIFICATION_ID);
 		
 		// Tell the user we stopped.
 		stopService(new Intent(UshahidiService.this, UshahidiService.class));
@@ -175,18 +151,18 @@ public class UshahidiService extends Service {
         newUshahidiReportNotification.flags = Notification.FLAG_AUTO_CANCEL;
         newUshahidiReportNotification.defaults = Notification.DEFAULT_ALL;
         newUshahidiReportNotification.setLatestEventInfo(this, TAG, tickerText, contentIntent);
-        if( ringtone ){ 
+        if( UshahidiPref.ringtone ){ 
         	//set the ringer
         	Uri ringURI = Uri.fromFile(new File("/system/media/audio/ringtones/ringer.mp3"));
         	newUshahidiReportNotification.sound = ringURI; 
         }
         
-        if( vibrate ){
+        if( UshahidiPref.vibrate ){
         	double vibrateLength = 100*Math.exp(0.53*20);
         	long[] vibrate = new long[] {100, 100, (long)vibrateLength };
         	newUshahidiReportNotification.vibrate = vibrate;
         	
-        	if( flashLed ){
+        	if( UshahidiPref.flashLed ){
         		int color = Color.BLUE;    
         		newUshahidiReportNotification.ledARGB = color;
         	}
@@ -196,7 +172,7 @@ public class UshahidiService extends Service {
         	newUshahidiReportNotification.flags = newUshahidiReportNotification.flags |  Notification.FLAG_SHOW_LIGHTS;
         }
         
-        mNotificationManager.notify(NOTIFICATION_ID, newUshahidiReportNotification);
+        mNotificationManager.notify(UshahidiPref.NOTIFICATION_ID, newUshahidiReportNotification);
 	}
 	
 	
@@ -208,55 +184,7 @@ public class UshahidiService extends Service {
 		return getDb().clearData();
 	}
 	
-	public static void loadSettings(Context context) {
-		final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
-		
-		final String path = context.getDir("",MODE_PRIVATE).toString();
-		
-		savePath = settings.getString("savePath",path);
-		
-		domain = settings.getString("Domain", "");
-		firstname = settings.getString("Firstname", "");
-		lastname = settings.getString("Lastname", "");
-		email = settings.getString("Email", "");
-		countries = settings.getInt("Countries", 0);
-		AutoUpdateDelay = settings.getInt("AutoUpdateDelay", 5);
-		AutoFetch = settings.getBoolean("AutoFetch", false);
-		totalReports = settings.getString("TotalReports", "");
-		smsUpdate = settings.getBoolean("SmsUpdate",false);
-		username = settings.getString("Username", "");
-		password = settings.getString("Password","");
-		
-		// make sure folder exists
-		final File dir = new File(UshahidiService.savePath);
-		dir.mkdirs();
- 
-	}
-	
-	public static void saveSettings(Context context) {
-	    
-		final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
-		final SharedPreferences.Editor editor = settings.edit();
-		
-		editor.putString("Domain", domain.trim());
-		editor.putString("Firstname", firstname);
-		editor.putString("Lastname", lastname);
-		
-		if( Util.validateEmail(settings.getString("Email", ""))) {
-			editor.putString("Email", email);
-		}
-		
-		editor.putString("savePath", savePath);
-		editor.putInt("AutoUpdateDelay", AutoUpdateDelay);
-		editor.putBoolean("AutoFetch", AutoFetch);
-		editor.putString("TotalReports", totalReports);
-		editor.putBoolean("SmsUpdate", smsUpdate);
-		editor.putString("Username", username);
-		editor.putString("Password", password);
-		editor.commit();
-		
-	}
-	
+
 	public class QueueThread {
 	    protected Vector<Thread>    queue;
 	    protected int       itemcount;

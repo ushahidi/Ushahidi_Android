@@ -150,14 +150,14 @@ public class Util{
 			  if( Util.isConnected(context)) {
 
 				  if(Categories.getAllCategoriesFromWeb() ) {
-					  mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse);
+					  mNewCategories = HandleXml.processCategoriesXml(UshahidiPref.categoriesResponse);
 				  }
 
 				  if(Incidents.getAllIncidentsFromWeb()){
-					  mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse ); 
+					  mNewIncidents =  HandleXml.processIncidentsXml( UshahidiPref.incidentsResponse ); 
 				  }
 				  
-				  UshahidiService.total_reports = mNewCategories.size()+" Categories -- " +  mNewIncidents.size()+ " Reports";
+				  UshahidiPref.total_reports = mNewCategories.size()+" Categories -- " +  mNewIncidents.size()+ " Reports";
 				  
 				  UshahidiApplication.mDb.addCategories(mNewCategories, false);
 				  UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
@@ -277,13 +277,13 @@ public class Util{
 				 
 				if(Categories.getAllCategoriesFromWeb()) {
 						
-					mNewCategories = HandleXml.processCategoriesXml(UshahidiService.categoriesResponse); 
+					mNewCategories = HandleXml.processCategoriesXml(UshahidiPref.categoriesResponse); 
 				} else {
 					return 1;
 				}
 				
 				if( Incidents.getAllIncidentsFromWeb() ){
-					mNewIncidents =  HandleXml.processIncidentsXml( UshahidiService.incidentsResponse );
+					mNewIncidents =  HandleXml.processIncidentsXml( UshahidiPref.incidentsResponse );
 					
 				} else {
 					return 1;

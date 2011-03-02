@@ -41,7 +41,7 @@ public class ImageManager {
 		FileInputStream fIn;
 		if( !TextUtils.isEmpty( fileName) ) {
 			try {
-				fIn = new FileInputStream(UshahidiService.savePath + fileName);
+				fIn = new FileInputStream(UshahidiPref.savePath + fileName);
 				d = Drawable.createFromStream(fIn, "src");
 			} catch (FileNotFoundException e) {
 			
@@ -57,10 +57,10 @@ public class ImageManager {
 		byte[] is;
 		for (String image : UshahidiService.mNewIncidentsImages) {
 			if (!TextUtils.isEmpty(image)) {
-				File f = new File(UshahidiService.savePath + image);
+				File f = new File(UshahidiPref.savePath + image);
 				if (!f.exists()) {
 					try {
-						is = UshahidiHttpClient.fetchImage(UshahidiService.domain+"/media/uploads/"+image);
+						is = UshahidiHttpClient.fetchImage(UshahidiPref.domain+"/media/uploads/"+image);
 						if( is != null ) {
 							writeImage( is, image );
 						}
@@ -82,10 +82,10 @@ public class ImageManager {
 		byte[] is;
 		for (String image : UshahidiService.mNewIncidentsThumbnails) {
 			if(!TextUtils.isEmpty(image )) {
-				File f = new File(UshahidiService.savePath + image);
+				File f = new File(UshahidiPref.savePath + image);
 				if(!f.exists()) {
 					try {
-						is = UshahidiHttpClient.fetchImage(UshahidiService.domain+"/media/uploads/"+image);
+						is = UshahidiHttpClient.fetchImage(UshahidiPref.domain+"/media/uploads/"+image);
 						if( is != null ) {
 							writeImage(is, image);
 						}
@@ -110,7 +110,7 @@ public class ImageManager {
 		if( data != null ) {
 			FileOutputStream fOut;	
 			try {
-				fOut = new FileOutputStream(UshahidiService.savePath + filename);
+				fOut = new FileOutputStream(UshahidiPref.savePath + filename);
 				fOut.write(data);
 				fOut.flush();
 				fOut.close();
@@ -127,7 +127,7 @@ public class ImageManager {
 	
 	public static void deleteImage(String filename) {
 		
-		File f = new File(UshahidiService.savePath + filename);
+		File f = new File(UshahidiPref.savePath + filename);
 		if (f.exists()){
 			f.delete();
 		}

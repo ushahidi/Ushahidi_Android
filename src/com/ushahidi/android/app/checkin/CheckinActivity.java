@@ -21,7 +21,7 @@ import android.widget.EditText;
 import com.ushahidi.android.app.ImageCapture;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.UshahidiService;
+import com.ushahidi.android.app.UshahidiPref;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -149,9 +149,9 @@ public class CheckinActivity extends Activity {
 
 				mFilename = "android_pic_upload" + randomString() + ".jpg";
 				ImageManager.writeImage(byteArrayos.toByteArray(), mFilename);
-				UshahidiService.fileName = mFilename;
+				UshahidiPref.fileName = mFilename;
                 selectedPhoto = mFilename;
-				mSelectedPhoto.setText(UshahidiService.fileName);
+				mSelectedPhoto.setText(UshahidiPref.fileName);
 				break;
 		}
     }
@@ -210,12 +210,12 @@ public class CheckinActivity extends Activity {
         // Post data online and close the progress dialog
 
         // Initialize the settings
-        UshahidiService.loadSettings(CheckinActivity.this);
+        UshahidiPref.loadSettings(CheckinActivity.this);
         
-        String ushahidiDomain = UshahidiService.domain;
-        String firstname = UshahidiService.firstname;
-        String lastname = UshahidiService.lastname;
-        String email = UshahidiService.email;
+        String ushahidiDomain = UshahidiPref.domain;
+        String firstname = UshahidiPref.firstname;
+        String lastname = UshahidiPref.lastname;
+        String email = UshahidiPref.email;
         
         NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this), ushahidiDomain, checkinDetails, 
         		LocationServices.location, selectedPhoto,firstname,lastname,email);
