@@ -1,22 +1,29 @@
+
 package com.ushahidi.android.app.checkin;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ahmed
- * Date: 2/17/11
- * Time: 6:53 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: Ahmed Date: 2/17/11 Time: 6:53 PM To change
+ * this template use File | Settings | File Templates.
  */
 public class Checkin {
     private String id;
+
     private String user;
+
     private String loc;
+
     private String msg;
+
     private String date;
+
     private String lat;
+
     private String lon;
+
     private String firstName;
+
     private String lastName;
+
     private String email;
 
     public String getId() {
@@ -74,27 +81,27 @@ public class Checkin {
     public void setLon(String lon) {
         this.lon = lon;
     }
-    
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    
+
     public String getFirstName() {
         return this.firstName;
     }
-    
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+
     public String getLastName() {
         return this.lastName;
     }
-    
+
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     public String getEmail() {
         return this.email;
     }

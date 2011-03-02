@@ -1,3 +1,4 @@
+
 package com.ushahidi.android.app.checkin;
 
 import org.json.JSONArray;
@@ -7,14 +8,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ahmed
- * Date: 2/17/11
- * Time: 5:45 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: Ahmed Date: 2/17/11 Time: 5:45 PM To change
+ * this template use File | Settings | File Templates.
  */
 public class JSONServices {
-	private JSONObject jsonObject;
+    private JSONObject jsonObject;
+
     private boolean processingResult;
 
     public JSONServices(String JSONString) {
@@ -43,23 +42,29 @@ public class JSONServices {
         }
     }
 
-    public ArrayList <Checkin> getCheckinsList() {
-        if(processingResult) {
+    public ArrayList<Checkin> getCheckinsList() {
+        if (processingResult) {
             ArrayList<Checkin> checkinsList = new ArrayList<Checkin>();
             JSONArray checkinsArray = getCheckinsArray();
             int arraySize = checkinsArray.length();
 
-            for(int checkinsLoop = 0; checkinsLoop < arraySize; checkinsLoop++ ) {
+            for (int checkinsLoop = 0; checkinsLoop < arraySize; checkinsLoop++) {
                 Checkin currentCheckin = new Checkin();
 
                 try {
                     currentCheckin.setId(checkinsArray.getJSONObject(checkinsLoop).getString("id"));
-                    currentCheckin.setLoc(checkinsArray.getJSONObject(checkinsLoop).getString("loc"));
-                    currentCheckin.setLat(checkinsArray.getJSONObject(checkinsLoop).getString("lat"));
-                    currentCheckin.setLon(checkinsArray.getJSONObject(checkinsLoop).getString("lon"));
-                    currentCheckin.setDate(checkinsArray.getJSONObject(checkinsLoop).getString("date"));
-                    currentCheckin.setMsg(checkinsArray.getJSONObject(checkinsLoop).getString("msg"));
-                    currentCheckin.setUser(checkinsArray.getJSONObject(checkinsLoop).getString("user"));
+                    currentCheckin.setLoc(checkinsArray.getJSONObject(checkinsLoop)
+                            .getString("loc"));
+                    currentCheckin.setLat(checkinsArray.getJSONObject(checkinsLoop)
+                            .getString("lat"));
+                    currentCheckin.setLon(checkinsArray.getJSONObject(checkinsLoop)
+                            .getString("lon"));
+                    currentCheckin.setDate(checkinsArray.getJSONObject(checkinsLoop).getString(
+                            "date"));
+                    currentCheckin.setMsg(checkinsArray.getJSONObject(checkinsLoop)
+                            .getString("msg"));
+                    currentCheckin.setUser(checkinsArray.getJSONObject(checkinsLoop).getString(
+                            "user"));
                 } catch (JSONException e) {
                     processingResult = false;
                     return null;

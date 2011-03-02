@@ -29,9 +29,9 @@ public class CheckinMap extends MapActivity {
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        
+
         UshahidiPref.loadSettings(CheckinMap.this);
-        
+
         boolean firstPoint = true;
         GeoPoint centerGeoPoint = new GeoPoint(0, 0);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -47,9 +47,9 @@ public class CheckinMap extends MapActivity {
 
         String strCheckinsJSON = NetworkServices.getCheckins(UshahidiPref.domain, null, null);
         JSONServices checkinsJSON = new JSONServices(strCheckinsJSON);
-        
+
         ArrayList checkinsList = checkinsJSON.getCheckinsList();
-        
+
         int numCheckins = checkinsList.size();
 
         for (int checkinsLoop = 0; checkinsLoop < numCheckins; checkinsLoop++) {
