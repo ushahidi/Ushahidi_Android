@@ -509,7 +509,7 @@ public class AddIncident extends Activity {
 				mFilename = "android_pic_upload" + randomString() + ".jpg";
 				ImageManager.writeImage(byteArrayos.toByteArray(), mFilename);
 				UshahidiPref.fileName = mFilename;
-				mSelectedPhoto.setImageDrawable(ImageManager.getImages(UshahidiPref.fileName));
+				mSelectedPhoto.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName));
 				break;
 				
 			case VIEW_MAP:

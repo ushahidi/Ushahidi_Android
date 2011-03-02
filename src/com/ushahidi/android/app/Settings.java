@@ -86,6 +86,10 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     public static final String RINGTONE_PREFERENCE = "ringtone_preference";
 
     public static final String FLASH_LED_PREFERENCE = "flash_led_preference";
+    
+    public static final String USHAHIDI_DEPLOYMENT_PREFERENCE = "ushahidi_instance_preference";
+    
+    public static final String EMAIL_ADDRESS_PREFERENCE = "email_address_preference";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -318,11 +322,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         editor.putString("Domain", ushahidiInstancePref.getText().toString().trim());
         editor.putString("Firstname", firstNamePref.getText());
         editor.putString("Lastname", lastNamePref.getText());
-
-        if (Util.validateEmail(settings.getString("Email", ""))) {
-            editor.putString("Email", emailAddressPref.getText());
-        }
-
+        editor.putString("Email", emailAddressPref.getText());
         editor.putString("savePath", newSavePath);
         editor.putInt("AutoUpdateDelay", autoUdateDelay);
         editor.putBoolean("AutoFetch", autoFetchCheckBoxPref.isChecked());
@@ -398,35 +398,34 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         }
 
         // cache
-        if (key.equals("ushahidi_instance_preference")) {
-            if (!sharedPreferences.getString("ushahidi_instance_preference", "").equals(
+        if (key.equals(USHAHIDI_DEPLOYMENT_PREFERENCE)) {
+            if (!sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, "").equals(
                     UshahidiPref.domain)) {
                 new UshahidiService().clearCache();
                 UshahidiPref.domain = sharedPreferences.getString(
-                        "ushahidi_instance_preference", "");
+                        USHAHIDI_DEPLOYMENT_PREFERENCE, "");
             }
         }
 
         // validate email address
-        if (key.equals("email_address_preference")) {
-            if (!Util.validateEmail(sharedPreferences.getString("email_address_preference", ""))) {
+        if (key.equals(EMAIL_ADDRESS_PREFERENCE)) {
+            if (!Util.validateEmail(sharedPreferences.getString(EMAIL_ADDRESS_PREFERENCE, ""))) {
                 Util.showToast(this, R.string.invalid_email_address);
             }
         }
 
         // validate ushahidi instance
-        if (key.equals("ushahidi_instance_preference")) {
+        if (key.equals(USHAHIDI_DEPLOYMENT_PREFERENCE)) {
 
             ReportsTask reportsTask = new ReportsTask();
             reportsTask.appContext = this;
             reportsTask.execute();
 
             if (!Util.validateUshahidiInstance(sharedPreferences.getString(
-                    "ushahidi_instance_preference", ""))) {
+                    USHAHIDI_DEPLOYMENT_PREFERENCE, ""))) {
 
                 // reset whatever was entered in that field.
                 ushahidiInstancePref.setText("");
-                UshahidiPref.domain = "";
                 Util.showToast(this, R.string.invalid_ushahidi_instance);
             }
         }
@@ -443,6 +442,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
         @Override
         protected void onPreExecute() {
+            
+            UshahidiPref.loadSettings(appContext);
             this.dialog = ProgressDialog.show(appContext, getString(R.string.please_wait),
                     getString(R.string.fetching_new_reports), true);
 

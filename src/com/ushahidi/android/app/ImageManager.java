@@ -29,16 +29,21 @@ import java.net.MalformedURLException;
 
 import com.ushahidi.android.app.net.UshahidiHttpClient;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+
+import  android.graphics.drawable.BitmapDrawable;
 
 public class ImageManager {
 	//Images
 	public static Drawable getImages(String fileName) {
 		
 		Drawable d = null;
-	
-		FileInputStream fIn;
+		BitmapDrawable bD = new BitmapDrawable(UshahidiPref.savePath + fileName);
+		d = bD.mutate();
+		/*FileInputStream fIn;
 		if( !TextUtils.isEmpty( fileName) ) {
 			try {
 				fIn = new FileInputStream(UshahidiPref.savePath + fileName);
@@ -47,7 +52,7 @@ public class ImageManager {
 			
 				e.printStackTrace();
 			}
-		}
+		}*/
 	
 		return d;
 	}
@@ -131,6 +136,11 @@ public class ImageManager {
 		if (f.exists()){
 			f.delete();
 		}
+	}
+	
+	public static Bitmap getBitmap(String fileName) {
+	    Bitmap bitMap = BitmapFactory.decodeFile(UshahidiPref.savePath + fileName);
+	    return bitMap;
 	}
 	
 }
