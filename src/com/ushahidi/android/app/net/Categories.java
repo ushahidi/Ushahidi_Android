@@ -27,33 +27,33 @@ import org.apache.http.HttpResponse;
 import com.ushahidi.android.app.UshahidiService;
 
 public class Categories {
-	
-	public static boolean getAllCategoriesFromWeb() throws IOException {
-		
-		HttpResponse response;
-		String categories = "";
-		
-		StringBuilder uriBuilder = new StringBuilder( UshahidiService.domain);
-		uriBuilder.append("/api?task=categories");
-		uriBuilder.append("&resp=xml");
-		
-		response = UshahidiHttpClient.GetURL( uriBuilder.toString() );
-		
-		if( response == null ) {
-			return false;
-		}
-		
-		final int statusCode = response.getStatusLine().getStatusCode();
-		
-		if( statusCode == 200 ) {
-			categories = UshahidiHttpClient.GetText(response);
-			UshahidiService.categoriesResponse = categories;
-			return true;
-			
-		} else {
-			return false;
-		}
-		
-	}
+
+    public static boolean getAllCategoriesFromWeb() throws IOException {
+
+        HttpResponse response;
+        String categories = "";
+
+        StringBuilder uriBuilder = new StringBuilder(UshahidiService.domain);
+        uriBuilder.append("/api?task=categories");
+        uriBuilder.append("&resp=xml");
+
+        response = UshahidiHttpClient.GetURL(uriBuilder.toString());
+
+        if (response == null) {
+            return false;
+        }
+
+        final int statusCode = response.getStatusLine().getStatusCode();
+
+        if (statusCode == 200) {
+            categories = UshahidiHttpClient.GetText(response);
+            UshahidiService.categoriesResponse = categories;
+            return true;
+
+        } else {
+            return false;
+        }
+
+    }
 
 }

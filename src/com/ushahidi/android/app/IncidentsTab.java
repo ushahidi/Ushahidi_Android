@@ -27,46 +27,53 @@ import android.widget.TabHost;
 import android.content.Intent;
 import com.ushahidi.android.app.checkin.CheckinMap;
 
-
 public class IncidentsTab extends TabActivity {
-	
-	private TabHost tabHost;
-	private Bundle bundle;
-	private Bundle extras;
-    
-	@Override
+
+    private TabHost tabHost;
+
+    private Bundle bundle;
+
+    private Bundle extras;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        
+
         bundle = new Bundle();
-		extras = this.getIntent().getExtras();
-		
+        extras = this.getIntent().getExtras();
+
         tabHost = getTabHost();
 
         // List of reports
-        tabHost.addTab(tabHost.newTabSpec("list_reports")
-        		.setIndicator("List",getResources().getDrawable(R.drawable.ushahidi_tab_list_selected))
+        tabHost.addTab(tabHost
+                .newTabSpec("list_reports")
+                .setIndicator("List",
+                        getResources().getDrawable(R.drawable.ushahidi_tab_list_selected))
                 .setContent(new Intent(this, ListIncidents.class)));
 
         // Reports map
-        tabHost.addTab(tabHost.newTabSpec("map")
-                .setIndicator("Map",getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
+        tabHost.addTab(tabHost
+                .newTabSpec("map")
+                .setIndicator("Map",
+                        getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
                 .setContent(new Intent(this, IncidentMap.class)));
 
         // Checkins map
         // TODO: Place the checkins map here
-        tabHost.addTab(tabHost.newTabSpec("checkin")
-                .setIndicator("Checkin",getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
+        tabHost.addTab(tabHost
+                .newTabSpec("checkin")
+                .setIndicator("Checkin",
+                        getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
                 .setContent(new Intent(this, CheckinMap.class)));
 
         tabHost.setCurrentTab(0);
-        
-        if( extras != null ) {
-        	bundle = extras.getBundle("tab");
-        	tabHost.setCurrentTab(bundle.getInt("tab_index"));
+
+        if (extras != null) {
+            bundle = extras.getBundle("tab");
+            tabHost.setCurrentTab(bundle.getInt("tab_index"));
         }
-        
+
     }
-    
+
 }

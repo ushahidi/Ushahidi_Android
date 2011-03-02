@@ -1,93 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
-  Copyright (c) 2010 Ushahidi Inc
-  All rights reserved
-  Contact: team@ushahidi.com
-  Website: http://www.ushahidi.com
-  
-  GNU Lesser General Public License Usage
-  This file may be used under the terms of the GNU Lesser
-  General Public License version 3 as published by the Free Software
-  Foundation and appearing in the file LICENSE.LGPL included in the
-  packaging of this file. Please review the following information to
-  ensure the GNU Lesser General Public License version 3 requirements
-  will be met: http://www.gnu.org/licenses/lgpl.html.	
- 	
- 
-  If you have questions regarding the use of this file, please contact
-  Ushahidi developers at team@ushahidi.com. 
- -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<!-- Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+  Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
+  This file may be used under the terms of the GNU Lesser General Public License 
+  version 3 as published by the Free Software Foundation and appearing in the 
+  file LICENSE.LGPL included in the packaging of this file. Please review the 
+  following information to ensure the GNU Lesser General Public License version 
+  3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
+  have questions regarding the use of this file, please contact Ushahidi developers 
+  at team@ushahidi.com. -->
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:background="@drawable/background_color"
+  android:gravity="center"
+  android:padding="25px">
+  <ScrollView
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/background_color"
-    android:gravity="center"
-    android:padding="25px">
-    <ScrollView android:layout_width="fill_parent" 
-		android:layout_height="fill_parent"
-		android:gravity="center">
-		<LinearLayout android:layout_width="fill_parent" 
-	    	android:layout_height="wrap_content"
-	    	android:orientation="vertical"
-	    	android:gravity="center"
-	    	android:paddingRight="15px">
-		
-			<TextView  android:id="@+id/title"
-    			android:layout_width="wrap_content" 
-    			android:layout_height="wrap_content" 
-    			android:background="@drawable/ushahidi_android_logo" />
- 			
- 			<TextView  android:id="@+id/spacer"
-    			android:layout_width="fill_parent" 
-    			android:layout_height="wrap_content" />
- 			
- 			<TextView  android:id="@+id/spacer"
-    			android:layout_width="fill_parent" 
-    			android:layout_height="wrap_content" />
-   			<Button android:id="@+id/checkin"
-        		android:layout_width="fill_parent"
-        		android:layout_height="wrap_content"
-        		android:layout_alignParentLeft="true"
-        		android:layout_marginLeft="0px"
-        		android:textStyle="bold"
-        		android:text="@string/checkin_menu" />
-       		<TextView  android:id="@+id/spacer"
-    			android:layout_width="fill_parent" 
-    			android:layout_height="wrap_content" />
-    		      
- 			<Button android:id="@+id/incident_add"
-        		android:layout_width="fill_parent"
-        		android:layout_height="wrap_content"
-        		android:layout_alignParentLeft="true"
-        		android:layout_marginLeft="0px"
-        		android:textStyle="bold"
-        		android:text="@string/incident_menu_add" />
-        	
-        	<TextView  android:id="@+id/spacer"
-    			android:layout_width="fill_parent" 
-    			android:layout_height="wrap_content" />
-    		          
- 			<Button android:id="@+id/incident_list"
-        		android:layout_width="fill_parent"
-        		android:layout_height="wrap_content"
-        		android:layout_alignParentLeft="true"
-        		android:layout_marginLeft="0px"
-        		android:textStyle="bold"
-        		android:text="@string/incident_list" />
- 			
- 			<TextView  android:id="@+id/spacer2"
-    			android:layout_width="fill_parent" 
-    			android:layout_height="wrap_content" />
-        
- 			<Button android:id="@+id/incident_map"
-        		android:layout_width="fill_parent"
-        		android:layout_height="wrap_content"
-        		android:layout_alignParentLeft="true"
-        		android:layout_marginLeft="0px"
-        		android:textStyle="bold"
-        		android:text="@string/menu_settings" />
-    		
-        </LinearLayout>
-	</ScrollView>        
+    android:gravity="center">
+    <LinearLayout
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:gravity="center"
+      android:paddingRight="15px">
+
+      <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ushahidi_android_logo" />
+
+      <TextView
+        android:id="@+id/spacer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+      <TextView
+        android:id="@+id/spacer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+      <Button
+        android:id="@+id/checkin"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="0px"
+        android:textStyle="bold"
+        android:text="@string/checkin_menu" />
+      <TextView
+        android:id="@+id/spacer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+      <Button
+        android:id="@+id/incident_add"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="0px"
+        android:textStyle="bold"
+        android:text="@string/incident_menu_add" />
+
+      <TextView
+        android:id="@+id/spacer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+      <Button
+        android:id="@+id/incident_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="0px"
+        android:textStyle="bold"
+        android:text="@string/incident_list" />
+
+      <TextView
+        android:id="@+id/spacer2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+      <Button
+        android:id="@+id/incident_map"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="0px"
+        android:textStyle="bold"
+        android:text="@string/menu_settings" />
+
+    </LinearLayout>
+  </ScrollView>
 </RelativeLayout>

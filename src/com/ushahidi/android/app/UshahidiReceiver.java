@@ -26,11 +26,11 @@ import android.content.Intent;
 
 public class UshahidiReceiver extends BroadcastReceiver {
 
-  public static final String ACTION_REFRESH_EARTHQUAKE_ALARM = "com.ushahidi.android.app.ushahidi.ACTION_UPDATE_USHAHIDI_ALARM"; 
-	
-  @Override
-  public void onReceive(Context context, Intent intent) {
-    Intent startIntent = new Intent(context, UshahidiService.class);
-    context.startService(startIntent);
-	}
+    public static final String ACTION_REFRESH_EARTHQUAKE_ALARM = "com.ushahidi.android.app.ushahidi.ACTION_UPDATE_USHAHIDI_ALARM";
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Intent startIntent = new Intent(context, UshahidiService.class);
+        context.startService(startIntent);
+    }
 }

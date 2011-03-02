@@ -30,13 +30,14 @@ import android.util.Log;
  * checks for new ushahidi reports.
  */
 public class BootReceiver extends BroadcastReceiver {
-	private static final String TAG = "BootReceiver";
-  
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		Log.i(TAG, "Ushahidi BootReceiver is receiving.");
-	  	if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {      
-	  		//startService(new Intent(BootReceive.this, UshahidiService.class));
-	  	}
-	}
+    private static final String TAG = "BootReceiver";
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Log.i(TAG, "Ushahidi BootReceiver is receiving.");
+        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
+            // startService(new Intent(BootReceive.this,
+            // UshahidiService.class));
+        }
+    }
 }
