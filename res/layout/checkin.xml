@@ -3,18 +3,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:padding="20px"
+    android:background="@drawable/background_color"
     android:orientation="vertical">
 
     <TextView android:id="@+id/checkin_message_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@drawable/date_color"
+        android:textStyle="bold"
         android:text="@string/checkin_message" />
     <EditText android:id="@+id/checkin_message_text"
         android:layout_width="fill_parent"
+        android:singleLine="false"
+        android:lines="5"
+        android:gravity="top"
         android:layout_height="wrap_content" />
     <TextView android:id="@+id/checkin_selected_photo_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@drawable/date_color"
+        android:textStyle="bold"
         android:text="@string/checkin_selected_photo" />
     <EditText android:id="@+id/checkin_selected_photo_text"
         android:layout_width="fill_parent"

@@ -157,7 +157,10 @@
 				
 				<EditText android:id="@+id/incident_desc" 
 					android:layout_width="fill_parent"
-					android:layout_height="100px"
+					android:layout_height="wrap_content"
+					android:gravity="top"
+					android:singleLine="false"
+                    android:lines="5"
 					android:autoText="true"
 					android:scrollbars="vertical" />
 			</LinearLayout>

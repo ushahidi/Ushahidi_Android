@@ -173,12 +173,12 @@
     <!-- Checkin Strings -->
     <string name="checkin_menu">Checkin</string>
     <string name="checkin_photo">Photo</string>
-    <string name="checkin_message">Checkin Message</string>
+    <string name="checkin_message">Checkin Message:</string>
     <string name="checkin_upload_photo">Upload photo</string>
     <string name="checkin_how_to_select_pic">Please choose how you would like to get the picture.</string>
     <string name="checkin_select_pic_file">File</string>
     <string name="checkin_select_pic_camera">Camera</string>
-    <string name="checkin_selected_photo">Selected photo</string>
+    <string name="checkin_selected_photo">Selected photo:</string>
     <string name="view_checkins">Ushahidi | View Checkins</string>
     <string name="checkin_progress_title">Working...</string>
     <string name="checkin_progress_message">Getting location data...</string>
