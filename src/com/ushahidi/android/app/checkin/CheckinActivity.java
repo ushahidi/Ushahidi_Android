@@ -11,13 +11,15 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.ushahidi.android.app.ImageCapture;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
@@ -41,8 +43,9 @@ public class CheckinActivity extends Activity {
     private Button checkinButton;
     private Button uploadPhotoButton;
     private EditText checkinMessageText;
-    private EditText mSelectedPhoto;
-
+    private ImageView mCheckImgPrev;
+    private TextView mSelectedPhotoText;
+    
     // Photo functionality
     private String mFilename = "";
     private String selectedPhoto = "";
@@ -67,8 +70,9 @@ public class CheckinActivity extends Activity {
         checkinButton = (Button) findViewById(R.id.perform_checkin_button);
         uploadPhotoButton = (Button) findViewById(R.id.upload_checkin_photo_button);
         checkinMessageText = (EditText) findViewById(R.id.checkin_message_text);
-        mSelectedPhoto = (EditText) findViewById(R.id.checkin_selected_photo_text);
-
+        mCheckImgPrev = (ImageView) findViewById(R.id.checkin_img_prev);
+        mSelectedPhotoText = (TextView) findViewById(R.id.checkin_selected_photo_label);
+        mSelectedPhotoText.setVisibility(View.GONE);
         // Perform the checkin
         checkinButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -83,18 +87,6 @@ public class CheckinActivity extends Activity {
                 }
             });
     }
-
-    @Override
-	public void onCreateContextMenu(ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo) {
-		populateMenu(menu);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		populateMenu(menu);
-
-		return(super.onCreateOptionsMenu(menu));
-	}
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -116,7 +108,8 @@ public class CheckinActivity extends Activity {
 				if ( mBundle != null && !mBundle.isEmpty() ) {
                     selectedPhoto = mBundle.getString("name");
 					NetworkServices.fileName = mBundle.getString("name");
-					mSelectedPhoto.setText(NetworkServices.fileName);
+					mSelectedPhotoText.setVisibility(View.VISIBLE);
+					mCheckImgPrev.setImageDrawable(ImageManager.getImages(NetworkServices.fileName));
 				}
 				break;
 
@@ -151,7 +144,7 @@ public class CheckinActivity extends Activity {
 				ImageManager.writeImage(byteArrayos.toByteArray(), mFilename);
 				UshahidiPref.fileName = mFilename;
                 selectedPhoto = mFilename;
-				mSelectedPhoto.setText(UshahidiPref.fileName);
+				
 				break;
 		}
     }
@@ -240,8 +233,4 @@ public class CheckinActivity extends Activity {
         LocationServices.getLocation(this);
 	}
 
-    private void populateMenu(Menu menu) {
-		MenuItem i;
-        // Create the menu here
-	}
 }

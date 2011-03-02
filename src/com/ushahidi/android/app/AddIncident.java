@@ -39,7 +39,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -65,6 +64,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -111,7 +111,7 @@ public class AddIncident extends Activity {
 	private EditText mIncidentDesc;
 	
 	private TextView mIncidentDate;
-	private TextView mSelectedPhoto;
+	private ImageView mSelectedPhoto;
 	private TextView mSelectedCategories;
 	
 	private Button mBtnSend;
@@ -129,12 +129,10 @@ public class AddIncident extends Activity {
 	
 	private static final int DIALOG_ERROR_NETWORK = 0;
 	private static final int DIALOG_ERROR_SAVING = 1;
-    private static final int DIALOG_LOADING_CATEGORIES= 2;
-    private static final int DIALOG_LOADING_LOCATIONS = 3;
-	private static final int DIALOG_CHOOSE_IMAGE_METHOD = 4;
-	private static final int DIALOG_MULTIPLE_CATEGORY = 6;
-	private static final int TIME_DIALOG_ID = 7;
-    private static final int DATE_DIALOG_ID = 8;
+	private static final int DIALOG_CHOOSE_IMAGE_METHOD = 2;
+	private static final int DIALOG_MULTIPLE_CATEGORY = 3;
+	private static final int TIME_DIALOG_ID = 4;
+    private static final int DATE_DIALOG_ID = 5;
 	
 	private final static Handler mHandler = new Handler();
 	
@@ -264,7 +262,7 @@ public class AddIncident extends Activity {
 		mPickTime = (Button) findViewById(R.id.pick_time);
 		mAddLocation = (Button) findViewById(R.id.location);
 	
-		mSelectedPhoto = (TextView) findViewById(R.id.lbl_photo);
+		mSelectedPhoto = (ImageView) findViewById(R.id.sel_photo_prev);
 		mSelectedCategories = (TextView) findViewById(R.id.lbl_category);
 		
 		mIncidentTitle = (EditText) findViewById(R.id.incident_title);
@@ -444,7 +442,6 @@ public class AddIncident extends Activity {
 		mIncidentLocation.setText("");
 		mIncidentDesc.setText("");
 		mVectorCategories.clear();
-		mSelectedPhoto.setText("");
 		mSelectedCategories.setText("");
 		mCounter = 0;
 		updateDisplay();
@@ -477,7 +474,7 @@ public class AddIncident extends Activity {
 				
 				if ( mBundle != null && !mBundle.isEmpty() ) {
 					UshahidiPref.fileName = mBundle.getString("name");
-					mSelectedPhoto.setText(UshahidiPref.fileName);
+					mSelectedPhoto.setImageDrawable(ImageManager.getImages(UshahidiPref.fileName));
 				}
 				break;
 	
@@ -512,7 +509,7 @@ public class AddIncident extends Activity {
 				mFilename = "android_pic_upload" + randomString() + ".jpg";
 				ImageManager.writeImage(byteArrayos.toByteArray(), mFilename);
 				UshahidiPref.fileName = mFilename;
-				mSelectedPhoto.setText(UshahidiPref.fileName);
+				mSelectedPhoto.setImageDrawable(ImageManager.getImages(UshahidiPref.fileName));
 				break;
 				
 			case VIEW_MAP:

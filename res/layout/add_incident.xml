@@ -178,12 +178,10 @@
 					android:textStyle="bold" 
 					android:text="@string/btn_add_photo" />		
 			
-				<TextView android:id="@+id/lbl_photo" 
-					android:layout_width="fill_parent"
-					android:layout_height="wrap_content"
-					android:singleLine="false"
-					android:textStyle="bold"
-					android:textColor="@drawable/date_color" />
+				<ImageView 
+				android:id="@+id/sel_photo_prev" android:layout_height="wrap_content" 
+                android:layout_width="wrap_content"
+                android:scaleType="fitCenter" />
 			
 			</LinearLayout>
 			<!-- Photo layout ends. -->
