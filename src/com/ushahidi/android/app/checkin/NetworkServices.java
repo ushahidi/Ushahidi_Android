@@ -20,7 +20,7 @@ import java.util.HashMap;
 public class NetworkServices {
     public static String fileName;
 
-    public static boolean postToOnline(String IMEI, String domainName, String checkinDetails,
+    public static String postToOnline(String IMEI, String domainName, String checkinDetails,
             Location location, String filename, String firstname, String lastname, String email) {
 
         HashMap<String, String> myParams = new HashMap<String, String>();
@@ -44,17 +44,13 @@ public class NetworkServices {
         Log.i("Ushahidi URL: ", urlBuilder.toString());
 
         try {
-            PostFileUpload(urlBuilder.toString(), myParams);
-
-            return true;
+            return PostFileUpload(urlBuilder.toString(), myParams);
         } catch (IOException e) {
-            e.printStackTrace();
-
-            return false;
+            return null;
         }
     }
 
-    public static boolean PostFileUpload(String URL, HashMap<String, String> params)
+    public static String PostFileUpload(String URL, HashMap<String, String> params)
             throws IOException {
         ClientHttpRequest req = null;
 
@@ -81,14 +77,13 @@ public class NetworkServices {
 
             InputStream serverInput = req.post();
 
-            if (Util.extractPayloadJSON(GetText(serverInput))) {
-                return true;
-            }
+            return GetText(serverInput);
 
         } catch (MalformedURLException ex) {
             // fall through and return false
         }
-        return false;
+
+        return null;
     }
 
     public static String getCheckins(String URL, String mobileId, String checkinId) {

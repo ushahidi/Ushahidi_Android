@@ -224,13 +224,22 @@ public class CheckinActivity extends Activity {
         String lastname = UshahidiPref.lastname;
         String email = UshahidiPref.email;
 
-        NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this), ushahidiDomain,
+        String jsonResponse = NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this), ushahidiDomain,
                 checkinDetails, LocationServices.location, selectedPhoto, firstname, lastname,
                 email);
 
-        NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this), ushahidiDomain,
-                checkinDetails, LocationServices.location, selectedPhoto, firstname, lastname,
-                email);
+        PostCheckinsJSONServices jsonServices = new PostCheckinsJSONServices(jsonResponse);
+
+        // JSON Post
+        boolean postCheckinJsonSuccess = false;
+        String postCheckinJsonErrorCode = "", postCheckinJsonErrorMessage = "";
+
+        if(jsonServices.isProcessingResult()) {
+            postCheckinJsonSuccess = true;
+
+            postCheckinJsonErrorCode = jsonServices.getErrorCode();
+            postCheckinJsonErrorMessage = jsonServices.getErrorMessage();
+        }
 
         if (pd != null) {
             pd.dismiss();
@@ -239,8 +248,15 @@ public class CheckinActivity extends Activity {
         pd = null;
 
         // Display checkin status and return back to main screen
-        com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
+        if(postCheckinJsonErrorCode != "0") {
+            com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
                 R.string.checkin_success_toast);
+        }
+        else {
+            com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
+                R.string.checkin_error_toast);
+        }
+
         CheckinActivity.this.finish();
     }
 

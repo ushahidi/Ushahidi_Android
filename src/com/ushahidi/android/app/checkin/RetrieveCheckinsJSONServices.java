@@ -11,12 +11,12 @@ import java.util.ArrayList;
  * Created by IntelliJ IDEA. User: Ahmed Date: 2/17/11 Time: 5:45 PM To change
  * this template use File | Settings | File Templates.
  */
-public class JSONServices {
+public class RetrieveCheckinsJSONServices {
     private JSONObject jsonObject;
 
     private boolean processingResult;
 
-    public JSONServices(String JSONString) {
+    public RetrieveCheckinsJSONServices(String JSONString) {
         processingResult = true;
 
         try {
