@@ -29,108 +29,116 @@ import java.net.MalformedURLException;
 
 import com.ushahidi.android.app.net.UshahidiHttpClient;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
+import android.graphics.drawable.BitmapDrawable;
+
 public class ImageManager {
-	//Images
-	public static Drawable getImages(String fileName) {
-		
-		Drawable d = null;
-	
-		FileInputStream fIn;
-		if( !TextUtils.isEmpty( fileName) ) {
-			try {
-				fIn = new FileInputStream(UshahidiService.savePath + fileName);
-				d = Drawable.createFromStream(fIn, "src");
-			} catch (FileNotFoundException e) {
-			
-				e.printStackTrace();
-			}
-		}
-	
-		return d;
-	}
-	
-	
-	public static void saveImage() {
-		byte[] is;
-		for (String image : UshahidiService.mNewIncidentsImages) {
-			if (!TextUtils.isEmpty(image)) {
-				File f = new File(UshahidiService.savePath + image);
-				if (!f.exists()) {
-					try {
-						is = UshahidiHttpClient.fetchImage(UshahidiService.domain+"/media/uploads/"+image);
-						if( is != null ) {
-							writeImage( is, image );
-						}
-					} catch (MalformedURLException e) {
-						
-						e.printStackTrace();
-					} catch (IOException e) {
-						
-						e.printStackTrace();
-					}
-				
-				}
-			}
-		}
-		
-	}
-	
-	public static void saveThumbnail() {
-		byte[] is;
-		for (String image : UshahidiService.mNewIncidentsThumbnails) {
-			if(!TextUtils.isEmpty(image )) {
-				File f = new File(UshahidiService.savePath + image);
-				if(!f.exists()) {
-					try {
-						is = UshahidiHttpClient.fetchImage(UshahidiService.domain+"/media/uploads/"+image);
-						if( is != null ) {
-							writeImage(is, image);
-						}
-					} catch (MalformedURLException e) {
-						
-						e.printStackTrace();
-					} catch (IOException e) {
-						
-						e.printStackTrace();
-					}
-				
-				}
-			}
-		}
-		
-	}
-	
-	public static void writeImage(byte[] data, String filename) {
-		
-		deleteImage(filename);
-		
-		if( data != null ) {
-			FileOutputStream fOut;	
-			try {
-				fOut = new FileOutputStream(UshahidiService.savePath + filename);
-				fOut.write(data);
-				fOut.flush();
-				fOut.close();
-			} catch (final FileNotFoundException e) {
-			
-				e.printStackTrace();
-			} catch (final IOException e) {
-			
-				e.printStackTrace();
-			}
-		}
-		
-	}
-	
-	public static void deleteImage(String filename) {
-		
-		File f = new File(UshahidiService.savePath + filename);
-		if (f.exists()){
-			f.delete();
-		}
-	}
-	
+
+    // Images
+    public static Drawable getImages(String fileName) {
+
+        Drawable d = null;
+        BitmapDrawable bD = new BitmapDrawable(UshahidiPref.savePath + fileName);
+        d = bD.mutate();
+        /*
+         * FileInputStream fIn; if( !TextUtils.isEmpty( fileName) ) { try { fIn
+         * = new FileInputStream(UshahidiPref.savePath + fileName); d =
+         * Drawable.createFromStream(fIn, "src"); } catch (FileNotFoundException
+         * e) { e.printStackTrace(); } }
+         */
+
+        return d;
+    }
+
+    public static void saveImage() {
+        byte[] is;
+        for (String image : UshahidiService.mNewIncidentsImages) {
+            if (!TextUtils.isEmpty(image)) {
+                File f = new File(UshahidiPref.savePath + image);
+                if (!f.exists()) {
+                    try {
+                        is = UshahidiHttpClient.fetchImage(UshahidiPref.domain + "/media/uploads/"
+                                + image);
+                        if (is != null) {
+                            writeImage(is, image);
+                        }
+                    } catch (MalformedURLException e) {
+
+                        e.printStackTrace();
+                    } catch (IOException e) {
+
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }
+
+    }
+
+    public static void saveThumbnail() {
+        byte[] is;
+        for (String image : UshahidiService.mNewIncidentsThumbnails) {
+            if (!TextUtils.isEmpty(image)) {
+                File f = new File(UshahidiPref.savePath + image);
+                if (!f.exists()) {
+                    try {
+                        is = UshahidiHttpClient.fetchImage(UshahidiPref.domain + "/media/uploads/"
+                                + image);
+                        if (is != null) {
+                            writeImage(is, image);
+                        }
+                    } catch (MalformedURLException e) {
+
+                        e.printStackTrace();
+                    } catch (IOException e) {
+
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }
+
+    }
+
+    public static void writeImage(byte[] data, String filename) {
+
+        deleteImage(filename);
+
+        if (data != null) {
+            FileOutputStream fOut;
+            try {
+                fOut = new FileOutputStream(UshahidiPref.savePath + filename);
+                fOut.write(data);
+                fOut.flush();
+                fOut.close();
+            } catch (final FileNotFoundException e) {
+
+                e.printStackTrace();
+            } catch (final IOException e) {
+
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public static void deleteImage(String filename) {
+
+        File f = new File(UshahidiPref.savePath + filename);
+        if (f.exists()) {
+            f.delete();
+        }
+    }
+
+    public static Bitmap getBitmap(String fileName) {
+        Bitmap bitMap = BitmapFactory.decodeFile(UshahidiPref.savePath + fileName);
+        return bitMap;
+    }
+
 }

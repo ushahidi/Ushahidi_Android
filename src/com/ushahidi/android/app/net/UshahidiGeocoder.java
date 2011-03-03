@@ -27,38 +27,39 @@ import org.apache.http.HttpResponse;
 import com.ushahidi.android.app.R;
 
 public class UshahidiGeocoder {
-	
-	private static final String GOOGLE_MAPS_GEO_URL = "http://maps.google.com/maps/geo?q=";
-	/**
-	 * Reverse Geocode using google's geocode web service
-	 * 
-	 * @param latitude
-	 * @param longitude
-	 * @return String
-	 */
-	public static String reverseGeocode(double latitude, double longitude) throws IOException{
-	
-	    HttpResponse response;
-	    
-	    StringBuilder uriBuilder = new StringBuilder(GOOGLE_MAPS_GEO_URL);
-	    uriBuilder.append(latitude+","+longitude);
-	    uriBuilder.append("&output=json&oe=utf8&sensor=true&key=");
-	    uriBuilder.append(R.string.google_map_api_key);
-	    
-	    response = UshahidiHttpClient.GetURL( uriBuilder.toString() );
-	    
-	    if( response == null ) {
-			return null;
-		}
-	    
-	    final int statusCode = response.getStatusLine().getStatusCode();
-	    
-	    if( statusCode == 200 ) {
-	    	
-	    	return UshahidiHttpClient.GetText(response);
-	    }else {
-	    	return null;
-	    }
-	    
-	}
+
+    private static final String GOOGLE_MAPS_GEO_URL = "http://maps.google.com/maps/geo?q=";
+
+    /**
+     * Reverse Geocode using google's geocode web service
+     * 
+     * @param latitude
+     * @param longitude
+     * @return String
+     */
+    public static String reverseGeocode(double latitude, double longitude) throws IOException {
+
+        HttpResponse response;
+
+        StringBuilder uriBuilder = new StringBuilder(GOOGLE_MAPS_GEO_URL);
+        uriBuilder.append(latitude + "," + longitude);
+        uriBuilder.append("&output=json&oe=utf8&sensor=true&key=");
+        uriBuilder.append(R.string.google_map_api_key);
+
+        response = UshahidiHttpClient.GetURL(uriBuilder.toString());
+
+        if (response == null) {
+            return null;
+        }
+
+        final int statusCode = response.getStatusLine().getStatusCode();
+
+        if (statusCode == 200) {
+
+            return UshahidiHttpClient.GetText(response);
+        } else {
+            return null;
+        }
+
+    }
 }

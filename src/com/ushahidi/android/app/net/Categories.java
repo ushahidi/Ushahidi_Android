@@ -24,7 +24,7 @@ import java.io.IOException;
 
 import org.apache.http.HttpResponse;
 
-import com.ushahidi.android.app.UshahidiService;
+import com.ushahidi.android.app.UshahidiPref;
 
 public class Categories {
 	
@@ -33,7 +33,7 @@ public class Categories {
 		HttpResponse response;
 		String categories = "";
 		
-		StringBuilder uriBuilder = new StringBuilder( UshahidiService.domain);
+		StringBuilder uriBuilder = new StringBuilder( UshahidiPref.domain);
 		uriBuilder.append("/api?task=categories");
 		uriBuilder.append("&resp=xml");
 		
@@ -47,7 +47,7 @@ public class Categories {
 		
 		if( statusCode == 200 ) {
 			categories = UshahidiHttpClient.GetText(response);
-			UshahidiService.categoriesResponse = categories;
+			UshahidiPref.categoriesResponse = categories;
 			return true;
 			
 		} else {

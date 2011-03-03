@@ -24,37 +24,37 @@ import java.io.IOException;
 
 import org.apache.http.HttpResponse;
 
-import com.ushahidi.android.app.UshahidiService;
+import com.ushahidi.android.app.UshahidiPref;
 
 public class Incidents {
-	
-	public static boolean getAllIncidentsFromWeb() throws IOException {
-		HttpResponse response;
-		String incidents = "";
-		
-		StringBuilder uriBuilder = new StringBuilder( UshahidiService.domain );
-		uriBuilder.append("/api?task=incidents");
-		uriBuilder.append("&by=all");
-		uriBuilder.append("&limit="+UshahidiService.totalReports);
-		uriBuilder.append("&resp=xml");
-		
-		response = UshahidiHttpClient.GetURL( uriBuilder.toString());
-		
-		if( response == null ) {
-			return false;
-		}
-		
-		final int statusCode = response.getStatusLine().getStatusCode();
-		
-		if( statusCode == 200 ) {
-			
-			incidents = UshahidiHttpClient.GetText(response);
-			UshahidiService.incidentsResponse = incidents;
-			return true;
-		} else {
-			return false;
-		}
-		
-	}
-	
+
+    public static boolean getAllIncidentsFromWeb() throws IOException {
+        HttpResponse response;
+        String incidents = "";
+
+        StringBuilder uriBuilder = new StringBuilder(UshahidiPref.domain);
+        uriBuilder.append("/api?task=incidents");
+        uriBuilder.append("&by=all");
+        uriBuilder.append("&limit=" + UshahidiPref.totalReports);
+        uriBuilder.append("&resp=xml");
+
+        response = UshahidiHttpClient.GetURL(uriBuilder.toString());
+
+        if (response == null) {
+            return false;
+        }
+
+        final int statusCode = response.getStatusLine().getStatusCode();
+
+        if (statusCode == 200) {
+
+            incidents = UshahidiHttpClient.GetText(response);
+            UshahidiPref.incidentsResponse = incidents;
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
 }

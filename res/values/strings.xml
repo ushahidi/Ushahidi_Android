@@ -166,15 +166,19 @@
 	<string name="how_to_select_pic">Please choose how you would like to get the picture.</string>
 	<string name="camera_option">Camera</string>
 	<string name="gallery_option">Gallery</string>
+	<string name="network_error">Network Error</string>
+	<string name="network_error_msg">Network Error, please ensure you are connected to the Internet</string>
+	<string name="file_system_error">File System Error</string>
+	<string name="file_system_error_msg">File System Error, please ensure your save path is correct!</string>
     <!-- Checkin Strings -->
     <string name="checkin_menu">Checkin</string>
     <string name="checkin_photo">Photo</string>
-    <string name="checkin_message">Checkin Message</string>
+    <string name="checkin_message">Checkin Message:</string>
     <string name="checkin_upload_photo">Upload photo</string>
     <string name="checkin_how_to_select_pic">Please choose how you would like to get the picture.</string>
     <string name="checkin_select_pic_file">File</string>
     <string name="checkin_select_pic_camera">Camera</string>
-    <string name="checkin_selected_photo">Selected photo</string>
+    <string name="checkin_selected_photo">Selected photo:</string>
     <string name="view_checkins">Ushahidi | View Checkins</string>
     <string name="checkin_progress_title">Working...</string>
     <string name="checkin_progress_message">Getting location data...</string>
