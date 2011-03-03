@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>ushahidi-android-test</name>
+	<name>UshahidiAndroidTests</name>
 	<comment></comment>
 	<projects>
-		<project>ushahidi-android</project>
+		<project>Ushahidi_Android</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

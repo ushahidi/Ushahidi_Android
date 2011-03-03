@@ -1,7 +1,6 @@
 
 package com.ushahidi.android.app.checkin;
 
-import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
