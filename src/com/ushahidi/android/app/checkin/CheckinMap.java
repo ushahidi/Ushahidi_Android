@@ -46,9 +46,9 @@ public class CheckinMap extends MapActivity {
         itemizedOverlay = new CheckinItemizedOverlay(drawable);
 
         String strCheckinsJSON = NetworkServices.getCheckins(UshahidiPref.domain, null, null);
-        JSONServices checkinsJSON = new JSONServices(strCheckinsJSON);
-
-        ArrayList checkinsList = checkinsJSON.getCheckinsList();
+        RetrieveCheckinsJSONServices checkinsRetrieveCheckinsJSON = new RetrieveCheckinsJSONServices(
+                strCheckinsJSON);
+        ArrayList checkinsList = checkinsRetrieveCheckinsJSON.getCheckinsList();
 
         int numCheckins = checkinsList.size();
 

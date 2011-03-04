@@ -20,8 +20,9 @@ import java.util.HashMap;
 public class NetworkServices {
     public static String fileName;
 
-    public static boolean postToOnline(String IMEI, String domainName, String checkinDetails,
-            Location location, String filename, String firstname, String lastname, String email) {
+    public static String postToOnline(String IMEI, String domainName, String checkinDetails,
+
+    Location location, String filename, String firstname, String lastname, String email) {
 
         HashMap<String, String> myParams = new HashMap<String, String>();
 
@@ -44,24 +45,19 @@ public class NetworkServices {
         Log.i("Ushahidi URL: ", urlBuilder.toString());
 
         try {
-            PostFileUpload(urlBuilder.toString(), myParams);
-
-            return true;
+            return PostFileUpload(urlBuilder.toString(), myParams);
         } catch (IOException e) {
-            e.printStackTrace();
-
-            return false;
+            return null;
         }
     }
 
-    public static boolean PostFileUpload(String URL, HashMap<String, String> params)
+    public static String PostFileUpload(String URL, HashMap<String, String> params)
             throws IOException {
         ClientHttpRequest req = null;
 
         try {
             URL url = new URL(URL);
             req = new ClientHttpRequest(url);
-
             req.setParameter("task", params.get("task"));
             req.setParameter("action", params.get("action"));
             req.setParameter("mobileid", params.get("mobileid"));
@@ -72,29 +68,26 @@ public class NetworkServices {
             req.setParameter("lastname", params.get("lastname"));
             req.setParameter("email", params.get("email"));
 
+            Log.i("HTTP Client:", "filename:" + UshahidiPref.savePath + params.get("filename"));
 
-             Log.i("HTTP Client:", "filename:" + UshahidiPref.savePath + params.get("filename"));
-
-             if( !TextUtils.isEmpty(params.get("filename")) || !(params.get("filename").equals("")))
+            if (!TextUtils.isEmpty(params.get("filename")) || !(params.get("filename").equals("")))
                 req.setParameter("photo", new File(UshahidiPref.savePath + params.get("filename")));
-
 
             InputStream serverInput = req.post();
 
-            if (Util.extractPayloadJSON(GetText(serverInput))) {
-                return true;
-            }
+            return GetText(serverInput);
 
         } catch (MalformedURLException ex) {
             // fall through and return false
         }
-        return false;
+
+        return null;
     }
 
     public static String getCheckins(String URL, String mobileId, String checkinId) {
         StringBuilder fullUrl = new StringBuilder(URL);
-    	fullUrl.append("/api");
-    	Log.i("Domain URL: ", "URL: "+fullUrl);
+        fullUrl.append("/api");
+        Log.i("Domain URL: ", "URL: " + fullUrl);
         try {
             URL url = new URL(fullUrl.toString());
             ClientHttpRequest req = new ClientHttpRequest(url);

@@ -183,4 +183,5 @@
     <string name="checkin_progress_title">Working...</string>
     <string name="checkin_progress_message">Getting location data...</string>
     <string name="checkin_success_toast">Checkin successful</string>
+    <string name="checkin_error_toast">Error encountered during checkin</string>
 </resources>
