@@ -151,6 +151,7 @@ public class IncidentMap extends MapActivity {
         }
 
     }
+    
 
     /**
      * add marker to the map

@@ -35,6 +35,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -88,7 +89,9 @@ public class Ushahidi extends Activity {
     private Button settingsBtn;
 
     private Button checkinBtn;
-
+    
+    private boolean isCheckinEnabled = false;
+    
     private String dialogErrorMsg = "An error occurred fetching the reports. "
             + "Make sure you have entered an Ushahidi instance.";
 
@@ -105,10 +108,8 @@ public class Ushahidi extends Activity {
         bundle = new Bundle();
 
         // load settings
-        if (UshahidiPref.domain.length() == 0) {
-            UshahidiPref.loadSettings(this);
-        }
-
+        UshahidiPref.loadSettings(this);
+        
         // check if domain has been set
         if (UshahidiPref.domain.length() == 0) {
 
@@ -125,7 +126,7 @@ public class Ushahidi extends Activity {
         addBtn = (Button)findViewById(R.id.incident_add);
         settingsBtn = (Button)findViewById(R.id.incident_map);
         checkinBtn = (Button)findViewById(R.id.checkin);
-
+        
         listBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -164,24 +165,19 @@ public class Ushahidi extends Activity {
                 setResult(RESULT_OK);
             }
         });
-
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-
-                if (mProgress >= MAX_PROGRESS) {
-                    mProgressDialog.dismiss();
-                } else {
-                    mProgress++;
-                    mProgressDialog.incrementProgressBy(1);
-                    mHandler.sendEmptyMessageDelayed(0, 100);
-                }
-            }
-        };
+        
+        //check if checkins is enabled
+        mHandler.post(isCheckinsEnabled);
 
     }
-
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+      //check if checkins is enabled
+        mHandler.post(isCheckinsEnabled);
+    }
+    
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
@@ -234,6 +230,18 @@ public class Ushahidi extends Activity {
     final Runnable mDisplayErrorPrompt = new Runnable() {
         public void run() {
             showDialog(DIALOG_ERROR);
+        }
+    };
+    
+    final Runnable isCheckinsEnabled = new Runnable() {
+        public void run() {
+            isCheckinEnabled = Util.isCheckinEnabled(Ushahidi.this);
+            
+            if (isCheckinEnabled) {
+                checkinBtn.setVisibility(View.VISIBLE);
+            } else {
+                checkinBtn.setVisibility(View.GONE);
+            }
         }
     };
 

@@ -161,7 +161,7 @@ public class LocationMap extends MapActivity {
             updateResultsInUi();
         }
     };
-
+    
     protected void startLongRunningOperation() {
 
         // Fire off a thread to do some work that we shouldn't do directly in

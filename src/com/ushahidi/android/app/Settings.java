@@ -28,6 +28,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.DialogPreference;
 import android.preference.EditTextPreference;
@@ -77,6 +78,10 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
     private SharedPreferences.Editor editor;
 
+    private boolean validUrl = false;
+
+    private final Handler mHandler = new Handler();
+
     public static final String AUTO_FETCH_PREFERENCE = "auto_fetch_preference";
 
     public static final String SMS_PREFERENCE = "sms_preference";
@@ -86,9 +91,9 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     public static final String RINGTONE_PREFERENCE = "ringtone_preference";
 
     public static final String FLASH_LED_PREFERENCE = "flash_led_preference";
-    
+
     public static final String USHAHIDI_DEPLOYMENT_PREFERENCE = "ushahidi_instance_preference";
-    
+
     public static final String EMAIL_ADDRESS_PREFERENCE = "email_address_preference";
 
     @Override
@@ -353,7 +358,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        // Let's do something when my counter preference value changes
+        // Let's do something when a preference value changes
 
         if (sharedPreferences.getBoolean(AUTO_FETCH_PREFERENCE, false)) {
 
@@ -402,8 +407,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             if (!sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, "").equals(
                     UshahidiPref.domain)) {
                 new UshahidiService().clearCache();
-                UshahidiPref.domain = sharedPreferences.getString(
-                        USHAHIDI_DEPLOYMENT_PREFERENCE, "");
+                UshahidiPref.domain = sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE,
+                        "");
             }
         }
 
@@ -417,18 +422,12 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         // validate ushahidi instance
         if (key.equals(USHAHIDI_DEPLOYMENT_PREFERENCE)) {
 
-            ReportsTask reportsTask = new ReportsTask();
-            reportsTask.appContext = this;
-            reportsTask.execute();
-
-            if (!Util.validateUshahidiInstance(sharedPreferences.getString(
-                    USHAHIDI_DEPLOYMENT_PREFERENCE, ""))) {
-
-                // reset whatever was entered in that field.
-                ushahidiInstancePref.setText("");
-                Util.showToast(this, R.string.invalid_ushahidi_instance);
-            }
+            validateUrl(sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, ""));
+            
         }
+
+        // save changes
+        this.saveSettings();
     }
 
     // thread class
@@ -442,7 +441,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
         @Override
         protected void onPreExecute() {
-            
+
             UshahidiPref.loadSettings(appContext);
             this.dialog = ProgressDialog.show(appContext, getString(R.string.please_wait),
                     getString(R.string.fetching_new_reports), true);
@@ -451,6 +450,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
         @Override
         protected Integer doInBackground(Void... params) {
+            // clear previous data
+            UshahidiApplication.mDb.clearData();
             status = Util.processReports(appContext);
             return status;
         }
@@ -463,5 +464,43 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             this.dialog.cancel();
         }
 
+    }
+
+    /**
+     * Create runnable for validating callback URL.
+     */
+    Runnable mValidateUrl = new Runnable() {
+        public void run() {
+
+            if (!validUrl) {
+
+                // reset whatever was entered in that field.
+                ushahidiInstancePref.setText("");
+                Util.showToast(Settings.this, R.string.invalid_ushahidi_instance);
+            } else {
+                ReportsTask reportsTask = new ReportsTask();
+                reportsTask.appContext = Settings.this;
+                reportsTask.execute();
+            }
+        }
+    };
+
+    /**
+     * Create a child thread and validate the callback URL in it when enabling
+     * SMSSync.
+     * 
+     * @param String Url - The Callback Url to be validated.
+     * @return void
+     */
+    public void validateUrl(final String Url) {
+
+        Thread t = new Thread() {
+            public void run() {
+
+                validUrl = Util.validateUshahidiInstance(Url);
+                mHandler.post(mValidateUrl);
+            }
+        };
+        t.start();
     }
 }

@@ -22,6 +22,8 @@ package com.ushahidi.android.app;
 
 import android.app.TabActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.view.Window;
 import android.widget.TabHost;
 import android.content.Intent;
@@ -34,12 +36,18 @@ public class IncidentsTab extends TabActivity {
     private Bundle bundle;
 
     private Bundle extras;
-
+    
+    private Handler mHandler;
+    
+    private boolean isCheckinEnabled = false;
+    
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
+        
+        mHandler = new Handler();
         bundle = new Bundle();
         extras = this.getIntent().getExtras();
 
@@ -59,14 +67,17 @@ public class IncidentsTab extends TabActivity {
                         getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
                 .setContent(new Intent(this, IncidentMap.class)));
 
-        // Checkins map
+        
+        //checkins
+     // Checkins map
         // TODO: Place the checkins map here
         tabHost.addTab(tabHost
                 .newTabSpec("checkin")
                 .setIndicator("Checkin",
                         getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
-                .setContent(new Intent(this, CheckinMap.class)));
-
+                .setContent(new Intent(IncidentsTab.this, CheckinMap.class)));
+        checkinEnabled();
+        
         tabHost.setCurrentTab(0);
 
         if (extras != null) {
@@ -75,5 +86,26 @@ public class IncidentsTab extends TabActivity {
         }
 
     }
+    
+    final Runnable mIsCheckinsEnabled = new Runnable() {
+        public void run() {
+            if (isCheckinEnabled) {
+                tabHost.getTabWidget().getChildTabViewAt(2).setVisibility(View.VISIBLE);
+            } else {
+                tabHost.getTabWidget().getChildTabViewAt(2).setVisibility(View.GONE);
+            }
+        }
+    };
 
+    public void checkinEnabled(){
+        Thread t = new Thread() {
+            public void run() {
+
+                isCheckinEnabled = Util.isCheckinEnabled(IncidentsTab.this);
+                mHandler.post(mIsCheckinsEnabled);
+            }
+        };
+        t.start();
+    }
+    
 }

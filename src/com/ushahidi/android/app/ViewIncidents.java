@@ -196,7 +196,7 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
         mapView.setBuiltInZoomControls(true);
         mapView.getOverlays().add(new MapMarker(marker, markerLatitude, markerLongitude));
     }
-
+    
     public GeoPoint getPoint(double lat, double lon) {
         return (new GeoPoint((int)(lat * 1000000.0), (int)(lon * 1000000.0)));
     }

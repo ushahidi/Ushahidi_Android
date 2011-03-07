@@ -1,4 +1,3 @@
-
 package com.ushahidi.android.app.checkin;
 
 import android.app.Activity;
@@ -12,9 +11,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -218,55 +214,69 @@ public class CheckinActivity extends Activity {
 
         // Initialize the settings
         UshahidiPref.loadSettings(CheckinActivity.this);
+        
+        
+        if(!LocationServices.locationSet) {
+            if (pd != null) {
+                pd.dismiss();
+                com.ushahidi.android.app.Util.showToast(CheckinActivity.this, R.string.checkin_no_location);
+            }else{
+                pd.dismiss();
+            }
 
-        String ushahidiDomain = UshahidiPref.domain;
-        String firstname = UshahidiPref.firstname;
-        String lastname = UshahidiPref.lastname;
-        String email = UshahidiPref.email;
-
-        String jsonResponse = NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this),
+            pd = null;
+        }else {
+            pd.dismiss();
+            String ushahidiDomain = UshahidiPref.domain;
+            String firstname = UshahidiPref.firstname;
+            String lastname = UshahidiPref.lastname;
+            String email = UshahidiPref.email;
+        
+            String jsonResponse = NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this),
                 ushahidiDomain, checkinDetails, LocationServices.location, selectedPhoto,
                 firstname, lastname, email);
 
-        PostCheckinsJSONServices jsonServices = new PostCheckinsJSONServices(jsonResponse);
+            PostCheckinsJSONServices jsonServices = new PostCheckinsJSONServices(jsonResponse);
 
-        // JSON Post
-        boolean postCheckinJsonSuccess = false;
-        String postCheckinJsonErrorCode = "", postCheckinJsonErrorMessage = "";
+            // JSON Post
+            boolean postCheckinJsonSuccess = false;
+            String postCheckinJsonErrorCode = "", postCheckinJsonErrorMessage = "";
 
-        if (jsonServices.isProcessingResult()) {
-            postCheckinJsonSuccess = true;
+            if (jsonServices.isProcessingResult()) {
+                postCheckinJsonSuccess = true;
 
-            postCheckinJsonErrorCode = jsonServices.getErrorCode();
-            postCheckinJsonErrorMessage = jsonServices.getErrorMessage();
-        }
-
-        if (pd != null) {
-            pd.dismiss();
-        }
-
-        pd = null;
-
-        // Display checkin status and return back to main screen
-
-        if (postCheckinJsonErrorCode != "0") {
-            com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
+                postCheckinJsonErrorCode = jsonServices.getErrorCode();
+                postCheckinJsonErrorMessage = jsonServices.getErrorMessage();
+            }
+        
+        
+            // Display checkin status and return back to main screen
+            if (postCheckinJsonErrorCode != "0") {
+                com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
                     R.string.checkin_success_toast);
-        } else {
-            com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
+            } else {
+                com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
                     R.string.checkin_error_toast);
-        }
+            }
 
-        CheckinActivity.this.finish();
+            CheckinActivity.this.finish();
+        }
     }
 
     private void performCheckin(String checkinDetails) {
         this.checkinDetails = checkinDetails;
-
-        // Initialize Progress dialog
-        pd = ProgressDialog.show(this, getString(R.string.checkin_progress_title),
-                getString(R.string.checkin_progress_message));
-        LocationServices.getLocation(this);
+        /**
+         * Check if there is internet connection on the device.
+         */
+        if(com.ushahidi.android.app.Util.isConnected(CheckinActivity.this)) {
+            // Initialize Progress dialog
+            pd = ProgressDialog.show(this, getString(R.string.checkin_progress_title),
+                getString(R.string.checkin_progress_message),true);
+            LocationServices.getLocation(this);
+        }else {
+            com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
+                    R.string.network_error_msg);
+        }
     }
 
 }

@@ -42,8 +42,6 @@ public class NetworkServices {
         // Specify the file name
         myParams.put("filename", filename);
 
-        Log.i("Ushahidi URL: ", urlBuilder.toString());
-
         try {
             return PostFileUpload(urlBuilder.toString(), myParams);
         } catch (IOException e) {
@@ -67,8 +65,6 @@ public class NetworkServices {
             req.setParameter("firstname", params.get("firstname"));
             req.setParameter("lastname", params.get("lastname"));
             req.setParameter("email", params.get("email"));
-
-            Log.i("HTTP Client:", "filename:" + UshahidiPref.savePath + params.get("filename"));
 
             if (!TextUtils.isEmpty(params.get("filename")) || !(params.get("filename").equals("")))
                 req.setParameter("photo", new File(UshahidiPref.savePath + params.get("filename")));

@@ -39,6 +39,7 @@ import android.widget.Toast;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +50,7 @@ import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.net.Categories;
 import com.ushahidi.android.app.net.Incidents;
 import com.ushahidi.android.app.net.UshahidiGeocoder;
+import com.ushahidi.android.app.net.UshahidiHttpClient;
 
 public class Util {
 
@@ -363,6 +365,47 @@ public class Util {
         }
 
         return status;
+    }
+    
+    public static boolean isCheckinEnabled(Context context) {
+        HttpResponse response;
+        String jsonString = "";
+        UshahidiPref.loadSettings(context);
+                
+        StringBuilder uriBuilder = new StringBuilder(UshahidiPref.domain);
+        uriBuilder.append("/api?task=version");
+        uriBuilder.append("&resp=json");
+
+        try {
+            response = UshahidiHttpClient.GetURL(uriBuilder.toString());
+            if (response == null) {
+                return false;
+            }
+
+            final int statusCode = response.getStatusLine().getStatusCode();
+
+            if (statusCode == 200) {
+                    
+                jsonString = UshahidiHttpClient.GetText(response);
+                JSONObject jsonObject = new JSONObject(jsonString);
+                int checkinStatus = jsonObject.getJSONObject("payload").getInt("checkins");
+                
+                if( checkinStatus == 1 ) {
+                    return true;
+                } else{
+                    return false;
+                }
+                
+            } else {
+                return false;
+            }
+        } catch (IOException e) {
+            
+            return false;
+        } catch (JSONException e) {
+            
+            return false;
+        }
     }
 
 }
