@@ -355,8 +355,6 @@ public class Util {
         boolean status = false;
         try {
             URL url = new URL(ushahidiUrl);
-            URLConnection conn = url.openConnection();
-            conn.connect();
             status = true;
         } catch (MalformedURLException e) {
             status = false;
