@@ -5,7 +5,6 @@ import android.location.Location;
 import android.text.TextUtils;
 import android.util.Log;
 import com.ushahidi.android.app.UshahidiPref;
-import com.ushahidi.android.app.Util;
 import com.ushahidi.android.app.net.ClientHttpRequest;
 
 import java.io.*;

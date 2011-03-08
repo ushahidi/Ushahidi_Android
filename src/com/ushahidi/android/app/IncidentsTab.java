@@ -46,7 +46,7 @@ public class IncidentsTab extends TabActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        
+        UshahidiPref.loadSettings(this);
         mHandler = new Handler();
         bundle = new Bundle();
         extras = this.getIntent().getExtras();
@@ -76,7 +76,11 @@ public class IncidentsTab extends TabActivity {
                 .setIndicator("Checkin",
                         getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
                 .setContent(new Intent(IncidentsTab.this, CheckinMap.class)));
-        checkinEnabled();
+        if (UshahidiPref.isCheckinEnabled == 1) {
+            tabHost.getTabWidget().getChildTabViewAt(2).setVisibility(View.VISIBLE);
+        } else {
+            tabHost.getTabWidget().getChildTabViewAt(2).setVisibility(View.GONE);
+        }
         
         tabHost.setCurrentTab(0);
 

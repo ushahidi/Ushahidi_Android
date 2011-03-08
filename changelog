@@ -1,4 +1,12 @@
 1.0
+ Feature:
+ * Added checkins support.
+ 
+ Fixed:
+ * Fixed issue with preferences value changes.
+ * Formatted code to official Android coding style.
+ 
+ Known Issue:
 
 0.9.4
  * Fixed issue with the app not sending the longitude when submitting a report but sends the latitude value as longitude value.

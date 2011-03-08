@@ -10,17 +10,21 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ushahidi.android.app.ImageCapture;
 import com.ushahidi.android.app.ImageManager;
+import com.ushahidi.android.app.IncidentsTab;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.UshahidiPref;
+import com.ushahidi.android.app.Util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -64,7 +68,15 @@ public class CheckinActivity extends Activity {
     private Bundle mBundle;
 
     private Bundle mExtras;
-
+    
+    private Handler mHandler;
+    
+    private PostCheckinsJSONServices jsonServices;
+    
+    private boolean postCheckinJsonSuccess = false;
+    private String postCheckinJsonErrorCode = "";
+    private String postCheckinJsonErrorMessage = "";
+    private String jsonResponse = "";
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkin);
@@ -75,7 +87,9 @@ public class CheckinActivity extends Activity {
         mCheckImgPrev = (ImageView)findViewById(R.id.checkin_img_prev);
         mSelectedPhotoText = (TextView)findViewById(R.id.checkin_selected_photo_label);
         mSelectedPhotoText.setVisibility(View.GONE);
-
+        
+        mHandler = new Handler();
+        
         // Perform the checkin
         checkinButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -220,46 +234,22 @@ public class CheckinActivity extends Activity {
             if (pd != null) {
                 pd.dismiss();
                 com.ushahidi.android.app.Util.showToast(CheckinActivity.this, R.string.checkin_no_location);
-            }else{
-                pd.dismiss();
             }
 
             pd = null;
         }else {
-            pd.dismiss();
-            String ushahidiDomain = UshahidiPref.domain;
+            if( pd != null ) {
+                pd.dismiss();
+            }
+            
+            String domain = UshahidiPref.domain;
             String firstname = UshahidiPref.firstname;
             String lastname = UshahidiPref.lastname;
             String email = UshahidiPref.email;
-        
-            String jsonResponse = NetworkServices.postToOnline(Util.IMEI(CheckinActivity.this),
-                ushahidiDomain, checkinDetails, LocationServices.location, selectedPhoto,
-                firstname, lastname, email);
+            String imei = com.ushahidi.android.app.checkin.Util.IMEI(CheckinActivity.this);
+            
+            postCheckin(imei, domain, firstname, lastname, email);
 
-            PostCheckinsJSONServices jsonServices = new PostCheckinsJSONServices(jsonResponse);
-
-            // JSON Post
-            boolean postCheckinJsonSuccess = false;
-            String postCheckinJsonErrorCode = "", postCheckinJsonErrorMessage = "";
-
-            if (jsonServices.isProcessingResult()) {
-                postCheckinJsonSuccess = true;
-
-                postCheckinJsonErrorCode = jsonServices.getErrorCode();
-                postCheckinJsonErrorMessage = jsonServices.getErrorMessage();
-            }
-        
-        
-            // Display checkin status and return back to main screen
-            if (postCheckinJsonErrorCode != "0") {
-                com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
-                    R.string.checkin_success_toast);
-            } else {
-                com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
-                    R.string.checkin_error_toast);
-            }
-
-            CheckinActivity.this.finish();
         }
     }
 
@@ -277,6 +267,53 @@ public class CheckinActivity extends Activity {
             com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
                     R.string.network_error_msg);
         }
+    }
+    
+    final Runnable mPostCheckin = new Runnable() {
+        public void run() {
+            
+            if( jsonResponse != null ) {
+                jsonServices = new PostCheckinsJSONServices(jsonResponse);
+
+                // JSON Post
+           
+                if (jsonServices.isProcessingResult()) {
+                    postCheckinJsonSuccess = true;
+
+                    postCheckinJsonErrorCode = jsonServices.getErrorCode();
+                    postCheckinJsonErrorMessage = jsonServices.getErrorMessage();
+                }
+        
+            // Display checkin status and return back to main screen
+                if (postCheckinJsonErrorCode != "0") {
+                    com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
+                            R.string.checkin_success_toast);
+                } else {
+                    com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
+                            R.string.checkin_error_toast);
+                }
+                CheckinActivity.this.finish();
+            } else {
+                com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
+                        R.string.checkin_error_toast);    
+            }
+            
+        }
+    };
+    
+    public void postCheckin( final String imei, final String domain, final String firstname, 
+            final String lastname, final String email){
+        Thread t = new Thread() {
+            public void run() {
+
+                jsonResponse = NetworkServices.postToOnline(imei,
+                        domain, checkinDetails, LocationServices.location, selectedPhoto,
+                        firstname, lastname, email);
+                
+                mHandler.post(mPostCheckin);
+            }
+        };
+        t.start();
     }
 
 }

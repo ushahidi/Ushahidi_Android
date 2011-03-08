@@ -167,7 +167,11 @@ public class Ushahidi extends Activity {
         });
         
         //check if checkins is enabled
-        mHandler.post(isCheckinsEnabled);
+       if (UshahidiPref.isCheckinEnabled == 1) {
+           checkinBtn.setVisibility(View.VISIBLE);
+       } else {
+           checkinBtn.setVisibility(View.GONE);
+       }
 
     }
     

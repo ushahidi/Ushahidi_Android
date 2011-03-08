@@ -95,6 +95,12 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     public static final String USHAHIDI_DEPLOYMENT_PREFERENCE = "ushahidi_instance_preference";
 
     public static final String EMAIL_ADDRESS_PREFERENCE = "email_address_preference";
+    
+    public static final String CHECKIN_PREFERENCE = "checkin_preference";
+    
+    private int isCheckinEnabled = 0;
+    
+    private boolean checkin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -335,6 +341,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         editor.putBoolean("SmsUpdate", smsCheckBoxPref.isChecked());
         editor.putString("Username", userNamePref.getText());
         editor.putString("Password", passwordPref.getText());
+        editor.putInt("CheckinEnabled", isCheckinEnabled);
         editor.commit();
 
     }
@@ -478,6 +485,12 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
                 ushahidiInstancePref.setText("");
                 Util.showToast(Settings.this, R.string.invalid_ushahidi_instance);
             } else {
+                if (checkin) {
+                    isCheckinEnabled = 1;
+                }else {
+                    isCheckinEnabled = 0;
+                }
+                    
                 ReportsTask reportsTask = new ReportsTask();
                 reportsTask.appContext = Settings.this;
                 reportsTask.execute();
@@ -498,6 +511,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             public void run() {
 
                 validUrl = Util.validateUshahidiInstance(Url);
+                checkin = Util.isCheckinEnabled(Settings.this);
                 mHandler.post(mValidateUrl);
             }
         };
