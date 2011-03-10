@@ -95,11 +95,11 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     public static final String USHAHIDI_DEPLOYMENT_PREFERENCE = "ushahidi_instance_preference";
 
     public static final String EMAIL_ADDRESS_PREFERENCE = "email_address_preference";
-    
+
     public static final String CHECKIN_PREFERENCE = "checkin_preference";
-    
+
     private int isCheckinEnabled = 0;
-    
+
     private boolean checkin = false;
 
     @Override
@@ -430,7 +430,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         if (key.equals(USHAHIDI_DEPLOYMENT_PREFERENCE)) {
 
             validateUrl(sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, ""));
-            
+
         }
 
         // save changes
@@ -487,10 +487,10 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             } else {
                 if (checkin) {
                     isCheckinEnabled = 1;
-                }else {
+                } else {
                     isCheckinEnabled = 0;
                 }
-                    
+
                 ReportsTask reportsTask = new ReportsTask();
                 reportsTask.appContext = Settings.this;
                 reportsTask.execute();

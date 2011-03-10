@@ -23,6 +23,7 @@ package com.ushahidi.android.app;
 import android.app.TabActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.TabHost;
@@ -46,7 +47,7 @@ public class IncidentsTab extends TabActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        UshahidiPref.loadSettings(this);
+        
         mHandler = new Handler();
         bundle = new Bundle();
         extras = this.getIntent().getExtras();
@@ -76,9 +77,13 @@ public class IncidentsTab extends TabActivity {
                 .setIndicator("Checkin",
                         getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
                 .setContent(new Intent(IncidentsTab.this, CheckinMap.class)));
+        //load preferences
+        UshahidiPref.loadSettings(this);
         if (UshahidiPref.isCheckinEnabled == 1) {
+            Log.i("Tab info","Tab enabled: "+UshahidiPref.isCheckinEnabled);
             tabHost.getTabWidget().getChildTabViewAt(2).setVisibility(View.VISIBLE);
         } else {
+            Log.i("Tab info","Tab disabled: "+UshahidiPref.isCheckinEnabled);
             tabHost.getTabWidget().getChildTabViewAt(2).setVisibility(View.GONE);
         }
         

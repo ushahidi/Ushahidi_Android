@@ -35,6 +35,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -388,7 +389,11 @@ public class ListIncidents extends Activity {
                 incidentData.setIncidentVerified(Util.toInt(cursor.getString(verifiedIndex)));
 
                 // TODO do a proper check for thumbnails
-                d = ImageManager.getImages(thumbnails[0]);
+                if ( !TextUtils.isEmpty(thumbnails[0])) {
+                    d = ImageManager.getImages(thumbnails[0]);
+                } else {
+                    d = null;
+                }
 
                 ila.addItem(new ListIncidentText(d == null ? getResources().getDrawable(
                         R.drawable.ushahidi_report_icon) : d, title, date, status, description,
