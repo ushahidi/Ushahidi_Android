@@ -72,6 +72,7 @@ public class ListIncidentAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         ListIncidentTextView iTv;
+        
         if (convertView == null) {
             iTv = new ListIncidentTextView(iContext, iItems.get(position));
 

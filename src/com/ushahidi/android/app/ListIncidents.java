@@ -359,7 +359,7 @@ public class ListIncidents extends Activity {
                 incidentData.setIncidentId(id);
                 incidentData.setIncidentLocLatitude(cursor.getString(latitudeIndex));
                 incidentData.setIncidentLocLongitude(cursor.getString(longitudeIndex));
-                title = Util.capitalizeString(cursor.getString(titleIndex));
+                title = Util.capitalizeString(Util.truncateText(cursor.getString(titleIndex)));
                 incidentData.setIncidentTitle(title);
 
                 description = cursor.getString(descIndex);

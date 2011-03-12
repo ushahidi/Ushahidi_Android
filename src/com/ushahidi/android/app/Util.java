@@ -136,6 +136,20 @@ public class Util {
     }
 
     /**
+     * Truncates any given text.
+     * 
+     * @param String text - the text to be truncated
+     * @return String
+     */
+    public static String truncateText(String text) {
+        if(text.length() > 30) {
+            return text.substring(0, 25).trim() + "É";
+          } else {
+            return text;
+          }
+    }
+
+    /**
      * Limit a string to defined length
      * 
      * @param int limit - the total length
@@ -364,12 +378,12 @@ public class Util {
 
         return status;
     }
-    
+
     public static boolean isCheckinEnabled(Context context) {
         HttpResponse response;
         String jsonString = "";
         UshahidiPref.loadSettings(context);
-                
+
         StringBuilder uriBuilder = new StringBuilder(UshahidiPref.domain);
         uriBuilder.append("/api?task=version");
         uriBuilder.append("&resp=json");
@@ -383,25 +397,25 @@ public class Util {
             final int statusCode = response.getStatusLine().getStatusCode();
 
             if (statusCode == 200) {
-                    
+
                 jsonString = UshahidiHttpClient.GetText(response);
                 JSONObject jsonObject = new JSONObject(jsonString);
                 int checkinStatus = jsonObject.getJSONObject("payload").getInt("checkins");
-                
-                if( checkinStatus == 1 ) {
+
+                if (checkinStatus == 1) {
                     return true;
-                } else{
+                } else {
                     return false;
                 }
-                
+
             } else {
                 return false;
             }
         } catch (IOException e) {
-            
+
             return false;
         } catch (JSONException e) {
-            
+
             return false;
         }
     }

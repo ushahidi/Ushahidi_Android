@@ -168,8 +168,10 @@ public class Ushahidi extends Activity {
         
         //check if checkins is enabled
        if (UshahidiPref.isCheckinEnabled == 1) {
+           Log.i("Tab info"," enabled: "+UshahidiPref.isCheckinEnabled);
            checkinBtn.setVisibility(View.VISIBLE);
        } else {
+           Log.i("Tab info"," disabled: "+UshahidiPref.isCheckinEnabled);
            checkinBtn.setVisibility(View.GONE);
        }
 
