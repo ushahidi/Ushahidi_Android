@@ -1,69 +1,63 @@
+
 package com.ushahidi.android.app.test;
 
-import com.ushahidi.android.app.AddIncident;
+import com.ushahidi.android.app.R;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
+import android.test.UiThreadTest;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.ushahidi.android.app.AddIncident;
+import com.ushahidi.android.app.data.UshahidiDatabase;
 
 public class AddIncidentTest extends ActivityInstrumentationTestCase2<AddIncident> {
-	
-	public static final int CATEGORY_ADAPTER_COUNT = 5;
-	
-	public static final int ITEM_TO_BE_SELECTED_POSITION = 2;
-	
-	public static final int INITIAL_POSITION = 0;
-	
-	public static final String INITIAL_SELECTION = "Trusted Reports";
-	
-    public static final int TEST_STATE_DESTROY_POSITION = 2;
-    public static final String TEST_STATE_DESTROY_SELECTION = "Earth";
 
-    
-    public static final int TEST_STATE_PAUSE_POSITION = 4;
-    public static final String TEST_STATE_PAUSE_SELECTION = "Jupiter";
+    private AddIncident mAddIncidentActivity;
 
-    private AddIncident addIncidentActivity;
+    private UshahidiDatabase mUshahidiDatabase;
 
-    private String categorySelection;
+    public AddIncidentTest() {
+        super("com.ushahidi.android.app", AddIncident.class);
+    }
 
-    private int mPos;
+    /**
+     * Set up the test environment before each test
+     */
+    protected void setUp() throws Exception {
+        super.setUp();
+        mAddIncidentActivity = getActivity();
+        mUshahidiDatabase = new UshahidiDatabase(mAddIncidentActivity);
+        mUshahidiDatabase.open();
+        mUshahidiDatabase.deleteAddIncidents();
+    }
 
-    private Spinner categorySpinner;
+    /**
+     * Tear down the environment after each test
+     */
+    protected void tearDown() throws Exception {
+        mUshahidiDatabase.close();
+    }
 
-    private SpinnerAdapter categoryData;
-	
-	public AddIncidentTest() {
-		super("com.ushahidi.android.app",AddIncident.class);
-	}
-	
-	/**
-	 * Set up the test environment before each test
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-		
-		// turn off touch mode.
-		setActivityInitialTouchMode(false);
-		
-		addIncidentActivity = getActivity();
-		
-		//categorySpinner = addIncidentActivity.findViewById(com.ushahidi.android.app.R.id.category);
-	}
-	
-	public void testPreconditions() {
-		
-	}
-	
-	public void testAddIncidentUI() {
-		
-	}
-	
-	public void testStateDestroy() {
-		
-	}
-	
-	public void testStatePause() {
-		
-	}
+    @UiThreadTest
+    public void testSendReportWitoutConnection() {
+        // set connectivity off
+
+        // set text in required fields
+        EditText title = (EditText)mAddIncidentActivity.findViewById(R.id.incident_title);
+        title.setText("James Blunt");
+        EditText location = (EditText)mAddIncidentActivity.findViewById(R.id.incident_location);
+        location.setText("UK");
+        EditText description = (EditText)mAddIncidentActivity.findViewById(R.id.incident_desc);
+        description.setText("James Blunt playing a gig, everyone get out");
+        // activate action to submit report
+        Button sendButton = (Button)mAddIncidentActivity.findViewById(R.id.incident_add_btn);
+        sendButton.performClick();
+        // 
+        while(!title.getText().toString().equals("")){
+        }
+        // check value exists in db
+        assertEquals(1, mUshahidiDatabase.fetchAllOfflineIncidents().getCount());
+        // turn connectivity on
+    }
 }
