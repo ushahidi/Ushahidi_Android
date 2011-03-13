@@ -71,6 +71,11 @@ import android.widget.Toast;
 
 public class AddIncident extends Activity {
 
+    /**
+     * Name of category that exists on the phone before any connection to a server
+     */
+    private static final String GENERIC_CATEGORY_NAME = "GENERIC";
+    
     private static final int HOME = Menu.FIRST + 1;
 
     private static final int LIST_INCIDENT = Menu.FIRST + 2;
@@ -190,6 +195,10 @@ public class AddIncident extends Activity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.add_incident);
         mFoundAddresses = new ArrayList<Address>();
+       
+        if(mVectorCategories.isEmpty()){
+            mVectorCategories.add(GENERIC_CATEGORY_NAME);
+        }
 
         mGc = new Geocoder(this);
 
@@ -1013,6 +1022,7 @@ public class AddIncident extends Activity {
         @Override
         protected void onPostExecute(Integer result) {
             if (result == 2) {
+                clearFields();
                 Util.showToast(appContext, R.string.report_successfully_added_offline);
             } else if (result == 1) {
                 Util.showToast(appContext, R.string.failed_to_add_report_online);
@@ -1027,7 +1037,5 @@ public class AddIncident extends Activity {
             }
             setProgressBarIndeterminateVisibility(false);
         }
-
     }
-
 }
