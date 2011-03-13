@@ -26,6 +26,8 @@ import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TextView;
 import android.content.Intent;
 import android.graphics.Color;
 
@@ -38,23 +40,21 @@ public class IncidentsTab extends TabActivity {
     private Bundle bundle;
 
     private Bundle extras;
-    
+
     private Handler mHandler;
-    
+
     private boolean isCheckinEnabled = false;
-    
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        
+
         mHandler = new Handler();
         bundle = new Bundle();
         extras = this.getIntent().getExtras();
 
         tabHost = getTabHost();
-        tabHost.setBackgroundColor(Color.parseColor("#8A1F03"));
         
         // List of reports
         tabHost.addTab(tabHost
@@ -62,7 +62,7 @@ public class IncidentsTab extends TabActivity {
                 .setIndicator("List",
                         getResources().getDrawable(R.drawable.ushahidi_tab_reports_selected))
                 .setContent(new Intent(this, ListIncidents.class)));
-      
+
         // Reports map
         tabHost.addTab(tabHost
                 .newTabSpec("map")
@@ -70,17 +70,17 @@ public class IncidentsTab extends TabActivity {
                         getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
                 .setContent(new Intent(this, IncidentMap.class)));
 
-        
-        //checkins
+        // checkins
         tabHost.addTab(tabHost
                 .newTabSpec("checkin")
                 .setIndicator("Checkin",
                         getResources().getDrawable(R.drawable.ushahidi_tab_checkin_selected))
                 .setContent(new Intent(IncidentsTab.this, CheckinMap.class)));
-        //load preferences
+        // load preferences
         checkinEnabled();
-        
+
         tabHost.setCurrentTab(0);
+       
         setTabColor(tabHost);
         
         if (extras != null) {
@@ -89,14 +89,14 @@ public class IncidentsTab extends TabActivity {
         }
 
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
-      //check if checkins is enabled
+        // check if checkins is enabled
         checkinEnabled();
     }
-    
+
     final Runnable mIsCheckinsEnabled = new Runnable() {
         public void run() {
             if (isCheckinEnabled) {
@@ -107,7 +107,7 @@ public class IncidentsTab extends TabActivity {
         }
     };
 
-    public void checkinEnabled(){
+    public void checkinEnabled() {
         Thread t = new Thread() {
             public void run() {
 
@@ -117,16 +117,23 @@ public class IncidentsTab extends TabActivity {
         };
         t.start();
     }
-    
+
     public static void setTabColor(TabHost tabhost) {
-        for(int i=0;i<tabhost.getTabWidget().getChildCount();i++)
-        {
-           tabhost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#404041")); 
-           //unselected
-           
+        for (int i = 0; i < tabhost.getTabWidget().getChildCount(); i++) {
+            // unselected
+            tabhost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#404041"));
+            
+            TextView tv = (TextView)tabhost.getTabWidget().getChildAt(i)
+                    .findViewById(android.R.id.title); // Unselected Tabs
+            tv.setTextColor(Color.parseColor("#ffffff"));
+
         }
-        tabhost.getTabWidget().getChildAt(tabhost.getCurrentTab()).setBackgroundColor(Color.parseColor("#8A1F03")); 
+
         // selected
+        tabhost.getTabWidget().getChildAt(tabhost.getCurrentTab())
+                .setBackgroundColor(Color.parseColor("#8A1F03"));
+        TextView tv = (TextView)tabhost.getCurrentTabView().findViewById(android.R.id.title);
+        tv.setTextColor(Color.parseColor("#ffffff"));
     }
-    
+
 }

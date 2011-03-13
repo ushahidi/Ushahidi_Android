@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -85,8 +86,15 @@ public class ListIncidentAdapter extends BaseAdapter {
             iTv.setTitle(iItems.get(position).getTitle());
 
             iTv.setDate(iItems.get(position).getDate());
-
+            
+            //change the status color
+            if(iItems.get(position).getStatus().equalsIgnoreCase("Verified")) {
+                iTv.setStatusColor(Color.rgb(41, 142, 40)); // green
+            } else if (iItems.get(position).getStatus().equalsIgnoreCase("Unverified")) {
+                iTv.setStatusColor(Color.rgb(237, 0, 0)); // red
+            }
             iTv.setStatus(iItems.get(position).getStatus());
+            
             iTv.setDesc(iItems.get(position).getDesc());
             iTv.setCategories(iItems.get(position).getLocation());
             iTv.setMedia(iItems.get(position).getMedia());
