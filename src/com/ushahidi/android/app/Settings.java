@@ -36,6 +36,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.widget.EditText;
@@ -415,6 +416,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             if (!sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, "").equals(
                     UshahidiPref.domain)) {
                 validateUrl(sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, ""));
+                
             }
         }
 
@@ -428,7 +430,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         // save changes
         this.saveSettings();
 
-        checkForCheckins();
     }
 
     // thread class
@@ -454,6 +455,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             // clear previous data
             UshahidiApplication.mDb.clearData();
             status = Util.processReports(appContext);
+            isCheckinsEnabled();
             return status;
         }
 
@@ -505,36 +507,39 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         t.start();
     }
     
-    Runnable mCheckForCheckins = new Runnable() {
+    Runnable mIsCheckinsEnabled = new Runnable() {
         public void run() {
 
-            if (!validUrl) {
-
-                // reset whatever was entered in that field.
-                ushahidiInstancePref.setText("");
-                Util.showToast(Settings.this, R.string.invalid_ushahidi_instance);
+            if (checkin) {
+                UshahidiPref.isCheckinEnabled = 1;
             } else {
-                if (checkin) {
-                    isCheckinEnabled = 1;
-                    saveSettings();
-                } else {
-                    isCheckinEnabled = 3;
-                    saveSettings();
-                }
+                UshahidiPref.isCheckinEnabled = 0;
             }
+             
+            UshahidiPref.saveSettings(Settings.this);
+            
         }
     };
     
-    public void checkForCheckins() {
-
-        Thread t = new Thread() {
-            public void run() {
+    /**
+     * Checks if checkins is enabled on the configured Ushahidi deployment.
+     */
+    public void isCheckinsEnabled() {
+        if (Util.isCheckinEnabled(Settings.this)) {
+            UshahidiPref.isCheckinEnabled = 1;
+        } else {
+            UshahidiPref.isCheckinEnabled = 0;
+        }
+        UshahidiPref.saveSettings(Settings.this);
+        //Thread t = new Thread() {
+          //  public void run() {
                 //save any changes that has been made
-                saveSettings();
-                checkin = Util.isCheckinEnabled(Settings.this);
-                mHandler.post(mCheckForCheckins);
-            }
-        };
-        t.start();
+                //checkin = Util.isCheckinEnabled(Settings.this);
+                //mHandler.post(mIsCheckinsEnabled);
+            //}
+        //};
+        //t.start();
     }
+    
+    
 }

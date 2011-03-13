@@ -32,6 +32,10 @@ public class UshahidiPref {
     public static String password = "";
     public static int isCheckinEnabled = 0;
     
+    private static SharedPreferences settings;
+
+    private static SharedPreferences.Editor editor;
+    
     public static void loadSettings(Context context) {
         final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
         
@@ -56,5 +60,12 @@ public class UshahidiPref {
         final File dir = new File(UshahidiPref.savePath);
         dir.mkdirs();
  
+    }
+    
+    public static void saveSettings(Context context){
+        settings = context.getSharedPreferences(PREFS_NAME, 0);
+        editor = settings.edit();
+        editor.putInt("CheckinEnabled", isCheckinEnabled);
+        editor.commit();
     }
 }

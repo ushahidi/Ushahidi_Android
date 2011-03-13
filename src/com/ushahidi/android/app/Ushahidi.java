@@ -34,7 +34,6 @@ import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -74,12 +73,6 @@ public class Ushahidi extends Activity {
 
     private static final int DIALOG_ERROR = 1;
 
-    private static final int MAX_PROGRESS = 100;
-
-    private ProgressDialog mProgressDialog;
-
-    private int mProgress;
-
     private Handler mHandler;
 
     private Button listBtn;
@@ -89,8 +82,6 @@ public class Ushahidi extends Activity {
     private Button settingsBtn;
 
     private Button checkinBtn;
-    
-    private boolean isCheckinEnabled = false;
     
     private String dialogErrorMsg = "An error occurred fetching the reports. "
             + "Make sure you have entered an Ushahidi instance.";
@@ -181,7 +172,11 @@ public class Ushahidi extends Activity {
     public void onResume() {
         super.onResume();
       //check if checkins is enabled
-        mHandler.post(isCheckinsEnabled);
+        if (UshahidiPref.isCheckinEnabled == 1) {
+            checkinBtn.setVisibility(View.VISIBLE);
+        } else {
+            checkinBtn.setVisibility(View.GONE);
+        }
     }
     
     @Override
@@ -236,18 +231,6 @@ public class Ushahidi extends Activity {
     final Runnable mDisplayErrorPrompt = new Runnable() {
         public void run() {
             showDialog(DIALOG_ERROR);
-        }
-    };
-    
-    final Runnable isCheckinsEnabled = new Runnable() {
-        public void run() {
-            isCheckinEnabled = Util.isCheckinEnabled(Ushahidi.this);
-            
-            if (isCheckinEnabled) {
-                checkinBtn.setVisibility(View.VISIBLE);
-            } else {
-                checkinBtn.setVisibility(View.GONE);
-            }
         }
     };
 

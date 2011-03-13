@@ -120,8 +120,15 @@ public class IncidentsTab extends TabActivity {
     public void checkinEnabled() {
         Thread t = new Thread() {
             public void run() {
-
-                isCheckinEnabled = Util.isCheckinEnabled(IncidentsTab.this);
+                //load settings
+                UshahidiPref.loadSettings(IncidentsTab.this);
+                
+                
+                if (UshahidiPref.isCheckinEnabled == 1 ) {
+                    isCheckinEnabled = true;
+                } else {
+                    isCheckinEnabled = false;
+                }
                 mHandler.post(mIsCheckinsEnabled);
             }
         };
