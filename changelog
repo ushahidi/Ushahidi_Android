@@ -1,11 +1,14 @@
 1.0
  Feature:
  * Added checkins support.
+ * Add color to tabs.
  
  Fixed:
- * Fixed issue with preferences value changes.
+ * Fixed issue with changes in preferences value.
  * Formatted code to official Android coding style.
  * Fixed default images not showing when listing reports.
+ * Fixed status colorization bug.
+ * Fixed bug with trailing slashes.
  
  Known Issue:
 

@@ -55,7 +55,7 @@ public class IncidentsTab extends TabActivity {
         extras = this.getIntent().getExtras();
 
         tabHost = getTabHost();
-        
+
         // List of reports
         tabHost.addTab(tabHost
                 .newTabSpec("list_reports")
@@ -80,8 +80,18 @@ public class IncidentsTab extends TabActivity {
         checkinEnabled();
 
         tabHost.setCurrentTab(0);
-       
+        
+        //set tab colors
         setTabColor(tabHost);
+
+        //set tab colors on tab change as well
+        tabHost.setOnTabChangedListener(new OnTabChangeListener() {
+
+            public void onTabChanged(String arg0) {
+                setTabColor(tabHost);
+            }
+            
+        });
         
         if (extras != null) {
             bundle = extras.getBundle("tab");
@@ -122,7 +132,7 @@ public class IncidentsTab extends TabActivity {
         for (int i = 0; i < tabhost.getTabWidget().getChildCount(); i++) {
             // unselected
             tabhost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#404041"));
-            
+
             TextView tv = (TextView)tabhost.getTabWidget().getChildAt(i)
                     .findViewById(android.R.id.title); // Unselected Tabs
             tv.setTextColor(Color.parseColor("#ffffff"));
