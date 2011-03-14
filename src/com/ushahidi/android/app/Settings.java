@@ -531,14 +531,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             UshahidiPref.isCheckinEnabled = 0;
         }
         UshahidiPref.saveSettings(Settings.this);
-        //Thread t = new Thread() {
-          //  public void run() {
-                //save any changes that has been made
-                //checkin = Util.isCheckinEnabled(Settings.this);
-                //mHandler.post(mIsCheckinsEnabled);
-            //}
-        //};
-        //t.start();
     }
     
     

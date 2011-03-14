@@ -34,7 +34,6 @@ import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -159,10 +158,8 @@ public class Ushahidi extends Activity {
         
         //check if checkins is enabled
        if (UshahidiPref.isCheckinEnabled == 1) {
-           Log.i("Tab info"," enabled: "+UshahidiPref.isCheckinEnabled);
            checkinBtn.setVisibility(View.VISIBLE);
        } else {
-           Log.i("Tab info"," disabled: "+UshahidiPref.isCheckinEnabled);
            checkinBtn.setVisibility(View.GONE);
        }
 
@@ -362,6 +359,7 @@ public class Ushahidi extends Activity {
         @Override
         protected Integer doInBackground(Void... params) {
             status = Util.processReports(appContext);
+            Util.checkForCheckin(appContext);
             return status;
         }
 

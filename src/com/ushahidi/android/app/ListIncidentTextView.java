@@ -40,6 +40,8 @@ public class ListIncidentTextView extends LinearLayout {
     private TextView date;
 
     private TextView status;
+    
+    private TextView mCategories;
 
     private ImageView thumbnail;
 
@@ -136,7 +138,14 @@ public class ListIncidentTextView extends LinearLayout {
         textLayout.addView(iLocation, new TableRow.LayoutParams(
                 android.view.ViewGroup.LayoutParams.FILL_PARENT,
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-
+        
+        mCategories = new TextView(context);
+        mCategories.setTextColor(Color.GRAY);
+        mCategories.setText(listText.getCategories());
+        textLayout.addView(mCategories, new TableRow.LayoutParams(
+                android.view.ViewGroup.LayoutParams.FILL_PARENT,
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+        
         status = new TextView(context);
         status.setText(listText.getStatus());
         

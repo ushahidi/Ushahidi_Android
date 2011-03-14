@@ -59,6 +59,7 @@ public class ListIncidentText {
         this.description = description;
         this.location = location;
         this.media = media;
+        this.categories = categories;
         this.id = id;
         this.arrow = arrow;
     }
@@ -73,6 +74,7 @@ public class ListIncidentText {
         this.description = description;
         this.location = location;
         this.media = media;
+        this.categories = categories;
         this.id = id;
         this.arrow = arrow;
     }

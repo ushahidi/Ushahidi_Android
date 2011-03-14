@@ -418,5 +418,14 @@ public class Util {
             return false;
         }
     }
+    
+    public static void checkForCheckin(Context context) {
+        if (Util.isCheckinEnabled(context)) {
+            UshahidiPref.isCheckinEnabled = 1;
+        } else {
+            UshahidiPref.isCheckinEnabled = 0;
+        }
+        UshahidiPref.saveSettings(context);
+    }
 
 }

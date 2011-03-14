@@ -33,6 +33,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import android.graphics.drawable.BitmapDrawable;
 
@@ -58,13 +59,14 @@ public class ImageManager {
         byte[] is;
         for (String image : UshahidiService.mNewIncidentsImages) {
             if (!TextUtils.isEmpty(image)) {
-                File f = new File(UshahidiPref.savePath + image);
+                File imageFilename = new File(image);
+                File f = new File(UshahidiPref.savePath + imageFilename.getName());
                 if (!f.exists()) {
                     try {
                         is = UshahidiHttpClient.fetchImage(UshahidiPref.domain + "/media/uploads/"
                                 + image);
                         if (is != null) {
-                            writeImage(is, image);
+                            writeImage(is,  imageFilename.getName());
                         }
                     } catch (MalformedURLException e) {
 
@@ -77,20 +79,26 @@ public class ImageManager {
                 }
             }
         }
+        
+        //clear images
+        UshahidiService.mNewIncidentsImages.clear();
 
     }
 
     public static void saveThumbnail() {
         byte[] is;
         for (String image : UshahidiService.mNewIncidentsThumbnails) {
+           
             if (!TextUtils.isEmpty(image)) {
-                File f = new File(UshahidiPref.savePath + image);
+                File thumbnailFilename = new File(image);
+                //Log.i("Save Images", "Image :" + UshahidiPref.savePath + thumbnailFilename.getName());
+                File f = new File(UshahidiPref.savePath + thumbnailFilename.getName());
                 if (!f.exists()) {
                     try {
                         is = UshahidiHttpClient.fetchImage(UshahidiPref.domain + "/media/uploads/"
                                 + image);
                         if (is != null) {
-                            writeImage(is, image);
+                            writeImage(is, thumbnailFilename.getName());
                         }
                     } catch (MalformedURLException e) {
 
@@ -103,6 +111,9 @@ public class ImageManager {
                 }
             }
         }
+        
+        // clear images
+        UshahidiService.mNewIncidentsThumbnails.clear();
 
     }
 

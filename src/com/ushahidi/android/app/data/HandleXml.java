@@ -27,6 +27,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import android.util.Log;
+
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.UshahidiApplication;
 import com.ushahidi.android.app.UshahidiService;
@@ -36,6 +38,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -163,7 +166,8 @@ public class HandleXml {
 
                 incidentData.setIncidentCategories(categories);
                 categories = "";
-
+                //UshahidiService.mNewIncidentsImages.clear();
+                //UshahidiService.mNewIncidentsThumbnails.clear();
                 // categories
                 NodeList mediaList = element.getElementsByTagName("media");
                 for (int j = 0; j < mediaList.getLength(); j++) {
@@ -179,12 +183,14 @@ public class HandleXml {
                             NodeList mediaThumb = mediaInnerThumbElement.getChildNodes();
 
                             if (!(mediaThumb.item(0)).getNodeValue().equals("")) {
+
                                 UshahidiService.mNewIncidentsThumbnails.add((mediaThumb.item(0))
                                         .getNodeValue());
                             }
 
-                            thumbnail += (j == mediaList.getLength() - 1) ? (mediaThumb.item(0))
-                                    .getNodeValue() : (mediaThumb.item(0)).getNodeValue() + ",";
+                            File thumbnailFilename = new File((mediaThumb.item(0)).getNodeValue());
+                            thumbnail += (j == mediaList.getLength() - 1) ? thumbnailFilename
+                                    .getName() : thumbnailFilename.getName() + ",";
                         }
 
                         NodeList mediaImageList = mediaElement.getElementsByTagName("link");
@@ -197,7 +203,8 @@ public class HandleXml {
                                         .getNodeValue());
                             }
                             // if( j != 0) {
-                            image += (mediaImage.item(0)).getNodeValue() + ",";
+                            File imageFilename = new File((mediaImage.item(0)).getNodeValue());
+                            image += imageFilename.getName() + ",";
                             // }
                             // image += (j == mediaImageList.getLength() -1)? (
                             // (Node)mediaImage.item(0)).getNodeValue(): (
@@ -206,6 +213,7 @@ public class HandleXml {
                         }
                     }
                 }
+
                 incidentData.setIncidentThumbnail(thumbnail);
                 incidentData.setIncidentImage(image);
                 thumbnail = "";
