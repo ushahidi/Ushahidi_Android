@@ -37,6 +37,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.widget.EditText;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
@@ -95,11 +96,11 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     public static final String USHAHIDI_DEPLOYMENT_PREFERENCE = "ushahidi_instance_preference";
 
     public static final String EMAIL_ADDRESS_PREFERENCE = "email_address_preference";
-    
+
     public static final String CHECKIN_PREFERENCE = "checkin_preference";
-    
+
     private int isCheckinEnabled = 0;
-    
+
     private boolean checkin = false;
 
     @Override
@@ -413,9 +414,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         if (key.equals(USHAHIDI_DEPLOYMENT_PREFERENCE)) {
             if (!sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, "").equals(
                     UshahidiPref.domain)) {
-                new UshahidiService().clearCache();
-                UshahidiPref.domain = sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE,
-                        "");
+                validateUrl(sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, ""));
             }
         }
 
@@ -426,15 +425,10 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             }
         }
 
-        // validate ushahidi instance
-        if (key.equals(USHAHIDI_DEPLOYMENT_PREFERENCE)) {
-
-            validateUrl(sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, ""));
-            
-        }
-
         // save changes
         this.saveSettings();
+
+        checkForCheckins();
     }
 
     // thread class
@@ -485,12 +479,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
                 ushahidiInstancePref.setText("");
                 Util.showToast(Settings.this, R.string.invalid_ushahidi_instance);
             } else {
-                if (checkin) {
-                    isCheckinEnabled = 1;
-                }else {
-                    isCheckinEnabled = 0;
-                }
-                    
+                
                 ReportsTask reportsTask = new ReportsTask();
                 reportsTask.appContext = Settings.this;
                 reportsTask.execute();
@@ -500,7 +489,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
     /**
      * Create a child thread and validate the callback URL in it when enabling
-     * SMSSync.
      * 
      * @param String Url - The Callback Url to be validated.
      * @return void
@@ -511,8 +499,40 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             public void run() {
 
                 validUrl = Util.validateUshahidiInstance(Url);
-                checkin = Util.isCheckinEnabled(Settings.this);
                 mHandler.post(mValidateUrl);
+            }
+        };
+        t.start();
+    }
+    
+    Runnable mCheckForCheckins = new Runnable() {
+        public void run() {
+
+            if (!validUrl) {
+
+                // reset whatever was entered in that field.
+                ushahidiInstancePref.setText("");
+                Util.showToast(Settings.this, R.string.invalid_ushahidi_instance);
+            } else {
+                if (checkin) {
+                    isCheckinEnabled = 1;
+                    saveSettings();
+                } else {
+                    isCheckinEnabled = 3;
+                    saveSettings();
+                }
+            }
+        }
+    };
+    
+    public void checkForCheckins() {
+
+        Thread t = new Thread() {
+            public void run() {
+                //save any changes that has been made
+                saveSettings();
+                checkin = Util.isCheckinEnabled(Settings.this);
+                mHandler.post(mCheckForCheckins);
             }
         };
         t.start();

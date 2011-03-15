@@ -27,6 +27,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TabHost;
 import android.content.Intent;
+import android.graphics.Color;
+
 import com.ushahidi.android.app.checkin.CheckinMap;
 
 public class IncidentsTab extends TabActivity {
@@ -46,20 +48,21 @@ public class IncidentsTab extends TabActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        UshahidiPref.loadSettings(this);
+        
         mHandler = new Handler();
         bundle = new Bundle();
         extras = this.getIntent().getExtras();
 
         tabHost = getTabHost();
-
+        tabHost.setBackgroundColor(Color.parseColor("#8A1F03"));
+        
         // List of reports
         tabHost.addTab(tabHost
                 .newTabSpec("list_reports")
                 .setIndicator("List",
-                        getResources().getDrawable(R.drawable.ushahidi_tab_list_selected))
+                        getResources().getDrawable(R.drawable.ushahidi_tab_reports_selected))
                 .setContent(new Intent(this, ListIncidents.class)));
-
+      
         // Reports map
         tabHost.addTab(tabHost
                 .newTabSpec("map")
@@ -69,26 +72,29 @@ public class IncidentsTab extends TabActivity {
 
         
         //checkins
-     // Checkins map
-        // TODO: Place the checkins map here
         tabHost.addTab(tabHost
                 .newTabSpec("checkin")
                 .setIndicator("Checkin",
-                        getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
+                        getResources().getDrawable(R.drawable.ushahidi_tab_checkin_selected))
                 .setContent(new Intent(IncidentsTab.this, CheckinMap.class)));
-        if (UshahidiPref.isCheckinEnabled == 1) {
-            tabHost.getTabWidget().getChildTabViewAt(2).setVisibility(View.VISIBLE);
-        } else {
-            tabHost.getTabWidget().getChildTabViewAt(2).setVisibility(View.GONE);
-        }
+        //load preferences
+        checkinEnabled();
         
         tabHost.setCurrentTab(0);
-
+        setTabColor(tabHost);
+        
         if (extras != null) {
             bundle = extras.getBundle("tab");
             tabHost.setCurrentTab(bundle.getInt("tab_index"));
         }
 
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+      //check if checkins is enabled
+        checkinEnabled();
     }
     
     final Runnable mIsCheckinsEnabled = new Runnable() {
@@ -110,6 +116,17 @@ public class IncidentsTab extends TabActivity {
             }
         };
         t.start();
+    }
+    
+    public static void setTabColor(TabHost tabhost) {
+        for(int i=0;i<tabhost.getTabWidget().getChildCount();i++)
+        {
+           tabhost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#404041")); 
+           //unselected
+           
+        }
+        tabhost.getTabWidget().getChildAt(tabhost.getCurrentTab()).setBackgroundColor(Color.parseColor("#8A1F03")); 
+        // selected
     }
     
 }

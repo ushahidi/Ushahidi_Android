@@ -122,7 +122,7 @@ public class UshahidiService extends Service {
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
 
-            UshahidiPref.saveSettings(getApplicationContext());
+            UshahidiPref.loadSettings(getApplicationContext());
 
             Util.fetchReports(UshahidiService.this);
 

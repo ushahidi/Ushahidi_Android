@@ -32,30 +32,6 @@ public class UshahidiPref {
     public static String password = "";
     public static int isCheckinEnabled = 0;
     
-    public static void saveSettings(Context context) {
-        
-        final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
-        final SharedPreferences.Editor editor = settings.edit();
-        
-        editor.putString("Domain", domain.trim());
-        editor.putString("Firstname", firstname);
-        editor.putString("Lastname", lastname);
-        
-        if( Util.validateEmail(settings.getString("Email", ""))) {
-            editor.putString("Email", email);
-        }
-        
-        editor.putString("savePath", savePath);
-        editor.putInt("AutoUpdateDelay", AutoUpdateDelay);
-        editor.putBoolean("AutoFetch", AutoFetch);
-        editor.putString("TotalReports", totalReports);
-        editor.putBoolean("SmsUpdate", smsUpdate);
-        editor.putString("Username", username);
-        editor.putString("Password", password);
-        editor.commit();
-        
-    }
-    
     public static void loadSettings(Context context) {
         final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
         

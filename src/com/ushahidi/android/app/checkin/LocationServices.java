@@ -1,7 +1,6 @@
 package com.ushahidi.android.app.checkin;
 
 import android.content.Context;
-import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -23,6 +22,8 @@ public class LocationServices {
     
     private static boolean gps_provider = false;
     private static boolean network_provider = false;
+    
+    private static long lastKnownLocationTimeMillis = 0;
     
     public static void dismissActionDialog() {
         checkin_activity.dismissCheckinProgressDialog();
@@ -47,9 +48,10 @@ public class LocationServices {
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 // TODO Auto-generated method stub
+                lastKnownLocationTimeMillis = SystemClock.elapsedRealtime();
                 LocationServices.location = location;
                 boolean isGpsFix = (SystemClock.elapsedRealtime() - 
-                        location.getTime()) < 5000;
+                        lastKnownLocationTimeMillis) < 5000;
                 //check if a fix was made
                 if (isGpsFix) {
                     // make sure we are not sending a null object 

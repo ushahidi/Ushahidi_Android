@@ -5,6 +5,7 @@
  Fixed:
  * Fixed issue with preferences value changes.
  * Formatted code to official Android coding style.
+ * Fixed default images not showing when listing reports.
  
  Known Issue:
 

@@ -102,7 +102,7 @@ public class ListIncidentTextView extends LinearLayout {
 
         title = new TextView(context);
 
-        title.setTextColor(Color.rgb(144, 80, 62));
+        title.setTextColor(Color.BLACK);
         title.setTextSize(fontSize);
         title.setSingleLine(false);
         title.setTypeface(Typeface.DEFAULT_BOLD);
@@ -116,22 +116,22 @@ public class ListIncidentTextView extends LinearLayout {
                 android.view.ViewGroup.LayoutParams.FILL_PARENT,
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        iLocation = new TextView(context);
-        iLocation.setTextColor(Color.BLACK);
-        iLocation.setText(listText.getLocation());
-
-        textLayout.addView(iLocation, new TableRow.LayoutParams(
-                android.view.ViewGroup.LayoutParams.FILL_PARENT,
-                android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-
         date = new TextView(context);
-        date.setTextColor(Color.BLACK);
+        date.setTextColor(Color.GRAY);
         date.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 
         date.setText(listText.getDate());
 
         textLayout.addView(date, new TableRow.LayoutParams(
+                android.view.ViewGroup.LayoutParams.FILL_PARENT,
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        iLocation = new TextView(context);
+        iLocation.setTextColor(Color.GRAY);
+        iLocation.setText(listText.getLocation());
+        
+        textLayout.addView(iLocation, new TableRow.LayoutParams(
                 android.view.ViewGroup.LayoutParams.FILL_PARENT,
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 
