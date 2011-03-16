@@ -11,8 +11,6 @@ public class UshahidiPref {
 
     public static boolean AutoFetch = false;
 
-    public static boolean smsUpdate = false;
-
     public static boolean vibrate = false;
 
     public static boolean ringtone = false;
@@ -47,10 +45,6 @@ public class UshahidiPref {
 
     public static String total_reports = "";
 
-    public static String username = "";
-
-    public static String password = "";
-
     public static int isCheckinEnabled = 0;
 
     private static SharedPreferences settings;
@@ -73,9 +67,6 @@ public class UshahidiPref {
         AutoUpdateDelay = settings.getInt("AutoUpdateDelay", 5);
         AutoFetch = settings.getBoolean("AutoFetch", false);
         totalReports = settings.getString("TotalReports", "");
-        smsUpdate = settings.getBoolean("SmsUpdate", false);
-        username = settings.getString("Username", "");
-        password = settings.getString("Password", "");
         isCheckinEnabled = settings.getInt("CheckinEnabled", isCheckinEnabled);
 
         // make sure folder exists

@@ -36,8 +36,6 @@ import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.text.method.PasswordTransformationMethod;
-import android.widget.EditText;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
     private EditTextPreference ushahidiInstancePref;
@@ -48,14 +46,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
     private EditTextPreference emailAddressPref;
 
-    private EditTextPreference userNamePref;
-
-    private EditTextPreference passwordPref;
-
-    private EditText passwordEditText;
-
-    private PasswordTransformationMethod transMethod;
-
     private CheckBoxPreference autoFetchCheckBoxPref;
 
     private CheckBoxPreference vibrateCheckBoxPref;
@@ -63,8 +53,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     private CheckBoxPreference ringtoneCheckBoxPref;
 
     private CheckBoxPreference flashLedCheckBoxPref;
-
-    private CheckBoxPreference smsCheckBoxPref;
 
     private DialogPreference clearCacheCheckBoxPref;
 
@@ -108,14 +96,11 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         ushahidiInstancePref = new EditTextPreference(this);
         firstNamePref = new EditTextPreference(this);
         lastNamePref = new EditTextPreference(this);
-        userNamePref = new EditTextPreference(this);
-        passwordPref = new EditTextPreference(this);
         emailAddressPref = new EditTextPreference(this);
         autoFetchCheckBoxPref = new CheckBoxPreference(this);
         vibrateCheckBoxPref = new CheckBoxPreference(this);
         ringtoneCheckBoxPref = new CheckBoxPreference(this);
         flashLedCheckBoxPref = new CheckBoxPreference(this);
-        smsCheckBoxPref = new CheckBoxPreference(this);
         clearCacheCheckBoxPref = (DialogPreference)getPreferenceScreen().findPreference(
                 "clear_cache_preference");
         autoUpdateTimePref = new ListPreference(this);
@@ -169,6 +154,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         firstNamePref.setKey("first_name_preference");
         firstNamePref.setTitle(R.string.txt_first_name);
         firstNamePref.setSummary(R.string.hint_first_name);
+        
         basicPrefCat.addPreference(firstNamePref);
 
         // Last name entry field
@@ -263,37 +249,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         flashLedCheckBoxPref.setSummary(R.string.hint_flash_led);
         notificationPrefCat.addPreference(flashLedCheckBoxPref);
 
-        // SMS Preferences
-        PreferenceCategory smsPrefCat = new PreferenceCategory(this);
-        smsPrefCat.setTitle(R.string.sms_settings);
-        root.addPreference(smsPrefCat);
-
-        // Auto fetch reports
-        smsCheckBoxPref.setKey("sms_preference");
-        smsCheckBoxPref.setTitle(R.string.chk_sms_send);
-        smsCheckBoxPref.setSummary(R.string.hint_sms_send);
-        smsPrefCat.addPreference(smsCheckBoxPref);
-
-        // First name entry field
-        userNamePref.setDialogTitle(R.string.txt_user_name);
-        userNamePref.setKey("user_name_preference");
-        userNamePref.setTitle(R.string.txt_user_name);
-        userNamePref.setSummary(R.string.hint_user_name);
-        smsPrefCat.addPreference(userNamePref);
-
-        // Last name entry field
-        passwordPref.setDialogTitle(R.string.txt_password);
-        passwordPref.setKey("password_preference");
-        passwordPref.setTitle(R.string.txt_password);
-        passwordPref.setSummary(R.string.hint_password);
-
-        passwordEditText = passwordPref.getEditText();
-        transMethod = new PasswordTransformationMethod();
-        passwordEditText.setTransformationMethod(transMethod);
-
-        // Edit text preference
-        smsPrefCat.addPreference(passwordPref);
-
         return root;
     }
 
@@ -336,9 +291,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         editor.putInt("AutoUpdateDelay", autoUdateDelay);
         editor.putBoolean("AutoFetch", autoFetchCheckBoxPref.isChecked());
         editor.putString("TotalReports", totalReports);
-        editor.putBoolean("SmsUpdate", smsCheckBoxPref.isChecked());
-        editor.putString("Username", userNamePref.getText());
-        editor.putString("Password", passwordPref.getText());
         editor.putInt("CheckinEnabled", UshahidiPref.isCheckinEnabled);
         editor.commit();
 
@@ -370,17 +322,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             startService(new Intent(Settings.this, UshahidiPref.class));
         } else {
             stopService(new Intent(Settings.this, UshahidiPref.class));
-        }
-
-        // Reset sms update
-        if (sharedPreferences.getBoolean(SMS_PREFERENCE, false)) {
-
-            UshahidiPref.smsUpdate = true;
-
-        } else {
-
-            UshahidiPref.smsUpdate = false;
-
         }
 
         // Reset vibrate
