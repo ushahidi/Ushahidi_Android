@@ -36,6 +36,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.text.InputType;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
     private EditTextPreference ushahidiInstancePref;
@@ -94,13 +95,18 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
         addPreferencesFromResource(R.xml.preferences);
         ushahidiInstancePref = new EditTextPreference(this);
+
         firstNamePref = new EditTextPreference(this);
+
         lastNamePref = new EditTextPreference(this);
+
         emailAddressPref = new EditTextPreference(this);
+
         autoFetchCheckBoxPref = new CheckBoxPreference(this);
         vibrateCheckBoxPref = new CheckBoxPreference(this);
         ringtoneCheckBoxPref = new CheckBoxPreference(this);
         flashLedCheckBoxPref = new CheckBoxPreference(this);
+
         clearCacheCheckBoxPref = (DialogPreference)getPreferenceScreen().findPreference(
                 "clear_cache_preference");
         autoUpdateTimePref = new ListPreference(this);
@@ -127,6 +133,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         ushahidiInstancePref.setTitle(R.string.txt_domain);
         ushahidiInstancePref.setDefaultValue("http://");
         ushahidiInstancePref.setSummary(R.string.hint_domain);
+        ushahidiInstancePref.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_URI);
         basicPrefCat.addPreference(ushahidiInstancePref);
 
         // Total reports to fetch at a time
@@ -154,7 +161,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         firstNamePref.setKey("first_name_preference");
         firstNamePref.setTitle(R.string.txt_first_name);
         firstNamePref.setSummary(R.string.hint_first_name);
-        
+        firstNamePref.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
         basicPrefCat.addPreference(firstNamePref);
 
         // Last name entry field
@@ -162,6 +169,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         lastNamePref.setKey("last_name_preference");
         lastNamePref.setTitle(R.string.txt_last_name);
         lastNamePref.setSummary(R.string.hint_last_name);
+        lastNamePref.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
         basicPrefCat.addPreference(lastNamePref);
 
         // Email name entry field
@@ -169,6 +177,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         emailAddressPref.setKey("email_address_preference");
         emailAddressPref.setTitle(R.string.txt_email);
         emailAddressPref.setSummary(R.string.hint_email);
+        emailAddressPref.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         basicPrefCat.addPreference(emailAddressPref);
 
         // Advanced Preferences
