@@ -139,6 +139,9 @@
 	<string name="empty_report_location">The location name field is required.</string>
 	<string name="empty_report_categories">Select at least one category.</string>
 	<string name="hint_location">Location here</string>
+	<string name="no_report">Could not fetch reports.</string>
+	<string name="no_categories">Could not fetch categories.</string>
+	<string name="reports_successfully_fetched">Reports successfully fetched.</string>
 	<!--  Add location screen -->
 	<string name="find_location">Finding you...</string>
 	<string name="location_not_found">A location can not currently be determined. Enable more
@@ -170,8 +173,14 @@
 	<string name="network_error_msg">Network Error, please ensure you are connected to the Internet</string>
 	<string name="file_system_error">File System Error</string>
 	<string name="file_system_error_msg">File System Error, please ensure your save path is correct!</string>
+	
+	<!-- Tab -->
+	<string name="tab_item_report_list">List</string>
+	<string name="tab_item_report_map">Map</string>
+	<string name="tab_item_checkin">Checkins</string>
+    
     <!-- Checkin Strings -->
-    <string name="checkin_menu">Checkin</string>
+    <string name="checkin_btn">Checkin</string>
     <string name="checkin_photo">Photo</string>
     <string name="checkin_message">Checkin Message:</string>
     <string name="checkin_upload_photo">Upload photo</string>

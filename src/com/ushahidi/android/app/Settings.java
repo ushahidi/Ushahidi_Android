@@ -36,9 +36,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.widget.EditText;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
@@ -99,8 +97,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     public static final String EMAIL_ADDRESS_PREFERENCE = "email_address_preference";
 
     public static final String CHECKIN_PREFERENCE = "checkin_preference";
-
-    private int isCheckinEnabled = 0;
 
     private boolean checkin = false;
 
@@ -326,7 +322,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         }
 
         if (saveItems.equalsIgnoreCase("phone")) {
-            newSavePath = this.getDir("", MODE_PRIVATE).toString();
+            newSavePath = this.getDir("", MODE_WORLD_READABLE | MODE_WORLD_WRITEABLE).toString();
 
         } else { // means on sd is checked
             newSavePath = Environment.getExternalStorageDirectory().toString() + "ushahidi";
@@ -343,7 +339,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         editor.putBoolean("SmsUpdate", smsCheckBoxPref.isChecked());
         editor.putString("Username", userNamePref.getText());
         editor.putString("Password", passwordPref.getText());
-        editor.putInt("CheckinEnabled", isCheckinEnabled);
+        editor.putInt("CheckinEnabled", UshahidiPref.isCheckinEnabled);
         editor.commit();
 
     }
@@ -416,7 +412,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             if (!sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, "").equals(
                     UshahidiPref.domain)) {
                 validateUrl(sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, ""));
-                
+
             }
         }
 
@@ -463,6 +459,14 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         protected void onPostExecute(Integer result) {
             if (result == 4) {
                 Util.showToast(appContext, R.string.internet_connection);
+            } else if (result == 3) {
+                Util.showToast(appContext, R.string.invalid_ushahidi_instance);
+            } else if (result == 2) {
+                Util.showToast(appContext, R.string.no_report);
+            } else if (result == 1) {
+                Util.showToast(appContext, R.string.no_categories);
+            } else {
+                Util.showToast(appContext, R.string.reports_successfully_fetched);
             }
             this.dialog.cancel();
         }
@@ -478,10 +482,10 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             if (!validUrl) {
 
                 // reset whatever was entered in that field.
-                ushahidiInstancePref.setText("");
+                ushahidiInstancePref.setText("http://");
                 Util.showToast(Settings.this, R.string.invalid_ushahidi_instance);
             } else {
-                
+
                 ReportsTask reportsTask = new ReportsTask();
                 reportsTask.appContext = Settings.this;
                 reportsTask.execute();
@@ -506,7 +510,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         };
         t.start();
     }
-    
+
     Runnable mIsCheckinsEnabled = new Runnable() {
         public void run() {
 
@@ -515,12 +519,12 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             } else {
                 UshahidiPref.isCheckinEnabled = 0;
             }
-             
+
             UshahidiPref.saveSettings(Settings.this);
-            
+
         }
     };
-    
+
     /**
      * Checks if checkins is enabled on the configured Ushahidi deployment.
      */
@@ -532,6 +536,5 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         }
         UshahidiPref.saveSettings(Settings.this);
     }
-    
-    
+
 }

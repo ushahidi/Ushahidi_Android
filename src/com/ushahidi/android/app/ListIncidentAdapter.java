@@ -94,9 +94,8 @@ public class ListIncidentAdapter extends BaseAdapter {
                 iTv.setStatusColor(Color.rgb(237, 0, 0)); // red
             }
             iTv.setStatus(iItems.get(position).getStatus());
-            
+            iTv.setLocation(iItems.get(position).getLocation());
             iTv.setDesc(iItems.get(position).getDesc());
-            iTv.setCategories(iItems.get(position).getLocation());
             iTv.setMedia(iItems.get(position).getMedia());
             iTv.setCategories(iItems.get(position).getCategories());
             iTv.setId(iItems.get(position).getId());

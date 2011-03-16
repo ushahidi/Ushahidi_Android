@@ -9,6 +9,7 @@
  * Fixed default images not showing when listing reports.
  * Fixed status colorization bug.
  * Fixed bug with trailing slashes.
+ * Fixed issues with images not being saved with crowdmap deployment.
  
  Known Issue:
 

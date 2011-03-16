@@ -20,6 +20,7 @@
 
 package com.ushahidi.android.app;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,6 +34,7 @@ import java.text.SimpleDateFormat;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.regex.Matcher;
@@ -96,7 +98,8 @@ public class Util {
      * @return capitalized string
      */
     public static String capitalizeString(String text) {
-        return text.substring(0, 1).toUpperCase() + text.substring(1);
+        if (text.length() == 0) return text;
+        return text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();
     }
 
     /**
@@ -141,11 +144,11 @@ public class Util {
      * @return String
      */
     public static String truncateText(String text) {
-        if(text.length() > 30) {
+        if (text.length() > 30) {
             return text.substring(0, 25).trim() + "É";
-          } else {
+        } else {
             return text;
-          }
+        }
     }
 
     /**
@@ -306,7 +309,7 @@ public class Util {
                     mNewIncidents = HandleXml.processIncidentsXml(UshahidiPref.incidentsResponse);
 
                 } else {
-                    return 1;
+                    return 2;
                 }
 
                 if (mNewCategories != null && mNewIncidents != null) {
@@ -315,7 +318,7 @@ public class Util {
                     return 0;
 
                 } else {
-                    return 1;
+                    return 3;
                 }
 
             } else {
@@ -418,7 +421,7 @@ public class Util {
             return false;
         }
     }
-    
+
     public static void checkForCheckin(Context context) {
         if (Util.isCheckinEnabled(context)) {
             UshahidiPref.isCheckinEnabled = 1;
@@ -426,6 +429,55 @@ public class Util {
             UshahidiPref.isCheckinEnabled = 0;
         }
         UshahidiPref.saveSettings(context);
+    }
+
+    /**
+     * Delete content of a folder recursively.
+     * 
+     * @param String path - path to the directory.
+     * @return void
+     */
+    public static void rmDir(String path) {
+        String strName = "";
+        File dir = new File(path);
+        if (dir.isDirectory()) {
+
+            String[] children = dir.list();
+            Log.i("Directory", "dir.list returned some files" + children.length + "--");
+            for (int i = 0; i < children.length; i++) {
+                File temp = new File(dir, children[i]);
+                strName = children[i] + ",";
+
+                if (temp.isDirectory()) {
+
+                    rmDir(temp.getName());
+                } else {
+                    temp.delete();
+                }
+            }
+
+            dir.delete();
+        } else {
+            Log.i("Directory", "This is not a directory" + path);
+        }
+    }
+    
+    /**
+     * Capitalize each word in a text.
+     * 
+     * @param String text - The text to be capitalized.
+     * 
+     * @return String
+     */
+    public static String capitalize(String text) {
+        
+        String[] words = text.split("\\s");
+        String capWord = "";
+        for (String word : words) {
+            
+            capWord += capitalizeString(word)+" ";
+        }
+        return capWord;
     }
 
 }

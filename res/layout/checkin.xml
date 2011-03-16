@@ -28,7 +28,7 @@
 				android:text="@string/checkin_upload_photo" />
 			<Button android:id="@+id/perform_checkin_button"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:text="@string/checkin_menu" />
+				android:text="@string/checkin_btn" />
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>

@@ -59,21 +59,21 @@ public class IncidentsTab extends TabActivity {
         // List of reports
         tabHost.addTab(tabHost
                 .newTabSpec("list_reports")
-                .setIndicator("List",
+                .setIndicator(getString(R.string.tab_item_report_list),
                         getResources().getDrawable(R.drawable.ushahidi_tab_reports_selected))
                 .setContent(new Intent(this, ListIncidents.class)));
 
         // Reports map
         tabHost.addTab(tabHost
                 .newTabSpec("map")
-                .setIndicator("Map",
+                .setIndicator(getString(R.string.tab_item_report_map),
                         getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
                 .setContent(new Intent(this, IncidentMap.class)));
 
         // checkins
         tabHost.addTab(tabHost
                 .newTabSpec("checkin")
-                .setIndicator("Checkin",
+                .setIndicator(getString(R.string.tab_item_checkin),
                         getResources().getDrawable(R.drawable.ushahidi_tab_checkin_selected))
                 .setContent(new Intent(IncidentsTab.this, CheckinMap.class)));
         // load preferences

@@ -47,7 +47,19 @@ public class ListIncidentText {
     private String categories;
 
     private boolean isSelectable;
-
+    
+    public ListIncidentText(){
+        this.thumbnail = null;
+        this.title = "";
+        this.date = "";
+        this.status = "";
+        this.description = "";
+        this.location = "";
+        this.media = "";
+        this.categories = "";
+        this.id =0;
+        this.arrow = null;
+    }
     public ListIncidentText(Drawable thumbnail, String title, String date, String status,
             String description, String location, String media, String categories, int id,
             Drawable arrow) {
