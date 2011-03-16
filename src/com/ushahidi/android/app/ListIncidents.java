@@ -298,7 +298,7 @@ public class ListIncidents extends Activity {
             } else if (result == 2) {
                 Util.showToast(appContext, R.string.no_report);
             } else if (result == 1) {
-                Util.showToast(appContext, R.string.no_categories);
+                Util.showToast(appContext, R.string.no_report);
             } else if (result == 0) {
                 showIncidents("All");
                 showCategories();

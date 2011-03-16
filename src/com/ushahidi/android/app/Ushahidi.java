@@ -367,6 +367,14 @@ public class Ushahidi extends Activity {
         protected void onPostExecute(Integer result) {
             if (result == 4) {
                 Util.showToast(appContext, R.string.internet_connection);
+            } else if (result == 3) {
+                Util.showToast(appContext, R.string.invalid_ushahidi_instance);
+            } else if (result == 2) {
+                Util.showToast(appContext, R.string.no_report);
+            } else if (result == 1) {
+                Util.showToast(appContext, R.string.no_report);
+            } else {
+                Util.showToast(appContext, R.string.reports_successfully_fetched);
             }
             this.dialog.cancel();
         }

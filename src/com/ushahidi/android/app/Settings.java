@@ -414,7 +414,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             } else if (result == 2) {
                 Util.showToast(appContext, R.string.no_report);
             } else if (result == 1) {
-                Util.showToast(appContext, R.string.no_categories);
+                Util.showToast(appContext, R.string.no_report);
             } else {
                 Util.showToast(appContext, R.string.reports_successfully_fetched);
             }
