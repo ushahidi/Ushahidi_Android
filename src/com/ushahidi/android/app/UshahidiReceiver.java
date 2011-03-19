@@ -30,7 +30,7 @@ public class UshahidiReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent startIntent = new Intent(context, UshahidiService.class);
+        Intent startIntent = new Intent(context, UshahidiServicebak.class);
         context.startService(startIntent);
     }
 }

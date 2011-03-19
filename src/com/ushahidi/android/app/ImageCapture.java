@@ -31,7 +31,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
-import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.hardware.Camera.PictureCallback;
 import android.os.Bundle;
@@ -61,6 +60,8 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
     private Bundle mBundle;
 
     private Intent mIntent;
+    
+    private ImageCaptureCallback iccb = null;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -157,7 +158,6 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        ImageCaptureCallback iccb = null;
         if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_CAMERA) {
             try {
                 String filename = mTimeStampFormat.format(new Date());

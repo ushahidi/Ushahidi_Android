@@ -115,6 +115,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         new ListPreference(this);
 
         setPreferenceScreen(createPreferenceHierarchy());
+
         this.saveSettings();
     }
 
@@ -328,9 +329,11 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
         if (sharedPreferences.getBoolean(AUTO_FETCH_PREFERENCE, false)) {
 
-            startService(new Intent(Settings.this, UshahidiPref.class));
+            // Enable background service.
+            startService(new Intent(Settings.this, UshahidiService.class));
+
         } else {
-            stopService(new Intent(Settings.this, UshahidiPref.class));
+            stopService(new Intent(Settings.this, UshahidiService.class));
         }
 
         // Reset vibrate

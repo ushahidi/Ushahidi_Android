@@ -1,12 +1,7 @@
 
 package com.ushahidi.android.app.checkin;
 
-import java.util.List;
-
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +12,6 @@ import android.widget.TextView;
 
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.data.IncidentsData;
 
 public class CheckinBalloonOverlayView extends FrameLayout {
     private LinearLayout layout;

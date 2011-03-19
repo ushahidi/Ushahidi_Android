@@ -49,7 +49,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 
 import com.ushahidi.android.app.UshahidiPref;
-import com.ushahidi.android.app.UshahidiService;
+import com.ushahidi.android.app.UshahidiServicebak;
 import com.ushahidi.android.app.Util;
 
 import android.text.TextUtils;
@@ -72,7 +72,7 @@ public class UshahidiHttpClient {
 
             // Post, check and show the result (not really spectacular, but
             // works):
-            HttpResponse response = UshahidiService.httpclient.execute(httpget);
+            HttpResponse response = UshahidiServicebak.httpclient.execute(httpget);
             UshahidiPref.httpRunning = false;
 
             return response;
@@ -112,7 +112,7 @@ public class UshahidiHttpClient {
             // Post, check and show the result (not really spectacular, but
             // works):
             try {
-                HttpResponse response = UshahidiService.httpclient.execute(httpost);
+                HttpResponse response = UshahidiServicebak.httpclient.execute(httpost);
                 UshahidiPref.httpRunning = false;
                 return response;
 

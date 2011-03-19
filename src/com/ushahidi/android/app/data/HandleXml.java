@@ -31,7 +31,7 @@ import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.UshahidiApplication;
-import com.ushahidi.android.app.UshahidiService;
+import com.ushahidi.android.app.UshahidiServicebak;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -184,7 +184,7 @@ public class HandleXml {
 
                             if (!(mediaThumb.item(0)).getNodeValue().equals("")) {
 
-                                UshahidiService.mNewIncidentsThumbnails.add((mediaThumb.item(0))
+                                UshahidiServicebak.mNewIncidentsThumbnails.add((mediaThumb.item(0))
                                         .getNodeValue());
                             }
 
@@ -199,7 +199,7 @@ public class HandleXml {
                             Element mediaInnerImageElement = (Element)mediaImageList.item(0);
                             NodeList mediaImage = mediaInnerImageElement.getChildNodes();
                             if (!(mediaImage.item(0)).getNodeValue().equals("")) {
-                                UshahidiService.mNewIncidentsImages.add((mediaImage.item(0))
+                                UshahidiServicebak.mNewIncidentsImages.add((mediaImage.item(0))
                                         .getNodeValue());
                             }
                             // if( j != 0) {
