@@ -39,17 +39,13 @@ import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 
 import com.ushahidi.android.app.UshahidiPref;
-import com.ushahidi.android.app.UshahidiServicebak;
+import com.ushahidi.android.app.UshahidiService;
 import com.ushahidi.android.app.Util;
 
 import android.text.TextUtils;
@@ -72,7 +68,7 @@ public class UshahidiHttpClient {
 
             // Post, check and show the result (not really spectacular, but
             // works):
-            HttpResponse response = UshahidiServicebak.httpclient.execute(httpget);
+            HttpResponse response = UshahidiService.httpclient.execute(httpget);
             UshahidiPref.httpRunning = false;
 
             return response;
@@ -112,7 +108,7 @@ public class UshahidiHttpClient {
             // Post, check and show the result (not really spectacular, but
             // works):
             try {
-                HttpResponse response = UshahidiServicebak.httpclient.execute(httpost);
+                HttpResponse response = UshahidiService.httpclient.execute(httpost);
                 UshahidiPref.httpRunning = false;
                 return response;
 

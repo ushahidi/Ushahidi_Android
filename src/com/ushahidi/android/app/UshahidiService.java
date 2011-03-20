@@ -39,7 +39,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
-import android.telephony.SmsMessage;
 
 public class UshahidiService extends Service {
 
@@ -118,7 +117,11 @@ public class UshahidiService extends Service {
     private UshahidiDatabase getDb() {
         return UshahidiApplication.mDb;
     }
-
+    
+    public static void clearCache() {
+        UshahidiApplication.mDb.clearData();
+    }
+    
     /**
      * Starts the background service
      * 

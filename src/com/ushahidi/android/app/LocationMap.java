@@ -58,7 +58,7 @@ public class LocationMap extends MapActivity {
 
     private MapController mapController;
 
-    public static Geocoder gc;
+    private static Geocoder gc;
 
     private GeoPoint defaultLocation;
 
@@ -78,7 +78,7 @@ public class LocationMap extends MapActivity {
 
     private Bundle bundle = new Bundle();
 
-    public List<Address> foundAddresses;
+    private List<Address> foundAddresses;
 
     private String locationName;
 
@@ -303,6 +303,7 @@ public class LocationMap extends MapActivity {
 
     // update the device current location
     private void updateLocation() {
+        
         MyLocationListener listener = new MyLocationListener();
         LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         long updateTimeMsec = 1000L;

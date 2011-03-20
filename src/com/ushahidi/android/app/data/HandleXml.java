@@ -27,11 +27,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import android.util.Log;
-
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.UshahidiApplication;
-import com.ushahidi.android.app.UshahidiServicebak;
+import com.ushahidi.android.app.UshahidiService;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -166,8 +164,8 @@ public class HandleXml {
 
                 incidentData.setIncidentCategories(categories);
                 categories = "";
-                //UshahidiService.mNewIncidentsImages.clear();
-                //UshahidiService.mNewIncidentsThumbnails.clear();
+                // UshahidiService.mNewIncidentsImages.clear();
+                // UshahidiService.mNewIncidentsThumbnails.clear();
                 // categories
                 NodeList mediaList = element.getElementsByTagName("media");
                 for (int j = 0; j < mediaList.getLength(); j++) {
@@ -184,7 +182,7 @@ public class HandleXml {
 
                             if (!(mediaThumb.item(0)).getNodeValue().equals("")) {
 
-                                UshahidiServicebak.mNewIncidentsThumbnails.add((mediaThumb.item(0))
+                                UshahidiService.mNewIncidentsThumbnails.add((mediaThumb.item(0))
                                         .getNodeValue());
                             }
 
@@ -199,7 +197,7 @@ public class HandleXml {
                             Element mediaInnerImageElement = (Element)mediaImageList.item(0);
                             NodeList mediaImage = mediaInnerImageElement.getChildNodes();
                             if (!(mediaImage.item(0)).getNodeValue().equals("")) {
-                                UshahidiServicebak.mNewIncidentsImages.add((mediaImage.item(0))
+                                UshahidiService.mNewIncidentsImages.add((mediaImage.item(0))
                                         .getNodeValue());
                             }
                             // if( j != 0) {

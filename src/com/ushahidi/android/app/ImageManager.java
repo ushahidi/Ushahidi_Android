@@ -55,7 +55,7 @@ public class ImageManager {
 
     public static void saveImage() {
         byte[] is;
-        for (String image : UshahidiServicebak.mNewIncidentsImages) {
+        for (String image : UshahidiService.mNewIncidentsImages) {
             if (!TextUtils.isEmpty(image)) {
                 File imageFilename = new File(image);
                 File f = new File(UshahidiPref.savePath + imageFilename.getName());
@@ -79,13 +79,13 @@ public class ImageManager {
         }
         
         //clear images
-        UshahidiServicebak.mNewIncidentsImages.clear();
+        UshahidiService.mNewIncidentsImages.clear();
 
     }
 
     public static void saveThumbnail() {
         byte[] is;
-        for (String image : UshahidiServicebak.mNewIncidentsThumbnails) {
+        for (String image : UshahidiService.mNewIncidentsThumbnails) {
            
             if (!TextUtils.isEmpty(image)) {
                 File thumbnailFilename = new File(image);
@@ -111,7 +111,7 @@ public class ImageManager {
         }
         
         // clear images
-        UshahidiServicebak.mNewIncidentsThumbnails.clear();
+        UshahidiService.mNewIncidentsThumbnails.clear();
 
     }
 
