@@ -157,12 +157,13 @@ public class CheckinMap extends MapActivity {
         
         long updateTimeMsec = 1000L;
         
+        //get low accuracy provider
         LocationProvider low = manager.getProvider(manager.getBestProvider(Util.createCoarseCriteria(),
-                false));
+                true));
 
         // get high accuracy provider
         LocationProvider high = manager.getProvider(manager.getBestProvider(Util.createFineCriteria(),
-                false));
+                true));
 
         manager.requestLocationUpdates(low.getName(), updateTimeMsec, 500.0f, listener);
 
@@ -173,9 +174,7 @@ public class CheckinMap extends MapActivity {
     // get the current location of the device/user
     public class DeviceLocationListener implements LocationListener {
         public void onLocationChanged(Location location) {
-            // double latitude = 0;
-            // double longitude = 0;
-            // String locName = "";
+           
             if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();

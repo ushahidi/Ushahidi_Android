@@ -17,14 +17,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ushahidi.android.app.ImageCapture;
 import com.ushahidi.android.app.ImageManager;
-import com.ushahidi.android.app.IncidentsTab;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.UshahidiPref;
-import com.ushahidi.android.app.Util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
