@@ -303,7 +303,6 @@ public class LocationMap extends MapActivity {
 
     // update the device current location
     private void updateLocation() {
-        
         MyLocationListener listener = new MyLocationListener();
         LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         long updateTimeMsec = 1000L;
