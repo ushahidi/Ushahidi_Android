@@ -1,34 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!-- Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+	Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
+	This file may be used under the terms of the GNU Lesser General Public License 
+	version 3 as published by the Free Software Foundation and appearing in the 
+	file LICENSE.LGPL included in the packaging of this file. Please review the 
+	following information to ensure the GNU Lesser General Public License version 
+	3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
+	have questions regarding the use of this file, please contact Ushahidi developers 
+	at team@ushahidi.com. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:padding="20px" android:background="@drawable/background_color"
 	android:orientation="vertical">
 	<ScrollView android:layout_width="fill_parent"
 		android:layout_height="fill_parent">
-		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:orientation="vertical">
+		<LinearLayout android:id="@+id/linearLayout1"
+			android:layout_height="fill_parent" android:layout_width="fill_parent"
+			android:orientation="vertical">
+			<!-- checkin message -->
+			<TextView android:textStyle="bold" android:layout_width="wrap_content"
+				android:text="@string/checkin_message" android:layout_height="wrap_content"
+				android:textColor="@drawable/title_color" android:id="@+id/checkin_message_label" />
 
-			<TextView android:id="@+id/checkin_message_label"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:textColor="@drawable/date_color" android:textStyle="bold"
-				android:text="@string/checkin_message" />
 			<EditText android:id="@+id/checkin_message_text"
-				android:layout_width="fill_parent" android:singleLine="false"
-				android:lines="5" android:gravity="top" android:layout_height="wrap_content" />
-			<TextView android:id="@+id/checkin_selected_photo_label"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:textColor="@drawable/date_color" android:textStyle="bold"
-				android:text="@string/checkin_selected_photo" />
-			<ImageView android:layout_height="wrap_content" android:id="@+id/checkin_img_prev"
-				android:layout_width="wrap_content" />
+				android:layout_width="fill_parent" android:lines="5"
+				android:autoText="true"
+				android:layout_height="wrap_content" android:singleLine="false"
+				android:hint="@string/checkin_enter_msg_hint" android:gravity="top" />
 
+			<!-- location -->
+			<TextView android:paddingBottom="20px" android:textStyle="bold"
+				android:layout_width="wrap_content" android:text="@string/report_location"
+				android:layout_height="wrap_content" android:textColor="@drawable/title_color" />
+			<com.google.android.maps.MapView
+				android:id="@+id/checkin_location_map" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_below="@+id/checkin_location"
+				android:apiKey="@string/google_map_api_key" android:enabled="true"
+				android:clickable="true" />
+			<TextView android:paddingBottom="20px" android:textStyle="bold"
+				android:gravity="center_horizontal" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:textColor="@drawable/date_color"
+				android:id="@+id/latlon" />
+
+			<!-- selected photo -->
+			<TextView android:paddingBottom="20px" android:textStyle="bold"
+				android:layout_width="wrap_content" android:text="@string/checkin_selected_photo"
+				android:layout_height="wrap_content" android:textColor="@drawable/title_color"
+				android:id="@+id/checkin_selected_photo_label" />
+			<ImageView android:layout_height="wrap_content"
+				android:adjustViewBounds="true" android:id="@+id/checkin_img_prev"
+				android:scaleType="centerCrop" android:layout_width="wrap_content"
+				android:paddingBottom="20px" />
 			<Button android:id="@+id/upload_checkin_photo_button"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:text="@string/checkin_upload_photo" />
-			<Button android:id="@+id/perform_checkin_button"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:text="@string/checkin_btn" />
+				android:layout_width="fill_parent" android:text="@string/checkin_upload_photo"
+				android:layout_height="wrap_content" />
+
+			<!-- contact -->
+			<TextView android:paddingBottom="20px" android:textStyle="bold"
+				android:layout_width="wrap_content" android:text="@string/checkin_contact"
+				android:layout_height="wrap_content" android:textColor="@drawable/title_color"
+				android:id="@+id/checkin_contact" />
+
+			<TextView android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_marginLeft="10dip"
+				android:text="@string/txt_first_name" android:textColor="@drawable/date_color" />
+			<EditText android:layout_width="fill_parent" android:id="@+id/checkin_firstname"
+				android:layout_marginLeft="10dip" android:inputType="textPersonName|textCapWords"
+				android:layout_height="wrap_content" android:hint="@string/checkin_enter_firstname_hint" />
+
+			<TextView android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_marginLeft="10dip"
+				android:text="@string/txt_last_name" android:textColor="@drawable/date_color" />
+			<EditText android:layout_width="fill_parent" android:id="@+id/checkin_lastname"
+				android:layout_marginLeft="10dip" android:layout_height="wrap_content"
+				android:inputType="textPersonName|textCapWords" android:hint="@string/checkin_enter_lastname_hint" />
+
+			<TextView android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_marginLeft="10dip"
+				android:text="@string/txt_email" android:textColor="@drawable/date_color" />
+			<EditText android:layout_width="fill_parent" android:id="@+id/checkin_email"
+				android:hint="@string/checkin_enter_email_hint" android:inputType="textEmailAddress"
+				android:layout_marginLeft="10dip" android:layout_height="wrap_content" />
+
+			<!-- checkin button -->
+			<RelativeLayout android:id="@+id/relativeLayout1"
+				android:layout_height="wrap_content" android:layout_width="fill_parent">
+				<Button android:id="@+id/perform_checkin_button"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_alignParentRight="true" android:layout_marginLeft="10dip"
+					android:text="@string/checkin_btn" />
+				<Button android:layout_width="wrap_content" android:id="@+id/checkin_cancel"
+					android:layout_height="wrap_content" android:layout_toLeftOf="@id/perform_checkin_button"
+					android:layout_alignTop="@id/perform_checkin_button" android:text="@string/btn_cancel" />
+			</RelativeLayout>
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>

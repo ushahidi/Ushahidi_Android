@@ -20,19 +20,19 @@ public class NetworkServices {
     public static String fileName;
 
     public static String postToOnline(String IMEI, String domainName, String checkinDetails,
-
-    Location location, String filename, String firstname, String lastname, String email) {
+            String filename, String firstname, String lastname, String email, double latitude,
+            double longitude) {
 
         HashMap<String, String> myParams = new HashMap<String, String>();
-
+        
         // Build the HTTP response
         StringBuilder urlBuilder = new StringBuilder(domainName);
         urlBuilder.append("/api");
         myParams.put("task", "checkin");
         myParams.put("action", "ci");
         myParams.put("mobileid", IMEI);
-        myParams.put("lat", String.valueOf(location.getLatitude()));
-        myParams.put("lon", String.valueOf(location.getLongitude()));
+        myParams.put("lat", String.valueOf(latitude));
+        myParams.put("lon", String.valueOf(longitude));
         myParams.put("message", checkinDetails);
         myParams.put("firstname", firstname);
         myParams.put("lastname", lastname);
@@ -44,6 +44,7 @@ public class NetworkServices {
         try {
             return PostFileUpload(urlBuilder.toString(), myParams);
         } catch (IOException e) {
+            
             return null;
         }
     }
@@ -82,7 +83,7 @@ public class NetworkServices {
     public static String getCheckins(String URL, String mobileId, String checkinId) {
         StringBuilder fullUrl = new StringBuilder(URL);
         fullUrl.append("/api");
-        Log.i("Domain URL: ", "URL: " + fullUrl);
+        
         try {
             URL url = new URL(fullUrl.toString());
             ClientHttpRequest req = new ClientHttpRequest(url);

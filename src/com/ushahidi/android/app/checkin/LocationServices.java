@@ -47,7 +47,8 @@ public class LocationServices {
                 if (LocationServices.location != null) {
                     LocationServices.locationSet = true;
                 }
-
+                ((LocationManager)checkin_activity.getSystemService(Context.LOCATION_SERVICE))
+                        .removeUpdates(this);
                 dismissActionDialog();
 
             }
@@ -58,8 +59,9 @@ public class LocationServices {
                 if (LocationServices.location != null) {
                     LocationServices.locationSet = true;
                 }
-                
-                ((LocationManager)checkin_activity.getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
+
+                ((LocationManager)checkin_activity.getSystemService(Context.LOCATION_SERVICE))
+                        .removeUpdates(this);
                 dismissActionDialog();
 
             }

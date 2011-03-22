@@ -53,10 +53,8 @@ public class CheckinMap extends MapActivity {
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-
-        UshahidiPref.loadSettings(CheckinMap.this);
-
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        UshahidiPref.loadSettings(CheckinMap.this);
         setContentView(R.layout.checkin_map);
 
         mHandler = new Handler();
@@ -138,10 +136,10 @@ public class CheckinMap extends MapActivity {
         try {
 
             foundAddresses = gc.getFromLocation(lat, lon, 5);
-
-            Address address = foundAddresses.get(0);
-
-            return address.getSubAdminArea();
+            if( foundAddresses.size() > 0 ) {
+                Address address = foundAddresses.get(0);
+                return address.getSubAdminArea();
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -179,7 +177,7 @@ public class CheckinMap extends MapActivity {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
 
-                locationName = getLocationFromLatLon(latitude, longitude);
+                //locationName = getLocationFromLatLon(latitude, longitude);
                 centerLocation(getPoint(latitude, longitude));
 
                 ((LocationManager)getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
