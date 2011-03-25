@@ -39,13 +39,9 @@ import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 
 import com.ushahidi.android.app.UshahidiPref;
@@ -169,49 +165,6 @@ public class UshahidiHttpClient {
             // fall through and return false
         }
         return false;
-    }
-
-    /**
-     * Upload sms to ushahidi
-     * 
-     * @param address
-     * @return
-     * @throws MalformedURLException
-     * @throws IOException TODO Think through this method and make it more
-     *             generic.
-     */
-    public static boolean postSmsToUshahidi(String URL, HashMap<String, String> params)
-            throws IOException {
-        // Create a new HttpClient and Post Header
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost(URL);
-
-        try {
-            // Add your data
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-            nameValuePairs.add(new BasicNameValuePair("task", params.get("task")));
-            nameValuePairs.add(new BasicNameValuePair("username", params.get("username")));
-            nameValuePairs.add(new BasicNameValuePair("password", params.get("password")));
-            nameValuePairs.add(new BasicNameValuePair("message_from", params.get("message_from")));
-            nameValuePairs.add(new BasicNameValuePair("message_description", params
-                    .get("message_description")));
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-            // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httppost);
-
-            if (response.getStatusLine().getStatusCode() == 200) {
-                Log.i("Web service succeeded", "It succeeded.");
-                return true;
-            } else {
-                Log.i("Web service succeeded", "It failed.");
-                return false;
-            }
-
-        } catch (ClientProtocolException e) {
-            return false;
-        }
-
     }
 
     public static byte[] fetchImage(String address) throws MalformedURLException, IOException {

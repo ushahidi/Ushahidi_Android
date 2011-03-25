@@ -34,8 +34,6 @@ import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -74,12 +72,6 @@ public class Ushahidi extends Activity {
 
     private static final int DIALOG_ERROR = 1;
 
-    private static final int MAX_PROGRESS = 100;
-
-    private ProgressDialog mProgressDialog;
-
-    private int mProgress;
-
     private Handler mHandler;
 
     private Button listBtn;
@@ -89,8 +81,6 @@ public class Ushahidi extends Activity {
     private Button settingsBtn;
 
     private Button checkinBtn;
-    
-    private boolean isCheckinEnabled = false;
     
     private String dialogErrorMsg = "An error occurred fetching the reports. "
             + "Make sure you have entered an Ushahidi instance.";
@@ -168,10 +158,8 @@ public class Ushahidi extends Activity {
         
         //check if checkins is enabled
        if (UshahidiPref.isCheckinEnabled == 1) {
-           Log.i("Tab info"," enabled: "+UshahidiPref.isCheckinEnabled);
            checkinBtn.setVisibility(View.VISIBLE);
        } else {
-           Log.i("Tab info"," disabled: "+UshahidiPref.isCheckinEnabled);
            checkinBtn.setVisibility(View.GONE);
        }
 
@@ -181,7 +169,11 @@ public class Ushahidi extends Activity {
     public void onResume() {
         super.onResume();
       //check if checkins is enabled
-        mHandler.post(isCheckinsEnabled);
+        if (UshahidiPref.isCheckinEnabled == 1) {
+            checkinBtn.setVisibility(View.VISIBLE);
+        } else {
+            checkinBtn.setVisibility(View.GONE);
+        }
     }
     
     @Override
@@ -236,18 +228,6 @@ public class Ushahidi extends Activity {
     final Runnable mDisplayErrorPrompt = new Runnable() {
         public void run() {
             showDialog(DIALOG_ERROR);
-        }
-    };
-    
-    final Runnable isCheckinsEnabled = new Runnable() {
-        public void run() {
-            isCheckinEnabled = Util.isCheckinEnabled(Ushahidi.this);
-            
-            if (isCheckinEnabled) {
-                checkinBtn.setVisibility(View.VISIBLE);
-            } else {
-                checkinBtn.setVisibility(View.GONE);
-            }
         }
     };
 
@@ -379,6 +359,7 @@ public class Ushahidi extends Activity {
         @Override
         protected Integer doInBackground(Void... params) {
             status = Util.processReports(appContext);
+            Util.checkForCheckin(appContext);
             return status;
         }
 
@@ -386,6 +367,14 @@ public class Ushahidi extends Activity {
         protected void onPostExecute(Integer result) {
             if (result == 4) {
                 Util.showToast(appContext, R.string.internet_connection);
+            } else if (result == 3) {
+                Util.showToast(appContext, R.string.invalid_ushahidi_instance);
+            } else if (result == 2) {
+                Util.showToast(appContext, R.string.no_report);
+            } else if (result == 1) {
+                Util.showToast(appContext, R.string.no_report);
+            } else {
+                Util.showToast(appContext, R.string.reports_successfully_fetched);
             }
             this.dialog.cancel();
         }

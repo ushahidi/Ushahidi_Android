@@ -36,9 +36,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
-import android.widget.EditText;
+import android.text.InputType;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
     private EditTextPreference ushahidiInstancePref;
@@ -49,14 +47,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
     private EditTextPreference emailAddressPref;
 
-    private EditTextPreference userNamePref;
-
-    private EditTextPreference passwordPref;
-
-    private EditText passwordEditText;
-
-    private PasswordTransformationMethod transMethod;
-
     private CheckBoxPreference autoFetchCheckBoxPref;
 
     private CheckBoxPreference vibrateCheckBoxPref;
@@ -64,8 +54,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     private CheckBoxPreference ringtoneCheckBoxPref;
 
     private CheckBoxPreference flashLedCheckBoxPref;
-
-    private CheckBoxPreference smsCheckBoxPref;
 
     private DialogPreference clearCacheCheckBoxPref;
 
@@ -99,8 +87,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
     public static final String CHECKIN_PREFERENCE = "checkin_preference";
 
-    private int isCheckinEnabled = 0;
-
     private boolean checkin = false;
 
     @Override
@@ -109,16 +95,18 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
         addPreferencesFromResource(R.xml.preferences);
         ushahidiInstancePref = new EditTextPreference(this);
+
         firstNamePref = new EditTextPreference(this);
+
         lastNamePref = new EditTextPreference(this);
-        userNamePref = new EditTextPreference(this);
-        passwordPref = new EditTextPreference(this);
+
         emailAddressPref = new EditTextPreference(this);
+
         autoFetchCheckBoxPref = new CheckBoxPreference(this);
         vibrateCheckBoxPref = new CheckBoxPreference(this);
         ringtoneCheckBoxPref = new CheckBoxPreference(this);
         flashLedCheckBoxPref = new CheckBoxPreference(this);
-        smsCheckBoxPref = new CheckBoxPreference(this);
+
         clearCacheCheckBoxPref = (DialogPreference)getPreferenceScreen().findPreference(
                 "clear_cache_preference");
         autoUpdateTimePref = new ListPreference(this);
@@ -127,6 +115,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         new ListPreference(this);
 
         setPreferenceScreen(createPreferenceHierarchy());
+
         this.saveSettings();
     }
 
@@ -145,6 +134,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         ushahidiInstancePref.setTitle(R.string.txt_domain);
         ushahidiInstancePref.setDefaultValue("http://");
         ushahidiInstancePref.setSummary(R.string.hint_domain);
+        ushahidiInstancePref.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_URI);
         basicPrefCat.addPreference(ushahidiInstancePref);
 
         // Total reports to fetch at a time
@@ -172,6 +162,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         firstNamePref.setKey("first_name_preference");
         firstNamePref.setTitle(R.string.txt_first_name);
         firstNamePref.setSummary(R.string.hint_first_name);
+        firstNamePref.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
         basicPrefCat.addPreference(firstNamePref);
 
         // Last name entry field
@@ -179,6 +170,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         lastNamePref.setKey("last_name_preference");
         lastNamePref.setTitle(R.string.txt_last_name);
         lastNamePref.setSummary(R.string.hint_last_name);
+        lastNamePref.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
         basicPrefCat.addPreference(lastNamePref);
 
         // Email name entry field
@@ -186,6 +178,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         emailAddressPref.setKey("email_address_preference");
         emailAddressPref.setTitle(R.string.txt_email);
         emailAddressPref.setSummary(R.string.hint_email);
+        emailAddressPref.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         basicPrefCat.addPreference(emailAddressPref);
 
         // Advanced Preferences
@@ -266,37 +259,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         flashLedCheckBoxPref.setSummary(R.string.hint_flash_led);
         notificationPrefCat.addPreference(flashLedCheckBoxPref);
 
-        // SMS Preferences
-        PreferenceCategory smsPrefCat = new PreferenceCategory(this);
-        smsPrefCat.setTitle(R.string.sms_settings);
-        root.addPreference(smsPrefCat);
-
-        // Auto fetch reports
-        smsCheckBoxPref.setKey("sms_preference");
-        smsCheckBoxPref.setTitle(R.string.chk_sms_send);
-        smsCheckBoxPref.setSummary(R.string.hint_sms_send);
-        smsPrefCat.addPreference(smsCheckBoxPref);
-
-        // First name entry field
-        userNamePref.setDialogTitle(R.string.txt_user_name);
-        userNamePref.setKey("user_name_preference");
-        userNamePref.setTitle(R.string.txt_user_name);
-        userNamePref.setSummary(R.string.hint_user_name);
-        smsPrefCat.addPreference(userNamePref);
-
-        // Last name entry field
-        passwordPref.setDialogTitle(R.string.txt_password);
-        passwordPref.setKey("password_preference");
-        passwordPref.setTitle(R.string.txt_password);
-        passwordPref.setSummary(R.string.hint_password);
-
-        passwordEditText = passwordPref.getEditText();
-        transMethod = new PasswordTransformationMethod();
-        passwordEditText.setTransformationMethod(transMethod);
-
-        // Edit text preference
-        smsPrefCat.addPreference(passwordPref);
-
         return root;
     }
 
@@ -325,7 +287,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         }
 
         if (saveItems.equalsIgnoreCase("phone")) {
-            newSavePath = this.getDir("", MODE_PRIVATE).toString();
+            newSavePath = this.getDir("", MODE_WORLD_READABLE | MODE_WORLD_WRITEABLE).toString();
 
         } else { // means on sd is checked
             newSavePath = Environment.getExternalStorageDirectory().toString() + "ushahidi";
@@ -339,10 +301,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         editor.putInt("AutoUpdateDelay", autoUdateDelay);
         editor.putBoolean("AutoFetch", autoFetchCheckBoxPref.isChecked());
         editor.putString("TotalReports", totalReports);
-        editor.putBoolean("SmsUpdate", smsCheckBoxPref.isChecked());
-        editor.putString("Username", userNamePref.getText());
-        editor.putString("Password", passwordPref.getText());
-        editor.putInt("CheckinEnabled", isCheckinEnabled);
+        editor.putInt("CheckinEnabled", UshahidiPref.isCheckinEnabled);
         editor.commit();
 
     }
@@ -370,20 +329,11 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
         if (sharedPreferences.getBoolean(AUTO_FETCH_PREFERENCE, false)) {
 
-            startService(new Intent(Settings.this, UshahidiPref.class));
-        } else {
-            stopService(new Intent(Settings.this, UshahidiPref.class));
-        }
-
-        // Reset sms update
-        if (sharedPreferences.getBoolean(SMS_PREFERENCE, false)) {
-
-            UshahidiPref.smsUpdate = true;
+            // Enable background service.
+            startService(new Intent(Settings.this, UshahidiService.class));
 
         } else {
-
-            UshahidiPref.smsUpdate = false;
-
+            stopService(new Intent(Settings.this, UshahidiService.class));
         }
 
         // Reset vibrate
@@ -415,6 +365,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             if (!sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, "").equals(
                     UshahidiPref.domain)) {
                 validateUrl(sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, ""));
+
             }
         }
 
@@ -428,7 +379,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         // save changes
         this.saveSettings();
 
-        checkForCheckins();
     }
 
     // thread class
@@ -454,6 +404,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             // clear previous data
             UshahidiApplication.mDb.clearData();
             status = Util.processReports(appContext);
+            isCheckinsEnabled();
             return status;
         }
 
@@ -461,6 +412,14 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         protected void onPostExecute(Integer result) {
             if (result == 4) {
                 Util.showToast(appContext, R.string.internet_connection);
+            } else if (result == 3) {
+                Util.showToast(appContext, R.string.invalid_ushahidi_instance);
+            } else if (result == 2) {
+                Util.showToast(appContext, R.string.no_report);
+            } else if (result == 1) {
+                Util.showToast(appContext, R.string.no_report);
+            } else {
+                Util.showToast(appContext, R.string.reports_successfully_fetched);
             }
             this.dialog.cancel();
         }
@@ -476,10 +435,10 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             if (!validUrl) {
 
                 // reset whatever was entered in that field.
-                ushahidiInstancePref.setText("");
+                ushahidiInstancePref.setText("http://");
                 Util.showToast(Settings.this, R.string.invalid_ushahidi_instance);
             } else {
-                
+
                 ReportsTask reportsTask = new ReportsTask();
                 reportsTask.appContext = Settings.this;
                 reportsTask.execute();
@@ -504,37 +463,31 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         };
         t.start();
     }
-    
-    Runnable mCheckForCheckins = new Runnable() {
+
+    Runnable mIsCheckinsEnabled = new Runnable() {
         public void run() {
 
-            if (!validUrl) {
-
-                // reset whatever was entered in that field.
-                ushahidiInstancePref.setText("");
-                Util.showToast(Settings.this, R.string.invalid_ushahidi_instance);
+            if (checkin) {
+                UshahidiPref.isCheckinEnabled = 1;
             } else {
-                if (checkin) {
-                    isCheckinEnabled = 1;
-                    saveSettings();
-                } else {
-                    isCheckinEnabled = 3;
-                    saveSettings();
-                }
+                UshahidiPref.isCheckinEnabled = 0;
             }
+
+            UshahidiPref.saveSettings(Settings.this);
+
         }
     };
-    
-    public void checkForCheckins() {
 
-        Thread t = new Thread() {
-            public void run() {
-                //save any changes that has been made
-                saveSettings();
-                checkin = Util.isCheckinEnabled(Settings.this);
-                mHandler.post(mCheckForCheckins);
-            }
-        };
-        t.start();
+    /**
+     * Checks if checkins is enabled on the configured Ushahidi deployment.
+     */
+    public void isCheckinsEnabled() {
+        if (Util.isCheckinEnabled(Settings.this)) {
+            UshahidiPref.isCheckinEnabled = 1;
+        } else {
+            UshahidiPref.isCheckinEnabled = 0;
+        }
+        UshahidiPref.saveSettings(Settings.this);
     }
+
 }

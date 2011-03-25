@@ -21,6 +21,8 @@
 package com.ushahidi.android.app;
 
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -31,24 +33,28 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.SystemClock;
-import android.util.Log;
 
 public class UshahidiService extends Service {
+
+    private TimerTask mDoTask;
+
+    private Timer mT = new Timer();
+
+    private Handler handler = new Handler();
+
+    private Context mContext;
 
     private static final String TAG = "Ushahidi - New Updates";
 
     public static boolean httpRunning = false;
 
     public static boolean AutoFetch = false;
-
-    public static boolean smsUpdate = false;
 
     public static boolean vibrate = false;
 
@@ -84,10 +90,6 @@ public class UshahidiService extends Service {
 
     public static String total_reports = "";
 
-    public static String username = "";
-
-    public static String password = "";
-
     public static final String NEW_USHAHIDI_REPORT_FOUND = "New_Ushahidi_Report_Found";
 
     public static Vector<String> mNewIncidentsImages = new Vector<String>();
@@ -96,90 +98,84 @@ public class UshahidiService extends Service {
 
     public static final DefaultHttpClient httpclient = new DefaultHttpClient();
 
-    private Handler mHandler = new Handler();
-
     private Notification newUshahidiReportNotification;
 
     private NotificationManager mNotificationManager;
 
-    private static QueueThread queue;
+    @Override
+    public void onCreate() {
+
+        mContext = getApplicationContext();
+
+        UshahidiPref.loadSettings(mContext);
+
+        mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        this.startService();
+
+    }
 
     private UshahidiDatabase getDb() {
         return UshahidiApplication.mDb;
     }
-
+    
+    public static void clearCache() {
+        UshahidiApplication.mDb.clearData();
+    }
+    
     /**
-     * Local services Binder.
+     * Starts the background service
      * 
-     * @author eyedol
+     * @return void
      */
-    public class LocalBinder extends Binder {
-        UshahidiService getService() {
-            return UshahidiService.this;
-        }
-    }
+    private void startService() {
 
-    private Runnable mUpdateTimeTask = new Runnable() {
-        public void run() {
+        UshahidiPref.loadSettings(mContext);
+        long period = (1 * 60000);
+        long delay = 500;
 
-            UshahidiPref.loadSettings(getApplicationContext());
-
-            Util.fetchReports(UshahidiService.this);
-
-            showNotification(UshahidiPref.total_reports);
-            mHandler.postAtTime(mUpdateTimeTask, SystemClock.uptimeMillis()
-                    + (1000 * 60 * UshahidiPref.AutoUpdateDelay));
-
-        }
-    };
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
-    private final IBinder mBinder = new LocalBinder();
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        queue = new QueueThread("ushahidi");
-        mHandler = new Handler();
-        UshahidiPref.loadSettings(UshahidiService.this);
-        if (UshahidiPref.AutoFetch) {
-            Log.i("Service ", "Service is checked to start.");
-            mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-            mHandler.postDelayed(mUpdateTimeTask, (1000 * 60 * UshahidiPref.AutoUpdateDelay));
-
-        } else {
-            Log.i("Service ", "Service is unchecked.");
-        }
-
-        final Thread tr = new Thread() {
+        mDoTask = new TimerTask() {
             @Override
             public void run() {
-                while (true) {
-                    queue.GetQueueItem().start();
-                }
+                handler.post(new Runnable() {
+
+                    public void run() {
+
+                        // Perform a task
+                        Util.fetchReports(UshahidiService.this);
+                        showNotification(UshahidiPref.total_reports);
+                    }
+
+                });
             }
+
         };
-        tr.start();
+
+        // Schedule the task.
+        mT.scheduleAtFixedRate(mDoTask, delay, period);
+    }
+
+    /**
+     * Stop background service.
+     * 
+     * @return void
+     */
+    private void stopService() {
+        if (mDoTask != null) {
+            mDoTask.cancel();
+            mT.cancel();
+            mT.purge();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        mNotificationManager.cancel(UshahidiPref.NOTIFICATION_ID);
-
-        // Tell the user we stopped.
-        stopService(new Intent(UshahidiService.this, UshahidiService.class));
-
+        this.stopService();
     }
-
-    public static void AddThreadToQueue(Thread tr) {
-        // if( tr != null)
-        // queue.AddQueueItem(tr);
+    
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     private void showNotification(String tickerText) {
@@ -222,59 +218,6 @@ public class UshahidiService extends Service {
         }
 
         mNotificationManager.notify(UshahidiPref.NOTIFICATION_ID, newUshahidiReportNotification);
-    }
-
-    /**
-     * Clear stored data
-     */
-    public boolean clearCache() {
-
-        return getDb().clearData();
-    }
-
-    public class QueueThread {
-        protected Vector<Thread> queue;
-
-        protected int itemcount;
-
-        protected String queueName;
-
-        public QueueThread(String name) {
-            queue = new Vector<Thread>();
-            queueName = name;
-            itemcount = 0;
-        }
-
-        // Get an item from the vector. Wait if no items available
-        public synchronized Thread GetQueueItem() {
-            Thread item = null;
-            // If no items available, drop into wait() call
-            if (itemcount == 0) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    // Somebody woke me up!
-                }
-            }
-            // Get first item from vector, remove it and decrement item count.
-            item = queue.firstElement();
-            queue.removeElement(item);
-            itemcount--;
-            // Send it back
-            return item;
-        }
-
-        // Place an item onto vector. Signal threads that an item is available.
-        public synchronized void AddQueueItem(Thread o) {
-            itemcount++;
-            queue.addElement(o);
-            notify();
-        }
-
-        // Handy place to put a separate notify call - used during shutdown.
-        public synchronized void BumpQueue() {
-            notify();
-        }
     }
 
 }

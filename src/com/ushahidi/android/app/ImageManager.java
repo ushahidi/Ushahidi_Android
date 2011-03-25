@@ -40,17 +40,11 @@ public class ImageManager {
 
     // Images
     public static Drawable getImages(String fileName) {
-
+        
         Drawable d = null;
         BitmapDrawable bD = new BitmapDrawable(UshahidiPref.savePath + fileName);
         d = bD.mutate();
-        /*
-         * FileInputStream fIn; if( !TextUtils.isEmpty( fileName) ) { try { fIn
-         * = new FileInputStream(UshahidiPref.savePath + fileName); d =
-         * Drawable.createFromStream(fIn, "src"); } catch (FileNotFoundException
-         * e) { e.printStackTrace(); } }
-         */
-
+        
         return d;
     }
 
@@ -58,13 +52,14 @@ public class ImageManager {
         byte[] is;
         for (String image : UshahidiService.mNewIncidentsImages) {
             if (!TextUtils.isEmpty(image)) {
-                File f = new File(UshahidiPref.savePath + image);
+                File imageFilename = new File(image);
+                File f = new File(UshahidiPref.savePath + imageFilename.getName());
                 if (!f.exists()) {
                     try {
                         is = UshahidiHttpClient.fetchImage(UshahidiPref.domain + "/media/uploads/"
                                 + image);
                         if (is != null) {
-                            writeImage(is, image);
+                            writeImage(is, imageFilename.getName());
                         }
                     } catch (MalformedURLException e) {
 
@@ -77,20 +72,27 @@ public class ImageManager {
                 }
             }
         }
+
+        // clear images
+        UshahidiService.mNewIncidentsImages.clear();
 
     }
 
     public static void saveThumbnail() {
         byte[] is;
         for (String image : UshahidiService.mNewIncidentsThumbnails) {
+
             if (!TextUtils.isEmpty(image)) {
-                File f = new File(UshahidiPref.savePath + image);
+                File thumbnailFilename = new File(image);
+                // Log.i("Save Images", "Image :" + UshahidiPref.savePath +
+                // thumbnailFilename.getName());
+                File f = new File(UshahidiPref.savePath + thumbnailFilename.getName());
                 if (!f.exists()) {
                     try {
                         is = UshahidiHttpClient.fetchImage(UshahidiPref.domain + "/media/uploads/"
                                 + image);
                         if (is != null) {
-                            writeImage(is, image);
+                            writeImage(is, thumbnailFilename.getName());
                         }
                     } catch (MalformedURLException e) {
 
@@ -103,6 +105,9 @@ public class ImageManager {
                 }
             }
         }
+
+        // clear images
+        UshahidiService.mNewIncidentsThumbnails.clear();
 
     }
 
@@ -137,8 +142,35 @@ public class ImageManager {
     }
 
     public static Bitmap getBitmap(String fileName) {
-        Bitmap bitMap = BitmapFactory.decodeFile(UshahidiPref.savePath + fileName);
-        return bitMap;
+        try {
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(new FileInputStream(UshahidiPref.savePath + fileName), null,
+                    o);
+
+            // The new size we want to scale to
+            final int REQUIRED_SIZE = 400;
+
+            // Find the correct scale value. It should be the power of 2.
+            int width_tmp = o.outWidth, height_tmp = o.outHeight;
+            int scale = 1;
+            while (true) {
+                if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE)
+                    break;
+                width_tmp /= 2;
+                height_tmp /= 2;
+                scale *= 2;
+            }
+
+            // Decode with inSampleSize
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            return BitmapFactory.decodeStream(
+                    new FileInputStream(UshahidiPref.savePath + fileName), null, o2);
+        } catch (FileNotFoundException e) {
+        }
+        return null;
     }
 
 }

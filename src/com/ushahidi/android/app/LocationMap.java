@@ -34,6 +34,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -58,7 +59,7 @@ public class LocationMap extends MapActivity {
 
     private MapController mapController;
 
-    public static Geocoder gc;
+    private static Geocoder gc;
 
     private GeoPoint defaultLocation;
 
@@ -78,7 +79,7 @@ public class LocationMap extends MapActivity {
 
     private Bundle bundle = new Bundle();
 
-    public List<Address> foundAddresses;
+    private List<Address> foundAddresses;
 
     private String locationName;
 
@@ -304,28 +305,23 @@ public class LocationMap extends MapActivity {
     // update the device current location
     private void updateLocation() {
         MyLocationListener listener = new MyLocationListener();
-        LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         long updateTimeMsec = 1000L;
 
-        // DIPO Fix
-        List<String> providers = manager.getProviders(true);
-        boolean gps_provider = false, network_provider = false;
+        LocationProvider low = locationManager.getProvider(locationManager.getBestProvider(
+                Util.createCoarseCriteria(), true));
 
-        for (String name : providers) {
-            if (name.equals(LocationManager.GPS_PROVIDER))
-                gps_provider = true;
-            if (name.equals(LocationManager.NETWORK_PROVIDER))
-                network_provider = true;
-        }
+        // get high accuracy provider
+        LocationProvider high = locationManager.getProvider(locationManager.getBestProvider(
+                Util.createFineCriteria(), true));
 
         // Register for GPS location if enabled or if neither is enabled
-        if (gps_provider || (!gps_provider && !network_provider)) {
-            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updateTimeMsec, 500.0f,
-                    listener);
-        } else if (network_provider) {
-            manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, updateTimeMsec,
-                    500.0f, listener);
-        }
+        locationManager.requestLocationUpdates(low.getName(), updateTimeMsec, 500.0f,
+                listener);
+        
+        locationManager.requestLocationUpdates(high.getName(), updateTimeMsec, 500.0f,
+                listener);
+        
     }
 
     // get the current location of the user
@@ -337,21 +333,20 @@ public class LocationMap extends MapActivity {
             if (location != null) {
                 // Dipo Fix
                 // Stop asking for updates when location has been retrieved
-                ((LocationManager)getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
-
+               
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
 
                 locName = getLocationFromLatLon(latitude, longitude);
                 centerLocation(getPoint(latitude, longitude));
-
+                ((LocationManager)getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
                 if (locName == null) {
 
                     Util.showToast(LocationMap.this, R.string.location_not_found);
                 } else {
 
                     locationName = locName;
-                    Toast.makeText(LocationMap.this, "Find you at " + locationName,
+                    Toast.makeText(LocationMap.this, "Found you at " + locationName,
                             Toast.LENGTH_SHORT).show();
                 }
             }

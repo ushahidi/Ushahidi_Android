@@ -525,6 +525,7 @@ public class AddIncident extends Activity {
                 if (mBundle != null && !mBundle.isEmpty()) {
                     UshahidiPref.fileName = mBundle.getString("name");
                     mSelectedPhoto.setImageDrawable(ImageManager.getImages(UshahidiPref.fileName));
+                    mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 }
                 break;
 
@@ -559,7 +560,9 @@ public class AddIncident extends Activity {
                 mFilename = "android_pic_upload" + randomString() + ".jpg";
                 ImageManager.writeImage(byteArrayos.toByteArray(), mFilename);
                 UshahidiPref.fileName = mFilename;
+                
                 mSelectedPhoto.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName));
+                mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 break;
 
             case VIEW_MAP:
@@ -939,16 +942,12 @@ public class AddIncident extends Activity {
         SharedPreferences prefs = getPreferences(0);
         String title = prefs.getString("title", null);
         String desc = prefs.getString("desc", null);
-        // String date = prefs.getString("date", null);
-
+       
         if (title != null)
             mIncidentTitle.setText(title, TextView.BufferType.EDITABLE);
 
         if (desc != null)
             mIncidentDesc.setText(desc, TextView.BufferType.EDITABLE);
-
-        // if( date != null )
-        // mIncidentDate.setText(date, TextView.BufferType.EDITABLE);
 
     }
 

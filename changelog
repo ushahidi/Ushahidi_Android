@@ -1,11 +1,16 @@
 1.0
  Feature:
- * Added checkins support.
+ * Added Checkin support.
+ * Added color to tabs.
  
  Fixed:
- * Fixed issue with preferences value changes.
+ * Fixed issue with changes in preferences value not taking effect.
  * Formatted code to official Android coding style.
  * Fixed default images not showing when listing reports.
+ * Fixed status colorization bug.
+ * Fixed issue with image overlapping its view.
+ * Fixed issues with images not being saved with Crowdmap deployment.
+ * Improved GPS fix. Now it doesn't take forever getting a fix especially when GPS is turned on.
  
  Known Issue:
 

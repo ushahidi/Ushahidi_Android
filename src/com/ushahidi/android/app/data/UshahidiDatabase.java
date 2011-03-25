@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.ushahidi.android.app.UshahidiPref;
+import com.ushahidi.android.app.Util;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -379,6 +380,9 @@ public class UshahidiDatabase {
 
         deleteAllIncidents();
         deleteAllCategories();
+
+        // delete all files
+        Util.rmDir(UshahidiPref.savePath);
         return true;
 
     }

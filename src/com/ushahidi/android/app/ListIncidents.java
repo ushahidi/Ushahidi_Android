@@ -217,7 +217,7 @@ public class ListIncidents extends Activity {
         i = menu.add(Menu.NONE, INCIDENT_MAP, Menu.NONE, R.string.incident_menu_map);
         i.setIcon(R.drawable.ushahidi_map);
 
-        i = menu.add(Menu.NONE, INCIDENT_REFRESH, Menu.NONE, R.string.incident_menu_refresh);
+        i = menu.add(Menu.NONE, INCIDENT_REFRESH, Menu.NONE, R.string.menu_sync);
         i.setIcon(R.drawable.ushahidi_refresh);
 
         i = menu.add(Menu.NONE, SETTINGS, Menu.NONE, R.string.menu_settings);
@@ -292,13 +292,19 @@ public class ListIncidents extends Activity {
         @Override
         protected void onPostExecute(Integer result) {
             if (result == 4) {
-
                 Util.showToast(appContext, R.string.internet_connection);
+            } else if (result == 3) {
+                Util.showToast(appContext, R.string.invalid_ushahidi_instance);
+            } else if (result == 2) {
+                Util.showToast(appContext, R.string.no_report);
+            } else if (result == 1) {
+                Util.showToast(appContext, R.string.no_report);
             } else if (result == 0) {
                 showIncidents("All");
                 showCategories();
-                setProgressBarIndeterminateVisibility(false);
+                Util.showToast(appContext, R.string.reports_successfully_fetched);
             }
+            setProgressBarIndeterminateVisibility(false);
         }
 
     }
@@ -323,7 +329,7 @@ public class ListIncidents extends Activity {
         String images[];
         String thumbnails[];
         Drawable d = null;
-
+        
         if (cursor.moveToFirst()) {
             int idIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_ID);
             int titleIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_TITLE);
@@ -349,37 +355,55 @@ public class ListIncidents extends Activity {
             ila.notifyDataSetChanged();
 
             mOldIncidents.clear();
-
+            
             do {
 
                 IncidentsData incidentData = new IncidentsData();
                 mOldIncidents.add(incidentData);
-
+                ListIncidentText listText = new ListIncidentText();
+                
                 int id = Util.toInt(cursor.getString(idIndex));
                 incidentData.setIncidentId(id);
                 incidentData.setIncidentLocLatitude(cursor.getString(latitudeIndex));
                 incidentData.setIncidentLocLongitude(cursor.getString(longitudeIndex));
-                title = Util.capitalizeString(Util.truncateText(cursor.getString(titleIndex)));
+                
+                title = cursor.getString(titleIndex);
                 incidentData.setIncidentTitle(title);
-
+                listText.setTitle(Util.capitalize(title));
+                
                 description = cursor.getString(descIndex);
                 incidentData.setIncidentDesc(description);
+                listText.setDesc(description);
 
                 categories = cursor.getString(categoryIndex);
                 incidentData.setIncidentCategories(categories);
-
+                listText.setCategories(Util.capitalize(categories));
+                
                 location = cursor.getString(locationIndex);
                 incidentData.setIncidentLocation(location);
+                listText.setLocation(Util.capitalize(location));
 
                 date = Util.formatDate("yyyy-MM-dd hh:mm:ss", cursor.getString(dateIndex),
                         "MMMM dd, yyyy 'at' hh:mm:ss aaa");
 
                 incidentData.setIncidentDate(date);
-
+                listText.setDate(date);
+                
                 media = cursor.getString(mediaIndex);
                 incidentData.setIncidentThumbnail(media);
+                listText.setMedia(media);
+                
                 thumbnails = media.split(",");
-
+                // TODO do a proper check for thumbnails
+                if (!TextUtils.isEmpty(thumbnails[0])) {
+                    d = ImageManager.getImages(thumbnails[0]);
+                } else {
+                    d = null;
+                }
+                
+                listText.setThumbnail(d == null ? getResources()
+                        .getDrawable(R.drawable.ushahidi_report_icon) : d);
+                
                 image = cursor.getString(imageIndex);
                 incidentData.setIncidentImage(image);
                 images = image.split(",");
@@ -387,18 +411,13 @@ public class ListIncidents extends Activity {
                 status = Util.toInt(cursor.getString(verifiedIndex)) == 0 ? getString(R.string.report_unverified)
                         : getString(R.string.report_verified);
                 incidentData.setIncidentVerified(Util.toInt(cursor.getString(verifiedIndex)));
-
-                // TODO do a proper check for thumbnails
-                if ( !TextUtils.isEmpty(thumbnails[0])) {
-                    d = ImageManager.getImages(thumbnails[0]);
-                } else {
-                    d = null;
-                }
-
-                ila.addItem(new ListIncidentText(d == null ? getResources().getDrawable(
-                        R.drawable.ushahidi_report_icon) : d, title, date, status, description,
-                        location, media, categories, id, getResources().getDrawable(
-                                R.drawable.ushahidi_arrow)));
+                listText.setStatus(status);
+                
+                
+                listText.setId(id);
+                listText.setArrow(getResources().getDrawable(
+                                R.drawable.ushahidi_arrow));
+                ila.addItem(listText);
 
             } while (cursor.moveToNext());
         }

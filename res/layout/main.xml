@@ -49,7 +49,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="0px"
         android:textStyle="bold"
-        android:text="@string/checkin_menu" />
+        android:text="@string/checkin_btn" />
       <TextView
         android:id="@+id/spacer"
         android:layout_width="fill_parent"

@@ -36,7 +36,6 @@
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_hide">Hide</string>
     <string name="alert_dialog_something">Something</string>
-    <string name="alert_dialog_cancel">Cancel</string>
     <string name="alert_dialog_error_title">Oops</string>
     <string name="alert_dialog_error_msg">An error occurred fetching the reports. Make sure you entered an Ushahidi instance.</string>
     <string name="invalid_email_address">An invalid email address was entered</string>
@@ -63,8 +62,8 @@
 	<string name="incident_add_category">Select Category</string>
 	<string name="incident_menu_add">Add Report</string>
 	<string name="incident_list">View Reports</string>
-	<string name="google_map_api_key">0kYzsDINnw4ZOdn8yE8VBmhFImB2Sn2Fnarj6xw</string>
-	<string name="google_map_api_key_pro">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string>
+	<string name="google_map_api_key_dev">02cv5Q8Rob0ChOFNh6Gf_ePmVHYlVgA_pgJIHRA</string>
+	<string name="google_map_api_key">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string>
 	<string name="menu_home">Home</string>
 	<string name="menu_sync">Sync</string>
 	<string name="sms_to_ushahidi_failed">Failed to post SMS to Ushahidi. Make sure username and password are correct</string>
@@ -139,6 +138,9 @@
 	<string name="empty_report_location">The location name field is required.</string>
 	<string name="empty_report_categories">Select at least one category.</string>
 	<string name="hint_location">Location here</string>
+	<string name="no_report">Could not fetch reports.</string>
+	<string name="no_categories">Could not fetch categories.</string>
+	<string name="reports_successfully_fetched">Reports successfully fetched.</string>
 	<!--  Add location screen -->
 	<string name="find_location">Finding you...</string>
 	<string name="location_not_found">A location can not currently be determined. Enable more
@@ -170,19 +172,30 @@
 	<string name="network_error_msg">Network Error, please ensure you are connected to the Internet</string>
 	<string name="file_system_error">File System Error</string>
 	<string name="file_system_error_msg">File System Error, please ensure your save path is correct!</string>
+	
+	<!-- Tab -->
+	<string name="tab_item_report_list">List</string>
+	<string name="tab_item_report_map">Map</string>
+	<string name="tab_item_checkin">Checkins</string>
+    
     <!-- Checkin Strings -->
-    <string name="checkin_menu">Checkin</string>
+    <string name="checkin_btn">Checkin</string>
     <string name="checkin_photo">Photo</string>
-    <string name="checkin_message">Checkin Message:</string>
+    <string name="checkin_message">Message</string>
+    <string name="checkin_enter_msg_hint">Enter message</string>
     <string name="checkin_upload_photo">Upload photo</string>
     <string name="checkin_how_to_select_pic">Please choose how you would like to get the picture.</string>
     <string name="checkin_select_pic_file">File</string>
     <string name="checkin_select_pic_camera">Camera</string>
-    <string name="checkin_selected_photo">Selected photo:</string>
+    <string name="checkin_selected_photo">Selected photo</string>
     <string name="view_checkins">Ushahidi | View Checkins</string>
     <string name="checkin_progress_title">Working...</string>
     <string name="checkin_progress_message">Getting location data...</string>
+    <string name="checkin_contact">Contact</string>
     <string name="checkin_success_toast">Checkin successful</string>
     <string name="checkin_error_toast">Error encountered during checkin</string>
     <string name="checkin_no_location">Could not get your location. If you are using the GPS feature of the phone make sure the phone can see the sky. If the phone cannot see the sky, turn of the GPS to make use of your network providers cell towers for location.</string>
+    <string name="checkin_enter_firstname_hint">Enter first name</string>
+    <string name="checkin_enter_lastname_hint">Enter last name</string>
+    <string name="checkin_enter_email_hint">Enter email</string>
 </resources>

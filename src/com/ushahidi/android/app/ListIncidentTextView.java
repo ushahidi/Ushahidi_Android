@@ -25,6 +25,13 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.text.method.KeyListener;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -39,6 +46,8 @@ public class ListIncidentTextView extends LinearLayout {
     private TextView date;
 
     private TextView status;
+    
+    private TextView mCategories;
 
     private ImageView thumbnail;
 
@@ -99,12 +108,16 @@ public class ListIncidentTextView extends LinearLayout {
                 android.view.ViewGroup.LayoutParams.FILL_PARENT));
 
         tblRow.addView(thumbnail);
-
+        
+        
+        
         title = new TextView(context);
-
+        
         title.setTextColor(Color.BLACK);
         title.setTextSize(fontSize);
-        title.setSingleLine(false);
+        
+        title.setSingleLine(true);
+        title.setEllipsize(TextUtils.TruncateAt.END);
         title.setTypeface(Typeface.DEFAULT_BOLD);
         title.setPadding(0, 0, 2, 2);
         title.setText(listText.getTitle());
@@ -129,20 +142,34 @@ public class ListIncidentTextView extends LinearLayout {
 
         iLocation = new TextView(context);
         iLocation.setTextColor(Color.GRAY);
+        iLocation.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         iLocation.setText(listText.getLocation());
-        
         textLayout.addView(iLocation, new TableRow.LayoutParams(
                 android.view.ViewGroup.LayoutParams.FILL_PARENT,
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-
+        
+        mCategories = new TextView(context);
+        mCategories.setTextColor(Color.GRAY);
+       
+        
+        mCategories.setSingleLine(true);
+        mCategories.setEllipsize(TextUtils.TruncateAt.END);
+        mCategories.setText(listText.getCategories());
+        
+        textLayout.addView(mCategories, new TableRow.LayoutParams(
+                android.view.ViewGroup.LayoutParams.FILL_PARENT,
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+        
         status = new TextView(context);
+        status.setText(listText.getStatus());
+        
         // change color to red if text is not Verified
         if (listText.getStatus().equalsIgnoreCase("Verified")) {
             status.setTextColor(Color.rgb(41, 142, 40)); // green color
-            status.setText(listText.getStatus());
+           
         } else if (listText.getStatus().equalsIgnoreCase("Unverified")) {
             status.setTextColor(Color.rgb(237, 0, 0)); // red color
-            status.setText(listText.getStatus());
+            
         }
         status.setTextSize(fontSize);
 
@@ -199,11 +226,11 @@ public class ListIncidentTextView extends LinearLayout {
     }
 
     public void setCategories(String categories) {
-        this.categories = categories;
+        this.mCategories.setText(categories);
     }
 
     public void setLocation(String location) {
-        this.location = location;
+        this.iLocation.setText(location);
     }
 
     public void setMedia(String media) {
@@ -218,5 +245,9 @@ public class ListIncidentTextView extends LinearLayout {
     public void setArrow(Drawable arrow) {
         this.arrow.setImageDrawable(arrow);
     }
-
+    
+    public void setStatusColor(int color) {
+        this.status.setTextColor(color);
+    }
+    
 }
