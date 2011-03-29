@@ -44,13 +44,7 @@
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-		<!-- sms -->
-		<receiver android:name=".SmsReceiver">
-			<intent-filter>
-				<action android:name="android.provider.Telephony.SMS_RECEIVED" />
-			</intent-filter>
-		</receiver>
-
+	
 		<!-- Incidents List -->
 		<activity android:name=".ListIncidents" android:label="@string/view_incident">
 			<intent-filter>
