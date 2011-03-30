@@ -24,8 +24,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import com.ushahidi.android.app.About;
+import com.ushahidi.android.app.AddIncident;
+import com.ushahidi.android.app.ImageManager;
+import com.ushahidi.android.app.IncidentsTab;
+import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.Settings;
+import com.ushahidi.android.app.Ushahidi;
+import com.ushahidi.android.app.UshahidiApplication;
 import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
+import com.ushahidi.android.app.Util;
 
 import android.app.Activity;
 import android.content.Context;
@@ -96,9 +105,9 @@ public class ListCheckin extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.list_incidents);
+        setContentView(R.layout.list_checkins);
 
-        listIncidents = (ListView)findViewById(R.id.view_incidents);
+        listIncidents = (ListView)findViewById(R.id.list_checkins);
 
         mOldIncidents = new ArrayList<IncidentsData>();
         listIncidents.setOnItemClickListener(new OnItemClickListener() {
@@ -123,7 +132,7 @@ public class ListCheckin extends Activity {
                 incidentsBundle.putString("status", ""
                         + mOldIncidents.get(position).getIncidentVerified());
 
-                Intent intent = new Intent(ListCheckin.this, ViewIncidents.class);
+                Intent intent = new Intent(ListCheckin.this, ViewCheckins.class);
                 intent.putExtra("incidents", incidentsBundle);
                 startActivityForResult(intent, VIEW_INCIDENT);
                 setResult(RESULT_OK, intent);
@@ -329,7 +338,7 @@ public class ListCheckin extends Activity {
         String images[];
         String thumbnails[];
         Drawable d = null;
-        
+
         if (cursor.moveToFirst()) {
             int idIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_ID);
             int titleIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_TITLE);
@@ -355,22 +364,22 @@ public class ListCheckin extends Activity {
             ila.notifyDataSetChanged();
 
             mOldIncidents.clear();
-            
+
             do {
 
                 IncidentsData incidentData = new IncidentsData();
                 mOldIncidents.add(incidentData);
                 ListCheckinText listText = new ListCheckinText();
-                
+
                 int id = Util.toInt(cursor.getString(idIndex));
                 incidentData.setIncidentId(id);
                 incidentData.setIncidentLocLatitude(cursor.getString(latitudeIndex));
                 incidentData.setIncidentLocLongitude(cursor.getString(longitudeIndex));
-                
+
                 title = cursor.getString(titleIndex);
                 incidentData.setIncidentTitle(title);
                 listText.setTitle(Util.capitalize(title));
-                
+
                 description = cursor.getString(descIndex);
                 incidentData.setIncidentDesc(description);
                 listText.setDesc(description);
@@ -378,7 +387,7 @@ public class ListCheckin extends Activity {
                 categories = cursor.getString(categoryIndex);
                 incidentData.setIncidentCategories(categories);
                 listText.setCategories(Util.capitalize(categories));
-                
+
                 location = cursor.getString(locationIndex);
                 incidentData.setIncidentLocation(location);
                 listText.setLocation(Util.capitalize(location));
@@ -388,11 +397,11 @@ public class ListCheckin extends Activity {
 
                 incidentData.setIncidentDate(date);
                 listText.setDate(date);
-                
+
                 media = cursor.getString(mediaIndex);
                 incidentData.setIncidentThumbnail(media);
                 listText.setMedia(media);
-                
+
                 thumbnails = media.split(",");
                 // TODO do a proper check for thumbnails
                 if (!TextUtils.isEmpty(thumbnails[0])) {
@@ -400,10 +409,10 @@ public class ListCheckin extends Activity {
                 } else {
                     d = null;
                 }
-                
-                listText.setThumbnail(d == null ? getResources()
-                        .getDrawable(R.drawable.ushahidi_report_icon) : d);
-                
+
+                listText.setThumbnail(d == null ? getResources().getDrawable(
+                        R.drawable.ushahidi_report_icon) : d);
+
                 image = cursor.getString(imageIndex);
                 incidentData.setIncidentImage(image);
                 images = image.split(",");
@@ -412,11 +421,9 @@ public class ListCheckin extends Activity {
                         : getString(R.string.report_verified);
                 incidentData.setIncidentVerified(Util.toInt(cursor.getString(verifiedIndex)));
                 listText.setStatus(status);
-                
-                
+
                 listText.setId(id);
-                listText.setArrow(getResources().getDrawable(
-                                R.drawable.ushahidi_arrow));
+                listText.setArrow(getResources().getDrawable(R.drawable.ushahidi_arrow));
                 ila.addItem(listText);
 
             } while (cursor.moveToNext());

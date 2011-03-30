@@ -109,6 +109,21 @@ public class UshahidiDatabase {
 
     public static final String ADD_PERSON_EMAIL = "person_email";
 
+    // Checkins
+    public static final String CHECKIN_ID = "_id";
+
+    public static final String CHECKIN_USER_ID = "user_id";
+
+    public static final String CHECKIN_MESG = "checkin_mesg";
+
+    public static final String CHECKIN_DATE = "checkin_date";
+
+    public static final String CHECKIN_LOC_LATITUDE = "checkin_loc_latitude";
+
+    public static final String CHECKIN_LOC_LONGITUDE = "checkin_loc_latitude";
+
+    public static final String CHECKIN_IMAGE = "checkin_image";
+
     public static final String[] INCIDENTS_COLUMNS = new String[] {
             INCIDENT_ID, INCIDENT_TITLE, INCIDENT_DESC, INCIDENT_DATE, INCIDENT_MODE,
             INCIDENT_VERIFIED, INCIDENT_LOC_NAME, INCIDENT_LOC_LATITUDE, INCIDENT_LOC_LONGITUDE,
@@ -127,6 +142,12 @@ public class UshahidiDatabase {
             ADD_PERSON_EMAIL
     };
 
+    /** Checkins **/
+    public static final String[] CHECKINS_COLUMNS = new String[] {
+            CHECKIN_ID, CHECKIN_USER_ID, CHECKIN_MESG, CHECKIN_DATE, CHECKIN_LOC_LATITUDE,
+            CHECKIN_LOC_LONGITUDE, CHECKIN_IMAGE
+    };
+
     private DatabaseHelper mDbHelper;
 
     private SQLiteDatabase mDb;
@@ -139,7 +160,9 @@ public class UshahidiDatabase {
 
     private static final String CATEGORIES_TABLE = "categories";
 
-    private static final int DATABASE_VERSION = 10;
+    private static final String CHECKINS_TABLE = "";
+
+    private static final int DATABASE_VERSION = 11;
 
     // NOTE: the incident ID is used as the row ID.
     // Furthermore, if a row already exists, an insert will replace
@@ -170,6 +193,12 @@ public class UshahidiDatabase {
             + CATEGORY_TITLE + " TEXT NOT NULL, " + CATEGORY_DESC + " TEXT, " + CATEGORY_COLOR
             + " TEXT, " + CATEGORY_IS_UNREAD + " BOOLEAN NOT NULL " + ")";
 
+    private static final String CHECKINS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
+            + CHECKINS_TABLE + " (" + CHECKIN_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
+            + CHECKIN_USER_ID + "INTEGER, " + CHECKIN_MESG + " TEXT NOT NULL, " + CHECKIN_DATE
+            + " DATE NOT NULL, " + CHECKIN_LOC_LATITUDE + " TEXT NOT NULL, "
+            + CHECKIN_LOC_LONGITUDE + " TEXT NOT NULL, " + INCIDENT_IMAGE + " TEXT" + ")";
+
     private final Context mContext;
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
@@ -182,6 +211,7 @@ public class UshahidiDatabase {
             db.execSQL(INCIDENTS_TABLE_CREATE);
             db.execSQL(CATEGORIES_TABLE_CREATE);
             db.execSQL(ADD_INCIDENTS_TABLE_CREATE);
+            db.execSQL(CHECKINS_TABLE_CREATE);
         }
 
         @Override
@@ -336,6 +366,25 @@ public class UshahidiDatabase {
         initialValues.put(CATEGORY_COLOR, categories.getCategoryColor());
         initialValues.put(CATEGORY_IS_UNREAD, isUnread);
         return mDb.insert(CATEGORIES_TABLE, null, initialValues);
+    }
+
+    /**
+     * Create table for checkins
+     * 
+     * @param incidents
+     * @param isUnread
+     * @return
+     */
+    public long createCheckins(CheckinsData checkins) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CHECKIN_ID, checkins.getCheckinId());
+        initialValues.put(CHECKIN_USER_ID, checkins.getCheckinUserId());
+        initialValues.put(CHECKIN_MESG, checkins.getCheckinMesg());
+        initialValues.put(CHECKIN_DATE, checkins.getCheckinDate());
+        initialValues.put(CHECKIN_LOC_LATITUDE, checkins.getcheckinLat());
+        initialValues.put(CHECKIN_LOC_LONGITUDE, checkins.getcheckinLon());
+        initialValues.put(CHECKIN_IMAGE, checkins.getcheckinImage());
+        return mDb.insert(CHECKINS_TABLE, null, initialValues);
     }
 
     public int addNewIncidentsAndCountUnread(ArrayList<IncidentsData> newIncidents) {
@@ -552,7 +601,22 @@ public class UshahidiDatabase {
             mDb.endTransaction();
         }
     }
+    
+    public void addCheckins(List<CheckinsData> checkins) {
+        try {
+            mDb.beginTransaction();
 
+            for (CheckinsData checkin : checkins) {
+                createCheckins(checkin);
+            }
+
+            limitRows(CHECKINS_TABLE, Integer.parseInt(UshahidiPref.totalReports), CHECKIN_ID);
+            mDb.setTransactionSuccessful();
+        } finally {
+            mDb.endTransaction();
+        }
+    }
+    
     public int limitRows(String tablename, int limit, String KEY_ID) {
         Cursor cursor = mDb.rawQuery("SELECT " + KEY_ID + " FROM " + tablename + " ORDER BY "
                 + KEY_ID + " DESC LIMIT 1 OFFSET ?", new String[] {
