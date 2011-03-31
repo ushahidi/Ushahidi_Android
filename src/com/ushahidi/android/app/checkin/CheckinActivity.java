@@ -140,7 +140,7 @@ public class CheckinActivity extends MapActivity {
         mSelectedPhotoText = (TextView)findViewById(R.id.checkin_selected_photo_label);
         mCheckinLocation = (TextView)findViewById(R.id.latlon);
         mSelectedPhotoText.setVisibility(View.GONE);
-        
+
         mHandler = new Handler();
 
         // get location stuff
@@ -188,23 +188,23 @@ public class CheckinActivity extends MapActivity {
     protected void onResume() {
         super.onResume();
     }
-    
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        
-        //house keeping
+
+        // house keeping
         ImageManager.deleteImage(selectedPhoto);
     }
-    
+
     @Override
     protected void onPause() {
         super.onPause();
-        
-        //house keeping
+
+        // house keeping
         ImageManager.deleteImage(selectedPhoto);
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -270,7 +270,7 @@ public class CheckinActivity extends MapActivity {
                 ImageManager.writeImage(byteArrayos.toByteArray(), mFilename);
                 UshahidiPref.fileName = mFilename;
                 selectedPhoto = mFilename;
-                
+
                 if (!TextUtils.isEmpty(selectedPhoto)) {
                     mSelectedPhotoText.setVisibility(View.VISIBLE);
                     mCheckImgPrev.refreshDrawableState();
@@ -389,11 +389,11 @@ public class CheckinActivity extends MapActivity {
 
                 // Display checkin status and return back to main screen
                 if (postCheckinJsonErrorCode != "0") {
-                    
-                    //delete uploaded image after successful checkin
+
+                    // delete uploaded image after successful checkin
                     com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
                             R.string.checkin_success_toast);
-                    
+
                 } else {
                     com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
                             R.string.checkin_error_toast);
@@ -543,15 +543,14 @@ public class CheckinActivity extends MapActivity {
         public void onLocationChanged(Location location) {
 
             if (location != null) {
+                ((LocationManager)getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
+
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
 
-                //locationName = getLocationFromLatLon(latitude, longitude);
                 centerLocation(getPoint(latitude, longitude));
                 mCheckinLocation
                         .setText(String.valueOf(latitude) + "," + String.valueOf(longitude));
-                ((LocationManager)getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
-
             }
         }
 

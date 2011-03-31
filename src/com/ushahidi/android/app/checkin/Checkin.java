@@ -25,6 +25,8 @@ public class Checkin {
     private String lastName;
 
     private String email;
+    
+    private String image;
 
     public String getId() {
         return id;
@@ -104,5 +106,13 @@ public class Checkin {
 
     public String getEmail() {
         return this.email;
+    }
+    
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getImage() {
+        return this.image;
     }
 }

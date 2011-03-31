@@ -65,6 +65,8 @@ public class RetrieveCheckinsJSONServices {
                             .getString("msg"));
                     currentCheckin.setUser(checkinsArray.getJSONObject(checkinsLoop).getString(
                             "user"));
+                    currentCheckin.setImage(checkinsArray.getJSONObject(checkinsLoop).getString(
+                    "link"));
                 } catch (JSONException e) {
                     processingResult = false;
                     return null;

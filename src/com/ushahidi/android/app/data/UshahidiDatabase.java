@@ -26,6 +26,7 @@ import java.util.List;
 
 import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.Util;
+import com.ushahidi.android.app.checkin.Checkin;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -118,6 +119,8 @@ public class UshahidiDatabase {
 
     public static final String CHECKIN_DATE = "checkin_date";
 
+    public static final String CHECKIN_LOC_NAME = "checki_loc_name";
+
     public static final String CHECKIN_LOC_LATITUDE = "checkin_loc_latitude";
 
     public static final String CHECKIN_LOC_LONGITUDE = "checkin_loc_latitude";
@@ -144,8 +147,8 @@ public class UshahidiDatabase {
 
     /** Checkins **/
     public static final String[] CHECKINS_COLUMNS = new String[] {
-            CHECKIN_ID, CHECKIN_USER_ID, CHECKIN_MESG, CHECKIN_DATE, CHECKIN_LOC_LATITUDE,
-            CHECKIN_LOC_LONGITUDE, CHECKIN_IMAGE
+            CHECKIN_ID, CHECKIN_USER_ID, CHECKIN_MESG, CHECKIN_DATE, CHECKIN_LOC_NAME,
+            CHECKIN_LOC_LATITUDE, CHECKIN_LOC_LONGITUDE, CHECKIN_IMAGE
     };
 
     private DatabaseHelper mDbHelper;
@@ -160,7 +163,7 @@ public class UshahidiDatabase {
 
     private static final String CATEGORIES_TABLE = "categories";
 
-    private static final String CHECKINS_TABLE = "";
+    private static final String CHECKINS_TABLE = "checkins";
 
     private static final int DATABASE_VERSION = 11;
 
@@ -196,8 +199,9 @@ public class UshahidiDatabase {
     private static final String CHECKINS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
             + CHECKINS_TABLE + " (" + CHECKIN_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
             + CHECKIN_USER_ID + "INTEGER, " + CHECKIN_MESG + " TEXT NOT NULL, " + CHECKIN_DATE
-            + " DATE NOT NULL, " + CHECKIN_LOC_LATITUDE + " TEXT NOT NULL, "
-            + CHECKIN_LOC_LONGITUDE + " TEXT NOT NULL, " + INCIDENT_IMAGE + " TEXT" + ")";
+            + " DATE NOT NULL, " + CHECKIN_LOC_NAME + " TEXT NOT NULL, " + CHECKIN_LOC_LATITUDE
+            + " TEXT NOT NULL, " + CHECKIN_LOC_LONGITUDE + " TEXT NOT NULL, " + INCIDENT_IMAGE
+            + " TEXT" + ")";
 
     private final Context mContext;
 
@@ -221,6 +225,7 @@ public class UshahidiDatabase {
             List<String> incidentsColumns;
             List<String> categoriesColumns;
             List<String> addIncidentColumns;
+            List<String> checkinsColums;
             // upgrade incident table
             db.execSQL(INCIDENTS_TABLE_CREATE);
             incidentsColumns = UshahidiDatabase.getColumns(db, INCIDENTS_TABLE);
@@ -254,6 +259,17 @@ public class UshahidiDatabase {
             db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s",
                     ADD_INCIDENTS_TABLE, addIncidentCols, addIncidentCols, ADD_INCIDENTS_TABLE));
             db.execSQL("DROP TABLE IF EXISTS temp_" + ADD_INCIDENTS_TABLE);
+
+            // upgrade checkin table
+            db.execSQL(CHECKINS_TABLE_CREATE);
+            checkinsColums = UshahidiDatabase.getColumns(db, CHECKINS_TABLE);
+            db.execSQL("ALTER TABLE " + CHECKINS_TABLE_CREATE + " RENAME TO temp_" + CHECKINS_TABLE);
+            db.execSQL(CHECKINS_TABLE_CREATE);
+            checkinsColums.retainAll(UshahidiDatabase.getColumns(db, CHECKINS_TABLE));
+            String checkinsCols = UshahidiDatabase.join(addIncidentColumns, ",");
+            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s", CHECKINS_TABLE,
+                    checkinsCols, checkinsCols, CHECKINS_TABLE));
+            db.execSQL("DROP TABLE IF EXISTS temp_" + CHECKINS_TABLE);
 
             onCreate(db);
         }
@@ -375,15 +391,16 @@ public class UshahidiDatabase {
      * @param isUnread
      * @return
      */
-    public long createCheckins(CheckinsData checkins) {
+    public long createCheckins(Checkin checkins) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(CHECKIN_ID, checkins.getCheckinId());
-        initialValues.put(CHECKIN_USER_ID, checkins.getCheckinUserId());
-        initialValues.put(CHECKIN_MESG, checkins.getCheckinMesg());
-        initialValues.put(CHECKIN_DATE, checkins.getCheckinDate());
-        initialValues.put(CHECKIN_LOC_LATITUDE, checkins.getcheckinLat());
-        initialValues.put(CHECKIN_LOC_LONGITUDE, checkins.getcheckinLon());
-        initialValues.put(CHECKIN_IMAGE, checkins.getcheckinImage());
+        initialValues.put(CHECKIN_ID, checkins.getId());
+        initialValues.put(CHECKIN_USER_ID, checkins.getUser());
+        initialValues.put(CHECKIN_MESG, checkins.getMsg());
+        initialValues.put(CHECKIN_DATE, checkins.getDate());
+        initialValues.put(CHECKIN_LOC_NAME, checkins.getLoc());
+        initialValues.put(CHECKIN_LOC_LATITUDE, checkins.getLat());
+        initialValues.put(CHECKIN_LOC_LONGITUDE, checkins.getLon());
+        initialValues.put(CHECKIN_IMAGE, checkins.getImage());
         return mDb.insert(CHECKINS_TABLE, null, initialValues);
     }
 
@@ -601,12 +618,12 @@ public class UshahidiDatabase {
             mDb.endTransaction();
         }
     }
-    
-    public void addCheckins(List<CheckinsData> checkins) {
+
+    public void addCheckins(List<Checkin> checkins) {
         try {
             mDb.beginTransaction();
 
-            for (CheckinsData checkin : checkins) {
+            for (Checkin checkin : checkins) {
                 createCheckins(checkin);
             }
 
@@ -616,7 +633,7 @@ public class UshahidiDatabase {
             mDb.endTransaction();
         }
     }
-    
+
     public int limitRows(String tablename, int limit, String KEY_ID) {
         Cursor cursor = mDb.rawQuery("SELECT " + KEY_ID + " FROM " + tablename + " ORDER BY "
                 + KEY_ID + " DESC LIMIT 1 OFFSET ?", new String[] {
