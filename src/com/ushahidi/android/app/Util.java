@@ -35,6 +35,7 @@ import android.content.Context;
 import android.location.Criteria;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -46,9 +47,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.ushahidi.android.app.checkin.Checkin;
+import com.ushahidi.android.app.checkin.NetworkServices;
+import com.ushahidi.android.app.checkin.RetrieveCheckinsJSONServices;
 import com.ushahidi.android.app.data.CategoriesData;
 import com.ushahidi.android.app.data.HandleXml;
 import com.ushahidi.android.app.data.IncidentsData;
+import com.ushahidi.android.app.data.UsersData;
 import com.ushahidi.android.app.net.Categories;
 import com.ushahidi.android.app.net.Incidents;
 import com.ushahidi.android.app.net.UshahidiGeocoder;
@@ -61,6 +66,9 @@ public class Util {
     private static List<IncidentsData> mNewIncidents;
 
     private static List<CategoriesData> mNewCategories;
+
+    private static List<Checkin> mCheckins;
+    private static List<UsersData> mUsers;
 
     private static JSONObject jsonObject;
 
@@ -99,7 +107,8 @@ public class Util {
      * @return capitalized string
      */
     public static String capitalizeString(String text) {
-        if (text.length() == 0) return text;
+        if (text.length() == 0)
+            return text;
         return text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();
     }
 
@@ -185,7 +194,7 @@ public class Util {
                     mNewIncidents = HandleXml.processIncidentsXml(UshahidiPref.incidentsResponse);
                 }
 
-                UshahidiPref.total_reports = mNewCategories.size() + " Categories -- "
+                UshahidiPref.totalReports = mNewCategories.size() + " Categories -- "
                         + mNewIncidents.size() + " Reports";
 
                 UshahidiApplication.mDb.addCategories(mNewCategories, false);
@@ -462,25 +471,24 @@ public class Util {
             Log.i("Directory", "This is not a directory" + path);
         }
     }
-    
+
     /**
      * Capitalize each word in a text.
      * 
      * @param String text - The text to be capitalized.
-     * 
      * @return String
      */
     public static String capitalize(String text) {
-        
+
         String[] words = text.split("\\s");
         String capWord = "";
         for (String word : words) {
-            
-            capWord += capitalizeString(word)+" ";
+
+            capWord += capitalizeString(word) + " ";
         }
         return capWord;
     }
-    
+
     /** this criteria will settle for less accuracy, high power, and cost */
     public static Criteria createCoarseCriteria() {
 
@@ -507,6 +515,40 @@ public class Util {
         c.setPowerRequirement(Criteria.POWER_HIGH);
         return c;
 
+    }
+
+    /**
+     * process checkins 0 - successful 1 - failed fetching categories 2 - failed
+     * fetching checkins 3 - non ushahidi instance 4 - No internet connection
+     * 
+     * @return int - status
+     */
+    public static int processCheckins(Context context) {
+        String strCheckinsJSON = "";
+
+        if (Util.isConnected(context)) {
+
+            strCheckinsJSON = NetworkServices.getCheckins(UshahidiPref.domain, null, null);
+
+            if (!TextUtils.isEmpty(strCheckinsJSON) && strCheckinsJSON != null) {
+                RetrieveCheckinsJSONServices checkinsRetrieveCheckinsJSON = new RetrieveCheckinsJSONServices(
+                        strCheckinsJSON);
+                mUsers = checkinsRetrieveCheckinsJSON.getCheckinsUsersList();
+                mCheckins = checkinsRetrieveCheckinsJSON.getCheckinsList();
+            }
+
+            if (mCheckins != null && mUsers != null) {
+                UshahidiApplication.mDb.addUsers(mUsers);
+                UshahidiApplication.mDb.addCheckins(mCheckins);
+                return 0;
+
+            } else {
+                return 1;
+            }
+
+        } else {
+            return 2;
+        }
     }
 
 }

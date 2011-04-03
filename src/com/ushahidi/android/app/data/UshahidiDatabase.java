@@ -123,9 +123,16 @@ public class UshahidiDatabase {
 
     public static final String CHECKIN_LOC_LATITUDE = "checkin_loc_latitude";
 
-    public static final String CHECKIN_LOC_LONGITUDE = "checkin_loc_latitude";
+    public static final String CHECKIN_LOC_LONGITUDE = "checkin_loc_longitude";
 
     public static final String CHECKIN_IMAGE = "checkin_image";
+
+    // Users
+    public static final String USER_ID = "_id";
+
+    public static final String USER_NAME = "user_name";
+
+    public static final String USER_COLOR = "user_color";
 
     public static final String[] INCIDENTS_COLUMNS = new String[] {
             INCIDENT_ID, INCIDENT_TITLE, INCIDENT_DESC, INCIDENT_DATE, INCIDENT_MODE,
@@ -151,6 +158,11 @@ public class UshahidiDatabase {
             CHECKIN_LOC_LATITUDE, CHECKIN_LOC_LONGITUDE, CHECKIN_IMAGE
     };
 
+    /** users **/
+    public static final String[] USERS_COLUMNS = new String[] {
+            USER_ID, USER_NAME, USER_COLOR
+    };
+
     private DatabaseHelper mDbHelper;
 
     private SQLiteDatabase mDb;
@@ -164,6 +176,8 @@ public class UshahidiDatabase {
     private static final String CATEGORIES_TABLE = "categories";
 
     private static final String CHECKINS_TABLE = "checkins";
+
+    private static final String USERS_TABLE = "users";
 
     private static final int DATABASE_VERSION = 11;
 
@@ -198,10 +212,14 @@ public class UshahidiDatabase {
 
     private static final String CHECKINS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
             + CHECKINS_TABLE + " (" + CHECKIN_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
-            + CHECKIN_USER_ID + "INTEGER, " + CHECKIN_MESG + " TEXT NOT NULL, " + CHECKIN_DATE
+            + CHECKIN_USER_ID + " INTEGER, " + CHECKIN_MESG + " TEXT NOT NULL, " + CHECKIN_DATE
             + " DATE NOT NULL, " + CHECKIN_LOC_NAME + " TEXT NOT NULL, " + CHECKIN_LOC_LATITUDE
-            + " TEXT NOT NULL, " + CHECKIN_LOC_LONGITUDE + " TEXT NOT NULL, " + INCIDENT_IMAGE
+            + " TEXT NOT NULL, " + CHECKIN_LOC_LONGITUDE + " TEXT NOT NULL, " + CHECKIN_IMAGE
             + " TEXT" + ")";
+
+    private static final String USERS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + USERS_TABLE
+            + " (" + USER_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + USER_NAME
+            + " TEXT NOT NULL, " + USER_COLOR + " TEXT" + ")";
 
     private final Context mContext;
 
@@ -216,6 +234,7 @@ public class UshahidiDatabase {
             db.execSQL(CATEGORIES_TABLE_CREATE);
             db.execSQL(ADD_INCIDENTS_TABLE_CREATE);
             db.execSQL(CHECKINS_TABLE_CREATE);
+            db.execSQL(USERS_TABLE_CREATE);
         }
 
         @Override
@@ -263,10 +282,10 @@ public class UshahidiDatabase {
             // upgrade checkin table
             db.execSQL(CHECKINS_TABLE_CREATE);
             checkinsColums = UshahidiDatabase.getColumns(db, CHECKINS_TABLE);
-            db.execSQL("ALTER TABLE " + CHECKINS_TABLE_CREATE + " RENAME TO temp_" + CHECKINS_TABLE);
+            db.execSQL("ALTER TABLE " + CHECKINS_TABLE + " RENAME TO temp_" + CHECKINS_TABLE);
             db.execSQL(CHECKINS_TABLE_CREATE);
             checkinsColums.retainAll(UshahidiDatabase.getColumns(db, CHECKINS_TABLE));
-            String checkinsCols = UshahidiDatabase.join(addIncidentColumns, ",");
+            String checkinsCols = UshahidiDatabase.join(checkinsColums, ",");
             db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s", CHECKINS_TABLE,
                     checkinsCols, checkinsCols, CHECKINS_TABLE));
             db.execSQL("DROP TABLE IF EXISTS temp_" + CHECKINS_TABLE);
@@ -404,6 +423,14 @@ public class UshahidiDatabase {
         return mDb.insert(CHECKINS_TABLE, null, initialValues);
     }
 
+    public long createUsers(UsersData users) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(USER_ID, users.getId());
+        initialValues.put(USER_NAME, users.getUserName());
+        initialValues.put(USER_COLOR, users.getColor());
+        return mDb.insert(USERS_TABLE, null, initialValues);
+    }
+
     public int addNewIncidentsAndCountUnread(ArrayList<IncidentsData> newIncidents) {
         addIncidents(newIncidents, true);
         return fetchUnreadCount();
@@ -442,11 +469,25 @@ public class UshahidiDatabase {
         });
     }
 
+    public Cursor fetchAllCheckins() {
+        return mDb.query(CHECKINS_TABLE, CHECKINS_COLUMNS, null, null, null, null, CHECKIN_DATE
+                + " DESC");
+    }
+
+    public Cursor fetchUsersById(String id) {
+        String sql = "SELECT * FROM " + USERS_TABLE + " WHERE " + USER_ID + " = ? ORDER BY "
+                + USER_NAME + " COLLATE NOCASE";
+        return mDb.rawQuery(sql, new String[] {
+            id
+        });
+    }
+
     public boolean clearData() {
 
         deleteAllIncidents();
         deleteAllCategories();
-
+        deleteUsers();
+        deleteAllCheckins();
         // delete all files
         Util.rmDir(UshahidiPref.savePath);
         return true;
@@ -463,6 +504,14 @@ public class UshahidiDatabase {
 
     public boolean deleteCategory(int id) {
         return mDb.delete(CATEGORIES_TABLE, CATEGORY_ID + "=" + id, null) > 0;
+    }
+
+    public boolean deleteAllCheckins() {
+        return mDb.delete(CHECKINS_TABLE, null, null) > 0;
+    }
+
+    public boolean deleteUsers() {
+        return mDb.delete(USERS_TABLE, null, null) > 0;
     }
 
     /**
@@ -627,7 +676,21 @@ public class UshahidiDatabase {
                 createCheckins(checkin);
             }
 
-            limitRows(CHECKINS_TABLE, Integer.parseInt(UshahidiPref.totalReports), CHECKIN_ID);
+            //limitRows(CHECKINS_TABLE, Integer.parseInt(UshahidiPref.totalReports), CHECKIN_ID);
+            mDb.setTransactionSuccessful();
+        } finally {
+            mDb.endTransaction();
+        }
+    }
+
+    public void addUsers(List<UsersData> users) {
+        try {
+            mDb.beginTransaction();
+
+            for (UsersData user : users) {
+                createUsers(user);
+            }
+
             mDb.setTransactionSuccessful();
         } finally {
             mDb.endTransaction();

@@ -370,9 +370,9 @@ public class Ushahidi extends Activity {
             } else if (result == 3) {
                 Util.showToast(appContext, R.string.invalid_ushahidi_instance);
             } else if (result == 2) {
-                Util.showToast(appContext, R.string.no_report);
+                Util.showToast(appContext, R.string.could_not_fetch_reports);
             } else if (result == 1) {
-                Util.showToast(appContext, R.string.no_report);
+                Util.showToast(appContext, R.string.could_not_fetch_reports);
             } else {
                 Util.showToast(appContext, R.string.reports_successfully_fetched);
             }

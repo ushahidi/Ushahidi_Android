@@ -43,8 +43,6 @@ public class UshahidiPref {
 
     public static String fileName = "";
 
-    public static String total_reports = "";
-
     public static int isCheckinEnabled = 0;
 
     private static SharedPreferences settings;

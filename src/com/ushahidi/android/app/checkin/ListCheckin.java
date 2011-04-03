@@ -22,7 +22,6 @@ package com.ushahidi.android.app.checkin;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import com.ushahidi.android.app.About;
 import com.ushahidi.android.app.AddIncident;
@@ -32,7 +31,6 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiApplication;
-import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.Util;
 
@@ -51,15 +49,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class ListCheckin extends Activity {
 
     /** Called when the activity is first created. */
-    private ListView listIncidents = null;
+    private ListView listCheckins = null;
 
     private ListCheckinAdapter ila = new ListCheckinAdapter(this);
 
@@ -81,25 +77,19 @@ public class ListCheckin extends Activity {
 
     private static final int INCIDENTS_MAP = 2;
 
-    private static final int VIEW_INCIDENT = 3;
+    private static final int VIEW_CHECKINS = 3;
 
     private static final int REQUEST_CODE_SETTINGS = 1;
 
     private static final int REQUEST_CODE_ABOUT = 2;
 
-    private Spinner spinner = null;
-
-    private ArrayAdapter<String> spinnerArrayAdapter;
-
-    private Bundle incidentsBundle = new Bundle();
+    private Bundle checkinsBundle = new Bundle();
 
     private final Handler mHandler = new Handler();
 
     public static UshahidiDatabase mDb;
 
-    private List<IncidentsData> mOldIncidents;
-
-    private Vector<String> vectorCategories = new Vector<String>();
+    private List<Checkin> checkins;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,47 +97,32 @@ public class ListCheckin extends Activity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.list_checkins);
 
-        listIncidents = (ListView)findViewById(R.id.list_checkins);
+        listCheckins = (ListView)findViewById(R.id.list_checkins);
 
-        mOldIncidents = new ArrayList<IncidentsData>();
-        listIncidents.setOnItemClickListener(new OnItemClickListener() {
+        checkins = new ArrayList<Checkin>();
+        listCheckins.setOnItemClickListener(new OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
 
-                incidentsBundle.putInt("id", mOldIncidents.get(position).getIncidentId());
-                incidentsBundle.putString("title", mOldIncidents.get(position).getIncidentTitle());
-                incidentsBundle.putString("desc", mOldIncidents.get(position).getIncidentDesc());
-                incidentsBundle.putString("longitude", mOldIncidents.get(position)
-                        .getIncidentLocLongitude());
-                incidentsBundle.putString("latitude", mOldIncidents.get(position)
-                        .getIncidentLocLatitude());
-                incidentsBundle.putString("category", mOldIncidents.get(position)
-                        .getIncidentCategories());
-                incidentsBundle.putString("location", mOldIncidents.get(position)
-                        .getIncidentLocation());
-                incidentsBundle.putString("date", mOldIncidents.get(position).getIncidentDate());
-                incidentsBundle.putString("media", mOldIncidents.get(position)
-                        .getIncidentThumbnail());
-                incidentsBundle.putString("image", mOldIncidents.get(position).getIncidentImage());
-                incidentsBundle.putString("status", ""
-                        + mOldIncidents.get(position).getIncidentVerified());
+                checkinsBundle.putString("id", checkins.get(position).getId());
+                checkinsBundle.putString("name", checkins.get(position).getName());
+                checkinsBundle.putString("msg", checkins.get(position).getMsg());
+                checkinsBundle.putString("longitude", checkins.get(position).getLon());
+                checkinsBundle.putString("latitude", checkins.get(position).getLat());
+                checkinsBundle.putString("location", checkins.get(position).getLoc());
+                checkinsBundle.putString("date", checkins.get(position).getDate());
+                checkinsBundle.putString("image", checkins.get(position).getImage());
 
                 Intent intent = new Intent(ListCheckin.this, ViewCheckins.class);
-                intent.putExtra("incidents", incidentsBundle);
-                startActivityForResult(intent, VIEW_INCIDENT);
+                intent.putExtra("checkins", checkinsBundle);
+                startActivityForResult(intent, VIEW_CHECKINS);
                 setResult(RESULT_OK, intent);
 
             }
 
         });
 
-        spinner = (Spinner)findViewById(R.id.incident_cat);
-
-        mHandler.post(mDisplayIncidents);
-        mHandler.post(mDisplayCategories);
-        // mark all incidents as read
-        UshahidiApplication.mDb.markAllIncidentssRead();
-        UshahidiApplication.mDb.markAllCategoriesRead();
+        mHandler.post(mDisplayCheckins);
 
     }
 
@@ -156,12 +131,7 @@ public class ListCheckin extends Activity {
         super.onResume();
 
         if (ila.getCount() == 0) {
-            mHandler.post(mDisplayIncidents);
-            mHandler.post(mDisplayCategories);
-
-            // mark all incidents as read
-            UshahidiApplication.mDb.markAllIncidentssRead();
-            UshahidiApplication.mDb.markAllCategoriesRead();
+            mHandler.post(mDisplayCheckins);
         }
     }
 
@@ -170,22 +140,15 @@ public class ListCheckin extends Activity {
         super.onDestroy();
     }
 
-    final Runnable mDisplayIncidents = new Runnable() {
+    final Runnable mDisplayCheckins = new Runnable() {
         public void run() {
             setProgressBarIndeterminateVisibility(true);
-            showIncidents("All");
-            showCategories();
+            showCheckins();
             try {
                 setProgressBarIndeterminateVisibility(false);
             } catch (Exception e) {
                 return; // means that the dialog is not showing, ignore please!
             }
-        }
-    };
-
-    final Runnable mDisplayCategories = new Runnable() {
-        public void run() {
-            showCategories();
         }
     };
 
@@ -245,15 +208,15 @@ public class ListCheckin extends Activity {
                 startActivityForResult(intent, GOTOHOME);
                 return true;
             case INCIDENT_REFRESH:
-                ReportsTask reportsTask = new ReportsTask();
-                reportsTask.appContext = this;
-                reportsTask.execute();
+                CheckinsTask checkinsTask = new CheckinsTask();
+                checkinsTask.appContext = this;
+                checkinsTask.execute();
                 return (true);
 
             case INCIDENT_MAP:
-                incidentsBundle.putInt("tab_index", 1);
+                checkinsBundle.putInt("tab_index", 1);
                 intent = new Intent(ListCheckin.this, IncidentsTab.class);
-                intent.putExtra("tab", incidentsBundle);
+                intent.putExtra("tab", checkinsBundle);
                 startActivityForResult(intent, INCIDENTS_MAP);
                 return (true);
 
@@ -280,7 +243,7 @@ public class ListCheckin extends Activity {
     }
 
     // thread class
-    private class ReportsTask extends AsyncTask<Void, Void, Integer> {
+    private class CheckinsTask extends AsyncTask<Void, Void, Integer> {
 
         protected Integer status;
 
@@ -294,7 +257,7 @@ public class ListCheckin extends Activity {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            status = Util.processReports(appContext);
+            status = Util.processCheckins(appContext);
             return status;
         }
 
@@ -305,12 +268,11 @@ public class ListCheckin extends Activity {
             } else if (result == 3) {
                 Util.showToast(appContext, R.string.invalid_ushahidi_instance);
             } else if (result == 2) {
-                Util.showToast(appContext, R.string.no_report);
+                Util.showToast(appContext, R.string.could_not_fetch_reports);
             } else if (result == 1) {
-                Util.showToast(appContext, R.string.no_report);
+                Util.showToast(appContext, R.string.could_not_fetch_reports);
             } else if (result == 0) {
-                showIncidents("All");
-                showCategories();
+                showCheckins();
                 Util.showToast(appContext, R.string.reports_successfully_fetched);
             }
             setProgressBarIndeterminateVisibility(false);
@@ -318,94 +280,76 @@ public class ListCheckin extends Activity {
 
     }
 
-    // get incidents from the db
-    public void showIncidents(String by) {
+    // get checkins from the db
+    public void showCheckins() {
 
         Cursor cursor;
-        if (by.equals("All"))
-            cursor = UshahidiApplication.mDb.fetchAllIncidents();
-        else
-            cursor = UshahidiApplication.mDb.fetchIncidentsByCategories(by);
-
-        String title;
-        String status;
+  
+        cursor = UshahidiApplication.mDb.fetchAllCheckins();
+        String name;
         String date;
-        String description;
+        String mesg;
         String location;
-        String categories;
-        String media;
         String image;
-        String images[];
-        String thumbnails[];
         Drawable d = null;
 
         if (cursor.moveToFirst()) {
-            int idIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_ID);
-            int titleIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_TITLE);
-            int dateIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_DATE);
-            int verifiedIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_VERIFIED);
-            int locationIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_NAME);
+            int idIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_ID);
+            int userIdIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_USER_ID);
+            int dateIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_DATE);
+            int locationIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_LOC_NAME);
 
-            int descIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_DESC);
+            int mesgIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_MESG);
 
-            int categoryIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_CATEGORIES);
-
-            int mediaIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_MEDIA);
-
-            int imageIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_IMAGE);
+            int imageIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_IMAGE);
 
             int latitudeIndex = cursor
-                    .getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LATITUDE);
+                    .getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_LOC_LATITUDE);
 
             int longitudeIndex = cursor
-                    .getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_LOC_LONGITUDE);
+                    .getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_LOC_LONGITUDE);
 
             ila.removeItems();
             ila.notifyDataSetChanged();
 
-            mOldIncidents.clear();
+            checkins.clear();
 
             do {
 
-                IncidentsData incidentData = new IncidentsData();
-                mOldIncidents.add(incidentData);
+                Checkin checkinsData = new Checkin();
+                checkins.add(checkinsData);
                 ListCheckinText listText = new ListCheckinText();
 
                 int id = Util.toInt(cursor.getString(idIndex));
-                incidentData.setIncidentId(id);
-                incidentData.setIncidentLocLatitude(cursor.getString(latitudeIndex));
-                incidentData.setIncidentLocLongitude(cursor.getString(longitudeIndex));
+                checkinsData.setId(String.valueOf(id));
+                checkinsData.setLat(cursor.getString(latitudeIndex));
+                checkinsData.setLon(cursor.getString(longitudeIndex));
 
-                title = cursor.getString(titleIndex);
-                incidentData.setIncidentTitle(title);
-                listText.setTitle(Util.capitalize(title));
+                name = cursor.getString(userIdIndex);
+                checkinsData.setName((name));
+                listText.setTitle(Util.capitalize(name));
 
-                description = cursor.getString(descIndex);
-                incidentData.setIncidentDesc(description);
-                listText.setDesc(description);
-
-                categories = cursor.getString(categoryIndex);
-                incidentData.setIncidentCategories(categories);
-                listText.setCategories(Util.capitalize(categories));
+                mesg = cursor.getString(mesgIndex);
+                checkinsData.setMsg(mesg);
+                listText.setDesc(mesg);
 
                 location = cursor.getString(locationIndex);
-                incidentData.setIncidentLocation(location);
+                checkinsData.setLoc(location);
                 listText.setLocation(Util.capitalize(location));
 
                 date = Util.formatDate("yyyy-MM-dd hh:mm:ss", cursor.getString(dateIndex),
                         "MMMM dd, yyyy 'at' hh:mm:ss aaa");
 
-                incidentData.setIncidentDate(date);
+                checkinsData.setDate(date);
                 listText.setDate(date);
 
-                media = cursor.getString(mediaIndex);
-                incidentData.setIncidentThumbnail(media);
-                listText.setMedia(media);
+                image = cursor.getString(imageIndex);
+                checkinsData.setImage(image);
+                listText.setMedia(image);
 
-                thumbnails = media.split(",");
                 // TODO do a proper check for thumbnails
-                if (!TextUtils.isEmpty(thumbnails[0])) {
-                    d = ImageManager.getImages(thumbnails[0]);
+                if (!TextUtils.isEmpty(image)) {
+                    d = ImageManager.getImages(image);
                 } else {
                     d = null;
                 }
@@ -414,13 +358,7 @@ public class ListCheckin extends Activity {
                         R.drawable.ushahidi_report_icon) : d);
 
                 image = cursor.getString(imageIndex);
-                incidentData.setIncidentImage(image);
-                images = image.split(",");
-
-                status = Util.toInt(cursor.getString(verifiedIndex)) == 0 ? getString(R.string.report_unverified)
-                        : getString(R.string.report_verified);
-                incidentData.setIncidentVerified(Util.toInt(cursor.getString(verifiedIndex)));
-                listText.setStatus(status);
+                checkinsData.setImage(image);
 
                 listText.setId(id);
                 listText.setArrow(getResources().getDrawable(R.drawable.ushahidi_arrow));
@@ -431,51 +369,10 @@ public class ListCheckin extends Activity {
 
         cursor.close();
         ila.notifyDataSetChanged();
-        listIncidents.setAdapter(ila);
+        listCheckins.setAdapter(ila);
     }
 
-    @SuppressWarnings("unchecked")
-    public void showCategories() {
-        Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
-        UshahidiApplication.mDb.fetchCategoriesCount();
-
-        vectorCategories.clear();
-        vectorCategories.add("All");
-        if (cursor.moveToFirst()) {
-            int titleIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CATEGORY_TITLE);
-            do {
-                vectorCategories.add(cursor.getString(titleIndex));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        spinnerArrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item,
-                vectorCategories);
-
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(spinnerArrayAdapter);
-
-        spinner.setOnItemSelectedListener(spinnerListener);
-
-    }
-
-    // spinner listener
-    Spinner.OnItemSelectedListener spinnerListener = new Spinner.OnItemSelectedListener() {
-
-        @SuppressWarnings("unchecked")
-        public void onItemSelected(AdapterView parent, View v, int position, long id) {
-
-            // clear data in the list
-            ila.removeItems();
-            ila.notifyDataSetChanged();
-            mOldIncidents.clear();
-            showIncidents(vectorCategories.get(position));
-        }
-
-        @SuppressWarnings("unchecked")
-        public void onNothingSelected(AdapterView parent) {
-        }
-    };
-
+   
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);

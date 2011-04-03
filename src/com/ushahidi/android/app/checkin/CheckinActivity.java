@@ -43,6 +43,7 @@ import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.Util;
+import com.ushahidi.android.app.checkin.CheckinMap.DeviceLocationListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -191,18 +192,19 @@ public class CheckinActivity extends MapActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
 
         // house keeping
         ImageManager.deleteImage(selectedPhoto);
+        ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
+                .removeUpdates(new DeviceLocationListener());
+        super.onDestroy();
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
-
         // house keeping
         ImageManager.deleteImage(selectedPhoto);
+        super.onPause();
     }
 
     @Override
@@ -549,8 +551,8 @@ public class CheckinActivity extends MapActivity {
                 longitude = location.getLongitude();
 
                 centerLocation(getPoint(latitude, longitude));
-                mCheckinLocation
-                        .setText(String.valueOf(latitude) + "," + String.valueOf(longitude));
+                mCheckinLocation.setText(String.valueOf(latitude) + ", "
+                        + String.valueOf(longitude));
             }
         }
 
