@@ -247,10 +247,9 @@ public class Util {
 
         } catch (JSONException e) {
 
-            e.printStackTrace();
+            return false;
         }
 
-        return false;
     }
 
     /**
@@ -289,11 +288,9 @@ public class Util {
             return "";
             // e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            // e.printStackTrace();
+            return "";
         }
 
-        return "";
     }
 
     /**

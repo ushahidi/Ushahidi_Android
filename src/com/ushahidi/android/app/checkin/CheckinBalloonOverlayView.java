@@ -1,7 +1,12 @@
 
 package com.ushahidi.android.app.checkin;
 
+import java.util.List;
+
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +26,11 @@ public class CheckinBalloonOverlayView extends FrameLayout {
     private TextView snippet;
 
     private TextView readmore;
+
+    private Bundle checkinsBundle = new Bundle();
+    
+    private static final int VIEW_CHECKINS = 1;
+
     /**
      * Create a new BalloonOverlayView.
      * 
@@ -31,7 +41,7 @@ public class CheckinBalloonOverlayView extends FrameLayout {
      * @author Jeff Gilfelt
      */
     public CheckinBalloonOverlayView(final CheckinMap iMap, final Context context,
-            final int balloonBottomOffset, final int index) {
+            final int balloonBottomOffset,final List<Checkin> checkins, final int index, final Bundle extras) {
 
         super(context);
 
@@ -45,7 +55,26 @@ public class CheckinBalloonOverlayView extends FrameLayout {
         title = (TextView)v.findViewById(R.id.balloon_item_title);
         snippet = (TextView)v.findViewById(R.id.balloon_item_snippet);
         readmore = (TextView)v.findViewById(R.id.balloon_item_readmore);
-        readmore.setVisibility(GONE);
+        readmore.setText(context.getString(R.string.read_more));
+        readmore.setOnClickListener(new OnClickListener() {
+
+            public void onClick(View view) {
+
+               if ( checkins != null ) {
+                    checkinsBundle.putString("name",checkins.get(index).getName() );
+                    checkinsBundle.putString("message", checkins.get(index).getMsg());
+                    checkinsBundle.putString("latitude", checkins.get(index).getLat());
+                    checkinsBundle.putString("longitude", checkins.get(index).getLon());
+                    checkinsBundle.putString("date", checkins.get(index).getDate());
+                    checkinsBundle.putString("photo", checkins.get(index).getImage());
+                }
+                
+                Intent intent = new Intent(context, ViewCheckins.class);
+                intent.putExtra("checkins", checkinsBundle);
+                iMap.startActivityForResult(intent, VIEW_CHECKINS);
+                iMap.setResult(Activity.RESULT_OK);
+            }
+        });
         ImageView close = (ImageView)v.findViewById(R.id.close_img_button);
         close.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {

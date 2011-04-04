@@ -125,19 +125,19 @@
 	<string name="ushahidi_url">Ushahidi.com</string>
 	<string name="welcome_mgs">Welcome to Ushahidi, which means "testimony" in
 		Swhahili, where we are
-		building a platform that crowdsources crisis information.Allowing anyone to
+		building a platform that crowdsources information.Allowing anyone to
 		submit crisis
 		information through text messaging using a mobile phone, email or web form.
 	</string>
 	<string name="internet_connection">Network error, please ensure you are connected to
-		the internet</string>
+		the Internet</string>
 	<string name="preferences_notifications">Notifications</string>
 	<!-- Add Report Screen -->
 	<string name="report_successfully_added_online">Report successfully posted online and entered into
 		a moderation queue</string>
 	<string name="report_successfully_added_offline">Report sent to local storage due to
-		unvailability of internet. Remember to sync to the online
-		instance when there there is internet connection.</string>
+		unavailability of Internet. Remember to sync to the online
+		instance when there there is Internet connection.</string>
 	<string name="failed_to_add_report_offline">Failed to send report.Check to see if you filled
 		all required fields.</string>
 	<string name="failed_to_add_report_online">Connection failure, cannot submit your report.
@@ -153,12 +153,9 @@
 	<!-- Add location screen -->
 	<string name="find_location">Finding you...</string>
 	<string name="location_not_found">A location can not currently be determined. Enable
-		more
-		location sources i.e. GPS Satellites in Security and Location
-		Settings.</string>
+		more location sources i.e. GPS Satellites in Security and Location Settings.</string>
 	<string name="loc_not_found">Your location could not be determined. Make sure
-		you have
-		pin point the exact location on the map.</string>
+		you have pin point the exact location on the map.</string>
 	<string name="version">1.0</string>
 	<string name="report_title">Title</string>
 	<string name="report_verified">Verified</string>
@@ -186,6 +183,7 @@
 	<string name="file_system_error">File System Error</string>
 	<string name="file_system_error_msg">File System Error, please ensure your save path is
 		correct!</string>
+	<string name="read_more">Read more...</string>
 
 	<!-- Tab -->
 	<string name="tab_item_report_list">List</string>
@@ -217,4 +215,5 @@
 	<string name="checkin_enter_lastname_hint">Enter last name</string>
 	<string name="checkin_enter_email_hint">Enter email</string>
 	<string name="no_name">No name</string>
+	<string name="curr_location">Current location</string>
 </resources>

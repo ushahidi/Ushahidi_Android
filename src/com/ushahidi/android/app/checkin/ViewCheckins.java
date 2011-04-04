@@ -60,13 +60,11 @@ public class ViewCheckins extends MapActivity implements AdapterView.OnItemSelec
 
     private GeoPoint defaultLocation;
 
-    private TextView title;
+    private TextView name;
 
-    private TextView body;
+    private TextView message;
 
     private TextView date;
-
-    private TextView location;
 
     private TextView photos;
 
@@ -82,9 +80,9 @@ public class ViewCheckins extends MapActivity implements AdapterView.OnItemSelec
 
     private int id;
 
-    private String reportLatitude;
+    private String checkinLatitude;
 
-    private String reportLongitude;
+    private String checkinLongitude;
 
     private ImageSwitcher mSwitcher;
 
@@ -104,66 +102,49 @@ public class ViewCheckins extends MapActivity implements AdapterView.OnItemSelec
 
         extras = incidents.getBundle("checkins");
 
-        id = extras.getInt("id");
-        reportLatitude = extras.getString("latitude");
-        reportLongitude = extras.getString("longitude");
-        
-        title = (TextView)findViewById(R.id.title);
-        title.setTypeface(Typeface.DEFAULT_BOLD);
-        title.setText(extras.getString("title"));
+        // id = extras.getInt("id");
+        checkinLatitude = extras.getString("latitude");
+        checkinLongitude = extras.getString("longitude");
+
+        name = (TextView)findViewById(R.id.title);
+        name.setTypeface(Typeface.DEFAULT_BOLD);
+        name.setText(com.ushahidi.android.app.checkin.Util.getCheckinUser(extras.getString("name")));
 
         date = (TextView)findViewById(R.id.date);
         date.setTextColor(Color.BLACK);
         date.setText(extras.getString("date"));
 
-        location = (TextView)findViewById(R.id.location);
-        location.setTextColor(Color.BLACK);
-        location.setText(extras.getString("location"));
+        message = (TextView)findViewById(R.id.checkin_desc);
+        message.setTextColor(Color.BLACK);
+        message.setText(extras.getString("message"));
 
-        body = (TextView)findViewById(R.id.webview);
-        body.setTextColor(Color.BLACK);
-        body.setText(extras.getString("desc"));
+        /* media = extras.getString("media"); */
 
-        media = extras.getString("media");
+        image = extras.getString("photo");
 
-        image = extras.getString("image");
-
-        imageAdapter = new ImageAdapter(this);
-
-        thumbnailAdapter = new ImageAdapter(this);
-
-        mSwitcher = (ImageSwitcher)findViewById(R.id.switcher);
-        mSwitcher.setFactory(this);
-        mSwitcher.setInAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
-        mSwitcher.setOutAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
-
-        if (!media.equals("")) {
-
-            thumbnails = media.split(",");
-            for (int i = 0; i < thumbnails.length; i++) {
-                thumbnailAdapter.mImageIds.add(ImageManager.getImages(thumbnails[i]));
-            }
-
-            images = image.split(",");
-
-            for (int i = 0; i < images.length; i++) {
-
-                imageAdapter.mImageIds.add(ImageManager.getImages(images[i]));
-            }
-
-        } else {
-            photos = (TextView)findViewById(R.id.report_photo);
-            photos.setText("");
-        }
-
-        Gallery g = (Gallery)findViewById(R.id.gallery);
-
-        g.setAdapter(thumbnailAdapter);
-        g.setOnItemSelectedListener(this);
+        /*
+         * imageAdapter = new ImageAdapter(this); thumbnailAdapter = new
+         * ImageAdapter(this); mSwitcher =
+         * (ImageSwitcher)findViewById(R.id.switcher);
+         * mSwitcher.setFactory(this);
+         * mSwitcher.setInAnimation(AnimationUtils.loadAnimation(this,
+         * android.R.anim.fade_in));
+         * mSwitcher.setOutAnimation(AnimationUtils.loadAnimation(this,
+         * android.R.anim.fade_out)); if (!media.equals("")) { thumbnails =
+         * media.split(","); for (int i = 0; i < thumbnails.length; i++) {
+         * thumbnailAdapter
+         * .mImageIds.add(ImageManager.getImages(thumbnails[i])); } images =
+         * image.split(","); for (int i = 0; i < images.length; i++) {
+         * imageAdapter.mImageIds.add(ImageManager.getImages(images[i])); } }
+         * else { photos = (TextView)findViewById(R.id.report_photo);
+         * photos.setText(""); } Gallery g =
+         * (Gallery)findViewById(R.id.gallery); g.setAdapter(thumbnailAdapter);
+         * g.setOnItemSelectedListener(this);
+         */
 
         mapController = mapView.getController();
-        defaultLocation = getPoint(Double.parseDouble(reportLatitude),
-                Double.parseDouble(reportLongitude));
+        defaultLocation = getPoint(Double.parseDouble(checkinLatitude),
+                Double.parseDouble(checkinLongitude));
         centerLocation(defaultLocation);
 
     }
@@ -178,7 +159,7 @@ public class ViewCheckins extends MapActivity implements AdapterView.OnItemSelec
         mapView.setBuiltInZoomControls(true);
         mapView.getOverlays().add(new MapMarker(marker, markerLatitude, markerLongitude));
     }
-    
+
     public GeoPoint getPoint(double lat, double lon) {
         return (new GeoPoint((int)(lat * 1000000.0), (int)(lon * 1000000.0)));
     }

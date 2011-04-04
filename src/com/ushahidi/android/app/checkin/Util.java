@@ -1,7 +1,11 @@
 
 package com.ushahidi.android.app.checkin;
 
+import com.ushahidi.android.app.UshahidiApplication;
+import com.ushahidi.android.app.data.UshahidiDatabase;
+
 import android.content.Context;
+import android.database.Cursor;
 import android.telephony.TelephonyManager;
 
 /**
@@ -13,5 +17,15 @@ public class Util {
         TelephonyManager TelephonyMgr = (TelephonyManager)appContext
                 .getSystemService(appContext.TELEPHONY_SERVICE);
         return TelephonyMgr.getDeviceId(); // Requires READ_PHONE_STATE
+    }
+    
+    public static String getCheckinUser(String userId) {
+        Cursor cursor = UshahidiApplication.mDb.fetchUsersById(userId);
+        if (cursor.moveToFirst()) {
+            int userName = cursor.getColumnIndexOrThrow(UshahidiDatabase.USER_NAME);
+            return cursor.getString(userName);
+        }
+        cursor.close();
+        return null;
     }
 }

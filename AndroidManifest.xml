@@ -125,7 +125,15 @@
 				<category android:name="android.intent.category.DEFAULT"></category>
 			</intent-filter>
 		</activity>
-
+        
+        <!-- View Checkins -->
+        <activity android:name=".checkin.ViewCheckins" android:label="@string/view_checkins">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity>
+        
 		<!-- About -->
 		<activity android:name=".About" android:label="@string/ushahidi_about">
 			<intent-filter>
