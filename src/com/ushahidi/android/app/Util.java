@@ -68,6 +68,7 @@ public class Util {
     private static List<CategoriesData> mNewCategories;
 
     private static List<Checkin> mCheckins;
+
     private static List<UsersData> mUsers;
 
     private static JSONObject jsonObject;
@@ -268,20 +269,21 @@ public class Util {
             } else {
                 return "";
             }
+            if (json_data != null) {
+                jsonObject = new JSONObject(json_data);
 
-            jsonObject = new JSONObject(json_data);
+                status = jsonObject.getJSONObject("Status").getInt("code");
 
-            status = jsonObject.getJSONObject("Status").getInt("code");
+                if (status == 200) {
+                    jsonArray = jsonObject.getJSONArray("Placemark");
 
-            if (status == 200) {
-                jsonArray = jsonObject.getJSONArray("Placemark");
+                    return jsonArray.getJSONObject(0).getJSONObject("AddressDetails")
+                            .getJSONObject("Country").getJSONObject("AdministrativeArea")
+                            .getJSONObject("Locality").getString("LocalityName");
 
-                return jsonArray.getJSONObject(0).getJSONObject("AddressDetails")
-                        .getJSONObject("Country").getJSONObject("AdministrativeArea")
-                        .getJSONObject("Locality").getString("LocalityName");
-
-            } else {
-                return "";
+                } else {
+                    return "";
+                }
             }
 
         } catch (JSONException e) {
@@ -290,7 +292,7 @@ public class Util {
         } catch (IOException e) {
             return "";
         }
-
+        return "";
     }
 
     /**

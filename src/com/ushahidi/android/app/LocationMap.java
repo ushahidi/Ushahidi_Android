@@ -162,7 +162,7 @@ public class LocationMap extends MapActivity {
             updateResultsInUi();
         }
     };
-    
+
     protected void startLongRunningOperation() {
 
         // Fire off a thread to do some work that we shouldn't do directly in
@@ -221,12 +221,15 @@ public class LocationMap extends MapActivity {
     private String getLocationFromLatLon(double lat, double lon) {
 
         try {
-
+            Address address;
             foundAddresses = gc.getFromLocation(lat, lon, 5);
+            if (foundAddresses.size() > 0) {
+                address = foundAddresses.get(0);
+                return address.getSubAdminArea();
 
-            Address address = foundAddresses.get(0);
-
-            return address.getSubAdminArea();
+            } else {
+                return "";
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -316,12 +319,10 @@ public class LocationMap extends MapActivity {
                 Util.createFineCriteria(), true));
 
         // Register for GPS location if enabled or if neither is enabled
-        locationManager.requestLocationUpdates(low.getName(), updateTimeMsec, 500.0f,
-                listener);
-        
-        locationManager.requestLocationUpdates(high.getName(), updateTimeMsec, 500.0f,
-                listener);
-        
+        locationManager.requestLocationUpdates(low.getName(), updateTimeMsec, 500.0f, listener);
+
+        locationManager.requestLocationUpdates(high.getName(), updateTimeMsec, 500.0f, listener);
+
     }
 
     // get the current location of the user
@@ -333,7 +334,7 @@ public class LocationMap extends MapActivity {
             if (location != null) {
                 // Dipo Fix
                 // Stop asking for updates when location has been retrieved
-               
+
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
 
@@ -463,7 +464,8 @@ public class LocationMap extends MapActivity {
                     Projection proj = mapView.getProjection();
                     GeoPoint loc = proj
                             .fromPixels((int)motionEvent.getX(), (int)motionEvent.getY());
-
+                    
+                    
                     foundLoc = getLocationFromLatLon(loc.getLatitudeE6() / 1.0E6,
                             loc.getLatitudeE6() / 1.0E6);
                     if (foundLoc == "") {
