@@ -31,11 +31,16 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.ItemizedOverlay;
+import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapController;
+import com.google.android.maps.MapView;
+import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -47,9 +52,15 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -69,7 +80,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-public class AddIncident extends Activity {
+public class AddIncident extends MapActivity {
 
     private static final int HOME = Menu.FIRST + 1;
 
@@ -140,6 +151,8 @@ public class AddIncident extends Activity {
 
     private TextView mSelectedCategories;
 
+    private TextView mReportLocation;
+
     private Button mBtnSend;
 
     private Button mBtnCancel;
@@ -152,13 +165,15 @@ public class AddIncident extends Activity {
 
     private Button mBtnPicture;
 
-    private Button mAddLocation;
-
     private HashMap<Integer, Integer> mTimeDigits;
 
     private Bundle mBundle;
 
     private Bundle mExtras;
+
+    private MapView mapView = null;
+
+    private MapController mapController;
 
     private static final int DIALOG_ERROR_NETWORK = 0;
 
@@ -190,13 +205,13 @@ public class AddIncident extends Activity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.add_incident);
         mFoundAddresses = new ArrayList<Address>();
-
         mGc = new Geocoder(this);
 
         // load settings
         UshahidiPref.loadSettings(AddIncident.this);
 
         initComponents();
+        setDeviceLocation();
 
     }
 
@@ -290,6 +305,7 @@ public class AddIncident extends Activity {
      * Initialize UI components
      */
     private void initComponents() {
+
         mBtnPicture = (Button)findViewById(R.id.btnPicture);
         mBtnAddCategory = (Button)findViewById(R.id.add_category);
         mBtnSend = (Button)findViewById(R.id.incident_add_btn);
@@ -297,14 +313,14 @@ public class AddIncident extends Activity {
         mIncidentDate = (TextView)findViewById(R.id.lbl_date);
         mPickDate = (Button)findViewById(R.id.pick_date);
         mPickTime = (Button)findViewById(R.id.pick_time);
-        mAddLocation = (Button)findViewById(R.id.location);
-
+        mReportLocation = (TextView)findViewById(R.id.latlon);
         mSelectedPhoto = (ImageView)findViewById(R.id.sel_photo_prev);
         mSelectedCategories = (TextView)findViewById(R.id.lbl_category);
 
         mIncidentTitle = (EditText)findViewById(R.id.incident_title);
         mIncidentLocation = (EditText)findViewById(R.id.incident_location);
-
+        mapView = (MapView)findViewById(R.id.location_map);
+        mapController = mapView.getController();
         mIncidentTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             public void onFocusChange(View v, boolean hasFocus) {
@@ -340,17 +356,6 @@ public class AddIncident extends Activity {
                 }
             }
 
-        });
-
-        // open location map window
-        mAddLocation.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                Intent intent = new Intent(AddIncident.this, LocationMap.class);
-                startActivityForResult(intent, VIEW_MAP);
-                setResult(RESULT_OK, intent);
-
-            }
         });
 
         mBtnSend.setOnClickListener(new View.OnClickListener() {
@@ -502,12 +507,7 @@ public class AddIncident extends Activity {
                     return;
                 }
 
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED); // pull
-                                                                                      // it
-                                                                                      // out
-                                                                                      // of
-                                                                                      // landscape
-                                                                                      // mode
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED); 
                 mBundle = null;
                 mExtras = data.getExtras();
                 if (mExtras != null)
@@ -551,7 +551,7 @@ public class AddIncident extends Activity {
                 mFilename = "android_pic_upload" + randomString() + ".jpg";
                 ImageManager.writeImage(byteArrayos.toByteArray(), mFilename);
                 UshahidiPref.fileName = mFilename;
-                
+
                 mSelectedPhoto.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName));
                 mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 break;
@@ -933,7 +933,7 @@ public class AddIncident extends Activity {
         SharedPreferences prefs = getPreferences(0);
         String title = prefs.getString("title", null);
         String desc = prefs.getString("desc", null);
-       
+
         if (title != null)
             mIncidentTitle.setText(title, TextView.BufferType.EDITABLE);
 
@@ -1027,6 +1027,133 @@ public class AddIncident extends Activity {
             setProgressBarIndeterminateVisibility(false);
         }
 
+    }
+
+    private void placeMarker(int markerLatitude, int markerLongitude) {
+
+        Drawable marker = getResources().getDrawable(R.drawable.marker);
+
+        marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
+        mapView.getController().setZoom(14);
+
+        mapView.setBuiltInZoomControls(true);
+        mapView.getOverlays().add(new MapMarker(marker, markerLatitude, markerLongitude));
+    }
+
+    // Location stuff
+    public GeoPoint getPoint(double lat, double lon) {
+        return (new GeoPoint((int)(lat * 1000000.0), (int)(lon * 1000000.0)));
+    }
+
+    private void centerLocation(GeoPoint centerGeoPoint) {
+
+        mapController.animateTo(centerGeoPoint);
+
+        // initilaize latitude and longitude for them to be passed to the
+        // AddIncident Activity.
+        sLatitude = centerGeoPoint.getLatitudeE6() / 1.0E6;
+        sLongitude = centerGeoPoint.getLongitudeE6() / 1.0E6;
+
+        placeMarker(centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6());
+
+    }
+
+    private class MapMarker extends ItemizedOverlay<OverlayItem> {
+
+        private List<OverlayItem> locations = new ArrayList<OverlayItem>();
+
+        private Drawable marker;
+
+        private OverlayItem myOverlayItem;
+
+        public MapMarker(Drawable defaultMarker, int LatitudeE6, int LongitudeE6) {
+            super(defaultMarker);
+            this.marker = defaultMarker;
+
+            // create locations of interest
+            GeoPoint myPlace = new GeoPoint(LatitudeE6, LongitudeE6);
+
+            myOverlayItem = new OverlayItem(myPlace, " ", " ");
+
+            locations.add(myOverlayItem);
+
+            populate();
+
+        }
+
+        @Override
+        protected OverlayItem createItem(int i) {
+            return locations.get(i);
+        }
+
+        @Override
+        public int size() {
+            return locations.size();
+        }
+
+        @Override
+        public void draw(Canvas canvas, MapView mapView, boolean shadow) {
+            super.draw(canvas, mapView, shadow);
+            boundCenterBottom(marker);
+        }
+
+    }
+
+    // Fetches the current location of the device.
+    private void setDeviceLocation() {
+
+        DeviceLocationListener listener = new DeviceLocationListener();
+        LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+        long updateTimeMsec = 1000L;
+
+        // get low accuracy provider
+        LocationProvider low = manager.getProvider(manager.getBestProvider(
+                Util.createCoarseCriteria(), true));
+
+        // get high accuracy provider
+        LocationProvider high = manager.getProvider(manager.getBestProvider(
+                Util.createFineCriteria(), true));
+
+        manager.requestLocationUpdates(low.getName(), updateTimeMsec, 500.0f, listener);
+
+        manager.requestLocationUpdates(high.getName(), updateTimeMsec, 500.0f, listener);
+
+    }
+
+    // get the current location of the device/user
+    public class DeviceLocationListener implements LocationListener {
+        public void onLocationChanged(Location location) {
+
+            if (location != null) {
+                ((LocationManager)getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
+
+                sLatitude = location.getLatitude();
+                sLongitude = location.getLongitude();
+
+                    centerLocation(getPoint(sLatitude, sLongitude));
+                mReportLocation.setText(String.valueOf(sLatitude) + ", "
+                        + String.valueOf(sLongitude));
+            }
+        }
+
+        public void onProviderDisabled(String provider) {
+            Util.showToast(AddIncident.this, R.string.location_not_found);
+        }
+
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+    }
+
+    @Override
+    protected boolean isRouteDisplayed() {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

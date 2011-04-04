@@ -24,7 +24,7 @@
 				android:paddingBottom="15px">
 
 				<TextView android:id="@+id/lbl_title" android:layout_width="fill_parent"
-					android:layout_height="wrap_content" android:textColor="@drawable/date_color"
+					android:layout_height="wrap_content" android:textColor="@drawable/title_color"
 					android:textStyle="bold" android:text="@string/incident_title" />
 
 				<EditText android:id="@+id/incident_title"
@@ -41,7 +41,7 @@
 
 				<TextView android:id="@+id/lbl_date" android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:textStyle="bold"
-					android:textColor="@drawable/date_color" android:text="@string/incident_current_date" />
+					android:textColor="@drawable/title_color" android:text="@string/incident_current_date" />
 				<LinearLayout android:orientation="horizontal"
 					android:layout_width="fill_parent" android:layout_height="wrap_content"
 					android:paddingBottom="15px">
@@ -63,21 +63,25 @@
 
 				<TextView android:id="@+id/incident_loc"
 					android:layout_width="fill_parent" android:layout_height="wrap_content"
-					android:textStyle="bold" android:textColor="@drawable/date_color"
+					android:textStyle="bold" android:textColor="@drawable/title_color"
 					android:text="@string/incident_location" />
-				<LinearLayout android:orientation="horizontal"
+					
+				<!-- location name -->
+				<EditText android:id="@+id/incident_location"
 					android:layout_width="fill_parent" android:layout_height="wrap_content"
-					android:paddingBottom="15px">
-					<EditText android:id="@+id/incident_location"
-						android:layout_width="wrap_content" android:layout_height="wrap_content"
-						android:hint="@string/hint_location" android:capitalize="words"
-						android:autoText="true" />
-
-					<Button android:id="@+id/location" android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:textStyle="bold"
-						android:gravity="right" android:text="@string/add_location" />
-				</LinearLayout>
-
+					android:hint="@string/hint_location" android:capitalize="words"
+					android:autoText="true" />
+				
+				<com.google.android.maps.MapView
+					android:id="@+id/location_map" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" 
+					android:apiKey="@string/google_map_api_key" android:enabled="true"
+					android:clickable="true" />
+				
+				<TextView android:textStyle="bold"
+					android:gravity="center_horizontal" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:textColor="@drawable/title_color"
+					android:id="@+id/latlon" />
 			</LinearLayout>
 			<!-- Location layout ends. -->
 
@@ -85,14 +89,14 @@
 			<LinearLayout android:orientation="horizontal"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:padding="15px">
-
+			
 				<Button android:id="@+id/add_category" android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:paddingLeft="15px"
 					android:textStyle="bold" android:text="@string/incident_add_category" />
 				<TextView android:id="@+id/lbl_category"
 					android:layout_width="fill_parent" android:layout_height="wrap_content"
 					android:textStyle="bold" android:singleLine="false"
-					android:textColor="@drawable/date_color" />
+					android:textColor="@drawable/title_color" />
 			</LinearLayout>
 			<!-- Categories layout ends. -->
 
@@ -103,7 +107,7 @@
 
 				<TextView android:id="@+id/lbl_incidents_dec"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
-					android:textStyle="bold" android:textColor="@drawable/date_color"
+					android:textStyle="bold" android:textColor="@drawable/title_color"
 					android:text="@string/incident_description" />
 
 				<EditText android:id="@+id/incident_desc"

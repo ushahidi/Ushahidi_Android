@@ -132,17 +132,13 @@ public class CheckinActivity extends MapActivity {
 
         mHandler = new Handler();
 
-        // get location stuff
-        // performCheckin(checkinMessageText.getText().toString());
-        setDeviceLocation();
         // map stuff
         mapView = (MapView)findViewById(R.id.checkin_location_map);
 
+        mapController = mapView.getController();
         // location stuff
         mCheckinLocation.setText(getString(R.string.checkin_progress_message));
-
-        mapController = mapView.getController();
-
+        setDeviceLocation();
         // contact
         firstName.setText(UshahidiPref.firstname);
         lastName.setText(UshahidiPref.lastname);
