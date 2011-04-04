@@ -138,7 +138,6 @@ public class CheckinMap extends MapActivity {
     }
 
     public void onResume() {
-        setDeviceLocation();
         super.onResume();
     }
 
@@ -220,8 +219,6 @@ public class CheckinMap extends MapActivity {
             mapView.getContext();
             user = name == "" ? getString(R.string.no_name) : name;
             
-            //clear items befor adding new one.
-            items.clear();
             items.add(new OverlayItem(getPoint(latitude, longitude), user,
                     getString(R.string.curr_location)));
             populate();

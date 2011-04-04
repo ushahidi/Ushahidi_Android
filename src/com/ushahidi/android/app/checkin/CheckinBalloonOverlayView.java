@@ -73,6 +73,9 @@ public class CheckinBalloonOverlayView extends FrameLayout {
                 intent.putExtra("checkins", checkinsBundle);
                 iMap.startActivityForResult(intent, VIEW_CHECKINS);
                 iMap.setResult(Activity.RESULT_OK);
+                
+                //Clear popup from the map.
+                layout.setVisibility(GONE);
             }
         });
         ImageView close = (ImageView)v.findViewById(R.id.close_img_button);

@@ -91,7 +91,9 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
 
                 iMap.startActivityForResult(intent, VIEW_INCIDENT);
                 iMap.setResult(Activity.RESULT_OK);
-
+                
+                //Clear popup from the map.
+                layout.setVisibility(GONE);
             }
         });
 
