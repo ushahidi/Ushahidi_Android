@@ -59,8 +59,6 @@
 	<string name="google_map_api_key_pro">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string>
 	<string name="menu_home">Home</string>
 	<string name="menu_sync">Sync</string>
-	<string name="sms_to_ushahidi_failed">Failed to post SMS to Ushahidi. Make sure username
-		and password are correct</string>
 	<string name="instructions">Tap your location on the map</string>
 	<!-- Settings -->
 	<string name="menu_settings">Settings</string>
@@ -88,7 +86,6 @@
 	<string name="hint_domain">Select the Ushahidi instance that you wish to
 		interact with.</string>
 	<string name="chk_auto_fetch">Auto sync</string>
-	<string name="chk_sms_send">Send SMS to Ushahidi</string>
 	<string name="hint_sms_send">This means all incoming sms will be pushed to
 		Ushahidi</string>
 	<string name="hint_auto_fetch">Ushahidi will automatically download new reports.

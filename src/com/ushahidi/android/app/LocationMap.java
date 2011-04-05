@@ -38,7 +38,6 @@ import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -226,7 +225,7 @@ public class LocationMap extends MapActivity {
             foundAddresses = gc.getFromLocation(lat, lon, 5);
             if (foundAddresses.size() > 0) {
                 address = foundAddresses.get(0);
-                return address.getSubAdminArea();
+                return address.getFeatureName();
 
             } else {
                 return "";

@@ -483,6 +483,8 @@ public class AddIncident extends MapActivity {
         mIncidentDesc.setText("");
         mVectorCategories.clear();
         mSelectedCategories.setText("");
+        mSelectedPhoto.setImageDrawable(null);
+        mSelectedPhoto.setImageBitmap(null);
         mCounter = 0;
         updateDisplay();
 
@@ -891,10 +893,8 @@ public class AddIncident extends MapActivity {
         String dates[] = mDateToSubmit.split(" ");
         String time[] = dates[1].split(":");
         String categories = Util.implode(mVectorCategories);
-
-        final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-
-        StringBuilder urlBuilder = new StringBuilder(settings.getString("Domain", ""));
+        
+        StringBuilder urlBuilder = new StringBuilder(UshahidiPref.domain);
         urlBuilder.append("/api");
 
         mParams.put("task", "report");
@@ -953,6 +953,7 @@ public class AddIncident extends MapActivity {
         SharedPreferences.Editor editor = getPreferences(0).edit();
         editor.putString("title", mIncidentTitle.getText().toString());
         editor.putString("desc", mIncidentDesc.getText().toString());
+        editor.putString("location", mIncidentLocation.getText().toString());
         // editor.putString("date", mIncidentDate.getText().toString());
         editor.commit();
     }
@@ -963,7 +964,7 @@ public class AddIncident extends MapActivity {
      * @param String - the location to be geocoded
      * @return int - 0 on success, 1 network failure, 2 couldn't geocode wrong
      *         location name
-     */
+     *
     public int geocodeLocationName(String locationName) {
         if (Util.isConnected(AddIncident.this)) {
             try {
@@ -977,6 +978,28 @@ public class AddIncident extends MapActivity {
             }
         }
         return 1;
+    }*/
+    
+    /**
+     * get the real location name from the latitude and longitude.
+     */
+    private String getLocationFromLatLon(double lat, double lon) {
+
+        try {
+            Address address;
+            mFoundAddresses = mGc.getFromLocation(lat, lon, 5);
+            if (mFoundAddresses.size() > 0) {
+                address = mFoundAddresses.get(0);
+                return address.getSubAdminArea();
+
+            } else {
+                return "";
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     // thread class
@@ -1053,7 +1076,7 @@ public class AddIncident extends MapActivity {
         // AddIncident Activity.
         sLatitude = centerGeoPoint.getLatitudeE6() / 1.0E6;
         sLongitude = centerGeoPoint.getLongitudeE6() / 1.0E6;
-
+        mIncidentLocation.setText(getLocationFromLatLon(sLatitude,sLongitude));
         placeMarker(centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6());
 
     }
@@ -1149,6 +1172,8 @@ public class AddIncident extends MapActivity {
 
         }
     }
+    
+    
 
     @Override
     protected boolean isRouteDisplayed() {

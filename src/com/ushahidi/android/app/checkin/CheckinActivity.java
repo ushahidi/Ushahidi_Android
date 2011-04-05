@@ -1,3 +1,4 @@
+
 package com.ushahidi.android.app.checkin;
 
 import android.app.AlertDialog;
@@ -86,7 +87,7 @@ public class CheckinActivity extends MapActivity {
 
     private String checkinDetails;
 
-    //private String locationName = "";
+    // private String locationName = "";
 
     // Used for the camera
     private static final int REQUEST_CODE_CAMERA = 5;
@@ -105,11 +106,11 @@ public class CheckinActivity extends MapActivity {
 
     private PostCheckinsJSONServices jsonServices;
 
-    private boolean postCheckinJsonSuccess = false;
+    // /private boolean postCheckinJsonSuccess = false;
 
     private String postCheckinJsonErrorCode = "";
 
-    private String postCheckinJsonErrorMessage = "";
+    // private String postCheckinJsonErrorMessage = "";
 
     private String jsonResponse = "";
 
@@ -187,7 +188,7 @@ public class CheckinActivity extends MapActivity {
         // house keeping
         ImageManager.deleteImage(selectedPhoto);
         ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
-        .removeUpdates(new DeviceLocationListener());
+                .removeUpdates(new DeviceLocationListener());
         super.onPause();
     }
 
@@ -367,10 +368,9 @@ public class CheckinActivity extends MapActivity {
                 // JSON Post
 
                 if (jsonServices.isProcessingResult()) {
-                    postCheckinJsonSuccess = true;
 
                     postCheckinJsonErrorCode = jsonServices.getErrorCode();
-                    postCheckinJsonErrorMessage = jsonServices.getErrorMessage();
+
                 }
 
                 // Display checkin status and return back to main screen
