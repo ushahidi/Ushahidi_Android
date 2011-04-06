@@ -57,7 +57,7 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
         snippet = (TextView)v.findViewById(R.id.balloon_item_snippet);
         readmore = (TextView)v.findViewById(R.id.balloon_item_readmore);
 
-        readmore.setText("Read more..");
+        readmore.setText(context.getString(R.string.read_more));
         readmore.setOnClickListener(new OnClickListener() {
             public void onClick(View view) {
 
@@ -91,7 +91,9 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
 
                 iMap.startActivityForResult(intent, VIEW_INCIDENT);
                 iMap.setResult(Activity.RESULT_OK);
-
+                
+                //Clear popup from the map.
+                layout.setVisibility(GONE);
             }
         });
 
@@ -110,6 +112,7 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
         addView(layout, params);
 
     }
+
 
     /**
      * Sets the view data from a given overlay item.

@@ -39,7 +39,7 @@
 				android:clickable="true" />
 			<TextView android:paddingBottom="20px" android:textStyle="bold"
 				android:gravity="center_horizontal" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:textColor="@drawable/date_color"
+				android:layout_height="wrap_content" android:textColor="@drawable/title_color"
 				android:id="@+id/latlon" />
 
 			<!-- selected photo -->

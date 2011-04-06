@@ -2,6 +2,7 @@
 package com.ushahidi.android.app.checkin;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -13,9 +14,11 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.data.IncidentsData;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA. User: Ahmed Date: 2/17/11 Time: 2:45 PM To change
@@ -30,6 +33,10 @@ public class CheckinItemizedOverlay<Item> extends ItemizedOverlay<OverlayItem> {
 
     private CheckinMap iMap;
 
+    private List<Checkin> mCheckins;
+
+    private Bundle extras;
+
     private int viewOffset;
 
     private View clickRegion;
@@ -40,13 +47,16 @@ public class CheckinItemizedOverlay<Item> extends ItemizedOverlay<OverlayItem> {
         super(boundCenter(drawable));
     }
 
-    public CheckinItemizedOverlay(Drawable marker, MapView mapView, CheckinMap iMap) {
+    public CheckinItemizedOverlay(Drawable marker, MapView mapView, CheckinMap iMap,
+            List<Checkin> checkins, Bundle extras) {
         super(marker);
 
         this.mapView = mapView;
         this.viewOffset = 32;
         this.iMap = iMap;
         this.mc = mapView.getController();
+        this.mCheckins = checkins;
+        this.extras = extras;
     }
 
     /**
@@ -88,7 +98,7 @@ public class CheckinItemizedOverlay<Item> extends ItemizedOverlay<OverlayItem> {
         if (balloonView == null) {
 
             balloonView = new CheckinBalloonOverlayView(this.iMap, mapView.getContext(),
-                    viewOffset,thisIndex);
+                    viewOffset, mCheckins, thisIndex, extras);
             clickRegion = balloonView.findViewById(R.id.balloon_inner_layout);
             isRecycled = false;
 

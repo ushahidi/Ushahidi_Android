@@ -5,6 +5,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.ushahidi.android.app.data.UsersData;
+
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -42,6 +46,43 @@ public class RetrieveCheckinsJSONServices {
         }
     }
 
+    private JSONArray getCheckinsUsersArray() {
+        try {
+            return getCheckinsObject().getJSONArray("users");
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
+    public ArrayList<UsersData> getCheckinsUsersList() {
+        if (processingResult) {
+            ArrayList<UsersData> checkinsUsersList = new ArrayList<UsersData>();
+            JSONArray checkinsUsersArray = getCheckinsUsersArray();
+
+            for (int index = 0; index < checkinsUsersArray.length(); index++) {
+                UsersData users = new UsersData();
+
+                try {
+                    users.setId(Integer.valueOf(checkinsUsersArray.getJSONObject(index).getString(
+                            "id")));
+                    users.setUserName(checkinsUsersArray.getJSONObject(index).getString(
+                            "name"));
+                    users.setColor(checkinsUsersArray.getJSONObject(index).getString(
+                    "color"));
+                } catch (JSONException e) {
+
+                    processingResult = false;
+                    return null;
+                }
+                
+                checkinsUsersList.add(users);
+            }
+            
+            return checkinsUsersList;
+        }
+        return null;
+    }
+
     public ArrayList<Checkin> getCheckinsList() {
         if (processingResult) {
             ArrayList<Checkin> checkinsList = new ArrayList<Checkin>();
@@ -65,7 +106,10 @@ public class RetrieveCheckinsJSONServices {
                             .getString("msg"));
                     currentCheckin.setUser(checkinsArray.getJSONObject(checkinsLoop).getString(
                             "user"));
+                    // currentCheckin.setImage(checkinsArray.getJSONObject(checkinsLoop).getString(
+                    // "media"));
                 } catch (JSONException e) {
+
                     processingResult = false;
                     return null;
                 }

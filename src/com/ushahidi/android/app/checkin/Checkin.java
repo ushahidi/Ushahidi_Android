@@ -20,11 +20,9 @@ public class Checkin {
 
     private String lon;
 
-    private String firstName;
-
-    private String lastName;
-
-    private String email;
+    private String name;
+    
+    private String image;
 
     public String getId() {
         return id;
@@ -82,27 +80,19 @@ public class Checkin {
         this.lon = lon;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getFirstName() {
-        return this.firstName;
+    public String getName() {
+        return this.name;
+    }
+    
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEmail() {
-        return this.email;
+    public String getImage() {
+        return this.image;
     }
 }

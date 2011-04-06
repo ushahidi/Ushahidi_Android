@@ -1,4 +1,3 @@
-
 package com.ushahidi.android.app.checkin;
 
 import android.app.AlertDialog;
@@ -10,26 +9,21 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -37,7 +31,6 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
-import com.google.android.maps.Projection;
 import com.ushahidi.android.app.ImageCapture;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
@@ -68,8 +61,6 @@ public class CheckinActivity extends MapActivity {
 
     private MapController mapController;
 
-    private static Geocoder gc;
-
     private static double latitude;
 
     private static double longitude;
@@ -95,7 +86,7 @@ public class CheckinActivity extends MapActivity {
 
     private String checkinDetails;
 
-    private String locationName = "";
+    //private String locationName = "";
 
     // Used for the camera
     private static final int REQUEST_CODE_CAMERA = 5;
@@ -111,8 +102,6 @@ public class CheckinActivity extends MapActivity {
     private Bundle mExtras;
 
     private Handler mHandler;
-
-    private List<Address> foundAddresses;
 
     private PostCheckinsJSONServices jsonServices;
 
@@ -140,7 +129,7 @@ public class CheckinActivity extends MapActivity {
         mSelectedPhotoText = (TextView)findViewById(R.id.checkin_selected_photo_label);
         mCheckinLocation = (TextView)findViewById(R.id.latlon);
         mSelectedPhotoText.setVisibility(View.GONE);
-        
+
         mHandler = new Handler();
 
         // get location stuff
@@ -148,8 +137,6 @@ public class CheckinActivity extends MapActivity {
         setDeviceLocation();
         // map stuff
         mapView = (MapView)findViewById(R.id.checkin_location_map);
-        foundAddresses = new ArrayList<Address>();
-        gc = new Geocoder(this);
 
         // location stuff
         mCheckinLocation.setText(getString(R.string.checkin_progress_message));
@@ -188,23 +175,26 @@ public class CheckinActivity extends MapActivity {
     protected void onResume() {
         super.onResume();
     }
-    
+
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        
-        //house keeping
+
+        // house keeping
         ImageManager.deleteImage(selectedPhoto);
+        ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
+                .removeUpdates(new DeviceLocationListener());
+        super.onDestroy();
     }
-    
+
     @Override
     protected void onPause() {
-        super.onPause();
-        
-        //house keeping
+        // house keeping
         ImageManager.deleteImage(selectedPhoto);
+        ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
+        .removeUpdates(new DeviceLocationListener());
+        super.onPause();
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -270,7 +260,7 @@ public class CheckinActivity extends MapActivity {
                 ImageManager.writeImage(byteArrayos.toByteArray(), mFilename);
                 UshahidiPref.fileName = mFilename;
                 selectedPhoto = mFilename;
-                
+
                 if (!TextUtils.isEmpty(selectedPhoto)) {
                     mSelectedPhotoText.setVisibility(View.VISIBLE);
                     mCheckImgPrev.refreshDrawableState();
@@ -389,11 +379,11 @@ public class CheckinActivity extends MapActivity {
 
                 // Display checkin status and return back to main screen
                 if (postCheckinJsonErrorCode != "0") {
-                    
-                    //delete uploaded image after successful checkin
+
+                    // delete uploaded image after successful checkin
                     com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
                             R.string.checkin_success_toast);
-                    
+
                 } else {
                     com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
                             R.string.checkin_error_toast);
@@ -438,25 +428,6 @@ public class CheckinActivity extends MapActivity {
         return (new GeoPoint((int)(lat * 1000000.0), (int)(lon * 1000000.0)));
     }
 
-    /**
-     * get the real location name from the latitude and longitude.
-     */
-    private String getLocationFromLatLon(double lat, double lon) {
-
-        try {
-
-            foundAddresses = gc.getFromLocation(lat, lon, 5);
-
-            Address address = foundAddresses.get(0);
-
-            return address.getSubAdminArea();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
     private void centerLocation(GeoPoint centerGeoPoint) {
 
         mapController.animateTo(centerGeoPoint);
@@ -478,13 +449,8 @@ public class CheckinActivity extends MapActivity {
 
         private OverlayItem myOverlayItem;
 
-        private boolean MoveMap = false;
-
-        private long timer;
-
         public MapMarker(Drawable defaultMarker, int LatitudeE6, int LongitudeE6) {
             super(defaultMarker);
-            this.timer = 0;
             this.marker = defaultMarker;
 
             // create locations of interest
@@ -543,15 +509,14 @@ public class CheckinActivity extends MapActivity {
         public void onLocationChanged(Location location) {
 
             if (location != null) {
+                ((LocationManager)getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
+
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
 
-                //locationName = getLocationFromLatLon(latitude, longitude);
                 centerLocation(getPoint(latitude, longitude));
-                mCheckinLocation
-                        .setText(String.valueOf(latitude) + "," + String.valueOf(longitude));
-                ((LocationManager)getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
-
+                mCheckinLocation.setText(String.valueOf(latitude) + ", "
+                        + String.valueOf(longitude));
             }
         }
 
@@ -566,48 +531,6 @@ public class CheckinActivity extends MapActivity {
         public void onStatusChanged(String provider, int status, Bundle extras) {
 
         }
-    }
-
-    // thread class
-    private class GeocodeTask extends AsyncTask<Void, Void, String> {
-
-        protected String localityName;
-
-        protected Context appContext;
-
-        protected double latitude;
-
-        protected double longitude;
-
-        @Override
-        protected void onPreExecute() {
-            setProgressBarIndeterminateVisibility(true);
-
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            // for some reason, Geocoder couldn't reverse geocode latitude and
-            // longitude
-            // so had to implement that using google geocde webservice.
-            localityName = Util.getFromLocation(latitude, longitude, appContext);
-            return localityName;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-
-            if (result == "") {
-                locationName = "";
-                Util.showToast(appContext, R.string.loc_not_found);
-            } else {
-                locationName = result;
-                Toast.makeText(appContext, locationName, Toast.LENGTH_SHORT).show();
-            }
-            setProgressBarIndeterminateVisibility(false);
-        }
-
     }
 
     @Override

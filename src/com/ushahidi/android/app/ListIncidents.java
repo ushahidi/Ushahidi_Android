@@ -296,9 +296,9 @@ public class ListIncidents extends Activity {
             } else if (result == 3) {
                 Util.showToast(appContext, R.string.invalid_ushahidi_instance);
             } else if (result == 2) {
-                Util.showToast(appContext, R.string.no_report);
+                Util.showToast(appContext, R.string.could_not_fetch_reports);
             } else if (result == 1) {
-                Util.showToast(appContext, R.string.no_report);
+                Util.showToast(appContext, R.string.could_not_fetch_reports);
             } else if (result == 0) {
                 showIncidents("All");
                 showCategories();
@@ -383,7 +383,7 @@ public class ListIncidents extends Activity {
                 incidentData.setIncidentLocation(location);
                 listText.setLocation(Util.capitalize(location));
 
-                date = Util.formatDate("yyyy-MM-dd hh:mm:ss", cursor.getString(dateIndex),
+                date = Util.formatDate("yyyy-MM-dd HH:mm:ss", cursor.getString(dateIndex),
                         "MMMM dd, yyyy 'at' hh:mm:ss aaa");
 
                 incidentData.setIncidentDate(date);

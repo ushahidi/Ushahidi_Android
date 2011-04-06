@@ -89,7 +89,8 @@ public class NetworkServices {
             ClientHttpRequest req = new ClientHttpRequest(url);
             req.setParameter("task", "checkin");
             req.setParameter("action", "get_ci");
-
+            req.setParameter("sort", "desc");
+            req.setParameter("sqllimit", UshahidiPref.totalReports);
             if (mobileId != null)
                 req.setParameter("mobileid", mobileId);
             if (checkinId != null)

@@ -13,7 +13,6 @@
 	android:versionName="0.1">
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.VIBRATE" />
-	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.RECEIVE_SMS" />
@@ -44,13 +43,7 @@
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-		<!-- sms -->
-		<receiver android:name=".SmsReceiver">
-			<intent-filter>
-				<action android:name="android.provider.Telephony.SMS_RECEIVED" />
-			</intent-filter>
-		</receiver>
-
+	
 		<!-- Incidents List -->
 		<activity android:name=".ListIncidents" android:label="@string/view_incident">
 			<intent-filter>
@@ -131,7 +124,15 @@
 				<category android:name="android.intent.category.DEFAULT"></category>
 			</intent-filter>
 		</activity>
-
+        
+        <!-- View Checkins -->
+        <activity android:name=".checkin.ViewCheckins" android:label="@string/view_checkins">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity>
+        
 		<!-- About -->
 		<activity android:name=".About" android:label="@string/ushahidi_about">
 			<intent-filter>
