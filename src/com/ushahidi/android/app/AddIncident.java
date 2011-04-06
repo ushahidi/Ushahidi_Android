@@ -10,8 +10,8 @@
  ** Foundation and appearing in the file LICENSE.LGPL included in the
  ** packaging of this file. Please review the following information to
  ** ensure the GNU Lesser General Public License version 3 requirements
- ** will be met: http://www.gnu.org/licenses/lgpl.html.	
- **	
+ ** will be met: http://www.gnu.org/licenses/lgpl.html. 
+ ** 
  **
  ** If you have questions regarding the use of this file, please contact
  ** Ushahidi developers at team@ushahidi.com.
@@ -72,9 +72,15 @@ import android.widget.Toast;
 public class AddIncident extends Activity {
 
     /**
-     * Name of category that exists on the phone before any connection to a server
+     * category that exists on the phone before any connection to a server, at present it is
+     * trusted reporter, id number 4 but will change to specific 'uncategorized' category when it 
+     * is ready on the server
      */
-    private static final String GENERIC_CATEGORY_NAME = "GENERIC";
+    private static final String UNCATEGORIZED_CATEGORY_ID = "4";
+    
+    private static final String UNCATEGORIZED_CATEGORY_TITLE = "uncategorized";
+    /**
+     */
     
     private static final int HOME = Menu.FIRST + 1;
 
@@ -196,8 +202,10 @@ public class AddIncident extends Activity {
         setContentView(R.layout.add_incident);
         mFoundAddresses = new ArrayList<Address>();
        
-        if(mVectorCategories.isEmpty()){
-            mVectorCategories.add(GENERIC_CATEGORY_NAME);
+        // sets category to be on the phone form the beginning
+        if(mCategoriesId.isEmpty()){
+            mCategoriesId.add(UNCATEGORIZED_CATEGORY_ID);
+            mCategoriesTitle.put(UNCATEGORIZED_CATEGORY_ID, UNCATEGORIZED_CATEGORY_TITLE);
         }
 
         mGc = new Geocoder(this);
@@ -208,7 +216,7 @@ public class AddIncident extends Activity {
         initComponents();
 
     }
-
+    
     // menu stuff
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -987,6 +995,14 @@ public class AddIncident extends Activity {
         }
         return 1;
     }
+    
+    /**
+     * Sets nVectorCategories
+     * @param aVectorCategories
+     */
+    public void setVectorCategories(Vector<String> aVectorCategories){
+        mVectorCategories = aVectorCategories;
+    }
 
     // thread class
     private class AddReportsTask extends AsyncTask<Void, Void, Integer> {
@@ -1006,9 +1022,9 @@ public class AddIncident extends Activity {
             if (Util.isConnected(AddIncident.this)) {
 
                 if (!postToOnline()) {
+                    addToDb();
                     status = 1; // fail
                 } else {
-
                     status = 0; // success
                 }
             } else {
@@ -1021,9 +1037,10 @@ public class AddIncident extends Activity {
         @Override
         protected void onPostExecute(Integer result) {
             if (result == 2) {
-                clearFields();
+                // TODO Clears fields as the the incident is saved in the db waiting to be posted
                 Util.showToast(appContext, R.string.report_successfully_added_offline);
             } else if (result == 1) {
+                clearFields();
                 Util.showToast(appContext, R.string.failed_to_add_report_online);
             } else if (result == 0) {
                 clearFields();
