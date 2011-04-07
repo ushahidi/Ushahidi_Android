@@ -41,7 +41,7 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
 
     private View clickRegion;
 
-    final MapController mc;
+    MapController mc;
 
     /**
      * @param marker - An icon to be drawn on the map for each item in the
@@ -91,9 +91,9 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
      * @see com.google.android.maps.ItemizedOverlay#onTap(int)
      */
     @Override
-    protected final boolean onTap(int index) {
+    protected boolean onTap(int index) {
         boolean isRecycled;
-        final int thisIndex;
+        int thisIndex;
         GeoPoint point;
         thisIndex = index;
         point = createItem(index).getPoint();

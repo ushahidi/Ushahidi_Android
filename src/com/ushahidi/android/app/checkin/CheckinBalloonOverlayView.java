@@ -56,6 +56,7 @@ public class CheckinBalloonOverlayView extends FrameLayout {
         snippet = (TextView)v.findViewById(R.id.balloon_item_snippet);
         readmore = (TextView)v.findViewById(R.id.balloon_item_readmore);
         readmore.setText(context.getString(R.string.read_more));
+        //readmore.setVisibility(GONE);
         readmore.setOnClickListener(new OnClickListener() {
 
             public void onClick(View view) {
@@ -78,6 +79,31 @@ public class CheckinBalloonOverlayView extends FrameLayout {
                 layout.setVisibility(GONE);
             }
         });
+        
+        layout.setOnClickListener(new OnClickListener() {
+
+            public void onClick(View v) {
+                if ( checkins != null ) {
+                    checkinsBundle.putString("name",checkins.get(index).getName() );
+                    checkinsBundle.putString("message", checkins.get(index).getMsg());
+                    checkinsBundle.putString("latitude", checkins.get(index).getLat());
+                    checkinsBundle.putString("longitude", checkins.get(index).getLon());
+                    checkinsBundle.putString("date", checkins.get(index).getDate());
+                    checkinsBundle.putString("photo", checkins.get(index).getImage());
+                }
+                
+                Intent intent = new Intent(context, ViewCheckins.class);
+                intent.putExtra("checkins", checkinsBundle);
+                iMap.startActivityForResult(intent, VIEW_CHECKINS);
+                iMap.setResult(Activity.RESULT_OK);
+                
+                //Clear popup from the map.
+                layout.setVisibility(GONE);
+                
+            }
+            
+        });
+        
         ImageView close = (ImageView)v.findViewById(R.id.close_img_button);
         close.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {

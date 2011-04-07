@@ -16,9 +16,11 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -39,6 +41,7 @@ import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.Util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -106,11 +109,7 @@ public class CheckinActivity extends MapActivity {
 
     private PostCheckinsJSONServices jsonServices;
 
-    // /private boolean postCheckinJsonSuccess = false;
-
     private String postCheckinJsonErrorCode = "";
-
-    // private String postCheckinJsonErrorMessage = "";
 
     private String jsonResponse = "";
 
@@ -118,7 +117,7 @@ public class CheckinActivity extends MapActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.checkin);
-        UshahidiPref.loadSettings(CheckinActivity.this);
+
         checkinButton = (Button)findViewById(R.id.perform_checkin_button);
         uploadPhotoButton = (Button)findViewById(R.id.upload_checkin_photo_button);
         mCancelButton = (Button)findViewById(R.id.checkin_cancel);
@@ -204,25 +203,25 @@ public class CheckinActivity extends MapActivity {
                     return;
                 }
 
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED); // pull
-                                                                                      // it
-                                                                                      // out
-                                                                                      // of
-                                                                                      // landscape
-                                                                                      // mode
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                
                 mBundle = null;
-                mExtras = data.getExtras();
-                if (mExtras != null)
-                    mBundle = mExtras.getBundle("filename");
+                
+                if (data != null) {
+                    mExtras = data.getExtras();
+                    if (mExtras != null)
+                        mBundle = mExtras.getBundle("filename");
 
-                if (mBundle != null && !mBundle.isEmpty()) {
-                    selectedPhoto = mBundle.getString("name");
-                    NetworkServices.fileName = mBundle.getString("name");
-                    mSelectedPhotoText.setVisibility(View.VISIBLE);
-                    mCheckImgPrev.refreshDrawableState();
-                    mCheckImgPrev
-                            .setImageDrawable(ImageManager.getImages(NetworkServices.fileName));
+                    if (mBundle != null && !mBundle.isEmpty()) {
+                        selectedPhoto = mBundle.getString("name");
+                        NetworkServices.fileName = mBundle.getString("name");
+                        mSelectedPhotoText.setVisibility(View.VISIBLE);
+                        mCheckImgPrev.refreshDrawableState();
+                        mCheckImgPrev.setImageDrawable(ImageManager
+                                .getImages(NetworkServices.fileName));
+                    }
                 }
+
                 break;
 
             case REQUEST_CODE_IMAGE:
@@ -299,11 +298,10 @@ public class CheckinActivity extends MapActivity {
                 dialog.setButton3(getString(R.string.camera_option), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
-                        Intent launchPreferencesIntent = new Intent().setClass(
-                                CheckinActivity.this, ImageCapture.class);
+                        Intent launchCamera = new Intent().setClass(CheckinActivity.this,
+                                ImageCapture.class);
 
-                        // Make it a subactivity so we know when it returns
-                        startActivityForResult(launchPreferencesIntent, REQUEST_CODE_CAMERA);
+                        startActivityForResult(launchCamera, REQUEST_CODE_CAMERA);
                         dialog.dismiss();
                     }
                 });
@@ -350,7 +348,7 @@ public class CheckinActivity extends MapActivity {
             String firstname = firstName.getText().toString();
             String lastname = lastName.getText().toString();
             String email = emailAddress.getText().toString();
-            String imei = com.ushahidi.android.app.checkin.Util.IMEI(CheckinActivity.this);
+            String imei = com.ushahidi.android.app.checkin.CheckinUtil.IMEI(CheckinActivity.this);
             this.checkinDetails = checkinMessageText.getText().toString();
             postCheckin(imei, domain, firstname, lastname, email);
         } else {

@@ -954,31 +954,8 @@ public class AddIncident extends MapActivity {
         editor.putString("title", mIncidentTitle.getText().toString());
         editor.putString("desc", mIncidentDesc.getText().toString());
         editor.putString("location", mIncidentLocation.getText().toString());
-        // editor.putString("date", mIncidentDate.getText().toString());
         editor.commit();
     }
-
-    /**
-     * Geocode user entered location name.
-     * 
-     * @param String - the location to be geocoded
-     * @return int - 0 on success, 1 network failure, 2 couldn't geocode wrong
-     *         location name
-     *
-    public int geocodeLocationName(String locationName) {
-        if (Util.isConnected(AddIncident.this)) {
-            try {
-                mFoundAddresses = mGc.getFromLocationName(locationName, 5);
-                Address address = mFoundAddresses.get(0);
-                AddIncident.sLatitude = address.getLatitude();
-                AddIncident.sLongitude = address.getLongitude();
-
-            } catch (IOException e) {
-                return 2;
-            }
-        }
-        return 1;
-    }*/
     
     /**
      * get the real location name from the latitude and longitude.

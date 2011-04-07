@@ -67,6 +67,8 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
                     incidentsBundle.putString("desc", extras.getString("desc"));
                     incidentsBundle.putString("category", extras.getString("category"));
                     incidentsBundle.putString("location", extras.getString("location"));
+                    incidentsBundle.putString("latitude", extras.getString("latitude"));
+                    incidentsBundle.putString("longitude", extras.getString("longitude"));
                     incidentsBundle.putString("date", extras.getString("date"));
                     incidentsBundle.putString("media", extras.getString("media"));
                     incidentsBundle.putString("image", extras.getString("image"));
@@ -79,6 +81,10 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
                             .getIncidentCategories());
                     incidentsBundle.putString("location", mNewIncidents.get(index)
                             .getIncidentLocation());
+                    incidentsBundle.putString("latitude", mNewIncidents.get(index)
+                            .getIncidentLocLatitude());
+                    incidentsBundle.putString("longitude", mNewIncidents.get(index)
+                            .getIncidentLocLongitude());
                     incidentsBundle.putString("date", mNewIncidents.get(index).getIncidentDate());
                     incidentsBundle.putString("media", mNewIncidents.get(index)
                             .getIncidentThumbnail());
@@ -91,8 +97,8 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
 
                 iMap.startActivityForResult(intent, VIEW_INCIDENT);
                 iMap.setResult(Activity.RESULT_OK);
-                
-                //Clear popup from the map.
+
+                // Clear popup from the map.
                 layout.setVisibility(GONE);
             }
         });
@@ -112,7 +118,6 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
         addView(layout, params);
 
     }
-
 
     /**
      * Sets the view data from a given overlay item.

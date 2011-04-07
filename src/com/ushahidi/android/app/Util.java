@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -76,6 +77,8 @@ public class Util {
     private static Pattern pattern;
 
     private static Matcher matcher;
+
+    private static Random random = new Random();
 
     private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -550,4 +553,15 @@ public class Util {
         }
     }
 
+    public static String generateFilename(boolean thumbnail) {
+        if( thumbnail) {
+            return  randomString() + "_t.jpg";
+        }
+        
+        return randomString() + ".jpg";
+    }
+
+    protected static String randomString() {
+        return Long.toString(random.nextLong(), 10);
+    }
 }
