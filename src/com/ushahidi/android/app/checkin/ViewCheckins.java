@@ -21,27 +21,17 @@
 package com.ushahidi.android.app.checkin;
 
 import android.os.Bundle;
-import android.widget.AdapterView;
-import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
-import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.widget.BaseAdapter;
-import android.widget.Gallery;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -66,7 +56,7 @@ public class ViewCheckins extends MapActivity {
 
     private TextView date;
 
-    private TextView photos;
+    private TextView photo;
 
     private Bundle extras = new Bundle();
 
@@ -84,8 +74,9 @@ public class ViewCheckins extends MapActivity {
 
         mapView = (MapView)findViewById(R.id.loc_map);
         image = (ImageView)findViewById(R.id.checkin_img);
+        photo = (TextView)findViewById(R.id.checkin_photo);
         Bundle incidents = getIntent().getExtras();
-
+        photo.setVisibility(View.GONE);
         extras = incidents.getBundle("checkins");
         
         // id = extras.getInt("id");
@@ -107,9 +98,11 @@ public class ViewCheckins extends MapActivity {
 
         
         fileName = extras.getString("photo");
-        
-        image.setImageDrawable(ImageManager
+        if(!TextUtils.isEmpty(fileName)) {
+            photo.setVisibility(View.VISIBLE);
+            image.setImageDrawable(ImageManager
                 .getImages(fileName));
+        }
 
         mapController = mapView.getController();
         defaultLocation = getPoint(Double.parseDouble(checkinLatitude),
@@ -164,13 +157,9 @@ public class ViewCheckins extends MapActivity {
 
         private OverlayItem myOverlayItem;
 
-        private boolean MoveMap = false;
-
-        private long timer;
-
         public MapMarker(Drawable defaultMarker, int LatitudeE6, int LongitudeE6) {
             super(defaultMarker);
-            this.timer = 0;
+            
             this.marker = defaultMarker;
 
             // create locations of interest

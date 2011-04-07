@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -96,23 +97,25 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
         int thisIndex;
         GeoPoint point;
         thisIndex = index;
+        
         point = createItem(index).getPoint();
 
         if (balloonView == null) {
 
             balloonView = new UshahidiBalloonOverlayView(this.iMap, mapView.getContext(),
-                    viewOffset, this.mNewIncidents, thisIndex, extras);
+                    viewOffset, this.mNewIncidents, index);
             clickRegion = balloonView.findViewById(R.id.balloon_inner_layout);
             isRecycled = false;
 
         } else {
+            
             isRecycled = true;
         }
 
         balloonView.setVisibility(View.GONE);
 
-        balloonView.setData(createItem(index));
-
+        balloonView.setData(createItem(index),index);
+        
         MapView.LayoutParams params = new MapView.LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT, point, MapView.LayoutParams.BOTTOM_CENTER);
 

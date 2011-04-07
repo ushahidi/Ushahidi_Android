@@ -103,7 +103,7 @@
 					android:paddingRight="10px" android:paddingLeft="10px"
 					android:textColor="@drawable/title_color" android:text="@string/report_location" />
 			</LinearLayout>
-			
+
 			<!-- Location ends -->
 			<!-- Map starts -->
 			<LinearLayout android:id="@+id/top_items_layout"
@@ -135,11 +135,10 @@
 			</LinearLayout>
 			<LinearLayout android:orientation="vertical"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
-				android:paddingBottom="5px" android:paddingLeft="7px"
-				android:paddingRight="9px">
-				<ImageView android:layout_height="wrap_content"
-					android:adjustViewBounds="true" android:id="@+id/checkin_img"
-					android:scaleType="centerCrop" android:layout_width="wrap_content"
+				android:padding="5px">
+				<ImageView android:layout_width="fill_parent"
+					android:layout_height="fill_parent" android:adjustViewBounds="true"
+					android:id="@+id/checkin_img" android:scaleType="centerCrop"
 					android:paddingBottom="20px" />
 			</LinearLayout>
 			<!-- Photo ends -->
