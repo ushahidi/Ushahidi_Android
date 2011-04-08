@@ -216,13 +216,7 @@ public class AddIncident extends MapActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.add_incident);
         mFoundAddresses = new ArrayList<Address>();
-       
-        // sets category to be on the phone form the beginning
-        if(mCategoriesId.isEmpty()){
-            mCategoriesId.add(UNCATEGORIZED_CATEGORY_ID);
-            mCategoriesTitle.put(UNCATEGORIZED_CATEGORY_ID, UNCATEGORIZED_CATEGORY_TITLE);
-        }
-
+      
         mGc = new Geocoder(this);
 
         // load settings
@@ -485,6 +479,13 @@ public class AddIncident extends MapActivity {
                 mCategoriesId.add(String.valueOf(cursor.getInt(idIndex)));
                 i++;
             } while (cursor.moveToNext());
+        }
+         
+        // sets category to be on the phone from the beginning if there aren't any already
+        if(mCategoriesId.isEmpty()){
+            categories[i] = UNCATEGORIZED_CATEGORY_TITLE;
+            mCategoriesId.add(UNCATEGORIZED_CATEGORY_ID);
+            mCategoriesTitle.put(UNCATEGORIZED_CATEGORY_ID, UNCATEGORIZED_CATEGORY_TITLE);
         }
 
         cursor.close();

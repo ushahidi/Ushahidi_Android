@@ -149,7 +149,6 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
         params.put(UshahidiHttpClient.PERSON_FIRST, cursor.getString(UshahidiDatabase.ADD_PERSON_FIRST_INDEX));
         params.put(UshahidiHttpClient.PERSON_LAST, cursor.getString(UshahidiDatabase.ADD_PERSON_LAST_INDEX));
         params.put(UshahidiHttpClient.PERSON_EMAIL, cursor.getString(UshahidiDatabase.ADD_PERSON_EMAIL_INDEX));
-        params.put("filename", cursor.getString(UshahidiDatabase.ADD_INCIDENT_PHOTO_INDEX));
         return params;
     }
 }
