@@ -133,22 +133,22 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
      */
     private HashMap<String, String> preparePostParams(Cursor cursor) {
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put("task", "report");
-        params.put("incident_title", cursor.getString(UshahidiDatabase.ADD_INCIDENT_TITLE_INDEX));
-        params.put("incident_description",
+        params.put(UshahidiHttpClient.TASK, "report");
+        params.put(UshahidiHttpClient.INCIDENT_TITLE, cursor.getString(UshahidiDatabase.ADD_INCIDENT_TITLE_INDEX));
+        params.put(UshahidiHttpClient.INCIDENT_DESCRIPTION,
                 cursor.getString(UshahidiDatabase.ADD_INCIDENT_DESC_INDEX));
-        params.put("incident_date", cursor.getString(UshahidiDatabase.ADD_INCIDENT_DATE_INDEX));
-        params.put("incident_hour", cursor.getString(UshahidiDatabase.ADD_INCIDENT_HOUR_INDEX));
-        params.put("incident_minute", cursor.getString(UshahidiDatabase.ADD_INCIDENT_MINUTE_INDEX));
-        params.put("incident_ampm", cursor.getString(UshahidiDatabase.ADD_INCIDENT_AMPM_INDEX));
-        params.put("incident_category",
+        params.put(UshahidiHttpClient.INCIDENT_DATE, cursor.getString(UshahidiDatabase.ADD_INCIDENT_DATE_INDEX));
+        params.put(UshahidiHttpClient.INCIDENT_HOUR, cursor.getString(UshahidiDatabase.ADD_INCIDENT_HOUR_INDEX));
+        params.put(UshahidiHttpClient.INCIDENT_MINUTE, cursor.getString(UshahidiDatabase.ADD_INCIDENT_MINUTE_INDEX));
+        params.put(UshahidiHttpClient.INCIDENT_AMPM, cursor.getString(UshahidiDatabase.ADD_INCIDENT_AMPM_INDEX));
+        params.put(UshahidiHttpClient.INCIDENT_CATEGORY,
                 cursor.getString(UshahidiDatabase.ADD_INCIDENT_CATEGORIES_INDEX));
-        params.put("latitude", cursor.getString(UshahidiDatabase.INCIDENT_LOC_LATITUDE_INDEX));
-        params.put("longitude", cursor.getString(UshahidiDatabase.INCIDENT_LOC_LONGITUDE_INDEX));
-        params.put("location_name", cursor.getString(UshahidiDatabase.INCIDENT_LOC_NAME_INDEX));
-        params.put("person_first", cursor.getString(UshahidiDatabase.ADD_PERSON_FIRST_INDEX));
-        params.put("person_last", cursor.getString(UshahidiDatabase.ADD_PERSON_LAST_INDEX));
-        params.put("person_email", cursor.getString(UshahidiDatabase.ADD_PERSON_EMAIL_INDEX));
+        params.put(UshahidiHttpClient.LATITUDE, cursor.getString(UshahidiDatabase.INCIDENT_LOC_LATITUDE_INDEX));
+        params.put(UshahidiHttpClient.LONGITUDE, cursor.getString(UshahidiDatabase.INCIDENT_LOC_LONGITUDE_INDEX));
+        params.put(UshahidiHttpClient.LOCATION_NAME, cursor.getString(UshahidiDatabase.INCIDENT_LOC_NAME_INDEX));
+        params.put(UshahidiHttpClient.PERSON_FIRST, cursor.getString(UshahidiDatabase.ADD_PERSON_FIRST_INDEX));
+        params.put(UshahidiHttpClient.PERSON_LAST, cursor.getString(UshahidiDatabase.ADD_PERSON_LAST_INDEX));
+        params.put(UshahidiHttpClient.PERSON_EMAIL, cursor.getString(UshahidiDatabase.ADD_PERSON_EMAIL_INDEX));
         params.put("filename", cursor.getString(UshahidiDatabase.ADD_INCIDENT_PHOTO_INDEX));
         return params;
     }
