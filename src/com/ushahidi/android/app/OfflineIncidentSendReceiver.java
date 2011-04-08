@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.util.Log;
 
 import com.ushahidi.android.app.data.UshahidiDatabase;
@@ -27,39 +28,41 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
 
     private static final String CLASS_TAG = OfflineIncidentSendReceiver.class.getCanonicalName();
 
-    private static final String NOTIFICATION_TITLE_MESSAGE = "Ushahidi Incidents";
-
     private NotificationManager mNotificationManager;
 
     private static final int OFFLINE_MESSAGES_SENT = 1;
 
     /**
-     * When a connectivity change event is received, send off line messages and
-     * notify user
+     * When connectivity returns, send off line messages and notify user
      */
     @Override
     public void onReceive(Context context, Intent intent) {
 
         Log.d(CLASS_TAG, "received connection state changed broadcast");
+        
+        // Check if connectivity is being switch back on (could be a FAILOVER_CONNECTION event as well
+        // but I am going to ignore as no harm will come attempting to check) 
+        if (!intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {
+            Log.d(CLASS_TAG, "High possibility connection is on, so try sending any off line incidents");
+            if (postToOnlineAllOfflineIncidents(context)) {
+                mNotificationManager = (NotificationManager)context
+                        .getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if (postToOnlineAllOfflineIncidents(context)) {
-            mNotificationManager = (NotificationManager)context
-                    .getSystemService(Context.NOTIFICATION_SERVICE);
+                // creates notification to be displayed on the status bar
+                Notification notification = createNotfication(context);
 
-            // creates notification to be displayed on the status bar
-            Notification notification = createNotfication();
+                // Notification expanding stuff
+                CharSequence contentTitle = context.getString(R.string.notification_expanded_title);
+                CharSequence contentText =  context.getString(R.string.notification_expanded_message);
+                Intent notificationIntent = new Intent(context, OfflineIncidentSendReceiver.class);
+                PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                        notificationIntent, 0);
 
-            // Notification expanding stuff
-            CharSequence contentTitle = NOTIFICATION_TITLE_MESSAGE;
-            CharSequence contentText = "Incidents Sent Successfully";
-            Intent notificationIntent = new Intent(context, OfflineIncidentSendReceiver.class);
-            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent,
-                    0);
+                notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
 
-            notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
-
-            // Send notification
-            mNotificationManager.notify(OFFLINE_MESSAGES_SENT, notification);
+                // Send notification
+                mNotificationManager.notify(OFFLINE_MESSAGES_SENT, notification);
+            }
         }
     }
 
@@ -68,6 +71,9 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
      */
     private boolean postToOnlineAllOfflineIncidents(Context context) {
 
+        // Need to create own db handle instance as it can't be guaranteed the
+        // app handle
+        // will be about
         UshahidiDatabase db = new UshahidiDatabase(context);
         db.open();
 
@@ -111,9 +117,9 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
      * 
      * @return Notification
      */
-    private Notification createNotfication() {
+    private Notification createNotfication(Context context) {
         int icon = R.drawable.ushahidi_report_icon;
-        CharSequence tickerText = "Incidents sent";
+        CharSequence tickerText = context.getString(R.string.notification_status_bar_message);
         long when = System.currentTimeMillis();
         return new Notification(icon, tickerText, when);
     }
