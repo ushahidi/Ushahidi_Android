@@ -60,8 +60,6 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
     private Bundle mBundle;
 
     private Intent mIntent;
-    
-    private ImageCaptureCallback iccb = null;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -164,7 +162,7 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
                 ContentValues values = new ContentValues();
                 values.put(MediaColumns.TITLE, filename);
                 values.put(ImageColumns.DESCRIPTION, "Image capture by camera");
-                iccb = new ImageCaptureCallback();
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

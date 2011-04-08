@@ -12,7 +12,7 @@ import android.telephony.TelephonyManager;
  * Created by IntelliJ IDEA. User: Ahmed Date: 2/21/11 Time: 7:08 PM To change
  * this template use File | Settings | File Templates.
  */
-public class Util {
+public class CheckinUtil {
     public static String IMEI(Context appContext) {
         TelephonyManager TelephonyMgr = (TelephonyManager)appContext
                 .getSystemService(appContext.TELEPHONY_SERVICE);
@@ -24,6 +24,16 @@ public class Util {
         if (cursor.moveToFirst()) {
             int userName = cursor.getColumnIndexOrThrow(UshahidiDatabase.USER_NAME);
             return cursor.getString(userName);
+        }
+        cursor.close();
+        return null;
+    }
+    
+    public static String getCheckinMedia(String checkinId) {
+        Cursor cursor = UshahidiApplication.mDb.fetchCheckinsMediaByCheckinId(checkinId);
+        if (cursor.moveToFirst()) {
+            int mediaMediumLink = cursor.getColumnIndexOrThrow(UshahidiDatabase.MEDIA_MEDIUM_LINK);
+            return cursor.getString(mediaMediumLink);
         }
         cursor.close();
         return null;

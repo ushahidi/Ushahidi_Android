@@ -27,6 +27,7 @@ import java.util.List;
 import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.Util;
 import com.ushahidi.android.app.checkin.Checkin;
+import com.ushahidi.android.app.checkin.CheckinMedia;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -37,6 +38,47 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class UshahidiDatabase {
+
+    /**
+     * Group of constants that specify the different columns in the offline
+     * incident table and there corresponding column indexes
+     */
+    public static final int ADD_INCIDENT_ID_INDEX = 0;
+
+    public static final int ADD_INCIDENT_TITLE_INDEX = 1;
+
+    public static final int ADD_INCIDENT_DESC_INDEX = 2;
+
+    public static final int ADD_INCIDENT_DATE_INDEX = 3;
+
+    public static final int ADD_INCIDENT_HOUR_INDEX = 4;
+
+    public static final int ADD_INCIDENT_MINUTE_INDEX = 5;
+
+    public static final int ADD_INCIDENT_AMPM_INDEX = 6;
+
+    public static final int ADD_INCIDENT_CATEGORIES_INDEX = 7;
+
+    public static final int INCIDENT_LOC_NAME_INDEX = 8;
+
+    public static final int INCIDENT_LOC_LATITUDE_INDEX = 9;
+
+    public static final int INCIDENT_LOC_LONGITUDE_INDEX = 10;
+
+    public static final int ADD_INCIDENT_PHOTO_INDEX = 11;
+
+    public static final int ADD_INCIDENT_VIDEO_INDEX = 12;
+
+    public static final int ADD_INCIDENT_NEWS_INDEX = 13;
+
+    public static final int ADD_PERSON_FIRST_INDEX = 14;
+
+    public static final int ADD_PERSON_LAST_INDEX = 15;
+
+    public static final int ADD_PERSON_EMAIL_INDEX = 16;
+
+    /**
+     */
 
     private static final String TAG = "UshahidiDatabase";
 
@@ -110,7 +152,7 @@ public class UshahidiDatabase {
 
     public static final String ADD_PERSON_EMAIL = "person_email";
 
-    // Checkins
+    // Checkin messages
     public static final String CHECKIN_ID = "_id";
 
     public static final String CHECKIN_USER_ID = "user_id";
@@ -125,14 +167,21 @@ public class UshahidiDatabase {
 
     public static final String CHECKIN_LOC_LONGITUDE = "checkin_loc_longitude";
 
-    public static final String CHECKIN_IMAGE = "checkin_image";
-
-    // Users
+    // Checkins users
     public static final String USER_ID = "_id";
 
     public static final String USER_NAME = "user_name";
 
     public static final String USER_COLOR = "user_color";
+
+    // Checkins media
+    public static final String MEDIA_ID = "_id";
+
+    public static final String MEDIA_CHECKIN_ID = "media_checkin_id";
+
+    public static final String MEDIA_THUMBNAIL_LINK = "media_thumbnail_link";
+
+    public static final String MEDIA_MEDIUM_LINK = "media_medium_link";
 
     public static final String[] INCIDENTS_COLUMNS = new String[] {
             INCIDENT_ID, INCIDENT_TITLE, INCIDENT_DESC, INCIDENT_DATE, INCIDENT_MODE,
@@ -144,6 +193,9 @@ public class UshahidiDatabase {
             CATEGORY_ID, CATEGORY_TITLE, CATEGORY_DESC, CATEGORY_COLOR, CATEGORY_IS_UNREAD
     };
 
+    /**
+     * Columns of the table that stores off line incidents
+     */
     public static final String[] ADD_INCIDENTS_COLUMNS = new String[] {
             ADD_INCIDENT_ID, ADD_INCIDENT_TITLE, ADD_INCIDENT_DESC, ADD_INCIDENT_DATE,
             ADD_INCIDENT_HOUR, ADD_INCIDENT_MINUTE, ADD_INCIDENT_AMPM, ADD_INCIDENT_CATEGORIES,
@@ -152,15 +204,20 @@ public class UshahidiDatabase {
             ADD_PERSON_EMAIL
     };
 
-    /** Checkins **/
+    // Checkins messages
     public static final String[] CHECKINS_COLUMNS = new String[] {
             CHECKIN_ID, CHECKIN_USER_ID, CHECKIN_MESG, CHECKIN_DATE, CHECKIN_LOC_NAME,
-            CHECKIN_LOC_LATITUDE, CHECKIN_LOC_LONGITUDE, CHECKIN_IMAGE
+            CHECKIN_LOC_LATITUDE, CHECKIN_LOC_LONGITUDE
     };
 
-    /** users **/
+    // checkins users
     public static final String[] USERS_COLUMNS = new String[] {
             USER_ID, USER_NAME, USER_COLOR
+    };
+
+    //
+    public static final String[] CHECKIN_MEDIA_COLUMNS = new String[] {
+            MEDIA_ID, MEDIA_CHECKIN_ID, MEDIA_THUMBNAIL_LINK, MEDIA_MEDIUM_LINK
     };
 
     private DatabaseHelper mDbHelper;
@@ -179,7 +236,9 @@ public class UshahidiDatabase {
 
     private static final String USERS_TABLE = "users";
 
-    private static final int DATABASE_VERSION = 11;
+    private static final String CHECKINS_MEDIA_TABLE = "checkin_media";
+
+    private static final int DATABASE_VERSION = 12;
 
     // NOTE: the incident ID is used as the row ID.
     // Furthermore, if a row already exists, an insert will replace
@@ -214,12 +273,16 @@ public class UshahidiDatabase {
             + CHECKINS_TABLE + " (" + CHECKIN_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
             + CHECKIN_USER_ID + " INTEGER, " + CHECKIN_MESG + " TEXT NOT NULL, " + CHECKIN_DATE
             + " DATE NOT NULL, " + CHECKIN_LOC_NAME + " TEXT NOT NULL, " + CHECKIN_LOC_LATITUDE
-            + " TEXT NOT NULL, " + CHECKIN_LOC_LONGITUDE + " TEXT NOT NULL, " + CHECKIN_IMAGE
-            + " TEXT" + ")";
+            + " TEXT NOT NULL, " + CHECKIN_LOC_LONGITUDE + " TEXT NOT NULL" + ")";
 
     private static final String USERS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + USERS_TABLE
             + " (" + USER_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + USER_NAME
             + " TEXT NOT NULL, " + USER_COLOR + " TEXT" + ")";
+
+    private static final String CHECKINS_MEDIA_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
+            + CHECKINS_MEDIA_TABLE + " (" + MEDIA_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
+            + MEDIA_CHECKIN_ID + " INTEGER, " + MEDIA_THUMBNAIL_LINK + " TEXT, "
+            + MEDIA_MEDIUM_LINK + " TEXT" + ")";
 
     private final Context mContext;
 
@@ -234,7 +297,9 @@ public class UshahidiDatabase {
             db.execSQL(CATEGORIES_TABLE_CREATE);
             db.execSQL(ADD_INCIDENTS_TABLE_CREATE);
             db.execSQL(CHECKINS_TABLE_CREATE);
+            db.execSQL(CHECKINS_MEDIA_TABLE_CREATE);
             db.execSQL(USERS_TABLE_CREATE);
+
         }
 
         @Override
@@ -245,6 +310,9 @@ public class UshahidiDatabase {
             List<String> categoriesColumns;
             List<String> addIncidentColumns;
             List<String> checkinsColums;
+            List<String> checkinsMediaColums;
+            List<String> usersColumns;
+
             // upgrade incident table
             db.execSQL(INCIDENTS_TABLE_CREATE);
             incidentsColumns = UshahidiDatabase.getColumns(db, INCIDENTS_TABLE);
@@ -289,6 +357,30 @@ public class UshahidiDatabase {
             db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s", CHECKINS_TABLE,
                     checkinsCols, checkinsCols, CHECKINS_TABLE));
             db.execSQL("DROP TABLE IF EXISTS temp_" + CHECKINS_TABLE);
+
+            // upgrade checkin media table
+            db.execSQL(CHECKINS_MEDIA_TABLE_CREATE);
+            checkinsMediaColums = UshahidiDatabase.getColumns(db, CHECKINS_MEDIA_TABLE);
+            db.execSQL("ALTER TABLE " + CHECKINS_MEDIA_TABLE + " RENAME TO temp_"
+                    + CHECKINS_MEDIA_TABLE);
+            db.execSQL(CHECKINS_MEDIA_TABLE_CREATE);
+            checkinsMediaColums.retainAll(UshahidiDatabase.getColumns(db, CHECKINS_MEDIA_TABLE));
+            String checkinsMediaCols = UshahidiDatabase.join(checkinsMediaColums, ",");
+            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s",
+                    CHECKINS_MEDIA_TABLE, checkinsMediaCols, checkinsMediaCols,
+                    CHECKINS_MEDIA_TABLE));
+            db.execSQL("DROP TABLE IF EXISTS temp_" + CHECKINS_MEDIA_TABLE);
+
+            // upgrade checkin users table
+            db.execSQL(USERS_TABLE_CREATE);
+            usersColumns = UshahidiDatabase.getColumns(db, USERS_TABLE);
+            db.execSQL("ALTER TABLE " + USERS_TABLE + " RENAME TO temp_" + CHECKINS_MEDIA_TABLE);
+            db.execSQL(USERS_TABLE_CREATE);
+            usersColumns.retainAll(UshahidiDatabase.getColumns(db, USERS_TABLE));
+            String usersCols = UshahidiDatabase.join(checkinsMediaColums, ",");
+            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s", USERS_TABLE,
+                    usersCols, usersCols, USERS_TABLE));
+            db.execSQL("DROP TABLE IF EXISTS temp_" + USERS_TABLE);
 
             onCreate(db);
         }
@@ -419,7 +511,6 @@ public class UshahidiDatabase {
         initialValues.put(CHECKIN_LOC_NAME, checkins.getLoc());
         initialValues.put(CHECKIN_LOC_LATITUDE, checkins.getLat());
         initialValues.put(CHECKIN_LOC_LONGITUDE, checkins.getLon());
-        initialValues.put(CHECKIN_IMAGE, checkins.getImage());
         return mDb.insert(CHECKINS_TABLE, null, initialValues);
     }
 
@@ -429,6 +520,16 @@ public class UshahidiDatabase {
         initialValues.put(USER_NAME, users.getUserName());
         initialValues.put(USER_COLOR, users.getColor());
         return mDb.insert(USERS_TABLE, null, initialValues);
+    }
+
+    public long createCheckinMedia(CheckinMedia checkinMedia) {
+        ContentValues initialValues = new ContentValues();
+
+        initialValues.put(MEDIA_ID, checkinMedia.getMediaId());
+        initialValues.put(MEDIA_CHECKIN_ID, checkinMedia.getCheckinId());
+        initialValues.put(MEDIA_THUMBNAIL_LINK, checkinMedia.getThumbnailLink());
+        initialValues.put(MEDIA_MEDIUM_LINK, checkinMedia.getMediumLink());
+        return mDb.insert(CHECKINS_MEDIA_TABLE, null, initialValues);
     }
 
     public int addNewIncidentsAndCountUnread(ArrayList<IncidentsData> newIncidents) {
@@ -474,12 +575,32 @@ public class UshahidiDatabase {
                 + " DESC");
     }
 
+    public Cursor fetchCheckinsByUserdId(String id) {
+        String sql = "SELECT * FROM " + CHECKINS_TABLE + " WHERE " + CHECKIN_USER_ID
+                + " = ? ORDER BY " + CHECKIN_ID + " COLLATE NOCASE";
+        return mDb.rawQuery(sql, new String[] {
+            id
+        });
+
+    }
+
     public Cursor fetchUsersById(String id) {
         String sql = "SELECT * FROM " + USERS_TABLE + " WHERE " + USER_ID + " = ? ORDER BY "
                 + USER_NAME + " COLLATE NOCASE";
         return mDb.rawQuery(sql, new String[] {
             id
         });
+
+    }
+
+    public Cursor fetchCheckinsMediaByCheckinId(String id) {
+
+        String sql = "SELECT * FROM " + CHECKINS_MEDIA_TABLE + " WHERE " + MEDIA_CHECKIN_ID
+                + " = ? ORDER BY " + MEDIA_CHECKIN_ID + " COLLATE NOCASE";
+        return mDb.rawQuery(sql, new String[] {
+            id
+        });
+
     }
 
     public boolean clearData() {
@@ -514,6 +635,19 @@ public class UshahidiDatabase {
         return mDb.delete(USERS_TABLE, null, null) > 0;
     }
 
+    public boolean deleteCheckinMedia() {
+        return mDb.delete(CHECKINS_MEDIA_TABLE, null, null) > 0;
+    }
+
+    /**
+     * Allows for the deletion of individual off line incidents given an id
+     * @param addIncidentId
+     * @return
+     */
+    public boolean deleteAddIncident(int addIncidentId) {
+        return mDb.delete(INCIDENTS_TABLE, CATEGORY_ID + "=" + addIncidentId, null) > 0;
+    }
+    
     /**
      * Clear the offline table for adding incidents
      * 
@@ -568,15 +702,6 @@ public class UshahidiDatabase {
 
         return result;
     }
-
-    /*
-     * public int fetchMaxCategoryId(boolean isSent) { Cursor mCursor =
-     * mDb.rawQuery("SELECT MAX(" + CATEGORY_ID + ") FROM " + CATEGORIES_TABLE +
-     * " WHERE " + CATEGORIES_IS_SENT + " = ?", new String[] { isSent ? "1" :
-     * "0" }); int result = 0; if (mCursor == null) { return result; }
-     * mCursor.moveToFirst(); result = mCursor.getInt(0); mCursor.close();
-     * return result; }
-     */
 
     public int addNewCategoryAndCountUnread(List<CategoriesData> categories) {
         addCategories(categories, true);
@@ -676,7 +801,8 @@ public class UshahidiDatabase {
                 createCheckins(checkin);
             }
 
-            //limitRows(CHECKINS_TABLE, Integer.parseInt(UshahidiPref.totalReports), CHECKIN_ID);
+            // limitRows(CHECKINS_TABLE,
+            // Integer.parseInt(UshahidiPref.totalReports), CHECKIN_ID);
             mDb.setTransactionSuccessful();
         } finally {
             mDb.endTransaction();
@@ -689,6 +815,20 @@ public class UshahidiDatabase {
 
             for (UsersData user : users) {
                 createUsers(user);
+            }
+
+            mDb.setTransactionSuccessful();
+        } finally {
+            mDb.endTransaction();
+        }
+    }
+
+    public void addCheckinMedia(List<CheckinMedia> checkinsMedia) {
+        try {
+            mDb.beginTransaction();
+
+            for (CheckinMedia checkinMedia : checkinsMedia) {
+                createCheckinMedia(checkinMedia);
             }
 
             mDb.setTransactionSuccessful();

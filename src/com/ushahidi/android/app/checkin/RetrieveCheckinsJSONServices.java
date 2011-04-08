@@ -5,9 +5,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.ushahidi.android.app.data.UsersData;
-
 import android.util.Log;
+
+import com.ushahidi.android.app.ImageManager;
+import com.ushahidi.android.app.UshahidiApplication;
+import com.ushahidi.android.app.Util;
+import com.ushahidi.android.app.data.UsersData;
 
 import java.util.ArrayList;
 
@@ -65,19 +68,17 @@ public class RetrieveCheckinsJSONServices {
                 try {
                     users.setId(Integer.valueOf(checkinsUsersArray.getJSONObject(index).getString(
                             "id")));
-                    users.setUserName(checkinsUsersArray.getJSONObject(index).getString(
-                            "name"));
-                    users.setColor(checkinsUsersArray.getJSONObject(index).getString(
-                    "color"));
+                    users.setUserName(checkinsUsersArray.getJSONObject(index).getString("name"));
+                    users.setColor(checkinsUsersArray.getJSONObject(index).getString("color"));
                 } catch (JSONException e) {
 
                     processingResult = false;
                     return null;
                 }
-                
+
                 checkinsUsersList.add(users);
             }
-            
+
             return checkinsUsersList;
         }
         return null;
@@ -106,8 +107,12 @@ public class RetrieveCheckinsJSONServices {
                             .getString("msg"));
                     currentCheckin.setUser(checkinsArray.getJSONObject(checkinsLoop).getString(
                             "user"));
-                    // currentCheckin.setImage(checkinsArray.getJSONObject(checkinsLoop).getString(
-                    // "media"));
+                    if (!checkinsArray.getJSONObject(checkinsLoop).isNull("media")) {
+                        savedMediaCheckinsList(checkinsArray.getJSONObject(checkinsLoop)
+                                .getJSONArray("media"), checkinsArray.getJSONObject(checkinsLoop)
+                                .getString("id"));
+                    }
+
                 } catch (JSONException e) {
 
                     processingResult = false;
@@ -121,6 +126,47 @@ public class RetrieveCheckinsJSONServices {
         }
 
         return null;
+    }
+
+    public void savedMediaCheckinsList(JSONArray checkinsCheckinsMediaArray, String checkinId) {
+        ArrayList<CheckinMedia> checkinsMediaList = new ArrayList<CheckinMedia>();
+
+        String fileName = "";
+        String thumbNail = "";
+        String url = "";
+        String thumbnailUrl = "";
+        for (int index = 0; index < checkinsCheckinsMediaArray.length(); index++) {
+            CheckinMedia checkinMedia = new CheckinMedia();
+
+            try {
+                checkinMedia.setMediaId(Integer.valueOf(checkinsCheckinsMediaArray.getJSONObject(
+                        index).getString("id")));
+                checkinMedia.setCheckinId(Integer.valueOf(checkinId));
+                // generate a file name
+                url = checkinsCheckinsMediaArray.getJSONObject(index).getString("medium");
+
+                fileName = url.substring(url.lastIndexOf('/') + 1, url.length());
+                
+                ImageManager.saveImageFromURL(checkinsCheckinsMediaArray.getJSONObject(index)
+                        .getString("medium"), fileName);
+                
+                checkinMedia.setMediumLink(fileName);
+
+                thumbnailUrl = checkinsCheckinsMediaArray.getJSONObject(index).getString("thumb");
+                
+                thumbNail = thumbnailUrl.substring(thumbnailUrl.lastIndexOf('/') + 1,
+                        thumbnailUrl.length());
+                
+                ImageManager.saveImageFromURL(thumbnailUrl, thumbNail);
+                checkinMedia.setThumbnailLink(thumbNail);
+
+            } catch (JSONException e) {
+            }
+
+            checkinsMediaList.add(checkinMedia);
+        }
+        UshahidiApplication.mDb.addCheckinMedia(checkinsMediaList);
+
     }
 
     public boolean isProcessingResult() {

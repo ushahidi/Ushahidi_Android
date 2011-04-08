@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,15 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
 
     private Bundle incidentsBundle = new Bundle();
 
+    private List<IncidentsData> mNewIncidents;
+
+    private IncidentMap mMap;
+
+    private Context mContext;
+
     private static final int VIEW_INCIDENT = 1;
+
+    // public int index = 0;
 
     /**
      * Create a new BalloonOverlayView.
@@ -41,8 +50,8 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
      * @author Jeff Gilfelt
      */
     public UshahidiBalloonOverlayView(final IncidentMap iMap, final Context context,
-            final int balloonBottomOffset, final List<IncidentsData> mNewIncidents,
-            final int index, final Bundle extras) {
+            final int balloonBottomOffset, final List<IncidentsData> incidentsData,
+            final int thisIndex) {
 
         super(context);
 
@@ -50,52 +59,18 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
         layout = new LinearLayout(context);
         layout.setVisibility(VISIBLE);
 
+        mNewIncidents = incidentsData;
+        mMap = iMap;
+        mContext = context;
+
         LayoutInflater inflater = (LayoutInflater)context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.balloon_map_overlay, layout);
         title = (TextView)v.findViewById(R.id.balloon_item_title);
         snippet = (TextView)v.findViewById(R.id.balloon_item_snippet);
         readmore = (TextView)v.findViewById(R.id.balloon_item_readmore);
-
+        
         readmore.setText(context.getString(R.string.read_more));
-        readmore.setOnClickListener(new OnClickListener() {
-            public void onClick(View view) {
-
-                if (extras != null) {
-
-                    incidentsBundle.putString("title", extras.getString("title"));
-                    incidentsBundle.putString("desc", extras.getString("desc"));
-                    incidentsBundle.putString("category", extras.getString("category"));
-                    incidentsBundle.putString("location", extras.getString("location"));
-                    incidentsBundle.putString("date", extras.getString("date"));
-                    incidentsBundle.putString("media", extras.getString("media"));
-                    incidentsBundle.putString("image", extras.getString("image"));
-                    incidentsBundle.putString("status", "" + extras.getString("status"));
-
-                } else {
-                    incidentsBundle.putString("title", mNewIncidents.get(index).getIncidentTitle());
-                    incidentsBundle.putString("desc", mNewIncidents.get(index).getIncidentDesc());
-                    incidentsBundle.putString("category", mNewIncidents.get(index)
-                            .getIncidentCategories());
-                    incidentsBundle.putString("location", mNewIncidents.get(index)
-                            .getIncidentLocation());
-                    incidentsBundle.putString("date", mNewIncidents.get(index).getIncidentDate());
-                    incidentsBundle.putString("media", mNewIncidents.get(index)
-                            .getIncidentThumbnail());
-                    incidentsBundle.putString("image", mNewIncidents.get(index).getIncidentImage());
-                    incidentsBundle.putString("status", ""
-                            + mNewIncidents.get(index).getIncidentVerified());
-                }
-                Intent intent = new Intent(context, ViewIncidents.class);
-                intent.putExtra("incidents", incidentsBundle);
-
-                iMap.startActivityForResult(intent, VIEW_INCIDENT);
-                iMap.setResult(Activity.RESULT_OK);
-                
-                //Clear popup from the map.
-                layout.setVisibility(GONE);
-            }
-        });
 
         ImageView close = (ImageView)v.findViewById(R.id.close_img_button);
         close.setOnClickListener(new OnClickListener() {
@@ -113,6 +88,37 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
 
     }
 
+    private void viewReports(final int index) {
+        readmore.setOnClickListener(new OnClickListener() {
+            public void onClick(View view) {
+
+                incidentsBundle.putString("title", mNewIncidents.get(index).getIncidentTitle());
+                incidentsBundle.putString("desc", mNewIncidents.get(index).getIncidentDesc());
+                incidentsBundle.putString("category", mNewIncidents.get(index)
+                        .getIncidentCategories());
+                incidentsBundle.putString("location", mNewIncidents.get(index)
+                        .getIncidentLocation());
+                incidentsBundle.putString("latitude", mNewIncidents.get(index)
+                        .getIncidentLocLatitude());
+                incidentsBundle.putString("longitude", mNewIncidents.get(index)
+                        .getIncidentLocLongitude());
+                incidentsBundle.putString("date", mNewIncidents.get(index).getIncidentDate());
+                incidentsBundle.putString("media", mNewIncidents.get(index).getIncidentThumbnail());
+                incidentsBundle.putString("image", mNewIncidents.get(index).getIncidentImage());
+                incidentsBundle.putString("status", ""
+                        + mNewIncidents.get(index).getIncidentVerified());
+
+                Intent intent = new Intent(mContext, ViewIncidents.class);
+                intent.putExtra("incidents", incidentsBundle);
+
+                mMap.startActivityForResult(intent, VIEW_INCIDENT);
+                mMap.setResult(Activity.RESULT_OK);
+
+                // Clear popup from the map.
+                layout.setVisibility(GONE);
+            }
+        });
+    }
 
     /**
      * Sets the view data from a given overlay item.
@@ -120,8 +126,8 @@ public class UshahidiBalloonOverlayView extends FrameLayout {
      * @param item - The overlay item containing the relevant view data (title
      *            and snippet).
      */
-    public void setData(OverlayItem item) {
-
+    public void setData(OverlayItem item, final int i) {
+        viewReports(i);
         layout.setVisibility(VISIBLE);
         if (item.getTitle() != null) {
             title.setVisibility(VISIBLE);

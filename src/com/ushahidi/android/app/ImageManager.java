@@ -40,11 +40,11 @@ public class ImageManager {
 
     // Images
     public static Drawable getImages(String fileName) {
-        
+
         Drawable d = null;
         BitmapDrawable bD = new BitmapDrawable(UshahidiPref.savePath + fileName);
         d = bD.mutate();
-        
+
         return d;
     }
 
@@ -171,6 +171,30 @@ public class ImageManager {
         } catch (FileNotFoundException e) {
         }
         return null;
+    }
+
+    public static void saveImageFromURL(String url, String fileName) {
+        byte[] is;
+        
+        if (!TextUtils.isEmpty(url)) {
+            File imageFilename = new File(fileName);
+            File f = new File(UshahidiPref.savePath + imageFilename.getName());
+            if (!f.exists()) {
+                try {
+                    is = UshahidiHttpClient.fetchImage(url);
+                    if (is != null) {
+                        writeImage(is, imageFilename.getName());
+                    }
+                } catch (MalformedURLException e) {
+
+                    e.printStackTrace();
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+                }
+
+            }
+        }
     }
 
 }

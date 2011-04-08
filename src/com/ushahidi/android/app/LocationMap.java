@@ -179,7 +179,7 @@ public class LocationMap extends MapActivity {
 
     private void updateResultsInUi() {
 
-        Toast.makeText(LocationMap.this, "Find you at " + locationName, Toast.LENGTH_SHORT).show();
+        Toast.makeText(LocationMap.this, "Found you at " + locationName, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -210,7 +210,7 @@ public class LocationMap extends MapActivity {
         // AddIncident Activity.
         this.latitude = centerGeoPoint.getLatitudeE6() / 1.0E6;
         this.longitude = centerGeoPoint.getLongitudeE6() / 1.0E6;
-
+        mapView.getOverlays().clear();
         placeMarker(centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6());
 
     }
@@ -225,7 +225,7 @@ public class LocationMap extends MapActivity {
             foundAddresses = gc.getFromLocation(lat, lon, 5);
             if (foundAddresses.size() > 0) {
                 address = foundAddresses.get(0);
-                return address.getSubAdminArea();
+                return address.getFeatureName();
 
             } else {
                 return "";
@@ -476,7 +476,7 @@ public class LocationMap extends MapActivity {
                         Toast.makeText(LocationMap.this, locationName, Toast.LENGTH_SHORT).show();
                     }
                     // remove the last marker
-                    mapView.getOverlays().remove(0);
+                    
                     centerLocation(loc);
                 }
 

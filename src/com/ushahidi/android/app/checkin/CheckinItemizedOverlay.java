@@ -98,7 +98,7 @@ public class CheckinItemizedOverlay<Item> extends ItemizedOverlay<OverlayItem> {
         if (balloonView == null) {
 
             balloonView = new CheckinBalloonOverlayView(this.iMap, mapView.getContext(),
-                    viewOffset, mCheckins, thisIndex, extras);
+                    viewOffset, mCheckins, thisIndex);
             clickRegion = balloonView.findViewById(R.id.balloon_inner_layout);
             isRecycled = false;
 
@@ -108,7 +108,7 @@ public class CheckinItemizedOverlay<Item> extends ItemizedOverlay<OverlayItem> {
 
         balloonView.setVisibility(View.GONE);
 
-        balloonView.setData(createItem(index));
+        balloonView.setData(createItem(index),index);
 
         MapView.LayoutParams params = new MapView.LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT, point, MapView.LayoutParams.BOTTOM_CENTER);

@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Window;
 
 import com.google.android.maps.*;
@@ -184,7 +185,7 @@ public class CheckinMap extends MapActivity {
             for (Checkin checkin : checkinsList) {
 
                 items.add(new OverlayItem(getPoint(Double.valueOf(checkin.getLat()),
-                        Double.valueOf(checkin.getLon())), com.ushahidi.android.app.checkin.Util
+                        Double.valueOf(checkin.getLon())),CheckinUtil
                         .getCheckinUser(checkin.getName()), Util.limitString(checkin.getMsg(), 30)
                         + "\n" + checkin.getDate()));
 
@@ -217,7 +218,11 @@ public class CheckinMap extends MapActivity {
         public DeviceLocationOverlay(Drawable marker, MapView mapView) {
             super(boundCenterBottom(marker), mapView, CheckinMap.this, checkins, extras);
             mapView.getContext();
-            user = name == "" ? getString(R.string.no_name) : name;
+            if( TextUtils.isEmpty(name.trim())) {
+                user = getString(R.string.no_name);
+            } else {
+                user = name;
+            }
             
             items.add(new OverlayItem(getPoint(latitude, longitude), user,
                     getString(R.string.curr_location)));
@@ -249,7 +254,6 @@ public class CheckinMap extends MapActivity {
         String date;
         String mesg;
         String location;
-        String image;
 
         if (cursor.moveToFirst()) {
 
@@ -259,8 +263,6 @@ public class CheckinMap extends MapActivity {
             int locationIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_LOC_NAME);
 
             int mesgIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_MESG);
-
-            int imageIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_IMAGE);
 
             int latitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_LOC_LATITUDE);
 
@@ -290,10 +292,8 @@ public class CheckinMap extends MapActivity {
                         "MMMM dd, yyyy 'at' hh:mm:ss a");
 
                 checkinsData.setDate(date);
-
-                image = cursor.getString(imageIndex);
-                checkinsData.setImage(image);
-
+                checkinsData.setImage(CheckinUtil.getCheckinMedia(String.valueOf(id)));
+                
             } while (cursor.moveToNext());
         }
 

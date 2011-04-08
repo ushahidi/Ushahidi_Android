@@ -25,7 +25,6 @@ import java.util.List;
 
 import com.ushahidi.android.app.About;
 import com.ushahidi.android.app.AddIncident;
-import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.IncidentsTab;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
@@ -42,7 +41,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -301,8 +299,6 @@ public class ListCheckin extends Activity {
 
             int mesgIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_MESG);
 
-            int imageIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_IMAGE);
-
             int latitudeIndex = cursor
                     .getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_LOC_LATITUDE);
 
@@ -342,23 +338,6 @@ public class ListCheckin extends Activity {
 
                 checkinsData.setDate(date);
                 listText.setDate(date);
-
-                image = cursor.getString(imageIndex);
-                checkinsData.setImage(image);
-                listText.setMedia(image);
-
-                // TODO do a proper check for thumbnails
-                if (!TextUtils.isEmpty(image)) {
-                    d = ImageManager.getImages(image);
-                } else {
-                    d = null;
-                }
-
-                listText.setThumbnail(d == null ? getResources().getDrawable(
-                        R.drawable.ushahidi_report_icon) : d);
-
-                image = cursor.getString(imageIndex);
-                checkinsData.setImage(image);
 
                 listText.setId(id);
                 listText.setArrow(getResources().getDrawable(R.drawable.ushahidi_arrow));

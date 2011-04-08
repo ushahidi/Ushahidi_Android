@@ -48,6 +48,7 @@
       android:layout_width="fill_parent"
       android:id="@+id/balloon_item_readmore"
       android:text="balloon_item_snippet"
+      android:textStyle="bold"
       android:textColor="#7C2811"
       android:textSize="12dip" />
 
