@@ -53,6 +53,34 @@ import android.util.Log;
 
 public class UshahidiHttpClient {
 
+    public static final String TASK = "task";
+
+    public static final String INCIDENT_TITLE = "incident_title";
+
+    public static final String INCIDENT_DESCRIPTION = "incident_description";
+
+    public static final String INCIDENT_DATE = "incident_date";
+
+    public static final String INCIDENT_HOUR = "incident_hour";
+
+    public static final String INCIDENT_MINUTE = "incident_minute";
+
+    public static final String INCIDENT_AMPM = "incident_ampm";
+
+    public static final String INCIDENT_CATEGORY = "incident_category";
+
+    public static final String LATITUDE = "incident_category";
+
+    public static final String LONGITUDE = "incident_category";
+
+    public static final String LOCATION_NAME = "incident_category";
+
+    public static final String PERSON_FIRST = "incident_category";
+
+    public static final String PERSON_LAST = "incident_category";
+
+    public static final String PERSON_EMAIL = "incident_category";
+
     private static final int IO_BUFFER_SIZE = 512;
 
     final public static List<NameValuePair> blankNVPS = new ArrayList<NameValuePair>();

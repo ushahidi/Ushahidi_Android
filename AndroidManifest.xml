@@ -43,7 +43,7 @@
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-	
+
 		<!-- Incidents List -->
 		<activity android:name=".ListIncidents" android:label="@string/view_incident">
 			<intent-filter>
@@ -93,8 +93,8 @@
 		</activity>
 
 		<!-- Add a new incidents -->
-		<activity android:configChanges="orientation|keyboardHidden" android:name=".AddIncident" 
-		  android:label="@string/add_incident">
+		<activity android:configChanges="orientation|keyboardHidden"
+			android:name=".AddIncident" android:label="@string/add_incident">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT"></category>
@@ -109,8 +109,8 @@
 			</intent-filter>
 		</activity>
 		<!-- Settings -->
-		<activity android:name=".Settings" android:configChanges="orientation|keyboardHidden" 
-		  android:label="@string/app_settings">
+		<activity android:name=".Settings" android:configChanges="orientation|keyboardHidden"
+			android:label="@string/app_settings">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.ACTION_VIEW" />
@@ -124,15 +124,15 @@
 				<category android:name="android.intent.category.DEFAULT"></category>
 			</intent-filter>
 		</activity>
-        
-        <!-- View Checkins -->
-        <activity android:name=".checkin.ViewCheckins" android:label="@string/view_checkins">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT"></category>
-            </intent-filter>
-        </activity>
-        
+
+		<!-- View Checkins -->
+		<activity android:name=".checkin.ViewCheckins" android:label="@string/view_checkins">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT"></category>
+			</intent-filter>
+		</activity>
+
 		<!-- About -->
 		<activity android:name=".About" android:label="@string/ushahidi_about">
 			<intent-filter>
@@ -140,7 +140,17 @@
 				<category android:name="android.intent.category.DEFAULT"></category>
 			</intent-filter>
 		</activity>
-		<activity android:name=".checkin.CheckinActivity" 
-		  android:configChanges="orientation|keyboardHidden" android:label="Checkin" />
+		<activity android:name=".checkin.CheckinActivity"
+			android:configChanges="orientation|keyboardHidden" android:label="Checkin" />
+			
+        <!-- Receiver waits for connectivity change so offline messages can be sent -->
+		<receiver android:name=".ConnectivityChangeReceiver" android:enabled="true"
+			android:priority="0">
+			<intent-filter>
+				<action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> 
+  		    </intent-filter>
+		</receiver>
+		
+		<service android:name=".OfflineIncidentsSenderService"/>
 	</application>
 </manifest>

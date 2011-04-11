@@ -1,69 +1,120 @@
+
 package com.ushahidi.android.app.test;
 
-import com.ushahidi.android.app.AddIncident;
+import java.util.Vector;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.test.ActivityInstrumentationTestCase2;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
+import android.test.UiThreadTest;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.ushahidi.android.app.AddIncident;
+import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.data.UshahidiDatabase;
 
 public class AddIncidentTest extends ActivityInstrumentationTestCase2<AddIncident> {
-	
-	public static final int CATEGORY_ADAPTER_COUNT = 5;
-	
-	public static final int ITEM_TO_BE_SELECTED_POSITION = 2;
-	
-	public static final int INITIAL_POSITION = 0;
-	
-	public static final String INITIAL_SELECTION = "Trusted Reports";
-	
-    public static final int TEST_STATE_DESTROY_POSITION = 2;
-    public static final String TEST_STATE_DESTROY_SELECTION = "Earth";
 
-    
-    public static final int TEST_STATE_PAUSE_POSITION = 4;
-    public static final String TEST_STATE_PAUSE_SELECTION = "Jupiter";
+    private AddIncident mAddIncidentActivity;
 
-    private AddIncident addIncidentActivity;
+    private UshahidiDatabase mUshahidiDatabase;
 
-    private String categorySelection;
+    private EditText mTitle;
 
-    private int mPos;
+    private EditText mLocation;
 
-    private Spinner categorySpinner;
+    private EditText mDescription;
 
-    private SpinnerAdapter categoryData;
-	
-	public AddIncidentTest() {
-		super("com.ushahidi.android.app",AddIncident.class);
-	}
-	
-	/**
-	 * Set up the test environment before each test
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-		
-		// turn off touch mode.
-		setActivityInitialTouchMode(false);
-		
-		addIncidentActivity = getActivity();
-		
-		//categorySpinner = addIncidentActivity.findViewById(com.ushahidi.android.app.R.id.category);
-	}
-	
-	public void testPreconditions() {
-		
-	}
-	
-	public void testAddIncidentUI() {
-		
-	}
-	
-	public void testStateDestroy() {
-		
-	}
-	
-	public void testStatePause() {
-		
-	}
+    private Vector<String> mVectorCategories;
+
+    private Button mSendButton;
+
+    public AddIncidentTest() {
+        super("com.ushahidi.android.app", AddIncident.class);
+    }
+
+    /**
+     * Set up the test environment before each test
+     */
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        setActivityInitialTouchMode(false);
+        setActivityIntent(new Intent(Intent.ACTION_VIEW));
+        mAddIncidentActivity = getActivity();
+
+        mVectorCategories = new Vector<String>();
+        mVectorCategories.add("4");
+
+        mUshahidiDatabase = new UshahidiDatabase(mAddIncidentActivity);
+        mUshahidiDatabase.open();
+        mUshahidiDatabase.deleteAddIncidents();
+
+        mTitle = (EditText)mAddIncidentActivity.findViewById(R.id.incident_title);
+        mLocation = (EditText)mAddIncidentActivity.findViewById(R.id.incident_location);
+        mDescription = (EditText)mAddIncidentActivity.findViewById(R.id.incident_desc);
+
+        // activate action to submit report
+        mSendButton = (Button)mAddIncidentActivity.findViewById(R.id.incident_add_btn);
+
+    }
+
+    /**
+     * Tear down the environment after each test
+     */
+    protected void tearDown() throws Exception {
+        mUshahidiDatabase.close();
+        super.tearDown();
+    }
+
+    @UiThreadTest
+    public void testSendReport() {
+
+        final SharedPreferences settings = getInstrumentation().getContext().getSharedPreferences(
+                AddIncident.PREFS_NAME, 0);
+        Editor editor = settings.edit();
+        editor.putString("Domain", "http://demo.ushahidi.com");
+        editor.commit();
+
+        // set text in required fields
+        mTitle.setText("James Blunt");
+        mLocation.setText("UK");
+        mDescription.setText("James Blunt playing a gig, everyone get out");
+        mAddIncidentActivity.setVectorCategories(mVectorCategories);
+
+        // activate action to submit report
+        mSendButton.performClick();
+
+        try {
+            Thread.sleep(120000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail();
+        }
+        // check value exists in db
+        assertEquals(0, mUshahidiDatabase.fetchAllOfflineIncidents().getCount());
+    }
+
+    @UiThreadTest
+    public void testSendReportWithConnectionPostFailed() {
+
+        // set text in required fields
+        mTitle.setText("James Blunt");
+        mLocation.setText("UK");
+        mDescription.setText("James Blunt playing a gig, everyone get out");
+        mAddIncidentActivity.setVectorCategories(mVectorCategories);
+
+        mSendButton.performClick();
+
+        try {
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail();
+        }
+        // check value exists in db
+        assertEquals(1, mUshahidiDatabase.fetchAllOfflineIncidents().getCount());
+    }
 }

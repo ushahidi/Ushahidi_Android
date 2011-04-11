@@ -39,6 +39,47 @@ import android.util.Log;
 
 public class UshahidiDatabase {
 
+    /**
+     * Group of constants that specify the different columns in the offline
+     * incident table and there corresponding column indexes
+     */
+    public static final int ADD_INCIDENT_ID_INDEX = 0;
+
+    public static final int ADD_INCIDENT_TITLE_INDEX = 1;
+
+    public static final int ADD_INCIDENT_DESC_INDEX = 2;
+
+    public static final int ADD_INCIDENT_DATE_INDEX = 3;
+
+    public static final int ADD_INCIDENT_HOUR_INDEX = 4;
+
+    public static final int ADD_INCIDENT_MINUTE_INDEX = 5;
+
+    public static final int ADD_INCIDENT_AMPM_INDEX = 6;
+
+    public static final int ADD_INCIDENT_CATEGORIES_INDEX = 7;
+
+    public static final int INCIDENT_LOC_NAME_INDEX = 8;
+
+    public static final int INCIDENT_LOC_LATITUDE_INDEX = 9;
+
+    public static final int INCIDENT_LOC_LONGITUDE_INDEX = 10;
+
+    public static final int ADD_INCIDENT_PHOTO_INDEX = 11;
+
+    public static final int ADD_INCIDENT_VIDEO_INDEX = 12;
+
+    public static final int ADD_INCIDENT_NEWS_INDEX = 13;
+
+    public static final int ADD_PERSON_FIRST_INDEX = 14;
+
+    public static final int ADD_PERSON_LAST_INDEX = 15;
+
+    public static final int ADD_PERSON_EMAIL_INDEX = 16;
+
+    /**
+     */
+
     private static final String TAG = "UshahidiDatabase";
 
     public static final String INCIDENT_ID = "_id";
@@ -152,6 +193,9 @@ public class UshahidiDatabase {
             CATEGORY_ID, CATEGORY_TITLE, CATEGORY_DESC, CATEGORY_COLOR, CATEGORY_IS_UNREAD
     };
 
+    /**
+     * Columns of the table that stores off line incidents
+     */
     public static final String[] ADD_INCIDENTS_COLUMNS = new String[] {
             ADD_INCIDENT_ID, ADD_INCIDENT_TITLE, ADD_INCIDENT_DESC, ADD_INCIDENT_DATE,
             ADD_INCIDENT_HOUR, ADD_INCIDENT_MINUTE, ADD_INCIDENT_AMPM, ADD_INCIDENT_CATEGORIES,
@@ -330,14 +374,12 @@ public class UshahidiDatabase {
             // upgrade checkin users table
             db.execSQL(USERS_TABLE_CREATE);
             usersColumns = UshahidiDatabase.getColumns(db, USERS_TABLE);
-            db.execSQL("ALTER TABLE " + USERS_TABLE + " RENAME TO temp_"
-                    + CHECKINS_MEDIA_TABLE);
+            db.execSQL("ALTER TABLE " + USERS_TABLE + " RENAME TO temp_" + CHECKINS_MEDIA_TABLE);
             db.execSQL(USERS_TABLE_CREATE);
             usersColumns.retainAll(UshahidiDatabase.getColumns(db, USERS_TABLE));
             String usersCols = UshahidiDatabase.join(checkinsMediaColums, ",");
-            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-                    USERS_TABLE, usersCols, usersCols,
-                    USERS_TABLE));
+            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s", USERS_TABLE,
+                    usersCols, usersCols, USERS_TABLE));
             db.execSQL("DROP TABLE IF EXISTS temp_" + USERS_TABLE);
 
             onCreate(db);
@@ -597,6 +639,15 @@ public class UshahidiDatabase {
         return mDb.delete(CHECKINS_MEDIA_TABLE, null, null) > 0;
     }
 
+    /**
+     * Allows for the deletion of individual off line incidents given an id
+     * @param addIncidentId
+     * @return
+     */
+    public boolean deleteAddIncident(int addIncidentId) {
+        return mDb.delete(INCIDENTS_TABLE, CATEGORY_ID + "=" + addIncidentId, null) > 0;
+    }
+    
     /**
      * Clear the offline table for adding incidents
      * 

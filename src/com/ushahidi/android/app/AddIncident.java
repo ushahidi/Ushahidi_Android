@@ -10,8 +10,8 @@
  ** Foundation and appearing in the file LICENSE.LGPL included in the
  ** packaging of this file. Please review the following information to
  ** ensure the GNU Lesser General Public License version 3 requirements
- ** will be met: http://www.gnu.org/licenses/lgpl.html.	
- **	
+ ** will be met: http://www.gnu.org/licenses/lgpl.html. 
+ ** 
  **
  ** If you have questions regarding the use of this file, please contact
  ** Ushahidi developers at team@ushahidi.com.
@@ -82,6 +82,17 @@ import android.widget.Toast;
 
 public class AddIncident extends MapActivity {
 
+    /**
+     * category that exists on the phone before any connection to a server, at present it is
+     * trusted reporter, id number 4 but will change to specific 'uncategorized' category when it 
+     * is ready on the server
+     */
+    private static final String UNCATEGORIZED_CATEGORY_ID = "4";
+    
+    private static final String UNCATEGORIZED_CATEGORY_TITLE = "uncategorized";
+    /**
+     */
+    
     private static final int HOME = Menu.FIRST + 1;
 
     private static final int LIST_INCIDENT = Menu.FIRST + 2;
@@ -205,6 +216,7 @@ public class AddIncident extends MapActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.add_incident);
         mFoundAddresses = new ArrayList<Address>();
+      
         mGc = new Geocoder(this);
 
         // load settings
@@ -215,7 +227,7 @@ public class AddIncident extends MapActivity {
         
 
     }
-
+    
     // menu stuff
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -468,6 +480,13 @@ public class AddIncident extends MapActivity {
                 mCategoriesId.add(String.valueOf(cursor.getInt(idIndex)));
                 i++;
             } while (cursor.moveToNext());
+        }
+         
+        // sets category to be on the phone from the beginning if there aren't any already
+        if(mCategoriesId.isEmpty()){
+            categories[i] = UNCATEGORIZED_CATEGORY_TITLE;
+            mCategoriesId.add(UNCATEGORIZED_CATEGORY_ID);
+            mCategoriesTitle.put(UNCATEGORIZED_CATEGORY_ID, UNCATEGORIZED_CATEGORY_TITLE);
         }
 
         cursor.close();
@@ -979,6 +998,14 @@ public class AddIncident extends MapActivity {
         }
         return "";
     }
+    
+    /**
+     * Sets nVectorCategories
+     * @param aVectorCategories
+     */
+    public void setVectorCategories(Vector<String> aVectorCategories){
+        mVectorCategories = aVectorCategories;
+    }
 
     // thread class
     private class AddReportsTask extends AsyncTask<Void, Void, Integer> {
@@ -998,9 +1025,9 @@ public class AddIncident extends MapActivity {
             if (Util.isConnected(AddIncident.this)) {
 
                 if (!postToOnline()) {
+                    addToDb();
                     status = 1; // fail
                 } else {
-
                     status = 0; // success
                 }
             } else {
@@ -1013,8 +1040,10 @@ public class AddIncident extends MapActivity {
         @Override
         protected void onPostExecute(Integer result) {
             if (result == 2) {
+                // TODO Clears fields as the the incident is saved in the db waiting to be posted
                 Util.showToast(appContext, R.string.report_successfully_added_offline);
             } else if (result == 1) {
+                clearFields();
                 Util.showToast(appContext, R.string.failed_to_add_report_online);
             } else if (result == 0) {
                 clearFields();
@@ -1027,7 +1056,6 @@ public class AddIncident extends MapActivity {
             }
             setProgressBarIndeterminateVisibility(false);
         }
-
     }
 
     private void placeMarker(int markerLatitude, int markerLongitude) {
