@@ -144,7 +144,7 @@
 			android:configChanges="orientation|keyboardHidden" android:label="Checkin" />
 			
         <!-- Receiver waits for connectivity change so offline messages can be sent -->
-		<receiver android:name=".ConnectivityChangeReceiver" android:enabled="true"
+		<receiver android:name=".OfflineIncidentSendReceiver" android:enabled="true"
 			android:priority="0">
 			<intent-filter>
 				<action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> 
