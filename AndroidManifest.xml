@@ -151,6 +151,6 @@
   		    </intent-filter>
 		</receiver>
 		
-		<service android:name=".OfflineIncidentsSenderService"/>
+		<service android:name=".OfflineIncidentSendReceiver"/>
 	</application>
 </manifest>
