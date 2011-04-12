@@ -190,6 +190,7 @@ public class UshahidiHttpClient {
             }
 
         } catch (MalformedURLException ex) {
+            return false;
             // fall through and return false
         }
         return false;

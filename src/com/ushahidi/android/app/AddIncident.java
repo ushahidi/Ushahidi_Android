@@ -67,6 +67,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -83,16 +84,17 @@ import android.widget.Toast;
 public class AddIncident extends MapActivity {
 
     /**
-     * category that exists on the phone before any connection to a server, at present it is
-     * trusted reporter, id number 4 but will change to specific 'uncategorized' category when it 
-     * is ready on the server
+     * category that exists on the phone before any connection to a server, at
+     * present it is trusted reporter, id number 4 but will change to specific
+     * 'uncategorized' category when it is ready on the server
      */
     private static final String UNCATEGORIZED_CATEGORY_ID = "4";
-    
+
     private static final String UNCATEGORIZED_CATEGORY_TITLE = "uncategorized";
+
     /**
      */
-    
+
     private static final int HOME = Menu.FIRST + 1;
 
     private static final int LIST_INCIDENT = Menu.FIRST + 2;
@@ -216,18 +218,17 @@ public class AddIncident extends MapActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.add_incident);
         mFoundAddresses = new ArrayList<Address>();
-      
+
         mGc = new Geocoder(this);
 
         // load settings
         UshahidiPref.loadSettings(AddIncident.this);
-        
+
         setDeviceLocation();
         initComponents();
-        
 
     }
-    
+
     // menu stuff
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -464,7 +465,16 @@ public class AddIncident extends MapActivity {
     public String[] showCategories() {
         Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
 
-        String categories[] = new String[cursor.getCount()];
+        // check if there are any exisiting categories in the database
+        int categoryCount = cursor.getCount();
+        int categoryAmount = 0;
+        if (categoryCount > 0) {
+            categoryAmount = categoryCount;
+        } else {
+            categoryAmount = 1;
+        }
+
+        String categories[] = new String[categoryAmount];
 
         int i = 0;
         if (cursor.moveToFirst()) {
@@ -481,10 +491,11 @@ public class AddIncident extends MapActivity {
                 i++;
             } while (cursor.moveToNext());
         }
-         
-        // sets category to be on the phone from the beginning if there aren't any already
-        if(mCategoriesId.isEmpty()){
-            categories[i] = UNCATEGORIZED_CATEGORY_TITLE;
+
+        // sets category to be on the phone from the beginning if there aren't
+        // any already
+        if (mCategoriesId.isEmpty()) {
+            categories[0] = UNCATEGORIZED_CATEGORY_TITLE;
             mCategoriesId.add(UNCATEGORIZED_CATEGORY_ID);
             mCategoriesTitle.put(UNCATEGORIZED_CATEGORY_ID, UNCATEGORIZED_CATEGORY_TITLE);
         }
@@ -529,7 +540,7 @@ public class AddIncident extends MapActivity {
                     return;
                 }
 
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED); 
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                 mBundle = null;
                 mExtras = data.getExtras();
                 if (mExtras != null)
@@ -910,10 +921,15 @@ public class AddIncident extends MapActivity {
      */
     public boolean postToOnline() {
 
+        if (TextUtils.isEmpty(UshahidiPref.domain)
+                || UshahidiPref.domain.equalsIgnoreCase("http://")) {
+            return false;
+        }
+        
         String dates[] = mDateToSubmit.split(" ");
         String time[] = dates[1].split(":");
         String categories = Util.implode(mVectorCategories);
-        
+
         StringBuilder urlBuilder = new StringBuilder(UshahidiPref.domain);
         urlBuilder.append("/api");
 
@@ -976,7 +992,7 @@ public class AddIncident extends MapActivity {
         editor.putString("location", mIncidentLocation.getText().toString());
         editor.commit();
     }
-    
+
     /**
      * get the real location name from the latitude and longitude.
      */
@@ -998,12 +1014,13 @@ public class AddIncident extends MapActivity {
         }
         return "";
     }
-    
+
     /**
      * Sets nVectorCategories
+     * 
      * @param aVectorCategories
      */
-    public void setVectorCategories(Vector<String> aVectorCategories){
+    public void setVectorCategories(Vector<String> aVectorCategories) {
         mVectorCategories = aVectorCategories;
     }
 
@@ -1040,7 +1057,8 @@ public class AddIncident extends MapActivity {
         @Override
         protected void onPostExecute(Integer result) {
             if (result == 2) {
-                // TODO Clears fields as the the incident is saved in the db waiting to be posted
+                // TODO Clears fields as the the incident is saved in the db
+                // waiting to be posted
                 Util.showToast(appContext, R.string.report_successfully_added_offline);
             } else if (result == 1) {
                 clearFields();
@@ -1082,7 +1100,7 @@ public class AddIncident extends MapActivity {
         // AddIncident Activity.
         sLatitude = centerGeoPoint.getLatitudeE6() / 1.0E6;
         sLongitude = centerGeoPoint.getLongitudeE6() / 1.0E6;
-        mIncidentLocation.setText(getLocationFromLatLon(sLatitude,sLongitude));
+        mIncidentLocation.setText(getLocationFromLatLon(sLatitude, sLongitude));
         placeMarker(centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6());
 
     }
@@ -1160,7 +1178,7 @@ public class AddIncident extends MapActivity {
                 sLatitude = location.getLatitude();
                 sLongitude = location.getLongitude();
 
-                    centerLocation(getPoint(sLatitude, sLongitude));
+                centerLocation(getPoint(sLatitude, sLongitude));
                 mReportLocation.setText(String.valueOf(sLatitude) + ", "
                         + String.valueOf(sLongitude));
             }
@@ -1178,8 +1196,6 @@ public class AddIncident extends MapActivity {
 
         }
     }
-    
-    
 
     @Override
     protected boolean isRouteDisplayed() {
