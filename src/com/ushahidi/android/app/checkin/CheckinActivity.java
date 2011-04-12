@@ -3,6 +3,7 @@ package com.ushahidi.android.app.checkin;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,11 +17,9 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -42,7 +41,6 @@ import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.Util;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,6 +87,7 @@ public class CheckinActivity extends MapActivity {
     private TextView lblLastName;
 
     private TextView lblEmail;
+
     private TextView lblContact;
 
     // Photo functionality
@@ -122,6 +121,8 @@ public class CheckinActivity extends MapActivity {
     private String jsonResponse = "";
 
     private String errorMessage = "";
+
+    private ProgressDialog progressDialog;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,7 +160,7 @@ public class CheckinActivity extends MapActivity {
                 && (!TextUtils.isEmpty(UshahidiPref.email))) {
             lblContact.setVisibility(View.GONE);
         }
-        
+
         if (!TextUtils.isEmpty(UshahidiPref.firstname)) {
             lblFirstName.setVisibility(View.GONE);
             firstName.setVisibility(View.GONE);
@@ -423,6 +424,7 @@ public class CheckinActivity extends MapActivity {
                 com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
                         R.string.checkin_error_toast);
             }
+            progressDialog.dismiss();
             setProgressBarIndeterminateVisibility(false);
         }
     };
@@ -430,6 +432,9 @@ public class CheckinActivity extends MapActivity {
     public void postCheckin(final String imei, final String domain, final String firstname,
             final String lastname, final String email) {
         setProgressBarIndeterminateVisibility(true);
+        this.progressDialog = ProgressDialog.show(CheckinActivity.this,
+                getString(R.string.checkin_progress_title),
+                getString(R.string.checkin_in_progress), true);
         Thread t = new Thread() {
             public void run() {
 

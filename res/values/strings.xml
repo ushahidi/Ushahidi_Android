@@ -202,7 +202,8 @@
 	<string name="checkin_select_pic_camera">Camera</string>
 	<string name="checkin_selected_photo">Selected photo</string>
 	<string name="view_checkins">Ushahidi | View Checkins</string>
-	<string name="checkin_progress_title">Working...</string>
+	<string name="checkin_progress_title">Working</string>
+	<string name="checkin_in_progress">Sending checking...</string>
 	<string name="checkin_progress_message">Getting location data...</string>
 	<string name="checkin_contact">Contact</string>
 	<string name="checkin_success_toast">Checkin successful</string>

@@ -69,7 +69,8 @@
 		</activity>
 
 		<!-- Checkins Map -->
-		<activity android:name=".checkin.CheckinMap" android:label="@string/view_checkins">
+		<activity android:name=".checkin.CheckinMap"
+			android:configChanges="orientation|keyboardHidden" android:label="@string/view_checkins">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT"></category>
@@ -142,13 +143,14 @@
 		</activity>
 		<activity android:name=".checkin.CheckinActivity"
 			android:configChanges="orientation|keyboardHidden" android:label="Checkin" />
-			
-        <!-- Receiver waits for connectivity change so offline messages can be sent -->
-		<receiver android:name=".OfflineIncidentSendReceiver" android:enabled="true"
-			android:priority="0">
+
+		<!-- Receiver waits for connectivity change so offline messages can be 
+			sent -->
+		<receiver android:name=".OfflineIncidentSendReceiver"
+			android:enabled="true" android:priority="0">
 			<intent-filter>
-				<action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> 
-  		    </intent-filter>
+				<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+			</intent-filter>
 		</receiver>
 	</application>
 </manifest>
