@@ -142,7 +142,7 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".checkin.CheckinActivity"
-			android:configChanges="orientation|keyboardHidden" android:label="Checkin" />
+			android:configChanges="orientation|keyboardHidden" android:label="@string/checkin_btn" />
 
 		<!-- Receiver waits for connectivity change so offline messages can be 
 			sent -->

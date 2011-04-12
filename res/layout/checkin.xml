@@ -15,7 +15,7 @@
 	<ScrollView android:layout_width="fill_parent"
 		android:layout_height="fill_parent">
 		<LinearLayout android:id="@+id/linearLayout1"
-			android:layout_height="fill_parent" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_width="fill_parent"
 			android:orientation="vertical">
 			<!-- checkin message -->
 			<TextView android:textStyle="bold" android:layout_width="wrap_content"
@@ -23,7 +23,7 @@
 				android:textColor="@drawable/title_color" android:id="@+id/checkin_message_label" />
 
 			<EditText android:id="@+id/checkin_message_text"
-				android:layout_width="fill_parent" android:lines="5"
+				android:layout_width="fill_parent" android:lines="2"
 				android:autoText="true" android:layout_height="wrap_content"
 				android:singleLine="false" android:hint="@string/checkin_enter_msg_hint"
 				android:gravity="top" />
@@ -34,7 +34,7 @@
 				android:layout_height="wrap_content" android:textColor="@drawable/title_color" />
 			<com.google.android.maps.MapView
 				android:id="@+id/checkin_location_map" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:layout_below="@+id/checkin_location"
+				android:layout_height="fill_parent" android:layout_below="@+id/checkin_location"
 				android:apiKey="@string/google_map_api_key" android:enabled="true"
 				android:clickable="true" />
 			<TextView android:paddingBottom="20px" android:textStyle="bold"
@@ -52,7 +52,7 @@
 				android:scaleType="centerCrop" android:layout_width="wrap_content"
 				android:paddingBottom="20px" />
 			<Button android:id="@+id/upload_checkin_photo_button"
-				android:layout_width="fill_parent" android:text="@string/checkin_upload_photo"
+				android:layout_width="fill_parent" android:text="@string/btn_add_photo"
 				android:layout_height="wrap_content" />
 
 			<!-- contact -->

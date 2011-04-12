@@ -37,7 +37,7 @@
 	<string name="btn_find">Find me</string>
 	<string name="btn_reset">Reset</string>
 	<string name="btn_ok">Ok</string>
-	<string name="btn_add_photo">Add a Photo</string>
+	<string name="btn_add_photo">Add photo</string>
 	<string name="btn_cancel">Cancel</string>
 	<string name="btn_send">Send</string>
 	<string name="new_incidents">{0} New Reports </string>
@@ -188,26 +188,25 @@
 	<!-- Tab -->
 	<string name="tab_item_report_list">List</string>
 	<string name="tab_item_report_map">Map</string>
-	<string name="tab_item_checkin">Checkins</string>
+	<string name="tab_item_checkin">Check ins</string>
 
 	<!-- Checkin Strings -->
-	<string name="checkin_btn">Checkin</string>
+	<string name="checkin_btn">Check in</string>
 	<string name="checkin_photo">Photo</string>
 	<string name="checkin_message">Message</string>
 	<string name="checkin_enter_msg_hint">Enter message</string>
-	<string name="checkin_upload_photo">Upload photo</string>
 	<string name="checkin_how_to_select_pic">Please choose how you would like to get the
 		picture.</string>
 	<string name="checkin_select_pic_file">File</string>
 	<string name="checkin_select_pic_camera">Camera</string>
 	<string name="checkin_selected_photo">Selected photo</string>
-	<string name="view_checkins">Ushahidi | View Checkins</string>
+	<string name="view_checkins">Ushahidi | View Check ins</string>
 	<string name="checkin_progress_title">Working</string>
 	<string name="checkin_in_progress">Sending checking...</string>
 	<string name="checkin_progress_message">Getting location data...</string>
-	<string name="checkin_contact">Contact</string>
-	<string name="checkin_success_toast">Checkin successful</string>
-	<string name="checkin_error_toast">Error encountered during checkin</string>
+	<string name="checkin_contact">Contact Info</string>
+	<string name="checkin_success_toast">Check in successful</string>
+	<string name="checkin_error_toast">Error encountered during check in</string>
 	<string name="checkin_no_location">Could not get your location. If you are using the
 		GPS feature of the phone make sure the phone can see the sky. If the
 		phone cannot see the sky, turn of the GPS to make use of your network

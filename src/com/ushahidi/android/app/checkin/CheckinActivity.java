@@ -127,6 +127,7 @@ public class CheckinActivity extends MapActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        UshahidiPref.loadSettings(CheckinActivity.this);
         setContentView(R.layout.checkin);
 
         checkinButton = (Button)findViewById(R.id.perform_checkin_button);
