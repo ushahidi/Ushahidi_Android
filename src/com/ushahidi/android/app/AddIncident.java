@@ -221,9 +221,10 @@ public class AddIncident extends MapActivity {
 
         // load settings
         UshahidiPref.loadSettings(AddIncident.this);
-
-        initComponents();
+        
         setDeviceLocation();
+        initComponents();
+        
 
     }
     

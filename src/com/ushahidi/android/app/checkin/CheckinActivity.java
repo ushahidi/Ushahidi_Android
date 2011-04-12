@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -83,6 +84,13 @@ public class CheckinActivity extends MapActivity {
 
     private TextView mCheckinLocation;
 
+    private TextView lblFirstName;
+
+    private TextView lblLastName;
+
+    private TextView lblEmail;
+    private TextView lblContact;
+
     // Photo functionality
     private String mFilename = "";
 
@@ -113,6 +121,8 @@ public class CheckinActivity extends MapActivity {
 
     private String jsonResponse = "";
 
+    private String errorMessage = "";
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -125,6 +135,10 @@ public class CheckinActivity extends MapActivity {
         firstName = (EditText)findViewById(R.id.checkin_firstname);
         lastName = (EditText)findViewById(R.id.checkin_lastname);
         emailAddress = (EditText)findViewById(R.id.checkin_email);
+        lblFirstName = (TextView)findViewById(R.id.checkin_lbl_firstname);
+        lblLastName = (TextView)findViewById(R.id.checkin_lbl_lastname);
+        lblEmail = (TextView)findViewById(R.id.txt_lbl_email);
+        lblContact = (TextView)findViewById(R.id.checkin_contact);
         mCheckImgPrev = (ImageView)findViewById(R.id.checkin_img_prev);
         mSelectedPhotoText = (TextView)findViewById(R.id.checkin_selected_photo_label);
         mCheckinLocation = (TextView)findViewById(R.id.latlon);
@@ -140,6 +154,27 @@ public class CheckinActivity extends MapActivity {
         mCheckinLocation.setText(getString(R.string.checkin_progress_message));
         setDeviceLocation();
         // contact
+        if ((!TextUtils.isEmpty(UshahidiPref.firstname))
+                && (!TextUtils.isEmpty(UshahidiPref.lastname))
+                && (!TextUtils.isEmpty(UshahidiPref.email))) {
+            lblContact.setVisibility(View.GONE);
+        }
+        
+        if (!TextUtils.isEmpty(UshahidiPref.firstname)) {
+            lblFirstName.setVisibility(View.GONE);
+            firstName.setVisibility(View.GONE);
+        }
+
+        if (!TextUtils.isEmpty(UshahidiPref.lastname)) {
+            lblLastName.setVisibility(View.GONE);
+            lastName.setVisibility(View.GONE);
+        }
+
+        if (!TextUtils.isEmpty(UshahidiPref.email)) {
+            lblEmail.setVisibility(View.GONE);
+            emailAddress.setVisibility(View.GONE);
+        }
+
         firstName.setText(UshahidiPref.firstname);
         lastName.setText(UshahidiPref.lastname);
         emailAddress.setText(UshahidiPref.email);
@@ -204,9 +239,9 @@ public class CheckinActivity extends MapActivity {
                 }
 
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-                
+
                 mBundle = null;
-                
+
                 if (data != null) {
                     mExtras = data.getExtras();
                     if (mExtras != null)
@@ -368,6 +403,7 @@ public class CheckinActivity extends MapActivity {
                 if (jsonServices.isProcessingResult()) {
 
                     postCheckinJsonErrorCode = jsonServices.getErrorCode();
+                    errorMessage = jsonServices.getErrorMessage();
 
                 }
 
@@ -379,8 +415,8 @@ public class CheckinActivity extends MapActivity {
                             R.string.checkin_success_toast);
 
                 } else {
-                    com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
-                            R.string.checkin_error_toast);
+                    Toast.makeText(getApplicationContext(), "message: " + errorMessage,
+                            Toast.LENGTH_SHORT);
                 }
                 CheckinActivity.this.finish();
             } else {
