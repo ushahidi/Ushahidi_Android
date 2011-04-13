@@ -87,17 +87,6 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
         StringBuilder urlBuilder = new StringBuilder(settings.getString("Domain", ""));
         urlBuilder.append("/api");
 
-        ClientHttpRequest request;
-
-        try {
-            request = new ClientHttpRequest(urlBuilder.toString());
-        } catch (IOException e1) {
-            // if this fails there is something wrong with connection and is
-            // failing
-            e1.printStackTrace();
-            return false;
-        }
-
         Cursor cursor = db.fetchAllOfflineIncidents();
 
         cursor.moveToFirst();
@@ -106,7 +95,7 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
                     "Sending message with title : "
                             + cursor.getString(UshahidiDatabase.ADD_INCIDENT_TITLE_INDEX));
             try {
-                request.post(preparePostParams(cursor));
+                UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), preparePostParams(cursor));
                 // if it fails without exception at this point there is problem
                 // with the message
                 db.deleteAddIncident(cursor.getInt(UshahidiDatabase.ADD_INCIDENT_ID_INDEX));
@@ -173,6 +162,8 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
                 cursor.getString(UshahidiDatabase.ADD_PERSON_LAST_INDEX));
         params.put(UshahidiHttpClient.PERSON_EMAIL,
                 cursor.getString(UshahidiDatabase.ADD_PERSON_EMAIL_INDEX));
+        params.put(UshahidiHttpClient.PHOTO,
+                cursor.getString(UshahidiDatabase.ADD_INCIDENT_PHOTO_INDEX));
         return params;
     }
 }

@@ -81,6 +81,8 @@ public class UshahidiHttpClient {
 
     public static final String PERSON_EMAIL = "person_email";
     
+    public static final String PHOTO = "filename";
+    
     private static final int IO_BUFFER_SIZE = 512;
 
     final public static List<NameValuePair> blankNVPS = new ArrayList<NameValuePair>();

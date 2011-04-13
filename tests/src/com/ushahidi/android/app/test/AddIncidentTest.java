@@ -89,7 +89,7 @@ public class AddIncidentTest extends ActivityInstrumentationTestCase2<AddInciden
         mSendButton.performClick();
 
         try {
-            Thread.sleep(120000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
             fail();
