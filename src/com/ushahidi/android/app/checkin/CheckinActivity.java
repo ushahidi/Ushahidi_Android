@@ -253,9 +253,8 @@ public class CheckinActivity extends MapActivity {
                         selectedPhoto = mBundle.getString("name");
                         NetworkServices.fileName = mBundle.getString("name");
                         mSelectedPhotoText.setVisibility(View.VISIBLE);
-                        mCheckImgPrev.refreshDrawableState();
-                        mCheckImgPrev.setImageDrawable(ImageManager
-                                .getImages(NetworkServices.fileName));
+                        
+                        mCheckImgPrev.setImageBitmap(ImageManager.getBitmap(NetworkServices.fileName));
                     }
                 }
 

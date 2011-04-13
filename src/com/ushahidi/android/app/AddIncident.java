@@ -462,7 +462,7 @@ public class AddIncident extends MapActivity {
     public String[] showCategories() {
         Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
 
-        // check if there are any exisiting categories in the database
+        // check if there are any existing categories in the database
         int categoryCount = cursor.getCount();
         int categoryAmount = 0;
         if (categoryCount > 0) {
