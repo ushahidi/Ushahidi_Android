@@ -20,18 +20,14 @@
 
 package com.ushahidi.android.app.checkin;
 
+import com.ushahidi.android.app.Util;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.text.method.KeyListener;
-import android.view.KeyEvent;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -41,13 +37,11 @@ import android.widget.TextView;
 public class ListCheckinTextView extends LinearLayout {
     private TextView title;
 
-    private TextView iLocation;
-
     private TextView date;
 
     private TextView status;
     
-    private TextView mCategories;
+    private TextView mDescription;
 
     private ImageView thumbnail;
 
@@ -128,7 +122,19 @@ public class ListCheckinTextView extends LinearLayout {
         textLayout.addView(title, new TableRow.LayoutParams(
                 android.view.ViewGroup.LayoutParams.FILL_PARENT,
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-
+        
+        mDescription = new TextView(context);
+        mDescription.setTextColor(Color.GRAY);
+       
+        
+        mDescription.setSingleLine(true);
+        mDescription.setEllipsize(TextUtils.TruncateAt.END);
+        mDescription.setText(Util.capitalizeString(listText.getDesc()));
+        
+        textLayout.addView(mDescription, new TableRow.LayoutParams(
+                android.view.ViewGroup.LayoutParams.FILL_PARENT,
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+        
         date = new TextView(context);
         date.setTextColor(Color.GRAY);
         date.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -137,26 +143,6 @@ public class ListCheckinTextView extends LinearLayout {
         date.setText(listText.getDate());
 
         textLayout.addView(date, new TableRow.LayoutParams(
-                android.view.ViewGroup.LayoutParams.FILL_PARENT,
-                android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        iLocation = new TextView(context);
-        iLocation.setTextColor(Color.GRAY);
-        iLocation.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-        iLocation.setText(listText.getLocation());
-        textLayout.addView(iLocation, new TableRow.LayoutParams(
-                android.view.ViewGroup.LayoutParams.FILL_PARENT,
-                android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-        
-        mCategories = new TextView(context);
-        mCategories.setTextColor(Color.GRAY);
-       
-        
-        mCategories.setSingleLine(true);
-        mCategories.setEllipsize(TextUtils.TruncateAt.END);
-        mCategories.setText(listText.getCategories());
-        
-        textLayout.addView(mCategories, new TableRow.LayoutParams(
                 android.view.ViewGroup.LayoutParams.FILL_PARENT,
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
         
@@ -222,16 +208,9 @@ public class ListCheckinTextView extends LinearLayout {
     }
 
     public void setDesc(String description) {
-        this.description = description;
+        this.mDescription.setText(description);
     }
 
-    public void setCategories(String categories) {
-        this.mCategories.setText(categories);
-    }
-
-    public void setLocation(String location) {
-        this.iLocation.setText(location);
-    }
 
     public void setMedia(String media) {
         this.media = media;

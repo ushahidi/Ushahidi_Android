@@ -185,8 +185,7 @@ public class CheckinMap extends MapActivity {
             for (Checkin checkin : checkinsList) {
 
                 items.add(new OverlayItem(getPoint(Double.valueOf(checkin.getLat()),
-                        Double.valueOf(checkin.getLon())),CheckinUtil
-                        .getCheckinUser(checkin.getName()), Util.limitString(checkin.getMsg(), 30)
+                        Double.valueOf(checkin.getLon())),checkin.getName(), Util.limitString(checkin.getMsg(), 30)
                         + "\n" + checkin.getDate()));
 
             }
@@ -292,7 +291,7 @@ public class CheckinMap extends MapActivity {
                         "MMMM dd, yyyy 'at' hh:mm:ss a");
 
                 checkinsData.setDate(date);
-                checkinsData.setImage(CheckinUtil.getCheckinMedia(String.valueOf(id)));
+                checkinsData.setImage(String.valueOf(id));
                 
             } while (cursor.moveToNext());
         }

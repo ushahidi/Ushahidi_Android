@@ -61,7 +61,9 @@ public class ViewCheckins extends MapActivity {
     private Bundle extras = new Bundle();
 
     private ImageView image;
+
     private String fileName;
+
     private String checkinLatitude;
 
     private String checkinLongitude;
@@ -78,15 +80,14 @@ public class ViewCheckins extends MapActivity {
         Bundle incidents = getIntent().getExtras();
         photo.setVisibility(View.GONE);
         extras = incidents.getBundle("checkins");
-        
+
         // id = extras.getInt("id");
         checkinLatitude = extras.getString("latitude");
         checkinLongitude = extras.getString("longitude");
 
         name = (TextView)findViewById(R.id.title);
         name.setTypeface(Typeface.DEFAULT_BOLD);
-        name.setText(com.ushahidi.android.app.checkin.CheckinUtil.getCheckinUser(extras
-                .getString("name")));
+        name.setText(extras.getString("name"));
 
         date = (TextView)findViewById(R.id.date);
         date.setTextColor(Color.BLACK);
@@ -96,12 +97,10 @@ public class ViewCheckins extends MapActivity {
         message.setTextColor(Color.BLACK);
         message.setText(extras.getString("message"));
 
-        
         fileName = extras.getString("photo");
-        if(!TextUtils.isEmpty(fileName)) {
+        if (!TextUtils.isEmpty(fileName)) {
             photo.setVisibility(View.VISIBLE);
-            image.setImageDrawable(ImageManager
-                .getImages(fileName));
+            image.setImageDrawable(ImageManager.getImages(fileName));
         }
 
         mapController = mapView.getController();
@@ -110,12 +109,12 @@ public class ViewCheckins extends MapActivity {
         centerLocation(defaultLocation);
 
     }
-    
+
     public void onDestroy() {
         ViewCheckins.this.finish();
         super.onDestroy();
     }
-    
+
     public void onPause() {
         ViewCheckins.this.finish();
         super.onPause();
@@ -159,7 +158,7 @@ public class ViewCheckins extends MapActivity {
 
         public MapMarker(Drawable defaultMarker, int LatitudeE6, int LongitudeE6) {
             super(defaultMarker);
-            
+
             this.marker = defaultMarker;
 
             // create locations of interest

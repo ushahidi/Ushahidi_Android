@@ -80,8 +80,6 @@ public class Ushahidi extends Activity {
 
     private Button settingsBtn;
 
-    private Button checkinBtn;
-    
     private String dialogErrorMsg = "An error occurred fetching the reports. "
             + "Make sure you have entered an Ushahidi instance.";
 
@@ -99,9 +97,9 @@ public class Ushahidi extends Activity {
 
         // load settings
         UshahidiPref.loadSettings(this);
-        
+
         // check if domain has been set
-        if (UshahidiPref.domain.length() == 0) {
+        if (UshahidiPref.domain.length() == 0 || UshahidiPref.domain.equals("http://")) {
 
             // means this is a new install or the settings have been corrupted,
             // prompt them!
@@ -115,8 +113,29 @@ public class Ushahidi extends Activity {
         listBtn = (Button)findViewById(R.id.incident_list);
         addBtn = (Button)findViewById(R.id.incident_add);
         settingsBtn = (Button)findViewById(R.id.incident_map);
-        checkinBtn = (Button)findViewById(R.id.checkin);
-        
+   
+        // this for now
+        initializeUI();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initializeUI();
+    }
+
+    /**
+     * Initializes some of the UI components and test
+     */
+    public void initializeUI() {
+        UshahidiPref.loadSettings(this);
+        // This is to temporarily disable reports stuff
+        if (UshahidiPref.isCheckinEnabled == 1) {
+            addBtn.setText(getString(R.string.checkin_btn));
+            listBtn.setText(getString(R.string.checkin_list));
+        }
+
         listBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -137,45 +156,21 @@ public class Ushahidi extends Activity {
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(Ushahidi.this, AddIncident.class);
-                startActivityForResult(intent, ADD_INCIDENTS);
-                setResult(RESULT_OK);
+                if (UshahidiPref.isCheckinEnabled == 1) {
+                    NetworkServices.fileName = "";
+                    Intent checkinActivityIntent = new Intent().setClass(Ushahidi.this,
+                            CheckinActivity.class);
+                    startActivity(checkinActivityIntent);
+                    setResult(RESULT_OK);
+                } else {
+                    Intent intent = new Intent(Ushahidi.this, AddIncident.class);
+                    startActivityForResult(intent, ADD_INCIDENTS);
+                    setResult(RESULT_OK);
+                }
             }
         });
-
-        checkinBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Build the report addition alert box
-                NetworkServices.fileName = "";
-
-                Intent checkinActivityIntent = new Intent().setClass(Ushahidi.this,
-                        CheckinActivity.class);
-                startActivity(checkinActivityIntent);
-
-                setResult(RESULT_OK);
-            }
-        });
-        
-        //check if checkins is enabled
-       if (UshahidiPref.isCheckinEnabled == 1) {
-           checkinBtn.setVisibility(View.VISIBLE);
-       } else {
-           checkinBtn.setVisibility(View.GONE);
-       }
-
     }
-    
-    @Override
-    public void onResume() {
-        super.onResume();
-      //check if checkins is enabled
-        if (UshahidiPref.isCheckinEnabled == 1) {
-            checkinBtn.setVisibility(View.VISIBLE);
-        } else {
-            checkinBtn.setVisibility(View.GONE);
-        }
-    }
-    
+
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {

@@ -32,6 +32,7 @@ import android.content.Intent;
 import android.graphics.Color;
 
 import com.ushahidi.android.app.checkin.CheckinMap;
+import com.ushahidi.android.app.checkin.ListCheckin;
 
 public class IncidentsTab extends TabActivity {
 
@@ -56,43 +57,24 @@ public class IncidentsTab extends TabActivity {
 
         tabHost = getTabHost();
 
-        // List of reports
-        tabHost.addTab(tabHost
-                .newTabSpec("list_reports")
-                .setIndicator(getString(R.string.tab_item_report_list),
-                        getResources().getDrawable(R.drawable.ushahidi_tab_reports_selected))
-                .setContent(new Intent(this, ListIncidents.class)));
-
-        // Reports map
-        tabHost.addTab(tabHost
-                .newTabSpec("map")
-                .setIndicator(getString(R.string.tab_item_report_map),
-                        getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
-                .setContent(new Intent(this, IncidentMap.class)));
-
-        // checkins
-        tabHost.addTab(tabHost
-                .newTabSpec("checkin")
-                .setIndicator(getString(R.string.tab_item_checkin),
-                        getResources().getDrawable(R.drawable.ushahidi_tab_checkin_selected))
-                .setContent(new Intent(IncidentsTab.this, CheckinMap.class)));
+        
         // load preferences
         checkinEnabled();
 
         tabHost.setCurrentTab(0);
-        
-        //set tab colors
+
+        // set tab colors
         setTabColor(tabHost);
 
-        //set tab colors on tab change as well
+        // set tab colors on tab change as well
         tabHost.setOnTabChangedListener(new OnTabChangeListener() {
 
             public void onTabChanged(String arg0) {
                 setTabColor(tabHost);
             }
-            
+
         });
-        
+
         if (extras != null) {
             bundle = extras.getBundle("tab");
             tabHost.setCurrentTab(bundle.getInt("tab_index"));
@@ -104,35 +86,42 @@ public class IncidentsTab extends TabActivity {
     public void onResume() {
         super.onResume();
         // check if checkins is enabled
-        checkinEnabled();
+        //checkinEnabled();
     }
 
-    final Runnable mIsCheckinsEnabled = new Runnable() {
-        public void run() {
-            if (isCheckinEnabled) {
-                tabHost.getTabWidget().getChildTabViewAt(2).setVisibility(View.VISIBLE);
-            } else {
-                tabHost.getTabWidget().getChildTabViewAt(2).setVisibility(View.GONE);
-            }
-        }
-    };
-
     public void checkinEnabled() {
-        Thread t = new Thread() {
-            public void run() {
-                //load settings
-                UshahidiPref.loadSettings(IncidentsTab.this);
-                
-                
-                if (UshahidiPref.isCheckinEnabled == 1 ) {
-                    isCheckinEnabled = true;
-                } else {
-                    isCheckinEnabled = false;
-                }
-                mHandler.post(mIsCheckinsEnabled);
-            }
-        };
-        t.start();
+
+        UshahidiPref.loadSettings(IncidentsTab.this);
+        if (UshahidiPref.isCheckinEnabled == 1) {
+            setTitle(getString(R.string.tab_item_checkin));
+            tabHost.addTab(tabHost
+                    .newTabSpec("list_checkins")
+                    .setIndicator(getString(R.string.tab_item_report_list),
+                            getResources().getDrawable(R.drawable.ushahidi_tab_reports_selected))
+                    .setContent(new Intent(IncidentsTab.this, ListCheckin.class)));
+
+            // checkins
+            tabHost.addTab(tabHost
+                    .newTabSpec("checkin")
+                    .setIndicator(getString(R.string.tab_item_report_map),
+                            getResources().getDrawable(R.drawable.ushahidi_tab_checkin_selected))
+                    .setContent(new Intent(IncidentsTab.this, CheckinMap.class)));
+        } else {
+            // List of reports
+            tabHost.addTab(tabHost
+                    .newTabSpec("list_reports")
+                    .setIndicator(getString(R.string.tab_item_report_list),
+                            getResources().getDrawable(R.drawable.ushahidi_tab_reports_selected))
+                    .setContent(new Intent(IncidentsTab.this, ListIncidents.class)));
+
+            // Reports map
+            tabHost.addTab(tabHost
+                    .newTabSpec("map")
+                    .setIndicator(getString(R.string.tab_item_report_map),
+                            getResources().getDrawable(R.drawable.ushahidi_tab_map_selected))
+                    .setContent(new Intent(IncidentsTab.this, IncidentMap.class)));
+        }
+
     }
 
     public static void setTabColor(TabHost tabhost) {

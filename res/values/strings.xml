@@ -37,7 +37,7 @@
 	<string name="btn_find">Find me</string>
 	<string name="btn_reset">Reset</string>
 	<string name="btn_ok">Ok</string>
-	<string name="btn_add_photo">Add photo</string>
+	<string name="btn_add_photo">Add Photo</string>
 	<string name="btn_cancel">Cancel</string>
 	<string name="btn_send">Send</string>
 	<string name="new_incidents">{0} New Reports </string>
@@ -191,12 +191,13 @@
 	<string name="tab_item_checkin">Check ins</string>
 
 	<!-- Checkin Strings -->
-	<string name="checkin_btn">Check in</string>
+	<string name="checkin_btn">Check In</string>
 	<string name="checkin_photo">Photo</string>
 	<string name="checkin_message">Message</string>
 	<string name="checkin_enter_msg_hint">Enter message</string>
 	<string name="checkin_how_to_select_pic">Please choose how you would like to get the
 		picture.</string>
+	<string name="checkin_list">View Check In</string>
 	<string name="checkin_select_pic_file">File</string>
 	<string name="checkin_select_pic_camera">Camera</string>
 	<string name="checkin_selected_photo">Selected photo</string>

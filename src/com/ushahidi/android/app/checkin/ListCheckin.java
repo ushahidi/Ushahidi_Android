@@ -25,6 +25,7 @@ import java.util.List;
 
 import com.ushahidi.android.app.About;
 import com.ushahidi.android.app.AddIncident;
+import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.IncidentsTab;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
@@ -41,6 +42,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -102,14 +104,14 @@ public class ListCheckin extends Activity {
 
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
 
-                checkinsBundle.putString("id", checkins.get(position).getId());
-                checkinsBundle.putString("name", checkins.get(position).getName());
-                checkinsBundle.putString("msg", checkins.get(position).getMsg());
-                checkinsBundle.putString("longitude", checkins.get(position).getLon());
-                checkinsBundle.putString("latitude", checkins.get(position).getLat());
-                checkinsBundle.putString("location", checkins.get(position).getLoc());
-                checkinsBundle.putString("date", checkins.get(position).getDate());
-                checkinsBundle.putString("image", checkins.get(position).getImage());
+                if (checkins != null) {
+                    checkinsBundle.putString("name", checkins.get(position).getName());
+                    checkinsBundle.putString("message", checkins.get(position).getMsg());
+                    checkinsBundle.putString("longitude", checkins.get(position).getLon());
+                    checkinsBundle.putString("latitude", checkins.get(position).getLat());
+                    checkinsBundle.putString("date", checkins.get(position).getDate());
+                    checkinsBundle.putString("photo", checkins.get(position).getImage());
+                }
 
                 Intent intent = new Intent(ListCheckin.this, ViewCheckins.class);
                 intent.putExtra("checkins", checkinsBundle);
@@ -282,7 +284,7 @@ public class ListCheckin extends Activity {
     public void showCheckins() {
 
         Cursor cursor;
-  
+
         cursor = UshahidiApplication.mDb.fetchAllCheckins();
         String name;
         String date;
@@ -299,8 +301,7 @@ public class ListCheckin extends Activity {
 
             int mesgIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_MESG);
 
-            int latitudeIndex = cursor
-                    .getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_LOC_LATITUDE);
+            int latitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_LOC_LATITUDE);
 
             int longitudeIndex = cursor
                     .getColumnIndexOrThrow(UshahidiDatabase.CHECKIN_LOC_LONGITUDE);
@@ -322,12 +323,12 @@ public class ListCheckin extends Activity {
                 checkinsData.setLon(cursor.getString(longitudeIndex));
 
                 name = cursor.getString(userIdIndex);
-                checkinsData.setName((name));
-                listText.setTitle(Util.capitalize(name));
+                checkinsData.setName(name);
+                listText.setTitle(Util.capitalize(checkinsData.getName()));
 
                 mesg = cursor.getString(mesgIndex);
                 checkinsData.setMsg(mesg);
-                listText.setDesc(mesg);
+                listText.setDesc(Util.capitalizeString(checkinsData.getMsg()));
 
                 location = cursor.getString(locationIndex);
                 checkinsData.setLoc(location);
@@ -338,6 +339,19 @@ public class ListCheckin extends Activity {
 
                 checkinsData.setDate(date);
                 listText.setDate(date);
+
+                checkinsData.setImage(String.valueOf(id));
+                checkinsData.setThumbnail(String.valueOf(id));
+
+                if (!TextUtils.isEmpty(checkinsData.getThumbnail())) {
+                    d = ImageManager.getImages(checkinsData.getThumbnail());
+                } else {
+                    d = null;
+                }
+
+                // set thumbnail
+                listText.setThumbnail(d == null ? getResources().getDrawable(
+                        R.drawable.ushahidi_report_icon) : d);
 
                 listText.setId(id);
                 listText.setArrow(getResources().getDrawable(R.drawable.ushahidi_arrow));
@@ -351,7 +365,6 @@ public class ListCheckin extends Activity {
         listCheckins.setAdapter(ila);
     }
 
-   
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);

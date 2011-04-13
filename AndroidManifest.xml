@@ -76,6 +76,15 @@
 				<category android:name="android.intent.category.DEFAULT"></category>
 			</intent-filter>
 		</activity>
+		
+		<!-- List Checkins -->
+        <activity android:name=".checkin.ListCheckin"
+            android:configChanges="orientation|keyboardHidden" android:label="@string/view_checkins">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity>
 
 		<!-- View Incidents -->
 		<activity android:name=".ViewIncidents" android:label="@string/view_incident">

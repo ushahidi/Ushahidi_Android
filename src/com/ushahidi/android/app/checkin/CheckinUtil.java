@@ -38,4 +38,14 @@ public class CheckinUtil {
         cursor.close();
         return null;
     }
+    
+    public static String getCheckinThumbnail(String checkinId) {
+        Cursor cursor = UshahidiApplication.mDb.fetchCheckinsMediaByCheckinId(checkinId);
+        if (cursor.moveToFirst()) {
+            int mediaMediumLink = cursor.getColumnIndexOrThrow(UshahidiDatabase.MEDIA_THUMBNAIL_LINK);
+            return cursor.getString(mediaMediumLink);
+        }
+        cursor.close();
+        return null;
+    }
 }

@@ -21,8 +21,10 @@ public class Checkin {
     private String lon;
 
     private String name;
-    
+
     private String image;
+    
+    private String thumbnail;
 
     public String getId() {
         return id;
@@ -81,18 +83,27 @@ public class Checkin {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = CheckinUtil.getCheckinUser(name);
     }
 
     public String getName() {
         return this.name;
     }
-    
-    public void setImage(String image) {
-        this.image = image;
+
+    public void setImage(String checkinId) {
+        
+        this.image = CheckinUtil.getCheckinMedia(checkinId);
     }
 
     public String getImage() {
         return this.image;
+    }
+    
+    public void setThumbnail(String checkinId)  {
+        this.thumbnail = CheckinUtil.getCheckinThumbnail(checkinId);
+    }
+    
+    public String getThumbnail() {
+        return this.thumbnail;
     }
 }
