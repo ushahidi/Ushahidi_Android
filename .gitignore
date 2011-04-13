@@ -5,6 +5,8 @@ gen/*
 *.swp
 tests/bin/*
 tests/gen/*
+tests/.settings/*
+tests/.settings
 .settings/*
 .DS_Store
 test/.DS_Store

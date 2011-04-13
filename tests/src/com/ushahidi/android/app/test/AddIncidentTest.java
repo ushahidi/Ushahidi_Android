@@ -13,6 +13,7 @@ import android.widget.EditText;
 
 import com.ushahidi.android.app.AddIncident;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 
 public class AddIncidentTest extends ActivityInstrumentationTestCase2<AddIncident> {
@@ -73,7 +74,7 @@ public class AddIncidentTest extends ActivityInstrumentationTestCase2<AddInciden
     public void testSendReport() {
 
         final SharedPreferences settings = getInstrumentation().getContext().getSharedPreferences(
-                AddIncident.PREFS_NAME, 0);
+                UshahidiPref.PREFS_NAME, 0);
         Editor editor = settings.edit();
         editor.putString("Domain", "http://demo.ushahidi.com");
         editor.commit();
