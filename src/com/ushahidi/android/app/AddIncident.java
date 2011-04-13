@@ -545,7 +545,7 @@ public class AddIncident extends MapActivity {
 
                 if (mBundle != null && !mBundle.isEmpty()) {
                     UshahidiPref.fileName = mBundle.getString("name");
-                    mSelectedPhoto.setImageDrawable(ImageManager.getImages(UshahidiPref.fileName));
+                    mSelectedPhoto.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName));
                     mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 }
                 break;
