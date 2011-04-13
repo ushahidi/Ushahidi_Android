@@ -79,7 +79,7 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
 
         boolean someOfflineIncidentsSent = false;
 
-        final SharedPreferences settings = context.getSharedPreferences(AddIncident.PREFS_NAME, 0);
+        final SharedPreferences settings = context.getSharedPreferences(UshahidiPref.PREFS_NAME, 0);
         StringBuilder urlBuilder = new StringBuilder(settings.getString("Domain", ""));
         urlBuilder.append("/api");
 

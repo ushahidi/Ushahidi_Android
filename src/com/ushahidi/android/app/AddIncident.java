@@ -210,8 +210,6 @@ public class AddIncident extends MapActivity {
 
     private HashMap<String, String> mParams = new HashMap<String, String>();
 
-    public static final String PREFS_NAME = "UshahidiPref";
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

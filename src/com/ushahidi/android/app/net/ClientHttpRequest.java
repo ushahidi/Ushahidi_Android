@@ -165,9 +165,11 @@ public void setCookies(Map cookies) throws IOException {
    */
   public void setParameter(String name, String value) throws IOException {
     boundary();
-    writeName(name);
-    newline(); newline();
-    writeln(value);
+    if(name != null && value != null) {
+        writeName(name);
+        newline(); newline();
+        writeln(value);
+    }
   }
 
   private static void pipe(InputStream in, OutputStream out) throws IOException {
