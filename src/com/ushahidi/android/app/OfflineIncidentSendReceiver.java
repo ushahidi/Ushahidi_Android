@@ -2,6 +2,8 @@
 package com.ushahidi.android.app;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 
 import android.app.Notification;
@@ -16,6 +18,7 @@ import android.net.ConnectivityManager;
 import android.util.Log;
 
 import com.ushahidi.android.app.data.UshahidiDatabase;
+import com.ushahidi.android.app.net.ClientHttpRequest;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
 
 /**
@@ -72,7 +75,7 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
     private boolean postToOnlineAllOfflineIncidents(Context context) {
 
         // Need to create own db handle instance as it can't be guaranteed the
-        // app handle
+        // app handlr
         // will be about
         UshahidiDatabase db = new UshahidiDatabase(context);
         db.open();
@@ -82,7 +85,17 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
         final SharedPreferences settings = context.getSharedPreferences(UshahidiPref.PREFS_NAME, 0);
         StringBuilder urlBuilder = new StringBuilder(settings.getString("Domain", ""));
         urlBuilder.append("/api");
-
+        
+        ClientHttpRequest request;
+        
+        try {
+            request = new ClientHttpRequest(urlBuilder.toString());
+        } catch (IOException e1) {
+            // if this fails there is something wrong with connection and is failing
+            e1.printStackTrace();
+            return false;
+        }
+        
         Cursor cursor = db.fetchAllOfflineIncidents();
 
         cursor.moveToFirst();
@@ -91,13 +104,13 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
                     "Sending message with title : "
                             + cursor.getString(UshahidiDatabase.ADD_INCIDENT_TITLE_INDEX));
             try {
-                boolean postSuccess = UshahidiHttpClient.PostFileUpload(urlBuilder.toString(),
-                        preparePostParams(cursor));
-                if (postSuccess) {
-                    Log.d(CLASS_TAG, "Incident submitted successfully");
-                    db.deleteAddIncident(cursor.getInt(UshahidiDatabase.ADD_INCIDENT_ID_INDEX));
-                    someOfflineIncidentsSent = true;
-                }
+                InputStream inputStream = request.post(preparePostParams(cursor));
+                byte[] buff = new byte[3000]; 
+                inputStream.read(buff);
+                // if it fails without exception at this point there is problem with the message
+                Log.d(CLASS_TAG, "Response to submitted incident : " + new String(buff));
+                db.deleteAddIncident(cursor.getInt(UshahidiDatabase.ADD_INCIDENT_ID_INDEX));
+                someOfflineIncidentsSent = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }

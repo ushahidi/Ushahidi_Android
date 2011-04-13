@@ -69,18 +69,18 @@ public class UshahidiHttpClient {
 
     public static final String INCIDENT_CATEGORY = "incident_category";
 
-    public static final String LATITUDE = "incident_category";
+    public static final String LATITUDE = "latitude";
 
-    public static final String LONGITUDE = "incident_category";
+    public static final String LONGITUDE = "longitude";
 
-    public static final String LOCATION_NAME = "incident_category";
+    public static final String LOCATION_NAME = "location_name";
 
-    public static final String PERSON_FIRST = "incident_category";
+    public static final String PERSON_FIRST = "person_first";
 
-    public static final String PERSON_LAST = "incident_category";
+    public static final String PERSON_LAST = "person_last";
 
-    public static final String PERSON_EMAIL = "incident_category";
-
+    public static final String PERSON_EMAIL = "person_email";
+    
     private static final int IO_BUFFER_SIZE = 512;
 
     final public static List<NameValuePair> blankNVPS = new ArrayList<NameValuePair>();

@@ -645,7 +645,7 @@ public class UshahidiDatabase {
      * @return
      */
     public boolean deleteAddIncident(int addIncidentId) {
-        return mDb.delete(INCIDENTS_TABLE, CATEGORY_ID + "=" + addIncidentId, null) > 0;
+        return mDb.delete(ADD_INCIDENTS_TABLE, CATEGORY_ID + "=" + addIncidentId, null) > 0;
     }
     
     /**
