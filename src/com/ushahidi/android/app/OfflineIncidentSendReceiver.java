@@ -2,8 +2,6 @@
 package com.ushahidi.android.app;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.HashMap;
 
 import android.app.Notification;
@@ -42,11 +40,13 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         Log.d(CLASS_TAG, "received connection state changed broadcast");
-        
-        // Check if connectivity is being switch back on (could be a FAILOVER_CONNECTION event as well
-        // but I am going to ignore as no harm will come attempting to check) 
+
+        // Check if connectivity is being switch back on (could be a
+        // FAILOVER_CONNECTION event as well
+        // but I am going to ignore as no harm will come attempting to check)
         if (!intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {
-            Log.d(CLASS_TAG, "High possibility connection is on, so try sending any off line incidents");
+            Log.d(CLASS_TAG,
+                    "High possibility connection is on, so try sending any off line incidents");
             if (postToOnlineAllOfflineIncidents(context)) {
                 mNotificationManager = (NotificationManager)context
                         .getSystemService(Context.NOTIFICATION_SERVICE);
@@ -56,7 +56,8 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
 
                 // Notification expanding stuff
                 CharSequence contentTitle = context.getString(R.string.notification_expanded_title);
-                CharSequence contentText =  context.getString(R.string.notification_expanded_message);
+                CharSequence contentText = context
+                        .getString(R.string.notification_expanded_message);
                 Intent notificationIntent = new Intent(context, OfflineIncidentSendReceiver.class);
                 PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                         notificationIntent, 0);
@@ -85,17 +86,18 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
         final SharedPreferences settings = context.getSharedPreferences(UshahidiPref.PREFS_NAME, 0);
         StringBuilder urlBuilder = new StringBuilder(settings.getString("Domain", ""));
         urlBuilder.append("/api");
-        
+
         ClientHttpRequest request;
-        
+
         try {
             request = new ClientHttpRequest(urlBuilder.toString());
         } catch (IOException e1) {
-            // if this fails there is something wrong with connection and is failing
+            // if this fails there is something wrong with connection and is
+            // failing
             e1.printStackTrace();
             return false;
         }
-        
+
         Cursor cursor = db.fetchAllOfflineIncidents();
 
         cursor.moveToFirst();
@@ -104,11 +106,9 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
                     "Sending message with title : "
                             + cursor.getString(UshahidiDatabase.ADD_INCIDENT_TITLE_INDEX));
             try {
-                InputStream inputStream = request.post(preparePostParams(cursor));
-                byte[] buff = new byte[3000]; 
-                inputStream.read(buff);
-                // if it fails without exception at this point there is problem with the message
-                Log.d(CLASS_TAG, "Response to submitted incident : " + new String(buff));
+                request.post(preparePostParams(cursor));
+                // if it fails without exception at this point there is problem
+                // with the message
                 db.deleteAddIncident(cursor.getInt(UshahidiDatabase.ADD_INCIDENT_ID_INDEX));
                 someOfflineIncidentsSent = true;
             } catch (IOException e) {
@@ -147,21 +147,32 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
     private HashMap<String, String> preparePostParams(Cursor cursor) {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(UshahidiHttpClient.TASK, "report");
-        params.put(UshahidiHttpClient.INCIDENT_TITLE, cursor.getString(UshahidiDatabase.ADD_INCIDENT_TITLE_INDEX));
+        params.put(UshahidiHttpClient.INCIDENT_TITLE,
+                cursor.getString(UshahidiDatabase.ADD_INCIDENT_TITLE_INDEX));
         params.put(UshahidiHttpClient.INCIDENT_DESCRIPTION,
                 cursor.getString(UshahidiDatabase.ADD_INCIDENT_DESC_INDEX));
-        params.put(UshahidiHttpClient.INCIDENT_DATE, cursor.getString(UshahidiDatabase.ADD_INCIDENT_DATE_INDEX));
-        params.put(UshahidiHttpClient.INCIDENT_HOUR, cursor.getString(UshahidiDatabase.ADD_INCIDENT_HOUR_INDEX));
-        params.put(UshahidiHttpClient.INCIDENT_MINUTE, cursor.getString(UshahidiDatabase.ADD_INCIDENT_MINUTE_INDEX));
-        params.put(UshahidiHttpClient.INCIDENT_AMPM, cursor.getString(UshahidiDatabase.ADD_INCIDENT_AMPM_INDEX));
+        params.put(UshahidiHttpClient.INCIDENT_DATE,
+                cursor.getString(UshahidiDatabase.ADD_INCIDENT_DATE_INDEX));
+        params.put(UshahidiHttpClient.INCIDENT_HOUR,
+                cursor.getString(UshahidiDatabase.ADD_INCIDENT_HOUR_INDEX));
+        params.put(UshahidiHttpClient.INCIDENT_MINUTE,
+                cursor.getString(UshahidiDatabase.ADD_INCIDENT_MINUTE_INDEX));
+        params.put(UshahidiHttpClient.INCIDENT_AMPM,
+                cursor.getString(UshahidiDatabase.ADD_INCIDENT_AMPM_INDEX));
         params.put(UshahidiHttpClient.INCIDENT_CATEGORY,
                 cursor.getString(UshahidiDatabase.ADD_INCIDENT_CATEGORIES_INDEX));
-        params.put(UshahidiHttpClient.LATITUDE, cursor.getString(UshahidiDatabase.INCIDENT_LOC_LATITUDE_INDEX));
-        params.put(UshahidiHttpClient.LONGITUDE, cursor.getString(UshahidiDatabase.INCIDENT_LOC_LONGITUDE_INDEX));
-        params.put(UshahidiHttpClient.LOCATION_NAME, cursor.getString(UshahidiDatabase.INCIDENT_LOC_NAME_INDEX));
-        params.put(UshahidiHttpClient.PERSON_FIRST, cursor.getString(UshahidiDatabase.ADD_PERSON_FIRST_INDEX));
-        params.put(UshahidiHttpClient.PERSON_LAST, cursor.getString(UshahidiDatabase.ADD_PERSON_LAST_INDEX));
-        params.put(UshahidiHttpClient.PERSON_EMAIL, cursor.getString(UshahidiDatabase.ADD_PERSON_EMAIL_INDEX));
+        params.put(UshahidiHttpClient.LATITUDE,
+                cursor.getString(UshahidiDatabase.INCIDENT_LOC_LATITUDE_INDEX));
+        params.put(UshahidiHttpClient.LONGITUDE,
+                cursor.getString(UshahidiDatabase.INCIDENT_LOC_LONGITUDE_INDEX));
+        params.put(UshahidiHttpClient.LOCATION_NAME,
+                cursor.getString(UshahidiDatabase.INCIDENT_LOC_NAME_INDEX));
+        params.put(UshahidiHttpClient.PERSON_FIRST,
+                cursor.getString(UshahidiDatabase.ADD_PERSON_FIRST_INDEX));
+        params.put(UshahidiHttpClient.PERSON_LAST,
+                cursor.getString(UshahidiDatabase.ADD_PERSON_LAST_INDEX));
+        params.put(UshahidiHttpClient.PERSON_EMAIL,
+                cursor.getString(UshahidiDatabase.ADD_PERSON_EMAIL_INDEX));
         return params;
     }
 }

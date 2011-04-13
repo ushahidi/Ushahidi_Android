@@ -12,6 +12,8 @@ import java.io.OutputStream;
 import java.io.FileInputStream;
 import java.util.Iterator;
 
+import android.util.Log;
+
 /**
  * <p>Title: Client HTTP Request class</p>
  * <p>Description: this class helps to send POST HTTP requests with various form data,
