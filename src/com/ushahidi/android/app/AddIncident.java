@@ -31,16 +31,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.ItemizedOverlay;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
-import com.ushahidi.android.app.data.AddIncidentData;
-import com.ushahidi.android.app.data.UshahidiDatabase;
-import com.ushahidi.android.app.net.UshahidiHttpClient;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -52,8 +42,8 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -67,7 +57,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -80,6 +69,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.ItemizedOverlay;
+import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapController;
+import com.google.android.maps.MapView;
+import com.google.android.maps.OverlayItem;
+import com.ushahidi.android.app.data.AddIncidentData;
+import com.ushahidi.android.app.data.UshahidiDatabase;
+import com.ushahidi.android.app.net.UshahidiHttpClient;
 
 public class AddIncident extends MapActivity {
 
@@ -209,8 +208,6 @@ public class AddIncident extends MapActivity {
     private HashMap<String, String> mCategoriesTitle = new HashMap<String, String>();
 
     private HashMap<String, String> mParams = new HashMap<String, String>();
-
-    public static final String PREFS_NAME = "UshahidiPref";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -899,7 +896,7 @@ public class AddIncident extends MapActivity {
         addIncidentData.setIncidentDate(dates[0]);
         addIncidentData.setIncidentHour(Integer.parseInt(time[0]));
         addIncidentData.setIncidentMinute(Integer.parseInt(time[1]));
-        addIncidentData.setIncidentAmPm(dates[2]);
+        addIncidentData.setIncidentAmPm(dates[2].toLowerCase());
         addIncidentData.setIncidentCategories(Util.implode(mVectorCategories));
         addIncidentData.setIncidentLocName(mIncidentLocation.getText().toString());
         addIncidentData.setIncidentLocLatitude(String.valueOf(sLatitude));
