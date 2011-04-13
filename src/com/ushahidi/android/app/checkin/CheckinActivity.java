@@ -36,7 +36,9 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.ImageCapture;
 import com.ushahidi.android.app.ImageManager;
+import com.ushahidi.android.app.IncidentsTab;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.Util;
 
@@ -106,6 +108,8 @@ public class CheckinActivity extends MapActivity {
     private static final int DIALOG_CHOOSE_IMAGE_METHOD = 4;
 
     private static final int REQUEST_CODE_IMAGE = 3;
+    
+    private static final int INCIDENTS = 2;
 
     // To interchange information
     private Bundle mBundle;
@@ -302,6 +306,15 @@ public class CheckinActivity extends MapActivity {
                 break;
         }
     }
+    
+    /**
+     * Go to checkins screen
+     */
+    public void goToCheckins() {
+        Intent intent = new Intent(CheckinActivity.this, IncidentsTab.class);
+        startActivityForResult(intent, INCIDENTS);
+        setResult(RESULT_OK);
+    }
 
     private static Random random = new Random();
 
@@ -420,6 +433,7 @@ public class CheckinActivity extends MapActivity {
                             Toast.LENGTH_SHORT);
                 }
                 CheckinActivity.this.finish();
+                goToCheckins();
             } else {
                 com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
                         R.string.checkin_error_toast);

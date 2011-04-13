@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ushahidi.android.app.About;
-import com.ushahidi.android.app.AddIncident;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.IncidentsTab;
 import com.ushahidi.android.app.R;
@@ -100,6 +99,7 @@ public class ListCheckin extends Activity {
         listCheckins = (ListView)findViewById(R.id.list_checkins);
 
         checkins = new ArrayList<Checkin>();
+        refreshForNewCheckins();
         listCheckins.setOnItemClickListener(new OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
@@ -183,7 +183,7 @@ public class ListCheckin extends Activity {
         i = menu.add(Menu.NONE, HOME, Menu.NONE, R.string.menu_home);
         i.setIcon(R.drawable.ushahidi_home);
 
-        i = menu.add(Menu.NONE, ADD_INCIDENT, Menu.NONE, R.string.incident_menu_add);
+        i = menu.add(Menu.NONE, ADD_INCIDENT, Menu.NONE, R.string.checkin_btn);
         i.setIcon(R.drawable.ushahidi_add);
 
         i = menu.add(Menu.NONE, INCIDENT_MAP, Menu.NONE, R.string.incident_menu_map);
@@ -199,7 +199,13 @@ public class ListCheckin extends Activity {
         i.setIcon(R.drawable.ushahidi_about);
 
     }
-
+    
+    private void refreshForNewCheckins() {
+        CheckinsTask checkinsTask = new CheckinsTask();
+        checkinsTask.appContext = this;
+        checkinsTask.execute();
+    }
+    
     private boolean applyMenuChoice(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
@@ -208,9 +214,7 @@ public class ListCheckin extends Activity {
                 startActivityForResult(intent, GOTOHOME);
                 return true;
             case INCIDENT_REFRESH:
-                CheckinsTask checkinsTask = new CheckinsTask();
-                checkinsTask.appContext = this;
-                checkinsTask.execute();
+                refreshForNewCheckins();
                 return (true);
 
             case INCIDENT_MAP:
@@ -221,7 +225,7 @@ public class ListCheckin extends Activity {
                 return (true);
 
             case ADD_INCIDENT:
-                intent = new Intent(ListCheckin.this, AddIncident.class);
+                intent = new Intent(ListCheckin.this, CheckinActivity.class);
                 startActivityForResult(intent, POST_INCIDENT);
                 return (true);
 
@@ -268,12 +272,11 @@ public class ListCheckin extends Activity {
             } else if (result == 3) {
                 Util.showToast(appContext, R.string.invalid_ushahidi_instance);
             } else if (result == 2) {
-                Util.showToast(appContext, R.string.could_not_fetch_reports);
+                Util.showToast(appContext, R.string.could_not_fetch_checkin);
             } else if (result == 1) {
-                Util.showToast(appContext, R.string.could_not_fetch_reports);
+                Util.showToast(appContext, R.string.could_not_fetch_checkin);
             } else if (result == 0) {
                 showCheckins();
-                Util.showToast(appContext, R.string.reports_successfully_fetched);
             }
             setProgressBarIndeterminateVisibility(false);
         }
@@ -290,7 +293,6 @@ public class ListCheckin extends Activity {
         String date;
         String mesg;
         String location;
-        String image;
         Drawable d = null;
 
         if (cursor.moveToFirst()) {

@@ -212,11 +212,14 @@
 		GPS feature of the phone make sure the phone can see the sky. If the
 		phone cannot see the sky, turn of the GPS to make use of your network
 		providers cell towers for location.</string>
+	<string name="could_not_fetch_checkin">Could not fetch check ins.</string>
+    <string name="checkins_successfully_fetched">Checkins successfully fetched.</string>
 	<string name="checkin_enter_firstname_hint">Enter first name</string>
 	<string name="checkin_enter_lastname_hint">Enter last name</string>
 	<string name="checkin_enter_email_hint">Enter email</string>
 	<string name="no_name">No name</string>
 	<string name="curr_location">Current location</string>
+	
 	<!-- Notification message strings from OfflineIncidentSendReceiver -->
 	<string name="notification_status_bar_message">Incidents Sent</string>
     <string name="notification_expanded_title">Ushahidi Incidents</string>
