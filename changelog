@@ -2,6 +2,7 @@
  Feature:
  * Added Checkin support.
  * Added color to tabs.
+ * Added offline reporting to the app
  
  Fixed:
  * Fixed issue with changes in preferences value not taking effect.

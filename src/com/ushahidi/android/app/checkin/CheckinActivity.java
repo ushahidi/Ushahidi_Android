@@ -20,6 +20,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -34,10 +37,12 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
+import com.ushahidi.android.app.About;
 import com.ushahidi.android.app.ImageCapture;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.IncidentsTab;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.Util;
@@ -99,16 +104,36 @@ public class CheckinActivity extends MapActivity {
 
     private String checkinDetails;
 
-    // private String locationName = "";
+    private static final int HOME = Menu.FIRST + 1;
+
+    private static final int LIST_INCIDENT = Menu.FIRST + 2;
+
+    private static final int INCIDENT_MAP = Menu.FIRST + 3;
+
+    private static final int INCIDENT_REFRESH = Menu.FIRST + 4;
+
+    private static final int SETTINGS = Menu.FIRST + 5;
+
+    private static final int ABOUT = Menu.FIRST + 6;
+
+    private static final int GOTOHOME = 0;
+
+    private static final int MAP_CHECKINS = 1;
+
+    private static final int LIST_CHECKINS = 2;
+
+    private static final int REQUEST_CODE_SETTINGS = 3;
+
+    private static final int REQUEST_CODE_ABOUT = 4;
 
     // Used for the camera
     private static final int REQUEST_CODE_CAMERA = 5;
 
     // Used to choose the method for picture selection
-    private static final int DIALOG_CHOOSE_IMAGE_METHOD = 4;
+    private static final int DIALOG_CHOOSE_IMAGE_METHOD = 7;
 
-    private static final int REQUEST_CODE_IMAGE = 3;
-    
+    private static final int REQUEST_CODE_IMAGE = 8;
+
     private static final int INCIDENTS = 2;
 
     // To interchange information
@@ -117,6 +142,8 @@ public class CheckinActivity extends MapActivity {
     private Bundle mExtras;
 
     private Handler mHandler;
+
+    private Bundle checkinsBundle = new Bundle();
 
     private PostCheckinsJSONServices jsonServices;
 
@@ -127,6 +154,10 @@ public class CheckinActivity extends MapActivity {
     private String errorMessage = "";
 
     private ProgressDialog progressDialog;
+
+    private boolean mError = false;
+
+    private String mErrorMessage = "";
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,6 +190,20 @@ public class CheckinActivity extends MapActivity {
         // location stuff
         mCheckinLocation.setText(getString(R.string.checkin_progress_message));
         setDeviceLocation();
+
+        // Validate so empty text isn't sent over
+        checkinMessageText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (TextUtils.isEmpty(checkinMessageText.getText())) {
+                        checkinMessageText.setError(getString(R.string.checkin_empty_message));
+                    }
+                }
+            }
+
+        });
+
         // contact
         if ((!TextUtils.isEmpty(UshahidiPref.firstname))
                 && (!TextUtils.isEmpty(UshahidiPref.lastname))
@@ -188,7 +233,20 @@ public class CheckinActivity extends MapActivity {
         // Perform the checkin
         checkinButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                performCheckin();
+
+                if (TextUtils.isEmpty(checkinMessageText.getText())) {
+                    mErrorMessage = getString(R.string.checkin_empty_message);
+                    mError = true;
+                }
+
+                if (!mError) {
+                    performCheckin();
+                } else {
+                    final Toast t = Toast.makeText(CheckinActivity.this, "Error!\n\n"
+                            + mErrorMessage, Toast.LENGTH_LONG);
+                    t.show();
+                    mErrorMessage = "";
+                }
             }
         });
 
@@ -232,6 +290,95 @@ public class CheckinActivity extends MapActivity {
         super.onPause();
     }
 
+    // menu stuff
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        populateMenu(menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        populateMenu(menu);
+
+        return (super.onCreateOptionsMenu(menu));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return (applyMenuChoice(item) || super.onOptionsItemSelected(item));
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        return (applyMenuChoice(item) || super.onContextItemSelected(item));
+    }
+
+    private void populateMenu(Menu menu) {
+        MenuItem i;
+
+        i = menu.add(Menu.NONE, HOME, Menu.NONE, R.string.menu_home);
+        i.setIcon(R.drawable.ushahidi_home);
+
+        i = menu.add(Menu.NONE, LIST_INCIDENT, Menu.NONE, R.string.checkin_list);
+        i.setIcon(R.drawable.ushahidi_list);
+
+        i = menu.add(Menu.NONE, INCIDENT_MAP, Menu.NONE, R.string.incident_menu_map);
+        i.setIcon(R.drawable.ushahidi_map);
+
+        i = menu.add(Menu.NONE, INCIDENT_REFRESH, Menu.NONE, R.string.incident_menu_refresh);
+        i.setIcon(R.drawable.ushahidi_refresh);
+
+        i = menu.add(Menu.NONE, SETTINGS, Menu.NONE, R.string.menu_settings);
+        i.setIcon(R.drawable.ushahidi_settings);
+
+        i = menu.add(Menu.NONE, ABOUT, Menu.NONE, R.string.menu_about);
+        i.setIcon(R.drawable.ushahidi_about);
+
+    }
+
+    private boolean applyMenuChoice(MenuItem item) {
+        Intent launchPreferencesIntent;
+        switch (item.getItemId()) {
+
+            case LIST_INCIDENT:
+                launchPreferencesIntent = new Intent(CheckinActivity.this, IncidentsTab.class);
+                startActivityForResult(launchPreferencesIntent, LIST_CHECKINS);
+                setResult(RESULT_OK);
+                return true;
+
+            case INCIDENT_MAP:
+                checkinsBundle.putInt("tab_index", 1);
+                launchPreferencesIntent = new Intent(CheckinActivity.this, IncidentsTab.class);
+                launchPreferencesIntent.putExtra("tab", checkinsBundle);
+                startActivityForResult(launchPreferencesIntent, MAP_CHECKINS);
+                return true;
+
+            case HOME:
+                launchPreferencesIntent = new Intent(CheckinActivity.this, Ushahidi.class);
+                startActivityForResult(launchPreferencesIntent, GOTOHOME);
+                setResult(RESULT_OK);
+                return true;
+
+            case ABOUT:
+                launchPreferencesIntent = new Intent(CheckinActivity.this, About.class);
+                startActivityForResult(launchPreferencesIntent, REQUEST_CODE_ABOUT);
+                setResult(RESULT_OK);
+                return true;
+
+            case SETTINGS:
+                launchPreferencesIntent = new Intent().setClass(CheckinActivity.this,
+                        Settings.class);
+
+                // Make it a subactivity so we know when it returns
+                startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);
+                return true;
+
+        }
+        return false;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -257,8 +404,9 @@ public class CheckinActivity extends MapActivity {
                         selectedPhoto = mBundle.getString("name");
                         NetworkServices.fileName = mBundle.getString("name");
                         mSelectedPhotoText.setVisibility(View.VISIBLE);
-                        
-                        mCheckImgPrev.setImageBitmap(ImageManager.getBitmap(NetworkServices.fileName));
+
+                        mCheckImgPrev.setImageBitmap(ImageManager
+                                .getBitmap(NetworkServices.fileName));
                     }
                 }
 
@@ -306,7 +454,7 @@ public class CheckinActivity extends MapActivity {
                 break;
         }
     }
-    
+
     /**
      * Go to checkins screen
      */
@@ -482,7 +630,7 @@ public class CheckinActivity extends MapActivity {
         mapController.animateTo(centerGeoPoint);
 
         // initilaize latitude and longitude for them to be passed to the
-        // AddIncident Activity.
+        // CheckinActivity Activity.
         CheckinActivity.latitude = centerGeoPoint.getLatitudeE6() / 1.0E6;
         CheckinActivity.longitude = centerGeoPoint.getLongitudeE6() / 1.0E6;
 

@@ -33,6 +33,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -350,7 +351,7 @@ public class Util {
      * @return void
      */
     public static void showToast(Context context, int i) {
-        int duration = Toast.LENGTH_SHORT;
+        int duration = Toast.LENGTH_LONG;
         Toast.makeText(context, i, duration).show();
     }
 
@@ -554,14 +555,50 @@ public class Util {
     }
 
     public static String generateFilename(boolean thumbnail) {
-        if( thumbnail) {
-            return  randomString() + "_t.jpg";
+        if (thumbnail) {
+            return randomString() + "_t.jpg";
         }
-        
+
         return randomString() + ".jpg";
     }
 
     protected static String randomString() {
         return Long.toString(random.nextLong(), 10);
+    }
+
+    /**
+     * Checks that the device supports Camera.
+     * 
+     * @param Context context - The calling activity's context.
+     * 
+     * @return boolean - True if it supports otherwise false.
+     */
+    public static boolean deviceHasCamera( Context context) {
+        
+        PackageManager pm = context.getPackageManager();
+
+        if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Checks that the device supports Camera supports auto focus.
+     * 
+     * @param Context context - The calling activity's context.
+     * 
+     * @return boolean - True if it supports otherwise false.
+     */
+    public static boolean deviceCameraHasAutofocus( Context context) {
+        
+        PackageManager pm = context.getPackageManager();
+
+        if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

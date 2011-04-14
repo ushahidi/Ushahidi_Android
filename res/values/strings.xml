@@ -208,6 +208,7 @@
 	<string name="checkin_contact">Contact Info</string>
 	<string name="checkin_success_toast">Check in successful</string>
 	<string name="checkin_error_toast">Error encountered during check in</string>
+	<string name="checkin_empty_message">Please enter a check in message.</string>
 	<string name="checkin_no_location">Could not get your location. If you are using the
 		GPS feature of the phone make sure the phone can see the sky. If the
 		phone cannot see the sky, turn of the GPS to make use of your network

@@ -91,9 +91,6 @@ public class AddIncident extends MapActivity {
 
     private static final String UNCATEGORIZED_CATEGORY_TITLE = "uncategorized";
 
-    /**
-     */
-
     private static final int HOME = Menu.FIRST + 1;
 
     private static final int LIST_INCIDENT = Menu.FIRST + 2;
@@ -224,6 +221,15 @@ public class AddIncident extends MapActivity {
         setDeviceLocation();
         initComponents();
 
+    }
+    
+    @Override
+    protected void onDestroy() {
+
+        // house keeping
+        ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
+                .removeUpdates(new DeviceLocationListener());
+        super.onDestroy();
     }
 
     // menu stuff
@@ -762,10 +768,6 @@ public class AddIncident extends MapActivity {
                                             }
                                         }
 
-                                        /*
-                                         * User clicked on a check box do some
-                                         * stuff
-                                         */
                                     }
                                 })
                         .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
@@ -922,7 +924,7 @@ public class AddIncident extends MapActivity {
                 || UshahidiPref.domain.equalsIgnoreCase("http://")) {
             return false;
         }
-        
+
         String dates[] = mDateToSubmit.split(" ");
         String time[] = dates[1].split(":");
         String categories = Util.implode(mVectorCategories);
@@ -981,13 +983,14 @@ public class AddIncident extends MapActivity {
      */
     @Override
     protected void onPause() {
-        super.onPause();
-
+        ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
+        .removeUpdates(new DeviceLocationListener());
         SharedPreferences.Editor editor = getPreferences(0).edit();
         editor.putString("title", mIncidentTitle.getText().toString());
         editor.putString("desc", mIncidentDesc.getText().toString());
         editor.putString("location", mIncidentLocation.getText().toString());
         editor.commit();
+        super.onPause();
     }
 
     /**
@@ -1054,8 +1057,7 @@ public class AddIncident extends MapActivity {
         @Override
         protected void onPostExecute(Integer result) {
             if (result == 2) {
-                // TODO Clears fields as the the incident is saved in the db
-                // waiting to be posted
+                clearFields();
                 Util.showToast(appContext, R.string.report_successfully_added_offline);
             } else if (result == 1) {
                 clearFields();

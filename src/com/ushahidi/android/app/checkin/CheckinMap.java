@@ -2,6 +2,7 @@
 package com.ushahidi.android.app.checkin;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -11,10 +12,18 @@ import android.location.LocationProvider;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 
 import com.google.android.maps.*;
+import com.ushahidi.android.app.About;
+import com.ushahidi.android.app.IncidentsTab;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.Settings;
+import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiApplication;
 import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.Util;
@@ -46,6 +55,30 @@ public class CheckinMap extends MapActivity {
     protected String name = "";
 
     private Bundle extras = new Bundle();
+    
+    private Bundle checkinsBundle = new Bundle();
+    
+    private static final int HOME = Menu.FIRST + 1;
+
+    private static final int ADD_CHECKIN = Menu.FIRST + 2;
+
+    private static final int CHECKIN_MAP = Menu.FIRST + 3;
+
+    private static final int CHECKIN_REFRESH = Menu.FIRST + 4;
+
+    private static final int SETTINGS = Menu.FIRST + 5;
+
+    private static final int ABOUT = Menu.FIRST + 6;
+
+    private static final int GOTOHOME = 0;
+
+    private static final int POST_CHECKIN = 1;
+
+    private static final int CHECKINS_MAP = 2;
+
+    private static final int REQUEST_CODE_SETTINGS = 4;
+
+    private static final int REQUEST_CODE_ABOUT = 5;
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -86,6 +119,100 @@ public class CheckinMap extends MapActivity {
             populateMap();
         }
     };
+    
+ // menu stuff
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        populateMenu(menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        populateMenu(menu);
+
+        return (super.onCreateOptionsMenu(menu));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // applyMenuChoice(item);
+
+        return (applyMenuChoice(item) || super.onOptionsItemSelected(item));
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        return (applyMenuChoice(item) || super.onContextItemSelected(item));
+    }
+
+    private void populateMenu(Menu menu) {
+        MenuItem i;
+        i = menu.add(Menu.NONE, HOME, Menu.NONE, R.string.menu_home);
+        i.setIcon(R.drawable.ushahidi_home);
+
+        i = menu.add(Menu.NONE, ADD_CHECKIN, Menu.NONE, R.string.checkin_btn);
+        i.setIcon(R.drawable.ushahidi_add);
+
+        i = menu.add(Menu.NONE, CHECKIN_MAP, Menu.NONE, R.string.checkin_list);
+        i.setIcon(R.drawable.ushahidi_list);
+
+        i = menu.add(Menu.NONE, CHECKIN_REFRESH, Menu.NONE, R.string.menu_sync);
+        i.setIcon(R.drawable.ushahidi_refresh);
+
+        i = menu.add(Menu.NONE, SETTINGS, Menu.NONE, R.string.menu_settings);
+        i.setIcon(R.drawable.ushahidi_settings);
+
+        i = menu.add(Menu.NONE, ABOUT, Menu.NONE, R.string.menu_about);
+        i.setIcon(R.drawable.ushahidi_about);
+
+    }
+    
+    private void refreshForNewCheckins() {
+        CheckinsTask checkinsTask = new CheckinsTask();
+        checkinsTask.appContext = this;
+        checkinsTask.execute();
+    }
+    
+    private boolean applyMenuChoice(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case HOME:
+                intent = new Intent(CheckinMap.this, Ushahidi.class);
+                startActivityForResult(intent, GOTOHOME);
+                return true;
+            case CHECKIN_REFRESH:
+                refreshForNewCheckins();
+                return (true);
+
+            case CHECKIN_MAP:
+                checkinsBundle.putInt("tab_index", 0);
+                intent = new Intent(CheckinMap.this, IncidentsTab.class);
+                intent.putExtra("tab", checkinsBundle);
+                startActivityForResult(intent, CHECKINS_MAP);
+                return (true);
+
+            case ADD_CHECKIN:
+                intent = new Intent(CheckinMap.this, CheckinActivity.class);
+                startActivityForResult(intent, POST_CHECKIN);
+                return (true);
+
+            case ABOUT:
+                intent = new Intent(CheckinMap.this, About.class);
+                startActivityForResult(intent, REQUEST_CODE_ABOUT);
+                setResult(RESULT_OK);
+                return true;
+
+            case SETTINGS:
+                intent = new Intent(CheckinMap.this, Settings.class);
+
+                // Make it a subactivity so we know when it returns
+                startActivityForResult(intent, REQUEST_CODE_SETTINGS);
+                return (true);
+
+        }
+        return (false);
+    }
 
     /**
      * Add marker for current location of the device

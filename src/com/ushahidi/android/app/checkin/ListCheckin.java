@@ -78,9 +78,9 @@ public class ListCheckin extends Activity {
 
     private static final int VIEW_CHECKINS = 3;
 
-    private static final int REQUEST_CODE_SETTINGS = 1;
+    private static final int REQUEST_CODE_SETTINGS = 4;
 
-    private static final int REQUEST_CODE_ABOUT = 2;
+    private static final int REQUEST_CODE_ABOUT = 5;
 
     private Bundle checkinsBundle = new Bundle();
 

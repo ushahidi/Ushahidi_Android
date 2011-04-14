@@ -113,16 +113,15 @@ public class Ushahidi extends Activity {
         listBtn = (Button)findViewById(R.id.incident_list);
         addBtn = (Button)findViewById(R.id.incident_add);
         settingsBtn = (Button)findViewById(R.id.incident_map);
-   
-        // this for now
+
         initializeUI();
 
     }
 
     @Override
     public void onResume() {
-        super.onResume();
         initializeUI();
+        super.onResume();
     }
 
     /**
@@ -134,6 +133,9 @@ public class Ushahidi extends Activity {
         if (UshahidiPref.isCheckinEnabled == 1) {
             addBtn.setText(getString(R.string.checkin_btn));
             listBtn.setText(getString(R.string.checkin_list));
+        } else {
+            addBtn.setText(getString(R.string.incident_menu_add));
+            listBtn.setText(getString(R.string.incident_list));
         }
 
         listBtn.setOnClickListener(new View.OnClickListener() {
@@ -266,11 +268,21 @@ public class Ushahidi extends Activity {
     private void populateMenu(Menu menu) {
         MenuItem i;
 
-        i = menu.add(Menu.NONE, ADD_INCIDENT, Menu.NONE, R.string.incident_menu_add);
-        i.setIcon(R.drawable.ushahidi_add);
+        if (UshahidiPref.isCheckinEnabled == 1) {
+            i = menu.add(Menu.NONE, ADD_INCIDENT, Menu.NONE, R.string.checkin_btn);
+            i.setIcon(R.drawable.ushahidi_add);
+        } else {
+            i = menu.add(Menu.NONE, ADD_INCIDENT, Menu.NONE, R.string.incident_menu_add);
+            i.setIcon(R.drawable.ushahidi_add);
+        }
 
-        i = menu.add(Menu.NONE, LIST_INCIDENT, Menu.NONE, R.string.incident_list);
-        i.setIcon(R.drawable.ushahidi_list);
+        if (UshahidiPref.isCheckinEnabled == 1) {
+            i = menu.add(Menu.NONE, LIST_INCIDENT, Menu.NONE, R.string.checkin_list);
+            i.setIcon(R.drawable.ushahidi_list);
+        } else {
+            i = menu.add(Menu.NONE, LIST_INCIDENT, Menu.NONE, R.string.incident_list);
+            i.setIcon(R.drawable.ushahidi_list);
+        }
 
         i = menu.add(Menu.NONE, INCIDENT_MAP, Menu.NONE, R.string.incident_menu_map);
         i.setIcon(R.drawable.ushahidi_map);
@@ -306,9 +318,15 @@ public class Ushahidi extends Activity {
                 return true;
 
             case ADD_INCIDENT:
-                launchIntent = new Intent(Ushahidi.this, AddIncident.class);
-                startActivityForResult(launchIntent, ADD_INCIDENTS);
-                setResult(RESULT_OK);
+                if (UshahidiPref.isCheckinEnabled == 1) {
+                    launchIntent = new Intent(Ushahidi.this, CheckinActivity.class);
+                    startActivityForResult(launchIntent, ADD_INCIDENTS);
+                    setResult(RESULT_OK);
+                } else {
+                    launchIntent = new Intent(Ushahidi.this, AddIncident.class);
+                    startActivityForResult(launchIntent, ADD_INCIDENTS);
+                    setResult(RESULT_OK);
+                }
                 return true;
 
             case ABOUT:

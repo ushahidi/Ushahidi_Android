@@ -16,7 +16,6 @@ import android.net.ConnectivityManager;
 import android.util.Log;
 
 import com.ushahidi.android.app.data.UshahidiDatabase;
-import com.ushahidi.android.app.net.ClientHttpRequest;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
 
 /**
