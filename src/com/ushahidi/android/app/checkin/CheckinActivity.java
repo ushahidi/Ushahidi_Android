@@ -261,6 +261,9 @@ public class CheckinActivity extends MapActivity {
         // Uploading a photo for the checkin
         uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                if (!TextUtils.isEmpty(selectedPhoto)) {
+                    ImageManager.deleteImage(selectedPhoto);
+                }
                 showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
             }
         });
@@ -268,6 +271,9 @@ public class CheckinActivity extends MapActivity {
 
     @Override
     protected void onResume() {
+        if (!TextUtils.isEmpty(selectedPhoto)) {
+            uploadPhotoButton.setText(getString(R.string.change_photo));
+        }
         super.onResume();
     }
 

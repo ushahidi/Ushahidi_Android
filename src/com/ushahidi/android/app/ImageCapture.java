@@ -40,6 +40,8 @@ import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 public class ImageCapture extends Activity implements SurfaceHolder.Callback {
@@ -64,8 +66,11 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.take_picture);
 
         mSurfaceView = (SurfaceView)findViewById(R.id.sur_camera);
@@ -205,6 +210,7 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
         if (mIsPreviewRunning) {
             mCamera.stopPreview();
         }
+        
         Camera.Parameters p = mCamera.getParameters();
         p.setPreviewSize(w, h);
         mCamera.setParameters(p);

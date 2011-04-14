@@ -188,7 +188,7 @@
 	<!-- Tab -->
 	<string name="tab_item_report_list">List</string>
 	<string name="tab_item_report_map">Map</string>
-	<string name="tab_item_checkin">Check ins</string>
+	<string name="tab_item_checkin">Check Ins</string>
 
 	<!-- Checkin Strings -->
 	<string name="checkin_btn">Check In</string>
@@ -201,9 +201,9 @@
 	<string name="checkin_select_pic_file">File</string>
 	<string name="checkin_select_pic_camera">Camera</string>
 	<string name="checkin_selected_photo">Selected photo</string>
-	<string name="view_checkins">Ushahidi | View Check ins</string>
+	<string name="view_checkins">Ushahidi | View Check Ins</string>
 	<string name="checkin_progress_title">Working</string>
-	<string name="checkin_in_progress">Sending checking...</string>
+	<string name="checkin_in_progress">Sending Check-in...</string>
 	<string name="checkin_progress_message">Getting location data...</string>
 	<string name="checkin_contact">Contact Info</string>
 	<string name="checkin_success_toast">Check in successful</string>
@@ -225,4 +225,5 @@
 	<string name="notification_status_bar_message">Incidents Sent</string>
     <string name="notification_expanded_title">Ushahidi Incidents</string>
     <string name="notification_expanded_message">Incidents Sent Successfully</string>
+    <string name="change_photo">Change Photo</string>
 </resources>
