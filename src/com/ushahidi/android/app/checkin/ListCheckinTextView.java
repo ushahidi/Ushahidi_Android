@@ -29,6 +29,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -40,7 +41,7 @@ public class ListCheckinTextView extends LinearLayout {
     private TextView date;
 
     private TextView status;
-    
+
     private TextView mDescription;
 
     private ImageView thumbnail;
@@ -82,9 +83,10 @@ public class ListCheckinTextView extends LinearLayout {
                 android.view.ViewGroup.LayoutParams.FILL_PARENT,
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
         this.tblLayout.setColumnStretchable(1, true);
+
         this.tblRow = new TableRow(context);
         this.tblRow.setLayoutParams(new TableRow.LayoutParams(
-                android.view.ViewGroup.LayoutParams.FILL_PARENT,
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 
         textLayout.setOrientation(VERTICAL);
@@ -95,21 +97,20 @@ public class ListCheckinTextView extends LinearLayout {
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 
         thumbnail = new ImageView(context);
+        //thumbnail.setScaleType(ScaleType.CENTER);
         thumbnail.setImageURI(listText.getThumbnailUri());
         thumbnail.setImageDrawable(listText.getThumbnail());
-        thumbnail.setPadding(2, 0, 10, 4);
-        thumbnail.setLayoutParams(new TableRow.LayoutParams(87,
-                android.view.ViewGroup.LayoutParams.FILL_PARENT));
+        thumbnail.setPadding(2, 5, 10, 4);
+        thumbnail.setLayoutParams(new TableRow.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 
         tblRow.addView(thumbnail);
-        
-        
-        
+
         title = new TextView(context);
-        
+
         title.setTextColor(Color.BLACK);
         title.setTextSize(fontSize);
-        
+
         title.setSingleLine(true);
         title.setEllipsize(TextUtils.TruncateAt.END);
         title.setTypeface(Typeface.DEFAULT_BOLD);
@@ -122,19 +123,18 @@ public class ListCheckinTextView extends LinearLayout {
         textLayout.addView(title, new TableRow.LayoutParams(
                 android.view.ViewGroup.LayoutParams.FILL_PARENT,
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-        
+
         mDescription = new TextView(context);
         mDescription.setTextColor(Color.GRAY);
-       
-        
+
         mDescription.setSingleLine(true);
         mDescription.setEllipsize(TextUtils.TruncateAt.END);
         mDescription.setText(Util.capitalizeString(listText.getDesc()));
-        
+
         textLayout.addView(mDescription, new TableRow.LayoutParams(
                 android.view.ViewGroup.LayoutParams.FILL_PARENT,
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-        
+
         date = new TextView(context);
         date.setTextColor(Color.GRAY);
         date.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -145,17 +145,17 @@ public class ListCheckinTextView extends LinearLayout {
         textLayout.addView(date, new TableRow.LayoutParams(
                 android.view.ViewGroup.LayoutParams.FILL_PARENT,
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-        
+
         status = new TextView(context);
         status.setText(listText.getStatus());
-        
+
         // change color to red if text is not Verified
         if (listText.getStatus().equalsIgnoreCase("Verified")) {
             status.setTextColor(Color.rgb(41, 142, 40)); // green color
-           
+
         } else if (listText.getStatus().equalsIgnoreCase("Unverified")) {
             status.setTextColor(Color.rgb(237, 0, 0)); // red color
-            
+
         }
         status.setTextSize(fontSize);
 
@@ -211,7 +211,6 @@ public class ListCheckinTextView extends LinearLayout {
         this.mDescription.setText(description);
     }
 
-
     public void setMedia(String media) {
         this.media = media;
     }
@@ -224,9 +223,9 @@ public class ListCheckinTextView extends LinearLayout {
     public void setArrow(Drawable arrow) {
         this.arrow.setImageDrawable(arrow);
     }
-    
+
     public void setStatusColor(int color) {
         this.status.setTextColor(color);
     }
-    
+
 }

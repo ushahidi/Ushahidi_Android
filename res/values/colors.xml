@@ -27,4 +27,5 @@
     <drawable name="thick_background_color">#DDD0A3</drawable>
     <drawable name="white_color">#FFFFFF</drawable>
     <drawable name="black_color">#000000</drawable>
+    <drawable name="gray_color">#736F6E</drawable>
 </resources>

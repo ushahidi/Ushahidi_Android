@@ -222,7 +222,7 @@ public class AddIncident extends MapActivity {
         initComponents();
 
     }
-    
+
     @Override
     protected void onDestroy() {
 
@@ -418,6 +418,9 @@ public class AddIncident extends MapActivity {
 
         mBtnPicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if (!TextUtils.isEmpty(UshahidiPref.fileName)) {
+                    ImageManager.deleteImage(UshahidiPref.fileName);
+                }
                 showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
             }
         });
@@ -963,8 +966,10 @@ public class AddIncident extends MapActivity {
      */
     @Override
     protected void onResume() {
-        super.onResume();
-
+        if (!TextUtils.isEmpty(UshahidiPref.fileName)) {
+            mBtnPicture.setText(getString(R.string.change_photo));
+        }
+        
         SharedPreferences prefs = getPreferences(0);
         String title = prefs.getString("title", null);
         String desc = prefs.getString("desc", null);
@@ -975,6 +980,8 @@ public class AddIncident extends MapActivity {
         if (desc != null)
             mIncidentDesc.setText(desc, TextView.BufferType.EDITABLE);
 
+        super.onResume();
+
     }
 
     /**
@@ -984,7 +991,7 @@ public class AddIncident extends MapActivity {
     @Override
     protected void onPause() {
         ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
-        .removeUpdates(new DeviceLocationListener());
+                .removeUpdates(new DeviceLocationListener());
         SharedPreferences.Editor editor = getPreferences(0).edit();
         editor.putString("title", mIncidentTitle.getText().toString());
         editor.putString("desc", mIncidentDesc.getText().toString());

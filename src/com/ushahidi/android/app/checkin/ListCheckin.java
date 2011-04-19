@@ -99,7 +99,7 @@ public class ListCheckin extends Activity {
         listCheckins = (ListView)findViewById(R.id.list_checkins);
 
         checkins = new ArrayList<Checkin>();
-        refreshForNewCheckins();
+        
         listCheckins.setOnItemClickListener(new OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
@@ -121,7 +121,7 @@ public class ListCheckin extends Activity {
             }
 
         });
-
+        refreshForNewCheckins();
         mHandler.post(mDisplayCheckins);
 
     }
@@ -353,7 +353,7 @@ public class ListCheckin extends Activity {
 
                 // set thumbnail
                 listText.setThumbnail(d == null ? getResources().getDrawable(
-                        R.drawable.ushahidi_report_icon) : d);
+                        R.drawable.ushahidi_icon) : d);
 
                 listText.setId(id);
                 listText.setArrow(getResources().getDrawable(R.drawable.ushahidi_arrow));

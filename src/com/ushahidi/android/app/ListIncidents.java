@@ -52,7 +52,7 @@ public class ListIncidents extends Activity {
     /** Called when the activity is first created. */
     private ListView listIncidents = null;
 
-    private ListIncidentAdapter ila = new ListIncidentAdapter(this);
+    private ListIncidentAdapter ila;
 
     private static final int HOME = Menu.FIRST + 1;
 
@@ -101,6 +101,7 @@ public class ListIncidents extends Activity {
         listIncidents = (ListView)findViewById(R.id.view_incidents);
 
         mOldIncidents = new ArrayList<IncidentsData>();
+        ila = new ListIncidentAdapter(this);
         listIncidents.setOnItemClickListener(new OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
@@ -402,7 +403,7 @@ public class ListIncidents extends Activity {
                 }
                 
                 listText.setThumbnail(d == null ? getResources()
-                        .getDrawable(R.drawable.ushahidi_report_icon) : d);
+                        .getDrawable(R.drawable.ushahidi_icon) : d);
                 
                 image = cursor.getString(imageIndex);
                 incidentData.setIncidentImage(image);

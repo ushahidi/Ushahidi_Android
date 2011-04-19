@@ -92,6 +92,7 @@ public class Ushahidi extends Activity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.main);
+        
         mHandler = new Handler();
         bundle = new Bundle();
 
@@ -109,11 +110,9 @@ public class Ushahidi extends Activity {
             // return;
 
         }
-
         listBtn = (Button)findViewById(R.id.incident_list);
         addBtn = (Button)findViewById(R.id.incident_add);
         settingsBtn = (Button)findViewById(R.id.incident_map);
-
         initializeUI();
 
     }
@@ -156,7 +155,7 @@ public class Ushahidi extends Activity {
             }
         });
 
-        addBtn.setOnClickListener(new View.OnClickListener() {
+       addBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (UshahidiPref.isCheckinEnabled == 1) {
                     NetworkServices.fileName = "";
