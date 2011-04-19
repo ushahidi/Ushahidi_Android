@@ -56,7 +56,7 @@ public class ListCheckin extends Activity {
     /** Called when the activity is first created. */
     private ListView listCheckins = null;
 
-    private ListCheckinAdapter ila = new ListCheckinAdapter(this);
+    private ListCheckinAdapter ila;
 
     private static final int HOME = Menu.FIRST + 1;
 
@@ -99,6 +99,7 @@ public class ListCheckin extends Activity {
         listCheckins = (ListView)findViewById(R.id.list_checkins);
 
         checkins = new ArrayList<Checkin>();
+        ila = new ListCheckinAdapter(this);
         
         listCheckins.setOnItemClickListener(new OnItemClickListener() {
 

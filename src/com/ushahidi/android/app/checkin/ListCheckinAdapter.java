@@ -21,22 +21,31 @@
 package com.ushahidi.android.app.checkin;
 
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ushahidi.android.app.R;
+
 import android.content.Context;
 import android.graphics.Color;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 public class ListCheckinAdapter extends BaseAdapter {
 
     private Context iContext;
+    
+    private LayoutInflater mInflater;
 
     private List<ListCheckinText> iItems = new ArrayList<ListCheckinText>();
 
     public ListCheckinAdapter(Context context) {
         iContext = context;
+        mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public void addItem(ListCheckinText it) {
@@ -72,34 +81,44 @@ public class ListCheckinAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        ListCheckinTextView iTv;
         
-        if (convertView == null) {
-            iTv = new ListCheckinTextView(iContext, iItems.get(position));
+        View row = mInflater.inflate(R.layout.checkin_list_text, parent, false);
+        
+        ViewHolder holder = (ViewHolder)row.getTag();
 
-        } else {
+        if (holder == null) {
+            holder = new ViewHolder(row);
+            row.setTag(holder);
 
-            iTv = (ListCheckinTextView)convertView;
+        } 
+        
+        holder.thumbnail.setImageDrawable(iItems.get(position).getThumbnail());
+        holder.title.setText(iItems.get(position).getTitle());
+        holder.date.setText(iItems.get(position).getDate());
+        holder.checkinMessage.setText(iItems.get(position).getDesc());
+        holder.arrow.setImageDrawable(iItems.get(position).getArrow());
+        
+        return row;
+    }
+    
+    class ViewHolder {
+        TextView title;
 
-            iTv.setThumbnail(iItems.get(position).getThumbnail());
+        TextView checkinMessage;
 
-            iTv.setTitle(iItems.get(position).getTitle());
+        TextView date;
 
-            iTv.setDate(iItems.get(position).getDate());
-            
-            //change the status color
-            if(iItems.get(position).getStatus().equalsIgnoreCase("Verified")) {
-                iTv.setStatusColor(Color.rgb(41, 142, 40)); // green
-            } else if (iItems.get(position).getStatus().equalsIgnoreCase("Unverified")) {
-                iTv.setStatusColor(Color.rgb(237, 0, 0)); // red
-            }
-            iTv.setStatus(iItems.get(position).getStatus());
-            iTv.setDesc(iItems.get(position).getDesc());
-            iTv.setMedia(iItems.get(position).getMedia());
-            iTv.setId(iItems.get(position).getId());
-            iTv.setArrow(iItems.get(position).getArrow());
+        ImageView thumbnail;
+
+        ImageView arrow;
+
+        ViewHolder(View convertView) {
+            this.thumbnail = (ImageView)convertView.findViewById(R.id.checkin_thumbnail);
+            this.checkinMessage = (TextView)convertView.findViewById(R.id.checkin_message);
+            this.title = (TextView)convertView.findViewById(R.id.checkin_title);
+            this.date = (TextView)convertView.findViewById(R.id.checkin_date);
+            this.arrow = (ImageView)convertView.findViewById(R.id.checkin_arrow);
         }
-        return iTv;
     }
 
 }
