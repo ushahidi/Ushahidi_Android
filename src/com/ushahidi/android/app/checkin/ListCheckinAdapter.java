@@ -30,21 +30,17 @@ import java.util.List;
 import com.ushahidi.android.app.R;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 public class ListCheckinAdapter extends BaseAdapter {
-
-    private Context iContext;
-    
+ 
     private LayoutInflater mInflater;
 
     private List<ListCheckinText> iItems = new ArrayList<ListCheckinText>();
 
     public ListCheckinAdapter(Context context) {
-        iContext = context;
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -93,6 +89,7 @@ public class ListCheckinAdapter extends BaseAdapter {
         } 
         
         holder.thumbnail.setImageDrawable(iItems.get(position).getThumbnail());
+        
         holder.title.setText(iItems.get(position).getTitle());
         holder.date.setText(iItems.get(position).getDate());
         holder.checkinMessage.setText(iItems.get(position).getDesc());

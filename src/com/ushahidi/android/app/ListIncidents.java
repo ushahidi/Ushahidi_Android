@@ -403,7 +403,7 @@ public class ListIncidents extends Activity {
                 }
                 
                 listText.setThumbnail(d == null ? getResources()
-                        .getDrawable(R.drawable.ushahidi_icon) : d);
+                        .getDrawable(R.drawable.ushahidi_report_icon) : d);
                 
                 image = cursor.getString(imageIndex);
                 incidentData.setIncidentImage(image);

@@ -238,7 +238,7 @@ public class UshahidiDatabase {
 
     private static final String CHECKINS_MEDIA_TABLE = "checkin_media";
 
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 11;
 
     // NOTE: the incident ID is used as the row ID.
     // Furthermore, if a row already exists, an insert will replace
@@ -374,7 +374,7 @@ public class UshahidiDatabase {
             // upgrade checkin users table
             db.execSQL(USERS_TABLE_CREATE);
             usersColumns = UshahidiDatabase.getColumns(db, USERS_TABLE);
-            db.execSQL("ALTER TABLE " + USERS_TABLE + " RENAME TO temp_" + CHECKINS_MEDIA_TABLE);
+            db.execSQL("ALTER TABLE " + USERS_TABLE + " RENAME TO temp_" + USERS_TABLE);
             db.execSQL(USERS_TABLE_CREATE);
             usersColumns.retainAll(UshahidiDatabase.getColumns(db, USERS_TABLE));
             String usersCols = UshahidiDatabase.join(checkinsMediaColums, ",");
@@ -609,6 +609,7 @@ public class UshahidiDatabase {
         deleteAllCategories();
         deleteUsers();
         deleteAllCheckins();
+        deleteCheckinMedia();
         // delete all files
         Util.rmDir(UshahidiPref.savePath);
         return true;

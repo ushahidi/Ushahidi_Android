@@ -354,7 +354,7 @@ public class ListCheckin extends Activity {
 
                 // set thumbnail
                 listText.setThumbnail(d == null ? getResources().getDrawable(
-                        R.drawable.ushahidi_icon) : d);
+                        R.drawable.ushahidi_report_icon) : d);
 
                 listText.setId(id);
                 listText.setArrow(getResources().getDrawable(R.drawable.ushahidi_arrow));
