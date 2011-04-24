@@ -123,7 +123,6 @@ public class ListCheckin extends Activity {
 
         });
         refreshForNewCheckins();
-        mHandler.post(mDisplayCheckins);
 
     }
 
@@ -143,10 +142,10 @@ public class ListCheckin extends Activity {
 
     final Runnable mDisplayCheckins = new Runnable() {
         public void run() {
-            setProgressBarIndeterminateVisibility(true);
+            //setProgressBarIndeterminateVisibility(true);
             showCheckins();
             try {
-                setProgressBarIndeterminateVisibility(false);
+              //  setProgressBarIndeterminateVisibility(false);
             } catch (Exception e) {
                 return; // means that the dialog is not showing, ignore please!
             }

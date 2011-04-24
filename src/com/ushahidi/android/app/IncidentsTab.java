@@ -50,7 +50,6 @@ public class IncidentsTab extends TabActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
         mHandler = new Handler();
         bundle = new Bundle();
         extras = this.getIntent().getExtras();
@@ -85,8 +84,7 @@ public class IncidentsTab extends TabActivity {
     @Override
     public void onResume() {
         super.onResume();
-        // check if checkins is enabled
-        //checkinEnabled();
+       
     }
 
     public void checkinEnabled() {
