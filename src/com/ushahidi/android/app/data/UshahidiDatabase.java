@@ -377,7 +377,7 @@ public class UshahidiDatabase {
             db.execSQL("ALTER TABLE " + USERS_TABLE + " RENAME TO temp_" + USERS_TABLE);
             db.execSQL(USERS_TABLE_CREATE);
             usersColumns.retainAll(UshahidiDatabase.getColumns(db, USERS_TABLE));
-            String usersCols = UshahidiDatabase.join(checkinsMediaColums, ",");
+            String usersCols = UshahidiDatabase.join(usersColumns, ",");
             db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s", USERS_TABLE,
                     usersCols, usersCols, USERS_TABLE));
             db.execSQL("DROP TABLE IF EXISTS temp_" + USERS_TABLE);

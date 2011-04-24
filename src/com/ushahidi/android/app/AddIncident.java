@@ -232,6 +232,15 @@ public class AddIncident extends MapActivity {
         super.onDestroy();
     }
 
+    @Override
+    protected void onStop() {
+        // house keeping
+        ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
+                .removeUpdates(new DeviceLocationListener());
+        super.onStop();
+
+    }
+
     // menu stuff
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -428,6 +437,9 @@ public class AddIncident extends MapActivity {
         mBtnCancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clearFields();
+                // house keeping
+                ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
+                        .removeUpdates(new DeviceLocationListener());
                 Intent intent = new Intent(AddIncident.this, Ushahidi.class);
                 startActivityForResult(intent, GOTOHOME);
                 setResult(RESULT_OK);
@@ -969,7 +981,7 @@ public class AddIncident extends MapActivity {
         if (!TextUtils.isEmpty(UshahidiPref.fileName)) {
             mBtnPicture.setText(getString(R.string.change_photo));
         }
-        
+
         SharedPreferences prefs = getPreferences(0);
         String title = prefs.getString("title", null);
         String desc = prefs.getString("desc", null);
@@ -1179,7 +1191,8 @@ public class AddIncident extends MapActivity {
         public void onLocationChanged(Location location) {
 
             if (location != null) {
-                ((LocationManager)getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
+                ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
+                        .removeUpdates(DeviceLocationListener.this);
 
                 sLatitude = location.getLatitude();
                 sLongitude = location.getLongitude();

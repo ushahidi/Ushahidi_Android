@@ -13,11 +13,11 @@
 	android:id="@+id/checkin_list_text"
 	android:layout_height="wrap_content">
 	
-	<ImageView android:layout_height="wrap_content"
-		android:layout_width="80dp" android:id="@+id/checkin_thumbnail"
-		android:scaleType="center"
+	<ImageView 
+		android:layout_width="50dp" android:layout_height="50dp" android:id="@+id/checkin_thumbnail"
 		android:layout_alignParentTop="true"
-		android:layout_alignParentLeft="true" android:padding="5dip" />
+		android:layout_alignParentLeft="true" android:padding="5dip"
+		android:scaleType="centerCrop" />
 		<RelativeLayout android:layout_height="match_parent"
 			android:layout_width="match_parent" android:layout_toRightOf="@+id/checkin_thumbnail">
 

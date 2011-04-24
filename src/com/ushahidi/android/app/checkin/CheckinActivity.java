@@ -712,7 +712,8 @@ public class CheckinActivity extends MapActivity {
         public void onLocationChanged(Location location) {
 
             if (location != null) {
-                ((LocationManager)getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
+                ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
+                        .removeUpdates(DeviceLocationListener.this);
 
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
