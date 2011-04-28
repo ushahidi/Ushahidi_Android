@@ -19,7 +19,7 @@
 		android:layout_alignParentTop="true" android:layout_alignParentRight="true"
 		android:layout_toRightOf="@+id/report_thumbnail" android:layout_width="fill_parent"
 		android:gravity="center_horizontal|left">
-		<RelativeLayout android:layout_height="match_parent"
+		<RelativeLayout android:layout_height="fill_parent"
 			android:id="@+id/relativeLayout2" android:layout_width="fill_parent"
 			android:layout_toRightOf="@+id/report_thumbnail">
 

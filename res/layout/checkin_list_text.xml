@@ -18,8 +18,8 @@
 		android:layout_alignParentTop="true"
 		android:layout_alignParentLeft="true" android:padding="5dip"
 		android:scaleType="centerCrop" />
-		<RelativeLayout android:layout_height="match_parent"
-			android:layout_width="match_parent" android:layout_toRightOf="@+id/checkin_thumbnail">
+		<RelativeLayout android:layout_height="fill_parent"
+			android:layout_width="fill_parent" android:layout_toRightOf="@+id/checkin_thumbnail">
 
 			<LinearLayout android:layout_height="wrap_content"
 				android:id="@+id/title_layout" android:layout_alignParentTop="true"
