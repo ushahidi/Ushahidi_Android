@@ -120,7 +120,7 @@ public class About extends Activity {
                 AlertDialog dialog = (new AlertDialog.Builder(this)).create();
                 dialog.setTitle(R.string.alert_dialog_error_title);
                 dialog.setMessage(dialogErrorMsg);
-                dialog.setButton2("Ok", new Dialog.OnClickListener() {
+                dialog.setButton2(getString(R.string.btn_ok), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
                         Intent launchPreferencesIntent = new Intent(About.this, Settings.class);

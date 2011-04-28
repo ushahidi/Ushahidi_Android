@@ -41,7 +41,7 @@
 
 				<TextView android:id="@+id/lbl_date" android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:textStyle="bold"
-					android:textColor="@drawable/title_color" android:text="@string/incident_current_date" />
+					android:textColor="@drawable/title_color"  />
 				<LinearLayout android:orientation="horizontal"
 					android:layout_width="fill_parent" android:layout_height="wrap_content"
 					android:paddingBottom="15px">

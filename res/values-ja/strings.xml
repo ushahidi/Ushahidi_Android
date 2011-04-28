@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+	Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
+	This file may be used under the terms of the GNU Lesser General Public License 
+	version 3 as published by the Free Software Foundation and appearing in the 
+	file LICENSE.LGPL included in the packaging of this file. Please review the 
+	following information to ensure the GNU Lesser General Public License version 
+	3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
+	have questions regarding the use of this file, please contact Ushahidi developers 
+	at team@ushahidi.com. -->
+<resources>
+	<string name="app_name">Ushahidi</string>
+	<string name="add_incident">Ushahidi | レポート追加</string>
+	<string name="view_incident">Ushahidi | レポート表示</string>
+	<string name="incident_details">Ushahidi | レポート詳細</string>
+	<string name="app_settings">Ushahidi | 設定 </string>
+	<string name="ushahidi_about">Ushahidi | About </string>
+	<string name="ushahidi_sync">Ushahidi | 同期 </string>
+	<string name="ushahidi_splash_screen">Ushahidi | Splash Screen"</string>
+	<string name="date_time">イベントタイトル</string>
+	<string name="prompt_mesg">フィルターからカテゴリーを選択してください</string>
+	<string name="btn_country">デフォルトの位置</string>
+	<string name="btn_confirm">保存</string>
+	<string name="str_post_photos">写真追加</string>
+	<string name="add_categories">カテゴリー選択</string>
+	<string name="alert_dialog_ok">OK</string>
+	<string name="alert_dialog_hide">Hide</string>
+	<string name="alert_dialog_something">Something</string>
+	<string name="alert_dialog_error_title">Oops</string>
+	<string name="alert_dialog_error_msg">レポート取得中にエラーが発生しました 入力したデータを確認してください</string>
+	<string name="invalid_email_address">E-mailアドレスが異常です</string>
+	<string name="invalid_ushahidi_instance">入力したURLが見つかりません</string>
+	<string name="btn_save">保存</string>
+	<string name="btn_find">現在地</string>
+	<string name="btn_reset">リセット</string>
+	<string name="btn_ok">Ok</string>
+	<string name="btn_add_photo">写真追加</string>
+	<string name="btn_cancel">キャンセル</string>
+	<string name="btn_send">送信</string>
+	<string name="new_incidents">{0} 新規レポート </string>
+	<string name="new_categories">{0} 新規カテゴリー </string>
+	<string name="incident_date">日付変更</string>
+	<string name="incident_current_date"></string>
+	<string name="incident_verified">確認済</string>
+	<string name="incident_unverified">未確認</string>
+	<string name="incident_location">場所:</string>
+	<string name="add_location">場所の追加</string>
+	<string name="view_map">マップ</string>
+	<string name="incident_description">説明:</string>
+	<string name="incident_time">時刻変更</string>
+	<string name="incident_title">タイトル:</string>
+	<string name="incident_add_category">カテゴリー選択</string>
+	<string name="incident_menu_add">レポートの追加</string>
+	<string name="incident_list">レポートの表示</string>
+	<!-- <string name="google_map_api_key_dev">0ffWSFpaVkgD5aL7vbO5wmtK0fXTccA_KJBwnAQ</string> 
+		<string name="google_map_api_key">0ffWSFpaVkgC0w4IHRJmd1yUrfMoPqLDQasHHkQ</string> -->
+	<string name="menu_home">ホーム</string>
+	<string name="menu_sync">同期</string>
+	<string name="sms_to_ushahidi_failed">SMS送信に失敗しました。ユーザー名またはパスワードが正しいか確認してください。</string>
+	<string name="instructions">現在位置をタップしてください</string>
+	<!-- Settings -->
+	<string name="menu_settings">設定</string>
+	<string name="basic_settings">基本設定</string>
+	<string name="advanced_settings">詳細設定</string>
+	<string name="hint_advanced_settings">詳細設定を行います</string>
+	<string name="sms_settings">SMS 設定</string>
+	<string name="txt_clear_cache">キャッシュのクリア</string>
+	<string name="txt_confirm_clear_cache">本当にキャッシュを消去してもよろしいですか</string>
+	<string name="hint_clear_cache">全ての保存データクリア</string>
+	<string name="option_location">デフォルトフォルダー</string>
+	<string name="hint_option_location">データの保存場所を設定します</string>
+	<string name="hint_SD_save_path">フォルダー名</string>
+	<string name="bg_notification">ノーティフィケーション（通知）</string>
+	<string name="vibrate">バイブ音</string>
+	<string name="hint_vibrate">バイブ音を鳴らします</string>
+	<string name="ringtone">着信音</string>
+	<string name="hint_ringtone">着信音を鳴らします</string>
+	<string name="select_ringtone">着信音の選択</string>
+	<string name="hint_select_ringtone">使用する着信音を選択して下さい</string>
+	<string name="flash_led">LEDの点滅</string>
+	<string name="hint_flash_led">LEDを点滅します</string>
+	<string name="hint_domain">サイトのURLを入力してください</string>
+	<string name="chk_auto_fetch">自動同期</string>
+	<string name="chk_sms_send">アプリへのSMS送信</string>
+	<string name="hint_sms_send">全ての取得SMSはアプリへ送られます</string>
+	<string name="hint_auto_fetch">自動的に新しいレポートを取得します</string>
+	<string name="txt_auto_update_delay">自動定期同期</string>
+	<string name="hint_auto_update_delay">選択したデータに同期する回数を設定します</string>
+	<string name="txt_path_SD">SDカードのパス名:</string>
+	<string name="txt_cache">キャッシュファイル:</string>
+	<string name="txt_countries">国の選択</string>
+	<string name="txt_domain">ウェブサイト</string>
+	<string name="txt_first_name">名前</string>
+	<string name="hint_first_name">レポート添付の属性(オプション)</string>
+	<string name="txt_last_name">姓名</string>
+	<string name="hint_last_name">レポート添付の属性(オプション)</string>
+	<string name="txt_user_name">ユーザー名</string>
+	<string name="hint_user_name">Ushahidiユーザー名</string>
+	<string name="txt_password">パスワード</string>
+	<string name="hint_password">Ushahidiパスワード</string>
+	<string name="txt_email">E-mailアドレス</string>
+	<string name="hint_email">連絡用途のみ</string>
+	<string name="total_reports">レポート数</string>
+	<string name="hint_total_reports">選択したデータからのレポート数</string>
+	<!-- Menu -->
+	<string name="incident_menu_map">マップ表示</string>
+	<string name="incident_menu_refresh">リフレッシュ</string>
+	<string name="reports">レポート</string>
+	<!-- about screen -->
+	<string name="menu_about">About</string>
+	<string name="ushahidi_url">Ushahidi.com</string>
+	<string name="welcome_mgs">Welcome to Ushahidi, which means "testimony" in
+		Swhahili, where we are
+		building a platform that crowdsources crisis information.Allowing anyone to
+		submit crisis
+		information through text messaging using a mobile phone, email or web form.
+	</string>
+	<string name="internet_connection">ネットワークエラーです。データとの接続を確保してください</string>
+	<string name="preferences_notifications">通知</string>
+	<!-- Add Report Screen -->
+	<string name="report_successfully_added_online">レポートは正常に送られました。モデレーションキューに入りました</string>
+	<string name="report_successfully_added_offline">レポートはローカルファイルに保存しました。
+		インターネットが使用できません。オンライン接続の時にレポートが送られます</string>
+	<string name="failed_to_add_report_offline">レポート送信に失敗しました。すべての項目を入力したか確認してください</string>
+	<string name="failed_to_add_report_online">接続に失敗しました。レポートを確定できません. 回線の速度が遅いかもしれません</string>
+	<string name="empty_report_title">タイトルを入力してください</string>
+	<string name="empty_report_description">説明を入力してください</string>
+	<string name="empty_report_location">要求するロケーション名が異常です</string>
+	<string name="empty_report_categories">少なくとも１つのカテゴリーを入力して下さい</string>
+	<string name="hint_location">ここにいます</string>
+	<string name="no_report">レポートを取得できません</string>
+	<string name="no_categories">カテゴリーを取得できません</string>
+	<string name="reports_successfully_fetched">レポートを正しく取得できました</string>
+	<!-- Add location screen -->
+	<string name="find_location">現在地を捜してます...</string>
+	<string name="location_not_found">場所を正確に特定できません。GPSを有効にして下さい（現在地情報とセキュリティ）</string>
+	<string name="loc_not_found">現在位置を確定できませんでした。 地図上の正しい位置にピンを置きましたか</string>
+	<string name="version">0.9.6</string>
+	<string name="report_title">タイトル</string>
+	<string name="report_verified">確認済</string>
+	<string name="report_unverified">未確認</string>
+	<string name="report_desc">説明</string>
+	<string name="report_category">カテゴリー</string>
+	<string name="report_date">日付</string>
+	<string name="report_location">位置</string>
+	<string name="report_photo">写真</string>
+	<string name="sms_status">ステータス</string>
+	<string name="sms_sent">SMS同期 メッセージ 送信</string>
+	<string name="sms_failed">SMS同期 メッセージ送信失敗</string>
+	<string name="status_no">いいえ</string>
+	<string name="status_yes">はい</string>
+	<string name="please_wait">しばらくお待ちください...</string>
+	<string name="please_wait_long_times">しばらくお待ちください... 数分程度かかることがあります。</string>
+	<string name="fetching_new_reports">新しいレポート更新</string>
+	<string name="choose_method">方法選択</string>
+	<string name="how_to_select_pic">写真の取得方法を選択して下さい</string>
+	<string name="camera_option">カメラ</string>
+	<string name="gallery_option">ギャラリー</string>
+	<string name="network_error">ネットワークエラー</string>
+	<string name="network_error_msg">ネットワークエラー、ネットワークが正しいか確認して下さい</string>
+	<string name="file_system_error">ファイルシステムエラー</string>
+	<string name="file_system_error_msg">ファイルシステムエラー、保存パス名が正しいか確認して下さい</string>
+
+	<!-- Tab -->
+	<string name="tab_item_report_list">リスト</string>
+	<string name="tab_item_report_map">マップ</string>
+	<string name="tab_item_checkin">チェックイン</string>
+
+	<!-- Checkin Strings -->
+	<string name="checkin_btn">チェックイン</string>
+	<string name="checkin_photo">写真</string>
+	<string name="checkin_message">メッセージ</string>
+	<string name="checkin_enter_msg_hint">メッセージ入力</string>
+	<string name="checkin_upload_photo">写真アップロード</string>
+	<string name="checkin_how_to_select_pic">選択したい写真を選んでください</string>
+	<string name="checkin_select_pic_file">ファイル</string>
+	<string name="checkin_select_pic_camera">カメラ</string>
+	<string name="checkin_selected_photo">写真選択</string>
+	<string name="view_checkins">Ushahidi | チェックイン表示</string>
+	<string name="checkin_progress_title">処理中...</string>
+	<string name="checkin_progress_message">位置情報取得中...</string>
+	<string name="checkin_contact">接続</string>
+	<string name="checkin_success_toast">チェックイン成功</string>
+	<string name="checkin_error_toast">チェックイン中の接触失敗</string>
+	<string name="checkin_no_location">位置情報を取得できません
+		GPSをお使いの場合、電話機から空が見える状態にある必要があります。もし空が見えない位置の場合は、ネットワークの基地局から位置情報を取得する設定に変更してください
+	</string>
+	<string name="checkin_enter_firstname_hint">名前の入力</string>
+	<string name="checkin_enter_lastname_hint">姓名の入力</string>
+	<string name="checkin_enter_email_hint">E-mailの入力</string>
+</resources>
