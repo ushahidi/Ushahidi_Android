@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	<LinearLayout style="@style/ActionBarTitleContainer">
+		<ImageButton style="@style/ActionBarTitle"
+			android:contentDescription="@string/menu_home" android:src="@drawable/ushahidi_home"
+			android:onClick="onClickHome" />
+
+		<ImageView style="@style/ActionBarTitleSeparator" />
+		<TextView style="@style/ActionBarTitleText" />
+		<ImageButton style="@style/ActionBarTitle"
+			android:contentDescription="@string/incident_list" android:src="@drawable/ushahidi_list"
+			android:onClick="onClickAbout" />
+		<ImageButton style="@style/ActionBarTitle"
+			android:contentDescription="@string/search_label" android:src="@drawable/title_search"
+			android:onClick="onClickSearch" />
+	</LinearLayout>
+	<EditText android:id="@+id/search_deploy"
+		android:layout_height="wrap_content" android:layout_width="fill_parent"
+		android:hint="Search"/>
+		
+		<!-- Holds the found deployments -->
+		<ListView android:id="@+id/deployment_list" android:layout_width="fill_parent"
+			android:layout_height="0dip" android:layout_weight="1" />
+</LinearLayout>

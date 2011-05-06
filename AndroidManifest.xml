@@ -24,12 +24,13 @@
 	<uses-feature android:name="android.hardware.camera" />
 	<!-- Enable this feature if you need autofocus <uses-feature android:name="android.hardware.camera.autofocus" 
 		/> -->
-	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="10" />
+	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="11" />
 	<supports-screens android:largeScreens="true"
 		android:normalScreens="true" android:smallScreens="true"
 		android:anyDensity="true" />
 	<application android:icon="@drawable/ushahidi_icon"
 		android:label="@string/app_name" android:name="UshahidiApplication"
+		android:theme="@style/Theme.D1"
 		android:debuggable="true">
 		<service android:name="UshahidiService" />
 		<uses-library android:name="com.google.android.maps" />
@@ -166,5 +167,26 @@
 				<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 			</intent-filter>
 		</receiver>
+		
+		<!-- Search dialog -->
+		 <!-- The default activity of the app.  Can also display search results. -->
+        <activity android:name=".DeploymentSearch"
+                android:theme="@style/Theme.D1"
+                android:label="@string/app_name">
+
+            <!-- Receives the search request. -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <!-- Points to searchable meta data. -->
+            <meta-data android:name="android.app.searchable"
+                    android:resource="@xml/searchable"/>
+        </activity>
+		
+		<!-- Provides search suggestions for deployments. -->
+        <provider android:name="com.ushahidi.android.app.data.DeploymentProvider"
+                android:authorities="com.ushahidi.android.app.data.deploymentprovider"
+                android:syncable="false" />
 	</application>
 </manifest>

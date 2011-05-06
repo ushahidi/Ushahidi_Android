@@ -10,7 +10,7 @@
 	at team@ushahidi.com. -->
 <resources>
 	<string name="app_name">Ushahidi</string>
-	<string name="add_incident">Ushahidi | Add Report</string>
+	<string name="add_incident">Add Report</string>
 	<string name="view_incident">Ushahidi | View Reports</string>
 	<string name="incident_details">Ushahidi | Report Detail</string>
 	<string name="app_settings">Ushahidi | Settings </string>
@@ -203,4 +203,18 @@
     <string name="notification_expanded_title">Ushahidi Report</string>
     <string name="notification_expanded_message">Reports Sent Successfully</string>
     <string name="change_photo">Change Photo</string>
+    
+    <!--  Deployment search -->
+    <string name="search_label">Search</string>
+     <!-- The hint text that appears in the search box. -->
+    <string name="search_hint">Search for a deployment</string>
+    
+    <!-- The description that will show up in the search settings for this source.  -->
+    <string name="settings_description">Found deployments</string>
+    <string name="no_results">No results found for \"%s\"</string>
+    <!-- Shown above search results when we receive a search request. -->
+    <plurals name="search_results">
+      <item quantity="one">%1$d result for \"%2$s\": </item>
+      <item quantity="other">%1$d results for \"%2$s\": </item>
+    </plurals>
 </resources>

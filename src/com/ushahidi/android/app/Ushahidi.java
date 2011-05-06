@@ -23,7 +23,6 @@ package com.ushahidi.android.app;
 import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.checkin.NetworkServices;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -40,7 +39,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class Ushahidi extends Activity {
+public class Ushahidi extends DashboardActivity {
     /** Called when the activity is first created. */
     private static final int ADD_INCIDENT = Menu.FIRST + 1;
 
@@ -63,6 +62,8 @@ public class Ushahidi extends Activity {
     private static final int INCIDENTS = 3;
 
     private static final int VIEW_SETTINGS = 4;
+    
+    private static final int VIEW_SEARCH = 5;
 
     private static final int REQUEST_CODE_SETTINGS = 1;
 
@@ -80,6 +81,12 @@ public class Ushahidi extends Activity {
 
     private Button settingsBtn;
 
+    private Button mapBtn;
+
+    private Button aboutBtn;
+
+    private Button searchBtn;
+
     private String dialogErrorMsg = "An error occurred fetching the reports. "
             + "Make sure you have entered an Ushahidi instance.";
 
@@ -92,7 +99,7 @@ public class Ushahidi extends Activity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.main);
-        
+        setTitleFromActivityLabel(R.id.title_text);
         mHandler = new Handler();
         bundle = new Bundle();
 
@@ -112,7 +119,10 @@ public class Ushahidi extends Activity {
         }
         listBtn = (Button)findViewById(R.id.incident_list);
         addBtn = (Button)findViewById(R.id.incident_add);
-        settingsBtn = (Button)findViewById(R.id.incident_map);
+        settingsBtn = (Button)findViewById(R.id.deployment_settings);
+        mapBtn = (Button)findViewById(R.id.incident_map);
+        searchBtn = (Button)findViewById(R.id.deployment_search);
+        aboutBtn = (Button)findViewById(R.id.deployment_about);
         initializeUI();
 
     }
@@ -149,13 +159,14 @@ public class Ushahidi extends Activity {
 
         settingsBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 Intent intent = new Intent(Ushahidi.this, Settings.class);
                 startActivityForResult(intent, VIEW_SETTINGS);
                 setResult(RESULT_OK);
             }
         });
 
-       addBtn.setOnClickListener(new View.OnClickListener() {
+        addBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (UshahidiPref.isCheckinEnabled == 1) {
                     NetworkServices.fileName = "";
@@ -168,6 +179,37 @@ public class Ushahidi extends Activity {
                     startActivityForResult(intent, ADD_INCIDENTS);
                     setResult(RESULT_OK);
                 }
+            }
+        });
+        
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            
+            public void onClick(View v) {
+                
+                Intent intent = new Intent(Ushahidi.this, DeploymentSearch.class);
+                startActivityForResult(intent, VIEW_SEARCH);
+                setResult(RESULT_OK);
+            }
+        });
+        
+        aboutBtn.setOnClickListener(new View.OnClickListener() {
+            
+            public void onClick(View v) {
+                Intent launchIntent = new Intent(Ushahidi.this, About.class);
+                startActivityForResult(launchIntent, REQUEST_CODE_ABOUT);
+                setResult(RESULT_OK);
+                
+            }
+        });
+        
+        mapBtn.setOnClickListener(new View.OnClickListener() {
+            
+            public void onClick(View v) {
+                bundle.putInt("tab_index", 1);
+                Intent launchIntent = new Intent(Ushahidi.this, IncidentsTab.class);
+                launchIntent.putExtra("tab", bundle);
+                startActivityForResult(launchIntent, MAP_INCIDENTS);
+                setResult(RESULT_OK);
             }
         });
     }
