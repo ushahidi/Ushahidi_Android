@@ -10,14 +10,29 @@
 	at team@ushahidi.com. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:orientation="vertical" android:padding="10px"
+	android:orientation="vertical" 
 	android:background="@drawable/background_color">
+	<LinearLayout style="@style/ActionBarTitleContainer">
+        <ImageButton style="@style/ActionBarTitle"
+            android:contentDescription="@string/menu_home" android:src="@drawable/home_btn"
+            android:onClick="onClickHome" />
+
+        <ImageView style="@style/ActionBarTitleSeparator" />
+        <TextView style="@style/ActionBarTitleText" />
+        <ImageView style="@style/ActionBarTitleSeparator" />
+        <ImageButton style="@style/ActionBarTitle"
+            android:id="@+id/search_report_btn"
+            android:src="@drawable/ic_title_search"
+            android:onClick="onSearchDeployments" />
+            
+    </LinearLayout>
+    <ImageView style="@style/ActionBarSeparator" />
 	<ScrollView android:layout_width="fill_parent"
 		android:layout_height="fill_parent">
 		<!-- Parent layout starts -->
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="fill_parent" android:orientation="vertical"
-			android:paddingRight="10px">
+			android:padding="10dip">
 			<!-- Title layout begins -->
 			<LinearLayout android:orientation="vertical"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"

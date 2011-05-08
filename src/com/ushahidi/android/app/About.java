@@ -32,7 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class About extends Activity {
+public class About extends DashboardActivity {
 
     private Button urlBtn;
 

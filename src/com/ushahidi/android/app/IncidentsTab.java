@@ -49,7 +49,7 @@ public class IncidentsTab extends TabActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setContentView(R.layout.report_tab);
         mHandler = new Handler();
         bundle = new Bundle();
         extras = this.getIntent().getExtras();
@@ -138,6 +138,12 @@ public class IncidentsTab extends TabActivity {
                 .setBackgroundColor(Color.parseColor("#8A1F03"));
         TextView tv = (TextView)tabhost.getCurrentTabView().findViewById(android.R.id.title);
         tv.setTextColor(Color.parseColor("#ffffff"));
+    }
+    
+    public void setTitleFromActivityLabel (int textViewId)
+    {
+        TextView tv = (TextView) findViewById (textViewId);
+        if (tv != null) tv.setText (getTitle ());
     }
 
 }

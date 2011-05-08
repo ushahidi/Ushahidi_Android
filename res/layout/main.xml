@@ -24,8 +24,10 @@
         <TextView style="@style/ActionBarTitleText" />
         <ImageView style="@style/ActionBarTitleSeparator" />
         <ImageButton style="@style/ActionBarTitle"
+            android:id="@+id/refresh_report_btn"
             android:src="@drawable/refresh_icon"
-            android:onClick="onClickAbout" />
+            android:onClick="onRefreshReports" />
+            
         <ProgressBar style="@style/TitleBarProgressIndicator"
             android:id="@+id/title_refresh_progress"
             android:visibility="gone" />    

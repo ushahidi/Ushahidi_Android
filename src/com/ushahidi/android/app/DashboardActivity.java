@@ -68,6 +68,16 @@ public abstract class DashboardActivity extends Activity {
     }
     
     /**
+     * Handle the click on the refresh button.
+     * 
+     * @param v View
+     * @return void
+     */
+    public void onRefreshReports(View v) {
+        
+    }
+    
+    /**
      * Go back to the home activity.
      * 
      * @param context Context

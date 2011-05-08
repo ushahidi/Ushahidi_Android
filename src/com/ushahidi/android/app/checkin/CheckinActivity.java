@@ -24,9 +24,11 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +40,7 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.About;
+import com.ushahidi.android.app.DeploymentSearch;
 import com.ushahidi.android.app.ImageCapture;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.IncidentsTab;
@@ -66,6 +69,8 @@ public class CheckinActivity extends MapActivity {
     private Button uploadPhotoButton;
 
     private Button mCancelButton;
+    
+    private ImageButton mSearchButton;
 
     private MapView mapView = null;
 
@@ -96,6 +101,8 @@ public class CheckinActivity extends MapActivity {
     private TextView lblEmail;
 
     private TextView lblContact;
+    
+    private TextView activityTitle;
 
     // Photo functionality
     private String mFilename = "";
@@ -133,6 +140,8 @@ public class CheckinActivity extends MapActivity {
     private static final int DIALOG_CHOOSE_IMAGE_METHOD = 7;
 
     private static final int REQUEST_CODE_IMAGE = 8;
+    
+    private static final int VIEW_SEARCH = 9;
 
     private static final int INCIDENTS = 2;
 
@@ -180,7 +189,10 @@ public class CheckinActivity extends MapActivity {
         mSelectedPhotoText = (TextView)findViewById(R.id.checkin_selected_photo_label);
         mCheckinLocation = (TextView)findViewById(R.id.latlon);
         mSelectedPhotoText.setVisibility(View.GONE);
-
+        activityTitle = (TextView) findViewById(R.id.title_text);
+        if (activityTitle != null) activityTitle.setText (getTitle ());
+        mSearchButton = (ImageButton) findViewById(R.id.search_report_btn);
+        
         mHandler = new Handler();
 
         // map stuff
@@ -267,6 +279,15 @@ public class CheckinActivity extends MapActivity {
                 showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
             }
         });
+        
+        //search for deployments
+        mSearchButton.setOnClickListener(new OnClickListener() {
+
+            public void onClick(View v) {
+                onSearchDeployments(); 
+            }
+            
+        });
     }
 
     @Override
@@ -294,6 +315,13 @@ public class CheckinActivity extends MapActivity {
         ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
                 .removeUpdates(new DeviceLocationListener());
         super.onPause();
+    }
+    
+    protected void onSearchDeployments() 
+    {
+        Intent intent = new Intent(CheckinActivity.this, DeploymentSearch.class);
+        startActivityForResult(intent, VIEW_SEARCH);
+        setResult(RESULT_OK);
     }
 
     // menu stuff

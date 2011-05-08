@@ -91,6 +91,8 @@ public class Ushahidi extends DashboardActivity {
             + "Make sure you have entered an Ushahidi instance.";
 
     private Bundle bundle;
+    
+    private boolean refreshState = false;
 
     // Checkin specific variables and functions
 
@@ -125,6 +127,13 @@ public class Ushahidi extends DashboardActivity {
         aboutBtn = (Button)findViewById(R.id.deployment_about);
         initializeUI();
 
+    }
+    
+    @Override
+    public void onRefreshReports(View v) {
+        ReportsTask reportsTask = new ReportsTask();
+        reportsTask.appContext = this;
+        reportsTask.execute();
     }
 
     @Override
@@ -305,6 +314,13 @@ public class Ushahidi extends DashboardActivity {
 
         return (applyMenuChoice(item) || super.onContextItemSelected(item));
     }
+    
+    private void updateRefreshStatus() {
+        findViewById(R.id.refresh_report_btn).setVisibility(
+                refreshState ? View.GONE : View.VISIBLE);
+        findViewById(R.id.title_refresh_progress).setVisibility(
+                refreshState ? View.VISIBLE : View.GONE);
+    }
 
     private void populateMenu(Menu menu) {
         MenuItem i;
@@ -405,6 +421,8 @@ public class Ushahidi extends DashboardActivity {
 
         @Override
         protected void onPreExecute() {
+            refreshState = true;
+            updateRefreshStatus();
             this.dialog = ProgressDialog.show(appContext, getString(R.string.please_wait),
                     getString(R.string.fetching_new_reports), true);
 
@@ -431,6 +449,8 @@ public class Ushahidi extends DashboardActivity {
                 Util.showToast(appContext, R.string.reports_successfully_fetched);
             }
             this.dialog.cancel();
+            refreshState = false;
+            updateRefreshStatus();
         }
 
     }
