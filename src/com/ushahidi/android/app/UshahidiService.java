@@ -27,8 +27,6 @@ import java.util.Vector;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.ushahidi.android.app.data.UshahidiDatabase;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -112,10 +110,6 @@ public class UshahidiService extends Service {
         mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         this.startService();
 
-    }
-
-    private UshahidiDatabase getDb() {
-        return UshahidiApplication.mDb;
     }
     
     public static void clearCache() {

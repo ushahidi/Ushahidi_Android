@@ -6,7 +6,6 @@ import java.util.List;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -36,7 +35,7 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
 
     private List<IncidentsData> mNewIncidents;
 
-    private Bundle extras;
+    //private Bundle extras;
 
     private int viewOffset;
 
@@ -58,7 +57,7 @@ public abstract class UshahidiItemizedOverlay<Item> extends ItemizedOverlay<Over
         this.viewOffset = 32;
         this.iMap = iMap;
         this.mNewIncidents = mNewIncidents;
-        this.extras = extras;
+        //this.extras = extras;
         this.mc = mapView.getController();
 
     }

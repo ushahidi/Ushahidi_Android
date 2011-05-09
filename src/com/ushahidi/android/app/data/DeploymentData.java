@@ -1,13 +1,7 @@
 package com.ushahidi.android.app.data;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-import android.database.Cursor;
 import android.util.Log;
 
 /**
@@ -22,7 +16,7 @@ public class DeploymentData {
         return sInstance;
     }
 
-    private final Map<String, List<Deployment>> mDeployed = new ConcurrentHashMap<String, List<Deployment>>();
+    //private final Map<String, List<Deployment>> mDeployed = new ConcurrentHashMap<String, List<Deployment>>();
 
     private DeploymentData() {
     }
@@ -63,7 +57,7 @@ public class DeploymentData {
  // get checkins from the db
     public void fetchDeploymentByName(String _name) {
 
-        Cursor cursor;
+        //Cursor cursor;
 
         /*cursor = UshahidiApplication.mDb.fetchDeploymentByName(_name);
         String name;
@@ -92,36 +86,5 @@ public class DeploymentData {
         cursor.close();*/
         
         
-    }
-
-
-    public List<Deployment> getMatches(String query) {
-        //load query
-        ensureLoaded(query);
-        
-        List<Deployment> list = mDeployed.get(query);
-        return list == null ? Collections.EMPTY_LIST : list;
-    }
-
-    private void addDeployment(String id, String name, String description, String url) {
-        final Deployment foundDeployment = new Deployment();
-        foundDeployment.setId(id);
-        foundDeployment.setName(name);
-        foundDeployment.setUrl(url);
-        
-        final int len = name.length();
-        for (int i = 0; i < len; i++) {
-            final String prefix = name.substring(0, len - i);
-            addMatch(prefix, foundDeployment);
-        }
-    }
-
-    private void addMatch(String query, Deployment deployment) {
-        List<Deployment> matches = mDeployed.get(query);
-        if (matches == null) {
-            matches = new ArrayList<Deployment>();
-            mDeployed.put(query, matches);
-        }
-        matches.add(deployment);
     }
 }

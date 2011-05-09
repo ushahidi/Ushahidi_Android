@@ -82,17 +82,17 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
 
     private String images[];
 
-    private int id;
+    //private int id;
 
     private String reportLatitude;
 
     private String reportLongitude;
 
-    private String reportTitle;
+    //private String reportTitle;
 
-    private String reportDescription;
+    //private String reportDescription;
 
-    private static final int VIEW_MAP = 1;
+    //private static final int VIEW_MAP = 1;
 
     private ImageSwitcher mSwitcher;
 
@@ -112,9 +112,9 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
 
         extras = incidents.getBundle("incidents");
 
-        id = extras.getInt("id");
-        reportTitle = extras.getString("title");
-        reportDescription = extras.getString("desc");
+        //id = extras.getInt("id");
+        //reportTitle = extras.getString("title");
+        // = extras.getString("desc");
         reportLatitude = extras.getString("latitude");
         reportLongitude = extras.getString("longitude");
         String iStatus = Util.toInt(extras.getString("status")) == 0 ? getString(R.string.status_no)
@@ -224,12 +224,12 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
         return i;
     }
 
-    public void onItemSelected(AdapterView parent, View v, int position, long id) {
+    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
         mSwitcher.setImageDrawable(imageAdapter.mImageIds.get(position));
 
     }
 
-    public void onNothingSelected(AdapterView parent) {
+    public void onNothingSelected(AdapterView<?> parent) {
     }
 
     public int imageBackgroundColor() {
@@ -249,13 +249,13 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
 
         private OverlayItem myOverlayItem;
 
-        private boolean MoveMap = false;
+        //private boolean MoveMap = false;
 
-        private long timer;
+        //private long timer;
 
         public MapMarker(Drawable defaultMarker, int LatitudeE6, int LongitudeE6) {
             super(defaultMarker);
-            this.timer = 0;
+            //this.timer = 0;
             this.marker = defaultMarker;
 
             // create locations of interest

@@ -36,7 +36,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
@@ -366,44 +365,7 @@ public class LocationMap extends MapActivity {
         }
     }
 
-    // thread class
-    private class GeocodeTask extends AsyncTask<Double, Void, String> {
-
-        protected String localityName;
-
-        protected Context appContext;
-
-        @Override
-        protected void onPreExecute() {
-            setProgressBarIndeterminateVisibility(true);
-
-        }
-
-        @Override
-        protected String doInBackground(Double... params) {
-
-            // for some reason, Geocoder couldn't reverse geocode latitude and
-            // longitude
-            // so had to implement that using google geocde webservice.
-
-            localityName = Util.getFromLocation(params[0], params[1], appContext);
-            return localityName;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-
-            if (result == "") {
-                locationName = "";
-                Util.showToast(appContext, R.string.loc_not_found);
-            } else {
-                locationName = result;
-                Toast.makeText(appContext, locationName, Toast.LENGTH_SHORT).show();
-            }
-            setProgressBarIndeterminateVisibility(false);
-        }
-
-    }
+   
 
     private class MapMarker extends ItemizedOverlay<OverlayItem> {
 

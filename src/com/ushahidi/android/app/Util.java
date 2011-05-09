@@ -22,15 +22,20 @@ package com.ushahidi.android.app;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.http.HttpResponse;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -40,14 +45,6 @@ import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.http.HttpResponse;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.ushahidi.android.app.checkin.Checkin;
 import com.ushahidi.android.app.checkin.NetworkServices;
@@ -382,14 +379,14 @@ public class Util {
         // make an http get request to a dummy api call
         // TODO improve on how to do this
         boolean status = false;
-        try {
+        /*try {
             URL url = new URL(ushahidiUrl);
             status = true;
         } catch (MalformedURLException e) {
             status = false;
         } catch (IOException e) {
             status = true;
-        }
+        }*/
 
         return status;
     }
@@ -451,16 +448,14 @@ public class Util {
      * @return void
      */
     public static void rmDir(String path) {
-        String strName = "";
         File dir = new File(path);
         if (dir.isDirectory()) {
 
             String[] children = dir.list();
-            Log.i("Directory", "dir.list returned some files" + children.length + "--");
+            Log.d("Directory", "dir.list returned some files" + children.length + "--");
             for (int i = 0; i < children.length; i++) {
                 File temp = new File(dir, children[i]);
-                strName = children[i] + ",";
-
+                
                 if (temp.isDirectory()) {
 
                     rmDir(temp.getName());
@@ -471,7 +466,7 @@ public class Util {
 
             dir.delete();
         } else {
-            Log.i("Directory", "This is not a directory" + path);
+            Log.d("Directory", "This is not a directory" + path);
         }
     }
 

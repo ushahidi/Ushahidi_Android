@@ -35,14 +35,11 @@ import android.view.ViewGroup;
 
 public class ListIncidentAdapter extends BaseAdapter {
 
-    private Context iContext;
-
     private LayoutInflater mInflater;
 
     private List<ListIncidentText> iItems = new ArrayList<ListIncidentText>();
 
     public ListIncidentAdapter(Context context) {
-        iContext = context;
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

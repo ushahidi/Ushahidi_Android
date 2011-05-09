@@ -5,11 +5,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.UshahidiApplication;
-import com.ushahidi.android.app.Util;
 import com.ushahidi.android.app.data.UsersData;
 
 import java.util.ArrayList;

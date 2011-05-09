@@ -14,8 +14,6 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.data.IncidentsData;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +33,7 @@ public class CheckinItemizedOverlay<Item> extends ItemizedOverlay<OverlayItem> {
 
     private List<Checkin> mCheckins;
 
-    private Bundle extras;
+    //private Bundle extras;
 
     private int viewOffset;
 
@@ -56,7 +54,7 @@ public class CheckinItemizedOverlay<Item> extends ItemizedOverlay<OverlayItem> {
         this.iMap = iMap;
         this.mc = mapView.getController();
         this.mCheckins = checkins;
-        this.extras = extras;
+        //this.extras = extras;
     }
 
     /**

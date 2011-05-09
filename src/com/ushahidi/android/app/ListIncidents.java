@@ -40,7 +40,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.ushahidi.android.app.data.IncidentsData;
@@ -314,7 +313,7 @@ public class ListIncidents extends Activity {
                 showCategories();
                 Util.showToast(appContext, R.string.reports_successfully_fetched);
             }
-            setProgressBarIndeterminateVisibility(false);
+            listIncidents.onRefreshComplete();
         }
 
     }
@@ -336,7 +335,7 @@ public class ListIncidents extends Activity {
         String categories;
         String media;
         String image;
-        String images[];
+        
         String thumbnails[];
         Drawable d = null;
 
@@ -416,7 +415,6 @@ public class ListIncidents extends Activity {
 
                 image = cursor.getString(imageIndex);
                 incidentData.setIncidentImage(image);
-                images = image.split(",");
 
                 status = Util.toInt(cursor.getString(verifiedIndex)) == 0 ? getString(R.string.report_unverified)
                         : getString(R.string.report_verified);
@@ -435,7 +433,6 @@ public class ListIncidents extends Activity {
         listIncidents.setAdapter(ila);
     }
 
-    @SuppressWarnings("unchecked")
     public void showCategories() {
         Cursor cursor = UshahidiApplication.mDb.fetchAllCategories();
         UshahidiApplication.mDb.fetchCategoriesCount();
@@ -449,7 +446,7 @@ public class ListIncidents extends Activity {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        spinnerArrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item,
+        spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
                 vectorCategories);
 
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -462,8 +459,8 @@ public class ListIncidents extends Activity {
     // spinner listener
     Spinner.OnItemSelectedListener spinnerListener = new Spinner.OnItemSelectedListener() {
 
-        @SuppressWarnings("unchecked")
-        public void onItemSelected(AdapterView parent, View v, int position, long id) {
+        
+        public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 
             // clear data in the list
             ila.removeItems();
@@ -472,8 +469,8 @@ public class ListIncidents extends Activity {
             showIncidents(vectorCategories.get(position));
         }
 
-        @SuppressWarnings("unchecked")
-        public void onNothingSelected(AdapterView parent) {
+       
+        public void onNothingSelected(AdapterView<?> parent) {
         }
     };
 

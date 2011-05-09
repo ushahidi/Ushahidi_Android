@@ -15,7 +15,7 @@ import android.telephony.TelephonyManager;
 public class CheckinUtil {
     public static String IMEI(Context appContext) {
         TelephonyManager TelephonyMgr = (TelephonyManager)appContext
-                .getSystemService(appContext.TELEPHONY_SERVICE);
+                .getSystemService(Context.TELEPHONY_SERVICE);
         return TelephonyMgr.getDeviceId(); // Requires READ_PHONE_STATE
     }
     

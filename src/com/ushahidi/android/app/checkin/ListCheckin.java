@@ -90,8 +90,6 @@ public class ListCheckin extends Activity {
 
     private List<Checkin> checkins;
 
-    private boolean refreshState = false;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -221,20 +219,6 @@ public class ListCheckin extends Activity {
      */
     public void onRefreshReports() {
         refreshForNewCheckins();
-    }
-
-    private void updateRefreshStatus() {
-        /*
-         * LayoutInflater mInflater = getLayoutInflater(); LinearLayout
-         * rootElement = new LinearLayout(ListCheckin.this); View viewItem =
-         * mInflater.inflate(R.layout.report_tab, new
-         * IncidentsTab().getTabWidget(), false);
-         * viewItem.findViewById(R.id.refresh_report_btn).setVisibility(
-         * refreshState ? View.GONE : View.VISIBLE);
-         * viewItem.findViewById(R.id.title_refresh_progress).setVisibility(
-         * refreshState ? View.VISIBLE : View.GONE);
-         */
-
     }
 
     private boolean applyMenuChoice(MenuItem item) {
