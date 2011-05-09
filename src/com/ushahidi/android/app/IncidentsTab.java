@@ -21,10 +21,12 @@
 package com.ushahidi.android.app;
 
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
@@ -39,19 +41,18 @@ public class IncidentsTab extends TabActivity {
     private Bundle bundle;
 
     private Bundle extras;
-
-    private Handler mHandler;
-
-    private boolean isCheckinEnabled = false;
+    private TextView activityTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_tab);
-        mHandler = new Handler();
+        new Handler();
         bundle = new Bundle();
         extras = this.getIntent().getExtras();
-
+        
+        activityTitle = (TextView) findViewById(R.id.title_text);
+        
         tabHost = getTabHost();
 
         
@@ -90,6 +91,7 @@ public class IncidentsTab extends TabActivity {
         UshahidiPref.loadSettings(IncidentsTab.this);
         if (UshahidiPref.isCheckinEnabled == 1) {
             setTitle(getString(R.string.tab_item_checkin));
+            if (activityTitle != null) activityTitle.setText (getString(R.string.tab_item_checkin));
             tabHost.addTab(tabHost
                     .newTabSpec("list_checkins")
                     .setIndicator(getString(R.string.tab_item_report_list),
@@ -103,6 +105,7 @@ public class IncidentsTab extends TabActivity {
                             getResources().getDrawable(R.drawable.ushahidi_tab_checkin_selected))
                     .setContent(new Intent(IncidentsTab.this, CheckinMap.class)));
         } else {
+            if (activityTitle != null) activityTitle.setText (getTitle ());
             // List of reports
             tabHost.addTab(tabHost
                     .newTabSpec("list_reports")
@@ -138,10 +141,22 @@ public class IncidentsTab extends TabActivity {
         tv.setTextColor(Color.parseColor("#ffffff"));
     }
     
-    public void setTitleFromActivityLabel (int textViewId)
+    public void onClickHome(View v) {
+        goHome(this);
+    }
+    
+    /**
+     * Go back to the home activity.
+     * 
+     * @param context Context
+     * @return void
+     */
+
+    public void goHome(Context context) 
     {
-        TextView tv = (TextView) findViewById (textViewId);
-        if (tv != null) tv.setText (getTitle ());
+        final Intent intent = new Intent(context, Ushahidi.class);
+        intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity (intent);
     }
 
 }

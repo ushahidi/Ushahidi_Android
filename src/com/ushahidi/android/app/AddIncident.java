@@ -117,8 +117,6 @@ public class AddIncident extends MapActivity {
 
     private static final int REQUEST_CODE_CAMERA = 5;
     
-    private static final int VIEW_SEARCH = 6;
-
     private static final int VIEW_MAP = 1;
 
     private Geocoder mGc;
@@ -244,13 +242,6 @@ public class AddIncident extends MapActivity {
                 .removeUpdates(new DeviceLocationListener());
         super.onStop();
 
-    }
-    
-    protected void onSearchDeployments() 
-    {
-        Intent intent = new Intent(AddIncident.this, DeploymentSearch.class);
-        startActivityForResult(intent, VIEW_SEARCH);
-        setResult(RESULT_OK);
     }
 
     // menu stuff

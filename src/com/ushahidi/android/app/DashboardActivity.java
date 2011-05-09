@@ -9,7 +9,8 @@ import android.view.View;
 import android.widget.TextView;
 
 public abstract class DashboardActivity extends Activity {
-
+    
+    private static final int VIEW_SEARCH = 0;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -55,6 +56,12 @@ public abstract class DashboardActivity extends Activity {
 
     public void onClickSearch(View v) {
         onSearchRequested();
+    }
+    
+    public void onSearchDeployments( View v ) {
+        Intent intent = new Intent(DashboardActivity.this, DeploymentSearch.class);
+        startActivityForResult(intent, VIEW_SEARCH);
+        setResult(RESULT_OK);
     }
 
     /**

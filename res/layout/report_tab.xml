@@ -13,9 +13,9 @@
 	android:id="@+id/db1_root" android:orientation="vertical"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
 	<LinearLayout style="@style/ActionBarTitleContainer">
-		<ImageButton style="@style/ActionBarTitle"
-			android:contentDescription="@string/menu_home" android:src="@drawable/ushahidi_icon"
-			android:onClick="onClickHome" />
+		 <ImageButton style="@style/ActionBarTitle"
+            android:contentDescription="@string/menu_home" android:src="@drawable/home_btn"
+            android:onClick="onClickHome" />
 
 		<TextView style="@style/ActionBarTitleText" />
 		<ImageView style="@style/ActionBarTitleSeparator" />

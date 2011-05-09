@@ -544,6 +544,24 @@ public class CheckinActivity extends MapActivity {
         }
         return null;
     }
+    
+    public void onClickHome(View v) {
+        goHome(this);
+    }
+    
+    /**
+     * Go back to the home activity.
+     * 
+     * @param context Context
+     * @return void
+     */
+
+    public void goHome(Context context) 
+    {
+        final Intent intent = new Intent(context, Ushahidi.class);
+        intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity (intent);
+    }
 
     // Progress dialog functionality
 

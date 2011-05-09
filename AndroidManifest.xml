@@ -106,7 +106,8 @@
 		</activity>
 
 		<!-- reports tabs -->
-		<activity android:name=".IncidentsTab" android:label="@string/reports">
+		<activity android:theme="@style/Theme.D1" android:name=".IncidentsTab"
+			android:label="@string/reports">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT"></category>
