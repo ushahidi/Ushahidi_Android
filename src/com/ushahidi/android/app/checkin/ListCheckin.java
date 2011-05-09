@@ -23,16 +23,6 @@ package com.ushahidi.android.app.checkin;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ushahidi.android.app.About;
-import com.ushahidi.android.app.ImageManager;
-import com.ushahidi.android.app.IncidentsTab;
-import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.Settings;
-import com.ushahidi.android.app.Ushahidi;
-import com.ushahidi.android.app.UshahidiApplication;
-import com.ushahidi.android.app.data.UshahidiDatabase;
-import com.ushahidi.android.app.Util;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -46,15 +36,25 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+
+import com.ushahidi.android.app.About;
+import com.ushahidi.android.app.ImageManager;
+import com.ushahidi.android.app.IncidentsTab;
+import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.Settings;
+import com.ushahidi.android.app.Ushahidi;
+import com.ushahidi.android.app.UshahidiApplication;
+import com.ushahidi.android.app.Util;
+import com.ushahidi.android.app.data.UshahidiDatabase;
+import com.ushahidi.android.app.ui.PullToRefreshListView;
+import com.ushahidi.android.app.ui.PullToRefreshListView.OnRefreshListener;
 
 public class ListCheckin extends Activity {
 
     /** Called when the activity is first created. */
-    private ListView listCheckins = null;
+    private PullToRefreshListView listCheckins = null;
 
     private ListCheckinAdapter ila;
 
@@ -90,17 +90,24 @@ public class ListCheckin extends Activity {
 
     private List<Checkin> checkins;
 
+    private boolean refreshState = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        // requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.list_checkins);
 
-        listCheckins = (ListView)findViewById(R.id.list_checkins);
-
+        listCheckins = (PullToRefreshListView)findViewById(R.id.list_checkins);
+        
+        listCheckins.setOnRefreshListener(new OnRefreshListener() {
+            public void onRefresh() {
+                refreshForNewCheckins();
+            }
+        });
         checkins = new ArrayList<Checkin>();
         ila = new ListCheckinAdapter(this);
-        
+
         listCheckins.setOnItemClickListener(new OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
@@ -142,10 +149,10 @@ public class ListCheckin extends Activity {
 
     final Runnable mDisplayCheckins = new Runnable() {
         public void run() {
-            //setProgressBarIndeterminateVisibility(true);
+            // setProgressBarIndeterminateVisibility(true);
             showCheckins();
             try {
-              //  setProgressBarIndeterminateVisibility(false);
+                // setProgressBarIndeterminateVisibility(false);
             } catch (Exception e) {
                 return; // means that the dialog is not showing, ignore please!
             }
@@ -199,13 +206,37 @@ public class ListCheckin extends Activity {
         i.setIcon(R.drawable.ushahidi_about);
 
     }
-    
+
     private void refreshForNewCheckins() {
         CheckinsTask checkinsTask = new CheckinsTask();
         checkinsTask.appContext = this;
         checkinsTask.execute();
     }
-    
+
+    /**
+     * Handle the click on the refresh button.
+     * 
+     * @param v View
+     * @return void
+     */
+    public void onRefreshReports() {
+        refreshForNewCheckins();
+    }
+
+    private void updateRefreshStatus() {
+        /*
+         * LayoutInflater mInflater = getLayoutInflater(); LinearLayout
+         * rootElement = new LinearLayout(ListCheckin.this); View viewItem =
+         * mInflater.inflate(R.layout.report_tab, new
+         * IncidentsTab().getTabWidget(), false);
+         * viewItem.findViewById(R.id.refresh_report_btn).setVisibility(
+         * refreshState ? View.GONE : View.VISIBLE);
+         * viewItem.findViewById(R.id.title_refresh_progress).setVisibility(
+         * refreshState ? View.VISIBLE : View.GONE);
+         */
+
+    }
+
     private boolean applyMenuChoice(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
@@ -255,7 +286,6 @@ public class ListCheckin extends Activity {
 
         @Override
         protected void onPreExecute() {
-            setProgressBarIndeterminateVisibility(true);
 
         }
 
@@ -278,7 +308,7 @@ public class ListCheckin extends Activity {
             } else if (result == 0) {
                 showCheckins();
             }
-            setProgressBarIndeterminateVisibility(false);
+            listCheckins.onRefreshComplete();
         }
 
     }

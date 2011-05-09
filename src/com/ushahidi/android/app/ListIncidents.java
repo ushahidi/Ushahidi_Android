@@ -24,9 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import com.ushahidi.android.app.data.IncidentsData;
-import com.ushahidi.android.app.data.UshahidiDatabase;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -40,17 +37,21 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.AdapterView.OnItemClickListener;
+
+import com.ushahidi.android.app.data.IncidentsData;
+import com.ushahidi.android.app.data.UshahidiDatabase;
+import com.ushahidi.android.app.ui.PullToRefreshListView;
+import com.ushahidi.android.app.ui.PullToRefreshListView.OnRefreshListener;
 
 public class ListIncidents extends Activity {
 
     /** Called when the activity is first created. */
-    private ListView listIncidents = null;
+    private PullToRefreshListView listIncidents = null;
 
     private ListIncidentAdapter ila;
 
@@ -95,11 +96,15 @@ public class ListIncidents extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        // requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.list_incidents);
 
-        listIncidents = (ListView)findViewById(R.id.view_incidents);
-
+        listIncidents = (PullToRefreshListView)findViewById(R.id.view_incidents);
+        listIncidents.setOnRefreshListener(new OnRefreshListener() {
+            public void onRefresh() {
+                refreshForReports();
+            }
+        });
         mOldIncidents = new ArrayList<IncidentsData>();
         ila = new ListIncidentAdapter(this);
         listIncidents.setOnItemClickListener(new OnItemClickListener() {
@@ -180,6 +185,12 @@ public class ListIncidents extends Activity {
             showCategories();
         }
     };
+    
+    public void refreshForReports() {
+        ReportsTask reportsTask = new ReportsTask();
+        reportsTask.appContext = this;
+        reportsTask.execute();
+    }
 
     // menu stuff
     @Override
@@ -237,9 +248,7 @@ public class ListIncidents extends Activity {
                 startActivityForResult(intent, GOTOHOME);
                 return true;
             case INCIDENT_REFRESH:
-                ReportsTask reportsTask = new ReportsTask();
-                reportsTask.appContext = this;
-                reportsTask.execute();
+                refreshForReports();
                 return (true);
 
             case INCIDENT_MAP:
@@ -330,7 +339,7 @@ public class ListIncidents extends Activity {
         String images[];
         String thumbnails[];
         Drawable d = null;
-        
+
         if (cursor.moveToFirst()) {
             int idIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_ID);
             int titleIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.INCIDENT_TITLE);
@@ -356,22 +365,22 @@ public class ListIncidents extends Activity {
             ila.notifyDataSetChanged();
 
             mOldIncidents.clear();
-            
+
             do {
 
                 IncidentsData incidentData = new IncidentsData();
                 mOldIncidents.add(incidentData);
                 ListIncidentText listText = new ListIncidentText();
-                
+
                 int id = Util.toInt(cursor.getString(idIndex));
                 incidentData.setIncidentId(id);
                 incidentData.setIncidentLocLatitude(cursor.getString(latitudeIndex));
                 incidentData.setIncidentLocLongitude(cursor.getString(longitudeIndex));
-                
+
                 title = cursor.getString(titleIndex);
                 incidentData.setIncidentTitle(title);
                 listText.setTitle(Util.capitalize(title));
-                
+
                 description = cursor.getString(descIndex);
                 incidentData.setIncidentDesc(description);
                 listText.setDesc(description);
@@ -379,7 +388,7 @@ public class ListIncidents extends Activity {
                 categories = cursor.getString(categoryIndex);
                 incidentData.setIncidentCategories(categories);
                 listText.setCategories(Util.capitalize(categories));
-                
+
                 location = cursor.getString(locationIndex);
                 incidentData.setIncidentLocation(location);
                 listText.setLocation(Util.capitalize(location));
@@ -389,11 +398,11 @@ public class ListIncidents extends Activity {
 
                 incidentData.setIncidentDate(date);
                 listText.setDate(date);
-                
+
                 media = cursor.getString(mediaIndex);
                 incidentData.setIncidentThumbnail(media);
                 listText.setMedia(media);
-                
+
                 thumbnails = media.split(",");
                 // TODO do a proper check for thumbnails
                 if (!TextUtils.isEmpty(thumbnails[0])) {
@@ -401,10 +410,10 @@ public class ListIncidents extends Activity {
                 } else {
                     d = null;
                 }
-                
-                listText.setThumbnail(d == null ? getResources()
-                        .getDrawable(R.drawable.ushahidi_report_icon) : d);
-                
+
+                listText.setThumbnail(d == null ? getResources().getDrawable(
+                        R.drawable.ushahidi_report_icon) : d);
+
                 image = cursor.getString(imageIndex);
                 incidentData.setIncidentImage(image);
                 images = image.split(",");
@@ -413,11 +422,9 @@ public class ListIncidents extends Activity {
                         : getString(R.string.report_verified);
                 incidentData.setIncidentVerified(Util.toInt(cursor.getString(verifiedIndex)));
                 listText.setStatus(status);
-                
-                
+
                 listText.setId(id);
-                listText.setArrow(getResources().getDrawable(
-                                R.drawable.ushahidi_arrow));
+                listText.setArrow(getResources().getDrawable(R.drawable.ushahidi_arrow));
                 ila.addItem(listText);
 
             } while (cursor.moveToNext());

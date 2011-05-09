@@ -15,7 +15,7 @@
   android:background="@drawable/background_color">
 
   <!-- List incidents -->
-  <ListView
+  <com.ushahidi.android.app.ui.PullToRefreshListView
     android:id="@+id/list_checkins"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"

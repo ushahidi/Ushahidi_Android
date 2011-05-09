@@ -141,7 +141,7 @@ public class IncidentsTab extends TabActivity {
         tv.setTextColor(Color.parseColor("#ffffff"));
     }
     
-    public void onClickHome(View v) {
+    protected void onClickHome(View v) {
         goHome(this);
     }
     
@@ -152,11 +152,27 @@ public class IncidentsTab extends TabActivity {
      * @return void
      */
 
-    public void goHome(Context context) 
+    protected void goHome(Context context) 
     {
         final Intent intent = new Intent(context, Ushahidi.class);
         intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity (intent);
+    }
+    
+    /**
+     * Handle the click on the refresh button.
+     * 
+     * @param v View
+     * @return void
+     */
+    public void onRefreshReports(View v) {
+        UshahidiPref.loadSettings(IncidentsTab.this);
+        if (UshahidiPref.isCheckinEnabled == 1) {
+            //TODO checkins
+            new ListCheckin().onRefreshReports();
+        } else {
+           //TODO reports
+        }
     }
 
 }
