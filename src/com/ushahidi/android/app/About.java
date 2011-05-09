@@ -57,7 +57,7 @@ public class About extends DashboardActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.about);
-        
+        setTitleFromActivityLabel(R.id.title_text);
         urlBtn = (Button)findViewById(R.id.view_website);
         // Dipo Fix
         final Intent i = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(URL));

@@ -24,11 +24,10 @@
 		<ProgressBar style="@style/TitleBarProgressIndicator"
 			android:id="@+id/refresh_report" android:visibility="gone" />
 	</LinearLayout>
-	<ImageView style="@style/ActionBarSeparator"/>
+	<ImageView style="@style/ActionBarSeparator" />
 	<LinearLayout android:orientation="vertical"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:layout_weight="1" android:padding="0dip">
-
 		<TabHost android:id="@android:id/tabhost"
 			android:layout_width="fill_parent" android:layout_height="fill_parent"
 			android:layout_marginTop="5dip">
@@ -41,10 +40,9 @@
 				<FrameLayout android:id="@android:id/tabcontent"
 					android:layout_width="fill_parent" android:layout_height="0dip"
 					android:layout_weight="1">
-                    					
+
 				</FrameLayout>
 			</LinearLayout>
 		</TabHost>
 	</LinearLayout>
-
 </LinearLayout>  

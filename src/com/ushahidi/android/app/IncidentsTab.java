@@ -21,15 +21,13 @@
 package com.ushahidi.android.app;
 
 import android.app.TabActivity;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
-import android.view.Window;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
-import android.content.Intent;
-import android.graphics.Color;
 
 import com.ushahidi.android.app.checkin.CheckinMap;
 import com.ushahidi.android.app.checkin.ListCheckin;
