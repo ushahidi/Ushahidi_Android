@@ -20,19 +20,19 @@
 
 package com.ushahidi.android.app.checkin;
 
-import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -43,7 +43,6 @@ import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.UshahidiPref;
-import com.ushahidi.android.app.ViewIncidents;
 
 public class ViewCheckins extends MapActivity {
 

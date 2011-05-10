@@ -27,6 +27,8 @@ import java.util.Vector;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.ushahidi.android.app.util.Util;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;

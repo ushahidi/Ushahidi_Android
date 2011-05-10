@@ -18,7 +18,7 @@
  ** 
  **/
 
-package com.ushahidi.android.app;
+package com.ushahidi.android.app.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +46,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.ushahidi.android.app.UshahidiApplication;
+import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.checkin.Checkin;
 import com.ushahidi.android.app.checkin.NetworkServices;
 import com.ushahidi.android.app.checkin.RetrieveCheckinsJSONServices;

@@ -1,7 +1,9 @@
 
 package com.ushahidi.android.app;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,6 +26,10 @@ public class DeploymentSearch extends DashboardActivity {
     private ListView mListView;
 
     private static final int MENU_SEARCH = 1;
+    
+    private final CharSequence[] items = {"50","100","250","500","750","1000","1500"};
+    
+    private static final int DIALOG_DISTANCE = 0;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,6 +155,36 @@ public class DeploymentSearch extends DashboardActivity {
                 }
             });
         }
+    }
+    
+    /**
+     * Create an alert dialog
+     */
+    
+    protected void createDialog(int d) {
+        switch(d) {
+            case DIALOG_DISTANCE:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Select distance in km");
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        
+                    }
+                });
+                
+                AlertDialog alert = builder.create();
+                alert.show();
+        }
+        
+        
+    }
+    
+    /**
+     * Do something when the refresh icon is pressed
+     */
+    @Override 
+    public void onRefreshReports(View v) {
+        createDialog(DIALOG_DISTANCE);
     }
 
 }

@@ -22,6 +22,7 @@ package com.ushahidi.android.app;
 
 import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.checkin.NetworkServices;
+import com.ushahidi.android.app.util.Util;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

@@ -20,6 +20,8 @@
 
 package com.ushahidi.android.app;
 
+import com.ushahidi.android.app.util.Util;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;

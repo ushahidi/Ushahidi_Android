@@ -79,6 +79,7 @@ import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
+import com.ushahidi.android.app.util.Util;
 
 public class AddIncident extends MapActivity {
 
@@ -239,10 +240,11 @@ public class AddIncident extends MapActivity {
 
     @Override
     protected void onStop() {
+        super.onStop();
         // house keeping
         ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
                 .removeUpdates(new DeviceLocationListener());
-        super.onStop();
+        
 
     }
 

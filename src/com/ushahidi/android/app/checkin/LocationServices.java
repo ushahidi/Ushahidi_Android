@@ -8,7 +8,7 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 
-import com.ushahidi.android.app.Util;
+import com.ushahidi.android.app.util.Util;
 
 /**
  * Created by IntelliJ IDEA. User: Ahmed Date: 2/10/11 Time: 4:17 PM To change

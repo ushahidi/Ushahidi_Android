@@ -46,10 +46,10 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiApplication;
-import com.ushahidi.android.app.Util;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.ui.PullToRefreshListView;
 import com.ushahidi.android.app.ui.PullToRefreshListView.OnRefreshListener;
+import com.ushahidi.android.app.util.Util;
 
 public class ListCheckin extends Activity {
 

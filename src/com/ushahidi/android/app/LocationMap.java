@@ -52,6 +52,7 @@ import com.google.android.maps.OverlayItem;
 import com.google.android.maps.Projection;
 import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
+import com.ushahidi.android.app.util.Util;
 
 public class LocationMap extends MapActivity {
     private MapView mapView = null;

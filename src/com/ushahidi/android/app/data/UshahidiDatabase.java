@@ -26,9 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ushahidi.android.app.UshahidiPref;
-import com.ushahidi.android.app.Util;
 import com.ushahidi.android.app.checkin.Checkin;
 import com.ushahidi.android.app.checkin.CheckinMedia;
+import com.ushahidi.android.app.util.Util;
 
 import android.app.SearchManager;
 import android.content.ContentValues;
@@ -587,7 +587,7 @@ public class UshahidiDatabase {
         return mDb.insert(CHECKINS_MEDIA_TABLE, null, initialValues);
     }
     
-    public long createDeployment(Deployment deployment) {
+    public long createDeployment(DeploymentsData deployment) {
         ContentValues initialValues = new ContentValues();
         
         initialValues.put(DEPLOYMENT_ID, deployment.getId());
@@ -1004,11 +1004,11 @@ public class UshahidiDatabase {
         }
     }
     
-    public void addDeployment(List<Deployment> deployments) {
+    public void addDeployment(List<DeploymentsData> deployments) {
         try {
             mDb.beginTransaction();
 
-            for (Deployment deployment : deployments) {
+            for (DeploymentsData deployment : deployments) {
                 createDeployment(deployment);
             }
 

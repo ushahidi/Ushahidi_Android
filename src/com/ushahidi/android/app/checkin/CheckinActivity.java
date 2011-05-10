@@ -48,7 +48,7 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiPref;
-import com.ushahidi.android.app.Util;
+import com.ushahidi.android.app.util.Util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -574,7 +574,7 @@ public class CheckinActivity extends MapActivity {
         if (!LocationServices.locationSet) {
             // if (pd != null) {
             // pd.dismiss();
-            com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
+            com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
                     R.string.checkin_no_location);
             // }
 
@@ -592,7 +592,7 @@ public class CheckinActivity extends MapActivity {
         /**
          * Check if there is internet connection on the device.
          */
-        if (com.ushahidi.android.app.Util.isConnected(CheckinActivity.this)) {
+        if (com.ushahidi.android.app.util.Util.isConnected(CheckinActivity.this)) {
             String domain = UshahidiPref.domain;
             String firstname = firstName.getText().toString();
             String lastname = lastName.getText().toString();
@@ -601,7 +601,7 @@ public class CheckinActivity extends MapActivity {
             this.checkinDetails = checkinMessageText.getText().toString();
             postCheckin(imei, domain, firstname, lastname, email);
         } else {
-            com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
+            com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
                     R.string.network_error_msg);
         }
     }
@@ -625,7 +625,7 @@ public class CheckinActivity extends MapActivity {
                 if (postCheckinJsonErrorCode != "0") {
 
                     // delete uploaded image after successful checkin
-                    com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
+                    com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
                             R.string.checkin_success_toast);
 
                 } else {
@@ -635,7 +635,7 @@ public class CheckinActivity extends MapActivity {
                 CheckinActivity.this.finish();
                 goToCheckins();
             } else {
-                com.ushahidi.android.app.Util.showToast(CheckinActivity.this,
+                com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
                         R.string.checkin_error_toast);
             }
             progressDialog.dismiss();

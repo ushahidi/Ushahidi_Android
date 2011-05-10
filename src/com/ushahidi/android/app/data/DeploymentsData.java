@@ -1,6 +1,6 @@
 package com.ushahidi.android.app.data;
 
-public class Deployment {
+public class DeploymentsData {
     private String id;
 
     private String name;

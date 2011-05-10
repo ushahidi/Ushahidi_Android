@@ -46,6 +46,7 @@ import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.ui.PullToRefreshListView;
 import com.ushahidi.android.app.ui.PullToRefreshListView.OnRefreshListener;
+import com.ushahidi.android.app.util.Util;
 
 public class ListIncidents extends Activity {
 

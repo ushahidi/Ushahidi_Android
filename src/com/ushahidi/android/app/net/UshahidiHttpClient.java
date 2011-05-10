@@ -46,7 +46,7 @@ import org.apache.http.protocol.HTTP;
 
 import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.UshahidiService;
-import com.ushahidi.android.app.Util;
+import com.ushahidi.android.app.util.Util;
 
 import android.text.TextUtils;
 import android.util.Log;

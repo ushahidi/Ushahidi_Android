@@ -207,7 +207,7 @@
     <!--  Deployment search -->
     <string name="search_label">Search</string>
      <!-- The hint text that appears in the search box. -->
-    <string name="search_hint">Search for a deployment</string>
+    <string name="search_hint">Search for a deployment...</string>
     
     <!-- The description that will show up in the search settings for this source.  -->
     <string name="settings_description">Found deployments</string>
@@ -226,4 +226,5 @@
     <!-- sharing -->
     <string name="share_template">Check out <xliff:g id="title">%1$s</xliff:g> at <xliff:g id="reporturl">%2$s</xliff:g></string>
     <string name="title_share">Share using</string>
+    <string name="select_distance">Select distance in km</string>
 </resources>
