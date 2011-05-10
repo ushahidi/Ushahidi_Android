@@ -23,6 +23,7 @@ package com.ushahidi.android.app.checkin;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -41,6 +42,8 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.UshahidiPref;
+import com.ushahidi.android.app.ViewIncidents;
 
 public class ViewCheckins extends MapActivity {
 
@@ -118,6 +121,20 @@ public class ViewCheckins extends MapActivity {
     public void onPause() {
         ViewCheckins.this.finish();
         super.onPause();
+    }
+    
+    public void onShareClick(View v) {
+        // TODO: consider bringing in shortlink to session
+        UshahidiPref.loadSettings(ViewCheckins.this);
+        final String reportUrl = UshahidiPref.domain;
+        final String shareString = getString(R.string.share_template, name.getText().toString(),
+                reportUrl);
+
+        final Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, shareString);
+
+        startActivity(Intent.createChooser(intent, getText(R.string.title_share)));
     }
 
     private void placeMarker(int markerLatitude, int markerLongitude) {

@@ -95,7 +95,6 @@ public class ListIncidents extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.list_incidents);
 
         listIncidents = (PullToRefreshListView)findViewById(R.id.view_incidents);

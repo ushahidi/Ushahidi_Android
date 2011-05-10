@@ -402,7 +402,7 @@ public InputStream post(Map cookies, Map parameters) throws IOException {
    * @see setParameters
    */
   @SuppressWarnings("unchecked")
-public static InputStream post(URL url, Map parameters) throws IOException {
+  public static InputStream post(URL url, Map parameters) throws IOException {
     return new ClientHttpRequest(url).post(parameters);
   }
 

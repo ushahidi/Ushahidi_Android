@@ -42,6 +42,8 @@ public class IncidentsTab extends TabActivity {
 
     private Bundle extras;
     private TextView activityTitle;
+    
+    private static final int VIEW_SEARCH = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,7 +143,7 @@ public class IncidentsTab extends TabActivity {
         tv.setTextColor(Color.parseColor("#ffffff"));
     }
     
-    protected void onClickHome(View v) {
+    public void onClickHome(View v) {
         goHome(this);
     }
     
@@ -159,20 +161,10 @@ public class IncidentsTab extends TabActivity {
         context.startActivity (intent);
     }
     
-    /**
-     * Handle the click on the refresh button.
-     * 
-     * @param v View
-     * @return void
-     */
-    public void onRefreshReports(View v) {
-        UshahidiPref.loadSettings(IncidentsTab.this);
-        if (UshahidiPref.isCheckinEnabled == 1) {
-            //TODO checkins
-            new ListCheckin().onRefreshReports();
-        } else {
-           //TODO reports
-        }
+    public void onSearchDeployments( View v ) {
+        Intent intent = new Intent(IncidentsTab.this, DeploymentSearch.class);
+        startActivityForResult(intent, VIEW_SEARCH);
+        setResult(RESULT_OK);
     }
 
 }

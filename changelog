@@ -1,3 +1,11 @@
+2.0
+Feature:
+* Added sharing support; Reports / Checkins can now be shared via email, twitter, bluetooth,etc
+* Added Japanese translation.
+* Added Deployment search support.
+* Redesign dashboard UI.
+* Added action bar to most activities.
+
 1.0
  Feature:
  * Added Checkin support.

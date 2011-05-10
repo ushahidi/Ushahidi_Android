@@ -15,7 +15,18 @@
   android:layout_height="fill_parent"
   android:orientation="vertical"
   android:background="@drawable/background_color">
+    <LinearLayout style="@style/ActionBarTitleContainer">
+         <ImageButton style="@style/ActionBarTitle"
+            android:contentDescription="@string/menu_home" android:src="@drawable/home_btn"
+            android:onClick="onClickHome" />
 
+        <TextView style="@style/ActionBarTitleText" />
+        <ImageView style="@style/ActionBarTitleSeparator" />
+        <ImageButton style="@style/ActionBarTitle"
+            android:id="@+id/search_report_btn"
+            android:src="@drawable/report_share"
+            android:onClick="onShareClick" />
+    </LinearLayout>
   <ScrollView
     android:id="@+id/view_report"
     android:layout_width="fill_parent"

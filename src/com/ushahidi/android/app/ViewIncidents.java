@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -82,17 +83,11 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
 
     private String images[];
 
-    //private int id;
-
     private String reportLatitude;
 
     private String reportLongitude;
 
-    //private String reportTitle;
-
-    //private String reportDescription;
-
-    //private static final int VIEW_MAP = 1;
+    private String id;
 
     private ImageSwitcher mSwitcher;
 
@@ -112,11 +107,9 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
 
         extras = incidents.getBundle("incidents");
 
-        //id = extras.getInt("id");
-        //reportTitle = extras.getString("title");
-        // = extras.getString("desc");
         reportLatitude = extras.getString("latitude");
         reportLongitude = extras.getString("longitude");
+        id = extras.getString("id");
         String iStatus = Util.toInt(extras.getString("status")) == 0 ? getString(R.string.status_no)
                 : getString(R.string.status_yes);
         title = (TextView)findViewById(R.id.title);
@@ -196,7 +189,7 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
         mapView.setBuiltInZoomControls(true);
         mapView.getOverlays().add(new MapMarker(marker, markerLatitude, markerLongitude));
     }
-    
+
     public GeoPoint getPoint(double lat, double lon) {
         return (new GeoPoint((int)(lat * 1000000.0), (int)(lon * 1000000.0)));
     }
@@ -216,7 +209,6 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
 
     public View makeView() {
         ImageView i = new ImageView(this);
-        // i.setBackgroundColor(0xFF000000);
         i.setScaleType(ImageView.ScaleType.FIT_CENTER);
         i.setLayoutParams(new ImageSwitcher.LayoutParams(
                 android.view.ViewGroup.LayoutParams.FILL_PARENT,
@@ -230,6 +222,20 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
+    }
+
+    public void onShareClick(View v) {
+        // TODO: consider bringing in shortlink to session
+        UshahidiPref.loadSettings(ViewIncidents.this);
+        final String reportUrl = UshahidiPref.domain + "/reports/view/" + id;
+        final String shareString = getString(R.string.share_template, title.getText().toString(),
+                reportUrl);
+
+        final Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, shareString);
+
+        startActivity(Intent.createChooser(intent, getText(R.string.title_share)));
     }
 
     public int imageBackgroundColor() {
@@ -249,13 +255,9 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
 
         private OverlayItem myOverlayItem;
 
-        //private boolean MoveMap = false;
-
-        //private long timer;
-
         public MapMarker(Drawable defaultMarker, int LatitudeE6, int LongitudeE6) {
             super(defaultMarker);
-            //this.timer = 0;
+
             this.marker = defaultMarker;
 
             // create locations of interest

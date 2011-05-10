@@ -118,6 +118,8 @@ public class AddIncident extends MapActivity {
     private static final int REQUEST_CODE_CAMERA = 5;
     
     private static final int VIEW_MAP = 1;
+    
+    private static final int VIEW_SEARCH = 2;
 
     private Geocoder mGc;
 
@@ -268,6 +270,7 @@ public class AddIncident extends MapActivity {
 
         return (applyMenuChoice(item) || super.onContextItemSelected(item));
     }
+       
 
     private void populateMenu(Menu menu) {
         MenuItem i;
@@ -999,6 +1002,30 @@ public class AddIncident extends MapActivity {
         super.onResume();
 
     }
+    
+    public void onClickHome(View v) {
+        goHome(this);
+    }
+    
+    /**
+     * Go back to the home activity.
+     * 
+     * @param context Context
+     * @return void
+     */
+
+    protected void goHome(Context context) 
+    {
+        final Intent intent = new Intent(context, Ushahidi.class);
+        intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity (intent);
+    }
+    
+    public void onSearchDeployments( View v ) {
+        Intent intent = new Intent(AddIncident.this, DeploymentSearch.class);
+        startActivityForResult(intent, VIEW_SEARCH);
+        setResult(RESULT_OK);
+    }
 
     /**
      * Any time we are paused we need to save away the current state, so it will
@@ -1222,7 +1249,6 @@ public class AddIncident extends MapActivity {
 
     @Override
     protected boolean isRouteDisplayed() {
-        // TODO Auto-generated method stub
         return false;
     }
 

@@ -110,14 +110,7 @@ public class Ushahidi extends DashboardActivity {
 
         // check if domain has been set
         if (UshahidiPref.domain.length() == 0 || UshahidiPref.domain.equals("http://")) {
-
-            // means this is a new install or the settings have been corrupted,
-            // prompt them!
-            mHandler.post(mDisplayPrompt);
-            // This return statement had to be commented out bcos it will not
-            // allow the initialisation of the buttons below.
-            // return;
-
+            mHandler.post(mDisplayPrompt);          
         }
         listBtn = (Button)findViewById(R.id.incident_list);
         addBtn = (Button)findViewById(R.id.incident_add);

@@ -8,7 +8,7 @@
 	3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com. -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 	<string name="app_name">Ushahidi</string>
 	<string name="add_incident">Add Report</string>
 	<string name="view_incident">View Reports</string>
@@ -222,4 +222,8 @@
     <string name="pull_to_refresh_release_label">Release to refresh...</string>
     <string name="pull_to_refresh_refreshing_label">Loading...</string>
     <string name="pull_to_refresh_tap_label">Tap to refresh...</string>
+    
+    <!-- sharing -->
+    <string name="share_template">Check out <xliff:g id="title">%1$s</xliff:g> at <xliff:g id="reporturl">%2$s</xliff:g></string>
+    <string name="title_share">Share using</string>
 </resources>
