@@ -107,8 +107,12 @@ public class ListIncidents extends Activity {
         ila = new ListIncidentAdapter(this);
         listIncidents.setOnItemClickListener(new OnItemClickListener() {
 
-            public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-
+            public void onItemClick(AdapterView<?> arg0, View view, int positions, long id) {
+                
+                //It seems pull to refresh list is buggy; The list item position item is by 1 higher
+                //TODO Look into fixing this.
+                int position = positions - 1;
+                
                 incidentsBundle.putInt("id", mOldIncidents.get(position).getIncidentId());
                 incidentsBundle.putString("title", mOldIncidents.get(position).getIncidentTitle());
                 incidentsBundle.putString("desc", mOldIncidents.get(position).getIncidentDesc());

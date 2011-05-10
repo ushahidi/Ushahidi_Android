@@ -87,7 +87,7 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
 
     private String reportLongitude;
 
-    private String id;
+    private int id;
 
     private ImageSwitcher mSwitcher;
 
@@ -98,18 +98,15 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.view_incidents);
-
         mapView = (MapView)findViewById(R.id.loc_map);
-
         Bundle incidents = getIntent().getExtras();
-
+        
         extras = incidents.getBundle("incidents");
-
         reportLatitude = extras.getString("latitude");
         reportLongitude = extras.getString("longitude");
-        id = extras.getString("id");
+        id = extras.getInt("id");
+        
         String iStatus = Util.toInt(extras.getString("status")) == 0 ? getString(R.string.status_no)
                 : getString(R.string.status_yes);
         title = (TextView)findViewById(R.id.title);
