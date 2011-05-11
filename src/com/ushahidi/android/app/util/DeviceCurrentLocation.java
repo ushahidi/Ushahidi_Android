@@ -7,96 +7,129 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
+import android.util.Log;
 
-public class DeviceCurrentLocation {
+public class DeviceCurrentLocation implements LocationListener {
 
     public static double latitude;
 
     public static double longitude;
 
     private Context mContext;
-    
+
     private LocationManager mLocationMgr = null;
 
-    public static Location loc;
+    private static Location loc;
+
+    private static final String CLASS_TAG = DeviceCurrentLocation.class.getCanonicalName();
+
     public DeviceCurrentLocation(Context context) {
         mContext = context;
-        //this.latitude = 0.0d;
-        //this.longitude = 0.0d;
-        
-        //get current location
-        //this.setDeviceLocation();
+        setDeviceLocation();
     }
 
     // Fetches the current location of the device.
     public void setDeviceLocation() {
 
-        DeviceLocationListener listener = new DeviceLocationListener();
-        mLocationMgr = (LocationManager)mContext
-                .getSystemService(Context.LOCATION_SERVICE);
+        mLocationMgr = (LocationManager)mContext.getSystemService(Context.LOCATION_SERVICE);
 
-        long updateTimeMsec = 1000L;
+        long updateTimeMsec = 30 * 1000;
+        try {
+            // get low accuracy provider
+            LocationProvider low = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
+                    Util.createCoarseCriteria(), true));
 
-        // get low accuracy provider
-        LocationProvider low = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
-                Util.createCoarseCriteria(), true));
+            // get high accuracy provider
+            LocationProvider high = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
+                    Util.createFineCriteria(), true));
 
-        // get high accuracy provider
-        LocationProvider high = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
-                Util.createFineCriteria(), true));
+            mLocationMgr.requestLocationUpdates(low.getName(), updateTimeMsec, 0, this);
 
-        mLocationMgr.requestLocationUpdates(low.getName(), updateTimeMsec, 500.0f, listener);
+            mLocationMgr.requestLocationUpdates(high.getName(), updateTimeMsec, 0, this);
 
-        mLocationMgr.requestLocationUpdates(high.getName(), updateTimeMsec, 500.0f, listener);
+            try {
 
-    }
-    
-    public void stopFetchingLocation()  {
-        mLocationMgr.removeUpdates(new DeviceLocationListener());
-        mLocationMgr = null;
-    }
+                // defaulting to Accra :-)
 
-    // get the current location of the device/user
-    private class DeviceLocationListener implements LocationListener {
-        public void onLocationChanged(Location location) {
+                Location hardFix = new Location("ACC");
+                hardFix.setLatitude(5.555717);
+                hardFix.setLongitude(-0.196306);
 
-            if (location != null) {
-                mLocationMgr.removeUpdates(DeviceLocationListener.this);
+                try {
+                    Location gps = mLocationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    Location network = mLocationMgr
+                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    if (gps != null)
+                        onLocationChanged(gps);
+                    else if (network != null)
+                        onLocationChanged(network);
+                    else
+                        onLocationChanged(hardFix);
+                } catch (Exception ex2) {
+                    onLocationChanged(hardFix);
+                }
 
-                setLocationLatitude(location.getLatitude());
-                setLocationLongitude(location.getLongitude());
-                loc = location;
-                mLocationMgr = null;
+            } catch (Exception ex) {
+                Log.d(CLASS_TAG, ex.getMessage());
+            }
+        } catch (Exception ex1) {
+            try {
+
+                if (mLocationMgr != null) {
+                    mLocationMgr.removeUpdates(this);
+                    mLocationMgr = null;
+                }
+            } catch (Exception ex2) {
+                Log.d(CLASS_TAG, ex2.getMessage());
             }
         }
 
-        public void onProviderDisabled(String provider) {
-            // TODO: Do something when
+    }
+
+    public void stopLocating() {
+
+        try {
+
+            try {
+                mLocationMgr.removeUpdates(this);
+            } catch (Exception ex) {
+                Log.d(CLASS_TAG, ex.getMessage());
+            }
+            mLocationMgr = null;
+        } catch (Exception ex) {
+            Log.d(CLASS_TAG, ex.getMessage());
         }
+    }
 
-        public void onProviderEnabled(String provider) {
-
+    public void onLocationChanged(Location location) {
+        if( location !=null ) {
+            setLocation(location);
+            stopLocating();
         }
+    }
 
-        public void onStatusChanged(String provider, int status, Bundle extras) {
+    public void onProviderDisabled(String provider) {
+        // don't mind me
 
+    }
+
+    public void onProviderEnabled(String provider) {
+        // don't mind me
+
+    }
+
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // don't mind me
+
+    }
+
+    public static void setLocation(Location location) {
+        if (location != null) {
+            loc = location;
         }
     }
 
-    public void setLocationLatitude(double latitude) {
-        this.latitude = latitude;
+    public static Location getLocation() {
+        return loc;
     }
-
-    public void setLocationLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public double getLocationLatitude() {
-        return this.latitude;
-    }
-
-    public double getLocationLongitude() {
-        return this.longitude;
-    }
-
 }

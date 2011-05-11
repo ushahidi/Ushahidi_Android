@@ -14,11 +14,9 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.location.Location;
-import android.util.Log;
 
 import com.ushahidi.android.app.UshahidiApplication;
 import com.ushahidi.android.app.data.DeploymentsData;
-import com.ushahidi.android.app.util.DeviceCurrentLocation;
 
 /**
  * Contains logic to load the details of a deployment and find a list of
@@ -28,15 +26,11 @@ public class Deployments {
 
     private static final String DEPLOYMENT_SEARCH_URL = "http://tracker.ushahidi.com/list/";
 
-    private Context mContext;
-
     private String mDistance;
 
     private double lat;
 
     private double lon;
-
-    private DeviceCurrentLocation deviceLocation;
 
     private JSONObject jsonObject;
 
@@ -47,7 +41,6 @@ public class Deployments {
     private ArrayList<DeploymentsData> deploymentsData;
 
     public Deployments(Context context) {
-        mContext = context;
         deploymentJson = "";
         
     }
@@ -60,7 +53,7 @@ public class Deployments {
     public boolean fetchDeployments(String distance, Location location) {
         this.mDistance = distance;
        
-        Log.d("deploymentSearch","Lat: "+lat+"-- Lon"+lon);
+        
         // check if current location was retrieved.
         if (location !=null) {
             lat = location.getLatitude();

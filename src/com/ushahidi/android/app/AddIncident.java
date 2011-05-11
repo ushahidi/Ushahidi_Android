@@ -48,9 +48,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -79,6 +76,7 @@ import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
+import com.ushahidi.android.app.util.DeviceCurrentLocation;
 import com.ushahidi.android.app.util.Util;
 
 public class AddIncident extends MapActivity {
@@ -117,9 +115,9 @@ public class AddIncident extends MapActivity {
     private static final int REQUEST_CODE_IMAGE = 4;
 
     private static final int REQUEST_CODE_CAMERA = 5;
-    
+
     private static final int VIEW_MAP = 1;
-    
+
     private static final int VIEW_SEARCH = 2;
 
     private Geocoder mGc;
@@ -139,9 +137,9 @@ public class AddIncident extends MapActivity {
 
     private int mCounter = 0;
 
-    private static double sLongitude;
+    private static double sLongitude = 0.0;
 
-    private static double sLatitude;
+    private static double sLatitude = 0.0;
 
     private String mErrorMessage = "";
 
@@ -164,7 +162,7 @@ public class AddIncident extends MapActivity {
     private TextView mSelectedCategories;
 
     private TextView mReportLocation;
-    
+
     private TextView activityTitle;
 
     private Button mBtnSend;
@@ -211,40 +209,41 @@ public class AddIncident extends MapActivity {
 
     private HashMap<String, String> mParams = new HashMap<String, String>();
 
+    private Location loc;
+
+    private DeviceCurrentLocation deviceCurrentLocation;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.add_incident);
-        
+
         mFoundAddresses = new ArrayList<Address>();
 
         mGc = new Geocoder(this);
 
         // load settings
         UshahidiPref.loadSettings(AddIncident.this);
-
-        setDeviceLocation();
+        deviceCurrentLocation = new DeviceCurrentLocation(this);
         initComponents();
-
     }
 
     @Override
     protected void onDestroy() {
-
-        // house keeping
-        ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
-                .removeUpdates(new DeviceLocationListener());
         super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setDeviceLocation();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        // house keeping
-        ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
-                .removeUpdates(new DeviceLocationListener());
-        
+        deviceCurrentLocation.stopLocating();
 
     }
 
@@ -272,7 +271,6 @@ public class AddIncident extends MapActivity {
 
         return (applyMenuChoice(item) || super.onContextItemSelected(item));
     }
-       
 
     private void populateMenu(Menu menu) {
         MenuItem i;
@@ -350,8 +348,9 @@ public class AddIncident extends MapActivity {
         mReportLocation = (TextView)findViewById(R.id.latlon);
         mSelectedPhoto = (ImageView)findViewById(R.id.sel_photo_prev);
         mSelectedCategories = (TextView)findViewById(R.id.lbl_category);
-        activityTitle = (TextView) findViewById(R.id.title_text);
-        if (activityTitle != null) activityTitle.setText (getTitle ());
+        activityTitle = (TextView)findViewById(R.id.title_text);
+        if (activityTitle != null)
+            activityTitle.setText(getTitle());
         mIncidentTitle = (EditText)findViewById(R.id.incident_title);
         mIncidentLocation = (EditText)findViewById(R.id.incident_location);
         mapView = (MapView)findViewById(R.id.location_map);
@@ -446,9 +445,6 @@ public class AddIncident extends MapActivity {
         mBtnCancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clearFields();
-                // house keeping
-                ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
-                        .removeUpdates(new DeviceLocationListener());
                 Intent intent = new Intent(AddIncident.this, Ushahidi.class);
                 startActivityForResult(intent, GOTOHOME);
                 setResult(RESULT_OK);
@@ -1004,11 +1000,11 @@ public class AddIncident extends MapActivity {
         super.onResume();
 
     }
-    
+
     public void onClickHome(View v) {
         goHome(this);
     }
-    
+
     /**
      * Go back to the home activity.
      * 
@@ -1016,14 +1012,13 @@ public class AddIncident extends MapActivity {
      * @return void
      */
 
-    protected void goHome(Context context) 
-    {
+    protected void goHome(Context context) {
         final Intent intent = new Intent(context, Ushahidi.class);
-        intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity (intent);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
     }
-    
-    public void onSearchDeployments( View v ) {
+
+    public void onSearchDeployments(View v) {
         Intent intent = new Intent(AddIncident.this, DeploymentSearch.class);
         startActivityForResult(intent, VIEW_SEARCH);
         setResult(RESULT_OK);
@@ -1035,8 +1030,7 @@ public class AddIncident extends MapActivity {
      */
     @Override
     protected void onPause() {
-        ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
-                .removeUpdates(new DeviceLocationListener());
+
         SharedPreferences.Editor editor = getPreferences(0).edit();
         editor.putString("title", mIncidentTitle.getText().toString());
         editor.putString("desc", mIncidentDesc.getText().toString());
@@ -1065,7 +1059,7 @@ public class AddIncident extends MapActivity {
             e.printStackTrace();
             return "";
         }
-        
+
     }
 
     /**
@@ -1145,15 +1139,16 @@ public class AddIncident extends MapActivity {
     }
 
     private void centerLocation(GeoPoint centerGeoPoint) {
+        if (centerGeoPoint != null) {
+            mapController.animateTo(centerGeoPoint);
 
-        mapController.animateTo(centerGeoPoint);
-
-        // initilaize latitude and longitude for them to be passed to the
-        // AddIncident Activity.
-        sLatitude = centerGeoPoint.getLatitudeE6() / 1.0E6;
-        sLongitude = centerGeoPoint.getLongitudeE6() / 1.0E6;
-        mIncidentLocation.setText(getLocationFromLatLon(sLatitude, sLongitude));
-        placeMarker(centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6());
+            // initilaize latitude and longitude for them to be passed to the
+            // AddIncident Activity.
+            sLatitude = centerGeoPoint.getLatitudeE6() / 1.0E6;
+            sLongitude = centerGeoPoint.getLongitudeE6() / 1.0E6;
+            mIncidentLocation.setText(getLocationFromLatLon(sLatitude, sLongitude));
+            placeMarker(centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6());
+        }
 
     }
 
@@ -1200,58 +1195,21 @@ public class AddIncident extends MapActivity {
 
     // Fetches the current location of the device.
     private void setDeviceLocation() {
-
-        DeviceLocationListener listener = new DeviceLocationListener();
-        LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-
-        long updateTimeMsec = 1000L;
-
-        // get low accuracy provider
-        LocationProvider low = manager.getProvider(manager.getBestProvider(
-                Util.createCoarseCriteria(), true));
-
-        // get high accuracy provider
-        LocationProvider high = manager.getProvider(manager.getBestProvider(
-                Util.createFineCriteria(), true));
-
-        manager.requestLocationUpdates(low.getName(), updateTimeMsec, 500.0f, listener);
-
-        manager.requestLocationUpdates(high.getName(), updateTimeMsec, 500.0f, listener);
-
-    }
-
-    // get the current location of the device/user
-    public class DeviceLocationListener implements LocationListener {
-        public void onLocationChanged(Location location) {
-
-            if (location != null) {
-                ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
-                        .removeUpdates(DeviceLocationListener.this);
-
-                sLatitude = location.getLatitude();
-                sLongitude = location.getLongitude();
-
-                centerLocation(getPoint(sLatitude, sLongitude));
-                mReportLocation.setText(String.valueOf(sLatitude) + ", "
-                        + String.valueOf(sLongitude));
-            }
+       
+        loc = DeviceCurrentLocation.getLocation();
+        if( loc != null ) {
+            sLatitude = loc.getLatitude();
+            sLongitude = loc.getLongitude();
+            
+            centerLocation(getPoint(sLatitude, sLongitude));
+            mReportLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
         }
 
-        public void onProviderDisabled(String provider) {
-            Util.showToast(AddIncident.this, R.string.location_not_found);
-        }
-
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
     }
 
     @Override
     protected boolean isRouteDisplayed() {
+        // TODO Auto-generated method stub
         return false;
     }
 

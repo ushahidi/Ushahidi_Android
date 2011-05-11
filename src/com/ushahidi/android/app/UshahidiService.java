@@ -138,7 +138,7 @@ public class UshahidiService extends Service {
 
                         // Perform a task
                         Util.fetchReports(UshahidiService.this);
-                        showNotification(UshahidiPref.totalReports);
+                        showNotification(UshahidiPref.totalReportsFetched);
                     }
 
                 });

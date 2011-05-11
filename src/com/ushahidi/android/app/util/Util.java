@@ -200,8 +200,8 @@ public class Util {
                     mNewIncidents = HandleXml.processIncidentsXml(UshahidiPref.incidentsResponse);
                 }
 
-                /*UshahidiPref.totalReports = mNewCategories.size() + " Categories -- "
-                        + mNewIncidents.size() + " Reports";*/
+                UshahidiPref.totalReportsFetched = mNewCategories.size() + " Categories \n"
+                        + mNewIncidents.size() + " Reports";
 
                 UshahidiApplication.mDb.addCategories(mNewCategories, false);
                 UshahidiApplication.mDb.addIncidents(mNewIncidents, false);

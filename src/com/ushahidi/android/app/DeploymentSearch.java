@@ -1,8 +1,6 @@
-
 package com.ushahidi.android.app;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,7 +45,7 @@ public class DeploymentSearch extends DashboardActivity {
 
         mTextView = (TextView)findViewById(R.id.search_deploy);
         mListView = (ListView)findViewById(R.id.deployment_list);
-
+        
         showResults();
         mTextView.addTextChangedListener(new TextWatcher() {
 
@@ -119,6 +117,13 @@ public class DeploymentSearch extends DashboardActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    
+    @Override
+    public void onStop() {
+        super.onStop();
+        DeviceCurrentLocation deviceLocation = new DeviceCurrentLocation(DeploymentSearch.this);
+        deviceLocation.stopLocating();
+    }
 
     /**
      * Searches the dictionary and displays results for the given query.
@@ -185,12 +190,13 @@ public class DeploymentSearch extends DashboardActivity {
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         DeviceCurrentLocation deviceLocation = new DeviceCurrentLocation(DeploymentSearch.this);
-                        deviceLocation.setDeviceLocation();
+                        //deviceLocation.setDeviceLocation();
                         RefreshDeploymentTask deploymentTask = new RefreshDeploymentTask();
                         deploymentTask.appContext = DeploymentSearch.this;
-                        deploymentTask.location = DeviceCurrentLocation.loc;
+                        deploymentTask.location = DeviceCurrentLocation.getLocation();
                         deploymentTask.distance = items[item];
                         deploymentTask.execute();
+                        deviceLocation.stopLocating();
                     }
                 });
                 
@@ -209,12 +215,10 @@ public class DeploymentSearch extends DashboardActivity {
         createDialog(DIALOG_DISTANCE);
     }
     
- // thread class
+    // thread class
     private class RefreshDeploymentTask extends AsyncTask<Void, Void, Boolean> {
 
         protected Boolean status;
-
-        private ProgressDialog dialog;
 
         protected Context appContext;
         
@@ -229,9 +233,6 @@ public class DeploymentSearch extends DashboardActivity {
             refreshState = true;
             updateRefreshStatus();
             deployments = new Deployments(appContext);
-            /*this.dialog = ProgressDialog.show(appContext, getString(R.string.please_wait),
-                    getString(R.string.fetching_new_reports), true);*/
-
         }
 
         @Override
@@ -249,7 +250,6 @@ public class DeploymentSearch extends DashboardActivity {
                 Util.showToast(appContext, R.string.reports_successfully_fetched);
                 showResults();
             }
-            //this.dialog.cancel();
             refreshState = false;
             updateRefreshStatus();
         }

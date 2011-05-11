@@ -1,6 +1,13 @@
 
 package com.ushahidi.android.app.checkin;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -12,9 +19,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,14 +52,7 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiPref;
-import com.ushahidi.android.app.util.Util;
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import com.ushahidi.android.app.util.DeviceCurrentLocation;
 
 /**
  * Created by IntelliJ IDEA. User: Ahmed Date: 2/15/11 Time: 3:05 PM To change
@@ -69,7 +66,7 @@ public class CheckinActivity extends MapActivity {
     private Button uploadPhotoButton;
 
     private Button mCancelButton;
-    
+
     private ImageButton mSearchButton;
 
     private MapView mapView = null;
@@ -101,7 +98,7 @@ public class CheckinActivity extends MapActivity {
     private TextView lblEmail;
 
     private TextView lblContact;
-    
+
     private TextView activityTitle;
 
     // Photo functionality
@@ -140,7 +137,7 @@ public class CheckinActivity extends MapActivity {
     private static final int DIALOG_CHOOSE_IMAGE_METHOD = 7;
 
     private static final int REQUEST_CODE_IMAGE = 8;
-    
+
     private static final int VIEW_SEARCH = 9;
 
     private static final int INCIDENTS = 2;
@@ -168,12 +165,16 @@ public class CheckinActivity extends MapActivity {
 
     private String mErrorMessage = "";
 
+    private DeviceCurrentLocation deviceCurrentLocation;
+
+    private Location loc;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        UshahidiPref.loadSettings(CheckinActivity.this);
         setContentView(R.layout.checkin);
-
+        UshahidiPref.loadSettings(CheckinActivity.this);
+        deviceCurrentLocation = new DeviceCurrentLocation(this);
         checkinButton = (Button)findViewById(R.id.perform_checkin_button);
         uploadPhotoButton = (Button)findViewById(R.id.upload_checkin_photo_button);
         mCancelButton = (Button)findViewById(R.id.checkin_cancel);
@@ -189,10 +190,11 @@ public class CheckinActivity extends MapActivity {
         mSelectedPhotoText = (TextView)findViewById(R.id.checkin_selected_photo_label);
         mCheckinLocation = (TextView)findViewById(R.id.latlon);
         mSelectedPhotoText.setVisibility(View.GONE);
-        activityTitle = (TextView) findViewById(R.id.title_text);
-        if (activityTitle != null) activityTitle.setText (getTitle ());
-        mSearchButton = (ImageButton) findViewById(R.id.search_report_btn);
-        
+        activityTitle = (TextView)findViewById(R.id.title_text);
+        if (activityTitle != null)
+            activityTitle.setText(getTitle());
+        mSearchButton = (ImageButton)findViewById(R.id.search_report_btn);
+
         mHandler = new Handler();
 
         // map stuff
@@ -279,15 +281,21 @@ public class CheckinActivity extends MapActivity {
                 showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
             }
         });
-        
-        //search for deployments
+
+        // search for deployments
         mSearchButton.setOnClickListener(new OnClickListener() {
 
             public void onClick(View v) {
-                onSearchDeployments(); 
+                onSearchDeployments();
             }
-            
+
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setDeviceLocation();
     }
 
     @Override
@@ -299,26 +307,17 @@ public class CheckinActivity extends MapActivity {
     }
 
     @Override
-    protected void onDestroy() {
-
-        // house keeping
-        ImageManager.deleteImage(selectedPhoto);
-        ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
-                .removeUpdates(new DeviceLocationListener());
+    protected void onStop() {
         super.onDestroy();
+        deviceCurrentLocation.stopLocating();
     }
 
     @Override
     protected void onPause() {
-        // house keeping
-        ImageManager.deleteImage(selectedPhoto);
-        ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
-                .removeUpdates(new DeviceLocationListener());
         super.onPause();
     }
-    
-    protected void onSearchDeployments() 
-    {
+
+    protected void onSearchDeployments() {
         Intent intent = new Intent(CheckinActivity.this, DeploymentSearch.class);
         startActivityForResult(intent, VIEW_SEARCH);
         setResult(RESULT_OK);
@@ -544,11 +543,11 @@ public class CheckinActivity extends MapActivity {
         }
         return null;
     }
-    
+
     public void onClickHome(View v) {
         goHome(this);
     }
-    
+
     /**
      * Go back to the home activity.
      * 
@@ -556,11 +555,10 @@ public class CheckinActivity extends MapActivity {
      * @return void
      */
 
-    public void goHome(Context context) 
-    {
+    public void goHome(Context context) {
         final Intent intent = new Intent(context, Ushahidi.class);
-        intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity (intent);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
     }
 
     // Progress dialog functionality
@@ -734,53 +732,15 @@ public class CheckinActivity extends MapActivity {
     // Fetches the current location of the device.
     private void setDeviceLocation() {
 
-        DeviceLocationListener listener = new DeviceLocationListener();
-        LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        if (loc != null) {
+            loc = DeviceCurrentLocation.getLocation();
+            latitude = loc.getLatitude();
+            longitude = loc.getLongitude();
 
-        long updateTimeMsec = 1000L;
-
-        // get low accuracy provider
-        LocationProvider low = manager.getProvider(manager.getBestProvider(
-                Util.createCoarseCriteria(), true));
-
-        // get high accuracy provider
-        LocationProvider high = manager.getProvider(manager.getBestProvider(
-                Util.createFineCriteria(), true));
-
-        manager.requestLocationUpdates(low.getName(), updateTimeMsec, 500.0f, listener);
-
-        manager.requestLocationUpdates(high.getName(), updateTimeMsec, 500.0f, listener);
-
-    }
-
-    // get the current location of the device/user
-    public class DeviceLocationListener implements LocationListener {
-        public void onLocationChanged(Location location) {
-
-            if (location != null) {
-                ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
-                        .removeUpdates(DeviceLocationListener.this);
-
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-
-                centerLocation(getPoint(latitude, longitude));
-                mCheckinLocation.setText(String.valueOf(latitude) + ", "
-                        + String.valueOf(longitude));
-            }
+            centerLocation(getPoint(latitude, longitude));
+            mCheckinLocation.setText(String.valueOf(latitude) + ", " + String.valueOf(longitude));
         }
 
-        public void onProviderDisabled(String provider) {
-            Util.showToast(CheckinActivity.this, R.string.location_not_found);
-        }
-
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
     }
 
     @Override

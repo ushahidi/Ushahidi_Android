@@ -48,6 +48,8 @@ public class UshahidiPref {
     private static SharedPreferences settings;
 
     private static SharedPreferences.Editor editor;
+    
+    public static String totalReportsFetched = "";
 
     public static void loadSettings(Context context) {
         final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
