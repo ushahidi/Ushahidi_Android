@@ -1063,8 +1063,9 @@ public class AddIncident extends MapActivity {
 
         } catch (IOException e) {
             e.printStackTrace();
+            return "";
         }
-        return "";
+        
     }
 
     /**

@@ -22,6 +22,8 @@ package com.ushahidi.android.app.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -198,8 +200,8 @@ public class Util {
                     mNewIncidents = HandleXml.processIncidentsXml(UshahidiPref.incidentsResponse);
                 }
 
-                UshahidiPref.totalReports = mNewCategories.size() + " Categories -- "
-                        + mNewIncidents.size() + " Reports";
+                /*UshahidiPref.totalReports = mNewCategories.size() + " Categories -- "
+                        + mNewIncidents.size() + " Reports";*/
 
                 UshahidiApplication.mDb.addCategories(mNewCategories, false);
                 UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
@@ -381,14 +383,14 @@ public class Util {
         // make an http get request to a dummy api call
         // TODO improve on how to do this
         boolean status = false;
-        /*try {
+        try {
             URL url = new URL(ushahidiUrl);
             status = true;
         } catch (MalformedURLException e) {
             status = false;
         } catch (IOException e) {
             status = true;
-        }*/
+        }
 
         return status;
     }

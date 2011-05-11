@@ -917,7 +917,7 @@ public class UshahidiDatabase {
             for (IncidentsData incident : incidents) {
                 createIncidents(incident, isUnread);
             }
-
+           
             limitRows(INCIDENTS_TABLE, Integer.parseInt(UshahidiPref.totalReports), INCIDENT_ID);
             mDb.setTransactionSuccessful();
         } finally {

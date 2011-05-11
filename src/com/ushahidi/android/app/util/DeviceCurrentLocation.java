@@ -10,25 +10,26 @@ import android.os.Bundle;
 
 public class DeviceCurrentLocation {
 
-    private double latitude;
+    public static double latitude;
 
-    private double longitude;
+    public static double longitude;
 
     private Context mContext;
     
     private LocationManager mLocationMgr = null;
 
+    public static Location loc;
     public DeviceCurrentLocation(Context context) {
         mContext = context;
-        this.latitude = 0.0d;
-        this.longitude = 0.0d;
+        //this.latitude = 0.0d;
+        //this.longitude = 0.0d;
         
         //get current location
-        this.setDeviceLocation();
+        //this.setDeviceLocation();
     }
 
     // Fetches the current location of the device.
-    private void setDeviceLocation() {
+    public void setDeviceLocation() {
 
         DeviceLocationListener listener = new DeviceLocationListener();
         mLocationMgr = (LocationManager)mContext
@@ -64,7 +65,7 @@ public class DeviceCurrentLocation {
 
                 setLocationLatitude(location.getLatitude());
                 setLocationLongitude(location.getLongitude());
-                
+                loc = location;
                 mLocationMgr = null;
             }
         }

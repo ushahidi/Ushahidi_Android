@@ -2,9 +2,13 @@
 package com.ushahidi.android.app;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,6 +23,9 @@ import android.widget.TextView;
 
 import com.ushahidi.android.app.data.DeploymentProvider;
 import com.ushahidi.android.app.data.UshahidiDatabase;
+import com.ushahidi.android.app.net.Deployments;
+import com.ushahidi.android.app.util.DeviceCurrentLocation;
+import com.ushahidi.android.app.util.Util;
 
 public class DeploymentSearch extends DashboardActivity {
     private TextView mTextView;
@@ -27,9 +34,11 @@ public class DeploymentSearch extends DashboardActivity {
 
     private static final int MENU_SEARCH = 1;
     
-    private final CharSequence[] items = {"50","100","250","500","750","1000","1500"};
+    private final String[] items = {"50","100","250","500","750","1000","1500"};
     
     private static final int DIALOG_DISTANCE = 0;
+    
+    private boolean refreshState = false;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +92,13 @@ public class DeploymentSearch extends DashboardActivity {
 
         });
 
+    }
+    
+    private void updateRefreshStatus() {
+        findViewById(R.id.refresh_report_btn).setVisibility(
+                refreshState ? View.GONE : View.VISIBLE);
+        findViewById(R.id.title_refresh_progress).setVisibility(
+                refreshState ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -168,7 +184,13 @@ public class DeploymentSearch extends DashboardActivity {
                 builder.setTitle("Select distance in km");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        
+                        DeviceCurrentLocation deviceLocation = new DeviceCurrentLocation(DeploymentSearch.this);
+                        deviceLocation.setDeviceLocation();
+                        RefreshDeploymentTask deploymentTask = new RefreshDeploymentTask();
+                        deploymentTask.appContext = DeploymentSearch.this;
+                        deploymentTask.location = DeviceCurrentLocation.loc;
+                        deploymentTask.distance = items[item];
+                        deploymentTask.execute();
                     }
                 });
                 
@@ -186,5 +208,51 @@ public class DeploymentSearch extends DashboardActivity {
     public void onRefreshReports(View v) {
         createDialog(DIALOG_DISTANCE);
     }
+    
+ // thread class
+    private class RefreshDeploymentTask extends AsyncTask<Void, Void, Boolean> {
 
+        protected Boolean status;
+
+        private ProgressDialog dialog;
+
+        protected Context appContext;
+        
+        private Deployments deployments;
+        
+        protected String distance;
+        
+        protected Location location;
+
+        @Override
+        protected void onPreExecute() {
+            refreshState = true;
+            updateRefreshStatus();
+            deployments = new Deployments(appContext);
+            /*this.dialog = ProgressDialog.show(appContext, getString(R.string.please_wait),
+                    getString(R.string.fetching_new_reports), true);*/
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            status = deployments.fetchDeployments(distance,location); 
+            Util.checkForCheckin(appContext);
+            return status;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (!status) {
+                Util.showToast(appContext, R.string.internet_connection);
+            } else {
+                Util.showToast(appContext, R.string.reports_successfully_fetched);
+                showResults();
+            }
+            //this.dialog.cancel();
+            refreshState = false;
+            updateRefreshStatus();
+        }
+
+    }
 }

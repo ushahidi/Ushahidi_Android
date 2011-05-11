@@ -13,7 +13,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.location.Location;
+import android.util.Log;
 
+import com.ushahidi.android.app.UshahidiApplication;
 import com.ushahidi.android.app.data.DeploymentsData;
 import com.ushahidi.android.app.util.DeviceCurrentLocation;
 
@@ -40,11 +43,13 @@ public class Deployments {
     private boolean processingResult;
 
     private String deploymentJson;
+    
+    private ArrayList<DeploymentsData> deploymentsData;
 
     public Deployments(Context context) {
         mContext = context;
         deploymentJson = "";
-        deviceLocation = new DeviceCurrentLocation(mContext);
+        
     }
 
     /**
@@ -52,23 +57,29 @@ public class Deployments {
      * 
      * @param String distance
      */
-    public boolean fetchDeployments(String distance) {
+    public boolean fetchDeployments(String distance, Location location) {
         this.mDistance = distance;
-        lat = deviceLocation.getLocationLatitude();
-        lon = deviceLocation.getLocationLongitude();
-
+       
+        Log.d("deploymentSearch","Lat: "+lat+"-- Lon"+lon);
         // check if current location was retrieved.
-        if ((lat != 0.0d) && (lon != 00d)) {
+        if (location !=null) {
+            lat = location.getLatitude();
+            lon = location.getLongitude();
             deploymentJson = getDeploymentsFromOnline();
             processingResult = true;
-
+            
             try {
                 jsonObject = new JSONObject(deploymentJson);
+                deploymentsData = retrieveDeploymentJson();
                 
+                if( deploymentsData != null ) {
+                    UshahidiApplication.mDb.addDeployment(deploymentsData);
+                    return true;
+                }
             } catch (JSONException e) {
                 processingResult = false;
             }
-            return true;
+            
         }
         return false;
     }

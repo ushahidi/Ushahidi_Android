@@ -64,7 +64,7 @@ public class UshahidiPref {
         countries = settings.getInt("Countries", 0);
         AutoUpdateDelay = settings.getInt("AutoUpdateDelay", 5);
         AutoFetch = settings.getBoolean("AutoFetch", false);
-        totalReports = settings.getString("TotalReports", "");
+        totalReports = settings.getString("TotalReports", "20");
         isCheckinEnabled = settings.getInt("CheckinEnabled", isCheckinEnabled);
 
         // make sure folder exists
