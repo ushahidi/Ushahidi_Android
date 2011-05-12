@@ -730,6 +730,12 @@ public class UshahidiDatabase {
             id
         });
     }
+    
+    public Cursor fetchDeploymentUrlById(String id) {
+        String sql = "SELECT "+DEPLOYMENT_URL+" FROM "+DEPLOYMENT_TABLE+" WHERE "+DEPLOYMENT_ID+ 
+        " = ? ";
+        return mDb.rawQuery(sql, new String[]{id});
+    }
 
     public Cursor fetchCheckinsByUserdId(String id) {
         String sql = "SELECT * FROM " + CHECKINS_TABLE + " WHERE " + CHECKIN_USER_ID
@@ -1004,6 +1010,11 @@ public class UshahidiDatabase {
         }
     }
     
+    /**
+     * Add new deployments to table
+     * 
+     * @param deployments
+     */
     public void addDeployment(List<DeploymentsData> deployments) {
         try {
             mDb.beginTransaction();
@@ -1017,6 +1028,20 @@ public class UshahidiDatabase {
             mDb.endTransaction();
         }
     }
+    
+    public void updateDeployment(String id ) {
+        String sql = "UPDATE "+DEPLOYMENT_TABLE+" SET "+DEPLOYMENT_ACTIVE+"= ? WHERE "+DEPLOYMENT_ID+"= ?";
+        
+        mDb.rawQuery(sql, new String[]{"1",id});
+    }
+    
+    /**
+     * Limit number of records to retrieve. 
+     * @param tablename
+     * @param limit
+     * @param KEY_ID
+     * @return
+     */
     
     public int limitRows(String tablename, int limit, String KEY_ID) {
         Cursor cursor = mDb.rawQuery("SELECT " + KEY_ID + " FROM " + tablename + " ORDER BY "

@@ -33,7 +33,7 @@
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:orientation="vertical">
 
-				<TextView android:id="@+id/checkin_title"
+				<TextView android:id="@+id/chek_title"
 					android:singleLine="false" android:layout_width="fill_parent"
 					android:layout_height="wrap_content" android:textStyle="bold"
 					android:paddingTop="15px" android:paddingBottom="15px"
@@ -43,16 +43,16 @@
 			<LinearLayout android:id="@+id/top_items_layout"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:background="@drawable/report_lable" android:orientation="vertical">
-				<TextView android:id="@+id/title" android:singleLine="false"
-					android:textStyle="bold" android:paddingTop="15px"
+				<TextView android:id="@+id/checkin_title" android:singleLine="false"
+					android:paddingTop="15px"
 					android:paddingBottom="15px" android:paddingRight="10px"
-					android:paddingLeft="10px" android:textColor="@drawable/black_color"
+					android:paddingLeft="10px" 
 					android:layout_width="fill_parent" android:layout_height="wrap_content" />
 			</LinearLayout>
 			<!-- Title ends -->
 
 			<!-- Description starts -->
-			<LinearLayout android:id="@+id/report_status_layout"
+			<LinearLayout 
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:orientation="vertical">
 
@@ -72,9 +72,10 @@
 					android:paddingTop="5px" android:paddingLeft="10px"
 					android:paddingRight="10px" android:fadingEdge="none">
 					<TextView android:id="@+id/checkin_description"
+					   android:paddingTop="15px" android:paddingBottom="15px"
 						android:singleLine="false" android:layout_width="fill_parent"
 						android:layout_height="wrap_content" android:autoLink="all"
-						android:textColor="@drawable/black_color" android:textStyle="bold"
+						android:textColor="@drawable/black_color"
 						android:fadingEdge="none" />
 				</ScrollView>
 			</LinearLayout>
@@ -97,7 +98,7 @@
 				android:background="@drawable/report_lable" android:orientation="vertical">
 				<TextView android:paddingTop="15px" android:paddingBottom="15px"
 					android:paddingRight="10px" android:paddingLeft="10px" android:id="@+id/date"
-					android:textStyle="bold" android:singleLine="false"
+					android:singleLine="false"
 					android:layout_width="fill_parent" android:layout_height="wrap_content" />
 			</LinearLayout>
 			<!-- Date ends -->
@@ -144,13 +145,13 @@
 					android:paddingRight="10px" android:paddingLeft="10px"
 					android:textColor="@drawable/title_color" android:text="@string/report_photo" />
 			</LinearLayout>
-			<LinearLayout android:orientation="vertical"
+			<LinearLayout android:id="@+id/img_layout" android:orientation="vertical"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:background="@drawable/rectangleshape"
 				android:padding="5px">
 				<ImageView android:layout_width="fill_parent"
-					android:layout_height="fill_parent" android:adjustViewBounds="true"
-					android:id="@+id/checkin_img" android:scaleType="centerCrop"
-					android:paddingBottom="20px" />
+					android:layout_height="fill_parent" 
+					android:id="@+id/checkin_img" android:scaleType="centerCrop"/>
 			</LinearLayout>
 			<!-- Photo ends -->
 		</LinearLayout>

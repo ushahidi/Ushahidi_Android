@@ -26,12 +26,12 @@ import java.util.List;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
@@ -63,6 +63,8 @@ public class ViewCheckins extends MapActivity {
     private Bundle extras = new Bundle();
 
     private ImageView image;
+    
+    private LinearLayout photoLayout;
 
     private String fileName;
 
@@ -79,6 +81,8 @@ public class ViewCheckins extends MapActivity {
         mapView = (MapView)findViewById(R.id.loc_map);
         image = (ImageView)findViewById(R.id.checkin_img);
         photo = (TextView)findViewById(R.id.checkin_photo);
+        photoLayout = (LinearLayout) findViewById(R.id.img_layout);
+        photoLayout.setVisibility(View.GONE);
         Bundle incidents = getIntent().getExtras();
         photo.setVisibility(View.GONE);
         extras = incidents.getBundle("checkins");
@@ -87,20 +91,21 @@ public class ViewCheckins extends MapActivity {
         checkinLatitude = extras.getString("latitude");
         checkinLongitude = extras.getString("longitude");
 
-        name = (TextView)findViewById(R.id.title);
-        name.setTypeface(Typeface.DEFAULT_BOLD);
+        name = (TextView)findViewById(R.id.checkin_title);
+        name.setTextColor(Color.BLACK);
         name.setText(extras.getString("name"));
 
         date = (TextView)findViewById(R.id.date);
         date.setTextColor(Color.BLACK);
         date.setText(extras.getString("date"));
 
-        message = (TextView)findViewById(R.id.checkin_desc);
+        message = (TextView)findViewById(R.id.checkin_description);
         message.setTextColor(Color.BLACK);
         message.setText(extras.getString("message"));
 
         fileName = extras.getString("photo");
         if (!TextUtils.isEmpty(fileName)) {
+            photoLayout.setVisibility(View.VISIBLE);
             photo.setVisibility(View.VISIBLE);
             image.setImageDrawable(ImageManager.getImages(fileName));
         }
@@ -113,13 +118,15 @@ public class ViewCheckins extends MapActivity {
     }
 
     public void onDestroy() {
-        ViewCheckins.this.finish();
         super.onDestroy();
     }
 
     public void onPause() {
-        ViewCheckins.this.finish();
         super.onPause();
+    }
+    
+    public void onStop() {
+        super.onStop();
     }
     
     public void onShareClick(View v) {
