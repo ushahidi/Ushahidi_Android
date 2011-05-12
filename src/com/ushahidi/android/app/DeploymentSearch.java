@@ -37,7 +37,7 @@ public class DeploymentSearch extends DashboardActivity {
     private static final int DIALOG_DISTANCE = 0;
     
     private boolean refreshState = false;
-
+    
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.deployment_search);
@@ -89,6 +89,7 @@ public class DeploymentSearch extends DashboardActivity {
             }
 
         });
+       
 
     }
     
@@ -119,10 +120,8 @@ public class DeploymentSearch extends DashboardActivity {
     }
     
     @Override
-    public void onStop() {
-        super.onStop();
-        DeviceCurrentLocation deviceLocation = new DeviceCurrentLocation(DeploymentSearch.this);
-        deviceLocation.stopLocating();
+    public void onStart() {
+        super.onStart();
     }
 
     /**
@@ -189,14 +188,14 @@ public class DeploymentSearch extends DashboardActivity {
                 builder.setTitle("Select distance in km");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        DeviceCurrentLocation deviceLocation = new DeviceCurrentLocation(DeploymentSearch.this);
-                        //deviceLocation.setDeviceLocation();
+                        new DeviceCurrentLocation(DeploymentSearch.this);
+                        
                         RefreshDeploymentTask deploymentTask = new RefreshDeploymentTask();
                         deploymentTask.appContext = DeploymentSearch.this;
                         deploymentTask.location = DeviceCurrentLocation.getLocation();
                         deploymentTask.distance = items[item];
                         deploymentTask.execute();
-                        deviceLocation.stopLocating();
+                        
                     }
                 });
                 
@@ -238,7 +237,6 @@ public class DeploymentSearch extends DashboardActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             status = deployments.fetchDeployments(distance,location); 
-            Util.checkForCheckin(appContext);
             return status;
         }
 

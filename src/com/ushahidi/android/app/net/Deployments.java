@@ -6,14 +6,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
+import org.apache.http.HttpResponse;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 
 import com.ushahidi.android.app.UshahidiApplication;
 import com.ushahidi.android.app.data.DeploymentsData;
@@ -37,12 +39,12 @@ public class Deployments {
     private boolean processingResult;
 
     private String deploymentJson;
-    
+
     private ArrayList<DeploymentsData> deploymentsData;
 
     public Deployments(Context context) {
         deploymentJson = "";
-        
+
     }
 
     /**
@@ -52,51 +54,60 @@ public class Deployments {
      */
     public boolean fetchDeployments(String distance, Location location) {
         this.mDistance = distance;
-       
-        
+
         // check if current location was retrieved.
-        if (location !=null) {
+        if (location != null) {
+            processingResult = true;
             lat = location.getLatitude();
             lon = location.getLongitude();
-            deploymentJson = getDeploymentsFromOnline();
-            processingResult = true;
             
+            deploymentJson = getDeploymentsFromOnline();
             try {
                 jsonObject = new JSONObject(deploymentJson);
                 deploymentsData = retrieveDeploymentJson();
-                
-                if( deploymentsData != null ) {
+
+                if (deploymentsData != null) {
+                    UshahidiApplication.mDb.deleteDeployment();
                     UshahidiApplication.mDb.addDeployment(deploymentsData);
                     return true;
                 }
             } catch (JSONException e) {
                 processingResult = false;
             }
-            
+
         }
         return false;
     }
 
     public String getDeploymentsFromOnline() {
         StringBuilder fullUrl = new StringBuilder(DEPLOYMENT_SEARCH_URL);
-
+        fullUrl.append("?return_vars=name,latitude,longitude,description,url,category_id,discovery_date,id");
+        fullUrl.append("&units=km");
+        fullUrl.append("&distance="+mDistance);
+        fullUrl.append("&lat="+String.valueOf(lat));
+        fullUrl.append("&lon="+String.valueOf(lon));
+        HttpResponse response;
+        
+        
         try {
-            URL url = new URL(fullUrl.toString());
-            ClientHttpRequest req = new ClientHttpRequest(url);
-            req.setParameter("units", "km");
-            req.setParameter("distance", mDistance);
-            req.setParameter("lat", String.valueOf(lat));
-            req.setParameter("lon", String.valueOf(lon));
-            req.setParameter("limit", 10);
+          
+            response = UshahidiHttpClient.GetURL(fullUrl.toString());
+            if (response == null) {
+                return "";
+            }
+            final int statusCode = response.getStatusLine().getStatusCode();
 
-            InputStream inputStream = req.post();
+            if (statusCode == 200) {
 
-            return GetText(inputStream);
+                return UshahidiHttpClient.GetText(response);
+           }
+                //UshahidiPref.incidentsResponse = incidents;
         } catch (MalformedURLException e) {
             return null;
         } catch (IOException e) {
             return null;
         }
+        return null;
     }
 
     public static String GetText(InputStream in) {
@@ -120,22 +131,40 @@ public class Deployments {
     }
 
     public ArrayList<DeploymentsData> retrieveDeploymentJson() {
-        int len = jsonObject.length();
+        JSONArray names = jsonObject.names();
         ArrayList<DeploymentsData> deploymentsList = new ArrayList<DeploymentsData>();
         if (processingResult) {
-            for (int i = 0; i > len; i++) {
+            for (int i = 0; i < names.length(); i++) {
                 DeploymentsData deploymentData = new DeploymentsData();
                 try {
-                    deploymentData.setId(jsonObject.getString("id"));
-                    deploymentData.setDate(jsonObject.getString("discovery_date"));
+
+                    deploymentData.setId(jsonObject.getJSONObject(names.getString(0)).getString(
+                            "id"));
+                    deploymentData.setDate(jsonObject.getJSONObject(names.getString(i)).getString(
+                            "discovery_date"));
                     deploymentData.setActive("0");
-                    deploymentData.setLat(jsonObject.getString("latitude"));
-                    deploymentData.setLon(jsonObject.getString("longitude"));
-                    deploymentData.setName(jsonObject.getString("name"));
-                    deploymentData.setUrl(jsonObject.getString("url"));
-                    deploymentData.setDesc(jsonObject.getString("description"));
-                    deploymentData.setCatId(jsonObject.getString("category_id"));
+                    deploymentData.setLat(jsonObject.getJSONObject(names.getString(i)).getString(
+                            "latitude"));
+                    deploymentData.setLon(jsonObject.getJSONObject(names.getString(i)).getString(
+                            "longitude"));
+                    deploymentData.setName(jsonObject.getJSONObject(names.getString(i)).getString(
+                            "name"));
+                    deploymentData.setUrl(jsonObject.getJSONObject(names.getString(i)).getString(
+                            "url"));
+                    
+                    //use deployment name if there is no deployment description
+                    if(jsonObject.getJSONObject(names.getString(i)).getString(
+                            "description").equals("")){
+                        deploymentData.setDesc(jsonObject.getJSONObject(names.getString(i)).getString(
+                        "name")); 
+                    } else {
+                        deploymentData.setDesc(jsonObject.getJSONObject(names.getString(i)).getString(
+                            "description"));
+                    }
+                    deploymentData.setCatId(jsonObject.getJSONObject(names.getString(i)).getString(
+                            "category_id"));
                 } catch (JSONException e) {
+                    e.printStackTrace();
                     processingResult = false;
                     return null;
                 }

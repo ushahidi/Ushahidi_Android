@@ -108,8 +108,8 @@ public class ListCheckin extends Activity {
 
         listCheckins.setOnItemClickListener(new OnItemClickListener() {
 
-            public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-
+            public void onItemClick(AdapterView<?> arg0, View view, int positions, long id) {
+                int position = positions - 1;
                 if (checkins != null) {
                     checkinsBundle.putString("name", checkins.get(position).getName());
                     checkinsBundle.putString("message", checkins.get(position).getMsg());

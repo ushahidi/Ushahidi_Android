@@ -10,47 +10,38 @@
 	at team@ushahidi.com. -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/relativeLayout1" android:layout_width="fill_parent"
-	android:layout_height="wrap_content">
+	android:layout_height="wrap_content" android:padding="5dip">
+
 	<ImageView android:layout_height="wrap_content"
-		android:layout_width="80dp" android:id="@+id/report_thumbnail"
-		android:layout_alignParentLeft="true" android:padding="5dip" android:layout_alignParentTop="true"/>
-	<LinearLayout android:layout_height="wrap_content"
-		android:orientation="horizontal" android:id="@+id/title_arrow_layout"
-		android:layout_alignParentTop="true" android:layout_alignParentRight="true"
-		android:layout_toRightOf="@+id/report_thumbnail" android:layout_width="fill_parent"
-		android:gravity="center_horizontal|left">
-		<RelativeLayout android:layout_height="fill_parent"
-			android:id="@+id/relativeLayout2" android:layout_width="fill_parent"
-			android:layout_toRightOf="@+id/report_thumbnail">
+		android:layout_width="50dip" android:id="@+id/report_thumbnail"
+		android:layout_alignParentLeft="true" android:paddingRight="5dip" />
 
-			<LinearLayout android:layout_height="wrap_content"
-				android:id="@+id/title_layout" android:layout_alignParentTop="true"
-				android:padding="5dp" android:layout_width="wrap_content"
-				android:orientation="vertical">
-				<TextView android:id="@+id/report_title"
-					android:layout_width="wrap_content" android:layout_height="wrap_content"
-					android:singleLine="true"
-					android:textStyle="bold"
-					android:ellipsize="end"
-					android:textColor="@drawable/date_color"
-					android:layout_toRightOf="@+id/report_thumbnail" />
-				<TextView android:layout_height="wrap_content"
-				    android:textColor="@drawable/gray_color"
-					android:layout_alignParentLeft="true" android:layout_toRightOf="@+id/report_thumbnail"
-					android:id="@+id/report_date" android:layout_width="wrap_content" />
-				<TextView android:id="@+id/report_location"
-				    android:textColor="@drawable/gray_color"
-					android:layout_toRightOf="@+id/report_thumbnail"
-					android:layout_height="wrap_content" android:layout_width="wrap_content" />
-				<TextView android:id="@+id/report_status"
-				    android:textColor="@drawable/gray_color"
-					android:layout_toRightOf="@+id/report_thumbnail"
-					android:layout_height="wrap_content" android:layout_width="wrap_content" />
-			</LinearLayout>
-			<ImageView android:padding="5dip" android:layout_height="wrap_content"
-				android:id="@+id/report_arrow" android:layout_width="wrap_content"
-				android:layout_alignParentRight="true" android:layout_centerInParent="true"/>
-		</RelativeLayout>
-	</LinearLayout>
+	<TextView android:id="@+id/report_title" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:singleLine="true"
+		android:textStyle="bold" android:ellipsize="end" android:textColor="@drawable/date_color"
+		android:layout_toRightOf="@+id/report_thumbnail"
+		android:layout_toLeftOf="@+id/report_arrow" android:paddingLeft="3dip" />
 
+	<TextView android:id="@+id/report_date" android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:textColor="@drawable/gray_color"
+		android:layout_below="@+id/report_title" android:layout_toLeftOf="@+id/report_arrow"
+		android:layout_toRightOf="@+id/report_thumbnail" android:paddingLeft="3dip" />
+
+	<TextView android:id="@+id/report_location"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:textColor="@drawable/gray_color" android:layout_below="@+id/report_date"
+		android:layout_toLeftOf="@+id/report_arrow" android:layout_toRightOf="@+id/report_thumbnail"
+		android:paddingLeft="3dip" />
+
+	<TextView android:id="@+id/report_status"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:textColor="@drawable/gray_color" android:layout_below="@+id/report_location"
+		android:layout_toLeftOf="@+id/report_arrow" android:layout_toRightOf="@+id/report_thumbnail"
+		android:paddingLeft="3dip" />
+
+
+	<ImageView android:padding="5dip" android:layout_height="wrap_content"
+		android:id="@+id/report_arrow" android:layout_width="wrap_content"
+		android:layout_alignParentRight="true" android:layout_centerInParent="true"
+		android:layout_weight="1" android:gravity="center_vertical|center_horizontal" />
 </RelativeLayout>

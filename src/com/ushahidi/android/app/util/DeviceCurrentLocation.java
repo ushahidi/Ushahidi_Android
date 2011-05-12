@@ -35,6 +35,7 @@ public class DeviceCurrentLocation implements LocationListener {
 
         long updateTimeMsec = 30 * 1000;
         try {
+            
             // get low accuracy provider
             LocationProvider low = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
                     Util.createCoarseCriteria(), true));
@@ -47,31 +48,6 @@ public class DeviceCurrentLocation implements LocationListener {
 
             mLocationMgr.requestLocationUpdates(high.getName(), updateTimeMsec, 0, this);
 
-            try {
-
-                // defaulting to Accra :-)
-
-                Location hardFix = new Location("ACC");
-                hardFix.setLatitude(5.555717);
-                hardFix.setLongitude(-0.196306);
-
-                try {
-                    Location gps = mLocationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    Location network = mLocationMgr
-                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    if (gps != null)
-                        onLocationChanged(gps);
-                    else if (network != null)
-                        onLocationChanged(network);
-                    else
-                        onLocationChanged(hardFix);
-                } catch (Exception ex2) {
-                    onLocationChanged(hardFix);
-                }
-
-            } catch (Exception ex) {
-                Log.d(CLASS_TAG, ex.getMessage());
-            }
         } catch (Exception ex1) {
             try {
 

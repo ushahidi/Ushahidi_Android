@@ -9,42 +9,40 @@
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com. -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:id="@+id/checkin_list_text"
-	android:layout_height="wrap_content">
-	
-	<ImageView 
-		android:layout_width="50dp" android:layout_height="50dp" android:id="@+id/checkin_thumbnail"
-		android:layout_alignParentTop="true"
-		android:layout_alignParentLeft="true" android:padding="5dip"
-		android:scaleType="centerCrop" />
-		<RelativeLayout android:layout_height="fill_parent"
-			android:layout_width="fill_parent" android:layout_toRightOf="@+id/checkin_thumbnail">
+	android:layout_width="fill_parent" android:id="@+id/checkin_list_text"
+	android:layout_height="fill_parent"
+	android:padding="5dip" >
 
-			<LinearLayout android:layout_height="wrap_content"
-				android:id="@+id/title_layout" android:layout_alignParentTop="true"
-				android:padding="5dp" android:layout_width="wrap_content"
-				android:orientation="vertical">
-				<TextView android:id="@+id/checkin_title"
-					android:layout_width="wrap_content" android:layout_height="wrap_content"
-					android:singleLine="true" android:textStyle="bold"
-					android:ellipsize="end" android:textColor="@drawable/date_color"
-					android:layout_toRightOf="@+id/checkin_thumbnail" />
-				
-				<TextView android:id="@+id/checkin_message"
-				    android:singleLine="true"
-                    android:ellipsize="end"
-					android:textColor="@drawable/gray_color" android:layout_toRightOf="@+id/checkin_thumbnail"
-					android:layout_height="wrap_content" android:layout_width="wrap_content" />
-				<TextView android:layout_height="wrap_content"
-                    android:textColor="@drawable/gray_color"
-                    android:layout_alignParentLeft="true" android:layout_toRightOf="@+id/checkin_thumbnail"
-                    android:id="@+id/checkin_date" android:layout_width="wrap_content" />
-				
-			</LinearLayout>
-			<ImageView android:padding="5dip" android:layout_height="wrap_content"
-				android:id="@+id/checkin_arrow" android:layout_width="wrap_content"
-				android:layout_alignParentRight="true"
-				android:layout_centerInParent="true" />
-		</RelativeLayout>
+	<ImageView android:layout_width="50dip" android:layout_height="50dip"
+		android:id="@+id/checkin_thumbnail" android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true" android:paddingRight="5dip"
+		android:scaleType="centerCrop" />
+	<TextView android:id="@+id/checkin_title"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:singleLine="true" android:textStyle="bold" android:ellipsize="end"
+		android:textColor="@drawable/date_color"
+		android:layout_toLeftOf="@+id/checkin_arrow"
+		android:layout_toRightOf="@+id/checkin_thumbnail"
+		android:paddingLeft="5dip"/>
+
+	<TextView android:id="@+id/checkin_message"
+		android:singleLine="true" android:ellipsize="end" android:textColor="@drawable/gray_color"
+		android:layout_below="@+id/checkin_title"
+		android:layout_toLeftOf="@+id/checkin_arrow"
+		android:layout_toRightOf="@+id/checkin_thumbnail"
+		android:paddingLeft="5dip"
+		android:layout_height="wrap_content" android:layout_width="wrap_content" />
+	<TextView android:id="@+id/checkin_date"
+		android:layout_height="wrap_content" android:textColor="@drawable/gray_color"
+		android:layout_below="@+id/checkin_message"
+		android:layout_toRightOf="@+id/checkin_thumbnail"
+		android:paddingLeft="5dip"
+		android:layout_toLeftOf="@+id/checkin_arrow"
+		android:layout_width="wrap_content" />
+
+	<ImageView android:id="@+id/checkin_arrow" 
+	    android:paddingLeft="5dip"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:layout_alignParentRight="true" android:layout_centerInParent="true"
+        android:layout_weight="1" android:gravity="center_vertical|center_horizontal" />
 </RelativeLayout>
