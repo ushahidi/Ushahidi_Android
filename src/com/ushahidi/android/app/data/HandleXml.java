@@ -29,6 +29,7 @@ import org.xml.sax.SAXException;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.UshahidiApplication;
+import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.UshahidiService;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -222,8 +223,8 @@ public class HandleXml {
         }
 
         // save images
-        ImageManager.saveThumbnail();
-        ImageManager.saveImage();
+        ImageManager.saveThumbnail(UshahidiPref.savePath);
+        ImageManager.saveImage(UshahidiPref.savePath);
 
         return listIncidentsData;
 

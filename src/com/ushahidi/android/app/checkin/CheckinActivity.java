@@ -19,6 +19,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -52,7 +55,7 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiPref;
-import com.ushahidi.android.app.util.DeviceCurrentLocation;
+import com.ushahidi.android.app.util.Util;
 
 /**
  * Created by IntelliJ IDEA. User: Ahmed Date: 2/15/11 Time: 3:05 PM To change
@@ -165,16 +168,15 @@ public class CheckinActivity extends MapActivity {
 
     private String mErrorMessage = "";
 
-    private DeviceCurrentLocation deviceCurrentLocation;
-
-    private Location loc;
+    private LocationManager manager;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.checkin);
         UshahidiPref.loadSettings(CheckinActivity.this);
-        deviceCurrentLocation = new DeviceCurrentLocation(this);
+        //deviceCurrentLocation = new DeviceCurrentLocation(this);
+        manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         checkinButton = (Button)findViewById(R.id.perform_checkin_button);
         uploadPhotoButton = (Button)findViewById(R.id.upload_checkin_photo_button);
         mCancelButton = (Button)findViewById(R.id.checkin_cancel);
@@ -276,7 +278,7 @@ public class CheckinActivity extends MapActivity {
         uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(selectedPhoto)) {
-                    ImageManager.deleteImage(selectedPhoto);
+                    ImageManager.deleteImage(selectedPhoto,UshahidiPref.savePath);
                 }
                 showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
             }
@@ -308,8 +310,10 @@ public class CheckinActivity extends MapActivity {
 
     @Override
     protected void onStop() {
-        super.onDestroy();
-        deviceCurrentLocation.stopLocating();
+        super.onStop();
+        manager.removeUpdates(new DeviceLocationListener());
+        manager = null;
+        
     }
 
     @Override
@@ -439,7 +443,7 @@ public class CheckinActivity extends MapActivity {
                         mSelectedPhotoText.setVisibility(View.VISIBLE);
 
                         mCheckImgPrev.setImageBitmap(ImageManager
-                                .getBitmap(NetworkServices.fileName));
+                                .getBitmap(NetworkServices.fileName,UshahidiPref.savePath));
                     }
                 }
 
@@ -474,14 +478,14 @@ public class CheckinActivity extends MapActivity {
                 }
 
                 mFilename = "android_pic_upload" + randomString() + ".jpg";
-                ImageManager.writeImage(byteArrayos.toByteArray(), mFilename);
+                ImageManager.writeImage(byteArrayos.toByteArray(), mFilename,UshahidiPref.savePath);
                 UshahidiPref.fileName = mFilename;
                 selectedPhoto = mFilename;
 
                 if (!TextUtils.isEmpty(selectedPhoto)) {
                     mSelectedPhotoText.setVisibility(View.VISIBLE);
                     mCheckImgPrev.refreshDrawableState();
-                    mCheckImgPrev.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName));
+                    mCheckImgPrev.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName,UshahidiPref.savePath));
                 }
 
                 break;
@@ -729,18 +733,54 @@ public class CheckinActivity extends MapActivity {
 
     }
 
-    // Fetches the current location of the device.
+ // Fetches the current location of the device.
     private void setDeviceLocation() {
 
-        if (loc != null) {
-            loc = DeviceCurrentLocation.getLocation();
-            latitude = loc.getLatitude();
-            longitude = loc.getLongitude();
+        DeviceLocationListener listener = new DeviceLocationListener();
+        
 
-            centerLocation(getPoint(latitude, longitude));
-            mCheckinLocation.setText(String.valueOf(latitude) + ", " + String.valueOf(longitude));
+        long updateTimeMsec = 1000L;
+
+        // get low accuracy provider
+        LocationProvider low = manager.getProvider(manager.getBestProvider(
+                Util.createCoarseCriteria(), true));
+
+        // get high accuracy provider
+        LocationProvider high = manager.getProvider(manager.getBestProvider(
+                Util.createFineCriteria(), true));
+
+        manager.requestLocationUpdates(low.getName(), updateTimeMsec, 500.0f, listener);
+
+        manager.requestLocationUpdates(high.getName(), updateTimeMsec, 500.0f, listener);
+
+    }
+    
+ // get the current location of the device/user
+    public class DeviceLocationListener implements LocationListener {
+        public void onLocationChanged(Location location) {
+
+            if (location != null) {
+                manager.removeUpdates(DeviceLocationListener.this);
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+
+                centerLocation(getPoint(latitude, longitude));
+                mCheckinLocation.setText(String.valueOf(latitude) + ", "
+                        + String.valueOf(longitude));
+            }
         }
 
+        public void onProviderDisabled(String provider) {
+            Util.showToast(CheckinActivity.this, R.string.location_not_found);
+        }
+
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
     }
 
     @Override

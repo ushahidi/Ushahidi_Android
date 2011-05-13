@@ -95,6 +95,8 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
     private ImageAdapter imageAdapter;
 
     private ImageAdapter thumbnailAdapter;
+    
+    private TextView activityTitle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +115,11 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
         title = (TextView)findViewById(R.id.title);
         title.setTypeface(Typeface.DEFAULT_BOLD);
         title.setText(extras.getString("title"));
-
+        
+        activityTitle = (TextView)findViewById(R.id.title_text);
+        if (activityTitle != null)
+            activityTitle.setText(getTitle());
+        
         category = (TextView)findViewById(R.id.category);
         category.setTextColor(Color.BLACK);
         category.setText(extras.getString("category"));

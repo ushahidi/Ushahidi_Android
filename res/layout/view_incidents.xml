@@ -27,6 +27,7 @@
             android:src="@drawable/report_share"
             android:onClick="onShareClick" />
     </LinearLayout>
+    <ImageView style="@style/ActionBarSeparator" />
   <ScrollView
     android:id="@+id/view_report"
     android:layout_width="fill_parent"

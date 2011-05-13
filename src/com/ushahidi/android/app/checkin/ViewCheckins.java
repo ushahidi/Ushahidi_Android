@@ -43,6 +43,7 @@ import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.UshahidiPref;
+import com.ushahidi.android.app.ui.ImagePreviewer;
 
 public class ViewCheckins extends MapActivity {
 
@@ -59,6 +60,8 @@ public class ViewCheckins extends MapActivity {
     private TextView date;
 
     private TextView photo;
+    
+    private TextView activityTitle;
 
     private Bundle extras = new Bundle();
 
@@ -71,6 +74,8 @@ public class ViewCheckins extends MapActivity {
     private String checkinLatitude;
 
     private String checkinLongitude;
+    
+    private Bundle photosBundle = new Bundle();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,16 +86,17 @@ public class ViewCheckins extends MapActivity {
         mapView = (MapView)findViewById(R.id.loc_map);
         image = (ImageView)findViewById(R.id.checkin_img);
         photo = (TextView)findViewById(R.id.checkin_photo);
-        photoLayout = (LinearLayout) findViewById(R.id.img_layout);
+        photoLayout = (LinearLayout)findViewById(R.id.img_layout);
         photoLayout.setVisibility(View.GONE);
         Bundle incidents = getIntent().getExtras();
         photo.setVisibility(View.GONE);
         extras = incidents.getBundle("checkins");
-
-        // id = extras.getInt("id");
+        photosBundle = new Bundle();
         checkinLatitude = extras.getString("latitude");
         checkinLongitude = extras.getString("longitude");
-
+        activityTitle = (TextView)findViewById(R.id.title_text);
+        if (activityTitle != null)
+            activityTitle.setText(getTitle());
         name = (TextView)findViewById(R.id.checkin_title);
         name.setTextColor(Color.BLACK);
         name.setText(extras.getString("name"));
@@ -124,11 +130,11 @@ public class ViewCheckins extends MapActivity {
     public void onPause() {
         super.onPause();
     }
-    
+
     public void onStop() {
         super.onStop();
     }
-    
+
     public void onShareClick(View v) {
         // TODO: consider bringing in shortlink to session
         UshahidiPref.loadSettings(ViewCheckins.this);
@@ -141,6 +147,21 @@ public class ViewCheckins extends MapActivity {
         intent.putExtra(Intent.EXTRA_TEXT, shareString);
 
         startActivity(Intent.createChooser(intent, getText(R.string.title_share)));
+    }
+
+    public void onImageClick(View v) {
+        if (!TextUtils.isEmpty(fileName)) {
+            previewImage(fileName);
+        }
+    }
+
+    private void previewImage(String filename) {
+        String images [] = {filename};
+        photosBundle.putStringArray("images", images);
+        Intent intent = new Intent(this, ImagePreviewer.class);
+        intent.putExtra("photos", photosBundle);
+        startActivityForResult(intent, 0);
+        setResult(RESULT_OK, intent);
     }
 
     private void placeMarker(int markerLatitude, int markerLongitude) {

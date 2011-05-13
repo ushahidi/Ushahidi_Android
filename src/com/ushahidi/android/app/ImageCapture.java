@@ -23,16 +23,16 @@ package com.ushahidi.android.app;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.PixelFormat;
 import android.hardware.Camera;
-import android.hardware.Camera.ShutterCallback;
 import android.hardware.Camera.PictureCallback;
+import android.hardware.Camera.ShutterCallback;
 import android.os.Bundle;
 import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.MediaColumns;
@@ -66,7 +66,7 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        //getWindow().setFormat(PixelFormat.TRANSLUCENT);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -135,7 +135,7 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
 
             mCamera.startPreview();
             String filename = "ushandroid_" + randomString() + ".jpg";
-            ImageManager.writeImage(data, filename);
+            ImageManager.writeImage(data, filename,UshahidiPref.savePath);
             mBundle.putString("name", filename);
             mIntent.putExtra("filename", mBundle);
 
@@ -212,7 +212,11 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
         }
         
         Camera.Parameters p = mCamera.getParameters();
-        p.setPreviewSize(w, h);
+        
+        //get supported screen sizes
+        List<Camera.Size> previewSizes = p.getSupportedPreviewSizes();
+        Camera.Size previewSize = previewSizes.get(0);
+        p.setPreviewSize(previewSize.width, previewSize.height);
         mCamera.setParameters(p);
         try {
             mCamera.setPreviewDisplay(holder);

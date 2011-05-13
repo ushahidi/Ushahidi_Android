@@ -33,6 +33,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import android.graphics.drawable.BitmapDrawable;
 
@@ -48,18 +49,18 @@ public class ImageManager {
         return d;
     }
 
-    public static void saveImage() {
+    public static void saveImage(String path) {
         byte[] is;
         for (String image : UshahidiService.mNewIncidentsImages) {
             if (!TextUtils.isEmpty(image)) {
                 File imageFilename = new File(image);
-                File f = new File(UshahidiPref.savePath + imageFilename.getName());
+                File f = new File(path + imageFilename.getName());
                 if (!f.exists()) {
                     try {
                         is = UshahidiHttpClient.fetchImage(UshahidiPref.domain + "/media/uploads/"
                                 + image);
                         if (is != null) {
-                            writeImage(is, imageFilename.getName());
+                            writeImage(is, imageFilename.getName(),path);
                         }
                     } catch (MalformedURLException e) {
 
@@ -78,7 +79,7 @@ public class ImageManager {
 
     }
 
-    public static void saveThumbnail() {
+    public static void saveThumbnail(String path) {
         byte[] is;
         for (String image : UshahidiService.mNewIncidentsThumbnails) {
 
@@ -86,13 +87,13 @@ public class ImageManager {
                 File thumbnailFilename = new File(image);
                 // Log.i("Save Images", "Image :" + UshahidiPref.savePath +
                 // thumbnailFilename.getName());
-                File f = new File(UshahidiPref.savePath + thumbnailFilename.getName());
+                File f = new File(path + thumbnailFilename.getName());
                 if (!f.exists()) {
                     try {
                         is = UshahidiHttpClient.fetchImage(UshahidiPref.domain + "/media/uploads/"
                                 + image);
                         if (is != null) {
-                            writeImage(is, thumbnailFilename.getName());
+                            writeImage(is, thumbnailFilename.getName(),path);
                         }
                     } catch (MalformedURLException e) {
 
@@ -111,14 +112,14 @@ public class ImageManager {
 
     }
 
-    public static void writeImage(byte[] data, String filename) {
+    public static void writeImage(byte[] data, String filename, String path) {
 
-        deleteImage(filename);
-
+        deleteImage(filename,path);
+        Log.d("Deleting Images: ","FilePaht "+filename+path);
         if (data != null) {
             FileOutputStream fOut;
             try {
-                fOut = new FileOutputStream(UshahidiPref.savePath + filename);
+                fOut = new FileOutputStream(path + filename);
                 fOut.write(data);
                 fOut.flush();
                 fOut.close();
@@ -133,15 +134,15 @@ public class ImageManager {
 
     }
 
-    public static void deleteImage(String filename) {
+    public static void deleteImage(String filename, String path) {
 
-        File f = new File(UshahidiPref.savePath + filename);
+        File f = new File(path + filename);
         if (f.exists()) {
             f.delete();
         }
     }
 
-    public static Bitmap getBitmap(String fileName) {
+    public static Bitmap getBitmap(String fileName,String path) {
         try {
             // Decode image size
             BitmapFactory.Options o = new BitmapFactory.Options();
@@ -167,23 +168,23 @@ public class ImageManager {
             BitmapFactory.Options o2 = new BitmapFactory.Options();
             o2.inSampleSize = scale;
             return BitmapFactory.decodeStream(
-                    new FileInputStream(UshahidiPref.savePath + fileName), null, o2);
+                    new FileInputStream(path + fileName), null, o2);
         } catch (FileNotFoundException e) {
         }
         return null;
     }
 
-    public static void saveImageFromURL(String url, String fileName) {
+    public static void saveImageFromURL(String url, String fileName, String path) {
         byte[] is;
         
         if (!TextUtils.isEmpty(url)) {
             File imageFilename = new File(fileName);
-            File f = new File(UshahidiPref.savePath + imageFilename.getName());
+            File f = new File(path + imageFilename.getName());
             if (!f.exists()) {
                 try {
                     is = UshahidiHttpClient.fetchImage(url);
                     if (is != null) {
-                        writeImage(is, imageFilename.getName());
+                        writeImage(is, imageFilename.getName(),path);
                     }
                 } catch (MalformedURLException e) {
 

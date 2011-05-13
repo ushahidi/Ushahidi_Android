@@ -42,7 +42,7 @@ public class ImageCaptureCallback implements PictureCallback {
         try {
 
             String filename = "ushandroid_" + randomString() + ".jpg";
-            ImageManager.writeImage(data, filename);
+            ImageManager.writeImage(data, filename,UshahidiPref.savePath);
             UshahidiPref.fileName = filename;
 
         } catch (final Exception ex) {

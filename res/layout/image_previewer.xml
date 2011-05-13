@@ -1,0 +1,44 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="fill_parent"
+    android:orientation="vertical" 
+    android:layout_height="fill_parent"
+    android:background="@drawable/black_color">
+    <ImageView style="@style/ActionBarSeparator" />
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/title_height"
+        android:orientation="horizontal"
+        android:background="@drawable/black_color">
+        <ImageView style="@style/ActionBarTitleSeparator" />
+         <ImageButton style="@style/ActionBarTitle"
+            android:contentDescription="@string/menu_home" android:src="@drawable/home_btn"
+            android:onClick="onClickHome" />
+
+        <TextView style="@style/ActionBarTitleText" />
+        <ImageView style="@style/ActionBarTitleSeparator" />
+        <ImageButton style="@style/ActionBarTitle"
+            android:id="@+id/search_report_btn"
+            android:src="@drawable/report_share"
+            android:onClick="onShareClick" />
+        <ImageView style="@style/ActionBarTitleSeparator" />
+    </LinearLayout>
+    <ImageView style="@style/ActionBarSeparator" />
+    <Gallery android:id="@+id/gallery"
+        android:background="#55000000"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        
+        android:gravity="center_vertical"
+        android:spacing="16dp"
+    />
+    <ImageSwitcher android:id="@+id/switcher"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+    />
+    
+</LinearLayout>
+   

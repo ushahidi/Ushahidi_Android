@@ -141,7 +141,8 @@
 		</activity>
 
 		<!-- Image capture -->
-		<activity android:name=".ImageCapture" android:label="@string/str_post_photos">
+		<activity android:configChanges="orientation|keyboardHidden"
+			android:name=".ImageCapture" android:label="@string/str_post_photos">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT"></category>
@@ -156,7 +157,16 @@
 				<category android:name="android.intent.category.DEFAULT"></category>
 			</intent-filter>
 		</activity>
-
+		
+		<!-- Preview Images  -->
+        <activity android:name=".ui.ImagePreviewer" android:label="@string/preview_photo"
+            android:theme="@style/Theme.D1" android:configChanges="orientation|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity>
+        
 		<!-- About -->
 		<activity android:name=".About" android:label="@string/ushahidi_about"
 			android:theme="@style/Theme.D1">

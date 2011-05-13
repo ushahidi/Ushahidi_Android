@@ -48,7 +48,7 @@ public class SaveIncidentsImage extends Thread {
 
         Log.i("Capture Me", "What: " + filename);
 
-        ImageManager.writeImage(mData, filename);
+        ImageManager.writeImage(mData, filename,UshahidiPref.savePath);
         UshahidiPref.fileName = filename;
 
         File f = new File(UshahidiPref.savePath + filename);

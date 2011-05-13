@@ -436,7 +436,7 @@ public class AddIncident extends MapActivity {
         mBtnPicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(UshahidiPref.fileName)) {
-                    ImageManager.deleteImage(UshahidiPref.fileName);
+                    ImageManager.deleteImage(UshahidiPref.fileName,UshahidiPref.savePath);
                 }
                 showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
             }
@@ -571,7 +571,7 @@ public class AddIncident extends MapActivity {
 
                 if (mBundle != null && !mBundle.isEmpty()) {
                     UshahidiPref.fileName = mBundle.getString("name");
-                    mSelectedPhoto.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName));
+                    mSelectedPhoto.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName,UshahidiPref.savePath));
                     mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 }
                 break;
@@ -598,6 +598,7 @@ public class AddIncident extends MapActivity {
                 try {
                     b.compress(CompressFormat.JPEG, 75, byteArrayos);
                     byteArrayos.flush();
+                    
                 } catch (OutOfMemoryError e) {
                     break;
                 } catch (IOException e) {
@@ -605,10 +606,10 @@ public class AddIncident extends MapActivity {
                 }
 
                 mFilename = "android_pic_upload" + randomString() + ".jpg";
-                ImageManager.writeImage(byteArrayos.toByteArray(), mFilename);
+                ImageManager.writeImage(byteArrayos.toByteArray(), mFilename,UshahidiPref.savePath);
                 UshahidiPref.fileName = mFilename;
 
-                mSelectedPhoto.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName));
+                mSelectedPhoto.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName,UshahidiPref.savePath));
                 mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 break;
 

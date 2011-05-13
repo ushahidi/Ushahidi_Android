@@ -24,10 +24,12 @@
             android:src="@drawable/report_share"
             android:onClick="onShareClick" />
     </LinearLayout>
+    <ImageView style="@style/ActionBarSeparator" />
 	<ScrollView android:id="@+id/view_checking"
 		android:layout_width="fill_parent" android:layout_height="fill_parent">
 		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:orientation="vertical">
+			android:layout_height="fill_parent" android:orientation="vertical"
+			android:padding="5dp">
 			<!-- Title starts -->
 			<LinearLayout android:id="@+id/top_items_layout"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
@@ -148,10 +150,13 @@
 			<LinearLayout android:id="@+id/img_layout" android:orientation="vertical"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
 				android:background="@drawable/rectangleshape"
-				android:padding="5px">
-				<ImageView android:layout_width="fill_parent"
-					android:layout_height="fill_parent" 
-					android:id="@+id/checkin_img" android:scaleType="centerCrop"/>
+				android:padding="10px">
+		    <ImageView android:layout_width="fill_parent"
+					android:layout_height="fill_parent"
+					android:scaleType="centerCrop"
+					android:onClick="onImageClick" 
+					android:id="@+id/checkin_img"/>
+			     	
 			</LinearLayout>
 			<!-- Photo ends -->
 		</LinearLayout>

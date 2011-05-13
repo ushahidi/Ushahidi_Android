@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.UshahidiApplication;
+import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.data.UsersData;
 
 import java.util.ArrayList;
@@ -145,7 +146,7 @@ public class RetrieveCheckinsJSONServices {
                 fileName = url.substring(url.lastIndexOf('/') + 1, url.length());
                 
                 ImageManager.saveImageFromURL(checkinsCheckinsMediaArray.getJSONObject(index)
-                        .getString("medium"), fileName);
+                        .getString("medium"), fileName, UshahidiPref.savePath);
                 
                 checkinMedia.setMediumLink(fileName);
 
@@ -154,7 +155,7 @@ public class RetrieveCheckinsJSONServices {
                 thumbNail = thumbnailUrl.substring(thumbnailUrl.lastIndexOf('/') + 1,
                         thumbnailUrl.length());
                 
-                ImageManager.saveImageFromURL(thumbnailUrl, thumbNail);
+                ImageManager.saveImageFromURL(thumbnailUrl, thumbNail,UshahidiPref.savePath);
                 checkinMedia.setThumbnailLink(thumbNail);
 
             } catch (JSONException e) {
