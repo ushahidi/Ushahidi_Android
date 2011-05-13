@@ -65,6 +65,8 @@ public class ImagePreviewer extends DashboardActivity implements
 
         photos = extras.getBundle("photos");
         images = photos.getStringArray("images");
+       
+        ImagePreviewer.photoPosition = photos.getInt("position");
         mSwitcher = (ImageSwitcher)findViewById(R.id.switcher);
         mSwitcher.setFactory(this);
         mSwitcher.setInAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
@@ -82,7 +84,7 @@ public class ImagePreviewer extends DashboardActivity implements
                 imageAdapter.mImageIds.add(ImageManager.getImages(image));
             }
         }
-
+        mSwitcher.setImageDrawable(imageAdapter.mImageIds.get(ImagePreviewer.photoPosition));
         Gallery g = (Gallery)findViewById(R.id.gallery);
 
         g.setAdapter(thumbnailAdapter);
@@ -151,14 +153,6 @@ public class ImagePreviewer extends DashboardActivity implements
             return;
         }
      
-        // delete image
-        String path = getExternalStorage();
-        if (path != null) {
-            for (String image : images) {
-                //ImageManager.deleteImage("/" + image, path);
-               
-            }
-        }
     }
 
     public class ImageAdapter extends BaseAdapter {

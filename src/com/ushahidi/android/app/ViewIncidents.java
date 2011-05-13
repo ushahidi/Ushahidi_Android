@@ -20,12 +20,10 @@
 
 package com.ushahidi.android.app;
 
-import android.os.Bundle;
-import android.widget.AdapterView;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.ViewSwitcher;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -33,15 +31,18 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -49,6 +50,7 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
+import com.ushahidi.android.app.ui.ImagePreviewer;
 import com.ushahidi.android.app.util.Util;
 
 public class ViewIncidents extends MapActivity implements AdapterView.OnItemSelectedListener,
@@ -97,6 +99,8 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
     private ImageAdapter thumbnailAdapter;
     
     private TextView activityTitle;
+    
+    private Bundle photosBundle = new Bundle();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -175,14 +179,34 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
 
         g.setAdapter(thumbnailAdapter);
         g.setOnItemSelectedListener(this);
+        g.setOnItemClickListener(new OnItemClickListener(){
 
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                previewImage(position);
+            }
+            
+        });
         mapController = mapView.getController();
         defaultLocation = getPoint(Double.parseDouble(reportLatitude),
                 Double.parseDouble(reportLongitude));
         centerLocation(defaultLocation);
 
     }
-
+    
+    public void onImageClick(View v) {
+        previewImage(ImagePreviewer.photoPosition);
+        
+    }
+   
+    private void previewImage(int position) {
+        photosBundle.putInt("position", position);
+        photosBundle.putStringArray("images", thumbnails);
+        Intent intent = new Intent(this, ImagePreviewer.class);
+        intent.putExtra("photos", photosBundle);
+        startActivityForResult(intent, 0);
+        setResult(RESULT_OK, intent);
+    }
+    
     private void placeMarker(int markerLatitude, int markerLongitude) {
 
         Drawable marker = getResources().getDrawable(R.drawable.marker);
@@ -221,8 +245,9 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
     }
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-        mSwitcher.setImageDrawable(imageAdapter.mImageIds.get(position));
-
+        //mSwitcher.setImageDrawable(imageAdapter.mImageIds.get(position));
+        ImagePreviewer.photoPosition = 0;
+        //previewImage(position);
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
