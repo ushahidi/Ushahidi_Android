@@ -23,6 +23,7 @@ package com.ushahidi.android.app.checkin;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -42,6 +43,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.ui.ImagePreviewer;
 
@@ -153,6 +155,23 @@ public class ViewCheckins extends MapActivity {
         if (!TextUtils.isEmpty(fileName)) {
             previewImage(fileName);
         }
+    }
+    
+    public void onClickHome(View v) {
+        goHome(this);
+    }
+
+    /**
+     * Go back to the home activity.
+     * 
+     * @param context Context
+     * @return void
+     */
+
+    public void goHome(Context context) {
+        final Intent intent = new Intent(context, Ushahidi.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
     }
 
     private void previewImage(String filename) {
