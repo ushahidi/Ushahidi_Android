@@ -10,30 +10,29 @@
 		<ImageView style="@style/ActionBarTitleSeparator" />
 		<TextView style="@style/ActionBarTitleText" />
 		<ImageView style="@style/ActionBarTitleSeparator" />
-        <ImageButton style="@style/ActionBarTitle"
-            android:id="@+id/refresh_report_btn"
-            android:src="@drawable/refresh_icon"
-            android:onClick="onRefreshReports" />
-            
-        <ProgressBar style="@style/TitleBarProgressIndicator"
-            android:id="@+id/title_refresh_progress"
-            android:visibility="gone" />
+		<ImageButton style="@style/ActionBarTitle" android:id="@+id/refresh_report_btn"
+			android:src="@drawable/refresh_icon" android:onClick="onRefreshReports" />
+
+		<ProgressBar style="@style/TitleBarProgressIndicator"
+			android:id="@+id/title_refresh_progress" android:visibility="gone" />
 	</LinearLayout>
 	<ImageView style="@style/ActionBarSeparator" />
+	<EditText android:id="@+id/search_deployment"
+            android:layout_height="wrap_content" android:layout_width="fill_parent"
+            android:hint="@string/search_hint"  />
 	<LinearLayout android:orientation="vertical"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:layout_weight="1" android:padding="6dip">
-		<EditText android:id="@+id/search_deploy"
-			android:layout_height="wrap_content" android:layout_width="fill_parent"
-			android:hint="@string/search_hint" />
-
 		<!-- Holds the found deployments -->
 		<ListView android:id="@+id/deployment_list"
 			android:layout_width="fill_parent" android:layout_height="fill_parent"
-			android:cacheColorHint="#00000000"
-			android:fadingEdge="none"
-			android:scrollbars="vertical"
-			android:scrollbarStyle="outsideOverlay"
-			android:layout_weight="1" />
+			android:cacheColorHint="#00000000" 
+			android:scrollbars="none"/>
+
+		<!-- Here is the view to show if the list is emtpy -->
+		<TextView android:id="@+id/empty_list_for_deployments"
+			android:layout_width="fill_parent" android:layout_height="fill_parent"
+			android:text="@string/empty_deployments" android:textStyle="bold"
+			android:textColor="@drawable/black_color" android:gravity="center_horizontal|center" />
 	</LinearLayout>
 </LinearLayout>

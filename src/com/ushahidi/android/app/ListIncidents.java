@@ -41,6 +41,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
@@ -92,6 +93,7 @@ public class ListIncidents extends Activity {
     private List<IncidentsData> mOldIncidents;
 
     private Vector<String> vectorCategories = new Vector<String>();
+    private TextView emptyListText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,18 +101,15 @@ public class ListIncidents extends Activity {
         setContentView(R.layout.list_incidents);
 
         listIncidents = (PullToRefreshListView)findViewById(R.id.view_incidents);
-        listIncidents.setOnRefreshListener(new OnRefreshListener() {
-            public void onRefresh() {
-                refreshForReports();
-            }
-        });
+        emptyListText = (TextView) findViewById(R.id.empty_list_for_reports);
+        
         mOldIncidents = new ArrayList<IncidentsData>();
         ila = new ListIncidentAdapter(this);
         listIncidents.setOnItemClickListener(new OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> arg0, View view, int positions, long id) {
                 
-                //It seems pull to refresh list is buggy; The list item position item is by 1 higher
+                //It seems pull to refresh list is buggy; The list item position is by 1 higher
                 //TODO Look into fixing this.
                 int position = positions - 1;
                 
@@ -140,7 +139,13 @@ public class ListIncidents extends Activity {
             }
 
         });
-
+        
+        listIncidents.setOnRefreshListener(new OnRefreshListener() {
+            public void onRefresh() {
+                refreshForReports();
+            }
+        });
+        
         spinner = (Spinner)findViewById(R.id.incident_cat);
 
         mHandler.post(mDisplayIncidents);
@@ -148,6 +153,7 @@ public class ListIncidents extends Activity {
         // mark all incidents as read
         UshahidiApplication.mDb.markAllIncidentssRead();
         UshahidiApplication.mDb.markAllCategoriesRead();
+        displayEmptyListText();
 
     }
 
@@ -163,6 +169,16 @@ public class ListIncidents extends Activity {
             UshahidiApplication.mDb.markAllIncidentssRead();
             UshahidiApplication.mDb.markAllCategoriesRead();
         }
+    }
+    
+    public  void displayEmptyListText() {
+
+        if (ila.getCount() == 0) {
+            emptyListText.setVisibility(View.VISIBLE);
+        } else {
+            emptyListText.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -409,7 +425,7 @@ public class ListIncidents extends Activity {
                 thumbnails = media.split(",");
                 // TODO do a proper check for thumbnails
                 if (!TextUtils.isEmpty(thumbnails[0])) {
-                    d = ImageManager.getImages(thumbnails[0]);
+                    d = ImageManager.getImages(UshahidiPref.savePath,thumbnails[0]);
                 } else {
                     d = null;
                 }
@@ -435,6 +451,7 @@ public class ListIncidents extends Activity {
         cursor.close();
         ila.notifyDataSetChanged();
         listIncidents.setAdapter(ila);
+        displayEmptyListText();
     }
 
     public void showCategories() {

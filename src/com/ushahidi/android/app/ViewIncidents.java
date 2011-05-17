@@ -160,14 +160,14 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
 
             thumbnails = media.split(",");
             for (int i = 0; i < thumbnails.length; i++) {
-                thumbnailAdapter.mImageIds.add(ImageManager.getImages(thumbnails[i]));
+                thumbnailAdapter.mImageIds.add(ImageManager.getImages(UshahidiPref.savePath,thumbnails[i]));
             }
 
             images = image.split(",");
 
             for (int i = 0; i < images.length; i++) {
 
-                imageAdapter.mImageIds.add(ImageManager.getImages(images[i]));
+                imageAdapter.mImageIds.add(ImageManager.getImages(UshahidiPref.savePath,images[i]));
             }
 
         } else {

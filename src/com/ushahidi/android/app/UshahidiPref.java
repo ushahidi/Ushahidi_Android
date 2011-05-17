@@ -44,12 +44,19 @@ public class UshahidiPref {
     public static String fileName = "";
 
     public static int isCheckinEnabled = 0;
+    
+    public static int activeDeployment = 0;
+    
+    public static String deploymentLatitude = "0.0";
+    
+    public static String deploymentLongitude = "0.0";
 
     private static SharedPreferences settings;
 
     private static SharedPreferences.Editor editor;
     
     public static String totalReportsFetched = "";
+    
 
     public static void loadSettings(Context context) {
         final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
@@ -68,7 +75,10 @@ public class UshahidiPref {
         AutoFetch = settings.getBoolean("AutoFetch", false);
         totalReports = settings.getString("TotalReports", "20");
         isCheckinEnabled = settings.getInt("CheckinEnabled", isCheckinEnabled);
-
+        activeDeployment = settings.getInt("ActiveDeployment", 0);
+        deploymentLatitude = settings.getString("DeploymentLatitude", "0.0");
+        deploymentLongitude = settings.getString("DeploymentLongitude","0.0");
+        
         // make sure folder exists
         final File dir = new File(UshahidiPref.savePath);
         dir.mkdirs();
@@ -78,7 +88,11 @@ public class UshahidiPref {
     public static void saveSettings(Context context) {
         settings = context.getSharedPreferences(PREFS_NAME, 0);
         editor = settings.edit();
+        editor.putString("Domain", domain);
         editor.putInt("CheckinEnabled", isCheckinEnabled);
+        editor.putInt("ActiveDeployment", activeDeployment);
+        editor.putString("DeploymentLatitude", deploymentLatitude);
+        editor.putString("DeploymentLongitude", deploymentLongitude);
         editor.commit();
     }
 }

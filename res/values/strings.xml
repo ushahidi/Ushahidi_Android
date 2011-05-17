@@ -208,6 +208,8 @@
     <string name="search_label">Search</string>
      <!-- The hint text that appears in the search box. -->
     <string name="search_hint">Search for a deployment...</string>
+    <string name="deployment_fetched_successful">Deployments successfully fetched</string>
+    <string name="could_not_fetch_data">Couldn\'t fetch new deployments due to network error.</string>
     
     <!-- The description that will show up in the search settings for this source.  -->
     <string name="settings_description">Found deployments</string>
@@ -229,4 +231,16 @@
     <string name="select_distance">Select distance in km</string>
     <!-- photos -->
     <string name="preview_photo">Photo\%\</string>
+    
+    <!-- empty list -->
+    <string name="empty_checkins">No check ins</string>
+    <string name="empty_reports">No reports</string>
+    <string name="empty_deployments">No deployments</string>
+    
+    <!--  clear deployments -->
+    <string name="clear_all">Clear all</string>
+    <string name="confirm_clear">Are you sure you want to clear everything?</string>
+    <string name="items_cleared">Everything was successfully cleared</string>
+    <string name="no_items_cleared">No items to clear</string>
+    <string name="loading">Loading...</string>
 </resources>

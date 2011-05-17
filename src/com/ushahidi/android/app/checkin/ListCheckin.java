@@ -37,6 +37,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.ushahidi.android.app.About;
@@ -46,6 +47,7 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiApplication;
+import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.ui.PullToRefreshListView;
 import com.ushahidi.android.app.ui.PullToRefreshListView.OnRefreshListener;
@@ -89,6 +91,8 @@ public class ListCheckin extends Activity {
     public static UshahidiDatabase mDb;
 
     private List<Checkin> checkins;
+    
+    private TextView emptyListText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,7 +101,7 @@ public class ListCheckin extends Activity {
         setContentView(R.layout.list_checkins);
 
         listCheckins = (PullToRefreshListView)findViewById(R.id.list_checkins);
-        
+        emptyListText = (TextView)findViewById(R.id.empty);
         listCheckins.setOnRefreshListener(new OnRefreshListener() {
             public void onRefresh() {
                 refreshForNewCheckins();
@@ -105,7 +109,7 @@ public class ListCheckin extends Activity {
         });
         checkins = new ArrayList<Checkin>();
         ila = new ListCheckinAdapter(this);
-
+        displayEmptyListText();
         listCheckins.setOnItemClickListener(new OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> arg0, View view, int positions, long id) {
@@ -128,9 +132,20 @@ public class ListCheckin extends Activity {
 
         });
         refreshForNewCheckins();
+        
 
     }
+    
+    public  void displayEmptyListText() {
 
+        if (ila.getCount() == 0) {
+            emptyListText.setVisibility(View.VISIBLE);
+        } else {
+            emptyListText.setVisibility(View.GONE);
+        }
+
+    }
+    
     @Override
     protected void onResume() {
         super.onResume();
@@ -360,7 +375,7 @@ public class ListCheckin extends Activity {
                 checkinsData.setThumbnail(String.valueOf(id));
 
                 if (!TextUtils.isEmpty(checkinsData.getThumbnail())) {
-                    d = ImageManager.getImages(checkinsData.getThumbnail());
+                    d = ImageManager.getImages(UshahidiPref.savePath, checkinsData.getThumbnail());
                 } else {
                     d = null;
                 }
@@ -379,6 +394,7 @@ public class ListCheckin extends Activity {
         cursor.close();
         ila.notifyDataSetChanged();
         listCheckins.setAdapter(ila);
+        displayEmptyListText();
     }
 
     @Override

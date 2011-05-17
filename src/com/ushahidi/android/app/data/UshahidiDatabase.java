@@ -778,6 +778,19 @@ public class UshahidiDatabase {
         return true;
 
     }
+    
+    public boolean clearReports() {
+
+        deleteAllIncidents();
+        deleteAllCategories();
+        deleteUsers();
+        deleteAllCheckins();
+        deleteCheckinMedia();
+        // delete all files
+        Util.rmDir(UshahidiPref.savePath);
+        return true;
+
+    }
 
     public boolean deleteAllIncidents() {
         return mDb.delete(INCIDENTS_TABLE, null, null) > 0;

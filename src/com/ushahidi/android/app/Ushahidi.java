@@ -227,7 +227,7 @@ public class Ushahidi extends DashboardActivity {
                 dialog.setButton2("Ok", new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent launchPreferencesIntent = new Intent().setClass(Ushahidi.this,
-                                Settings.class);
+                                DeploymentSearch.class);
 
                         // Make it a subactivity so we know when it returns
                         startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);
@@ -418,7 +418,7 @@ public class Ushahidi extends DashboardActivity {
             refreshState = true;
             updateRefreshStatus();
             this.dialog = ProgressDialog.show(appContext, getString(R.string.please_wait),
-                    getString(R.string.fetching_new_reports), true);
+                    getString(R.string.loading), true);
 
         }
 

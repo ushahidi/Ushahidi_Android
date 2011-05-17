@@ -20,6 +20,9 @@
 
 package com.ushahidi.android.app;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -27,9 +30,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -45,10 +50,6 @@ import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.util.Util;
-
-import android.location.Geocoder;
-import java.util.ArrayList;
-import java.util.List;
 
 public class IncidentMap extends MapActivity {
     private MapView mapView = null;
@@ -107,7 +108,7 @@ public class IncidentMap extends MapActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.incidents_map);
         mapView = (MapView)findViewById(R.id.map);
-
+        UshahidiPref.loadSettings(this);
         mOldIncidents = new ArrayList<IncidentsData>();
         mNewIncidents = new ArrayList<IncidentsData>();
 
@@ -127,13 +128,28 @@ public class IncidentMap extends MapActivity {
 
         if (mNewIncidents.size() > 0) {
             if (id > 0) {
-                IncidentMap.latitude = Double.parseDouble(reportLatitude);
-                IncidentMap.longitude = Double.parseDouble(reportLongitude);
+                if (!TextUtils.isEmpty(UshahidiPref.deploymentLatitude)
+                        && !TextUtils.isEmpty(UshahidiPref.deploymentLatitude)) {
+                    IncidentMap.latitude = Double.parseDouble(UshahidiPref.deploymentLatitude);
+                    IncidentMap.longitude = Double.parseDouble(UshahidiPref.deploymentLongitude);
+                    
+                } else {
+                    IncidentMap.latitude = Double.parseDouble(reportLatitude);
+                    IncidentMap.longitude = Double.parseDouble(reportLongitude);
+                    
+                }
             } else {
-                IncidentMap.latitude = Double.parseDouble(mNewIncidents.get(0)
-                        .getIncidentLocLatitude());
-                IncidentMap.longitude = Double.parseDouble(mNewIncidents.get(0)
-                        .getIncidentLocLongitude());
+                if (!TextUtils.isEmpty(UshahidiPref.deploymentLatitude)
+                        && !TextUtils.isEmpty(UshahidiPref.deploymentLatitude)) {
+                    IncidentMap.latitude = Double.parseDouble(UshahidiPref.deploymentLatitude);
+                    IncidentMap.longitude = Double.parseDouble(UshahidiPref.deploymentLongitude);
+                    
+                } else {
+                    IncidentMap.latitude = Double.parseDouble(mNewIncidents.get(0)
+                            .getIncidentLocLatitude());
+                    IncidentMap.longitude = Double.parseDouble(mNewIncidents.get(0)
+                            .getIncidentLocLongitude());
+                }
 
             }
 
@@ -152,7 +168,6 @@ public class IncidentMap extends MapActivity {
         }
 
     }
-    
 
     /**
      * add marker to the map

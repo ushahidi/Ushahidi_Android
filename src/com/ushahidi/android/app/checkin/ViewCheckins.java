@@ -115,7 +115,7 @@ public class ViewCheckins extends MapActivity {
         if (!TextUtils.isEmpty(fileName)) {
             photoLayout.setVisibility(View.VISIBLE);
             photo.setVisibility(View.VISIBLE);
-            image.setImageDrawable(ImageManager.getImages(fileName));
+            image.setImageDrawable(ImageManager.getImages(UshahidiPref.savePath,fileName));
         }
 
         mapController = mapView.getController();
@@ -138,7 +138,7 @@ public class ViewCheckins extends MapActivity {
     }
 
     public void onShareClick(View v) {
-        // TODO: consider bringing in shortlink to session
+        // TODO: Implement URL shortening...
         UshahidiPref.loadSettings(ViewCheckins.this);
         final String reportUrl = UshahidiPref.domain;
         final String shareString = getString(R.string.share_template, name.getText().toString(),

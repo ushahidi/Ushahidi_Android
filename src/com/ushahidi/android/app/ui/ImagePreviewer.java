@@ -80,8 +80,8 @@ public class ImagePreviewer extends DashboardActivity implements
         }
         if (images.length > 0) {
             for (String image : images) {
-                thumbnailAdapter.mImageIds.add(ImageManager.getImages(image));
-                imageAdapter.mImageIds.add(ImageManager.getImages(image));
+                thumbnailAdapter.mImageIds.add(ImageManager.getImages(UshahidiPref.savePath,image));
+                imageAdapter.mImageIds.add(ImageManager.getImages(UshahidiPref.savePath,image));
             }
         }
         mSwitcher.setImageDrawable(imageAdapter.mImageIds.get(ImagePreviewer.photoPosition));

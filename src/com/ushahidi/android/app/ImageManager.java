@@ -40,10 +40,10 @@ import android.graphics.drawable.BitmapDrawable;
 public class ImageManager {
 
     // Images
-    public static Drawable getImages(String fileName) {
+    public static Drawable getImages(String path,String fileName) {
 
         Drawable d = null;
-        BitmapDrawable bD = new BitmapDrawable(UshahidiPref.savePath + fileName);
+        BitmapDrawable bD = new BitmapDrawable(path + fileName);
         d = bD.mutate();
 
         return d;

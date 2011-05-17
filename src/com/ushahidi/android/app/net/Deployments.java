@@ -15,7 +15,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.location.Location;
-import android.util.Log;
 
 import com.ushahidi.android.app.UshahidiApplication;
 import com.ushahidi.android.app.data.DeploymentsData;
@@ -138,7 +137,7 @@ public class Deployments {
                 DeploymentsData deploymentData = new DeploymentsData();
                 try {
 
-                    deploymentData.setId(jsonObject.getJSONObject(names.getString(0)).getString(
+                    deploymentData.setId(jsonObject.getJSONObject(names.getString(i)).getString(
                             "id"));
                     deploymentData.setDate(jsonObject.getJSONObject(names.getString(i)).getString(
                             "discovery_date"));
