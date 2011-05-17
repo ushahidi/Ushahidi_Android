@@ -24,16 +24,20 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class About extends DashboardActivity {
 
     private Button urlBtn;
+
+    private TextView version;
 
     private static final String URL = "http://www.ushahidi.com";
 
@@ -47,6 +51,7 @@ public class About extends DashboardActivity {
 
     private static final int DIALOG_ERROR = 0;
 
+    private String versionName = "";
 
     private String dialogErrorMsg = "An error occurred fetching the reports. "
             + "Make sure you have entered an Ushahidi instance.";
@@ -58,6 +63,14 @@ public class About extends DashboardActivity {
         setContentView(R.layout.about);
         setTitleFromActivityLabel(R.id.title_text);
         urlBtn = (Button)findViewById(R.id.view_website);
+        version = (TextView)findViewById(R.id.version);
+
+        try {
+            versionName = getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        version.setText("v"+versionName);
         // Dipo Fix
         final Intent i = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(URL));
 
@@ -101,7 +114,7 @@ public class About extends DashboardActivity {
                 intent = new Intent(About.this, Ushahidi.class);
                 startActivityForResult(intent, GOTOHOME);
                 return true;
-                
+
             case SETTINGS:
                 intent = new Intent(About.this, Settings.class);
 
