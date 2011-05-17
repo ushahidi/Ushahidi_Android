@@ -25,7 +25,7 @@ then
     sed "s/android:versionCode=\"[0-9]*\"/android:versionCode=\"${INCREMENTED}\"/" $FULLPATH > $FULLPATH.tmp && mv $FULLPATH.tmp $FULLPATH
     echo "Updated android:versionCode to ${INCREMENTED} in ${FULLPATH}";
 
-	LINE_VERSION_NAME=$(grep -o ${FULLPATH} -e 'android:versionName="[0-9]*"');
+	LINE_VERSION_NAME=$(grep -o ${FULLPATH} -e 'android:versionName="2.0"');
     declare -a LINE_VERSION_NAME;
     LINE_VERSION_NAME=(`echo $LINE_VERSION_NAME | tr "\"" " "`);
     VERSION_NAME=(${LINE_VERSION_NAME[1]});
