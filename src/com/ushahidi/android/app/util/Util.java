@@ -379,17 +379,16 @@ public class Util {
      * @param String - URL to be validated.
      * @return boolean
      */
-    public static boolean validateUshahidiInstance(String ushahidiUrl) {
+    public static boolean validateUshahidiInstance(String ushahidiUrl) throws IOException {
         // make an http get request to a dummy api call
         // TODO improve on how to do this
         boolean status = false;
         try {
-            URL url = new URL(ushahidiUrl);
+            new URL(ushahidiUrl);
             status = true;
         } catch (MalformedURLException e) {
             status = false;
-        } catch (IOException e) {
-            status = true;
+        } finally {
         }
 
         return status;

@@ -328,6 +328,7 @@ public class DeploymentSearch extends DashboardActivity {
         }
         cursor.close();
         UshahidiPref.saveSettings(this);
+        UshahidiPref.loadSettings(this);
 
     }
 
@@ -341,6 +342,7 @@ public class DeploymentSearch extends DashboardActivity {
             }
 
             UshahidiPref.saveSettings(DeploymentSearch.this);
+            
         }
     };
 

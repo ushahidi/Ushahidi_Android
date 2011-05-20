@@ -9,7 +9,7 @@
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.ushahidi.android.app" android:versionCode="9"
+	package="com.ushahidi.android.app" android:versionCode="10"
 	android:versionName="2.0">
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.VIBRATE" />
@@ -191,7 +191,7 @@
 		<!-- Search dialog -->
 		<!-- The default activity of the app. Can also display search results. -->
 		<activity android:name=".DeploymentSearch" android:theme="@style/Theme.D1"
-			android:label="@string/search_label">
+			android:configChanges="orientation|keyboardHidden" android:label="@string/search_label">
 
 			<!-- Receives the search request. -->
 			<intent-filter>

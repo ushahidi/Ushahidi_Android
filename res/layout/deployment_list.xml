@@ -28,7 +28,7 @@
 		android:layout_toLeftOf="@+id/deployment_arrow"
 		android:layout_alignParentLeft="true"
 		android:focusable="false"
-		android:visibility="visible"
+		android:visibility="gone"
 		android:textColor="@drawable/date_color" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:layout_below="@+id/deployment_list_url" />
 

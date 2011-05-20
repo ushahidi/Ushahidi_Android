@@ -66,7 +66,7 @@ public class UshahidiPref {
 
         savePath = settings.getString("savePath", path);
 
-        domain = settings.getString("Domain", "");
+        domain = settings.getString("Domain", UshahidiPref.domain);
         firstname = settings.getString("Firstname", "");
         lastname = settings.getString("Lastname", "");
         email = settings.getString("Email", "");
