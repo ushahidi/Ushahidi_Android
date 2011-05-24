@@ -243,4 +243,9 @@
     <string name="items_cleared">Everything was successfully cleared</string>
     <string name="no_items_cleared">No items to clear</string>
     <string name="loading">Loading...</string>
+    <string name="deploymet_url">Deployment URL</string>
+    <string name="add_deployment">Add Deployment</string>
+    <string name="delete">Delete</string>
+    <string name="deployment_deleted">Deployment deleted</string>
+    <string name="deployment_deleted_failed">Failed to delete</string>
 </resources>

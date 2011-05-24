@@ -15,6 +15,11 @@
 
 		<ProgressBar style="@style/TitleBarProgressIndicator"
 			android:id="@+id/title_refresh_progress" android:visibility="gone" />
+	    <ImageView style="@style/ActionBarTitleSeparator" />
+        <ImageButton style="@style/ActionBarTitle"
+            android:id="@+id/search_report_btn"
+            android:src="@drawable/ic_title_search"
+            android:onClick="onAddDeployment"/>
 	</LinearLayout>
 	<ImageView style="@style/ActionBarSeparator" />
 	<EditText android:id="@+id/search_deployment"

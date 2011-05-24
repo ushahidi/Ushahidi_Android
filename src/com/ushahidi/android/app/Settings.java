@@ -22,8 +22,6 @@ package com.ushahidi.android.app;
 
 import java.io.IOException;
 
-import com.ushahidi.android.app.util.Util;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -41,7 +39,8 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.text.InputType;
-import android.util.Log;
+
+import com.ushahidi.android.app.util.Util;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
     private EditTextPreference ushahidiInstancePref;
@@ -131,15 +130,13 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         PreferenceCategory basicPrefCat = new PreferenceCategory(this);
         basicPrefCat.setTitle(R.string.basic_settings);
         root.addPreference(basicPrefCat);
-        Log.d("Settings","Domain"+UshahidiPref.domain);
-        // URL entry field
+        
         ushahidiInstancePref.setDialogTitle(R.string.txt_domain);
         ushahidiInstancePref.setKey("ushahidi_instance_preference");
         ushahidiInstancePref.setTitle(R.string.txt_domain);
         ushahidiInstancePref.setDefaultValue(UshahidiPref.domain);
         ushahidiInstancePref.setSummary(R.string.hint_domain);
         ushahidiInstancePref.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_URI);
-        UshahidiPref.loadSettings(Settings.this);
         ushahidiInstancePref.setText(UshahidiPref.domain);
         basicPrefCat.addPreference(ushahidiInstancePref);
 
@@ -277,10 +274,13 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         String saveItems = saveItemsPref.getValue();
         String totalReports = totalReportsPref.getValue();
         String newSavePath;
+        
         int autoUdateDelay = 0;
+        
         if(!ushahidiInstancePref.getText().toString().trim().equals("")) {
             UshahidiPref.domain = ushahidiInstancePref.getText().toString().trim();
         }
+        
         // "5 Minutes", "10 Minutes", "15 Minutes", "c", "60 Minutes"
         if (autoUpdate.matches("5")) {
             autoUdateDelay = 5;

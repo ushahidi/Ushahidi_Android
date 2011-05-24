@@ -203,8 +203,11 @@ public class UshahidiDatabase {
     public static final String DEPLOYMENT_LONGITUDE = "longitude";
 
     public static final String DEPLOYMENT_DATE = "discovery_date";
-    
-    public static final String DEPLOYMENT_ACTIVE = "deployment_active"; // 1 4 active, 0 4 inactive
+
+    public static final String DEPLOYMENT_ACTIVE = "deployment_active"; // 1 4
+                                                                        // active,
+                                                                        // 0 4
+                                                                        // inactive
 
     public static final String[] INCIDENTS_COLUMNS = new String[] {
             INCIDENT_ID, INCIDENT_TITLE, INCIDENT_DESC, INCIDENT_DATE, INCIDENT_MODE,
@@ -246,8 +249,7 @@ public class UshahidiDatabase {
     // Deployments
     public static final String[] DEPLOYMENT_COLUMNS = new String[] {
             DEPLOYMENT_ID, DEPLOYMENT_NAME, DEPLOYMENT_URL, DEPLOYMENT_DESC, DEPLOYMENT_CAT_ID,
-            DEPLOYMENT_ACTIVE,
-            DEPLOYMENT_LATITUDE, DEPLOYMENT_LONGITUDE, DEPLOYMENT_DATE
+            DEPLOYMENT_ACTIVE, DEPLOYMENT_LATITUDE, DEPLOYMENT_LONGITUDE, DEPLOYMENT_DATE
     };
 
     private DatabaseHelper mDbHelper;
@@ -319,11 +321,10 @@ public class UshahidiDatabase {
     private static final String DEPLOYMENT_TABLE_CREATE = "CREATE VIRTUAL TABLE "
             + DEPLOYMENT_TABLE + " USING fts3(" + DEPLOYMENT_ID
             + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + DEPLOYMENT_CAT_ID + " INTEGER, "
-            + DEPLOYMENT_ACTIVE + " INTEGER, "
-            + DEPLOYMENT_NAME + " TEXT NOT NULL, " + DEPLOYMENT_DATE + " DATE NOT NULL, "
-            + DEPLOYMENT_DESC + " TEXT NOT NULL, " + DEPLOYMENT_URL + " TEXT NOT NULL, "
-            + DEPLOYMENT_LATITUDE + " TEXT NOT NULL, " + DEPLOYMENT_LONGITUDE + " TEXT NOT NULL"
-            + ")";
+            + DEPLOYMENT_ACTIVE + " INTEGER, " + DEPLOYMENT_NAME + " TEXT NOT NULL, "
+            + DEPLOYMENT_DATE + " DATE NOT NULL, " + DEPLOYMENT_DESC + " TEXT NOT NULL, "
+            + DEPLOYMENT_URL + " TEXT NOT NULL, " + DEPLOYMENT_LATITUDE + " TEXT NOT NULL, "
+            + DEPLOYMENT_LONGITUDE + " TEXT NOT NULL" + ")";
 
     private final Context mContext;
 
@@ -341,8 +342,7 @@ public class UshahidiDatabase {
             db.execSQL(CHECKINS_MEDIA_TABLE_CREATE);
             db.execSQL(USERS_TABLE_CREATE);
             db.execSQL(DEPLOYMENT_TABLE_CREATE);
-            
-           
+
         }
 
         @Override
@@ -425,7 +425,7 @@ public class UshahidiDatabase {
             db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s", USERS_TABLE,
                     usersCols, usersCols, USERS_TABLE));
             db.execSQL("DROP TABLE IF EXISTS temp_" + USERS_TABLE);
-            
+
             // upgrade deployment table
             db.execSQL(DEPLOYMENT_TABLE_CREATE);
             deploymentColumns = UshahidiDatabase.getColumns(db, DEPLOYMENT_TABLE);
@@ -433,8 +433,8 @@ public class UshahidiDatabase {
             db.execSQL(DEPLOYMENT_TABLE_CREATE);
             deploymentColumns.retainAll(UshahidiDatabase.getColumns(db, DEPLOYMENT_TABLE));
             String deploymentCols = UshahidiDatabase.join(deploymentColumns, ",");
-            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s", DEPLOYMENT_TABLE,
-                    deploymentCols, deploymentCols, DEPLOYMENT_TABLE));
+            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s",
+                    DEPLOYMENT_TABLE, deploymentCols, deploymentCols, DEPLOYMENT_TABLE));
             db.execSQL("DROP TABLE IF EXISTS temp_" + DEPLOYMENT_TABLE);
 
             onCreate(db);
@@ -586,10 +586,10 @@ public class UshahidiDatabase {
         initialValues.put(MEDIA_MEDIUM_LINK, checkinMedia.getMediumLink());
         return mDb.insert(CHECKINS_MEDIA_TABLE, null, initialValues);
     }
-    
+
     public long createDeployment(DeploymentsData deployment) {
         ContentValues initialValues = new ContentValues();
-        
+
         initialValues.put(DEPLOYMENT_ID, deployment.getId());
         initialValues.put(DEPLOYMENT_CAT_ID, deployment.getCatId());
         initialValues.put(DEPLOYMENT_DESC, deployment.getDesc());
@@ -599,6 +599,19 @@ public class UshahidiDatabase {
         initialValues.put(DEPLOYMENT_URL, deployment.getUrl());
         initialValues.put(DEPLOYMENT_LATITUDE, deployment.getLat());
         initialValues.put(DEPLOYMENT_LONGITUDE, deployment.getLon());
+        return mDb.insert(DEPLOYMENT_TABLE, null, initialValues);
+    }
+
+    public long createAddDeployment(String name, String url) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(DEPLOYMENT_ID, 0);
+        initialValues.put(DEPLOYMENT_CAT_ID, 0);
+        initialValues.put(DEPLOYMENT_NAME, name);
+        initialValues.put(DEPLOYMENT_DESC, name);
+        initialValues.put(DEPLOYMENT_URL, url);
+        initialValues.put(DEPLOYMENT_DATE, "datetime()");
+        initialValues.put(DEPLOYMENT_LATITUDE, "0.0");
+        initialValues.put(DEPLOYMENT_LONGITUDE, "0.0");
         return mDb.insert(DEPLOYMENT_TABLE, null, initialValues);
     }
 
@@ -644,50 +657,58 @@ public class UshahidiDatabase {
         return mDb.query(CHECKINS_TABLE, CHECKINS_COLUMNS, null, null, null, null, CHECKIN_DATE
                 + " DESC");
     }
-    
+
     public Cursor fetchAllDeployments() {
-        return mDb.query(DEPLOYMENT_TABLE, DEPLOYMENT_COLUMNS, null, null, null, null, DEPLOYMENT_DATE
-                + " DESC");
+        return mDb.query(DEPLOYMENT_TABLE, DEPLOYMENT_COLUMNS, null, null, null, null,
+                DEPLOYMENT_DATE + " DESC");
     }
-    
+
     public Cursor getDeploymentMatches(String query, String[] columns) {
-        String selection = DEPLOYMENT_NAME+" MATCH ?";
-        String[] selectionArgs = new String[] {query+"*"};
+        String selection = DEPLOYMENT_NAME + " MATCH ?";
+        String[] selectionArgs = new String[] {
+            query + "*"
+        };
 
         return query(selection, selectionArgs, columns);
 
-        /* This builds a query that looks like:
-         *     SELECT <columns> FROM <table> WHERE deployment_name = <deployment_name>
+        /*
+         * This builds a query that looks like: SELECT <columns> FROM <table>
+         * WHERE deployment_name = <deployment_name>
          */
     }
-    
+
     /**
      * Returns a Cursor positioned at the word specified by rowId
-     *
+     * 
      * @param rowId id of deployment to retrieve
      * @param columns The columns to include, if null then all are included
      * @return Cursor positioned to matching deployment, or null if not found.
      */
     public Cursor getDeployment(String rowId, String[] columns) {
         String selection = "rowid = ?";
-        String[] selectionArgs = new String[] {rowId};
+        String[] selectionArgs = new String[] {
+            rowId
+        };
 
         return query(selection, selectionArgs, columns);
 
-        /* This builds a query that looks like:
-         *     SELECT <columns> FROM <table> WHERE id = <rowId>
+        /*
+         * This builds a query that looks like: SELECT <columns> FROM <table>
+         * WHERE id = <rowId>
          */
     }
-    
+
     /**
      * Performs a database query.
+     * 
      * @param selection The selection clause
-     * @param selectionArgs Selection arguments for "?" components in the selection
+     * @param selectionArgs Selection arguments for "?" components in the
+     *            selection
      * @param columns The columns to return
      * @return A Cursor over all rows matching the query
      */
     private Cursor query(String selection, String[] selectionArgs, String[] columns) {
-        HashMap<String,String> mColumnMap = new HashMap<String,String>();
+        HashMap<String, String> mColumnMap = new HashMap<String, String>();
         mColumnMap.put(DEPLOYMENT_ID, DEPLOYMENT_ID);
         mColumnMap.put(DEPLOYMENT_CAT_ID, DEPLOYMENT_CAT_ID);
         mColumnMap.put(DEPLOYMENT_DESC, DEPLOYMENT_DESC);
@@ -696,22 +717,23 @@ public class UshahidiDatabase {
         mColumnMap.put(DEPLOYMENT_URL, DEPLOYMENT_URL);
         mColumnMap.put(DEPLOYMENT_LATITUDE, DEPLOYMENT_LATITUDE);
         mColumnMap.put(DEPLOYMENT_LONGITUDE, DEPLOYMENT_LONGITUDE);
-        mColumnMap.put(BaseColumns._ID, "rowid AS " +
-                BaseColumns._ID);
-        mColumnMap.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, "rowid AS " +
-                SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID);
-        mColumnMap.put(SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, "rowid AS " +
-                SearchManager.SUGGEST_COLUMN_SHORTCUT_ID);
-        /* The SQLiteBuilder provides a map for all possible columns requested to
-         * actual columns in the database, creating a simple column alias mechanism
-         * by which the ContentProvider does not need to know the real column names
+        mColumnMap.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
+        mColumnMap.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, "rowid AS "
+                + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID);
+        mColumnMap.put(SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, "rowid AS "
+                + SearchManager.SUGGEST_COLUMN_SHORTCUT_ID);
+        /*
+         * The SQLiteBuilder provides a map for all possible columns requested
+         * to actual columns in the database, creating a simple column alias
+         * mechanism by which the ContentProvider does not need to know the real
+         * column names
          */
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(DEPLOYMENT_TABLE);
         builder.setProjectionMap(mColumnMap);
 
-        Cursor cursor = builder.query(mDbHelper.getReadableDatabase(),
-                columns, selection, selectionArgs, null, null, null);
+        Cursor cursor = builder.query(mDbHelper.getReadableDatabase(), columns, selection,
+                selectionArgs, null, null, null);
 
         if (cursor == null) {
             return null;
@@ -722,7 +744,6 @@ public class UshahidiDatabase {
         return cursor;
     }
 
-    
     public Cursor fetchDeploymentById(String id) {
         String sql = "SELECT * FROM " + DEPLOYMENT_TABLE + " WHERE " + DEPLOYMENT_ID
                 + " = ? ORDER BY " + DEPLOYMENT_NAME + " COLLATE NOCASE";
@@ -730,11 +751,13 @@ public class UshahidiDatabase {
             id
         });
     }
-    
+
     public Cursor fetchDeploymentUrlById(String id) {
-        String sql = "SELECT "+DEPLOYMENT_URL+" FROM "+DEPLOYMENT_TABLE+" WHERE "+DEPLOYMENT_ID+ 
-        " = ? ";
-        return mDb.rawQuery(sql, new String[]{id});
+        String sql = "SELECT " + DEPLOYMENT_URL + " FROM " + DEPLOYMENT_TABLE + " WHERE "
+                + DEPLOYMENT_ID + " = ? ";
+        return mDb.rawQuery(sql, new String[] {
+            id
+        });
     }
 
     public Cursor fetchCheckinsByUserdId(String id) {
@@ -778,7 +801,7 @@ public class UshahidiDatabase {
         return true;
 
     }
-    
+
     public boolean clearReports() {
 
         deleteAllIncidents();
@@ -815,11 +838,11 @@ public class UshahidiDatabase {
     public boolean deleteCheckinMedia() {
         return mDb.delete(CHECKINS_MEDIA_TABLE, null, null) > 0;
     }
-    
+
     public boolean deleteDeployment() {
         return mDb.delete(DEPLOYMENT_TABLE, null, null) > 0;
     }
-    
+
     public boolean deleteDeployment(int id) {
         return mDb.delete(DEPLOYMENT_TABLE, DEPLOYMENT_ID + "=" + id, null) > 0;
     }
@@ -936,7 +959,7 @@ public class UshahidiDatabase {
             for (IncidentsData incident : incidents) {
                 createIncidents(incident, isUnread);
             }
-           
+
             limitRows(INCIDENTS_TABLE, Integer.parseInt(UshahidiPref.totalReports), INCIDENT_ID);
             mDb.setTransactionSuccessful();
         } finally {
@@ -1022,7 +1045,7 @@ public class UshahidiDatabase {
             mDb.endTransaction();
         }
     }
-    
+
     /**
      * Add new deployments to table
      * 
@@ -1041,21 +1064,41 @@ public class UshahidiDatabase {
             mDb.endTransaction();
         }
     }
-    
-    public void updateDeployment(String id ) {
-        String sql = "UPDATE "+DEPLOYMENT_TABLE+" SET "+DEPLOYMENT_ACTIVE+"= ? WHERE "+DEPLOYMENT_ID+"= ?";
-        
-        mDb.rawQuery(sql, new String[]{"1",id});
-    }
-    
+
     /**
-     * Limit number of records to retrieve. 
+     * Add new deployments to table
+     * 
+     * @param deployments
+     */
+    public void addDeployment(String name, String url) {
+        try {
+            mDb.beginTransaction();
+            createAddDeployment(name, url);
+
+            mDb.setTransactionSuccessful();
+        } finally {
+            mDb.endTransaction();
+        }
+    }
+
+    public void updateDeployment(String id) {
+        String sql = "UPDATE " + DEPLOYMENT_TABLE + " SET " + DEPLOYMENT_ACTIVE + "= ? WHERE "
+                + DEPLOYMENT_ID + "= ?";
+
+        mDb.rawQuery(sql, new String[] {
+                "1", id
+        });
+    }
+
+    /**
+     * Limit number of records to retrieve.
+     * 
      * @param tablename
      * @param limit
      * @param KEY_ID
      * @return
      */
-    
+
     public int limitRows(String tablename, int limit, String KEY_ID) {
         Cursor cursor = mDb.rawQuery("SELECT " + KEY_ID + " FROM " + tablename + " ORDER BY "
                 + KEY_ID + " DESC LIMIT 1 OFFSET ?", new String[] {

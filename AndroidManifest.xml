@@ -9,7 +9,7 @@
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.ushahidi.android.app" android:versionCode="10"
+	package="com.ushahidi.android.app" android:versionCode="11"
 	android:versionName="2.0">
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.VIBRATE" />
@@ -52,7 +52,8 @@
 
 		<!-- Incidents List -->
 		<activity android:name=".ListIncidents" android:theme="@style/Theme.D1"
-			android:configChanges="orientation|keyboardHidden" android:label="@string/view_incident">
+			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+			android:label="@string/view_incident">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT"></category>
@@ -68,7 +69,8 @@
 		</activity>
 
 		<!-- Incidents Map -->
-		<activity android:name=".IncidentMap" android:configChanges="orientation|keyboardHidden"
+		<activity android:name=".IncidentMap"
+			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
 			android:theme="@style/Theme.D1" android:label="@string/view_incident">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
@@ -78,8 +80,8 @@
 
 		<!-- Checkins Map -->
 		<activity android:name=".checkin.CheckinMap"
-			android:configChanges="orientation|keyboardHidden" android:theme="@style/Theme.D1"
-			android:label="@string/view_checkins">
+			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+			android:theme="@style/Theme.D1" android:label="@string/view_checkins">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT"></category>
@@ -88,8 +90,8 @@
 
 		<!-- List Checkins -->
 		<activity android:name=".checkin.ListCheckin"
-			android:configChanges="orientation|keyboardHidden" android:theme="@style/Theme.D1"
-			android:label="@string/view_checkins">
+			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+			android:theme="@style/Theme.D1" android:label="@string/view_checkins">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT"></category>
@@ -115,7 +117,8 @@
 		</activity>
 
 		<!-- Add a new incidents -->
-		<activity android:configChanges="orientation|keyboardHidden"
+		<activity
+			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
 			android:theme="@style/Theme.D1" android:name=".AddIncident"
 			android:label="@string/add_incident">
 			<intent-filter>
@@ -132,7 +135,8 @@
 			</intent-filter>
 		</activity>
 		<!-- Settings -->
-		<activity android:name=".Settings" android:configChanges="orientation|keyboardHidden"
+		<activity android:name=".Settings"
+			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
 			android:label="@string/app_settings">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
@@ -141,7 +145,8 @@
 		</activity>
 
 		<!-- Image capture -->
-		<activity android:configChanges="orientation|keyboardHidden"
+		<activity
+			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
 			android:name=".ImageCapture" android:label="@string/str_post_photos">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
@@ -157,16 +162,17 @@
 				<category android:name="android.intent.category.DEFAULT"></category>
 			</intent-filter>
 		</activity>
-		
-		<!-- Preview Images  -->
-        <activity android:name=".ui.ImagePreviewer" android:label="@string/preview_photo"
-            android:theme="@style/Theme.D1" android:configChanges="orientation|keyboardHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT"></category>
-            </intent-filter>
-        </activity>
-        
+
+		<!-- Preview Images -->
+		<activity android:name=".ui.ImagePreviewer" android:label="@string/preview_photo"
+			android:theme="@style/Theme.D1"
+			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT"></category>
+			</intent-filter>
+		</activity>
+
 		<!-- About -->
 		<activity android:name=".About" android:label="@string/ushahidi_about"
 			android:theme="@style/Theme.D1">
@@ -176,7 +182,8 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".checkin.CheckinActivity"
-			android:theme="@style/Theme.D1" android:configChanges="orientation|keyboardHidden"
+			android:theme="@style/Theme.D1"
+			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
 			android:label="@string/checkin_btn" />
 
 		<!-- Receiver waits for connectivity change so offline messages can be 
@@ -191,7 +198,8 @@
 		<!-- Search dialog -->
 		<!-- The default activity of the app. Can also display search results. -->
 		<activity android:name=".DeploymentSearch" android:theme="@style/Theme.D1"
-			android:configChanges="orientation|keyboardHidden" android:label="@string/search_label">
+			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+			android:label="@string/search_label">
 
 			<!-- Receives the search request. -->
 			<intent-filter>

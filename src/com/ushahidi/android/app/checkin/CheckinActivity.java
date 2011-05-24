@@ -297,7 +297,7 @@ public class CheckinActivity extends MapActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        setDeviceLocation();
+        
     }
 
     @Override
@@ -309,7 +309,7 @@ public class CheckinActivity extends MapActivity {
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         super.onStop();
         manager.removeUpdates(new DeviceLocationListener());
         manager = null;

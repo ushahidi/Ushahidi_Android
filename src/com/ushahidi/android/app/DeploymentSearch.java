@@ -8,16 +8,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -28,7 +36,10 @@ import com.ushahidi.android.app.net.Deployments;
 import com.ushahidi.android.app.util.DeviceCurrentLocation;
 import com.ushahidi.android.app.util.Util;
 
-public class DeploymentSearch extends DashboardActivity {
+public class DeploymentSearch extends DashboardActivity implements LocationListener {
+    
+    private int deploymentId = 0;
+    
     private TextView mTextView;
 
     private TextView mEmptyList;
@@ -43,9 +54,22 @@ public class DeploymentSearch extends DashboardActivity {
 
     private static final int DIALOG_CLEAR_DEPLOYMENT = 1;
 
+    private static final int DIALOG_ADD_DEPLOYMENT = 2;
+
     private boolean refreshState = false;
 
     private boolean checkin = false;
+
+    private LocationManager mLocationMgr = null;
+
+    private static Location location;
+
+    private static final String CLASS_TAG = DeviceCurrentLocation.class.getCanonicalName();
+    
+ // Context menu items
+    private static final int DELETE = Menu.FIRST + 1;
+    
+    private Handler mHandler;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +79,9 @@ public class DeploymentSearch extends DashboardActivity {
         mTextView = (TextView)findViewById(R.id.search_deployment);
         mListView = (ListView)findViewById(R.id.deployment_list);
         mEmptyList = (TextView)findViewById(R.id.empty_list_for_deployments);
-
+        registerForContextMenu(mListView);
+        mHandler = new Handler();
+        setDeviceLocation();
         showResults();
         mTextView.addTextChangedListener(new TextWatcher() {
 
@@ -97,7 +123,7 @@ public class DeploymentSearch extends DashboardActivity {
                 } else {
                     showResults();
                 }
-
+                cursor.close();
             }
 
         });
@@ -120,7 +146,55 @@ public class DeploymentSearch extends DashboardActivity {
         });
 
     }
+    
+    // menu stuff
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.add(Menu.NONE, DELETE, Menu.NONE, R.string.delete);
+    }
+    
+    public boolean onContextItemSelected(MenuItem item) {
 
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item
+                .getMenuInfo();
+        deploymentId = (int)info.id;  
+
+        switch (item.getItemId()) {
+            // context menu selected
+            case DELETE:
+                // Delete by ID
+                mHandler.post(mDeleteDeploymentById);
+                return (true);
+        }
+        return true;
+    }
+    
+    /**
+     * Delete individual messages 0 - Successfully deleted. 1 - There is nothing
+     * to be deleted.
+     */
+    final Runnable mDeleteDeploymentById = new Runnable() {
+        public void run() {
+            boolean result = false;
+
+            int deleted = 0;
+            result = UshahidiApplication.mDb.deleteDeployment(deploymentId);
+            
+            try {
+                if (result) {
+                    Util.showToast(DeploymentSearch.this, R.string.deployment_deleted);
+                    showResults();
+                    displayEmptyListText();
+
+                } else {
+                    Util.showToast(DeploymentSearch.this, R.string.deployment_deleted_failed);
+                }
+            } catch (Exception e) {
+                return;
+            }
+        }
+    };
+    
     private void updateRefreshStatus() {
         findViewById(R.id.refresh_report_btn)
                 .setVisibility(refreshState ? View.GONE : View.VISIBLE);
@@ -162,12 +236,27 @@ public class DeploymentSearch extends DashboardActivity {
         super.onStart();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopLocating();
+    }
+
     public void clearAll() {
         if (mListView.getCount() == 0) {
             Util.showToast(this, R.string.no_items_cleared);
         } else {
             UshahidiApplication.mDb.deleteDeployment();
+            UshahidiApplication.mDb.clearData();
             showResults();
+
+            // clear the stuff that has been initialized in the
+            // sharedpreferences.
+            UshahidiPref.activeDeployment = 0;
+            UshahidiPref.domain = "";
+            UshahidiPref.deploymentLatitude = "0.0";
+            UshahidiPref.deploymentLongitude = "0.0";
+            UshahidiPref.saveSettings(this);
             Util.showToast(this, R.string.items_cleared);
         }
     }
@@ -218,9 +307,9 @@ public class DeploymentSearch extends DashboardActivity {
                     R.layout.deployment_list, cursor, from, to);
             mListView.setAdapter(deployments);
             displayEmptyListText();
-
+            // deployments.getCursor().close();
         }
-
+        startManagingCursor(cursor);
     }
 
     /**
@@ -234,11 +323,10 @@ public class DeploymentSearch extends DashboardActivity {
                 builder.setTitle("Select distance in km");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        new DeviceCurrentLocation(DeploymentSearch.this);
 
                         RefreshDeploymentTask deploymentTask = new RefreshDeploymentTask();
                         deploymentTask.appContext = DeploymentSearch.this;
-                        deploymentTask.location = DeviceCurrentLocation.getLocation();
+                        deploymentTask.location = location;
                         deploymentTask.distance = items[item];
                         deploymentTask.execute();
 
@@ -268,8 +356,41 @@ public class DeploymentSearch extends DashboardActivity {
                                 });
                 AlertDialog clearDialog = clearBuilder.create();
                 clearDialog.show();
+
                 break;
 
+            case DIALOG_ADD_DEPLOYMENT:
+                LayoutInflater factory = LayoutInflater.from(this);
+                final View textEntryView = factory.inflate(R.layout.add_deployment, null);
+                final EditText deploymentName = (EditText)textEntryView
+                        .findViewById(R.id.deployment_description_edit);
+
+                final EditText deploymentUrl = (EditText)textEntryView
+                        .findViewById(R.id.deployment_url_edit);
+
+                final AlertDialog.Builder addBuilder = new AlertDialog.Builder(this);
+
+                addBuilder
+                        .setTitle(R.string.add_deployment)
+                        .setView(textEntryView)
+                        .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                
+                                UshahidiApplication.mDb.addDeployment(deploymentUrl.getText()
+                                        .toString(), deploymentName.getText().toString());
+                                showResults();
+                            }
+                        })
+                        .setNegativeButton(R.string.btn_cancel,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog deploymentDialog = addBuilder.create();
+                deploymentDialog.show();
+                break;
         }
 
     }
@@ -280,6 +401,10 @@ public class DeploymentSearch extends DashboardActivity {
     @Override
     public void onRefreshReports(View v) {
         createDialog(DIALOG_DISTANCE);
+    }
+
+    public void onAddDeployment(View v) {
+        createDialog(DIALOG_ADD_DEPLOYMENT);
     }
 
     public void goToReports() {
@@ -308,7 +433,7 @@ public class DeploymentSearch extends DashboardActivity {
         String url = "";
         String latitude;
         String longitude;
-        
+
         if (cursor.moveToFirst()) {
             int urlIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.DEPLOYMENT_URL);
             int latitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.DEPLOYMENT_LATITUDE);
@@ -342,7 +467,7 @@ public class DeploymentSearch extends DashboardActivity {
             }
 
             UshahidiPref.saveSettings(DeploymentSearch.this);
-            
+
         }
     };
 
@@ -458,6 +583,83 @@ public class DeploymentSearch extends DashboardActivity {
             this.dialog.cancel();
 
         }
+
+    }
+
+    /** Location stuff **/
+    // Fetches the current location of the device.
+    public void setDeviceLocation() {
+
+        mLocationMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+        long updateTimeMsec = 30 * 1000;
+        try {
+
+            // get low accuracy provider
+            LocationProvider low = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
+                    Util.createCoarseCriteria(), true));
+
+            // get high accuracy provider
+            LocationProvider high = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
+                    Util.createFineCriteria(), true));
+
+            mLocationMgr.requestLocationUpdates(low.getName(), updateTimeMsec, 0, this);
+
+            mLocationMgr.requestLocationUpdates(high.getName(), updateTimeMsec, 0, this);
+
+        } catch (Exception ex1) {
+            try {
+
+                if (mLocationMgr != null) {
+                    mLocationMgr.removeUpdates(this);
+                    mLocationMgr = null;
+                }
+            } catch (Exception ex2) {
+                Log.d(CLASS_TAG, ex2.getMessage());
+            }
+        }
+
+    }
+
+    public void stopLocating() {
+
+        try {
+
+            try {
+                mLocationMgr.removeUpdates(this);
+            } catch (Exception ex) {
+                Log.d(CLASS_TAG, ex.getMessage());
+            }
+            mLocationMgr = null;
+        } catch (Exception ex) {
+            Log.d(CLASS_TAG, ex.getMessage());
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location loc) {
+        if (loc != null) {
+            location = loc;
+            stopLocating();
+        }
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // TODO Auto-generated method stub
 
     }
 
