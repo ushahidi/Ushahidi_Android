@@ -14,6 +14,7 @@ import android.location.LocationProvider;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.BaseColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -37,9 +38,9 @@ import com.ushahidi.android.app.util.DeviceCurrentLocation;
 import com.ushahidi.android.app.util.Util;
 
 public class DeploymentSearch extends DashboardActivity implements LocationListener {
-    
+
     private int deploymentId = 0;
-    
+
     private TextView mTextView;
 
     private TextView mEmptyList;
@@ -63,12 +64,13 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
     private LocationManager mLocationMgr = null;
 
     private static Location location;
-
+   
+    private String distance = "";
     private static final String CLASS_TAG = DeviceCurrentLocation.class.getCanonicalName();
-    
- // Context menu items
+
+    // Context menu items
     private static final int DELETE = Menu.FIRST + 1;
-    
+
     private Handler mHandler;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +83,6 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
         mEmptyList = (TextView)findViewById(R.id.empty_list_for_deployments);
         registerForContextMenu(mListView);
         mHandler = new Handler();
-        setDeviceLocation();
         showResults();
         mTextView.addTextChangedListener(new TextWatcher() {
 
@@ -101,7 +102,7 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
 
                 // Specify the columns we want to display in the result
                 String[] from = new String[] {
-                        UshahidiDatabase.DEPLOYMENT_ID, UshahidiDatabase.DEPLOYMENT_NAME,
+                        BaseColumns._ID, UshahidiDatabase.DEPLOYMENT_NAME,
                         UshahidiDatabase.DEPLOYMENT_DESC, UshahidiDatabase.DEPLOYMENT_URL
                 };
 
@@ -118,12 +119,13 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
                     SimpleCursorAdapter deployments = new SimpleCursorAdapter(
                             DeploymentSearch.this, R.layout.deployment_search_result, cursor, from,
                             to);
+                    deployments.notifyDataSetChanged();
                     mListView.setAdapter(deployments);
-
+                    startManagingCursor(cursor);
                 } else {
                     showResults();
                 }
-                cursor.close();
+
             }
 
         });
@@ -146,18 +148,18 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
         });
 
     }
-    
+
     // menu stuff
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(Menu.NONE, DELETE, Menu.NONE, R.string.delete);
     }
-    
+
     public boolean onContextItemSelected(MenuItem item) {
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item
                 .getMenuInfo();
-        deploymentId = (int)info.id;  
+        deploymentId = (int)info.id;
 
         switch (item.getItemId()) {
             // context menu selected
@@ -168,7 +170,7 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
         }
         return true;
     }
-    
+
     /**
      * Delete individual messages 0 - Successfully deleted. 1 - There is nothing
      * to be deleted.
@@ -177,9 +179,8 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
         public void run() {
             boolean result = false;
 
-            int deleted = 0;
-            result = UshahidiApplication.mDb.deleteDeployment(deploymentId);
-            
+            result = UshahidiApplication.mDb.deleteDeploymentById(deploymentId);
+
             try {
                 if (result) {
                     Util.showToast(DeploymentSearch.this, R.string.deployment_deleted);
@@ -194,7 +195,7 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
             }
         }
     };
-    
+
     private void updateRefreshStatus() {
         findViewById(R.id.refresh_report_btn)
                 .setVisibility(refreshState ? View.GONE : View.VISIBLE);
@@ -246,7 +247,7 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
         if (mListView.getCount() == 0) {
             Util.showToast(this, R.string.no_items_cleared);
         } else {
-            UshahidiApplication.mDb.deleteDeployment();
+            UshahidiApplication.mDb.deleteAllDeployment();
             UshahidiApplication.mDb.clearData();
             showResults();
 
@@ -284,7 +285,9 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
     private void showResults() {
 
         Cursor cursor = UshahidiApplication.mDb.fetchAllDeployments();
-
+        
+        //clear everything in the list view 
+        
         if (cursor != null) {
             // There are no results
 
@@ -305,11 +308,13 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
             // to the ListView
             SimpleCursorAdapter deployments = new SimpleCursorAdapter(this,
                     R.layout.deployment_list, cursor, from, to);
+            deployments.notifyDataSetChanged();
             mListView.setAdapter(deployments);
             displayEmptyListText();
-            // deployments.getCursor().close();
+
+            startManagingCursor(cursor);
         }
-        startManagingCursor(cursor);
+
     }
 
     /**
@@ -323,13 +328,8 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
                 builder.setTitle("Select distance in km");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-
-                        RefreshDeploymentTask deploymentTask = new RefreshDeploymentTask();
-                        deploymentTask.appContext = DeploymentSearch.this;
-                        deploymentTask.location = location;
-                        deploymentTask.distance = items[item];
-                        deploymentTask.execute();
-
+                        distance = items[item];
+                        setDeviceLocation();
                     }
                 });
 
@@ -346,6 +346,7 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         clearAll();
+                                        showResults();
                                     }
                                 })
                         .setNegativeButton(getString(R.string.status_no),
@@ -375,7 +376,7 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
                         .setView(textEntryView)
                         .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                
+
                                 UshahidiApplication.mDb.addDeployment(deploymentUrl.getText()
                                         .toString(), deploymentName.getText().toString());
                                 showResults();
@@ -433,27 +434,29 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
         String url = "";
         String latitude;
         String longitude;
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int urlIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.DEPLOYMENT_URL);
+                int latitudeIndex = cursor
+                        .getColumnIndexOrThrow(UshahidiDatabase.DEPLOYMENT_LATITUDE);
+                int longitudeIndex = cursor
+                        .getColumnIndexOrThrow(UshahidiDatabase.DEPLOYMENT_LONGITUDE);
 
-        if (cursor.moveToFirst()) {
-            int urlIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.DEPLOYMENT_URL);
-            int latitudeIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.DEPLOYMENT_LATITUDE);
-            int longitudeIndex = cursor
-                    .getColumnIndexOrThrow(UshahidiDatabase.DEPLOYMENT_LONGITUDE);
+                do {
+                    url = cursor.getString(urlIndex);
+                    latitude = cursor.getString(latitudeIndex);
+                    longitude = cursor.getString(longitudeIndex);
+                    UshahidiPref.activeDeployment = Util.toInt(id);
+                    UshahidiPref.domain = url;
+                    UshahidiPref.deploymentLatitude = latitude;
+                    UshahidiPref.deploymentLongitude = longitude;
+                } while (cursor.moveToNext());
 
-            do {
-                url = cursor.getString(urlIndex);
-                latitude = cursor.getString(latitudeIndex);
-                longitude = cursor.getString(longitudeIndex);
-                UshahidiPref.activeDeployment = Util.toInt(id);
-                UshahidiPref.domain = url;
-                UshahidiPref.deploymentLatitude = latitude;
-                UshahidiPref.deploymentLongitude = longitude;
-            } while (cursor.moveToNext());
-
+            }
+            cursor.close();
+            UshahidiPref.saveSettings(this);
+            UshahidiPref.loadSettings(this);
         }
-        cursor.close();
-        UshahidiPref.saveSettings(this);
-        UshahidiPref.loadSettings(this);
 
     }
 
@@ -640,6 +643,13 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
     public void onLocationChanged(Location loc) {
         if (loc != null) {
             location = loc;
+            
+            RefreshDeploymentTask deploymentTask = new RefreshDeploymentTask();
+            deploymentTask.appContext = DeploymentSearch.this;
+            deploymentTask.location = location;
+            deploymentTask.distance = distance;
+            deploymentTask.execute();
+            
             stopLocating();
         }
 

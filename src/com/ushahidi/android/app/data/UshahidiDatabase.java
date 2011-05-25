@@ -319,7 +319,7 @@ public class UshahidiDatabase {
             + MEDIA_MEDIUM_LINK + " TEXT" + ")";
 
     private static final String DEPLOYMENT_TABLE_CREATE = "CREATE VIRTUAL TABLE "
-            + DEPLOYMENT_TABLE + " USING fts3(" + DEPLOYMENT_ID
+            + DEPLOYMENT_TABLE + " USING fts3 (" + DEPLOYMENT_ID
             + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + DEPLOYMENT_CAT_ID + " INTEGER, "
             + DEPLOYMENT_ACTIVE + " INTEGER, " + DEPLOYMENT_NAME + " TEXT NOT NULL, "
             + DEPLOYMENT_DATE + " DATE NOT NULL, " + DEPLOYMENT_DESC + " TEXT NOT NULL, "
@@ -604,7 +604,7 @@ public class UshahidiDatabase {
 
     public long createAddDeployment(String name, String url) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(DEPLOYMENT_ID, 0);
+        // initialValues.put(DEPLOYMENT_ID, "NULL");
         initialValues.put(DEPLOYMENT_CAT_ID, 0);
         initialValues.put(DEPLOYMENT_NAME, name);
         initialValues.put(DEPLOYMENT_DESC, name);
@@ -659,8 +659,8 @@ public class UshahidiDatabase {
     }
 
     public Cursor fetchAllDeployments() {
-        return mDb.query(DEPLOYMENT_TABLE, DEPLOYMENT_COLUMNS, null, null, null, null,
-                DEPLOYMENT_DATE + " DESC");
+
+        return query(null, null, null);
     }
 
     public Cursor getDeploymentMatches(String query, String[] columns) {
@@ -731,9 +731,9 @@ public class UshahidiDatabase {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(DEPLOYMENT_TABLE);
         builder.setProjectionMap(mColumnMap);
-
+        String orderBy = DEPLOYMENT_DATE+ " DESC";
         Cursor cursor = builder.query(mDbHelper.getReadableDatabase(), columns, selection,
-                selectionArgs, null, null, null);
+                selectionArgs, null, null, orderBy);
 
         if (cursor == null) {
             return null;
@@ -745,10 +745,28 @@ public class UshahidiDatabase {
     }
 
     public Cursor fetchDeploymentById(String id) {
-        String sql = "SELECT * FROM " + DEPLOYMENT_TABLE + " WHERE " + DEPLOYMENT_ID
+       /* String sql = "SELECT * FROM " + DEPLOYMENT_TABLE + " WHERE " + DEPLOYMENT_ID
                 + " = ? ORDER BY " + DEPLOYMENT_NAME + " COLLATE NOCASE";
         return mDb.rawQuery(sql, new String[] {
             id
+        });*/
+        String selection = "rowid = ?";
+        String[] selectionArgs = new String[] {
+                id
+            };
+        String[] columns = new String[] {
+                BaseColumns._ID, DEPLOYMENT_NAME, DEPLOYMENT_LATITUDE, DEPLOYMENT_LONGITUDE,
+                DEPLOYMENT_URL
+        };
+
+        return query(selection, selectionArgs, columns);
+    }
+
+    public Cursor fetchDeploymentByIdAndUrl(String id, String url) {
+        String sql = "SELECT * FROM " + DEPLOYMENT_TABLE + " WHERE " + DEPLOYMENT_ID + " = ? AND "
+                + DEPLOYMENT_URL + " =? ORDER BY " + DEPLOYMENT_NAME + " COLLATE NOCASE";
+        return mDb.rawQuery(sql, new String[] {
+                id, url
         });
     }
 
@@ -795,7 +813,7 @@ public class UshahidiDatabase {
         deleteUsers();
         deleteAllCheckins();
         deleteCheckinMedia();
-        deleteDeployment();
+        deleteAllDeployment();
         // delete all files
         Util.rmDir(UshahidiPref.savePath);
         return true;
@@ -839,12 +857,20 @@ public class UshahidiDatabase {
         return mDb.delete(CHECKINS_MEDIA_TABLE, null, null) > 0;
     }
 
-    public boolean deleteDeployment() {
+    public boolean deleteAllDeployment() {
         return mDb.delete(DEPLOYMENT_TABLE, null, null) > 0;
     }
 
-    public boolean deleteDeployment(int id) {
-        return mDb.delete(DEPLOYMENT_TABLE, DEPLOYMENT_ID + "=" + id, null) > 0;
+    public boolean deleteDeploymentByIdAndUrl(String id, String url) {
+        String whereClause = "WHERE " + DEPLOYMENT_ID + " =? AND " + DEPLOYMENT_URL + " =? ";
+        String whereArgs[] = {
+                id, url
+        };
+        return mDb.delete(DEPLOYMENT_TABLE, whereClause, whereArgs) > 0;
+    }
+
+    public boolean deleteDeploymentById(int id) {
+        return mDb.delete(DEPLOYMENT_TABLE, BaseColumns._ID + " =" + id, null) > 0;
     }
 
     /**

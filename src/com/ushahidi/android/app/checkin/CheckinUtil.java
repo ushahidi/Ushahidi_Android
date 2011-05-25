@@ -21,31 +21,35 @@ public class CheckinUtil {
     
     public static String getCheckinUser(String userId) {
         Cursor cursor = UshahidiApplication.mDb.fetchUsersById(userId);
+        String user = null;
         if (cursor.moveToFirst()) {
             int userName = cursor.getColumnIndexOrThrow(UshahidiDatabase.USER_NAME);
-            return cursor.getString(userName);
+            user = cursor.getString(userName);
         }
         cursor.close();
-        return null;
+        return user;
     }
     
     public static String getCheckinMedia(String checkinId) {
         Cursor cursor = UshahidiApplication.mDb.fetchCheckinsMediaByCheckinId(checkinId);
+        String mediaLink = null;
         if (cursor.moveToFirst()) {
             int mediaMediumLink = cursor.getColumnIndexOrThrow(UshahidiDatabase.MEDIA_MEDIUM_LINK);
-            return cursor.getString(mediaMediumLink);
+            mediaLink = cursor.getString(mediaMediumLink);
         }
         cursor.close();
-        return null;
+        
+        return mediaLink;
     }
     
     public static String getCheckinThumbnail(String checkinId) {
         Cursor cursor = UshahidiApplication.mDb.fetchCheckinsMediaByCheckinId(checkinId);
+        String thumbnail = null;
         if (cursor.moveToFirst()) {
             int mediaMediumLink = cursor.getColumnIndexOrThrow(UshahidiDatabase.MEDIA_THUMBNAIL_LINK);
-            return cursor.getString(mediaMediumLink);
+            thumbnail = cursor.getString(mediaMediumLink);
         }
         cursor.close();
-        return null;
+        return thumbnail;
     }
 }

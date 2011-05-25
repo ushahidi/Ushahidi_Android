@@ -1,0 +1,137 @@
+
+package com.ushahidi.android.app.test;
+
+import com.ushahidi.android.app.DeploymentSearch;
+import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.UshahidiApplication;
+import com.ushahidi.android.app.data.UshahidiDatabase;
+import com.ushahidi.android.app.net.Deployments;
+import com.ushahidi.android.app.util.DeviceCurrentLocation;
+
+import android.content.Intent;
+import android.database.Cursor;
+import android.location.Location;
+import android.test.ActivityInstrumentationTestCase2;
+import android.test.UiThreadTest;
+import android.test.suitebuilder.annotation.MediumTest;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+
+public class DeploymentSearchTest extends ActivityInstrumentationTestCase2<DeploymentSearch> {
+
+    private UshahidiDatabase mUshahidiDatabase;
+
+    private DeploymentSearch mDeploymentSearchActivity;
+
+    private final String[] distances = {
+            "50", "100", "250", "500", "750", "1000", "1500"
+    };
+
+    private TextView mTextView;
+
+    private TextView mEmptyList;
+
+    private ListView mListView;
+
+    private Deployments mDeployments;
+
+    private Location location;
+
+    private DeviceCurrentLocation mCurrentLocation;
+
+    public DeploymentSearchTest() {
+        super("com.ushahidi.android.app", DeploymentSearch.class);
+        // TODO Auto-generated constructor stub
+    }
+
+    /**
+     * Setup test environment
+     */
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        setActivityInitialTouchMode(false);
+        setActivityIntent(new Intent(Intent.ACTION_VIEW));
+        mDeploymentSearchActivity = getActivity();
+
+        mUshahidiDatabase = new UshahidiDatabase(mDeploymentSearchActivity);
+        mUshahidiDatabase.open();
+
+        mCurrentLocation = new DeviceCurrentLocation(mDeploymentSearchActivity);
+
+        assertNotNull(mCurrentLocation);
+
+        mDeployments = new Deployments(mDeploymentSearchActivity);
+
+        mTextView = (TextView)mDeploymentSearchActivity.findViewById(R.id.search_deployment);
+        mListView = (ListView)mDeploymentSearchActivity.findViewById(R.id.deployment_list);
+        mEmptyList = (TextView)mDeploymentSearchActivity
+                .findViewById(R.id.empty_list_for_deployments);
+
+    }
+
+    /**
+     * Clean test data after testing
+     */
+    protected void tearDown() throws Exception {
+
+        mUshahidiDatabase.close();
+        super.tearDown();
+    }
+
+    public void testGetDeploymentsFromOnline() {
+        assertNotNull("It couldn't fetch data from online because app was offline",
+                mDeployments.getDeploymentsFromOnline());
+    }
+
+    /**
+     * Test when user refreshes for a new deployments
+     */
+    @UiThreadTest
+    public void testRefreshDeployment() {
+        try {
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            fail();
+        }
+        // get current location of the device
+        location = DeviceCurrentLocation.getLocation();
+        assertNotNull(
+                "Device location couldn't be retrieved because device data has been turned off",
+                location);
+        assertNotNull(mDeployments);
+        assertTrue(mDeployments.fetchDeployments(distances[0], location));
+
+    }
+
+    @UiThreadTest
+    public void testShowResults() {
+
+        Cursor cursor = UshahidiApplication.mDb.fetchAllDeployments();
+        assertTrue("Couldn't fetch deployments from online because app is offline",
+                cursor.getCount() > 0);
+        String[] from = new String[] {
+                UshahidiDatabase.DEPLOYMENT_ID, UshahidiDatabase.DEPLOYMENT_NAME,
+                UshahidiDatabase.DEPLOYMENT_DESC, UshahidiDatabase.DEPLOYMENT_URL
+        };
+
+        // Specify the corresponding layout elements where we want the
+        // columns to go
+        int[] to = new int[] {
+                R.id.deployment_list_id, R.id.deployment_list_name, R.id.deployment_list_desc,
+                R.id.deployment_list_url
+        };
+
+        // Create a simple cursor adapter for the definitions and apply them
+        // to the ListView
+        SimpleCursorAdapter deployments = new SimpleCursorAdapter(mDeploymentSearchActivity,
+                R.layout.deployment_list, cursor, from, to);
+        mListView.setAdapter(deployments);
+
+        assertTrue(mListView.getCount() > 0);
+        mUshahidiDatabase.deleteAllDeployment();
+
+    }
+}

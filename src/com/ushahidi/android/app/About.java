@@ -70,7 +70,7 @@ public class About extends DashboardActivity {
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
-        version.setText("v"+versionName);
+        version.setText(versionName);
         // Dipo Fix
         final Intent i = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(URL));
 

@@ -59,19 +59,21 @@ public class Deployments {
             processingResult = true;
             lat = location.getLatitude();
             lon = location.getLongitude();
-            
-            deploymentJson = getDeploymentsFromOnline();
-            try {
-                jsonObject = new JSONObject(deploymentJson);
-                deploymentsData = retrieveDeploymentJson();
 
-                if (deploymentsData != null) {
-                    UshahidiApplication.mDb.deleteDeployment();
-                    UshahidiApplication.mDb.addDeployment(deploymentsData);
-                    return true;
+            deploymentJson = getDeploymentsFromOnline();
+            if (deploymentJson != null) {
+                try {
+                    jsonObject = new JSONObject(deploymentJson);
+                    deploymentsData = retrieveDeploymentJson();
+
+                    if (deploymentsData != null) {
+                        UshahidiApplication.mDb.deleteAllDeployment();
+                        UshahidiApplication.mDb.addDeployment(deploymentsData);
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    processingResult = false;
                 }
-            } catch (JSONException e) {
-                processingResult = false;
             }
 
         }
@@ -82,25 +84,24 @@ public class Deployments {
         StringBuilder fullUrl = new StringBuilder(DEPLOYMENT_SEARCH_URL);
         fullUrl.append("?return_vars=name,latitude,longitude,description,url,category_id,discovery_date,id");
         fullUrl.append("&units=km");
-        fullUrl.append("&distance="+mDistance);
-        fullUrl.append("&lat="+String.valueOf(lat));
-        fullUrl.append("&lon="+String.valueOf(lon));
+        fullUrl.append("&distance=" + mDistance);
+        fullUrl.append("&lat=" + String.valueOf(lat));
+        fullUrl.append("&lon=" + String.valueOf(lon));
         HttpResponse response;
-        
-        
+
         try {
-          
+
             response = UshahidiHttpClient.GetURL(fullUrl.toString());
             if (response == null) {
-                return "";
+                return null;
             }
             final int statusCode = response.getStatusLine().getStatusCode();
 
             if (statusCode == 200) {
 
                 return UshahidiHttpClient.GetText(response);
-           }
-                //UshahidiPref.incidentsResponse = incidents;
+            }
+            // UshahidiPref.incidentsResponse = incidents;
         } catch (MalformedURLException e) {
             return null;
         } catch (IOException e) {
@@ -150,15 +151,15 @@ public class Deployments {
                             "name"));
                     deploymentData.setUrl(jsonObject.getJSONObject(names.getString(i)).getString(
                             "url"));
-                    
-                    //use deployment name if there is no deployment description
-                    if(jsonObject.getJSONObject(names.getString(i)).getString(
-                            "description").equals("")){
-                        deploymentData.setDesc(jsonObject.getJSONObject(names.getString(i)).getString(
-                        "name")); 
+
+                    // use deployment name if there is no deployment description
+                    if (jsonObject.getJSONObject(names.getString(i)).getString("description")
+                            .equals("")) {
+                        deploymentData.setDesc(jsonObject.getJSONObject(names.getString(i))
+                                .getString("name"));
                     } else {
-                        deploymentData.setDesc(jsonObject.getJSONObject(names.getString(i)).getString(
-                            "description"));
+                        deploymentData.setDesc(jsonObject.getJSONObject(names.getString(i))
+                                .getString("description"));
                     }
                     deploymentData.setCatId(jsonObject.getJSONObject(names.getString(i)).getString(
                             "category_id"));

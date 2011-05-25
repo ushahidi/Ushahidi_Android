@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="fill_parent" android:layout_width="fill_parent"
-    android:padding="5dp">
+	android:layout_height="fill_parent" android:layout_width="fill_parent"
+	android:padding="5dp">
 
-    <TextView android:id="@+id/deploy_name" style="@android:style/TextAppearance.Medium"
-        android:singleLine="true" android:ellipsize="end" android:textColor="@drawable/date_color"
-        android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/report_arrow" android:layout_alignParentLeft="true" />
-    <TextView android:id="@+id/deploy_desc" style="@android:style/TextAppearance.Small"
-        android:ellipsize="end" android:singleLine="true" android:capitalize="sentences"
-        android:layout_below="@+id/deploy_name"
-        android:textColor="@drawable/date_color" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_alignParentLeft="true" />
-    <TextView android:id="@+id/deploy_url" style="@android:style/TextAppearance.Small"
-        android:textColor="@drawable/date_color" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_below="@+id/deploy_desc" android:layout_alignParentLeft="true"/>
-    <TextView android:id="@+id/deploy_id" style="@android:style/TextAppearance.Small"
-        android:singleLine="true" android:capitalize="sentences"
-        android:visibility="gone" android:textColor="@drawable/date_color"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_below="@+id/deployment_url" android:layout_alignParentLeft="true"/>
-    <ImageView android:padding="10dip" android:layout_height="fill_parent"
-        android:id="@+id/report_arrow" android:layout_width="wrap_content"
-        android:layout_alignParentRight="true" android:layout_centerInParent="true"
-        android:layout_weight="1" android:gravity="center_vertical|center_horizontal"
-        android:src="@drawable/ushahidi_arrow" />
+	<TextView android:id="@+id/deploy_name" style="@android:style/TextAppearance.Medium"
+		android:singleLine="true" android:ellipsize="end" android:textColor="@drawable/date_color"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:focusable="false" android:layout_toLeftOf="@+id/report_arrow"
+		android:layout_alignParentLeft="true" />
+	<TextView android:id="@+id/deploy_desc" style="@android:style/TextAppearance.Small"
+		android:ellipsize="end" android:singleLine="true" android:capitalize="sentences"
+		android:focusable="false" android:layout_below="@+id/deploy_name"
+		android:textColor="@drawable/date_color" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_alignParentLeft="true" />
+	<TextView android:id="@+id/deploy_url" style="@android:style/TextAppearance.Small"
+		android:focusable="false" android:textColor="@drawable/date_color"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_below="@+id/deploy_desc"
+		android:layout_alignParentLeft="true" />
+	<TextView android:id="@+id/deploy_id" style="@android:style/TextAppearance.Small"
+		android:singleLine="true" android:capitalize="sentences"
+		android:focusable="false" 
+		android:visibility="gone" android:textColor="@drawable/date_color"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_below="@+id/deployment_url"
+		android:layout_alignParentLeft="true" />
+	<ImageView android:padding="10dip" android:layout_height="fill_parent"
+		android:id="@+id/report_arrow" android:layout_width="wrap_content"
+		android:layout_alignParentRight="true" android:layout_centerInParent="true"
+		android:layout_weight="1" android:gravity="center_vertical|center_horizontal"
+		android:src="@drawable/ushahidi_arrow" />
 </RelativeLayout>
