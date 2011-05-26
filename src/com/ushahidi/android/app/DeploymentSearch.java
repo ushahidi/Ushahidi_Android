@@ -119,6 +119,8 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
                     SimpleCursorAdapter deployments = new SimpleCursorAdapter(
                             DeploymentSearch.this, R.layout.deployment_search_result, cursor, from,
                             to);
+                    
+                    //refersh for new content
                     deployments.notifyDataSetChanged();
                     mListView.setAdapter(deployments);
                     startManagingCursor(cursor);
@@ -308,6 +310,8 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
             // to the ListView
             SimpleCursorAdapter deployments = new SimpleCursorAdapter(this,
                     R.layout.deployment_list, cursor, from, to);
+            
+            //refresh for new content.
             deployments.notifyDataSetChanged();
             mListView.setAdapter(deployments);
             displayEmptyListText();
