@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.BaseColumns;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -23,7 +24,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -64,8 +67,9 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
     private LocationManager mLocationMgr = null;
 
     private static Location location;
-   
+
     private String distance = "";
+
     private static final String CLASS_TAG = DeviceCurrentLocation.class.getCanonicalName();
 
     // Context menu items
@@ -119,8 +123,8 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
                     SimpleCursorAdapter deployments = new SimpleCursorAdapter(
                             DeploymentSearch.this, R.layout.deployment_search_result, cursor, from,
                             to);
-                    
-                    //refersh for new content
+
+                    // refersh for new content
                     deployments.notifyDataSetChanged();
                     mListView.setAdapter(deployments);
                     startManagingCursor(cursor);
@@ -287,9 +291,9 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
     private void showResults() {
 
         Cursor cursor = UshahidiApplication.mDb.fetchAllDeployments();
-        
-        //clear everything in the list view 
-        
+
+        // clear everything in the list view
+
         if (cursor != null) {
             // There are no results
 
@@ -310,8 +314,8 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
             // to the ListView
             SimpleCursorAdapter deployments = new SimpleCursorAdapter(this,
                     R.layout.deployment_list, cursor, from, to);
-            
-            //refresh for new content.
+
+            // refresh for new content.
             deployments.notifyDataSetChanged();
             mListView.setAdapter(deployments);
             displayEmptyListText();
@@ -329,7 +333,7 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
         switch (d) {
             case DIALOG_DISTANCE:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Select distance in km");
+                builder.setTitle(R.string.select_distance);
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         distance = items[item];
@@ -367,11 +371,26 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
             case DIALOG_ADD_DEPLOYMENT:
                 LayoutInflater factory = LayoutInflater.from(this);
                 final View textEntryView = factory.inflate(R.layout.add_deployment, null);
-                final EditText deploymentName = (EditText)textEntryView
+                final EditText deploymentUrl = (EditText)textEntryView
                         .findViewById(R.id.deployment_description_edit);
 
-                final EditText deploymentUrl = (EditText)textEntryView
+                final EditText deploymentName = (EditText)textEntryView
                         .findViewById(R.id.deployment_url_edit);
+
+                // Validate fields
+                deploymentUrl.setOnTouchListener(new OnTouchListener() {
+
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+
+                        if (TextUtils.isEmpty(deploymentUrl.getText().toString())) {
+                            deploymentUrl.setText("http://");
+                        }
+
+                        return false;
+                    }
+
+                });
 
                 final AlertDialog.Builder addBuilder = new AlertDialog.Builder(this);
 
@@ -380,10 +399,17 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
                         .setView(textEntryView)
                         .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
+                                // validate URL
+                                if ((Util.validateUshahidiInstance(deploymentUrl.getText()
+                                        .toString()))
+                                        && (TextUtils.isEmpty(deploymentName.getText().toString()))) {
+                                    UshahidiApplication.mDb.addDeployment(deploymentName.getText()
+                                            .toString(), deploymentUrl.getText().toString());
+                                    showResults();
+                                } else {
+                                    Util.showToast(DeploymentSearch.this, R.string.fix_error);
+                                }
 
-                                UshahidiApplication.mDb.addDeployment(deploymentUrl.getText()
-                                        .toString(), deploymentName.getText().toString());
-                                showResults();
                             }
                         })
                         .setNegativeButton(R.string.btn_cancel,
@@ -647,13 +673,13 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
     public void onLocationChanged(Location loc) {
         if (loc != null) {
             location = loc;
-            
+
             RefreshDeploymentTask deploymentTask = new RefreshDeploymentTask();
             deploymentTask.appContext = DeploymentSearch.this;
             deploymentTask.location = location;
             deploymentTask.distance = distance;
             deploymentTask.execute();
-            
+
             stopLocating();
         }
 

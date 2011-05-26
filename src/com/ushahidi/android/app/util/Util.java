@@ -22,8 +22,6 @@ package com.ushahidi.android.app.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -82,8 +80,10 @@ public class Util {
 
     private static Random random = new Random();
 
-    private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@"
+    private static final String VALID_EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+    private static final String VALID_URL_PATTERN = "^(https?|ftp)://[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].+)?$";
 
     /**
      * joins two strings together
@@ -366,7 +366,7 @@ public class Util {
      */
     public static boolean validateEmail(String emailAddress) {
         if (!emailAddress.equals("")) {
-            pattern = Pattern.compile(EMAIL_PATTERN);
+            pattern = Pattern.compile(VALID_EMAIL_PATTERN);
             matcher = pattern.matcher(emailAddress);
             return matcher.matches();
         }
@@ -379,19 +379,17 @@ public class Util {
      * @param String - URL to be validated.
      * @return boolean
      */
-    public static boolean validateUshahidiInstance(String ushahidiUrl) throws IOException {
+    public static boolean validateUshahidiInstance(String ushahidiUrl) {
         // make an http get request to a dummy api call
         // TODO improve on how to do this
-        boolean status = false;
-        try {
-            new URL(ushahidiUrl);
-            status = true;
-        } catch (MalformedURLException e) {
-            status = false;
-        } finally {
+        
+        if (!TextUtils.isEmpty(ushahidiUrl)) {
+            pattern = Pattern.compile(VALID_URL_PATTERN);
+            matcher = pattern.matcher(ushahidiUrl);
+            return matcher.matches();
         }
 
-        return status;
+        return false;
     }
 
     public static boolean isCheckinEnabled(Context context) {
@@ -458,7 +456,7 @@ public class Util {
             Log.d("Directory", "dir.list returned some files" + children.length + "--");
             for (int i = 0; i < children.length; i++) {
                 File temp = new File(dir, children[i]);
-                
+
                 if (temp.isDirectory()) {
 
                     rmDir(temp.getName());
@@ -568,11 +566,10 @@ public class Util {
      * Checks that the device supports Camera.
      * 
      * @param Context context - The calling activity's context.
-     * 
      * @return boolean - True if it supports otherwise false.
      */
-    public static boolean deviceHasCamera( Context context) {
-        
+    public static boolean deviceHasCamera(Context context) {
+
         PackageManager pm = context.getPackageManager();
 
         if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
@@ -581,16 +578,15 @@ public class Util {
             return false;
         }
     }
-    
+
     /**
      * Checks that the device supports Camera supports auto focus.
      * 
      * @param Context context - The calling activity's context.
-     * 
      * @return boolean - True if it supports otherwise false.
      */
-    public static boolean deviceCameraHasAutofocus( Context context) {
-        
+    public static boolean deviceCameraHasAutofocus(Context context) {
+
         PackageManager pm = context.getPackageManager();
 
         if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS)) {

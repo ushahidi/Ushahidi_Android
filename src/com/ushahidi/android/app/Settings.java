@@ -20,8 +20,6 @@
 
 package com.ushahidi.android.app;
 
-import java.io.IOException;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -43,7 +41,6 @@ import android.text.InputType;
 import com.ushahidi.android.app.util.Util;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
-    private EditTextPreference ushahidiInstancePref;
 
     private EditTextPreference firstNamePref;
 
@@ -98,7 +95,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.preferences);
-        ushahidiInstancePref = new EditTextPreference(this);
+
         firstNamePref = new EditTextPreference(this);
 
         lastNamePref = new EditTextPreference(this);
@@ -130,15 +127,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         PreferenceCategory basicPrefCat = new PreferenceCategory(this);
         basicPrefCat.setTitle(R.string.basic_settings);
         root.addPreference(basicPrefCat);
-        
-        ushahidiInstancePref.setDialogTitle(R.string.txt_domain);
-        ushahidiInstancePref.setKey("ushahidi_instance_preference");
-        ushahidiInstancePref.setTitle(R.string.txt_domain);
-        ushahidiInstancePref.setDefaultValue(UshahidiPref.domain);
-        ushahidiInstancePref.setSummary(R.string.hint_domain);
-        ushahidiInstancePref.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_URI);
-        ushahidiInstancePref.setText(UshahidiPref.domain);
-        basicPrefCat.addPreference(ushahidiInstancePref);
 
         // Total reports to fetch at a time
         // set list values
@@ -274,13 +262,9 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         String saveItems = saveItemsPref.getValue();
         String totalReports = totalReportsPref.getValue();
         String newSavePath;
-        
+
         int autoUdateDelay = 0;
-        
-        if(!ushahidiInstancePref.getText().toString().trim().equals("")) {
-            UshahidiPref.domain = ushahidiInstancePref.getText().toString().trim();
-        }
-        
+
         // "5 Minutes", "10 Minutes", "15 Minutes", "c", "60 Minutes"
         if (autoUpdate.matches("5")) {
             autoUdateDelay = 5;
@@ -445,7 +429,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
                 // reset whatever was entered in that field.
                 UshahidiPref.loadSettings(Settings.this);
-                ushahidiInstancePref.setText(UshahidiPref.domain);
                 Util.showToast(Settings.this, R.string.invalid_ushahidi_instance);
             } else {
 
@@ -467,11 +450,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         Thread t = new Thread() {
             public void run() {
 
-                try {
-                    validUrl = Util.validateUshahidiInstance(Url);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                validUrl = Util.validateUshahidiInstance(Url);
+
                 mHandler.post(mValidateUrl);
             }
         };

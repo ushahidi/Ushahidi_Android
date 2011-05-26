@@ -237,7 +237,7 @@
     <string name="empty_reports">No reports</string>
     <string name="empty_deployments">No deployments</string>
     
-    <!--  clear deployments -->
+    <!--  deployments -->
     <string name="clear_all">Clear all</string>
     <string name="confirm_clear">Are you sure you want to clear everything?</string>
     <string name="items_cleared">Everything was successfully cleared</string>
@@ -248,4 +248,5 @@
     <string name="delete">Delete</string>
     <string name="deployment_deleted">Deployment deleted</string>
     <string name="deployment_deleted_failed">Failed to delete</string>
+    <string name="fix_error">Please make sure a name and a valid URL are entered.</string>
 </resources>
