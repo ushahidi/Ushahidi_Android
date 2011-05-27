@@ -67,7 +67,7 @@ public class Deployments {
                     deploymentsData = retrieveDeploymentJson();
 
                     if (deploymentsData != null) {
-                        UshahidiApplication.mDb.deleteAllDeployment();
+                        UshahidiApplication.mDb.deleteAllAutoDeployment();
                         UshahidiApplication.mDb.addDeployment(deploymentsData);
                         return true;
                     }

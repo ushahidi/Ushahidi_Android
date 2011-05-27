@@ -185,8 +185,8 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
         public void run() {
             boolean result = false;
 
-            result = UshahidiApplication.mDb.deleteDeploymentById(deploymentId);
-
+            result = UshahidiApplication.mDb.deleteDeploymentById(String.valueOf(deploymentId));
+            
             try {
                 if (result) {
                     Util.showToast(DeploymentSearch.this, R.string.deployment_deleted);
@@ -402,7 +402,7 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
                                 // validate URL
                                 if ((Util.validateUshahidiInstance(deploymentUrl.getText()
                                         .toString()))
-                                        && (TextUtils.isEmpty(deploymentName.getText().toString()))) {
+                                        && !(TextUtils.isEmpty(deploymentName.getText().toString()))) {
                                     UshahidiApplication.mDb.addDeployment(deploymentName.getText()
                                             .toString(), deploymentUrl.getText().toString());
                                     showResults();

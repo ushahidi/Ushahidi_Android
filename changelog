@@ -3,7 +3,7 @@
  * Added sharing support; Reports / Checkins can now be shared via email, twitter, bluetooth,etc
  * Added Japanese translation.
  * Added Deployment search support.
- * Redesign dashboard UI.
+ * Redesigned dashboard UI.
  * Added action bar to most activities.
 
 Fixed:

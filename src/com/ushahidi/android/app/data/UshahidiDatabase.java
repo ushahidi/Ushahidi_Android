@@ -604,7 +604,7 @@ public class UshahidiDatabase {
 
     public long createAddDeployment(String name, String url) {
         ContentValues initialValues = new ContentValues();
-        // initialValues.put(DEPLOYMENT_ID, "NULL");
+        initialValues.put(DEPLOYMENT_ID, "0");
         initialValues.put(DEPLOYMENT_CAT_ID, 0);
         initialValues.put(DEPLOYMENT_NAME, name);
         initialValues.put(DEPLOYMENT_DESC, name);
@@ -745,11 +745,7 @@ public class UshahidiDatabase {
     }
 
     public Cursor fetchDeploymentById(String id) {
-       /* String sql = "SELECT * FROM " + DEPLOYMENT_TABLE + " WHERE " + DEPLOYMENT_ID
-                + " = ? ORDER BY " + DEPLOYMENT_NAME + " COLLATE NOCASE";
-        return mDb.rawQuery(sql, new String[] {
-            id
-        });*/
+       
         String selection = "rowid = ?";
         String[] selectionArgs = new String[] {
                 id
@@ -860,6 +856,17 @@ public class UshahidiDatabase {
     public boolean deleteAllDeployment() {
         return mDb.delete(DEPLOYMENT_TABLE, null, null) > 0;
     }
+    
+    /**
+     * Delete all deployments that were fetched from the internet
+     */
+    public boolean deleteAllAutoDeployment() {
+        String whereClause = DEPLOYMENT_ID + " <> ?";
+        String whereArgs[] = {
+                "0"
+        };
+        return mDb.delete(DEPLOYMENT_TABLE, whereClause, whereArgs) > 0;
+    }
 
     public boolean deleteDeploymentByIdAndUrl(String id, String url) {
         String whereClause = "WHERE " + DEPLOYMENT_ID + " =? AND " + DEPLOYMENT_URL + " =? ";
@@ -869,8 +876,10 @@ public class UshahidiDatabase {
         return mDb.delete(DEPLOYMENT_TABLE, whereClause, whereArgs) > 0;
     }
 
-    public boolean deleteDeploymentById(int id) {
-        return mDb.delete(DEPLOYMENT_TABLE, BaseColumns._ID + " =" + id, null) > 0;
+    public boolean deleteDeploymentById(String id) {
+        String whereClause = "rowid = ? ";
+        String whereArgs[] = {id};
+        return mDb.delete(DEPLOYMENT_TABLE, whereClause, whereArgs) > 0;
     }
 
     /**
