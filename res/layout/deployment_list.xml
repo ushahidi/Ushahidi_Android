@@ -28,13 +28,12 @@
 		android:layout_toLeftOf="@+id/deployment_arrow"
 		android:layout_alignParentLeft="true"
 		android:focusable="false"
-		android:visibility="visible"
+		android:visibility="gone"
 		android:textColor="@drawable/date_color" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:layout_below="@+id/deployment_list_url" />
 
 	<ImageView android:padding="5dip" android:layout_height="fill_parent"
 		android:id="@+id/deployment_arrow" android:layout_width="wrap_content"
 		android:layout_alignParentRight="true" android:layout_centerInParent="true"
-		android:layout_weight="1" android:gravity="center_vertical|center_horizontal"
-		android:src="@drawable/ushahidi_arrow" />
+		android:layout_weight="1" android:gravity="center_vertical|center_horizontal"/>
 </RelativeLayout>
