@@ -34,6 +34,7 @@ import java.util.Vector;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -73,6 +74,7 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
+import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
@@ -216,7 +218,6 @@ public class AddIncident extends MapActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.add_incident);
 
         mFoundAddresses = new ArrayList<Address>();
@@ -1084,10 +1085,14 @@ public class AddIncident extends MapActivity {
         protected Integer status;
 
         protected Context appContext;
+        
+        protected ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {
-            setProgressBarIndeterminateVisibility(true);
+            this.progressDialog = ProgressDialog.show(AddIncident.this,
+                    getString(R.string.checkin_progress_title),
+                    getString(R.string.sending_report_in_progress), true);
 
         }
 
@@ -1110,6 +1115,7 @@ public class AddIncident extends MapActivity {
 
         @Override
         protected void onPostExecute(Integer result) {
+            progressDialog.cancel();
             if (result == 2) {
                 clearFields();
                 Util.showToast(appContext, R.string.report_successfully_added_offline);
@@ -1125,7 +1131,7 @@ public class AddIncident extends MapActivity {
                 }
                 Util.showToast(appContext, R.string.report_successfully_added_online);
             }
-            setProgressBarIndeterminateVisibility(false);
+            
         }
     }
 

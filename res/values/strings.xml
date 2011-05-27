@@ -249,4 +249,5 @@
     <string name="deployment_deleted">Deployment deleted</string>
     <string name="deployment_deleted_failed">Failed to delete</string>
     <string name="fix_error">Please make sure a name and a valid URL are entered.</string>
+    <string name="sending_report_in_progress">Sending report...</string>
 </resources>
