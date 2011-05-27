@@ -436,7 +436,7 @@ public class AddIncident extends MapActivity {
         mBtnPicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(UshahidiPref.fileName)) {
-                    ImageManager.deleteImage(UshahidiPref.fileName,UshahidiPref.savePath);
+                    ImageManager.deleteImage(UshahidiPref.fileName, UshahidiPref.savePath);
                 }
                 showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
             }
@@ -571,7 +571,8 @@ public class AddIncident extends MapActivity {
 
                 if (mBundle != null && !mBundle.isEmpty()) {
                     UshahidiPref.fileName = mBundle.getString("name");
-                    mSelectedPhoto.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName,UshahidiPref.savePath));
+                    mSelectedPhoto.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName,
+                            UshahidiPref.savePath));
                     mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 }
                 break;
@@ -598,7 +599,7 @@ public class AddIncident extends MapActivity {
                 try {
                     b.compress(CompressFormat.JPEG, 75, byteArrayos);
                     byteArrayos.flush();
-                    
+
                 } catch (OutOfMemoryError e) {
                     break;
                 } catch (IOException e) {
@@ -606,10 +607,12 @@ public class AddIncident extends MapActivity {
                 }
 
                 mFilename = "android_pic_upload" + randomString() + ".jpg";
-                ImageManager.writeImage(byteArrayos.toByteArray(), mFilename,UshahidiPref.savePath);
+                ImageManager
+                        .writeImage(byteArrayos.toByteArray(), mFilename, UshahidiPref.savePath);
                 UshahidiPref.fileName = mFilename;
 
-                mSelectedPhoto.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName,UshahidiPref.savePath));
+                mSelectedPhoto.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName,
+                        UshahidiPref.savePath));
                 mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 break;
 
@@ -1044,13 +1047,16 @@ public class AddIncident extends MapActivity {
      * get the real location name from the latitude and longitude.
      */
     private String getLocationFromLatLon(double lat, double lon) {
-
+        String formattedAddress = "";
         try {
             Address address;
             mFoundAddresses = mGc.getFromLocation(lat, lon, 5);
             if (mFoundAddresses.size() > 0) {
                 address = mFoundAddresses.get(0);
-                return address.getSubAdminArea();
+
+                formattedAddress = address.getThoroughfare() + "," + address.getSubAdminArea()
+                        + "," + address.getCountryName();
+                return formattedAddress;
 
             } else {
                 return "";
@@ -1196,12 +1202,12 @@ public class AddIncident extends MapActivity {
 
     // Fetches the current location of the device.
     private void setDeviceLocation() {
-       
+
         loc = DeviceCurrentLocation.getLocation();
-        if( loc != null ) {
+        if (loc != null) {
             sLatitude = loc.getLatitude();
             sLongitude = loc.getLongitude();
-            
+
             centerLocation(getPoint(sLatitude, sLongitude));
             mReportLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
         }
