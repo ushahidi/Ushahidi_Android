@@ -35,11 +35,10 @@
 			android:scrollbars="vertical"
 			android:scrollingCache="true"
 			android:fastScrollEnabled="true"/>
-
-		<!-- Here is the view to show if the list is emtpy -->
-		<TextView android:id="@+id/empty_list_for_deployments"
-			android:layout_width="fill_parent" android:layout_height="fill_parent"
-			android:text="@string/empty_deployments" android:textStyle="bold"
-			android:textColor="@drawable/black_color" android:gravity="center_horizontal|center" />
 	</LinearLayout>
+	<!-- Here is the view to show if the list is emtpy -->
+        <TextView android:id="@+id/empty_list_for_deployments"
+            android:layout_width="fill_parent" android:layout_height="fill_parent"
+            android:text="@string/empty_deployments" android:textStyle="bold"
+            android:textColor="@drawable/black_color" android:gravity="center_horizontal|center" />
 </LinearLayout>

@@ -81,7 +81,7 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
     private Handler mHandler;
 
     private DeploymentAdapter deploymentAdapter;
-    
+
     private List<DeploymentsData> mDeployments;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,14 +92,12 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
         mTextView = (TextView)findViewById(R.id.search_deployment);
         mListView = (ListView)findViewById(R.id.deployment_list);
         mEmptyList = (TextView)findViewById(R.id.empty_list_for_deployments);
-        
+
         mDeployments = new ArrayList<DeploymentsData>();
         deploymentAdapter = new DeploymentAdapter(this);
-        
-        
+
         registerForContextMenu(mListView);
         mHandler = new Handler();
-        showResults("");
         mTextView.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable arg0) {
@@ -120,13 +118,11 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
 
         });
 
-        displayEmptyListText();
-
         // Define the on-click listener for the list items
         mListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final String deploymentId = mDeployments.get(position).getId();
-                if (isDeploymentActive(Integer.parseInt(deploymentId)) ) {
+                if (isDeploymentActive(Integer.parseInt(deploymentId))) {
                     goToReports();
                 } else {
                     ReportsTask reportsTask = new ReportsTask();
@@ -137,6 +133,9 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
 
             }
         });
+        
+        showResults("");
+        displayEmptyListText();
 
     }
 
@@ -198,8 +197,10 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
 
         if (mListView.getCount() == 0) {
             mEmptyList.setVisibility(View.VISIBLE);
+            mTextView.setVisibility(View.GONE);
         } else {
             mEmptyList.setVisibility(View.GONE);
+            mTextView.setVisibility(View.VISIBLE);
         }
 
     }
@@ -240,8 +241,10 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
         } else {
             UshahidiApplication.mDb.deleteAllDeployment();
             UshahidiApplication.mDb.clearData();
+            deploymentAdapter.removeItems();
+            deploymentAdapter.notifyDataSetChanged();
             showResults("");
-
+            displayEmptyListText();
             // clear the stuff that has been initialized in the
             // sharedpreferences.
             UshahidiPref.activeDeployment = 0;
@@ -259,14 +262,11 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
      * 
      * @param query The search query
      */
-    /*private Cursor showResults(String query) {
-
-        Cursor cursor = managedQuery(DeploymentProvider.CONTENT_URI, null, null, new String[] {
-            query
-        }, null);
-
-        return cursor;
-    }*/
+    /*
+     * private Cursor showResults(String query) { Cursor cursor =
+     * managedQuery(DeploymentProvider.CONTENT_URI, null, null, new String[] {
+     * query }, null); return cursor; }
+     */
 
     /**
      * Searches the dictionary and displays results for the given query.
@@ -275,10 +275,10 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
      */
     private void showResults(String query) {
         Cursor cursor = null;
-        
-        if( TextUtils.isEmpty(query)) {
+
+        if (TextUtils.isEmpty(query)) {
             cursor = UshahidiApplication.mDb.fetchAllDeployments();
-        }else {
+        } else {
 
             cursor = managedQuery(DeploymentProvider.CONTENT_URI, null, null, new String[] {
                 query
@@ -297,22 +297,23 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
                         .getColumnIndexOrThrow(UshahidiDatabase.DEPLOYMENT_DESC);
                 int deploymentUrlIndex = cursor
                         .getColumnIndexOrThrow(UshahidiDatabase.DEPLOYMENT_URL);
-                
-                deploymentAdapter.removeItems();
-                deploymentAdapter.notifyDataSetChanged();
-                
+                if (deploymentAdapter != null) {
+                    deploymentAdapter.removeItems();
+                    deploymentAdapter.notifyDataSetChanged();
+                }
+                mDeployments.clear();
                 do {
-                    
+
                     DeploymentsData deploymentsData = new DeploymentsData();
                     mDeployments.add(deploymentsData);
-                    
+
                     deploymentsData.setId(cursor.getString(deploymentIdIndex));
                     deploymentsData.setName(cursor.getString(deploymentNameIndex));
                     deploymentsData.setDesc(cursor.getString(deploymentDescIndex));
                     deploymentsData.setUrl(cursor.getString(deploymentUrlIndex));
-                    
+
                     deploymentAdapter.addItem(deploymentsData);
-                    
+
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -321,7 +322,6 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
             displayEmptyListText();
             // There are no results
 
-           
         }
 
     }
