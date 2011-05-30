@@ -32,7 +32,9 @@
 		<ListView android:id="@+id/deployment_list"
 			android:layout_width="fill_parent" android:layout_height="fill_parent"
 			android:cacheColorHint="#00000000" 
-			android:scrollbars="none"/>
+			android:scrollbars="vertical"
+			android:scrollingCache="true"
+			android:fastScrollEnabled="true"/>
 
 		<!-- Here is the view to show if the list is emtpy -->
 		<TextView android:id="@+id/empty_list_for_deployments"

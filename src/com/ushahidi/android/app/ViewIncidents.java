@@ -217,6 +217,7 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
    
     private void previewImage(int position) {
         photosBundle.putInt("position", position);
+        
         photosBundle.putStringArray("images", thumbnails);
         Intent intent = new Intent(this, ImagePreviewer.class);
         intent.putExtra("photos", photosBundle);

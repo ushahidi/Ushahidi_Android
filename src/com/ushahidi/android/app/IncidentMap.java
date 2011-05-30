@@ -34,7 +34,6 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -128,8 +127,8 @@ public class IncidentMap extends MapActivity {
 
         if (mNewIncidents.size() > 0) {
             if (id > 0) {
-                if (!TextUtils.isEmpty(UshahidiPref.deploymentLatitude)
-                        && !TextUtils.isEmpty(UshahidiPref.deploymentLatitude)) {
+                if (!UshahidiPref.deploymentLatitude.equals("0.0")
+                        && !UshahidiPref.deploymentLatitude.equals("0.0")) {
                     IncidentMap.latitude = Double.parseDouble(UshahidiPref.deploymentLatitude);
                     IncidentMap.longitude = Double.parseDouble(UshahidiPref.deploymentLongitude);
                     
@@ -139,8 +138,8 @@ public class IncidentMap extends MapActivity {
                     
                 }
             } else {
-                if (!TextUtils.isEmpty(UshahidiPref.deploymentLatitude)
-                        && !TextUtils.isEmpty(UshahidiPref.deploymentLatitude)) {
+                if (!UshahidiPref.deploymentLatitude.equals("0.0")
+                        && !UshahidiPref.deploymentLatitude.equals("0.0")) {
                     IncidentMap.latitude = Double.parseDouble(UshahidiPref.deploymentLatitude);
                     IncidentMap.longitude = Double.parseDouble(UshahidiPref.deploymentLongitude);
                     

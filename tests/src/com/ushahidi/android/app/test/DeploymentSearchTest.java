@@ -1,22 +1,20 @@
 
 package com.ushahidi.android.app.test;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.location.Location;
+import android.test.ActivityInstrumentationTestCase2;
+import android.test.UiThreadTest;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+
 import com.ushahidi.android.app.DeploymentSearch;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.UshahidiApplication;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.net.Deployments;
 import com.ushahidi.android.app.util.DeviceCurrentLocation;
-
-import android.content.Intent;
-import android.database.Cursor;
-import android.location.Location;
-import android.test.ActivityInstrumentationTestCase2;
-import android.test.UiThreadTest;
-import android.test.suitebuilder.annotation.MediumTest;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 
 public class DeploymentSearchTest extends ActivityInstrumentationTestCase2<DeploymentSearch> {
 
@@ -27,10 +25,6 @@ public class DeploymentSearchTest extends ActivityInstrumentationTestCase2<Deplo
     private final String[] distances = {
             "50", "100", "250", "500", "750", "1000", "1500"
     };
-
-    private TextView mTextView;
-
-    private TextView mEmptyList;
 
     private ListView mListView;
 
@@ -64,10 +58,8 @@ public class DeploymentSearchTest extends ActivityInstrumentationTestCase2<Deplo
 
         mDeployments = new Deployments(mDeploymentSearchActivity);
 
-        mTextView = (TextView)mDeploymentSearchActivity.findViewById(R.id.search_deployment);
         mListView = (ListView)mDeploymentSearchActivity.findViewById(R.id.deployment_list);
-        mEmptyList = (TextView)mDeploymentSearchActivity
-                .findViewById(R.id.empty_list_for_deployments);
+        
 
     }
 

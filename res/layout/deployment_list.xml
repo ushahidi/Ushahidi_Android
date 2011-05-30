@@ -4,9 +4,9 @@
 	android:padding="5dip">
 
 	<TextView android:id="@+id/deployment_list_name" style="@android:style/TextAppearance.Medium"
-		 android:layout_toLeftOf="@+id/report_arrow"
+		 android:layout_toLeftOf="@+id/deployment_arrow"
 		 android:focusable="false" 
-		android:layout_alignParentLeft="true" android:ellipsize="end"
+		android:layout_alignParentLeft="true" android:singleLine="true" android:ellipsize="end"
 		android:textColor="@drawable/date_color" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" />
 	

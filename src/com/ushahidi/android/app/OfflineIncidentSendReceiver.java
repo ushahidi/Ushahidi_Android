@@ -17,6 +17,7 @@ import android.util.Log;
 
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
+import com.ushahidi.android.app.util.Util;
 
 /**
  * Class is responsible for receiving connectivity change events and sending any
@@ -87,24 +88,30 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
         urlBuilder.append("/api");
 
         Cursor cursor = db.fetchAllOfflineIncidents();
-
-        cursor.moveToFirst();
-        while (cursor.isAfterLast() == false) {
-            Log.d(CLASS_TAG,
-                    "Sending message with title : "
-                            + cursor.getString(UshahidiDatabase.ADD_INCIDENT_TITLE_INDEX));
-            try {
-                UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), preparePostParams(cursor));
-                // if it fails without exception at this point there is problem
-                // with the message
-                db.deleteAddIncident(cursor.getInt(UshahidiDatabase.ADD_INCIDENT_ID_INDEX));
-                someOfflineIncidentsSent = true;
-            } catch (IOException e) {
-                e.printStackTrace();
+        // only send offline reports if there are items in the database.
+        if (cursor.getCount() > 0) {
+            // double check to make sure there internet
+            if (Util.isCheckinEnabled(context)) {
+                cursor.moveToFirst();
+                while (cursor.isAfterLast() == false) {
+                    Log.d(CLASS_TAG,
+                            "Sending message with title : "
+                                    + cursor.getString(UshahidiDatabase.ADD_INCIDENT_TITLE_INDEX));
+                    try {
+                        UshahidiHttpClient.PostFileUpload(urlBuilder.toString(),
+                                preparePostParams(cursor));
+                        // if it fails without exception at this point there is
+                        // problem
+                        // with the message
+                        db.deleteAddIncident(cursor.getInt(UshahidiDatabase.ADD_INCIDENT_ID_INDEX));
+                        someOfflineIncidentsSent = true;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    cursor.moveToNext();
+                }
             }
-            cursor.moveToNext();
         }
-
         cursor.close();
 
         db.close();

@@ -17,8 +17,10 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -58,14 +60,14 @@ public class ImagePreviewer extends DashboardActivity implements
         setContentView(R.layout.image_previewer);
 
         imageAdapter = new ImageAdapter(this);
-        thumbnailAdapter = new ImageAdapter(this);
+        //thumbnailAdapter = new ImageAdapter(this);
         photos = new Bundle();
         extras = getIntent().getExtras();
         activityTitle = (TextView)findViewById(R.id.title_text);
 
         photos = extras.getBundle("photos");
         images = photos.getStringArray("images");
-       
+        
         ImagePreviewer.photoPosition = photos.getInt("position");
         mSwitcher = (ImageSwitcher)findViewById(R.id.switcher);
         mSwitcher.setFactory(this);
@@ -76,18 +78,21 @@ public class ImagePreviewer extends DashboardActivity implements
             if (images.length > 1)
                 activityTitle.setText(getString(R.string.preview_photo, "s"));
             else
-                activityTitle.setText(getString(R.string.preview_photo, ""));
+                activityTitle.setText(getString(R.string.preview_photo, "ss"));
         }
+        
         if (images.length > 0) {
-            for (String image : images) {
-                thumbnailAdapter.mImageIds.add(ImageManager.getImages(UshahidiPref.savePath,image));
-                imageAdapter.mImageIds.add(ImageManager.getImages(UshahidiPref.savePath,image));
+            for (int i = 0; i < images.length; i++) {
+                
+                ///thumbnailAdapter.mImageIds.add(ImageManager.getImages(UshahidiPref.savePath,images[i]));
+                imageAdapter.mImageIds.add(ImageManager.getImages(UshahidiPref.savePath,images[i]));
+                
             }
         }
         mSwitcher.setImageDrawable(imageAdapter.mImageIds.get(ImagePreviewer.photoPosition));
         Gallery g = (Gallery)findViewById(R.id.gallery);
 
-        g.setAdapter(thumbnailAdapter);
+        g.setAdapter(imageAdapter);
         g.setOnItemSelectedListener(this);
 
     }
@@ -182,12 +187,11 @@ public class ImagePreviewer extends DashboardActivity implements
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView i = new ImageView(mContext);
             i.setImageDrawable(mImageIds.get(position));
-
-            i.setScaleType(ImageView.ScaleType.FIT_XY);
+            
+            i.setAdjustViewBounds(true);
 
             i.setLayoutParams(new Gallery.LayoutParams(
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 
             // The preferred Gallery item background
             i.setBackgroundResource(imageBackgroundColor());
