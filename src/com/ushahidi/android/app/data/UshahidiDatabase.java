@@ -272,7 +272,7 @@ public class UshahidiDatabase {
 
     private static final String DEPLOYMENT_TABLE = "deployment";
 
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
 
     // NOTE: the incident ID is used as the row ID.
     // Furthermore, if a row already exists, an insert will replace
@@ -355,7 +355,7 @@ public class UshahidiDatabase {
             List<String> checkinsColums;
             List<String> checkinsMediaColums;
             List<String> usersColumns;
-            List<String> deploymentColumns;
+            //List<String> deploymentColumns;
 
             // upgrade incident table
             db.execSQL(INCIDENTS_TABLE_CREATE);
@@ -427,16 +427,7 @@ public class UshahidiDatabase {
             db.execSQL("DROP TABLE IF EXISTS temp_" + USERS_TABLE);
 
             // upgrade deployment table
-            db.execSQL(DEPLOYMENT_TABLE_CREATE);
-            deploymentColumns = UshahidiDatabase.getColumns(db, DEPLOYMENT_TABLE);
-            db.execSQL("ALTER TABLE " + DEPLOYMENT_TABLE + " RENAME TO temp_" + DEPLOYMENT_TABLE);
-            db.execSQL(DEPLOYMENT_TABLE_CREATE);
-            deploymentColumns.retainAll(UshahidiDatabase.getColumns(db, DEPLOYMENT_TABLE));
-            String deploymentCols = UshahidiDatabase.join(deploymentColumns, ",");
-            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-                    DEPLOYMENT_TABLE, deploymentCols, deploymentCols, DEPLOYMENT_TABLE));
-            db.execSQL("DROP TABLE IF EXISTS temp_" + DEPLOYMENT_TABLE);
-
+            db.execSQL("DROP TABLE IF EXISTS " + DEPLOYMENT_TABLE);
             onCreate(db);
         }
 

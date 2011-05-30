@@ -264,7 +264,7 @@ public class ViewIncidents extends MapActivity implements AdapterView.OnItemSele
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
         //mSwitcher.setImageDrawable(imageAdapter.mImageIds.get(position));
-        ImagePreviewer.photoPosition = 0;
+        ImagePreviewer.photoPosition = position;
         //previewImage(position);
     }
 

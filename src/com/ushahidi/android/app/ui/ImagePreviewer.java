@@ -17,7 +17,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -48,8 +47,6 @@ public class ImagePreviewer extends DashboardActivity implements
 
     private ImageAdapter imageAdapter;
 
-    private ImageAdapter thumbnailAdapter;
-
     private TextView activityTitle;
 
     public static int photoPosition = 0;
@@ -60,7 +57,6 @@ public class ImagePreviewer extends DashboardActivity implements
         setContentView(R.layout.image_previewer);
 
         imageAdapter = new ImageAdapter(this);
-        //thumbnailAdapter = new ImageAdapter(this);
         photos = new Bundle();
         extras = getIntent().getExtras();
         activityTitle = (TextView)findViewById(R.id.title_text);
@@ -89,7 +85,9 @@ public class ImagePreviewer extends DashboardActivity implements
                 
             }
         }
-        mSwitcher.setImageDrawable(imageAdapter.mImageIds.get(ImagePreviewer.photoPosition));
+        
+        //mSwitcher.setImageDrawable(imageAdapter.mImageIds.get(ImagePreviewer.photoPosition));
+        imageAdapter.selectedImage = ImagePreviewer.photoPosition;
         Gallery g = (Gallery)findViewById(R.id.gallery);
 
         g.setAdapter(imageAdapter);
@@ -165,7 +163,9 @@ public class ImagePreviewer extends DashboardActivity implements
         public Vector<Drawable> mImageIds;
 
         private Context mContext;
-
+        
+        public int selectedImage = 0;
+        
         public ImageAdapter(Context context) {
             mContext = context;
             mImageIds = new Vector<Drawable>();
@@ -220,7 +220,7 @@ public class ImagePreviewer extends DashboardActivity implements
     }
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-        ImagePreviewer.photoPosition = position;
+        //ImagePreviewer.photoPosition = position;
         mSwitcher.setImageDrawable(imageAdapter.mImageIds.get(position));
     }
 
