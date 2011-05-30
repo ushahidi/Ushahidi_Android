@@ -1,3 +1,245 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+	Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
+	This file may be used under the terms of the GNU Lesser General Public License 
+	version 3 as published by the Free Software Foundation and appearing in the 
+	file LICENSE.LGPL included in the packaging of this file. Please review the 
+	following information to ensure the GNU Lesser General Public License version 
+	3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
+	have questions regarding the use of this file, please contact Ushahidi developers 
+	at team@ushahidi.com. -->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+	<string name="app_name">Ushahidi</string>
+	<string name="add_incident">Ushahidi | Ajouter rapport</string>
+	<string name="view_incident">Ushahidi | Afficher rapport</string>
+	<string name="incident_details">Ushahidi | Détails du rapport</string>
+	<string name="app_settings">Ushahidi | Options</string>
+	<string name="ushahidi_about">Ushahidi | A propos</string>
+	<string name="ushahidi_sync">Ushahidi | Synchroniser</string>
+	<string name="ushahidi_splash_screen">Ushahidi | Accueil</string>
+	<string name="prompt_mesg">Choisissez une catégorie à filtrer</string>
+	<string name="btn_country">Emplacement par défaut</string>
+	<string name="btn_confirm">Sauvegarder</string>
+	<string name="str_post_photos">Ajouter une photo</string>
+	<string name="add_categories">Choisissez les catégories</string>
+	<string name="alert_dialog_error_title">Oups!</string>
+	<string name="invalid_email_address">Votre adresse e-mail n\'est pas valide</string>
+	<string name="invalid_ushahidi_instance">On dirait que l\'URL saisie n\'est pas un
+		déploiement Ushahidi</string>
+	<string name="btn_save">Sauvegarder</string>
+	<string name="btn_find">Trouvez-moi</string>
+	<string name="btn_reset">Réinitialiser</string>
+	<string name="btn_ok">OK</string>
+	<string name="btn_add_photo">Ajouter une photo</string>
+	<string name="btn_cancel">Annuler</string>
+	<string name="btn_send">Envoyer</string>
+	<string name="incident_date">Modifier la date</string>
+	<string name="incident_verified">Vérifié</string>
+	<string name="incident_unverified">Non vérifié</string>
+	<string name="incident_location">Lieu</string>
+	<string name="add_location">Ajouter un lieu</string>
+	<string name="view_map">Carte</string>
+	<string name="incident_description">Description</string>
+	<string name="incident_time">Modifier l\'heure</string>
+	<string name="incident_title">Titre</string>
+	<string name="incident_add_category">Choisir une catégorie</string>
+	<string name="incident_menu_add">Ajouter un rapport</string>
+	<string name="incident_list">Voir les rapports</string>
+	<string name="menu_home">Accueil</string>
+	<string name="menu_sync">Synchroniser</string>
+	<string name="instructions">Tapez votre emplacement sur la carte</string>
+	<string name="menu_settings">Options</string>
+	<string name="basic_settings">Options de base</string>
+	<string name="advanced_settings">Options avancées</string>
+	<string name="hint_advanced_settings">Plus d\'options avancées</string>
+	<string name="txt_clear_cache">Vider le cache</string>
+	<string name="txt_confirm_clear_cache">Êtes-vous sûr de vouloir effacer la mémoire cache?</string>
+	<string name="hint_clear_cache">Effacer toutes les données stockées.</string>
+	<string name="option_location">Dossier par défaut</string>
+	<string name="hint_option_location">Emplacement où doivent être enregistrés les
+		éléments du déploiement sélectionné</string>
+	<string name="hint_SD_save_path">Tapez un nom de dossier</string>
+	<string name="bg_notification">Notifications en tâche de fond</string>
+	<string name="vibrate">Vibrer</string>
+	<string name="hint_vibrate">Le téléphone va vibrer</string>
+	<string name="ringtone">Sonnerie</string>
+	<string name="hint_ringtone">Écouter une sonnerie</string>
+	<string name="select_ringtone">Choisir une sonnerie</string>
+	<string name="hint_select_ringtone">Changer de sonnerie</string>
+	<string name="flash_led">Clignotement de la LED de notification</string>
+	<string name="hint_flash_led">Le téléphone va clignoter</string>
+	<string name="hint_domain">Sélectionnez le déploiement Ushahidi avec lequel
+		vous souhaitez interagir</string>
+	<string name="chk_auto_fetch">Synchronisation automatique</string>
+	<string name="hint_auto_fetch">Ushahidi va automatiquement télécharger les
+		nouveaux rapports.</string>
+	<string name="txt_auto_update_delay">Fréquence de synchronisation automatique</string>
+	<string name="hint_auto_update_delay">Définissez la fréquence à laquelle Ushahidi
+		synchronise le déploiement sélectionné.</string>
+	<string name="txt_path_SD">Chemin sur SD</string>
+	<string name="txt_cache">Fichiers cache</string>
+	<string name="txt_countries">Choisissez un pays par défaut</string>
+	<string name="txt_domain">Choisissez un site web par défaut</string>
+	<string name="txt_first_name">Prénom</string>
+	<string name="hint_first_name">Pour l\'attribution lors de l\'envoi d\'un rapport
+		(optionnel)</string>
+	<string name="txt_last_name">Nom</string>
+	<string name="hint_last_name">Egalement pour l\'attribution lors de l\'envoi
+		d\'un rapport (optionnel)</string>
+	<string name="txt_email">Adresse e-mail</string>
+	<string name="hint_email">Pour besoins de contact uniquement</string>
+	<string name="total_reports">Nombre de rapports</string>
+	<string name="hint_total_reports">Le nombre total de rapports à récupérer du
+		déploiement sélectionné.</string>
+	<string name="no_reports">Il n\'y a pas de rapports à montrer</string>
+	<string name="incident_menu_map">Voir carte</string>
+	<string name="incident_menu_refresh">Actualiser</string>
+	<string name="reports">Rapports</string>
+	<string name="menu_about">A propos</string>
+	<string name="ushahidi_url">ushahidi.com</string>
+	<string name="welcome_mgs">La plateforme Ushahidi est un logiciel gratuit et
+		open source de collecte et de visualisation d\'informations et de
+		cartographie interactive. Il permet à quiconque de soumettre des
+		informations par texto avec un téléphone mobile, par e-mail ou via un
+		formulaire Web.</string>
+	<string name="internet_connection">Erreur de réseau, assurez-vous que vous êtes
+		connecté à Internet</string>
+	<string name="preferences_notifications">Notifications</string>
+	<string name="report_successfully_added_online">Rapport mis en ligne avec succès et en attente de
+		modération</string>
+	<string name="report_successfully_added_offline">Rapport stocké localement en l\'absence de
+		connexion Internet. Pensez à synchroniser l\'application lors de votre
+		prochaine connexion.</string>
+	<string name="failed_to_add_report_offline">Impossible d\'envoyer le rapport. Vérifiez que tous
+		les champs obligatoires ont été remplis.</string>
+	<string name="failed_to_add_report_online">Erreur de connexion, votre rapport n\'a pu être
+		envoyé. Votre connexion est sans doute trop lente.</string>
+	<string name="empty_report_title">Entrez un titre pour le rapport.</string>
+	<string name="empty_report_description">Entrez une description pour le rapport.</string>
+	<string name="empty_report_location">Le nom de l\'emplacement est nécessaire.</string>
+	<string name="empty_report_categories">Sélectionnez au moins une catégorie.</string>
+	<string name="hint_location">Localisation actuelle</string>
+	<string name="could_not_fetch_reports">Impossible de récupérer les rapports.</string>
+	<string name="no_categories">Impossible de récupérer les catégories.</string>
+	<string name="reports_successfully_fetched">Rapports récupérés avec succès.</string>
+	<string name="find_location">Vous cherche...</string>
+	<string name="location_not_found">Aucun emplacement ne peut être déterminé
+		actuellement. Activer plus de sources satellites GPS dans les
+		Paramètres de Sécurité et de Localisation.</string>
+	<string name="loc_not_found">Votre position n\'a pu être déterminée.
+		Assurez-vous que vous avez choisi l\'emplacement exact sur la carte.</string>
+	<string name="version">v1.1</string>
+	<string name="report_title">Titre</string>
+	<string name="report_verified">Vérifié</string>
+	<string name="report_unverified">Non vérifié</string>
+	<string name="report_desc">Description</string>
+	<string name="report_category">Catégorie</string>
+	<string name="report_date">Date</string>
+	<string name="report_location">Lieu</string>
+	<string name="report_photo">Photo</string>
+	<string name="status_no">Non</string>
+	<string name="status_yes">Oui</string>
+	<string name="please_wait">Veuillez patienter...</string>
+	<string name="fetching_new_reports">Récupération de nouveaux rapports</string>
+	<string name="choose_method">Choisissez la méthode</string>
+	<string name="how_to_select_pic">Choisissez comment vous souhaitez obtenir l\'image.</string>
+	<string name="camera_option">Appareil-photo</string>
+	<string name="gallery_option">Galerie</string>
+	<string name="network_error">Erreur réseau</string>
+	<string name="network_error_msg">Erreur de réseau, assurez-vous que vous êtes
+		connecté à Internet</string>
+	<string name="file_system_error">Erreur de fichier système</string>
+	<string name="file_system_error_msg">Erreur de fichier système, assurez vous que votre
+		chemin de sauvegarde est correct !</string>
+	<string name="read_more">Lire plus...</string>
+	<string name="tab_item_report_list">Liste</string>
+	<string name="tab_item_report_map">Carte</string>
+	<string name="tab_item_checkin">Check Ins</string>
+	<string name="checkin_btn">Check In</string>
+	<string name="checkin_message">Message</string>
+	<string name="checkin_enter_msg_hint">Tapez message</string>
+	<string name="checkin_how_to_select_pic">Choisissez comment obtenir l\'image.</string>
+	<string name="checkin_list">Voir check in</string>
+	<string name="checkin_select_pic_file">Fichier</string>
+	<string name="checkin_selected_photo">Choisir photo</string>
+	<string name="view_checkins">Ushahidi | Voir Check Ins</string>
+	<string name="checkin_progress_title">Chargement</string>
+	<string name="checkin_in_progress">Envoi Check-in...</string>
+	<string name="checkin_progress_message">Obtenir les données de localisation...</string>
+	<string name="checkin_contact">Coordonnées</string>
+	<string name="checkin_success_toast">Check in réussi</string>
+	<string name="checkin_error_toast">Une erreur s\'est produite lors du check in</string>
+	<string name="checkin_empty_message">Tapez un message de check in</string>
+	<string name="checkin_no_location">Impossible d\'obtenir votre position. Si vous
+		utilisez la fonctionnalité GPS du téléphone, assurez-vous que le
+		téléphone peut voir le ciel. Si le téléphone ne peut pas voir le ciel,
+		éteignez le GPS pour utiliser les tours de vos fournisseurs de réseaux
+		cellulaires pour la localisation.</string>
+	<string name="could_not_fetch_checkin">Impossible de récupérer les check ins.</string>
+	<string name="checkins_successfully_fetched">Check ins récupérés avec succès.</string>
+	<string name="checkin_enter_firstname_hint">Entrez prénom</string>
+	<string name="checkin_enter_lastname_hint">Entrez nom</string>
+	<string name="checkin_enter_email_hint">Entrez votre e-mail</string>
+	<string name="no_name">Sans Nom</string>
+	<string name="curr_location">Emplacement actuel</string>
+	<string name="notification_status_bar_message">Envoyer Rapport</string>
+	<string name="notification_expanded_title">Rapport Ushahidi</string>
+	<string name="notification_expanded_message">Rapports envoyés avec succès</string>
+	<string name="change_photo">Changer d\'image</string>
+
+	<!-- Deployment search -->
+	<string name="search_label">Rechercher</string>
+	<!-- The hint text that appears in the search box. -->
+	<string name="search_hint">Recherche pour un déploiement...</string>
+	<string name="deployment_fetched_successful">
+		Déploiements succès récupérés</string>
+		<string name="could_not_fetch_data">Impossible de récupérer de nouveaux déploiements
+			raison d\'une erreur réseau.</string>
+
+		<!-- The description that will show up in the search settings for this 
+			source. -->
+		<string name="settings_description">Trouver des déploiements</string>
+		<string name="no_results">Aucun résultat trouvé pour \"%s\"</string>
+		<!-- Shown above search results when we receive a search request. -->
+		<plurals name="search_results">
+			<item quantity="one">%1$d résultat pour \"%2$s\": </item>
+			<item quantity="other">%1$d résultats pour \"%2$s\": </item>
+		</plurals>
+		<!-- pull to refresh list -->
+		<string name="pull_to_refresh_pull_label">Tirez pour rafraîchir...</string>
+		<string name="pull_to_refresh_release_label">Sortie pour se rafraîchir...</string>
+		<string name="pull_to_refresh_refreshing_label">Chargement...</string>
+		<string name="pull_to_refresh_tap_label">Appuyez sur pour rafraîchir...</string>
+
+		<!-- sharing -->
+		<string name="share_template">
+			Départ
+			<xliff:g id="title">%1$s</xliff:g>
+			at
+			<xliff:g id="reporturl">%2$s</xliff:g>
+		</string>
+		<string name="title_share">Partager avec</string>
+		<string name="select_distance">Sélectionnez la distance en km</string>
+		<!-- photos -->
+		<string name="preview_photo">Photo\%\</string>
+
+		<!-- empty list -->
+		<string name="empty_checkins">Pas de check ins</string>
+		<string name="empty_reports">Aucun rapport</string>
+		<string name="empty_deployments">Pas de déploiements</string>
+
+		<!-- deployments -->
+		<string name="clear_all">Effacer tous les</string>
+		<string name="confirm_clear">Êtes-vous sûr de vouloir tout effacer?</string>
+		<string name="items_cleared">Tout a été effacé</string>
+		<string name="no_items_cleared">Aucun élément pour effacer</string>
+		<string name="loading">Chargement...</string>
+		<string name="deploymet_url">URL de déploiement</string>
+		<string name="add_deployment">Ajouter déploiement</string>
+		<string name="delete">Supprimez</string>
+		<string name="deployment_deleted">Déploiement supprimé</string>
+		<string name="deployment_deleted_failed">Impossible de supprimer</string>
+		<string name="fix_error">S\'il vous plaît assurez-vous un nom et une adresse
+			URL valide sont inscrits.</string>
+		<string name="sending_report_in_progress">Envoi du rapport...</string>
 </resources>

@@ -5,6 +5,7 @@
  * Added Deployment search support.
  * Redesigned dashboard UI.
  * Added action bar to most activities.
+ * Added French Translation.
 
 Fixed:
  * Improved GPS fix. Its much faster now.
