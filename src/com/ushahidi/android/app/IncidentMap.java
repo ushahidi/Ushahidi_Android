@@ -40,7 +40,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -111,7 +110,7 @@ public class IncidentMap extends MapActivity {
         mOldIncidents = new ArrayList<IncidentsData>();
         mNewIncidents = new ArrayList<IncidentsData>();
 
-        mNewIncidents = showIncidents("All");
+        mNewIncidents = showIncidents(getString(R.string.all_categories));
         mHandler = new Handler();
 
         Bundle incidents = getIntent().getExtras();
@@ -162,8 +161,7 @@ public class IncidentMap extends MapActivity {
             mHandler.post(mMarkersOnMap);
 
         } else {
-            Toast.makeText(IncidentMap.this, "There are no reports to be shown", Toast.LENGTH_LONG)
-                    .show();
+            Util.showToast(IncidentMap.this, R.string.no_reports);
         }
 
     }
@@ -225,7 +223,7 @@ public class IncidentMap extends MapActivity {
         String thumbnail;
         String image;
 
-        if (by.equals("All"))
+        if (by.equals(getString(R.string.all_categories)))
             cursor = UshahidiApplication.mDb.fetchAllIncidents();
         else
             cursor = UshahidiApplication.mDb.fetchIncidentsByCategories(by);
@@ -271,7 +269,7 @@ public class IncidentMap extends MapActivity {
                 location = cursor.getString(locationIndex);
                 incidentData.setIncidentLocLongitude(location);
 
-                Util.joinString("Date: ", cursor.getString(dateIndex));
+                Util.joinString(getString(R.string.report_date), cursor.getString(dateIndex));
                 incidentData.setIncidentDate(cursor.getString(dateIndex));
 
                 thumbnail = cursor.getString(mediaIndex);
@@ -341,7 +339,7 @@ public class IncidentMap extends MapActivity {
                 AlertDialog dialog = (new AlertDialog.Builder(this)).create();
                 dialog.setTitle(title);
                 dialog.setMessage(message);
-                dialog.setButton2("Ok", new Dialog.OnClickListener() {
+                dialog.setButton2(getString(R.string.btn_ok), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
@@ -400,7 +398,7 @@ public class IncidentMap extends MapActivity {
 
                 Util.showToast(appContext, R.string.internet_connection);
             } else if (result == 0) {
-                mNewIncidents = showIncidents("All");
+                mNewIncidents = showIncidents(getString(R.string.all_categories));
                 populateMap();
                 setProgressBarIndeterminateVisibility(false);
             }

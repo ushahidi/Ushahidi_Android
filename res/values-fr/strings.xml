@@ -10,13 +10,13 @@
 	at team@ushahidi.com. -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 	<string name="app_name">Ushahidi</string>
-	<string name="add_incident">Ushahidi | Ajouter rapport</string>
-	<string name="view_incident">Ushahidi | Afficher rapport</string>
-	<string name="incident_details">Ushahidi | Détails du rapport</string>
-	<string name="app_settings">Ushahidi | Options</string>
-	<string name="ushahidi_about">Ushahidi | A propos</string>
-	<string name="ushahidi_sync">Ushahidi | Synchroniser</string>
-	<string name="ushahidi_splash_screen">Ushahidi | Accueil</string>
+	<string name="add_incident">Ajouter rapport</string>
+	<string name="view_incident">Afficher rapport</string>
+	<string name="incident_details">Détails du rapport</string>
+	<string name="app_settings">Options</string>
+	<string name="ushahidi_about">A propos</string>
+	<string name="ushahidi_sync">Synchroniser</string>
+	<string name="ushahidi_splash_screen">Accueil</string>
 	<string name="prompt_mesg">Choisissez une catégorie à filtrer</string>
 	<string name="btn_country">Emplacement par défaut</string>
 	<string name="btn_confirm">Sauvegarder</string>
@@ -193,53 +193,59 @@
 	<string name="search_hint">Recherche pour un déploiement...</string>
 	<string name="deployment_fetched_successful">
 		Déploiements succès récupérés</string>
-		<string name="could_not_fetch_data">Impossible de récupérer de nouveaux déploiements
-			raison d\'une erreur réseau.</string>
+	<string name="could_not_fetch_data">Impossible de récupérer de nouveaux déploiements
+		raison d\'une erreur réseau.</string>
 
-		<!-- The description that will show up in the search settings for this 
-			source. -->
-		<string name="settings_description">Trouver des déploiements</string>
-		<string name="no_results">Aucun résultat trouvé pour \"%s\"</string>
-		<!-- Shown above search results when we receive a search request. -->
-		<plurals name="search_results">
-			<item quantity="one">%1$d résultat pour \"%2$s\": </item>
-			<item quantity="other">%1$d résultats pour \"%2$s\": </item>
-		</plurals>
-		<!-- pull to refresh list -->
-		<string name="pull_to_refresh_pull_label">Tirez pour rafraîchir...</string>
-		<string name="pull_to_refresh_release_label">Sortie pour se rafraîchir...</string>
-		<string name="pull_to_refresh_refreshing_label">Chargement...</string>
-		<string name="pull_to_refresh_tap_label">Appuyez sur pour rafraîchir...</string>
+	<!-- The description that will show up in the search settings for this source. -->
+	<string name="settings_description">Trouver des déploiements</string>
+	<string name="no_results">Aucun résultat trouvé pour \"%s\"</string>
+	<!-- Shown above search results when we receive a search request. -->
+	<plurals name="search_results">
+		<item quantity="one">%1$d résultat pour \"%2$s\": </item>
+		<item quantity="other">%1$d résultats pour \"%2$s\": </item>
+	</plurals>
+	<!-- pull to refresh list -->
+	<string name="pull_to_refresh_pull_label">Tirez pour rafraîchir...</string>
+	<string name="pull_to_refresh_release_label">Sortie pour se rafraîchir...</string>
+	<string name="pull_to_refresh_refreshing_label">Chargement...</string>
+	<string name="pull_to_refresh_tap_label">Appuyez sur pour rafraîchir...</string>
 
-		<!-- sharing -->
-		<string name="share_template">
-			Départ
-			<xliff:g id="title">%1$s</xliff:g>
-			at
-			<xliff:g id="reporturl">%2$s</xliff:g>
-		</string>
-		<string name="title_share">Partager avec</string>
-		<string name="select_distance">Sélectionnez la distance en km</string>
-		<!-- photos -->
-		<string name="preview_photo">Photo\%\</string>
+	<!-- sharing -->
+	<string name="share_template">
+		Départ
+		<xliff:g id="title">%1$s</xliff:g>
+		at
+		<xliff:g id="reporturl">%2$s</xliff:g>
+	</string>
+	<string name="title_share">Partager avec</string>
+	<string name="select_distance">Sélectionnez la distance en km</string>
+	<!-- photos -->
+	<string name="preview_photo">Photo\%\</string>
 
-		<!-- empty list -->
-		<string name="empty_checkins">Pas de check ins</string>
-		<string name="empty_reports">Aucun rapport</string>
-		<string name="empty_deployments">Pas de déploiements</string>
+	<!-- empty list -->
+	<string name="empty_checkins">Pas de check ins</string>
+	<string name="empty_reports">Aucun rapport</string>
+	<string name="empty_deployments">Pas de déploiements</string>
 
-		<!-- deployments -->
-		<string name="clear_all">Effacer tous les</string>
-		<string name="confirm_clear">Êtes-vous sûr de vouloir tout effacer?</string>
-		<string name="items_cleared">Tout a été effacé</string>
-		<string name="no_items_cleared">Aucun élément pour effacer</string>
-		<string name="loading">Chargement...</string>
-		<string name="deploymet_url">URL de déploiement</string>
-		<string name="add_deployment">Ajouter déploiement</string>
-		<string name="delete">Supprimez</string>
-		<string name="deployment_deleted">Déploiement supprimé</string>
-		<string name="deployment_deleted_failed">Impossible de supprimer</string>
-		<string name="fix_error">S\'il vous plaît assurez-vous un nom et une adresse
-			URL valide sont inscrits.</string>
-		<string name="sending_report_in_progress">Envoi du rapport...</string>
+	<!-- deployments -->
+	<string name="clear_all">Effacer tous les</string>
+	<string name="confirm_clear">Êtes-vous sûr de vouloir tout effacer?</string>
+	<string name="items_cleared">Tout a été effacé</string>
+	<string name="no_items_cleared">Aucun élément pour effacer</string>
+	<string name="loading">Chargement...</string>
+	<string name="deploymet_url">URL de déploiement</string>
+	<string name="add_deployment">Ajouter déploiement</string>
+	<string name="delete">Supprimez</string>
+	<string name="deployment_deleted">Déploiement supprimé</string>
+	<string name="deployment_deleted_failed">Impossible de supprimer</string>
+	<string name="fix_error">S\'il vous plaît assurez-vous un nom et une adresse
+		URL valide sont inscrits.</string>
+	<string name="sending_report_in_progress">Envoi du rapport...</string>
+	<string name="ushahidi_setup_title">Configuration Ushahidi</string>
+	<string name="ushahidi_setup_blub">Configuration d\'un déploiement Ushahidi.</string>
+	<string name="all_categories">Tous les</string>
+	<string name="recent_reports">Rapports récents</string>
+	<string name="on_phone">Le téléphone</string>
+	<string name="on_sd_card">Sur carte SD</string>
+	 <string name="minutes">Minutes</string>
 </resources>

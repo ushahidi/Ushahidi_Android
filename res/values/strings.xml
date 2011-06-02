@@ -250,4 +250,11 @@
     <string name="deployment_deleted_failed">Failed to delete</string>
     <string name="fix_error">Please make sure a name and a valid URL are entered.</string>
     <string name="sending_report_in_progress">Sending report...</string>
+    <string name="ushahidi_setup_title">Ushahidi Setup</string>
+    <string name="ushahidi_setup_blub">Setup an ushahidi deployment.</string>
+    <string name="all_categories">All</string>
+    <string name="recent_reports">Recent Reports</string>
+    <string name="on_phone">On Phone</string>
+    <string name="on_sd_card">On SD Card</string>
+    <string name="minutes">Minutes</string>
 </resources>

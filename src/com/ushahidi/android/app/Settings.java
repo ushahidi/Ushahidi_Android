@@ -90,6 +90,14 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
     private boolean checkin = false;
 
+    private String recentReports = "";
+
+    private String onPhone = "";
+
+    private String onSdCard = "";
+
+    private String minutes = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +114,11 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         vibrateCheckBoxPref = new CheckBoxPreference(this);
         ringtoneCheckBoxPref = new CheckBoxPreference(this);
         flashLedCheckBoxPref = new CheckBoxPreference(this);
+
+        recentReports = getString(R.string.recent_reports);
+        onPhone = getString(R.string.on_phone);
+        onSdCard = getString(R.string.on_sd_card);
+        minutes = getString(R.string.minutes);
 
         clearCacheCheckBoxPref = (DialogPreference)getPreferenceScreen().findPreference(
                 "clear_cache_preference");
@@ -130,11 +143,15 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
         // Total reports to fetch at a time
         // set list values
+        // TODO:// need to look it how to properly handle this. It looks ugly
+        // but it works.
         CharSequence[] totalReportsEntries = {
-                "20 Recent Reports", "40 Recent Reports", "60 Recent Reports", "80 Recent Reports",
-                "100 Recent Reports", "250 Recent Reports", "500 Recent Reports",
-                "1000 Recent Reports"
+                "20 ".concat(recentReports), "40 ".concat(recentReports),
+                "60 ".concat(recentReports), "80 ".concat(recentReports),
+                "100 ".concat(recentReports), "250 ".concat(recentReports),
+                "500 ".concat(recentReports), "1000 ".concat(recentReports)
         };
+
         CharSequence[] totalReportsValues = {
                 "20", "40", "60", "80", "100", "250", "500", "1000"
         };
@@ -192,7 +209,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         // Auto update reports time interval
         // set list values
         CharSequence[] autoUpdateEntries = {
-                "5 Minutes", "10 Minutes", "15 Minutes", "30 Minutes", "60 Minutes"
+                "5 ".concat(minutes), "10 ".concat(minutes), "15 ".concat(minutes),
+                "30 ".concat(minutes), "60 ".concat(minutes)
         };
         CharSequence[] autoUpdateValues = {
                 "0", "5", "10", "15", "30", "60"
@@ -209,8 +227,9 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         // location of storage
         // set list values
         CharSequence[] saveItemsEntries = {
-                "On Phone", "On SD Card"
+                onPhone, onSdCard
         };
+        
         CharSequence[] saveItemsValues = {
                 "phone", "card"
         };

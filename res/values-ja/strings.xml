@@ -8,24 +8,24 @@
 	3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com. -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 	<string name="app_name">Ushahidi</string>
-	<string name="add_incident">Ushahidi | レポート追加</string>
-	<string name="view_incident">Ushahidi | レポート表示</string>
-	<string name="incident_details">Ushahidi | レポート詳細</string>
-	<string name="app_settings">Ushahidi | 設定 </string>
-	<string name="ushahidi_about">Ushahidi | About </string>
-	<string name="ushahidi_sync">Ushahidi | 同期 </string>
-	<string name="ushahidi_splash_screen">Ushahidi | Splash Screen"</string>
+	<string name="add_incident">レポート追加</string>
+	<string name="view_incident">レポート表示</string>
+	<string name="incident_details">レポート詳細</string>
+	<string name="app_settings">設定 </string>
+	<string name="ushahidi_about">について </string>
+	<string name="ushahidi_sync">同期 </string>
+	<string name="ushahidi_splash_screen">スプラッシュスクリーン</string>
 	<string name="date_time">イベントタイトル</string>
 	<string name="prompt_mesg">フィルターからカテゴリーを選択してください</string>
 	<string name="btn_country">デフォルトの位置</string>
 	<string name="btn_confirm">保存</string>
 	<string name="str_post_photos">写真追加</string>
 	<string name="add_categories">カテゴリー選択</string>
-	<string name="alert_dialog_ok">OK</string>
-	<string name="alert_dialog_hide">Hide</string>
-	<string name="alert_dialog_something">Something</string>
+	<string name="alert_dialog_ok">[OK]を</string>
+	<string name="alert_dialog_hide">隠す</string>
+	<string name="alert_dialog_something">何か</string>
 	<string name="alert_dialog_error_title">Oops</string>
 	<string name="alert_dialog_error_msg">レポート取得中にエラーが発生しました 入力したデータを確認してください</string>
 	<string name="invalid_email_address">E-mailアドレスが異常です</string>
@@ -33,7 +33,7 @@
 	<string name="btn_save">保存</string>
 	<string name="btn_find">現在地</string>
 	<string name="btn_reset">リセット</string>
-	<string name="btn_ok">Ok</string>
+	<string name="btn_ok">[OK]を</string>
 	<string name="btn_add_photo">写真追加</string>
 	<string name="btn_cancel">キャンセル</string>
 	<string name="btn_send">送信</string>
@@ -107,13 +107,9 @@
 	<string name="incident_menu_refresh">リフレッシュ</string>
 	<string name="reports">レポート</string>
 	<!-- about screen -->
-	<string name="menu_about">About</string>
+	<string name="menu_about">について</string>
 	<string name="ushahidi_url">Ushahidi.com</string>
-	<string name="welcome_mgs">Welcome to Ushahidi, which means "testimony" in
-		Swhahili, where we are
-		building a platform that crowdsources crisis information.Allowing anyone to
-		submit crisis
-		information through text messaging using a mobile phone, email or web form.
+	<string name="welcome_mgs">ようこそ私たちは、危機情報をcrowdsourcesプラットフォームを構築しているSwhahiliで、"証言"を意味するUshahidiに。許可する誰もが携帯電話、電子メールやWebフォームを使用してテキストメッセージを通じて危機情報を送信することができます。
 	</string>
 	<string name="internet_connection">ネットワークエラーです。データとの接続を確保してください</string>
 	<string name="preferences_notifications">通知</string>
@@ -188,4 +184,71 @@
 	<string name="checkin_enter_firstname_hint">名前の入力</string>
 	<string name="checkin_enter_lastname_hint">姓名の入力</string>
 	<string name="checkin_enter_email_hint">E-mailの入力</string>
+	<string name="no_name">名前のない</string>
+	<string name="curr_location">現在位置</string>
+
+	<!-- Notification message strings from OfflineIncidentSendReceiver -->
+	<string name="notification_status_bar_message">レポートを送信</string>
+	<string name="notification_expanded_title">Ushahidiレポート</string>
+	<string name="notification_expanded_message">レポートが正常に送信さ</string>
+	<string name="change_photo">変更写真</string>
+
+	<!-- Deployment search -->
+	<string name="search_label">探す</string>
+	<!-- The hint text that appears in the search box. -->
+	<string name="search_hint">デプロイメントの検索...</string>
+	<string name="deployment_fetched_successful">デプロイメントが正常にフェッチされた</string>
+	<string name="could_not_fetch_data">新しい展開、ネットワークエラーのために取得できませんでした。.</string>
+
+	<!-- The description that will show up in the search settings for this source. -->
+	<string name="settings_description">見つかったの展開</string>
+	<string name="no_results">結果はしましたが、見つかりません \"%s\"</string>
+	<!-- Shown above search results when we receive a search request. -->
+	<plurals name="search_results">
+		<item quantity="one">%1$d 結果 \"%2$s\": </item>
+		<item quantity="other">%1$d 結果 \"%2$s\": </item>
+	</plurals>
+	<!-- pull to refresh list -->
+	<string name="pull_to_refresh_pull_label">引いて、リフレッシュする...</string>
+	<string name="pull_to_refresh_release_label">リリースでは、更新する...</string>
+	<string name="pull_to_refresh_refreshing_label">ロード...</string>
+	<string name="pull_to_refresh_tap_label">更新をタップして...</string>
+
+	<!-- sharing -->
+	<string name="share_template">
+		チェックアウト
+		<xliff:g id="title">%1$s</xliff:g>
+		at
+		<xliff:g id="reporturl">%2$s</xliff:g>
+	</string>
+	<string name="title_share">共有使用して</string>
+	<string name="select_distance">キロで選択距離</string>
+	<!-- photos -->
+	<string name="preview_photo">写真\%\</string>
+
+	<!-- empty list -->
+	<string name="empty_checkins">いいえ check ins</string>
+	<string name="empty_reports">報告なし</string>
+	<string name="empty_deployments">いいえ展開</string>
+
+	<!-- deployments -->
+	<string name="clear_all">すべてクリア</string>
+	<string name="confirm_clear">あなたはすべてをクリアしてもよろしいですか？</string>
+	<string name="items_cleared">すべてが正常にクリアされ</string>
+	<string name="no_items_cleared">該当事項はありませんクリアする</string>
+	<string name="loading">ロード...</string>
+	<string name="deploymet_url">デプロイメントURL</string>
+	<string name="add_deployment">追加配備</string>
+	<string name="delete">削除</string>
+	<string name="deployment_deleted">展開が削除された</string>
+	<string name="deployment_deleted_failed">削除に失敗しました。</string>
+	<string name="fix_error">入力された名前と有効なURLを確認してください。</string>
+	<string name="sending_report_in_progress">レポートを送信する...</string>
+	<string name="ushahidi_setup_title">Ushahidiセットアップ</string>
+	<string name="ushahidi_setup_blub">セットアップushahidi展開。</string>
+	<string name="all_categories">すべて</string>
+	<string name="recent_reports">最近のレポート</string>
+	<string name="on_phone">電話で</string>
+    <string name="on_sd_card">SDカードについて</string>
+     <string name="minutes">分</string>
 </resources>

@@ -189,7 +189,7 @@ public class ListIncidents extends Activity {
     final Runnable mDisplayIncidents = new Runnable() {
         public void run() {
             setProgressBarIndeterminateVisibility(true);
-            showIncidents("All");
+            showIncidents(getString(R.string.all_categories));
             showCategories();
             try {
                 setProgressBarIndeterminateVisibility(false);
@@ -329,7 +329,7 @@ public class ListIncidents extends Activity {
             } else if (result == 1) {
                 Util.showToast(appContext, R.string.could_not_fetch_reports);
             } else if (result == 0) {
-                showIncidents("All");
+                showIncidents(getString(R.string.all_categories));
                 showCategories();
                 Util.showToast(appContext, R.string.reports_successfully_fetched);
             }
@@ -342,7 +342,7 @@ public class ListIncidents extends Activity {
     public void showIncidents(String by) {
 
         Cursor cursor;
-        if (by.equals("All"))
+        if (by.equals(getString(R.string.all_categories)))
             cursor = UshahidiApplication.mDb.fetchAllIncidents();
         else
             cursor = UshahidiApplication.mDb.fetchIncidentsByCategories(by);
@@ -459,7 +459,7 @@ public class ListIncidents extends Activity {
         UshahidiApplication.mDb.fetchCategoriesCount();
 
         vectorCategories.clear();
-        vectorCategories.add("All");
+        vectorCategories.add(getString(R.string.all_categories));
         if (cursor.moveToFirst()) {
             int titleIndex = cursor.getColumnIndexOrThrow(UshahidiDatabase.CATEGORY_TITLE);
             do {

@@ -34,9 +34,9 @@
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:layout_weight="1">
 			<Button android:id="@+id/incident_list" style="@style/DashboardButton"
-				android:text="@string/incident_list" android:drawableTop="@drawable/dashboard_btn_add" />
+				android:text="@string/incident_list" android:drawableTop="@drawable/dashboard_btn_list" />
 			<Button android:id="@+id/incident_add" style="@style/DashboardButton"
-				android:text="@string/incident_menu_add" android:drawableTop="@drawable/dashboard_btn_list" />
+				android:text="@string/incident_menu_add" android:drawableTop="@drawable/dashboard_btn_add" />
 		</LinearLayout>
 
 		<!-- Middle Grid -->
@@ -46,7 +46,7 @@
 			<Button android:id="@+id/incident_map" style="@style/DashboardButton"
 				android:text="@string/incident_menu_map" android:drawableTop="@drawable/dashboard_btn_map" />
 			<Button android:id="@+id/deployment_search" style="@style/DashboardButton"
-				android:onClick="onClickFeature" android:text="Search"
+				android:onClick="onClickFeature" android:text="@string/search_label"
 				android:drawableTop="@drawable/dashboard_btn_search" />
 		</LinearLayout>
 

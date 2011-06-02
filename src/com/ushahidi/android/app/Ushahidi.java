@@ -222,9 +222,9 @@ public class Ushahidi extends DashboardActivity {
         switch (id) {
             case DIALOG_PROMPT: {
                 AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-                dialog.setTitle("Ushahidi Setup");
-                dialog.setMessage("Setup an ushahidi instance.");
-                dialog.setButton2("Ok", new Dialog.OnClickListener() {
+                dialog.setTitle(R.string.ushahidi_setup_title);
+                dialog.setMessage(getString(R.string.ushahidi_setup_blub));
+                dialog.setButton2(getString(R.string.btn_ok), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent launchPreferencesIntent = new Intent().setClass(Ushahidi.this,
                                 DeploymentSearch.class);
