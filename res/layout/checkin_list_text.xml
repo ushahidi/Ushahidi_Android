@@ -13,10 +13,10 @@
 	android:layout_height="fill_parent"
 	android:padding="5dip" >
 
-	<ImageView android:layout_width="50dip" android:layout_height="50dip"
+	<ImageView android:layout_width="60dip" android:layout_height="60dip"
 		android:id="@+id/checkin_thumbnail" android:layout_alignParentTop="true"
-		android:layout_alignParentLeft="true" android:paddingRight="5dip"
-		android:scaleType="centerCrop" />
+		android:layout_alignParentLeft="true" android:paddingRight="2dip"
+		 />
 	<TextView android:id="@+id/checkin_title"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:singleLine="true" android:textStyle="bold" android:ellipsize="end"
