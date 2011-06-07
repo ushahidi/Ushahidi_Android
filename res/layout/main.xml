@@ -33,10 +33,21 @@
 		<LinearLayout android:orientation="horizontal"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:layout_weight="1">
+			<Button android:id="@+id/checkin_list_btn" style="@style/DashboardButton"
+				android:text="@string/checkin_list" android:drawableTop="@drawable/dashboard_btn_checkin" />
+
+			<!-- List button -->
 			<Button android:id="@+id/incident_list" style="@style/DashboardButton"
 				android:text="@string/incident_list" android:drawableTop="@drawable/dashboard_btn_list" />
+
 			<Button android:id="@+id/incident_add" style="@style/DashboardButton"
-				android:text="@string/incident_menu_add" android:drawableTop="@drawable/dashboard_btn_add" />
+				android:visibility="gone" android:text="@string/incident_menu_add"
+				android:drawableTop="@drawable/dashboard_btn_add" />
+
+			<!-- Checkin button -->
+			<Button android:id="@+id/checkin_add_btn" style="@style/DashboardButton"
+				android:visibility="gone" android:text="@string/checkin_btn"
+				android:drawableTop="@drawable/dashboard_btn_add_checkin" />
 		</LinearLayout>
 
 		<!-- Middle Grid -->

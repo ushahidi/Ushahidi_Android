@@ -20,10 +20,6 @@
 
 package com.ushahidi.android.app;
 
-import com.ushahidi.android.app.checkin.CheckinActivity;
-import com.ushahidi.android.app.checkin.NetworkServices;
-import com.ushahidi.android.app.util.Util;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -39,6 +35,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import com.ushahidi.android.app.checkin.CheckinActivity;
+import com.ushahidi.android.app.checkin.NetworkServices;
+import com.ushahidi.android.app.util.Util;
 
 public class Ushahidi extends DashboardActivity {
     /** Called when the activity is first created. */
@@ -63,7 +63,7 @@ public class Ushahidi extends DashboardActivity {
     private static final int INCIDENTS = 3;
 
     private static final int VIEW_SETTINGS = 4;
-    
+
     private static final int VIEW_SEARCH = 5;
 
     private static final int REQUEST_CODE_SETTINGS = 1;
@@ -80,6 +80,10 @@ public class Ushahidi extends DashboardActivity {
 
     private Button addBtn;
 
+    private Button checkinListBtn;
+
+    private Button checkinAddBtn;
+
     private Button settingsBtn;
 
     private Button mapBtn;
@@ -92,9 +96,10 @@ public class Ushahidi extends DashboardActivity {
             + "Make sure you have entered an Ushahidi instance.";
 
     private Bundle bundle;
-    
+
     private boolean refreshState = false;
 
+    
     // Checkin specific variables and functions
 
     @Override
@@ -111,10 +116,14 @@ public class Ushahidi extends DashboardActivity {
 
         // check if domain has been set
         if (UshahidiPref.domain.length() == 0 || UshahidiPref.domain.equals("http://")) {
-            mHandler.post(mDisplayPrompt);          
+            mHandler.post(mDisplayPrompt);
         }
         listBtn = (Button)findViewById(R.id.incident_list);
+        checkinListBtn = (Button)findViewById(R.id.checkin_list_btn);
+
         addBtn = (Button)findViewById(R.id.incident_add);
+        checkinAddBtn = (Button)findViewById(R.id.checkin_add_btn);
+
         settingsBtn = (Button)findViewById(R.id.deployment_settings);
         mapBtn = (Button)findViewById(R.id.incident_map);
         searchBtn = (Button)findViewById(R.id.deployment_search);
@@ -122,7 +131,7 @@ public class Ushahidi extends DashboardActivity {
         initializeUI();
 
     }
-    
+
     @Override
     public void onRefreshReports(View v) {
         ReportsTask reportsTask = new ReportsTask();
@@ -143,14 +152,32 @@ public class Ushahidi extends DashboardActivity {
         UshahidiPref.loadSettings(this);
         // This is to temporarily disable reports stuff
         if (UshahidiPref.isCheckinEnabled == 1) {
-            addBtn.setText(getString(R.string.checkin_btn));
-            listBtn.setText(getString(R.string.checkin_list));
+            
+            listBtn.setVisibility(View.GONE);
+            addBtn.setVisibility(View.GONE);
+            checkinListBtn.setVisibility(View.VISIBLE);
+
+            checkinAddBtn.setVisibility(View.VISIBLE);
+            
         } else {
-            addBtn.setText(getString(R.string.incident_menu_add));
-            listBtn.setText(getString(R.string.incident_list));
+
+            listBtn.setVisibility(View.VISIBLE);
+            addBtn.setVisibility(View.VISIBLE);
+            checkinListBtn.setVisibility(View.GONE);
+            checkinAddBtn.setVisibility(View.GONE);
         }
 
         listBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent intent = new Intent(Ushahidi.this, IncidentsTab.class);
+                startActivityForResult(intent, INCIDENTS);
+                setResult(RESULT_OK);
+
+            }
+        });
+
+        checkinListBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 Intent intent = new Intent(Ushahidi.this, IncidentsTab.class);
@@ -171,42 +198,47 @@ public class Ushahidi extends DashboardActivity {
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (UshahidiPref.isCheckinEnabled == 1) {
-                    NetworkServices.fileName = "";
-                    Intent checkinActivityIntent = new Intent().setClass(Ushahidi.this,
-                            CheckinActivity.class);
-                    startActivity(checkinActivityIntent);
-                    setResult(RESULT_OK);
-                } else {
-                    Intent intent = new Intent(Ushahidi.this, AddIncident.class);
-                    startActivityForResult(intent, ADD_INCIDENTS);
-                    setResult(RESULT_OK);
-                }
+
+                Intent intent = new Intent(Ushahidi.this, AddIncident.class);
+                startActivityForResult(intent, ADD_INCIDENTS);
+                setResult(RESULT_OK);
+
             }
         });
-        
-        searchBtn.setOnClickListener(new View.OnClickListener() {
-            
+
+        checkinAddBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                
+                NetworkServices.fileName = "";
+                Intent checkinActivityIntent = new Intent().setClass(Ushahidi.this,
+                        CheckinActivity.class);
+                startActivity(checkinActivityIntent);
+                setResult(RESULT_OK);
+
+            }
+        });
+
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+
                 Intent intent = new Intent(Ushahidi.this, DeploymentSearch.class);
                 startActivityForResult(intent, VIEW_SEARCH);
                 setResult(RESULT_OK);
             }
         });
-        
+
         aboutBtn.setOnClickListener(new View.OnClickListener() {
-            
+
             public void onClick(View v) {
                 Intent launchIntent = new Intent(Ushahidi.this, About.class);
                 startActivityForResult(launchIntent, REQUEST_CODE_ABOUT);
                 setResult(RESULT_OK);
-                
+
             }
         });
-        
+
         mapBtn.setOnClickListener(new View.OnClickListener() {
-            
+
             public void onClick(View v) {
                 bundle.putInt("tab_index", 1);
                 Intent launchIntent = new Intent(Ushahidi.this, IncidentsTab.class);
@@ -308,10 +340,10 @@ public class Ushahidi extends DashboardActivity {
 
         return (applyMenuChoice(item) || super.onContextItemSelected(item));
     }
-    
+
     private void updateRefreshStatus() {
-        findViewById(R.id.refresh_report_btn).setVisibility(
-                refreshState ? View.GONE : View.VISIBLE);
+        findViewById(R.id.refresh_report_btn)
+                .setVisibility(refreshState ? View.GONE : View.VISIBLE);
         findViewById(R.id.title_refresh_progress).setVisibility(
                 refreshState ? View.VISIBLE : View.GONE);
     }

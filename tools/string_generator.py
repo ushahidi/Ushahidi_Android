@@ -1,19 +1,49 @@
 #/usr/bin/python!
-''' Reads the hunspell dictionary definition for ak-GH
-and then generate a dicionary.xml file for android '''
+''' 
+/** 
+ ** Copyright (c) 2010 Ushahidi Inc
+ ** All rights reserved
+ ** Contact: team@ushahidi.com
+ ** Website: http://www.ushahidi.com
+ ** 
+ ** GNU Lesser General Public License Usage
+ ** This file may be used under the terms of the GNU Lesser
+ ** General Public License version 3 as published by the Free Software
+ ** Foundation and appearing in the file LICENSE.LGPL included in the
+ ** packaging of this file. Please review the following information to
+ ** ensure the GNU Lesser General Public License version 3 requirements
+ ** will be met: http://www.gnu.org/licenses/lgpl.html.	
+ **	
+ **
+ ** If you have questions regarding the use of this file, please contact
+ ** Ushahidi developers at team@ushahidi.com.
+ ** 
+ **/ 
+
+This class generates string.xml for Android from a csv file and as well generates string.xml from 
+csv file for Android.
+
+@author: Henry Addo.
+@date: Created on Tuesday June 7, 2011
+'''
 
 import sys
 import os
 
 from optparse import OptionParser
+from lxml import etree
 
-class DictGenerator:
+class AndroidString:
 
     def __init__(self, input_path, output_path):
         self.input_path = input_path
         self.output_path = output_path
         self.dic_gen()
 
+	# print usage instructions.
+	def usage(self):
+		print ''
+		
     #generate dictionary xml file
     def dic_gen(self):
         self.write_xml_doc_to_file( self.read_huns_dict() )

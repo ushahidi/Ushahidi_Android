@@ -33,10 +33,11 @@
 		android:paddingLeft="5dip"
 		android:layout_height="wrap_content" android:layout_width="wrap_content" />
 	<TextView android:id="@+id/checkin_date"
-		android:layout_height="wrap_content" android:textColor="@drawable/gray_color"
+		android:layout_height="wrap_content"
 		android:layout_below="@+id/checkin_message"
 		android:layout_toRightOf="@+id/checkin_thumbnail"
 		android:paddingLeft="5dip"
+		android:textColor="@color/list_view_date"
 		android:layout_toLeftOf="@+id/checkin_arrow"
 		android:layout_width="wrap_content" />
 

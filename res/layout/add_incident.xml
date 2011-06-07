@@ -14,7 +14,7 @@
 	android:background="@drawable/background_color">
 	<LinearLayout style="@style/ActionBarTitleContainer">
         <ImageButton style="@style/ActionBarTitle"
-            android:contentDescription="@string/menu_home" android:src="@drawable/home_btn"
+            android:contentDescription="@string/menu_home" android:src="@drawable/ushahidi_icon"
             android:onClick="onClickHome" />
 
         <ImageView style="@style/ActionBarTitleSeparator" />

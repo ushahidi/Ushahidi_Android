@@ -35,12 +35,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class ListCheckinAdapter extends BaseAdapter {
- 
+
     private LayoutInflater mInflater;
 
     private List<ListCheckinText> iItems = new ArrayList<ListCheckinText>();
 
+    private int[] colors;
+
     public ListCheckinAdapter(Context context) {
+
+        colors = new int[] {
+                R.color.table_odd_row_color, R.color.table_even_row_color
+        };
+
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -77,27 +84,31 @@ public class ListCheckinAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        
+
         View row = mInflater.inflate(R.layout.checkin_list_text, parent, false);
-        
+
+        // alternate row colors
+        int colorPosition = position % colors.length;
+        row.setBackgroundResource(colors[colorPosition]);
+
         ViewHolder holder = (ViewHolder)row.getTag();
 
         if (holder == null) {
             holder = new ViewHolder(row);
             row.setTag(holder);
 
-        } 
-        
+        }
+
         holder.thumbnail.setImageDrawable(iItems.get(position).getThumbnail());
-        
+
         holder.title.setText(iItems.get(position).getTitle());
         holder.date.setText(iItems.get(position).getDate());
         holder.checkinMessage.setText(iItems.get(position).getDesc());
         holder.arrow.setImageDrawable(iItems.get(position).getArrow());
-        
+
         return row;
     }
-    
+
     class ViewHolder {
         TextView title;
 

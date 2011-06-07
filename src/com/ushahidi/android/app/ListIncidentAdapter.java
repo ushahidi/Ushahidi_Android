@@ -38,8 +38,15 @@ public class ListIncidentAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
 
     private List<ListIncidentText> iItems = new ArrayList<ListIncidentText>();
-
+    
+    private int[] colors;
+    
     public ListIncidentAdapter(Context context) {
+        
+        colors = new int[] {
+                R.color.table_odd_row_color,R.color.table_even_row_color
+        };
+        
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -79,7 +86,11 @@ public class ListIncidentAdapter extends BaseAdapter {
         
         // ViewHolder holder;
         View row = mInflater.inflate(R.layout.incidents_list_text, parent, false);
-
+        
+        //alternate row colors
+        int colorPosition = position % colors.length;
+        row.setBackgroundResource(colors[colorPosition]);
+        
         ViewHolder holder = (ViewHolder)row.getTag();
 
         if (holder == null) {

@@ -20,7 +20,12 @@ public class DeploymentAdapter extends BaseAdapter {
 
     private List<DeploymentsData> iItems = new ArrayList<DeploymentsData>();
 
+    private int[] colors;
+
     public DeploymentAdapter(Context context) {
+        colors = new int[] {
+                R.color.table_odd_row_color,R.color.table_even_row_color
+        };
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -56,6 +61,8 @@ public class DeploymentAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final String deploymentId = String.valueOf(UshahidiPref.activeDeployment);
         View row = mInflater.inflate(R.layout.deployment_list, parent, false);
+        int colorPosition = position % colors.length;
+        row.setBackgroundResource(colors[colorPosition]);
 
         ViewHolder holder = (ViewHolder)row.getTag();
 
@@ -70,7 +77,7 @@ public class DeploymentAdapter extends BaseAdapter {
         holder.deploymentDesc.setText(iItems.get(position).getDesc());
         holder.deploymentUrl.setText(iItems.get(position).getUrl());
         holder.deploymentId.setText(iItems.get(position).getId());
-        
+
         if (iItems.get(position).getId().equals(deploymentId)) {
             holder.arrow.setImageResource(R.drawable.selected_deployment);
         } else {
