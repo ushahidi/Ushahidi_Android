@@ -15,7 +15,7 @@
 	<!-- List incidents -->
 	<com.ushahidi.android.app.ui.PullToRefreshListView
 		android:id="@+id/view_incidents" android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:paddingTop="11px"
+		android:layout_height="300dip" android:paddingTop="11px"
 		android:paddingBottom="70px" android:paddingLeft="5px"
 		android:paddingRight="5px" android:fadingEdge="none"
 		android:cacheColorHint="#00000000" android:scrollbars="none" />

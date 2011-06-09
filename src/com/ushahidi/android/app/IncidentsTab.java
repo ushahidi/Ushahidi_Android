@@ -31,6 +31,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
+import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.checkin.CheckinMap;
 import com.ushahidi.android.app.checkin.ListCheckin;
 
@@ -41,8 +42,9 @@ public class IncidentsTab extends TabActivity {
     private Bundle bundle;
 
     private Bundle extras;
+
     private TextView activityTitle;
-    
+
     private static final int VIEW_SEARCH = 0;
 
     @Override
@@ -52,12 +54,11 @@ public class IncidentsTab extends TabActivity {
         new Handler();
         bundle = new Bundle();
         extras = this.getIntent().getExtras();
-        
-        activityTitle = (TextView) findViewById(R.id.title_text);
-        
+
+        activityTitle = (TextView)findViewById(R.id.title_text);
+
         tabHost = getTabHost();
 
-        
         // load preferences
         checkinEnabled();
 
@@ -85,7 +86,7 @@ public class IncidentsTab extends TabActivity {
     @Override
     public void onResume() {
         super.onResume();
-       
+
     }
 
     public void checkinEnabled() {
@@ -93,7 +94,8 @@ public class IncidentsTab extends TabActivity {
         UshahidiPref.loadSettings(IncidentsTab.this);
         if (UshahidiPref.isCheckinEnabled == 1) {
             setTitle(getString(R.string.tab_item_checkin));
-            if (activityTitle != null) activityTitle.setText (getString(R.string.tab_item_checkin));
+            if (activityTitle != null)
+                activityTitle.setText(getString(R.string.tab_item_checkin));
             tabHost.addTab(tabHost
                     .newTabSpec("list_checkins")
                     .setIndicator(getString(R.string.tab_item_report_list),
@@ -107,7 +109,8 @@ public class IncidentsTab extends TabActivity {
                             getResources().getDrawable(R.drawable.ushahidi_tab_checkin_selected))
                     .setContent(new Intent(IncidentsTab.this, CheckinMap.class)));
         } else {
-            if (activityTitle != null) activityTitle.setText (getTitle ());
+            if (activityTitle != null)
+                activityTitle.setText(getTitle());
             // List of reports
             tabHost.addTab(tabHost
                     .newTabSpec("list_reports")
@@ -142,11 +145,11 @@ public class IncidentsTab extends TabActivity {
         TextView tv = (TextView)tabhost.getCurrentTabView().findViewById(android.R.id.title);
         tv.setTextColor(Color.parseColor("#ffffff"));
     }
-    
+
     public void onClickHome(View v) {
         goHome(this);
     }
-    
+
     /**
      * Go back to the home activity.
      * 
@@ -154,17 +157,31 @@ public class IncidentsTab extends TabActivity {
      * @return void
      */
 
-    protected void goHome(Context context) 
-    {
+    protected void goHome(Context context) {
         final Intent intent = new Intent(context, Ushahidi.class);
-        intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity (intent);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
     }
-    
-    public void onSearchDeployments( View v ) {
+
+    public void onSearchDeployments(View v) {
         Intent intent = new Intent(IncidentsTab.this, DeploymentSearch.class);
         startActivityForResult(intent, VIEW_SEARCH);
         setResult(RESULT_OK);
+    }
+    
+    public void onAddReport(View v) {
+        UshahidiPref.loadSettings(IncidentsTab.this);
+        if (UshahidiPref.isCheckinEnabled == 1) {
+            Intent checkinActivityIntent = new Intent().setClass(IncidentsTab.this,
+                    CheckinActivity.class);
+            startActivity(checkinActivityIntent);
+            setResult(RESULT_OK);
+            
+        } else {
+            Intent intent = new Intent(IncidentsTab.this, AddIncident.class);
+            startActivityForResult(intent, 0);
+            setResult(RESULT_OK);
+        }
     }
 
 }

@@ -13,24 +13,21 @@
 	android:id="@+id/db1_root" android:orientation="vertical"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
 	<LinearLayout style="@style/ActionBarTitleContainer">
-		 <ImageButton style="@style/ActionBarTitle"
-            android:contentDescription="@string/menu_home" android:src="@drawable/ushahidi_icon"
-            android:onClick="onClickHome" />
+		<ImageButton style="@style/ActionBarTitle"
+			android:contentDescription="@string/menu_home" android:src="@drawable/ushahidi_icon"
+			android:onClick="onClickHome" />
 
 		<TextView style="@style/ActionBarTitleText" />
 		<ImageView style="@style/ActionBarTitleSeparator" />
-		<ImageButton style="@style/ActionBarTitle"
-            android:id="@+id/search_report_btn"
-            android:src="@drawable/ic_title_search"
-            android:onClick="onSearchDeployments" />
+		<ImageButton style="@style/ActionBarTitle" android:id="@+id/search_report_btn"
+			android:src="@drawable/actionbar_add" android:onClick="onAddReport" />
 	</LinearLayout>
 	<ImageView style="@style/ActionBarSeparator" />
 	<LinearLayout android:orientation="vertical"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:layout_weight="1" android:padding="0dip">
 		<TabHost android:id="@android:id/tabhost"
-			android:layout_width="fill_parent" android:layout_height="fill_parent"
-			android:layout_marginTop="5dip">
+			android:layout_width="fill_parent" android:layout_height="fill_parent">
 			<LinearLayout android:orientation="vertical"
 				android:layout_width="fill_parent" android:layout_height="fill_parent">
 				<TabWidget android:id="@android:id/tabs"

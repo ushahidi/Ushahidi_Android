@@ -9,6 +9,6 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:maxLevel="0" android:drawable="@drawable/refresh_icon_light"/>
-    <item android:maxLevel="1" android:drawable="@drawable/ic_title_refresh_alt"/>
+    <item android:maxLevel="0" android:drawable="@drawable/actionbar_add"/>
+    <item android:maxLevel="1" android:drawable="@drawable/actionbar_add"/>
 </selector>

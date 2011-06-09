@@ -207,7 +207,7 @@
     <!--  Deployment search -->
     <string name="search_label">Search</string>
      <!-- The hint text that appears in the search box. -->
-    <string name="search_hint">Search for a deployment...</string>
+    <string name="search_hint">Type here to filter the list below...</string>
     <string name="deployment_fetched_successful">Deployments successfully fetched</string>
     <string name="could_not_fetch_data">Couldn\'t fetch new deployments due to network error.</string>
     
@@ -257,4 +257,9 @@
     <string name="on_phone">On Phone</string>
     <string name="on_sd_card">On SD Card</string>
     <string name="minutes">Minutes</string>
+    <string name="team">Team</string>
+    <string name="twitter">Twitter</string>
+    <string name="contact">Contact</string>
+    <string name="media">Media</string>
+    <string name="facebook">Facebook</string>
 </resources>

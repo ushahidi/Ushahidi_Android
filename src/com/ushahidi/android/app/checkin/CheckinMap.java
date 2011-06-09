@@ -1,6 +1,9 @@
 
 package com.ushahidi.android.app.checkin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,8 +21,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
-import com.google.android.maps.*;
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapView;
+import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.About;
+import com.ushahidi.android.app.AddIncident;
 import com.ushahidi.android.app.IncidentsTab;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
@@ -28,9 +35,6 @@ import com.ushahidi.android.app.UshahidiApplication;
 import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.util.Util;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA. User: Ahmed Date: 2/17/11 Time: 2:21 PM To change
@@ -144,6 +148,21 @@ public class CheckinMap extends MapActivity {
     public boolean onContextItemSelected(MenuItem item) {
 
         return (applyMenuChoice(item) || super.onContextItemSelected(item));
+    }
+    
+    public void onAddReport(View v) {
+        UshahidiPref.loadSettings(CheckinMap.this);
+        if (UshahidiPref.isCheckinEnabled == 1) {
+            Intent checkinActivityIntent = new Intent().setClass(CheckinMap.this,
+                    CheckinActivity.class);
+            startActivity(checkinActivityIntent);
+            setResult(RESULT_OK);
+            
+        } else {
+            Intent intent = new Intent(CheckinMap.this, AddIncident.class);
+            startActivityForResult(intent, 0);
+            setResult(RESULT_OK);
+        }
     }
 
     private void populateMenu(Menu menu) {

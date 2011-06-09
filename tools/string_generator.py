@@ -90,3 +90,10 @@ if __name__ == '__main__':
         dict_generator = DictGenerator(args[0], args[1] )
         
         #print dict_generator.structure_dict_xml()
+
+
+
+1. Add add a report/checkin action at the actionbar for dashboard.
+2. Remove the search action and replace with add a report/checkin on list dasbhoard
+3. At add a report/checkin replace search with send action
+4. Reduce the height of the map when adding a report/checkin

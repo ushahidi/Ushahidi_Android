@@ -15,32 +15,28 @@
 
 		<ProgressBar style="@style/TitleBarProgressIndicator"
 			android:id="@+id/title_refresh_progress" android:visibility="gone" />
-	    <ImageView style="@style/ActionBarTitleSeparator" />
-        <ImageButton style="@style/ActionBarTitle"
-            android:id="@+id/search_report_btn"
-            android:src="@drawable/ic_title_search"
-            android:onClick="onAddDeployment"/>
+		<ImageView style="@style/ActionBarTitleSeparator" />
+		<ImageButton style="@style/ActionBarTitle" android:id="@+id/search_report_btn"
+			android:src="@drawable/actionbar_add" android:onClick="onAddDeployment" />
 	</LinearLayout>
 	<ImageView style="@style/ActionBarSeparator" />
 	<EditText android:id="@+id/search_deployment"
-            android:layout_height="wrap_content" android:layout_width="fill_parent"
-            android:hint="@string/search_hint"  />
+		android:layout_height="wrap_content" android:layout_width="fill_parent"
+		android:singleLine="true" android:hint="@string/search_hint" />
 	<LinearLayout android:orientation="vertical"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:layout_weight="1" android:paddingTop="6dip">
 		<!-- Holds the found deployments -->
 		<ListView android:id="@+id/deployment_list"
 			android:layout_width="fill_parent" android:layout_height="fill_parent"
-			
-			android:smoothScrollbar="true"
-			android:fadingEdge="none"
-			android:scrollbars="vertical"
-			android:scrollingCache="true"
-			android:fastScrollEnabled="true"/>
+
+			android:smoothScrollbar="true" android:fadingEdge="none"
+			android:scrollbars="vertical" android:scrollingCache="true"
+			android:fastScrollEnabled="true" />
 	</LinearLayout>
 	<!-- Here is the view to show if the list is emtpy -->
-        <TextView android:id="@+id/empty_list_for_deployments"
-            android:layout_width="fill_parent" android:layout_height="fill_parent"
-            android:text="@string/empty_deployments" android:textStyle="bold"
-            android:textColor="@drawable/black_color" android:gravity="center_horizontal|center" />
+	<TextView android:id="@+id/empty_list_for_deployments"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:text="@string/empty_deployments" android:textStyle="bold"
+		android:textColor="@drawable/black_color" android:gravity="center_horizontal|center" />
 </LinearLayout>

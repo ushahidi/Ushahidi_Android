@@ -37,7 +37,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.ushahidi.android.app.checkin.CheckinActivity;
-import com.ushahidi.android.app.checkin.NetworkServices;
 import com.ushahidi.android.app.util.Util;
 
 public class Ushahidi extends DashboardActivity {
@@ -99,7 +98,6 @@ public class Ushahidi extends DashboardActivity {
 
     private boolean refreshState = false;
 
-    
     // Checkin specific variables and functions
 
     @Override
@@ -118,6 +116,7 @@ public class Ushahidi extends DashboardActivity {
         if (UshahidiPref.domain.length() == 0 || UshahidiPref.domain.equals("http://")) {
             mHandler.post(mDisplayPrompt);
         }
+
         listBtn = (Button)findViewById(R.id.incident_list);
         checkinListBtn = (Button)findViewById(R.id.checkin_list_btn);
 
@@ -128,6 +127,7 @@ public class Ushahidi extends DashboardActivity {
         mapBtn = (Button)findViewById(R.id.incident_map);
         searchBtn = (Button)findViewById(R.id.deployment_search);
         aboutBtn = (Button)findViewById(R.id.deployment_about);
+
         initializeUI();
 
     }
@@ -152,13 +152,13 @@ public class Ushahidi extends DashboardActivity {
         UshahidiPref.loadSettings(this);
         // This is to temporarily disable reports stuff
         if (UshahidiPref.isCheckinEnabled == 1) {
-            
+
             listBtn.setVisibility(View.GONE);
             addBtn.setVisibility(View.GONE);
             checkinListBtn.setVisibility(View.VISIBLE);
 
             checkinAddBtn.setVisibility(View.VISIBLE);
-            
+
         } else {
 
             listBtn.setVisibility(View.VISIBLE);
@@ -208,7 +208,6 @@ public class Ushahidi extends DashboardActivity {
 
         checkinAddBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                NetworkServices.fileName = "";
                 Intent checkinActivityIntent = new Intent().setClass(Ushahidi.this,
                         CheckinActivity.class);
                 startActivity(checkinActivityIntent);
@@ -247,6 +246,21 @@ public class Ushahidi extends DashboardActivity {
                 setResult(RESULT_OK);
             }
         });
+    }
+
+    public void onAddReport(View v) {
+        UshahidiPref.loadSettings(Ushahidi.this);
+        if (UshahidiPref.isCheckinEnabled == 1) {
+            Intent checkinActivityIntent = new Intent().setClass(Ushahidi.this,
+                    CheckinActivity.class);
+            startActivity(checkinActivityIntent);
+            setResult(RESULT_OK);
+            
+        } else {
+            Intent intent = new Intent(Ushahidi.this, AddIncident.class);
+            startActivityForResult(intent, ADD_INCIDENTS);
+            setResult(RESULT_OK);
+        }
     }
 
     @Override

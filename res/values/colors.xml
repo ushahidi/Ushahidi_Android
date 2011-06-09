@@ -23,7 +23,7 @@
     <drawable name="report_lable">#f6f6ee</drawable>
     <drawable name="header_color">#3E51BC</drawable>
     
-    <drawable name="background_color">#e8dbae</drawable>
+    <drawable name="background_color">#ede7d1</drawable>
     <drawable name="thick_background_color">#DDD0A3</drawable>
     <drawable name="white_color">#FFFFFF</drawable>
     <drawable name="verified_color">#25991C</drawable>

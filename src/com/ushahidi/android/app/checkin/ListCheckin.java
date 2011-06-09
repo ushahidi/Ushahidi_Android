@@ -37,10 +37,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 
 import com.ushahidi.android.app.About;
+import com.ushahidi.android.app.AddIncident;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.IncidentsTab;
 import com.ushahidi.android.app.R;
@@ -197,7 +198,24 @@ public class ListCheckin extends Activity {
 
         return (applyMenuChoice(item) || super.onContextItemSelected(item));
     }
-
+    
+    public void onAddReport(View v) {
+        
+        UshahidiPref.loadSettings(ListCheckin.this);
+        if (UshahidiPref.isCheckinEnabled == 1) {
+            Intent checkinActivityIntent = new Intent().setClass(ListCheckin.this,
+                    CheckinActivity.class);
+            startActivity(checkinActivityIntent);
+            setResult(RESULT_OK);
+            
+        } else {
+            Intent intent = new Intent(ListCheckin.this, AddIncident.class);
+            startActivityForResult(intent, 0);
+            setResult(RESULT_OK);
+        }
+        
+    }
+    
     private void populateMenu(Menu menu) {
         MenuItem i;
         i = menu.add(Menu.NONE, HOME, Menu.NONE, R.string.menu_home);

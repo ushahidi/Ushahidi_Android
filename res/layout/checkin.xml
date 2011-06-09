@@ -49,7 +49,7 @@
 				android:layout_height="wrap_content" android:textColor="@drawable/title_color" />
 			<com.google.android.maps.MapView
 				android:id="@+id/checkin_location_map" android:layout_width="fill_parent"
-				android:layout_height="fill_parent" android:layout_below="@+id/checkin_location"
+				android:layout_height="300dip" android:layout_below="@+id/checkin_location"
 				android:apiKey="@string/google_map_api_key" android:enabled="true"
 				android:clickable="true" />
 			<TextView android:paddingBottom="20px" android:textStyle="bold"

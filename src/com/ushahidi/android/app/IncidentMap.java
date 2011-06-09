@@ -45,6 +45,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
+import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.util.Util;
@@ -173,6 +174,21 @@ public class IncidentMap extends MapActivity {
         Drawable marker = getResources().getDrawable(R.drawable.marker);
         marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
         mapView.getOverlays().add(new SitesOverlay(marker, mapView));
+    }
+    
+    public void onAddReport(View v) {
+        UshahidiPref.loadSettings(IncidentMap.this);
+        if (UshahidiPref.isCheckinEnabled == 1) {
+            Intent checkinActivityIntent = new Intent().setClass(IncidentMap.this,
+                    CheckinActivity.class);
+            startActivity(checkinActivityIntent);
+            setResult(RESULT_OK);
+            
+        } else {
+            Intent intent = new Intent(IncidentMap.this, AddIncident.class);
+            startActivityForResult(intent, 0);
+            setResult(RESULT_OK);
+        }
     }
 
     // put this stuff in a seperate thread
