@@ -68,8 +68,6 @@ public class CheckinActivity extends MapActivity {
 
     private Button uploadPhotoButton;
 
-    private Button mCancelButton;
-
     private ImageButton mSearchButton;
 
     private MapView mapView = null;
@@ -175,11 +173,10 @@ public class CheckinActivity extends MapActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.checkin);
         UshahidiPref.loadSettings(CheckinActivity.this);
-        //deviceCurrentLocation = new DeviceCurrentLocation(this);
+        
         manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         checkinButton = (Button)findViewById(R.id.perform_checkin_button);
         uploadPhotoButton = (Button)findViewById(R.id.upload_checkin_photo_button);
-        mCancelButton = (Button)findViewById(R.id.checkin_cancel);
         checkinMessageText = (EditText)findViewById(R.id.checkin_message_text);
         firstName = (EditText)findViewById(R.id.checkin_firstname);
         lastName = (EditText)findViewById(R.id.checkin_lastname);
@@ -266,19 +263,11 @@ public class CheckinActivity extends MapActivity {
             }
         });
 
-        // cancel checking
-        // Perform the checkin
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                CheckinActivity.this.finish();
-            }
-        });
-
         // Uploading a photo for the checkin
         uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(selectedPhoto)) {
-                    ImageManager.deleteImage(selectedPhoto,UshahidiPref.savePath);
+                    ImageManager.deleteImage(selectedPhoto, UshahidiPref.savePath);
                 }
                 showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
             }
@@ -297,7 +286,7 @@ public class CheckinActivity extends MapActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        
+
     }
 
     @Override
@@ -313,7 +302,7 @@ public class CheckinActivity extends MapActivity {
         super.onStop();
         manager.removeUpdates(new DeviceLocationListener());
         manager = null;
-        
+
     }
 
     @Override
@@ -442,8 +431,8 @@ public class CheckinActivity extends MapActivity {
                         NetworkServices.fileName = mBundle.getString("name");
                         mSelectedPhotoText.setVisibility(View.VISIBLE);
 
-                        mCheckImgPrev.setImageBitmap(ImageManager
-                                .getBitmap(NetworkServices.fileName,UshahidiPref.savePath));
+                        mCheckImgPrev.setImageBitmap(ImageManager.getBitmap(
+                                NetworkServices.fileName, UshahidiPref.savePath));
                     }
                 }
 
@@ -478,14 +467,16 @@ public class CheckinActivity extends MapActivity {
                 }
 
                 mFilename = "android_pic_upload" + randomString() + ".jpg";
-                ImageManager.writeImage(byteArrayos.toByteArray(), mFilename,UshahidiPref.savePath);
+                ImageManager
+                        .writeImage(byteArrayos.toByteArray(), mFilename, UshahidiPref.savePath);
                 UshahidiPref.fileName = mFilename;
                 selectedPhoto = mFilename;
 
                 if (!TextUtils.isEmpty(selectedPhoto)) {
                     mSelectedPhotoText.setVisibility(View.VISIBLE);
                     mCheckImgPrev.refreshDrawableState();
-                    mCheckImgPrev.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName,UshahidiPref.savePath));
+                    mCheckImgPrev.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName,
+                            UshahidiPref.savePath));
                 }
 
                 break;
@@ -733,11 +724,10 @@ public class CheckinActivity extends MapActivity {
 
     }
 
- // Fetches the current location of the device.
+    // Fetches the current location of the device.
     private void setDeviceLocation() {
 
         DeviceLocationListener listener = new DeviceLocationListener();
-        
 
         long updateTimeMsec = 1000L;
 
@@ -754,8 +744,8 @@ public class CheckinActivity extends MapActivity {
         manager.requestLocationUpdates(high.getName(), updateTimeMsec, 500.0f, listener);
 
     }
-    
- // get the current location of the device/user
+
+    // get the current location of the device/user
     public class DeviceLocationListener implements LocationListener {
         public void onLocationChanged(Location location) {
 

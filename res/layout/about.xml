@@ -12,50 +12,49 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<LinearLayout android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:orientation="vertical"
-        android:layout_alignParentTop="true">
-	<LinearLayout style="@style/ActionBarTitleContainer">
-		<ImageButton style="@style/ActionBarTitle"
-			android:contentDescription="@string/menu_home" android:src="@drawable/ushahidi_icon"
-			android:onClick="onClickHome" />
+		android:layout_height="wrap_content" android:orientation="vertical"
+		android:layout_alignParentTop="true">
+		<LinearLayout style="@style/ActionBarTitleContainer">
+			<ImageButton style="@style/ActionBarTitle"
+				android:contentDescription="@string/menu_home" android:src="@drawable/ushahidi_icon"
+				android:onClick="onClickHome" />
 
-		<ImageView style="@style/ActionBarTitleSeparator" />
-		<TextView style="@style/ActionBarTitleText" />
-		<ImageView style="@style/ActionBarTitleSeparator" />
-		<ImageButton style="@style/ActionBarTitle" android:id="@+id/search_report_btn"
-			android:src="@drawable/ic_title_search" android:onClick="onSearchDeployments" />
-
-	</LinearLayout>
-	<ImageView style="@style/ActionBarSeparator"
-		android:layout_below="@+id/search_report_btn" android:id="@+id/menu_bar_separator" />
-	<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:gravity="center" android:padding="25px"
-		android:layout_alignBottom="@+id/relativeLayout1" android:scrollbars="vertical" android:fadeScrollbars="true">
-		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:orientation="vertical"
-			android:gravity="center" android:paddingRight="15px"
-			android:layout_alignBottom="@+id/relativeLayout1">
-
-
-			<TextView android:background="@drawable/ushahidi_android_logo"
-				android:id="@+id/title" android:layout_height="wrap_content"
-				android:layout_width="wrap_content" />
-			<TextView android:id="@+id/version" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:textColor="@drawable/date_color"
-				android:textStyle="bold" android:text="@string/version" />
-			<TextView android:id="@+id/spacer" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" />
-			<TextView android:layout_marginLeft="0px" android:textColor="@drawable/date_color"
-				android:id="@+id/welcome_txt" android:layout_height="wrap_content"
-				android:text="@string/welcome_mgs" android:textStyle="bold"
-				android:layout_width="fill_parent"></TextView>
-
-			<TextView android:id="@+id/spacer" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" />
+			<ImageView style="@style/ActionBarTitleSeparator" />
+			<TextView style="@style/ActionBarTitleText" />
+			<ImageView style="@style/ActionBarTitleSeparator" />
+			<ImageButton style="@style/ActionBarTitle" android:id="@+id/search_report_btn"
+				android:src="@drawable/ic_title_search" android:onClick="onSearchDeployments" />
 
 		</LinearLayout>
-	</ScrollView>
+		<ImageView style="@style/ActionBarSeparator"
+			android:layout_below="@+id/search_report_btn" android:id="@+id/menu_bar_separator" />
+		<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:gravity="center" android:padding="25px"
+			android:layout_alignBottom="@+id/relativeLayout1" android:scrollbars="vertical"
+			android:fadeScrollbars="true">
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:orientation="vertical"
+				android:gravity="center" android:paddingRight="15px"
+				android:layout_alignBottom="@+id/relativeLayout1">
+
+
+				<TextView android:background="@drawable/ushahidi_android_logo"
+					android:id="@+id/title" android:layout_height="wrap_content"
+					android:layout_width="wrap_content" />
+				<TextView android:id="@+id/version" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:textColor="@drawable/date_color"
+					android:textStyle="bold" android:text="@string/version" />
+				<TextView android:id="@+id/spacer" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" />
+				<TextView android:layout_marginLeft="0px"
+					android:textColor="@drawable/date_color" android:id="@+id/welcome_txt"
+					android:layout_height="wrap_content" android:text="@string/welcome_mgs"
+					android:textStyle="bold" android:layout_width="fill_parent"></TextView>
+				<TextView android:id="@+id/spacer" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" />
+			</LinearLayout>
+		</ScrollView>
 	</LinearLayout>
 	<TextView android:background="@drawable/ushahidi_android_sky_background"
 		android:id="@+id/sky_bg" android:layout_height="wrap_content"
@@ -72,15 +71,13 @@
 
 			<Button android:id="@+id/twitter_link" style="@style/BottomActionbarButton"
 				android:text="@string/twitter" android:drawableTop="@drawable/actionbar_twitter" />
-				
+
 			<Button android:id="@+id/facebook_link" style="@style/BottomActionbarButton"
 				android:text="@string/facebook" android:drawableTop="@drawable/actionbar_facebook" />
 
 			<Button android:id="@+id/contact_link" style="@style/BottomActionbarButton"
 				android:text="@string/contact" android:drawableTop="@drawable/actionbar_contact" />
-
 		</LinearLayout>
-
 	</LinearLayout>
 </RelativeLayout>
 	

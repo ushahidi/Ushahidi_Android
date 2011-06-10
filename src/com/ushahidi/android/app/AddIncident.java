@@ -167,8 +167,6 @@ public class AddIncident extends MapActivity {
 
     private Button mBtnSend;
 
-    private Button mBtnCancel;
-
     private Button mBtnAddCategory;
 
     private Button mPickTime;
@@ -340,7 +338,6 @@ public class AddIncident extends MapActivity {
         mBtnPicture = (Button)findViewById(R.id.btnPicture);
         mBtnAddCategory = (Button)findViewById(R.id.add_category);
         mBtnSend = (Button)findViewById(R.id.incident_add_btn);
-        mBtnCancel = (Button)findViewById(R.id.incident_add_cancel);
         mIncidentDate = (TextView)findViewById(R.id.lbl_date);
         mPickDate = (Button)findViewById(R.id.pick_date);
         mPickTime = (Button)findViewById(R.id.pick_time);
@@ -438,16 +435,6 @@ public class AddIncident extends MapActivity {
                     ImageManager.deleteImage(UshahidiPref.fileName, UshahidiPref.savePath);
                 }
                 showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
-            }
-        });
-
-        mBtnCancel.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                clearFields();
-                Intent intent = new Intent(AddIncident.this, Ushahidi.class);
-                startActivityForResult(intent, GOTOHOME);
-                setResult(RESULT_OK);
-                finish();
             }
         });
 
