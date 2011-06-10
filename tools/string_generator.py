@@ -97,3 +97,6 @@ if __name__ == '__main__':
 2. Remove the search action and replace with add a report/checkin on list dasbhoard
 3. At add a report/checkin replace search with send action
 4. Reduce the height of the map when adding a report/checkin
+
+06-10 13:08:12.142: ERROR/AndroidRuntime(1224): Caused by: java.lang.IllegalArgumentException: name==null
+

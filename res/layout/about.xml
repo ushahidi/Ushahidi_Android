@@ -37,8 +37,6 @@
 				android:layout_height="wrap_content" android:orientation="vertical"
 				android:gravity="center" android:paddingRight="15px"
 				android:layout_alignBottom="@+id/relativeLayout1">
-
-
 				<TextView android:background="@drawable/ushahidi_android_logo"
 					android:id="@+id/title" android:layout_height="wrap_content"
 					android:layout_width="wrap_content" />
