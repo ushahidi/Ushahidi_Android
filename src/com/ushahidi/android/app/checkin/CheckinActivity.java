@@ -306,7 +306,7 @@ public class CheckinActivity extends MapActivity implements LocationListener {
 
     @Override
     protected void onDestroy() {
-        super.onStop();
+        super.onDestroy();
         stopLocating();
 
     }
