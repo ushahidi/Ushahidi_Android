@@ -133,7 +133,7 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
 
             }
         });
-        
+
         showResults("");
         displayEmptyListText();
 
@@ -245,7 +245,8 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
             deploymentAdapter.notifyDataSetChanged();
             showResults("");
             displayEmptyListText();
-            // clear the stuff that has been initialized in the sharedpreferences.
+            // clear the stuff that has been initialized in the
+            // sharedpreferences.
             UshahidiPref.activeDeployment = 0;
             UshahidiPref.domain = "";
             UshahidiPref.deploymentLatitude = "0.0";

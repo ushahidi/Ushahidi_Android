@@ -49,12 +49,16 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -76,10 +80,9 @@ import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
-import com.ushahidi.android.app.util.DeviceCurrentLocation;
 import com.ushahidi.android.app.util.Util;
 
-public class AddIncident extends MapActivity {
+public class AddIncident extends MapActivity implements LocationListener {
 
     /**
      * category that exists on the phone before any connection to a server, at
@@ -207,9 +210,9 @@ public class AddIncident extends MapActivity {
 
     private HashMap<String, String> mParams = new HashMap<String, String>();
 
-    private Location loc;
+    private LocationManager mLocationMgr;
 
-    private DeviceCurrentLocation deviceCurrentLocation;
+    private static final String CLASS_TAG = AddIncident.class.getCanonicalName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -222,7 +225,7 @@ public class AddIncident extends MapActivity {
 
         // load settings
         UshahidiPref.loadSettings(AddIncident.this);
-        deviceCurrentLocation = new DeviceCurrentLocation(this);
+        setDeviceLocation();
         initComponents();
     }
 
@@ -240,8 +243,57 @@ public class AddIncident extends MapActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        deviceCurrentLocation.stopLocating();
+        stopLocating();
 
+    }
+
+    // Fetches the current location of the device.
+    private void setDeviceLocation() {
+
+        mLocationMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+        long updateTimeMsec = 30 * 1000;
+        try {
+
+            // get low accuracy provider
+            LocationProvider low = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
+                    Util.createCoarseCriteria(), true));
+
+            // get high accuracy provider
+            LocationProvider high = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
+                    Util.createFineCriteria(), true));
+
+            mLocationMgr.requestLocationUpdates(low.getName(), updateTimeMsec, 0, this);
+
+            mLocationMgr.requestLocationUpdates(high.getName(), updateTimeMsec, 0, this);
+
+        } catch (Exception ex1) {
+            try {
+
+                if (mLocationMgr != null) {
+                    mLocationMgr.removeUpdates(this);
+                    mLocationMgr = null;
+                }
+            } catch (Exception ex2) {
+                Log.d(CLASS_TAG, ex2.getMessage());
+            }
+        }
+
+    }
+
+    public void stopLocating() {
+
+        try {
+
+            try {
+                mLocationMgr.removeUpdates(this);
+            } catch (Exception ex) {
+                Log.d(CLASS_TAG, ex.getMessage());
+            }
+            mLocationMgr = null;
+        } catch (Exception ex) {
+            Log.d(CLASS_TAG, ex.getMessage());
+        }
     }
 
     // menu stuff
@@ -1070,7 +1122,7 @@ public class AddIncident extends MapActivity {
         protected Integer status;
 
         protected Context appContext;
-        
+
         protected ProgressDialog progressDialog;
 
         @Override
@@ -1116,7 +1168,7 @@ public class AddIncident extends MapActivity {
                 }
                 Util.showToast(appContext, R.string.report_successfully_added_online);
             }
-            
+
         }
     }
 
@@ -1191,24 +1243,42 @@ public class AddIncident extends MapActivity {
 
     }
 
-    // Fetches the current location of the device.
-    private void setDeviceLocation() {
+    @Override
+    protected boolean isRouteDisplayed() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-        loc = DeviceCurrentLocation.getLocation();
+    @Override
+    public void onLocationChanged(Location loc) {
         if (loc != null) {
             sLatitude = loc.getLatitude();
             sLongitude = loc.getLongitude();
 
             centerLocation(getPoint(sLatitude, sLongitude));
             mReportLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
+
+            stopLocating();
         }
 
     }
 
     @Override
-    protected boolean isRouteDisplayed() {
+    public void onProviderDisabled(String provider) {
         // TODO Auto-generated method stub
-        return false;
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // TODO Auto-generated method stub
+
     }
 
 }

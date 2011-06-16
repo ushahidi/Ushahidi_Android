@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,6 +56,7 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiPref;
+import com.ushahidi.android.app.util.DeviceCurrentLocation;
 import com.ushahidi.android.app.util.Util;
 
 /**
@@ -62,7 +64,7 @@ import com.ushahidi.android.app.util.Util;
  * this template use File | Settings | File Templates.
  */
 
-public class CheckinActivity extends MapActivity {
+public class CheckinActivity extends MapActivity implements LocationListener {
 
     private Button checkinButton;
 
@@ -166,15 +168,20 @@ public class CheckinActivity extends MapActivity {
 
     private String mErrorMessage = "";
 
-    private LocationManager manager;
+    private LocationManager mLocationMgr;
+
+    private Location location;
+
+    private static final String CLASS_TAG = DeviceCurrentLocation.class.getCanonicalName();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.checkin);
         UshahidiPref.loadSettings(CheckinActivity.this);
-        
-        manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+        // manager =
+        // (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         checkinButton = (Button)findViewById(R.id.perform_checkin_button);
         uploadPhotoButton = (Button)findViewById(R.id.upload_checkin_photo_button);
         checkinMessageText = (EditText)findViewById(R.id.checkin_message_text);
@@ -300,8 +307,7 @@ public class CheckinActivity extends MapActivity {
     @Override
     protected void onDestroy() {
         super.onStop();
-        manager.removeUpdates(new DeviceLocationListener());
-        manager = null;
+        stopLocating();
 
     }
 
@@ -727,49 +733,49 @@ public class CheckinActivity extends MapActivity {
     // Fetches the current location of the device.
     private void setDeviceLocation() {
 
-        DeviceLocationListener listener = new DeviceLocationListener();
+        mLocationMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
-        long updateTimeMsec = 1000L;
+        long updateTimeMsec = 30 * 1000;
+        try {
 
-        // get low accuracy provider
-        LocationProvider low = manager.getProvider(manager.getBestProvider(
-                Util.createCoarseCriteria(), true));
+            // get low accuracy provider
+            LocationProvider low = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
+                    Util.createCoarseCriteria(), true));
 
-        // get high accuracy provider
-        LocationProvider high = manager.getProvider(manager.getBestProvider(
-                Util.createFineCriteria(), true));
+            // get high accuracy provider
+            LocationProvider high = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
+                    Util.createFineCriteria(), true));
 
-        manager.requestLocationUpdates(low.getName(), updateTimeMsec, 500.0f, listener);
+            mLocationMgr.requestLocationUpdates(low.getName(), updateTimeMsec, 0, this);
 
-        manager.requestLocationUpdates(high.getName(), updateTimeMsec, 500.0f, listener);
+            mLocationMgr.requestLocationUpdates(high.getName(), updateTimeMsec, 0, this);
 
-    }
+        } catch (Exception ex1) {
+            try {
 
-    // get the current location of the device/user
-    public class DeviceLocationListener implements LocationListener {
-        public void onLocationChanged(Location location) {
-
-            if (location != null) {
-                manager.removeUpdates(DeviceLocationListener.this);
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-
-                centerLocation(getPoint(latitude, longitude));
-                mCheckinLocation.setText(String.valueOf(latitude) + ", "
-                        + String.valueOf(longitude));
+                if (mLocationMgr != null) {
+                    mLocationMgr.removeUpdates(this);
+                    mLocationMgr = null;
+                }
+            } catch (Exception ex2) {
+                Log.d(CLASS_TAG, ex2.getMessage());
             }
         }
 
-        public void onProviderDisabled(String provider) {
-            Util.showToast(CheckinActivity.this, R.string.location_not_found);
-        }
+    }
 
-        public void onProviderEnabled(String provider) {
+    public void stopLocating() {
 
-        }
+        try {
 
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
+            try {
+                mLocationMgr.removeUpdates(this);
+            } catch (Exception ex) {
+                Log.d(CLASS_TAG, ex.getMessage());
+            }
+            mLocationMgr = null;
+        } catch (Exception ex) {
+            Log.d(CLASS_TAG, ex.getMessage());
         }
     }
 
@@ -777,6 +783,40 @@ public class CheckinActivity extends MapActivity {
     protected boolean isRouteDisplayed() {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    @Override
+    public void onLocationChanged(Location loc) {
+        if (loc != null) {
+            location = loc;
+
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+
+            centerLocation(getPoint(latitude, longitude));
+            mCheckinLocation.setText(String.valueOf(latitude) + ", " + String.valueOf(longitude));
+
+            stopLocating();
+        }
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // TODO Auto-generated method stub
+
     }
 
 }
