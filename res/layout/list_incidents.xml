@@ -11,20 +11,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:background="@drawable/background_color">
-
+	
+    <!-- Here is the view to show if the list is emtpy -->
+    <TextView android:id="@+id/empty_list_for_reports"
+        android:layout_width="fill_parent" android:layout_height="fill_parent"
+        android:text="@string/empty_reports" android:textStyle="bold"
+        android:textColor="@drawable/black_color" android:gravity="center_horizontal|center" />
 	<!-- List incidents -->
 	<com.ushahidi.android.app.ui.PullToRefreshListView
 		android:id="@+id/view_incidents" android:layout_width="fill_parent"
-		android:layout_height="300dip" android:paddingTop="11px"
+		android:layout_height="wrap_content" android:paddingTop="11px"
 		android:paddingBottom="70px" android:paddingLeft="5px"
 		android:paddingRight="5px" android:fadingEdge="none"
 		android:cacheColorHint="#00000000" android:scrollbars="none" />
-
-	<!-- Here is the view to show if the list is emtpy -->
-	<TextView android:id="@+id/empty_list_for_reports"
-		android:layout_width="fill_parent" android:layout_height="fill_parent"
-		android:text="@string/empty_reports" android:textStyle="bold"
-		android:textColor="@drawable/black_color" android:gravity="center_horizontal|center" />
 
 	<!-- Categories Area. -->
 	<LinearLayout android:orientation="vertical"

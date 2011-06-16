@@ -285,7 +285,11 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
         }
 
         // clear everything in the list view
-
+        if (deploymentAdapter != null) {
+            deploymentAdapter.removeItems();
+            deploymentAdapter.notifyDataSetChanged();
+        }
+        mDeployments.clear();
         if (cursor != null) {
 
             if (cursor.moveToFirst()) {
