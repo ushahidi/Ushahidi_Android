@@ -232,19 +232,7 @@ public class AddIncident extends MapActivity implements LocationListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setDeviceLocation();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
         stopLocating();
-
     }
 
     // Fetches the current location of the device.
