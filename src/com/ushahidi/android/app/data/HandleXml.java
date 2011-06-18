@@ -27,6 +27,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import android.util.Log;
+
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.UshahidiApplication;
 import com.ushahidi.android.app.UshahidiPref;
@@ -37,6 +39,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -63,7 +66,9 @@ public class HandleXml {
         }
 
         try {
-            doc = builder.parse(new InputSource(new StringReader(xml)));
+            // encode the xml to UTF -8
+            ByteArrayInputStream encXML = new ByteArrayInputStream(xml.getBytes("UTF8"));
+            doc = builder.parse(encXML);
         } catch (SAXException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -231,7 +236,7 @@ public class HandleXml {
     }
 
     public static List<CategoriesData> processCategoriesXml(String xml) {
-
+        Log.d("StringXML", "XML: " + xml);
         List<CategoriesData> categoriesData = new ArrayList<CategoriesData>();
         String categories = "";
         DocumentBuilder builder = null;
@@ -247,7 +252,11 @@ public class HandleXml {
         }
 
         try {
-            doc = builder.parse(new InputSource(new StringReader(xml)));
+
+            // encode the xml to UTF -8
+            ByteArrayInputStream encXML = new ByteArrayInputStream(xml.getBytes("UTF8"));
+            doc = builder.parse(encXML);
+
         } catch (SAXException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -1,5 +1,5 @@
 #/usr/bin/python!
-''' 
+"""
 /** 
  ** Copyright (c) 2010 Ushahidi Inc
  ** All rights reserved
@@ -23,9 +23,90 @@
 This class generates string.xml for Android from a csv file and as well generates string.xml from 
 csv file for Android.
 
-@author: Henry Addo.
-@date: Created on Tuesday June 7, 2011
-'''
+Generates mock philosophy based on a context-free grammar
+
+Usage: python stringgen.py [options] [source] [destination]
+
+Options:
+  -i ..., --import        use to specify weather it should import from csv file 
+  -l ..., --language=...  use to specify the langauge to export from
+  -h, --help              show this help
+  -d                      show debugging information while parsing
+
+Examples:
+  stringen.py                            prints usage info
+  stringen.py -il en csv.txt string.xml   generates string.xml from csv file 
+  stringen.py string.xml csv.txt     reads from string.xml and generates csv file
+
+"""
+
+__author__ = "Henry Addo (henry@ushahidi.com)"
+__version__ = "$Revision: 1.0 $"
+__date__ = "$Date: 2011/06/17 17:17:19 $"
+__copyright__ = "Copyright (c) 2011 Ushahidi"
+__license__ = "GPL"
+
+import xml.dom.ext
+import xml.dom.minidom
+import csv
+
+class StringGenerator:
+    
+    """ generate string.xml or csv.txt file """
+    
+    def __init__(self, lang=None, source=None, destion=None):
+    
+    def generate_string_xml(self,csvfile, destdir):
+        """ generate strings.xml file from a csv file """
+        data = csv.reader(open(csvfile))  
+        doc = xml.dom.minidom.Document()
+        
+            resources = doc.createElementNS("urn:oasis:names:tc:xliff:document:1.2","resources")
+
+        doc.appendChild(resources)
+        for row in data:
+            doc.
+        return doc
+
+
+    def generate_csv(self):
+    
+    def write_xml_to_file(self, doc, destdir="strings.xml"):
+        file_obj = open(destdir, "w");
+        xml.dom.ext.PrettyPrint(doc, file_obj)
+        file_obj.close()
+    
+    def write_xml_to_screen(self,doc):
+        xml.dom.ext.PrettyPrint(doc, file_obj)
+
+    def sync_files(self,oldfile, newflie):
+
+
+def main(argv):
+    string = "string.xml"
+    try:
+        opts, args = getopt.getopt(argv, "hg:d", ["help", "lang="])
+    except getopt.GetoptError:
+        usage()
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            usage()
+            sys.exit()
+        elif opt == '-d':
+            global _debug
+            _debug = 1
+        elif opt in ("-l", "--lang"):
+            string = arg
+        elif opt in ("-i", "--import"):
+            usage()
+    
+    source = "".join(args)
+    k = KantGenerator(grammar, source)
+    print k.output()
+oh 
+if __name__ == "__main__":
+    main(sys.argv[1:])
 
 import sys
 import os
@@ -93,10 +174,4 @@ if __name__ == '__main__':
 
 
 
-1. Add add a report/checkin action at the actionbar for dashboard.
-2. Remove the search action and replace with add a report/checkin on list dasbhoard
-3. At add a report/checkin replace search with send action
-4. Reduce the height of the map when adding a report/checkin
-
-06-10 13:08:12.142: ERROR/AndroidRuntime(1224): Caused by: java.lang.IllegalArgumentException: name==null
 
