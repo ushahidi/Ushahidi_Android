@@ -115,7 +115,7 @@ public class ImageManager {
     public static void writeImage(byte[] data, String filename, String path) {
 
         deleteImage(filename,path);
-        Log.d("Deleting Images: ","FilePaht "+filename+path);
+        Log.d("Deleting Images: ",path+filename);
         if (data != null) {
             FileOutputStream fOut;
             try {
