@@ -1,1 +1,41 @@
-Ushahidi Android App
+* Ushahidi Android app *
+
+Ushahidi is an open source platform for democratizing information, increasing transparency and lowering the barriers for individuals to share their stories. 
+
+The Ushahidi Android app synchronizes with any Ushahidi deployment allowing viewing and creation of incident reports on the go. 
+
+The app supports loading of multiple deployments at one time, quick filtering through reports, exploring incident locations on the map, viewing report photos, news article, media as well as sharing reports via email, SMS or Twitter. Once the data has been downloaded, the app can function without an internet connection, allowing accurate collection of data utilizing the device's camera and GPS capabilities.
+
+For more information visit:
+
+* [About Ushahidi](http://www.ushahidi.com)
+* [Issue Tracker](http://dev.ushahidi.com/projects/roadmap/Ushahidi_Android)
+* [API Documentation](http://wiki.ushahidi.com/doku.php?id=ushahidi_api)
+* [Code Repository](http://github.com/ushahidi/Ushahidi_Android)
+
+** How To White-Label The App **
+*** Splash Screen ***
+
+Replace the file  "res/drawable/ushahidi_android_splash.png" with your custom designed splash image. It should be of the size 320px x 680px
+
+*** Application Icon ***
+
+Replace the files "res/drawable-hdpi/ushahidi_icon.png" (72 x 72), "res/drawable-ldpi/ushahidi_icon.png" (36px x 36px) and "res/drawable-mdpi/ushahidi_icon.png"(48px x 48px) with your custom designed application icon. The size should be 48px x 48px
+
+*** Deployment Logo ***
+Replace the file "res/drawable/ushahidi_android_logo" (260px x 68px) with your deployment logo.
+
+*** Report Image Place Holder ***
+Replace the file "res/drawable/ushahidi_report_icon" (50px x 50px) with your placeholder if report images
+
+*** ListView Odd Row Color ***
+To change the list view odd row color when viewing items in the list view, change the hexadecimal code in res/values/colors.xml -- <color name="table_odd_row_color">#replace this with your color's hexadecimal code</color> example. <color name="table_odd_row_color">#edd5c9</color> 
+
+*** ListView Even Row Color ***
+To change the list view even row color when viewing items in the list view, change the hexadecimal code in res/values/colors.xml -- <color name="table_odd_row_color">#replace this with your color's hexadecimal code</color> example. <color name="table_even_row_color">#f9f6ee</color> 
+
+*** Background Color ***
+To change the background color for the app, change the hexadecimal code in res/values/colors.xml -- Lookout for the element <drawable name="background_color">#ede7d1</drawable> and replace #ede7d1 with your color's hexadecimal code. Example. <drawable name="background_color">#0000ff</drawable>
+Or you can put an image there instead of an hexadecimal color code. In that case, it would be <drawable name="background_color">@drawable/image_name</drawable>
+
+*** Dashboard Background Image ***
