@@ -29,6 +29,8 @@
     <drawable name="verified_color">#25991C</drawable>
     <drawable name="black_color">#000000</drawable>
     <drawable name="gray_color">#736F6E</drawable>
+    <drawable name="actionbar_title_container_background">@drawable/ushahidi_android_titlebar</drawable>
+    <drawable name="about_background">#edd5c9</drawable>
     <color name="title_background">#453727</color>
     <color name="title_separator">#000000</color>
     <color name="title_text">#ffffff</color>

@@ -54,7 +54,7 @@
 			</LinearLayout>
 		</ScrollView>
 	</LinearLayout>
-	<TextView android:background="@drawable/ushahidi_android_sky_background"
+	<TextView android:background="@drawable/about_background"
 		android:id="@+id/sky_bg" android:layout_height="wrap_content"
 		android:layout_width="fill_parent" android:layout_above="@+id/bottom_menu_bar_separator" />
 	<LinearLayout style="@style/BottomActionBarContainer"
