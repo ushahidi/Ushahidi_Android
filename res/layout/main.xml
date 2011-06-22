@@ -12,7 +12,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/db1_root" android:orientation="vertical"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:background="@drawable/ushahidi_android_dashboard_background">
+	android:background="@drawable/dashboard_background">
 	<LinearLayout style="@style/ActionBarTitleContainer">
 		<ImageButton style="@style/ActionBarTitle"
 			android:contentDescription="@string/menu_home" android:src="@drawable/ushahidi_icon" />

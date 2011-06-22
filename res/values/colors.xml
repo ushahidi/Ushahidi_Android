@@ -1,50 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
-  Copyright (c) 2010 Ushahidi Inc
-  All rights reserved
-  Contact: team@ushahidi.com
-  Website: http://www.ushahidi.com
-  
-  GNU Lesser General Public License Usage
-  This file may be used under the terms of the GNU Lesser
-  General Public License version 3 as published by the Free Software
-  Foundation and appearing in the file LICENSE.LGPL included in the
-  packaging of this file. Please review the following information to
-  ensure the GNU Lesser General Public License version 3 requirements
-  will be met: http://www.gnu.org/licenses/lgpl.html.	
- 	
- 
-  If you have questions regarding the use of this file, please contact
-  Ushahidi developers at team@ushahidi.com. 
- -->
+<!-- Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+	Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
+	This file may be used under the terms of the GNU Lesser General Public License 
+	version 3 as published by the Free Software Foundation and appearing in the 
+	file LICENSE.LGPL included in the packaging of this file. Please review the 
+	following information to ensure the GNU Lesser General Public License version 
+	3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
+	have questions regarding the use of this file, please contact Ushahidi developers 
+	at team@ushahidi.com. -->
 <resources>
-    <drawable name="title_color">#7C2811</drawable>
-    <drawable name="date_color">#262321</drawable>
-    <drawable name="report_lable">#f6f6ee</drawable>
-    <drawable name="header_color">#3E51BC</drawable>
-    
-    <drawable name="background_color">#ede7d1</drawable>
-    <drawable name="thick_background_color">#DDD0A3</drawable>
-    <drawable name="white_color">#FFFFFF</drawable>
-    <drawable name="verified_color">#25991C</drawable>
-    <drawable name="black_color">#000000</drawable>
-    <drawable name="gray_color">#736F6E</drawable>
-    <drawable name="actionbar_title_container_background">@drawable/ushahidi_android_titlebar</drawable>
-    <drawable name="about_background">#edd5c9</drawable>
-    <color name="title_background">#453727</color>
-    <color name="title_separator">#000000</color>
-    <color name="title_text">#ffffff</color>
-    <color name="title_text_alt">#bf2b05</color>
-    <color name="icon_title">#89221b</color>
-    <color name="foreground2">#ff7081a3</color>
-    <color name="background1">#ffffffff</color>
-    <color name="background2">#ffd5ddeb</color>
-    <color name="background3">#ffe3e8f1</color>
-    <color name="list_view_date">#90544a</color>
-    <color name="table_odd_row_color">#f2eddc</color>
-    <color name="table_even_row_color">#efdbad</color>
-    <color name="table_selected_row_color"> #e6ddbe</color>
-    <color name="table_header_color">#e6ddbe</color>
-    <color name="verified_text_color">#99CC99</color>
-    <color name="unverified_text_color">#CC6666</color>  
+	<drawable name="title_color">#7C2811</drawable>
+	<drawable name="date_color">#262321</drawable>
+	<drawable name="report_lable">#f6f6ee</drawable>
+	<drawable name="header_color">#3E51BC</drawable>
+	<drawable name="dashboard_background">@drawable/ushahidi_android_dashboard_background
+	</drawable>
+	<drawable name="background_color">#ede7d1</drawable>
+	<drawable name="thick_background_color">#DDD0A3</drawable>
+	<drawable name="white_color">#FFFFFF</drawable>
+	<drawable name="verified_color">#25991C</drawable>
+	<drawable name="black_color">#000000</drawable>
+	<drawable name="gray_color">#736F6E</drawable>
+	<drawable name="actionbar_title_container_background">@drawable/ushahidi_android_titlebar</drawable>
+	<drawable name="about_background">@drawable/ushahidi_android_sky_background</drawable>
+	<color name="title_background">#453727</color>
+	<color name="title_separator">#000000</color>
+	<color name="title_text">#ffffff</color>
+	<color name="title_text_alt">#bf2b05</color>
+	<color name="icon_title">#89221b</color>
+	<color name="foreground2">#ff7081a3</color>
+	<color name="background1">#ffffffff</color>
+	<color name="background2">#ffd5ddeb</color>
+	<color name="background3">#ffe3e8f1</color>
+	<color name="list_view_date">#90544a</color>
+	<color name="table_odd_row_color">#f2eddc</color>
+	<color name="table_even_row_color">#efdbad</color>
+	<color name="table_selected_row_color"> #e6ddbe</color>
+	<color name="table_header_color">#e6ddbe</color>
+	<color name="verified_text_color">#99CC99</color>
+	<color name="unverified_text_color">#CC6666</color>
 </resources>
