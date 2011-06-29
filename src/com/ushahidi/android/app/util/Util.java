@@ -161,7 +161,7 @@ public class Util {
      */
     public static String truncateText(String text) {
         if (text.length() > 30) {
-            return text.substring(0, 25).trim() + "É";
+            return text.substring(0, 25).trim() + "ï¿½";
         } else {
             return text;
         }
@@ -327,6 +327,8 @@ public class Util {
                 }
 
                 if (mNewCategories != null && mNewIncidents != null) {
+                    //delete all categories
+                    UshahidiApplication.mDb.deleteAllCategories();
                     UshahidiApplication.mDb.addCategories(mNewCategories, false);
                     UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
                     return 0;
