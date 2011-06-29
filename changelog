@@ -5,6 +5,7 @@
  * Redesigned dashboard UI.
  * Added action bar to most activities.
  * Added new translations. French, Chinese, Portuguese, Japanese, Turkish
+ * Supports white-labeling.
 
 Fixed:
  * Improved GPS fix. Its much faster now.
