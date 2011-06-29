@@ -1,7 +1,9 @@
 #/usr/bin/python!
+# -*- coding: utf-8 -*-
+
 """
 /** 
- ** Copyright (c) 2010 Ushahidi Inc
+ ** Copyright (c) 2011 Ushahidi Inc
  ** All rights reserved
  ** Contact: team@ushahidi.com
  ** Website: http://www.ushahidi.com
@@ -22,8 +24,6 @@
 
 This class generates string.xml for Android from a csv file and as well generates string.xml from 
 csv file for Android.
-
-Generates mock philosophy based on a context-free grammar
 
 Usage: python stringgen.py [options] [source] [destination]
 
@@ -46,31 +46,237 @@ __date__ = "$Date: 2011/06/17 17:17:19 $"
 __copyright__ = "Copyright (c) 2011 Ushahidi"
 __license__ = "GPL"
 
-import xml.dom.ext
 import xml.dom.minidom
 import csv
+import os
+import sys
+
+from optparse import OptionParser
 
 class StringGenerator:
     
     """ generate string.xml or csv.txt file """
     
-    def __init__(self, lang=None, source=None, destion=None):
-    
-    def generate_string_xml(self,csvfile, destdir):
-        """ generate strings.xml file from a csv file """
-        data = csv.reader(open(csvfile))  
-        doc = xml.dom.minidom.Document()
+    def __init__(self,lang,source, destination):
+        self.languages= {"ab":"Abkhaz","aa":"Afar","af":"Afrikaans ",
+        "ak" :"Akan ",
+        "sq" :"Albanian ",
+        "am" :"Amharic ",
+        "ar" :"Arabic ",
+        "an" :"Aragonese ",
+        "hy" :"Armenian ",
+        "as" :"Assamese ",
+        "av" :"Avaric ",
+        "ae" :"Avestan ",
+        "ay" :"Aymara ",
+        "az" :"Azerbaijani ",
+        "bm" :"Bambara ",
+        "ba" :"Bashkir ",
+        "eu" :"Basque ",
+        "be" :"Belarusian ",
+        "bn" :"Bengali ",
+        "bh" :"Bihari ",
+        "bi" :"Bislama ",
+        "bs" :"Bosnian ",
+        "br" :"Breton ",
+        "bg" :"Bulgarian ",
+        "my" :"Burmese ",
+        "ca" :"Catalan; Valencian ",
+        "ch" :"Chamorro ",
+        "ce" :"Chechen ",
+        "ny" :"Chichewa; Chewa; Nyanja ",
+        "zh" :"Chinese ",
+        "cv" :"Chuvash ",
+        "kw" :"Cornish ",
+        "co" :"Corsican ",
+        "cr" :"Cree ",
+        "hr" :"Croatian ",
+        "cs" :"Czech ",
+        "da" :"Danish ",
+        "dv" :"Divehi; Dhivehi; Maldivian; ",
+        "nl" :"Dutch ",
+        "en" :"English ",
+        "eo" :"Esperanto ",
+        "et" :"Estonian ",
+        "ee" :"Ewe ",
+        "fo" :"Faroese ",
+        "fj" :"Fijian ",
+        "fi" :"Finnish ",
+         "suomi, suomen kieli "
+        "fr" :"French ",
+        "ff" :"Fula; Fulah; Pulaar; Pular ",
+        "gl" :"Galician ",
+        "ka" :"Georgian ",
+        "de" :"German ",
+        "el" :"Greek, Modern ",
+        "gn" :"Guaraní ",
+        "gu" :"Gujarati ",
+        "ht" :"Haitian; Haitian Creole ",
+        "ha" :"Hausa ",
+        "he" :"Hebrew",
+        "hz" :"Herero ",
+        "hi" :"Hindi ",
+        "ho" :"Hiri Motu ",
+        "hu" :"Hungarian ",
+        "ia" :"Interlingua ",
+        "id" :"Indonesian ",
+        "ie" :"Interlingue ",
+        "ga" :"Irish ",
+        "ig" :"Igbo ",
+        "ik" :"Inupiaq ",
+        "io" :"Ido ",
+        "is" :"Icelandic ",
+        "it" :"Italian ",
+        "iu" :"Inuktitut ",
+        "ja" :"Japanese ",
+        "jv" :"Javanese ",
+        "kl" :"Kalaallisut, Greenlandic ",
+        "kn" :"Kannada ",
+        "kr" :"Kanuri ",
+        "ks" :"Kashmiri ",
+        "kk" :"Kazakh ",
+        "km" :"Khmer ",
+        "ki" :"Kikuyu, Gikuyu ",
+        "rw" :"Kinyarwanda ",
+        "ky" :"Kirghiz, Kyrgyz ",
+        "kv" :"Komi ",
+        "kg" :"Kongo ",
+        "ko" :"Korean ",
+        "ku" :"Kurdish ",
+        "kj" :"Kwanyama, Kuanyama ",
+        "la" :"Latin ",
+        "lb" :"Luxembourgish, Letzeburgesch ",
+        "lg" :"Luganda ",
+        "li" :"Limburgish, Limburgan, Limburger ",
+        "ln" :"Lingala ",
+        "lo" :"Lao ",
+        "lt" :"Lithuanian ",
+        "lu" :"Luba-Katanga ",
+        "lv" :"Latvian ",
+        "gv" :"Manx ",
+        "mk" :"Macedonian ",
+        "mg" :"Malagasy ",
+        "ms" :"Malay ",
+        "ml" :"Malayalam ",
+        "mt" :"Maltese ",
+        "mi" :"Māori ",
+        "mr" :"Marathi (Marāṭhī) ",
+        "mh" :"Marshallese ",
+        "mn" :"Mongolian ",
+        "na" :"Nauru ",
+        "nv" :"Navajo, Navaho ",
+        "nb" :"Norwegian Bokmål ",
+        "nd" :"North Ndebele ",
+        "ne" :"Nepali ",
+        "ng" :"Ndonga ",
+        "nn" :"Norwegian Nynorsk ",
+        "no" :"Norwegian ",
+        "ii" :"Nuosu ",
+        "nr" :"South Ndebele ",
+        "oc" :"Occitan ",
+        "oj" :"Ojibwe, Ojibwa ",
+        "cu" :
+        "Old Church Slavonic, Church Slavic, Church Slavonic, Old Bulgarian, Old Slavonic ",
+        "om" :"Oromo ",
+        "or" :"Oriya ",
+        "os" :"Ossetian, Ossetic ",
+        "pa" :"Panjabi, Punjabi ",
+        "pi" :"Pāli ",
+        "fa" :"Persian ",
+        "pl" :"Polish ",
+        "ps" :"Pashto, Pushto ",
+        "pt" :"Portuguese ",
+        "qu" :"Quechua ",
+        "rm" :"Romansh ",
+        "rn" :"Kirundi ",
+        "ro" :"Romanian, Moldavian, Moldovan ",
+        "ru" :"Russian ",
+        "sa" :"Sanskrit (Saṁskṛta) ",
+        "sc" :"Sardinian ",
+        "sd" :"Sindhi ",
+        "se" :"Northern Sami ",
+        "sm" :"Samoan ",
+        "sg" :"Sango ",
+        "sr" :"Serbian ",
+        "gd" :"Scottish Gaelic; Gaelic ",
+        "sn" :"Shona ",
+        "si" :"Sinhala, Sinhalese ",
+        "sk" :"Slovak ",
+        "sl" :"Slovene ",
+        "so" :"Somali ",
+        "st" :"Southern Sotho ",
+        "es" :"Spanish; Castilian ",
+        "su" :"Sundanese ",
+        "sw" :"Swahili ",
+        "ss" :"Swati ",
+        "sv" :"Swedish ",
+        "ta" :"Tamil ",
+        "te" :"Telugu ",
+        "tg" :"Tajik ",
+        "th" :"Thai ",
+        "ti" :"Tigrinya ",
+        "bo" :"Tibetan Standard, Tibetan, Central ",
+        "tk" :"Turkmen ",
+        "tl" :"Tagalog ",
+        "tn" :"Tswana ",
+        "to" :"Tonga (Tonga Islands) ",
+        "tr" :"Turkish ",
+        "ts" :"Tsonga ",
+        "tt" :"Tatar ",
+        "tw" :"Twi ",
+        "ty" :"Tahitian ",
+        "ug" :"Uighur, Uyghur ",
+        "uk" :"Ukrainian ",
+        "ur" :"Urdu ",
+        "uz" :"Uzbek ",
+        "ve" :"Venda ",
+        "vi" :"Vietnamese ",
+        "vo" :"Volapük ",
+        "wa" :"Walloon ",
+        "cy" :"Welsh ",
+        "wo" :"Wolof ",
+        "fy" :"Western Frisian ",
+        "xh" :"Xhosa ",
+        "yi" :"Yiddish ",
+        "yo" :"Yoruba ",
+        "za" :"Zhuang, Chuang "}
         
-            resources = doc.createElementNS("urn:oasis:names:tc:xliff:document:1.2","resources")
+        self.source = source
+        self.destination = destination
+        self.lang = lang
+        self.generate_string_xml(lang,source,destination)    
 
+    def generate_string_xml(self,lang,csvfile,destination):
+        """ generate strings.xml file from a csv file """
+        csv_data = csv.reader(open(csvfile,"rb"))  
+        doc = xml.dom.minidom.Document()
+        resources = doc.createElementNS(
+            "urn:oasis:names:tc:xliff:document:1.2","resources")
         doc.appendChild(resources)
-        for row in data:
-            doc.
-        return doc
+        for row in csv_data:
+            if len(row) and len(row) == 2:
+                string = doc.createElement("string")
+                string.setAttribute("name",row[0])
+                string_text = doc.createTextNode(row[1])
+                string.appendChild(string_text)
+                resources.appendChild(string)
 
+        directory = self.create_dir(lang,destination)
+        stringxml = open(directory+"/strings.xml","w")
+        stringxml.writelines(doc.toprettyxml(indent="  "))
+        stringxml.close()
 
-    def generate_csv(self):
+    #print doc.toprettyxml(indent="  ")             
+    #def generate_csv(self):
     
+    def create_dir(self, lang, destination):
+        """ create android value-lang directory """
+        directory = "%s/values-%s" % (destination,lang)
+        
+        if not os.path.isdir(directory):
+            os.makedirs(directory)
+        return directory
+
     def write_xml_to_file(self, doc, destdir="strings.xml"):
         file_obj = open(destdir, "w");
         xml.dom.ext.PrettyPrint(doc, file_obj)
@@ -79,99 +285,27 @@ class StringGenerator:
     def write_xml_to_screen(self,doc):
         xml.dom.ext.PrettyPrint(doc, file_obj)
 
-    def sync_files(self,oldfile, newflie):
+# def sync_files(self,oldfile, newflie):
 
+def main(args,options,parser):
+    if len(args) < 3:
+        parser.print_usage() 
+        print "%s: " %(str(len(args)))
 
-def main(argv):
-    string = "string.xml"
-    try:
-        opts, args = getopt.getopt(argv, "hg:d", ["help", "lang="])
-    except getopt.GetoptError:
-        usage()
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt in ("-h", "--help"):
-            usage()
-            sys.exit()
-        elif opt == '-d':
-            global _debug
-            _debug = 1
-        elif opt in ("-l", "--lang"):
-            string = arg
-        elif opt in ("-i", "--import"):
-            usage()
-    
-    source = "".join(args)
-    k = KantGenerator(grammar, source)
-    print k.output()
-oh 
+    else:
+        stringgen = StringGenerator(args[0],args[1],args[2])
+#stringgen.create_dir('en',args[1])
+
+        if options.pot == 'pot':
+            stringgen.create_dir('en',args[1])
+
+usage = "usage: %prog [options] <language_2_letter_iso> <source_file> <destination_folder>"
+parser = OptionParser(usage=usage)
+parser.add_option("-i","--import", action="store",
+        help="import csv file and generate string.xml file",dest="import")
+parser.add_option("-p","--pot",action="store",help="generate pot file from string.xml file", dest="pot")
+(options, args) = parser.parse_args()
+
 if __name__ == "__main__":
-    main(sys.argv[1:])
-
-import sys
-import os
-
-from optparse import OptionParser
-from lxml import etree
-
-class AndroidString:
-
-    def __init__(self, input_path, output_path):
-        self.input_path = input_path
-        self.output_path = output_path
-        self.dic_gen()
-
-	# print usage instructions.
-	def usage(self):
-		print ''
-		
-    #generate dictionary xml file
-    def dic_gen(self):
-        self.write_xml_doc_to_file( self.read_huns_dict() )
-        #self.write_xml_doc()
-
-    #read hunspell dict file
-    def read_huns_dict(self):
-        f = open( self.input_path, 'r')
-        dict_content = f.readlines()
-        f.close()
-
-        return dict_content
-
-    def structure_dict_xml(self, huns_dict):
-        child_element = ""
-        header = '<?xml version="1.0" encoding="UTF-8" ?>\n'
-        start_root_element ='<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">\n'
-        for word in huns_dict:
-			part_of_child_element = '<string name="'
-			splitted_str = word.split("\n\r")
-			translated = splitted_str[0].rstrip("\n\r").split(",")
-			values_of_child_element = translated[0]+'">'+splitted_str[0].rstrip("\n\r")
-			end_of_child_element = '</string>\n'
-			child_element += part_of_child_element + values_of_child_element + end_of_child_element 
-
-        end_root_element = '</resources>'
-
-        build_xml_doc = header + start_root_element + child_element + end_root_element
-
-        return build_xml_doc
-
-    #write xml content to file
-    def write_xml_doc_to_file(self, huns_dict):
-        f = open( self.output_path + '/strings.xml','w')
-        f.writelines( self.structure_dict_xml(huns_dict) )
-        f.close()
-
-if __name__ == '__main__':
-    parser = OptionParser()
-    (options, args) = parser.parse_args()
-    
-    if len(args) > 1:
-
-        dict_generator = DictGenerator(args[0], args[1] )
-        
-        #print dict_generator.structure_dict_xml()
-
-
-
+    main(args, options,parser)
 
