@@ -59,25 +59,26 @@ public class RetrieveCheckinsJSONServices {
         if (processingResult) {
             ArrayList<UsersData> checkinsUsersList = new ArrayList<UsersData>();
             JSONArray checkinsUsersArray = getCheckinsUsersArray();
+            if (checkinsUsersArray != null) {
+                for (int index = 0; index < checkinsUsersArray.length(); index++) {
+                    UsersData users = new UsersData();
 
-            for (int index = 0; index < checkinsUsersArray.length(); index++) {
-                UsersData users = new UsersData();
+                    try {
+                        users.setId(Integer.valueOf(checkinsUsersArray.getJSONObject(index)
+                                .getString("id")));
+                        users.setUserName(checkinsUsersArray.getJSONObject(index).getString("name"));
+                        users.setColor(checkinsUsersArray.getJSONObject(index).getString("color"));
+                    } catch (JSONException e) {
 
-                try {
-                    users.setId(Integer.valueOf(checkinsUsersArray.getJSONObject(index).getString(
-                            "id")));
-                    users.setUserName(checkinsUsersArray.getJSONObject(index).getString("name"));
-                    users.setColor(checkinsUsersArray.getJSONObject(index).getString("color"));
-                } catch (JSONException e) {
+                        processingResult = false;
+                        return null;
+                    }
 
-                    processingResult = false;
-                    return null;
+                    checkinsUsersList.add(users);
                 }
 
-                checkinsUsersList.add(users);
+                return checkinsUsersList;
             }
-
-            return checkinsUsersList;
         }
         return null;
     }
@@ -86,41 +87,44 @@ public class RetrieveCheckinsJSONServices {
         if (processingResult) {
             ArrayList<Checkin> checkinsList = new ArrayList<Checkin>();
             JSONArray checkinsArray = getCheckinsArray();
-            int arraySize = checkinsArray.length();
+           
+            if (checkinsArray != null) {
+                int arraySize = checkinsArray.length();
+                for (int checkinsLoop = 0; checkinsLoop < arraySize; checkinsLoop++) {
+                    Checkin currentCheckin = new Checkin();
 
-            for (int checkinsLoop = 0; checkinsLoop < arraySize; checkinsLoop++) {
-                Checkin currentCheckin = new Checkin();
+                    try {
+                        currentCheckin.setId(checkinsArray.getJSONObject(checkinsLoop).getString(
+                                "id"));
+                        currentCheckin.setLoc(checkinsArray.getJSONObject(checkinsLoop).getString(
+                                "loc"));
+                        currentCheckin.setLat(checkinsArray.getJSONObject(checkinsLoop).getString(
+                                "lat"));
+                        currentCheckin.setLon(checkinsArray.getJSONObject(checkinsLoop).getString(
+                                "lon"));
+                        currentCheckin.setDate(checkinsArray.getJSONObject(checkinsLoop).getString(
+                                "date"));
+                        currentCheckin.setMsg(checkinsArray.getJSONObject(checkinsLoop).getString(
+                                "msg"));
+                        currentCheckin.setUser(checkinsArray.getJSONObject(checkinsLoop).getString(
+                                "user"));
+                        if (!checkinsArray.getJSONObject(checkinsLoop).isNull("media")) {
+                            savedMediaCheckinsList(checkinsArray.getJSONObject(checkinsLoop)
+                                    .getJSONArray("media"),
+                                    checkinsArray.getJSONObject(checkinsLoop).getString("id"));
+                        }
 
-                try {
-                    currentCheckin.setId(checkinsArray.getJSONObject(checkinsLoop).getString("id"));
-                    currentCheckin.setLoc(checkinsArray.getJSONObject(checkinsLoop)
-                            .getString("loc"));
-                    currentCheckin.setLat(checkinsArray.getJSONObject(checkinsLoop)
-                            .getString("lat"));
-                    currentCheckin.setLon(checkinsArray.getJSONObject(checkinsLoop)
-                            .getString("lon"));
-                    currentCheckin.setDate(checkinsArray.getJSONObject(checkinsLoop).getString(
-                            "date"));
-                    currentCheckin.setMsg(checkinsArray.getJSONObject(checkinsLoop)
-                            .getString("msg"));
-                    currentCheckin.setUser(checkinsArray.getJSONObject(checkinsLoop).getString(
-                            "user"));
-                    if (!checkinsArray.getJSONObject(checkinsLoop).isNull("media")) {
-                        savedMediaCheckinsList(checkinsArray.getJSONObject(checkinsLoop)
-                                .getJSONArray("media"), checkinsArray.getJSONObject(checkinsLoop)
-                                .getString("id"));
+                    } catch (JSONException e) {
+
+                        processingResult = false;
+                        return null;
                     }
 
-                } catch (JSONException e) {
-
-                    processingResult = false;
-                    return null;
+                    checkinsList.add(currentCheckin);
                 }
 
-                checkinsList.add(currentCheckin);
+                return checkinsList;
             }
-
-            return checkinsList;
         }
 
         return null;
@@ -133,37 +137,41 @@ public class RetrieveCheckinsJSONServices {
         String thumbNail = "";
         String url = "";
         String thumbnailUrl = "";
-        for (int index = 0; index < checkinsCheckinsMediaArray.length(); index++) {
-            CheckinMedia checkinMedia = new CheckinMedia();
 
-            try {
-                checkinMedia.setMediaId(Integer.valueOf(checkinsCheckinsMediaArray.getJSONObject(
-                        index).getString("id")));
-                checkinMedia.setCheckinId(Integer.valueOf(checkinId));
-                // generate a file name
-                url = checkinsCheckinsMediaArray.getJSONObject(index).getString("medium");
+        if (checkinsCheckinsMediaArray != null) {
+            for (int index = 0; index < checkinsCheckinsMediaArray.length(); index++) {
+                CheckinMedia checkinMedia = new CheckinMedia();
 
-                fileName = url.substring(url.lastIndexOf('/') + 1, url.length());
-                
-                ImageManager.saveImageFromURL(checkinsCheckinsMediaArray.getJSONObject(index)
-                        .getString("medium"), fileName, UshahidiPref.savePath);
-                
-                checkinMedia.setMediumLink(fileName);
+                try {
+                    checkinMedia.setMediaId(Integer.valueOf(checkinsCheckinsMediaArray
+                            .getJSONObject(index).getString("id")));
+                    checkinMedia.setCheckinId(Integer.valueOf(checkinId));
+                    // generate a file name
+                    url = checkinsCheckinsMediaArray.getJSONObject(index).getString("medium");
 
-                thumbnailUrl = checkinsCheckinsMediaArray.getJSONObject(index).getString("thumb");
-                
-                thumbNail = thumbnailUrl.substring(thumbnailUrl.lastIndexOf('/') + 1,
-                        thumbnailUrl.length());
-                
-                ImageManager.saveImageFromURL(thumbnailUrl, thumbNail,UshahidiPref.savePath);
-                checkinMedia.setThumbnailLink(thumbNail);
+                    fileName = url.substring(url.lastIndexOf('/') + 1, url.length());
 
-            } catch (JSONException e) {
+                    ImageManager.saveImageFromURL(checkinsCheckinsMediaArray.getJSONObject(index)
+                            .getString("medium"), fileName, UshahidiPref.savePath);
+
+                    checkinMedia.setMediumLink(fileName);
+
+                    thumbnailUrl = checkinsCheckinsMediaArray.getJSONObject(index).getString(
+                            "thumb");
+
+                    thumbNail = thumbnailUrl.substring(thumbnailUrl.lastIndexOf('/') + 1,
+                            thumbnailUrl.length());
+
+                    ImageManager.saveImageFromURL(thumbnailUrl, thumbNail, UshahidiPref.savePath);
+                    checkinMedia.setThumbnailLink(thumbNail);
+
+                } catch (JSONException e) {
+                }
+
+                checkinsMediaList.add(checkinMedia);
             }
-
-            checkinsMediaList.add(checkinMedia);
+            UshahidiApplication.mDb.addCheckinMedia(checkinsMediaList);
         }
-        UshahidiApplication.mDb.addCheckinMedia(checkinsMediaList);
 
     }
 

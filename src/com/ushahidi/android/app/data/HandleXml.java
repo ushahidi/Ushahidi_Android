@@ -24,7 +24,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import android.util.Log;
@@ -42,18 +41,19 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HandleXml {
 
-    public static List<IncidentsData> processIncidentsXml(String xml) {
+    public static List<IncidentsData> processIncidentsXml(String xmL) {
+        Log.d("Incident", " Fetching Incident ");
+        String xml = xmL.replaceAll( "&([^;]+(?!(?:\\w|;)))", "&amp;$1" );
         String categories = "";
         String thumbnail = "";
         String image = "";
-
+        List<IncidentsData> listIncidentsData = new ArrayList<IncidentsData>();
         DocumentBuilder builder = null;
         Document doc = null;
         try {
@@ -66,6 +66,9 @@ public class HandleXml {
             e.printStackTrace();
         }
 
+        if (builder == null)
+            return listIncidentsData;
+
         try {
             // encode the xml to UTF -8
             ByteArrayInputStream encXML = new ByteArrayInputStream(xml.getBytes("UTF8"));
@@ -77,8 +80,9 @@ public class HandleXml {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        List<IncidentsData> listIncidentsData = new ArrayList<IncidentsData>();
-
+        
+        if( doc == null ) return listIncidentsData;
+        
         NodeList node = doc.getElementsByTagName("incident");
 
         for (int i = 0; i < node.getLength(); i++) {
@@ -236,9 +240,10 @@ public class HandleXml {
 
     }
 
-    public static List<CategoriesData> processCategoriesXml(String xml) {
-        Log.d("StringXML", "XML: " + xml);
+    public static List<CategoriesData> processCategoriesXml(String xmL) {
+        Log.d("Categories XML", "Fetching categories ");
         List<CategoriesData> categoriesData = new ArrayList<CategoriesData>();
+        String xml = xmL.replaceAll( "&([^;]+(?!(?:\\w|;)))", "&amp;$1" );
         String categories = "";
         DocumentBuilder builder = null;
         Document doc = null;
@@ -252,7 +257,8 @@ public class HandleXml {
             e.printStackTrace();
         }
 
-        if (builder == null) return categoriesData;
+        if (builder == null)
+            return categoriesData;
 
         try {
 
@@ -271,7 +277,8 @@ public class HandleXml {
             e.printStackTrace();
         }
 
-        if (doc == null) return categoriesData;
+        if (doc == null)
+            return categoriesData;
 
         NodeList node = doc.getElementsByTagName("category");
         for (int i = 0; i < node.getLength(); i++) {
