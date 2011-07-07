@@ -24,7 +24,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import android.util.Log;
@@ -42,7 +41,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +54,8 @@ public class HandleXml {
 
         DocumentBuilder builder = null;
         Document doc = null;
+        List<IncidentsData> listIncidentsData = new ArrayList<IncidentsData>();
+
         try {
             builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         } catch (ParserConfigurationException e) {
@@ -65,6 +65,8 @@ public class HandleXml {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+        if (builder == null) return listIncidentsData;
 
         try {
             // encode the xml to UTF -8
@@ -77,7 +79,8 @@ public class HandleXml {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        List<IncidentsData> listIncidentsData = new ArrayList<IncidentsData>();
+
+        if (doc == null) return listIncidentsData;
 
         NodeList node = doc.getElementsByTagName("incident");
 
