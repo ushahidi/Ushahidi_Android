@@ -43,6 +43,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -251,6 +252,8 @@ public class HandleXml {
             e.printStackTrace();
         }
 
+        if (builder == null) return categoriesData;
+
         try {
 
             // encode the xml to UTF -8
@@ -260,10 +263,15 @@ public class HandleXml {
         } catch (SAXException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+        if (doc == null) return categoriesData;
 
         NodeList node = doc.getElementsByTagName("category");
         for (int i = 0; i < node.getLength(); i++) {
