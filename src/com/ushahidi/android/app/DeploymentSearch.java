@@ -73,7 +73,7 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
 
     private String distance = "";
 
-    private static final String CLASS_TAG = DeviceCurrentLocation.class.getCanonicalName();
+    private static final String CLASS_TAG = DeploymentSearch.class.getCanonicalName();
 
     // Context menu items
     private static final int DELETE = Menu.FIRST + 1;
@@ -149,7 +149,7 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item
                 .getMenuInfo();
-        deploymentId = (int)info.id;
+        deploymentId = Integer.parseInt(mDeployments.get(info.position).getId());
 
         switch (item.getItemId()) {
             // context menu selected
