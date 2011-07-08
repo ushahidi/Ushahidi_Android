@@ -215,8 +215,10 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
         
         //get supported screen sizes
         List<Camera.Size> previewSizes = p.getSupportedPreviewSizes();
-        Camera.Size previewSize = previewSizes.get(0);
-        p.setPreviewSize(previewSize.width, previewSize.height);
+        if (previewSizes != null){
+            Camera.Size previewSize = previewSizes.get(0);
+            p.setPreviewSize(previewSize.width, previewSize.height);
+        }
         mCamera.setParameters(p);
         try {
             mCamera.setPreviewDisplay(holder);

@@ -1133,12 +1133,13 @@ public class UshahidiDatabase {
 
         int deleted = 0;
 
-        if (cursor != null && cursor.moveToFirst()) {
-            int limitId = cursor.getInt(0);
-            deleted = mDb.delete(tablename, KEY_ID + "<" + limitId, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int limitId = cursor.getInt(0);
+	            deleted = mDb.delete(tablename, KEY_ID + "<" + limitId, null);
+            }
+            cursor.close();
         }
-
-        cursor.close();
 
         return deleted;
     }

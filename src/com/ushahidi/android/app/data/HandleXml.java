@@ -56,6 +56,8 @@ public class HandleXml {
         List<IncidentsData> listIncidentsData = new ArrayList<IncidentsData>();
         DocumentBuilder builder = null;
         Document doc = null;
+
+
         try {
             builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         } catch (ParserConfigurationException e) {
