@@ -62,6 +62,8 @@ public class CheckinMap extends MapActivity {
     
     private Bundle checkinsBundle = new Bundle();
     
+    private DeviceLocationListener locListener;
+
     private static final int HOME = Menu.FIRST + 1;
 
     private static final int ADD_CHECKIN = Menu.FIRST + 2;
@@ -94,7 +96,8 @@ public class CheckinMap extends MapActivity {
         mapView.setBuiltInZoomControls(true);
         name = UshahidiPref.firstname + " " + UshahidiPref.lastname;
         checkins = new ArrayList<Checkin>();
-        setDeviceLocation();
+
+        locListener = new DeviceLocationListener(); // started during onResume
 
         // checkinsList = showCheckins();
         CheckinsTask checkinTask = new CheckinsTask();
@@ -256,51 +259,55 @@ public class CheckinMap extends MapActivity {
 
     }
 
-    // Fetches the current location of the device.
-    private void setDeviceLocation() {
-
-        DeviceLocationListener listener = new DeviceLocationListener();
-        LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-
-        long updateTimeMsec = 1000L;
-
-        // get low accuracy provider
-        LocationProvider low = manager.getProvider(manager.getBestProvider(
-                Util.createCoarseCriteria(), true));
-
-        // get high accuracy provider
-        LocationProvider high = manager.getProvider(manager.getBestProvider(
-                Util.createFineCriteria(), true));
-
-        manager.requestLocationUpdates(low.getName(), updateTimeMsec, 500.0f, listener);
-
-        manager.requestLocationUpdates(high.getName(), updateTimeMsec, 500.0f, listener);
-
-    }
-
     public void onDestroy() {
         super.onDestroy();
-        ((LocationManager)getSystemService(Context.LOCATION_SERVICE))
-                .removeUpdates(new DeviceLocationListener());
+        locListener.stop();
     }
-
+    
+    public void onPause() {
+        super.onPause();
+        locListener.stop();
+    }
+    
     public void onResume() {
         super.onResume();
+        locListener.start();
     }
 
     // get the current location of the device/user
-    public class DeviceLocationListener implements LocationListener {
+    private class DeviceLocationListener implements LocationListener {
+        LocationManager manager;
+
+        public DeviceLocationListener(){
+            manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        }
+
+        public void start(){
+            long updateTimeMsec = 1000L;
+            // get low accuracy provider
+            LocationProvider low = manager.getProvider(manager.getBestProvider(
+                    Util.createCoarseCriteria(), true));
+            // get high accuracy provider
+            LocationProvider high = manager.getProvider(manager.getBestProvider(
+                    Util.createFineCriteria(), true));
+            manager.requestLocationUpdates(low.getName(), updateTimeMsec, 500.0f, locListener);
+            manager.requestLocationUpdates(high.getName(), updateTimeMsec, 500.0f, locListener);
+        }
+
+        public void stop(){
+            manager.removeUpdates(this);
+        }
+
         public void onLocationChanged(Location location) {
 
             if (location != null) {
-
-                ((LocationManager)getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
 
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
 
                 centerLocation(getPoint(latitude, longitude));
 
+                stop();
             }
         }
 
