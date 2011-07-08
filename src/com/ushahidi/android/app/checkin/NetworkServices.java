@@ -65,7 +65,7 @@ public class NetworkServices {
             req.setParameter("email", params.get("email"));
 
             if (!TextUtils.isEmpty(params.get("filename")) || !(params.get("filename").equals("")))
-                req.setParameter("photo", new File(UshahidiPref.savePath + params.get("filename")));
+                req.setParameter("photo", new File(UshahidiPref.savePath, params.get("filename")));
 
             InputStream serverInput = req.post();
 

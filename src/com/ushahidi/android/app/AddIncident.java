@@ -1144,7 +1144,7 @@ public class AddIncident extends MapActivity implements LocationListener {
             } else if (result == 0) {
                 clearFields();
                 // after a successful upload, delete the file
-                File f = new File(UshahidiPref.savePath + UshahidiPref.fileName);
+                File f = new File(UshahidiPref.savePath, UshahidiPref.fileName);
                 if (f.exists()) {
                     f.delete();
                 }

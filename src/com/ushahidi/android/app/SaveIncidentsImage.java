@@ -46,7 +46,7 @@ public class SaveIncidentsImage extends Thread {
         ImageManager.writeImage(mData, filename,UshahidiPref.savePath);
         UshahidiPref.fileName = filename;
 
-        File f = new File(UshahidiPref.savePath + filename);
+        File f = new File(UshahidiPref.savePath, filename);
         if (f.exists()) {
             f.delete();
         }
