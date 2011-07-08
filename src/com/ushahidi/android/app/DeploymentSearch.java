@@ -40,7 +40,6 @@ import com.ushahidi.android.app.data.DeploymentProvider;
 import com.ushahidi.android.app.data.DeploymentsData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.net.Deployments;
-import com.ushahidi.android.app.util.DeviceCurrentLocation;
 import com.ushahidi.android.app.util.Util;
 
 public class DeploymentSearch extends DashboardActivity implements LocationListener {
