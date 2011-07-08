@@ -35,7 +35,7 @@ public class RetrieveCheckinsJSONServices {
         try {
             return jsonObject.getJSONObject("payload");
         } catch (JSONException e) {
-            return null;
+            return new JSONObject();
         }
     }
 
@@ -43,7 +43,7 @@ public class RetrieveCheckinsJSONServices {
         try {
             return getCheckinsObject().getJSONArray("checkins");
         } catch (JSONException e) {
-            return null;
+            return new JSONArray();
         }
     }
 
@@ -51,7 +51,7 @@ public class RetrieveCheckinsJSONServices {
         try {
             return getCheckinsObject().getJSONArray("users");
         } catch (JSONException e) {
-            return null;
+            return new JSONArray();
         }
     }
 
