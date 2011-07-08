@@ -49,9 +49,9 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.About;
 import com.ushahidi.android.app.DeploymentSearch;
-import com.ushahidi.android.app.ImageCapture;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.IncidentsTab;
+import com.ushahidi.android.app.CaptureImage;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.Ushahidi;
@@ -172,7 +172,7 @@ public class CheckinActivity extends MapActivity implements LocationListener {
 
     private Location location;
 
-    private static final String CLASS_TAG = DeviceCurrentLocation.class.getCanonicalName();
+    private static final String CLASS_TAG = CheckinActivity.class.getCanonicalName();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -422,24 +422,39 @@ public class CheckinActivity extends MapActivity implements LocationListener {
                 if (resultCode != RESULT_OK) {
                     return;
                 }
+                Log.i(CLASS_TAG, "ActivityResult has returned");
+                // Do something with image
+                Bitmap original = new CaptureImage().getBitmap(
+                        new CaptureImage().getPhotoUri("photo.jpg", CheckinActivity.this),
+                        CheckinActivity.this);
+                if (original != null) {
+                    float ratio = (float)original.getWidth() / (float)original.getHeight();
+                    Bitmap scaled = Bitmap.createScaledBitmap(original, (int)(500 * ratio), 500,
+                            true);
+                    original.recycle();
+                    // get image URL
+                    Uri u = new CaptureImage().getPhotoUri("photo.jpg",
+                            CheckinActivity.this);
+
+                    Log.i(CLASS_TAG, "Image File Path" + u.getPath());
+                    selectedPhoto = u.getPath();
+                    NetworkServices.fileName = u.getPath();
+
+                    // use resized images
+                    mCheckImgPrev.setImageBitmap(scaled);
+                }
 
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
                 mBundle = null;
-
+                // get image URL
                 if (data != null) {
-                    mExtras = data.getExtras();
-                    if (mExtras != null)
-                        mBundle = mExtras.getBundle("filename");
+                    Uri u = data.getData();
+                    Log.i(CLASS_TAG, "Image File Path" + u.getPath());
+                    selectedPhoto = u.getPath();
+                    NetworkServices.fileName = u.getPath();
+                    mSelectedPhotoText.setVisibility(View.VISIBLE);
 
-                    if (mBundle != null && !mBundle.isEmpty()) {
-                        selectedPhoto = mBundle.getString("name");
-                        NetworkServices.fileName = mBundle.getString("name");
-                        mSelectedPhotoText.setVisibility(View.VISIBLE);
-
-                        mCheckImgPrev.setImageBitmap(ImageManager.getBitmap(
-                                NetworkServices.fileName, UshahidiPref.savePath));
-                    }
                 }
 
                 break;
@@ -529,10 +544,11 @@ public class CheckinActivity extends MapActivity implements LocationListener {
                 dialog.setButton3(getString(R.string.camera_option), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
-                        Intent launchCamera = new Intent().setClass(CheckinActivity.this,
-                                ImageCapture.class);
+                        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, new CaptureImage()
+                                .getPhotoUri("photo.jpg", CheckinActivity.this));
+                        startActivityForResult(intent, REQUEST_CODE_CAMERA);
 
-                        startActivityForResult(launchCamera, REQUEST_CODE_CAMERA);
                         dialog.dismiss();
                     }
                 });

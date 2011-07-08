@@ -2,6 +2,8 @@
 package com.ushahidi.android.app.checkin;
 
 import android.text.TextUtils;
+import android.util.Log;
+
 import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.net.ClientHttpRequest;
 
@@ -50,7 +52,7 @@ public class NetworkServices {
     public static String PostFileUpload(String URL, HashMap<String, String> params)
             throws IOException {
         ClientHttpRequest req = null;
-
+        Log.i("NeworkServices", "Posting Checkins online");
         try {
             URL url = new URL(URL);
             req = new ClientHttpRequest(url);
@@ -64,8 +66,10 @@ public class NetworkServices {
             req.setParameter("lastname", params.get("lastname"));
             req.setParameter("email", params.get("email"));
 
-            if (!TextUtils.isEmpty(params.get("filename")) || !(params.get("filename").equals("")))
-                req.setParameter("photo", new File(UshahidiPref.savePath + params.get("filename")));
+            if (!TextUtils.isEmpty(params.get("filename")) || !(params.get("filename").equals(""))) {
+                Log.i("NeworkServices", "Posting file online");
+                req.setParameter("photo", new File(params.get("filename")));
+            }
 
             InputStream serverInput = req.post();
 
