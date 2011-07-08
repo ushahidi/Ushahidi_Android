@@ -632,7 +632,7 @@ public class AddIncident extends MapActivity implements LocationListener {
                     break;
                 }
 
-                mFilename = "android_pic_upload" + randomString() + ".jpg";
+                mFilename = "android_pic_upload" + Util.randomString() + ".jpg";
                 ImageManager
                         .writeImage(byteArrayos.toByteArray(), mFilename, UshahidiPref.savePath);
                 UshahidiPref.fileName = mFilename;
@@ -660,12 +660,6 @@ public class AddIncident extends MapActivity implements LocationListener {
                 }
                 break;
         }
-    }
-
-    private static Random random = new Random();
-
-    protected static String randomString() {
-        return Long.toString(random.nextLong(), 10);
     }
 
     //

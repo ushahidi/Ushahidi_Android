@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -56,7 +55,6 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiPref;
-import com.ushahidi.android.app.util.DeviceCurrentLocation;
 import com.ushahidi.android.app.util.Util;
 
 /**
@@ -172,7 +170,7 @@ public class CheckinActivity extends MapActivity implements LocationListener {
 
     private Location location;
 
-    private static final String CLASS_TAG = DeviceCurrentLocation.class.getCanonicalName();
+    private static final String CLASS_TAG = CheckinActivity.class.getCanonicalName();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -472,7 +470,7 @@ public class CheckinActivity extends MapActivity implements LocationListener {
                     break;
                 }
 
-                mFilename = "android_pic_upload" + randomString() + ".jpg";
+                mFilename = "android_pic_upload" + Util.randomString() + ".jpg";
                 ImageManager
                         .writeImage(byteArrayos.toByteArray(), mFilename, UshahidiPref.savePath);
                 UshahidiPref.fileName = mFilename;
@@ -496,12 +494,6 @@ public class CheckinActivity extends MapActivity implements LocationListener {
         Intent intent = new Intent(CheckinActivity.this, IncidentsTab.class);
         startActivityForResult(intent, INCIDENTS);
         setResult(RESULT_OK);
-    }
-
-    private static Random random = new Random();
-
-    protected static String randomString() {
-        return Long.toString(random.nextLong(), 10);
     }
 
     @Override
