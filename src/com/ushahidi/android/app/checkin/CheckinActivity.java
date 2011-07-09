@@ -14,7 +14,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -48,15 +47,14 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.About;
+import com.ushahidi.android.app.CaptureImage;
 import com.ushahidi.android.app.DeploymentSearch;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.IncidentsTab;
-import com.ushahidi.android.app.CaptureImage;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiPref;
-import com.ushahidi.android.app.util.DeviceCurrentLocation;
 import com.ushahidi.android.app.util.Util;
 
 /**
@@ -144,11 +142,6 @@ public class CheckinActivity extends MapActivity implements LocationListener {
     private static final int VIEW_SEARCH = 9;
 
     private static final int INCIDENTS = 2;
-
-    // To interchange information
-    private Bundle mBundle;
-
-    private Bundle mExtras;
 
     private Handler mHandler;
 
@@ -274,7 +267,7 @@ public class CheckinActivity extends MapActivity implements LocationListener {
         uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(selectedPhoto)) {
-                    ImageManager.deleteImage(selectedPhoto, UshahidiPref.savePath);
+                    ImageManager.deleteImage(selectedPhoto,"");
                 }
                 showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
             }
@@ -307,6 +300,9 @@ public class CheckinActivity extends MapActivity implements LocationListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (!TextUtils.isEmpty(selectedPhoto)) {
+            ImageManager.deleteImage(selectedPhoto,"");
+        }
         stopLocating();
 
     }
@@ -433,30 +429,17 @@ public class CheckinActivity extends MapActivity implements LocationListener {
                             true);
                     original.recycle();
                     // get image URL
-                    Uri u = new CaptureImage().getPhotoUri("photo.jpg",
-                            CheckinActivity.this);
+                    Uri u = new CaptureImage().getPhotoUri("photo.jpg", CheckinActivity.this);
 
                     Log.i(CLASS_TAG, "Image File Path" + u.getPath());
                     selectedPhoto = u.getPath();
                     NetworkServices.fileName = u.getPath();
 
                     // use resized images
-                    mCheckImgPrev.setImageBitmap(scaled);
-                }
-
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-
-                mBundle = null;
-                // get image URL
-                if (data != null) {
-                    Uri u = data.getData();
-                    Log.i(CLASS_TAG, "Image File Path" + u.getPath());
-                    selectedPhoto = u.getPath();
-                    NetworkServices.fileName = u.getPath();
                     mSelectedPhotoText.setVisibility(View.VISIBLE);
+                    mCheckImgPrev.setImageBitmap(scaled);
 
                 }
-
                 break;
 
             case REQUEST_CODE_IMAGE:
@@ -545,8 +528,8 @@ public class CheckinActivity extends MapActivity implements LocationListener {
                     public void onClick(DialogInterface dialog, int which) {
 
                         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, new CaptureImage()
-                                .getPhotoUri("photo.jpg", CheckinActivity.this));
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                                new CaptureImage().getPhotoUri("photo.jpg", CheckinActivity.this));
                         startActivityForResult(intent, REQUEST_CODE_CAMERA);
 
                         dialog.dismiss();
@@ -639,7 +622,7 @@ public class CheckinActivity extends MapActivity implements LocationListener {
                 // Display checkin status and return back to main screen
                 if (postCheckinJsonErrorCode != "0") {
 
-                    // delete uploaded image after successful checkin
+                   
                     com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
                             R.string.checkin_success_toast);
 

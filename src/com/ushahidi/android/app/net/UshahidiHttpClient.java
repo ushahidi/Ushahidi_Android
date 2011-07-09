@@ -182,7 +182,7 @@ public class UshahidiHttpClient {
             Log.i("HTTP Client:", "filename:" + UshahidiPref.savePath + params.get("filename"));
             if (!TextUtils.isEmpty(params.get("filename")))
                 req.setParameter("incident_photo[]",
-                        new File(UshahidiPref.savePath + params.get("filename")));
+                        new File(params.get("filename")));
 
             InputStream serverInput = req.post();
 
