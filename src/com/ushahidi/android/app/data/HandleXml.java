@@ -26,6 +26,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
@@ -46,6 +47,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HandleXml {
+
+    protected static final int MEDIA_TYPE_IMAGE = 1;
+    protected static final int MEDIA_TYPE_VIDEO = 2;
+    //TODO: Is there a 3?
+    protected static final int MEDIA_TYPE_NEWS = 4;
+
 
     public static List<IncidentsData> processIncidentsXml(String xmL) {
         Log.d("Incident", " Fetching Incident ");
@@ -204,23 +211,29 @@ public class HandleXml {
                                     .getName() : thumbnailFilename.getName() + ",";
                         }
 
-                        NodeList mediaImageList = mediaElement.getElementsByTagName("link");
+                        // Check media type
+                        NodeList mediaTypeList = mediaElement.getElementsByTagName("type");
+                        if (mediaTypeList.getLength() != 0){
+                            NodeList mediaTypes = ((Element)mediaTypeList.item(0)).getChildNodes();
+                            String mediaType = mediaTypes.item(0).getNodeValue();
+                            switch(Integer.parseInt(mediaType)){
+                                case MEDIA_TYPE_IMAGE:
+                                    NodeList mediaImageList = mediaElement.getElementsByTagName("link");
 
-                        if (mediaImageList.getLength() != 0) {
-                            Element mediaInnerImageElement = (Element)mediaImageList.item(0);
-                            NodeList mediaImage = mediaInnerImageElement.getChildNodes();
-                            if (!(mediaImage.item(0)).getNodeValue().equals("")) {
-                                UshahidiService.mNewIncidentsImages.add((mediaImage.item(0))
-                                        .getNodeValue());
+                                    if (mediaImageList.getLength() != 0) {
+                                        String imageName = ((Element)mediaImageList.item(0)).getNodeValue();
+                                        if (!TextUtils.isEmpty(imageName)) {
+                                            UshahidiService.mNewIncidentsImages.add(imageName);
+                                            File imageFilename = new File(imageName);
+                                            image += imageFilename.getName() + ",";
+                                        }
+                                    }
+                                    break;
+                                case MEDIA_TYPE_VIDEO:
+                                    break;
+                                case MEDIA_TYPE_NEWS:
+                                    break;
                             }
-                            // if( j != 0) {
-                            File imageFilename = new File((mediaImage.item(0)).getNodeValue());
-                            image += imageFilename.getName() + ",";
-                            // }
-                            // image += (j == mediaImageList.getLength() -1)? (
-                            // (Node)mediaImage.item(0)).getNodeValue(): (
-                            // (Node)mediaImage.item(0)).getNodeValue()+",";
-
                         }
                     }
                 }
