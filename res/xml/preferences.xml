@@ -19,6 +19,7 @@
  -->
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
+       
 <com.ushahidi.android.app.DialogPreference
 	android:key="clear_cache_preference"
    	android:title="@string/txt_clear_cache"
@@ -27,4 +28,14 @@
    	android:summary="@string/hint_clear_cache"
    	android:positiveButtonText="@string/btn_ok"
    	android:negativeButtonText="@string/btn_cancel" />
+   	
+     <com.ushahidi.android.app.ui.SeekBarPreference android:key="photo_size_preference"
+        android:title="@string/photo_resize_title"
+        android:summary="@string/photo_resize_summary"
+        android:dialogMessage=" Resized image width"
+        android:dialogTitle="@string/photo_resize_title"
+        android:defaultValue="200"
+        android:text=" pixels"
+        android:max="1024"
+        />
 </PreferenceScreen>

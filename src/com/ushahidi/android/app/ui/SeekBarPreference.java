@@ -23,6 +23,7 @@ package com.ushahidi.android.app.ui;
 import android.content.Context;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -41,7 +42,13 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
 
     private String mDialogMessage, mSuffix;
 
-    private int mDefault, mMax, mValue = 0;
+    private int mMax = 0;
+    
+    private int mValue = 0;
+    
+    private int mDefault = 0;
+    
+    private int mMin =200;
 
     public SeekBarPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -49,8 +56,9 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
 
         mDialogMessage = attrs.getAttributeValue(androidns, "dialogMessage");
         mSuffix = attrs.getAttributeValue(androidns, "text");
-        mDefault = attrs.getAttributeIntValue(androidns, "defaultValue", 0);
+        mDefault = attrs.getAttributeIntValue(androidns, "defaultValue", mMin);
         mMax = attrs.getAttributeIntValue(androidns, "max", 100);
+        
 
     }
 
@@ -80,8 +88,11 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
 
         if (shouldPersist())
             mValue = getPersistedInt(mDefault);
-
+        
         mSeekBar.setMax(mMax);
+        if( mValue < mMin )
+         mSeekBar.setProgress(mMin);
+        else
         mSeekBar.setProgress(mValue);
         return layout;
     }
@@ -97,13 +108,19 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
     protected void onSetInitialValue(boolean restore, Object defaultValue) {
         super.onSetInitialValue(restore, defaultValue);
         if (restore)
-            mValue = shouldPersist() ? getPersistedInt(mDefault) : 0;
+            mValue = shouldPersist() ? getPersistedInt(mDefault) : mMin;
         else
-            mValue = (Integer)defaultValue;
+            mValue = ((Integer)defaultValue > mMin ) ?  (Integer) defaultValue : mMin;
     }
 
     public void onProgressChanged(SeekBar seek, int value, boolean fromTouch) {
-        String t = String.valueOf(value);
+        String t = "";
+        if( value < mMin ) {
+           t = String.valueOf(mMin); 
+        } else {
+            t = String.valueOf(value);
+        }
+        
         mValueText.setText(mSuffix == null ? t : t.concat(mSuffix));
         if (shouldPersist())
             persistInt(value);

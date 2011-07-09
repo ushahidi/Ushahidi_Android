@@ -267,7 +267,7 @@ public class CheckinActivity extends MapActivity implements LocationListener {
         uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(selectedPhoto)) {
-                    ImageManager.deleteImage(selectedPhoto,"");
+                    ImageManager.deleteImage(selectedPhoto, "");
                 }
                 showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
             }
@@ -301,7 +301,7 @@ public class CheckinActivity extends MapActivity implements LocationListener {
     protected void onDestroy() {
         super.onDestroy();
         if (!TextUtils.isEmpty(selectedPhoto)) {
-            ImageManager.deleteImage(selectedPhoto,"");
+            ImageManager.deleteImage(selectedPhoto, "");
         }
         stopLocating();
 
@@ -425,8 +425,8 @@ public class CheckinActivity extends MapActivity implements LocationListener {
                         CheckinActivity.this);
                 if (original != null) {
                     float ratio = (float)original.getWidth() / (float)original.getHeight();
-                    Bitmap scaled = Bitmap.createScaledBitmap(original, (int)(500 * ratio), 500,
-                            true);
+                    Bitmap scaled = Bitmap.createScaledBitmap(original,
+                            (int)(UshahidiPref.photoWidth * ratio), UshahidiPref.photoWidth, true);
                     original.recycle();
                     // get image URL
                     Uri u = new CaptureImage().getPhotoUri("photo.jpg", CheckinActivity.this);
@@ -622,7 +622,6 @@ public class CheckinActivity extends MapActivity implements LocationListener {
                 // Display checkin status and return back to main screen
                 if (postCheckinJsonErrorCode != "0") {
 
-                   
                     com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
                             R.string.checkin_success_toast);
 

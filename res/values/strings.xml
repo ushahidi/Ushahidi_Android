@@ -271,4 +271,11 @@
 	<string name="contact">Contact</string>
 	<string name="media">Media</string>
 	<string name="facebook">Facebook</string>
+	<!-- Photo resize preferences -->
+	<string name="photo_resize_title">Photo Settings</string>
+	<string name="photo_resize_summary">Resize image width</string>
+	<string name="photo_size_pixels">pixels</string>
+	
+	<!-- DEFAULT USHAHIDI DEPLOYMENT TO USE. DON'T REMOVE THIS LINE. RATHER EDIT THE VALUE -->
+	<string name="default_deployment"/>
 </resources>

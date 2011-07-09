@@ -45,7 +45,11 @@ public class UshahidiPref {
 
     public static int isCheckinEnabled = 0;
     
+    public static int appRunsFirstTime = 0;
+    
     public static int activeDeployment = 0;
+    
+    public static int photoWidth = 200;
     
     public static String deploymentLatitude = "0.0";
     
@@ -78,7 +82,8 @@ public class UshahidiPref {
         activeDeployment = settings.getInt("ActiveDeployment", 0);
         deploymentLatitude = settings.getString("DeploymentLatitude", "0.0");
         deploymentLongitude = settings.getString("DeploymentLongitude","0.0");
-        
+        photoWidth = settings.getInt("PhotoWidth", UshahidiPref.photoWidth);
+        appRunsFirstTime = settings.getInt("AppRunsFirstTime",appRunsFirstTime);
         // make sure folder exists
         final File dir = new File(UshahidiPref.savePath);
         dir.mkdirs();
@@ -93,6 +98,7 @@ public class UshahidiPref {
         editor.putInt("ActiveDeployment", activeDeployment);
         editor.putString("DeploymentLatitude", deploymentLatitude);
         editor.putString("DeploymentLongitude", deploymentLongitude);
+        editor.putInt("AppRunsFirstTime", appRunsFirstTime);
         editor.commit();
     }
 }

@@ -232,6 +232,11 @@ public class AddIncident extends MapActivity implements LocationListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //delete unset photo
+        File f = new File(UshahidiPref.fileName);
+        if (f.exists()) {
+            f.delete();
+        }
         stopLocating();
     }
 
@@ -472,7 +477,7 @@ public class AddIncident extends MapActivity implements LocationListener {
         mBtnPicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(UshahidiPref.fileName)) {
-                    ImageManager.deleteImage(UshahidiPref.fileName,"");
+                    ImageManager.deleteImage(UshahidiPref.fileName, "");
                 }
                 showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
             }
@@ -595,8 +600,8 @@ public class AddIncident extends MapActivity implements LocationListener {
                         AddIncident.this);
                 if (original != null) {
                     float ratio = (float)original.getWidth() / (float)original.getHeight();
-                    Bitmap scaled = Bitmap.createScaledBitmap(original, (int)(500 * ratio), 500,
-                            true);
+                    Bitmap scaled = Bitmap.createScaledBitmap(original,
+                            (int)(UshahidiPref.photoWidth * ratio), UshahidiPref.photoWidth, true);
                     original.recycle();
                     // get image URL
                     Uri u = new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this);
