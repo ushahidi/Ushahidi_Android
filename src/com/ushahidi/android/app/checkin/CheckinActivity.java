@@ -277,18 +277,6 @@ public class CheckinActivity extends UserLocationMap {
         super.onResume();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopLocating();
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
     protected void onSearchDeployments() {
         Intent intent = new Intent(CheckinActivity.this, DeploymentSearch.class);
         startActivityForResult(intent, VIEW_SEARCH);

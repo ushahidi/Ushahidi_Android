@@ -191,6 +191,18 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocating();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onPause();
+        stopLocating();
+    }
+
     public abstract interface UpdatableMarker{
         public abstract void updateLocation(GeoPoint point);
     }
