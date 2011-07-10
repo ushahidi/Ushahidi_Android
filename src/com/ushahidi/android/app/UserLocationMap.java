@@ -1,5 +1,7 @@
 package com.ushahidi.android.app;
 
+import java.util.Date;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -18,6 +20,10 @@ import com.ushahidi.android.app.util.Util;
 
 public abstract class UserLocationMap extends MapActivity implements LocationListener {
 
+    protected static final int ONE_MINUTE = 60*1000;
+
+    protected static final int FIVE_MINUTES = 5*ONE_MINUTE;
+
     protected double sLongitude = 0.0;
 
     protected double sLatitude = 0.0;
@@ -29,6 +35,8 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
     protected LocationManager mLocationMgr;
 
     protected UpdatableMarker mMapMark;
+
+    protected Location curLocation;
 
     /* Subclasses must implement a method which updates any relevant
        interface elements when the location changes. e.g. TextViews
@@ -64,6 +72,8 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
 
         // Set location based on the best last known location
         setBestLocation(nloc, gloc);
+        if((new Date()).getTime() - curLocation.getTime() < ONE_MINUTE)
+            stopLocating();
     }
 
     public void stopLocating() {
@@ -99,6 +109,7 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
 
     protected void setLocation(Location loc) {
         if (loc != null) {
+            curLocation = loc;
             sLatitude = loc.getLatitude();
             sLongitude = loc.getLongitude();
 
@@ -119,8 +130,8 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
             setLocation(f1);
             return;
         }
-        boolean f1SigNewer = f1.getTime() - f2.getTime() > 1000*60*5;
-        boolean f2SigNewer = f2.getTime() - f1.getTime() > 1000*60*5;
+        boolean f1SigNewer = f1.getTime() - f2.getTime() > FIVE_MINUTES;
+        boolean f2SigNewer = f2.getTime() - f1.getTime() > FIVE_MINUTES;
         if(f1SigNewer) setLocation(f1);
         if(f2SigNewer) setLocation(f1);
         boolean f1MoreAccurate = f1.getAccuracy() < f2.getAccuracy();
