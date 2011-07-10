@@ -61,19 +61,20 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
         if((!netAvail && !gpsAvail) || !anyEnabled)
             Util.showToast(UserLocationMap.this, R.string.location_not_found);
 
-        if(netAvail){
+        if(netAvail)
             nloc = mLocationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            mLocationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-        }
-        if(gpsAvail){
+        if(gpsAvail)
             gloc = mLocationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            mLocationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        }
-
-        // Set location based on the best last known location
         setBestLocation(nloc, gloc);
-        if((new Date()).getTime() - curLocation.getTime() < ONE_MINUTE)
-            stopLocating();
+
+        // If chosen location is more than a minute old, start querying network/GPS
+        if(curLocation == null ||
+                (new Date()).getTime() - curLocation.getTime() > ONE_MINUTE){
+            if(netAvail)
+                mLocationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+            if(gpsAvail)
+                mLocationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
     }
 
     public void stopLocating() {
@@ -200,6 +201,12 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
     public void onStatusChanged(String provider, int status, Bundle extras) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setDeviceLocation();
     }
 
     @Override

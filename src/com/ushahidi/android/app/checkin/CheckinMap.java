@@ -91,8 +91,6 @@ public class CheckinMap extends UserLocationMap {
         CheckinsTask checkinTask = new CheckinsTask();
         checkinTask.appContext = this;
         checkinTask.execute();
-
-        setDeviceLocation();
     }
 
     /**

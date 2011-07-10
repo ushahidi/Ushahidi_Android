@@ -195,7 +195,6 @@ public class AddIncident extends UserLocationMap{
         // load settings
         UshahidiPref.loadSettings(AddIncident.this);
         initComponents();
-        setDeviceLocation(); // Must come after initComponents
     }
 
     @Override
@@ -892,7 +891,6 @@ public class AddIncident extends UserLocationMap{
             mIncidentDesc.setText(desc, TextView.BufferType.EDITABLE);
 
         super.onResume();
-
     }
 
     public void onClickHome(View v) {

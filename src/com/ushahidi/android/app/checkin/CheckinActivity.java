@@ -182,7 +182,6 @@ public class CheckinActivity extends UserLocationMap {
         mapController = mapView.getController();
         // location stuff
         mCheckinLocation.setText(getString(R.string.checkin_progress_message));
-        setDeviceLocation();
 
         // Validate so empty text isn't sent over
         checkinMessageText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -271,10 +270,10 @@ public class CheckinActivity extends UserLocationMap {
 
     @Override
     protected void onResume() {
+        super.onResume();
         if (!TextUtils.isEmpty(selectedPhoto)) {
             uploadPhotoButton.setText(getString(R.string.change_photo));
         }
-        super.onResume();
     }
 
     protected void onSearchDeployments() {
