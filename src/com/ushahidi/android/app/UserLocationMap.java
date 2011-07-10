@@ -12,7 +12,9 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
+import com.ushahidi.android.app.util.Util;
 
 public abstract class UserLocationMap extends MapActivity implements LocationListener {
 
@@ -26,25 +28,40 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
 
     protected LocationManager mLocationMgr;
 
-    protected MapMarker mMapMark;
+    protected UpdatableMarker mMapMark;
 
     /* Subclasses must implement a method which updates any relevant
        interface elements when the location changes. e.g. TextViews
        displaying the location. */
     protected abstract void updateInterface();
     
+    /* Override this to set a custom marker */
+    protected UpdatableMarker createUpdatableMarker(Drawable marker, GeoPoint point){
+        return new MapMarker(marker, point);
+    }
+
     protected void setDeviceLocation() {
         mLocationMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         Location nloc = null;
         Location gloc = null;
-        if(mLocationMgr.getProvider(LocationManager.NETWORK_PROVIDER) != null){
+
+        boolean netAvail = mLocationMgr.getProvider(LocationManager.NETWORK_PROVIDER) != null;
+        boolean gpsAvail = mLocationMgr.getProvider(LocationManager.GPS_PROVIDER) != null;
+        boolean anyEnabled = (mLocationMgr.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
+                              mLocationMgr.isProviderEnabled(LocationManager.GPS_PROVIDER));
+
+        if((!netAvail && !gpsAvail) || !anyEnabled)
+            Util.showToast(UserLocationMap.this, R.string.location_not_found);
+
+        if(netAvail){
             nloc = mLocationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             mLocationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
         }
-        if(mLocationMgr.getProvider(LocationManager.GPS_PROVIDER) != null){
+        if(gpsAvail){
             gloc = mLocationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             mLocationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         }
+
         // Set location based on the best last known location
         setBestLocation(nloc, gloc);
     }
@@ -62,14 +79,14 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
 
     protected void placeMarker(GeoPoint point) {
         if(mMapMark == null){
-            Drawable marker = getResources().getDrawable(R.drawable.marker);
+            Drawable marker = getResources().getDrawable(R.drawable.green_dot);
 
             marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
             mapController.setZoom(14);
 
             mapView.setBuiltInZoomControls(true);
-            mMapMark = new MapMarker(marker, point);
-            mapView.getOverlays().add(mMapMark);
+            mMapMark = createUpdatableMarker(marker, point);
+            mapView.getOverlays().add((Overlay)mMapMark);
         } else {
             mMapMark.updateLocation(point);
         }
@@ -114,13 +131,12 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
         }
     }
 
-    private class MapMarker extends ItemizedOverlay<OverlayItem> {
+    private class MapMarker extends ItemizedOverlay<OverlayItem> implements UpdatableMarker{
         private OverlayItem myOverlayItem;
 
         public MapMarker(Drawable defaultMarker, GeoPoint point) {
             super(boundCenterBottom(defaultMarker));
-            myOverlayItem = new OverlayItem(point, " ", " ");
-            populate();
+            updateLocation(point);
         }
 
         public void updateLocation(GeoPoint point){
@@ -173,5 +189,9 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
     public void onStatusChanged(String provider, int status, Bundle extras) {
         // TODO Auto-generated method stub
 
+    }
+
+    public abstract interface UpdatableMarker{
+        public abstract void updateLocation(GeoPoint point);
     }
 }
