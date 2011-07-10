@@ -24,11 +24,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.Vector;
 
 import android.app.AlertDialog;
@@ -128,15 +129,7 @@ public class AddIncident extends MapActivity implements LocationListener {
     private List<Address> mFoundAddresses;
 
     // date and time
-    private int mYear;
-
-    private int mMonth;
-
-    private int mDay;
-
-    private int mHour;
-
-    private int mMinute;
+    private Calendar mCalendar;
 
     private int mCounter = 0;
 
@@ -177,8 +170,6 @@ public class AddIncident extends MapActivity implements LocationListener {
     private Button mPickDate;
 
     private Button mBtnPicture;
-
-    private HashMap<Integer, Integer> mTimeDigits;
 
     private Bundle mBundle;
 
@@ -499,13 +490,7 @@ public class AddIncident extends MapActivity implements LocationListener {
             }
         });
 
-        final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-        mHour = c.get(Calendar.HOUR_OF_DAY);
-        mMinute = c.get(Calendar.MINUTE);
-        c.get(Calendar.AM_PM);
+        mCalendar = Calendar.getInstance();
         updateDisplay();
 
     }
@@ -823,10 +808,14 @@ public class AddIncident extends MapActivity implements LocationListener {
             }
 
             case TIME_DIALOG_ID:
-                return new TimePickerDialog(this, mTimeSetListener, mHour, mMinute, false);
+                return new TimePickerDialog(this, mTimeSetListener,
+                        mCalendar.get(Calendar.HOUR), mCalendar.get(Calendar.MINUTE),
+                        false);
 
             case DATE_DIALOG_ID:
-                return new DatePickerDialog(this, mDateSetListener, mYear, mMonth, mDay);
+                return new DatePickerDialog(this, mDateSetListener,
+                        mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                        mCalendar.get(Calendar.DAY_OF_MONTH));
         }
         return null;
     }
@@ -835,73 +824,32 @@ public class AddIncident extends MapActivity implements LocationListener {
     protected void onPrepareDialog(int id, Dialog dialog) {
         switch (id) {
             case TIME_DIALOG_ID:
-                ((TimePickerDialog)dialog).updateTime(mHour, mMinute);
+                ((TimePickerDialog)dialog).updateTime(
+                        mCalendar.get(Calendar.HOUR_OF_DAY),
+                        mCalendar.get(Calendar.MINUTE));
                 break;
             case DATE_DIALOG_ID:
-                ((DatePickerDialog)dialog).updateDate(mYear, mMonth, mDay);
+                ((DatePickerDialog)dialog).updateDate(
+                        mCalendar.get(Calendar.YEAR),
+                        mCalendar.get(Calendar.MONTH),
+                        mCalendar.get(Calendar.DAY_OF_MONTH));
                 break;
         }
     }
 
     private void updateDisplay() {
-        String amPm;
-        mTimeDigits = new HashMap<Integer, Integer>();
+        SimpleDateFormat dispFormat = new SimpleDateFormat("MMMM dd, yyyy 'at' hh:mm a");
+        SimpleDateFormat submFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 
-        mTimeDigits.put(00, 12);
-        mTimeDigits.put(13, 1);
-        mTimeDigits.put(14, 2);
-        mTimeDigits.put(15, 3);
-        mTimeDigits.put(16, 4);
-        mTimeDigits.put(17, 5);
-        mTimeDigits.put(18, 6);
-        mTimeDigits.put(19, 7);
-        mTimeDigits.put(20, 8);
-        mTimeDigits.put(21, 9);
-        mTimeDigits.put(22, 10);
-        mTimeDigits.put(23, 11);
-        mTimeDigits.put(24, 12);
-        mTimeDigits.put(12, 12);
-        mTimeDigits.put(1, 1);
-        mTimeDigits.put(2, 2);
-        mTimeDigits.put(3, 3);
-        mTimeDigits.put(4, 4);
-        mTimeDigits.put(5, 5);
-        mTimeDigits.put(6, 6);
-        mTimeDigits.put(7, 7);
-        mTimeDigits.put(8, 8);
-        mTimeDigits.put(9, 9);
-        mTimeDigits.put(10, 10);
-        mTimeDigits.put(11, 11);
-        mTimeDigits.put(12, 12);
-        if (mHour >= 12)
-            amPm = "PM";
-        else
-            amPm = "AM";
-
-        String strDate = new StringBuilder()
-
-                // Month is 0 based so add 1
-                .append(mYear).append("-").append(pad(mMonth + 1)).append("-").append(pad(mDay))
-                .toString();
-
-        String dateTime = Util.formatDate("yyyy-MM-dd", strDate, "MMMM dd, yyyy");
-
-        mIncidentDate.setText(dateTime + " at " + pad(mTimeDigits.get(mHour)) + ":" + pad(mMinute)
-                + " " + amPm);
-
-        mDateToSubmit = new StringBuilder()
-                // Month is 0 based so add 1
-                .append(pad(mMonth + 1)).append("/").append(pad(mDay)).append("/").append(mYear)
-                .append(" ").append(pad(mTimeDigits.get(mHour))).append(":").append(pad(mMinute))
-                .append(" ").append(amPm).toString();
+        Date datetime = mCalendar.getTime();
+        mIncidentDate.setText(dispFormat.format(datetime));
+        mDateToSubmit = submFormat.format(datetime);
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
 
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            mYear = year;
-            mMonth = monthOfYear;
-            mDay = dayOfMonth;
+            mCalendar.set(year, monthOfYear, dayOfMonth);
             updateDisplay();
         }
     };
@@ -909,19 +857,11 @@ public class AddIncident extends MapActivity implements LocationListener {
     private TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            mHour = hourOfDay;
-            mMinute = minute;
-
+            mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            mCalendar.set(Calendar.MINUTE, minute);
             updateDisplay();
         }
     };
-
-    private static String pad(int c) {
-        if (c >= 10)
-            return String.valueOf(c);
-        else
-            return "0" + String.valueOf(c);
-    }
 
     /**
      * Insert incident data into db when app is offline.
