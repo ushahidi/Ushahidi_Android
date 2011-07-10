@@ -45,12 +45,8 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -70,18 +66,13 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.ItemizedOverlay;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
 import com.ushahidi.android.app.util.Util;
 
-public class AddIncident extends MapActivity implements LocationListener {
+public class AddIncident extends UserLocationMap{
 
     /**
      * category that exists on the phone before any connection to a server, at
@@ -131,10 +122,6 @@ public class AddIncident extends MapActivity implements LocationListener {
 
     private int mCounter = 0;
 
-    private static double sLongitude = 0.0;
-
-    private static double sLatitude = 0.0;
-
     private String mErrorMessage = "";
 
     private String mDateToSubmit = "";
@@ -173,10 +160,6 @@ public class AddIncident extends MapActivity implements LocationListener {
 
     private Bundle mExtras;
 
-    private MapView mapView = null;
-
-    private MapController mapController;
-
     private static final int DIALOG_ERROR_NETWORK = 0;
 
     private static final int DIALOG_ERROR_SAVING = 1;
@@ -199,10 +182,6 @@ public class AddIncident extends MapActivity implements LocationListener {
 
     private HashMap<String, String> mParams = new HashMap<String, String>();
 
-    private LocationManager mLocationMgr;
-
-    private MapMarker mMapMark;
-
     private static final String CLASS_TAG = AddIncident.class.getCanonicalName();
 
     @Override
@@ -218,41 +197,12 @@ public class AddIncident extends MapActivity implements LocationListener {
         UshahidiPref.loadSettings(AddIncident.this);
         initComponents();
         setDeviceLocation(); // Must come after initComponents
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         stopLocating();
-    }
-
-    private void setDeviceLocation() {
-
-        mLocationMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        Location nloc = null;
-        Location gloc = null;
-        if(mLocationMgr.getProvider(LocationManager.NETWORK_PROVIDER) != null){
-            nloc = mLocationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            mLocationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-        }
-        if(mLocationMgr.getProvider(LocationManager.GPS_PROVIDER) != null){
-            gloc = mLocationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            mLocationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        }
-        // Set location based on the best last known location
-        setBestLocation(nloc, gloc);
-    }
-
-    public void stopLocating() {
-        if (mLocationMgr != null){
-            try {
-                mLocationMgr.removeUpdates(this);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            mLocationMgr = null;
-        }
     }
 
     // menu stuff
@@ -607,7 +557,8 @@ public class AddIncident extends MapActivity implements LocationListener {
                 mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 break;
 
-            case VIEW_MAP:
+            /* TODO: Is there a plan to use this?
+               case VIEW_MAP:
                 if (resultCode != RESULT_OK) {
                     return;
                 }
@@ -623,7 +574,7 @@ public class AddIncident extends MapActivity implements LocationListener {
                     AddIncident.sLatitude = mBundle.getDouble("latitude");
                     AddIncident.sLongitude = mBundle.getDouble("longitude");
                 }
-                break;
+                break;*/
         }
     }
 
@@ -983,6 +934,12 @@ public class AddIncident extends MapActivity implements LocationListener {
         super.onPause();
     }
 
+    // Implementation of UserLocationMap abstract methods
+    protected void updateInterface(){
+        mReportLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
+        mIncidentLocation.setText(getLocationFromLatLon(sLatitude, sLongitude));
+    }
+
     /**
      * get the real location name from the latitude and longitude.
      */
@@ -1006,7 +963,6 @@ public class AddIncident extends MapActivity implements LocationListener {
             e.printStackTrace();
             return "";
         }
-
     }
 
     /**
@@ -1073,122 +1029,4 @@ public class AddIncident extends MapActivity implements LocationListener {
 
         }
     }
-
-    private void placeMarker(GeoPoint point) {
-        if(mMapMark == null){
-            Drawable marker = getResources().getDrawable(R.drawable.marker);
-
-            marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
-            mapController.setZoom(14);
-
-            mapView.setBuiltInZoomControls(true);
-            mMapMark = new MapMarker(marker, point);
-            mapView.getOverlays().add(mMapMark);
-        } else {
-            mMapMark.updateLocation(point);
-        }
-    }
-
-    // Location stuff
-    public GeoPoint getPoint(double lat, double lon) {
-        return (new GeoPoint((int)(lat * 1E6), (int)(lon * 1E6)));
-    }
-
-    private void setLocation(Location loc) {
-        if (loc != null) {
-            sLatitude = loc.getLatitude();
-            sLongitude = loc.getLongitude();
-
-            GeoPoint gp = getPoint(sLatitude, sLongitude);
-            mapController.animateTo(gp);
-
-            mReportLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
-            mIncidentLocation.setText(getLocationFromLatLon(sLatitude, sLongitude));
-            placeMarker(gp);
-        }
-    }
-
-    private void setBestLocation(Location f1, Location f2){
-        if(f1 == null && f2 == null) return;
-        if(f1 == null){
-            setLocation(f2);
-            return;
-        }
-        if(f2 == null) {
-            setLocation(f1);
-            return;
-        }
-        boolean f1SigNewer = f1.getTime() - f2.getTime() > 1000*60*5;
-        boolean f2SigNewer = f2.getTime() - f1.getTime() > 1000*60*5;
-        if(f1SigNewer) setLocation(f1);
-        if(f2SigNewer) setLocation(f1);
-        boolean f1MoreAccurate = f1.getAccuracy() < f2.getAccuracy();
-        if(f1.hasAccuracy() && f2.hasAccuracy() && f1MoreAccurate){
-            setLocation(f1);
-        }else{
-            setLocation(f2);
-        }
-    }
-
-    private class MapMarker extends ItemizedOverlay<OverlayItem> {
-        private OverlayItem myOverlayItem;
-
-        public MapMarker(Drawable defaultMarker, GeoPoint point) {
-            super(boundCenterBottom(defaultMarker));
-            myOverlayItem = new OverlayItem(point, " ", " ");
-            populate();
-        }
-
-        public void updateLocation(GeoPoint point){
-            myOverlayItem = new OverlayItem(point, " ", " ");
-            populate();
-        }
-
-        @Override
-        protected OverlayItem createItem(int i) {
-            return myOverlayItem;
-        }
-
-        @Override
-        public int size() {
-            return 1;
-        }
-    }
-
-    @Override
-    protected boolean isRouteDisplayed() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void onLocationChanged(Location loc) {
-        if (loc != null) {
-            setLocation(loc);
-            //TODO: Don't settle for first location, condition
-            // stopLocating on quality of fix + probability that we'll
-            // get a better one.
-            stopLocating();
-        }
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-
-    }
-
 }
