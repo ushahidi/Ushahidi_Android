@@ -45,14 +45,12 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -203,6 +201,8 @@ public class AddIncident extends MapActivity implements LocationListener {
 
     private LocationManager mLocationMgr;
 
+    private MapMarker mMapMark;
+
     private static final String CLASS_TAG = AddIncident.class.getCanonicalName();
 
     @Override
@@ -216,8 +216,9 @@ public class AddIncident extends MapActivity implements LocationListener {
 
         // load settings
         UshahidiPref.loadSettings(AddIncident.this);
-        setDeviceLocation();
         initComponents();
+        setDeviceLocation(); // Must come after initComponents
+
     }
 
     @Override
@@ -226,52 +227,31 @@ public class AddIncident extends MapActivity implements LocationListener {
         stopLocating();
     }
 
-    // Fetches the current location of the device.
     private void setDeviceLocation() {
 
         mLocationMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-
-        long updateTimeMsec = 30 * 1000;
-        try {
-
-            // get low accuracy provider
-            LocationProvider low = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
-                    Util.createCoarseCriteria(), true));
-
-            // get high accuracy provider
-            LocationProvider high = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
-                    Util.createFineCriteria(), true));
-
-            mLocationMgr.requestLocationUpdates(low.getName(), updateTimeMsec, 0, this);
-
-            mLocationMgr.requestLocationUpdates(high.getName(), updateTimeMsec, 0, this);
-
-        } catch (Exception ex1) {
-            try {
-
-                if (mLocationMgr != null) {
-                    mLocationMgr.removeUpdates(this);
-                    mLocationMgr = null;
-                }
-            } catch (Exception ex2) {
-                Log.d(CLASS_TAG, ex2.getMessage());
-            }
+        Location nloc = null;
+        Location gloc = null;
+        if(mLocationMgr.getProvider(LocationManager.NETWORK_PROVIDER) != null){
+            nloc = mLocationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            mLocationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
         }
-
+        if(mLocationMgr.getProvider(LocationManager.GPS_PROVIDER) != null){
+            gloc = mLocationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            mLocationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
+        // Set location based on the best last known location
+        setBestLocation(nloc, gloc);
     }
 
     public void stopLocating() {
-
-        try {
-
+        if (mLocationMgr != null){
             try {
                 mLocationMgr.removeUpdates(this);
             } catch (Exception ex) {
-                Log.d(CLASS_TAG, ex.getMessage());
+                ex.printStackTrace();
             }
             mLocationMgr = null;
-        } catch (Exception ex) {
-            Log.d(CLASS_TAG, ex.getMessage());
         }
     }
 
@@ -1094,75 +1074,85 @@ public class AddIncident extends MapActivity implements LocationListener {
         }
     }
 
-    private void placeMarker(int markerLatitude, int markerLongitude) {
+    private void placeMarker(GeoPoint point) {
+        if(mMapMark == null){
+            Drawable marker = getResources().getDrawable(R.drawable.marker);
 
-        Drawable marker = getResources().getDrawable(R.drawable.marker);
+            marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
+            mapController.setZoom(14);
 
-        marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
-        mapView.getController().setZoom(14);
-
-        mapView.setBuiltInZoomControls(true);
-        mapView.getOverlays().add(new MapMarker(marker, markerLatitude, markerLongitude));
+            mapView.setBuiltInZoomControls(true);
+            mMapMark = new MapMarker(marker, point);
+            mapView.getOverlays().add(mMapMark);
+        } else {
+            mMapMark.updateLocation(point);
+        }
     }
 
     // Location stuff
     public GeoPoint getPoint(double lat, double lon) {
-        return (new GeoPoint((int)(lat * 1000000.0), (int)(lon * 1000000.0)));
+        return (new GeoPoint((int)(lat * 1E6), (int)(lon * 1E6)));
     }
 
-    private void centerLocation(GeoPoint centerGeoPoint) {
-        if (centerGeoPoint != null) {
-            mapController.animateTo(centerGeoPoint);
+    private void setLocation(Location loc) {
+        if (loc != null) {
+            sLatitude = loc.getLatitude();
+            sLongitude = loc.getLongitude();
 
-            // initilaize latitude and longitude for them to be passed to the
-            // AddIncident Activity.
-            sLatitude = centerGeoPoint.getLatitudeE6() / 1.0E6;
-            sLongitude = centerGeoPoint.getLongitudeE6() / 1.0E6;
+            GeoPoint gp = getPoint(sLatitude, sLongitude);
+            mapController.animateTo(gp);
+
+            mReportLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
             mIncidentLocation.setText(getLocationFromLatLon(sLatitude, sLongitude));
-            placeMarker(centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6());
+            placeMarker(gp);
         }
+    }
 
+    private void setBestLocation(Location f1, Location f2){
+        if(f1 == null && f2 == null) return;
+        if(f1 == null){
+            setLocation(f2);
+            return;
+        }
+        if(f2 == null) {
+            setLocation(f1);
+            return;
+        }
+        boolean f1SigNewer = f1.getTime() - f2.getTime() > 1000*60*5;
+        boolean f2SigNewer = f2.getTime() - f1.getTime() > 1000*60*5;
+        if(f1SigNewer) setLocation(f1);
+        if(f2SigNewer) setLocation(f1);
+        boolean f1MoreAccurate = f1.getAccuracy() < f2.getAccuracy();
+        if(f1.hasAccuracy() && f2.hasAccuracy() && f1MoreAccurate){
+            setLocation(f1);
+        }else{
+            setLocation(f2);
+        }
     }
 
     private class MapMarker extends ItemizedOverlay<OverlayItem> {
-
-        private List<OverlayItem> locations = new ArrayList<OverlayItem>();
-
-        private Drawable marker;
-
         private OverlayItem myOverlayItem;
 
-        public MapMarker(Drawable defaultMarker, int LatitudeE6, int LongitudeE6) {
-            super(defaultMarker);
-            this.marker = defaultMarker;
-
-            // create locations of interest
-            GeoPoint myPlace = new GeoPoint(LatitudeE6, LongitudeE6);
-
-            myOverlayItem = new OverlayItem(myPlace, " ", " ");
-
-            locations.add(myOverlayItem);
-
+        public MapMarker(Drawable defaultMarker, GeoPoint point) {
+            super(boundCenterBottom(defaultMarker));
+            myOverlayItem = new OverlayItem(point, " ", " ");
             populate();
+        }
 
+        public void updateLocation(GeoPoint point){
+            myOverlayItem = new OverlayItem(point, " ", " ");
+            populate();
         }
 
         @Override
         protected OverlayItem createItem(int i) {
-            return locations.get(i);
+            return myOverlayItem;
         }
 
         @Override
         public int size() {
-            return locations.size();
+            return 1;
         }
-
-        @Override
-        public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-            super.draw(canvas, mapView, shadow);
-            boundCenterBottom(marker);
-        }
-
     }
 
     @Override
@@ -1174,12 +1164,10 @@ public class AddIncident extends MapActivity implements LocationListener {
     @Override
     public void onLocationChanged(Location loc) {
         if (loc != null) {
-            sLatitude = loc.getLatitude();
-            sLongitude = loc.getLongitude();
-
-            centerLocation(getPoint(sLatitude, sLongitude));
-            mReportLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
-
+            setLocation(loc);
+            //TODO: Don't settle for first location, condition
+            // stopLocating on quality of fix + probability that we'll
+            // get a better one.
             stopLocating();
         }
 
