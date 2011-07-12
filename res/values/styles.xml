@@ -29,7 +29,7 @@
 		<item name="android:layout_width">fill_parent</item>
 		<item name="android:layout_height">@dimen/title_height</item>
 		<item name="android:orientation">horizontal</item>
-		<item name="android:background">@drawable/ushahidi_android_titlebar</item>
+		<item name="android:background">@drawable/actionbar_title_container_background</item>
 	</style>
 
 	<style name="ActionBarTitle">
@@ -101,7 +101,7 @@
 		<item name="android:layout_width">fill_parent</item>
 		<item name="android:layout_height">@dimen/bottom_actionbar_height</item>
 		<item name="android:orientation">horizontal</item>
-		<item name="android:background">@drawable/ushahidi_android_titlebar</item>
+		<item name="android:background">@drawable/actionbar_title_container_background</item>
 	</style>
 	<style name="BottomActionbarButton">
 		<item name="android:paddingTop">@dimen/top_padding</item>
