@@ -104,7 +104,6 @@ public class CaptureImage {
 
     public Bitmap scaleBitmap(Bitmap original) {
         Log.i(CLASS_TAG, "scaleBitmap is called ");
-        
         if (original != null) {
             float ratio = (float)original.getWidth() / (float)original.getHeight();
             Log.i(CLASS_TAG, "Scalling image to " + UshahidiPref.photoWidth + " x " + ratio);
