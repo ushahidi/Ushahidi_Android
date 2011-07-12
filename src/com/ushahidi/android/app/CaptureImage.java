@@ -29,18 +29,20 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Display;
 
-public class CaptureImage  {
+public class CaptureImage {
 
-    public Bitmap scaled;
+    private Bitmap scaled;
 
-  
+    private static final String CLASS_TAG = CaptureImage.class.getCanonicalName();
+
     public CaptureImage() {
         scaled = null;
     }
 
-    public int getScreenOrientation( Activity context ) {
+    public int getScreenOrientation(Activity context) {
         Display display = context.getWindowManager().getDefaultDisplay();
         if (display.getWidth() == display.getHeight()) {
             return Configuration.ORIENTATION_SQUARE;
@@ -60,13 +62,32 @@ public class CaptureImage  {
         }
         return Uri.fromFile(new File(path, filename));
     }
-    
 
     public Bitmap getBitmap(Uri uri, Activity activity) {
         if (uri != null) {
-           
-            Bitmap original = BitmapFactory.decodeFile(uri.getPath());
-            
+
+            // Decode image size to handle proper image consumption
+            Log.i(CLASS_TAG, "Decoding bitmap image to handle proper memory consumption ");
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+
+            BitmapFactory.decodeFile(uri.getPath(), options);
+            final int IMAGE_MAX_SIZE = UshahidiPref.photoWidth;
+
+            int scale = 1;
+            if (options.outHeight > IMAGE_MAX_SIZE || options.outWidth > IMAGE_MAX_SIZE) {
+                scale = (int)Math.pow(
+                        2,
+                        (int)Math.round(Math.log(IMAGE_MAX_SIZE
+                                / (double)Math.max(options.outHeight, options.outWidth))
+                                / Math.log(0.5)));
+            }
+
+            // Decode with inSampleSize
+            BitmapFactory.Options options2 = new BitmapFactory.Options();
+            options2.inSampleSize = scale;
+            Bitmap original = BitmapFactory.decodeFile(uri.getPath(), options2);
+
             if (getScreenOrientation(activity) == Configuration.ORIENTATION_PORTRAIT
                     && original.getWidth() > original.getHeight()) {
                 Matrix matrix = new Matrix();
@@ -78,6 +99,22 @@ public class CaptureImage  {
             }
             return original;
         }
+        return null;
+    }
+
+    public Bitmap scaleBitmap(Bitmap original) {
+        Log.i(CLASS_TAG, "scaleBitmap is called ");
+        
+        if (original != null) {
+            float ratio = (float)original.getWidth() / (float)original.getHeight();
+            Log.i(CLASS_TAG, "Scalling image to " + UshahidiPref.photoWidth + " x " + ratio);
+            scaled = Bitmap.createScaledBitmap(original, (int)(UshahidiPref.photoWidth * ratio),
+                    UshahidiPref.photoWidth, true);
+            original.recycle();
+
+            return scaled;
+        }
+
         return null;
     }
 

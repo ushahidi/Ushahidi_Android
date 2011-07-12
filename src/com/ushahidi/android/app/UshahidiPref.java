@@ -44,23 +44,22 @@ public class UshahidiPref {
     public static String fileName = "";
 
     public static int isCheckinEnabled = 0;
-    
+
     public static int appRunsFirstTime = 0;
-    
+
     public static int activeDeployment = 0;
-    
+
     public static int photoWidth = 200;
-    
+
     public static String deploymentLatitude = "0.0";
-    
+
     public static String deploymentLongitude = "0.0";
 
     private static SharedPreferences settings;
 
     private static SharedPreferences.Editor editor;
-    
+
     public static String totalReportsFetched = "";
-    
 
     public static void loadSettings(Context context) {
         final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
@@ -68,7 +67,7 @@ public class UshahidiPref {
         final String path = context.getDir("",
                 Context.MODE_WORLD_READABLE | Context.MODE_WORLD_WRITEABLE).toString();
 
-        savePath = settings.getString("savePath", path+"/");
+        savePath = settings.getString("savePath", path + "/");
 
         domain = settings.getString("Domain", UshahidiPref.domain);
         firstname = settings.getString("Firstname", "");
@@ -81,9 +80,9 @@ public class UshahidiPref {
         isCheckinEnabled = settings.getInt("CheckinEnabled", isCheckinEnabled);
         activeDeployment = settings.getInt("ActiveDeployment", 0);
         deploymentLatitude = settings.getString("DeploymentLatitude", "0.0");
-        deploymentLongitude = settings.getString("DeploymentLongitude","0.0");
-        photoWidth = settings.getInt("PhotoWidth", UshahidiPref.photoWidth);
-        appRunsFirstTime = settings.getInt("AppRunsFirstTime",appRunsFirstTime);
+        deploymentLongitude = settings.getString("DeploymentLongitude", "0.0");
+        photoWidth = settings.getInt("PhotoWidth", 200);
+        appRunsFirstTime = settings.getInt("AppRunsFirstTime", appRunsFirstTime);
         // make sure folder exists
         final File dir = new File(UshahidiPref.savePath);
         dir.mkdirs();

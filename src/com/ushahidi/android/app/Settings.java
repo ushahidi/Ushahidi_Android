@@ -37,6 +37,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.text.InputType;
+import android.util.Log;
 
 import com.ushahidi.android.app.ui.SeekBarPreference;
 import com.ushahidi.android.app.util.Util;
@@ -102,6 +103,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     private String onSdCard = "";
 
     private String minutes = "";
+    
+    private static final String CLASS_TAG = Settings.class.getCanonicalName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +152,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         PreferenceCategory basicPrefCat = new PreferenceCategory(this);
         basicPrefCat.setTitle(R.string.basic_settings);
         root.addPreference(basicPrefCat);
-
+        
         // Total reports to fetch at a time
         // set list values
         // TODO:// need to look it how to properly handle this. It looks ugly
@@ -293,8 +296,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         String saveItems = saveItemsPref.getValue();
         String totalReports = totalReportsPref.getValue();
         String newSavePath;
-        UshahidiPref.photoWidth = photoSizePref.getProgress();
-        
+        Log.i(CLASS_TAG, "SeekBar current value: "+UshahidiPref.photoWidth+" New value: "+photoSizePref.getProgress());
         int autoUdateDelay = 0;
 
         // "5 Minutes", "10 Minutes", "15 Minutes", "c", "60 Minutes"
@@ -326,7 +328,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         editor.putBoolean("AutoFetch", autoFetchCheckBoxPref.isChecked());
         editor.putString("TotalReports", totalReports);
         editor.putInt("CheckinEnabled", UshahidiPref.isCheckinEnabled);
-        editor.putInt("PhotoWidth", UshahidiPref.photoWidth);
+        editor.putInt("PhotoWidth", photoSizePref.getProgress());
         editor.commit();
 
     }
@@ -396,7 +398,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         }
         
         //photo size
-     // cache
         if (key.equals(PHOTO_SIZE_PREFERENCE)) {
             if (sharedPreferences.getInt(PHOTO_SIZE_PREFERENCE, 200) > UshahidiPref.photoWidth) {
                 UshahidiPref.photoWidth = sharedPreferences.getInt(PHOTO_SIZE_PREFERENCE, 200);

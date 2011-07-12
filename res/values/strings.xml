@@ -207,7 +207,7 @@
 	<string name="change_photo">Change Photo</string>
 
 	<!-- Deployment search -->
-	<string name="search_label">Search</string>
+	<string name="search_label">Deployments </string>
 	<!-- The hint text that appears in the search box. -->
 	<string name="search_hint">Type here to filter the list below...</string>
 	<string name="deployment_fetched_successful">Deployments successfully fetched</string>

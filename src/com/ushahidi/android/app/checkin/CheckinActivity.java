@@ -286,7 +286,7 @@ public class CheckinActivity extends MapActivity implements LocationListener {
     @Override
     protected void onStart() {
         super.onStart();
-
+        UshahidiPref.loadSettings(CheckinActivity.this);
     }
 
     @Override
@@ -294,6 +294,7 @@ public class CheckinActivity extends MapActivity implements LocationListener {
         if (!TextUtils.isEmpty(selectedPhoto)) {
             uploadPhotoButton.setText(getString(R.string.change_photo));
         }
+        UshahidiPref.loadSettings(CheckinActivity.this);
         super.onResume();
     }
 
@@ -424,10 +425,7 @@ public class CheckinActivity extends MapActivity implements LocationListener {
                         new CaptureImage().getPhotoUri("photo.jpg", CheckinActivity.this),
                         CheckinActivity.this);
                 if (original != null) {
-                    float ratio = (float)original.getWidth() / (float)original.getHeight();
-                    Bitmap scaled = Bitmap.createScaledBitmap(original,
-                            (int)(UshahidiPref.photoWidth * ratio), UshahidiPref.photoWidth, true);
-                    original.recycle();
+                    Bitmap scaled = new CaptureImage().scaleBitmap(original);
                     // get image URL
                     Uri u = new CaptureImage().getPhotoUri("photo.jpg", CheckinActivity.this);
 
@@ -437,13 +435,14 @@ public class CheckinActivity extends MapActivity implements LocationListener {
 
                     // use resized images
                     mSelectedPhotoText.setVisibility(View.VISIBLE);
-                    mCheckImgPrev.setImageBitmap(scaled);
+                    
+                    if (scaled != null) {
+                        mCheckImgPrev.setImageBitmap(scaled);
+                    }
 
                 }
                 break;
-
             case REQUEST_CODE_IMAGE:
-
                 if (resultCode != RESULT_OK) {
                     return;
                 }

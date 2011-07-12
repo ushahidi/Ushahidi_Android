@@ -232,7 +232,7 @@ public class AddIncident extends MapActivity implements LocationListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //delete unset photo
+        // delete unset photo
         File f = new File(UshahidiPref.fileName);
         if (f.exists()) {
             f.delete();
@@ -599,10 +599,8 @@ public class AddIncident extends MapActivity implements LocationListener {
                         new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this),
                         AddIncident.this);
                 if (original != null) {
-                    float ratio = (float)original.getWidth() / (float)original.getHeight();
-                    Bitmap scaled = Bitmap.createScaledBitmap(original,
-                            (int)(UshahidiPref.photoWidth * ratio), UshahidiPref.photoWidth, true);
-                    original.recycle();
+
+                    Bitmap scaled = new CaptureImage().scaleBitmap(original);
                     // get image URL
                     Uri u = new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this);
 
@@ -611,8 +609,10 @@ public class AddIncident extends MapActivity implements LocationListener {
                     NetworkServices.fileName = u.getPath();
 
                     // use resized images
-                    mSelectedPhoto.setImageBitmap(scaled);
-                    mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    if (scaled != null) {
+                        mSelectedPhoto.setImageBitmap(scaled);
+                        mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    }
                 }
                 break;
 

@@ -29,13 +29,5 @@
    	android:positiveButtonText="@string/btn_ok"
    	android:negativeButtonText="@string/btn_cancel" />
    	
-     <com.ushahidi.android.app.ui.SeekBarPreference android:key="photo_size_preference"
-        android:title="@string/photo_resize_title"
-        android:summary="@string/photo_resize_summary"
-        android:dialogMessage=" Resized image width"
-        android:dialogTitle="@string/photo_resize_title"
-        android:defaultValue="200"
-        android:text=" pixels"
-        android:max="1024"
-        />
+     <com.ushahidi.android.app.ui.SeekBarPreference android:summary="@string/photo_resize_summary" android:max="1024" android:dialogMessage=" Resized image width" android:title="@string/photo_resize_title" android:dialogTitle="@string/photo_resize_title" android:defaultValue="200" android:key="photo_size_preference" android:text=" pixels"/>
 </PreferenceScreen>
