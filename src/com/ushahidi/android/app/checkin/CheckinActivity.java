@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.google.android.maps.MapView;
 import com.ushahidi.android.app.About;
+import com.ushahidi.android.app.CaptureImage;
 import com.ushahidi.android.app.DeploymentSearch;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.IncidentsTab;
