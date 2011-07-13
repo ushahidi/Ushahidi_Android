@@ -1,3 +1,18 @@
+2.3:
+Feature:
+  * Added a new settings field to allow resizing of images to be uploaded.
+  * Removed custom camera app and replaces it with inbuilt camera app which has more features.  
+
+  
+Bug:
+  * Minor bug fixes. More tweaks to the white-labelling feature
+2.2:
+Bug: 
+  * Minor bug fix. Fixed more null pointer exception causing app to crash
+
+2.1:
+Bug:
+  * Minor bug fix. Malformed XML, crashes the app
 2.0
  Feature:
  * Added sharing support; Reports / Checkins can now be shared via email, twitter, bluetooth,etc

@@ -56,7 +56,8 @@
 		<!-- Middle Grid -->
 		<LinearLayout android:orientation="horizontal"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:layout_weight="1">
+			android:layout_weight="1"
+			android:id="@+id/middle_grid" >
 			<Button android:id="@+id/incident_map" style="@style/DashboardButton"
 				android:text="@string/incident_menu_map" android:drawableTop="@drawable/dashboard_btn_map" />
 			<Button android:id="@+id/deployment_search" style="@style/DashboardButton"

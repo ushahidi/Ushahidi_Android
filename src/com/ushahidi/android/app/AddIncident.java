@@ -41,7 +41,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -66,6 +65,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.maps.MapView;
+import com.ushahidi.android.app.checkin.NetworkServices;
 import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
@@ -200,6 +200,11 @@ public class AddIncident extends UserLocationMap{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // delete unset photo
+        File f = new File(UshahidiPref.fileName);
+        if (f.exists()) {
+            f.delete();
+        }
         stopLocating();
     }
 
@@ -391,7 +396,7 @@ public class AddIncident extends UserLocationMap{
         mBtnPicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(UshahidiPref.fileName)) {
-                    ImageManager.deleteImage(UshahidiPref.fileName, UshahidiPref.savePath);
+                    ImageManager.deleteImage(UshahidiPref.fileName, "");
                 }
                 showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
             }
@@ -502,17 +507,25 @@ public class AddIncident extends UserLocationMap{
                     return;
                 }
 
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-                mBundle = null;
-                mExtras = data.getExtras();
-                if (mExtras != null)
-                    mBundle = mExtras.getBundle("filename");
+                // Do something with image
+                Bitmap original = new CaptureImage().getBitmap(
+                        new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this),
+                        AddIncident.this);
+                if (original != null) {
 
-                if (mBundle != null && !mBundle.isEmpty()) {
-                    UshahidiPref.fileName = mBundle.getString("name");
-                    mSelectedPhoto.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName,
-                            UshahidiPref.savePath));
-                    mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    Bitmap scaled = new CaptureImage().scaleBitmap(original);
+                    // get image URL
+                    Uri u = new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this);
+
+                    Log.i(CLASS_TAG, "Image File Path" + u.getPath());
+                    UshahidiPref.fileName = u.getPath();
+                    NetworkServices.fileName = u.getPath();
+
+                    // use resized images
+                    if (scaled != null) {
+                        mSelectedPhoto.setImageBitmap(scaled);
+                        mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    }
                 }
                 break;
 
@@ -681,11 +694,11 @@ public class AddIncident extends UserLocationMap{
                 dialog.setButton3(getString(R.string.camera_option), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
-                        Intent launchPreferencesIntent = new Intent().setClass(AddIncident.this,
-                                ImageCapture.class);
+                        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                                new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this));
+                        startActivityForResult(intent, REQUEST_CODE_CAMERA);
 
-                        // Make it a subactivity so we know when it returns
-                        startActivityForResult(launchPreferencesIntent, REQUEST_CODE_CAMERA);
                         dialog.dismiss();
 
                     }
@@ -891,6 +904,7 @@ public class AddIncident extends UserLocationMap{
             mIncidentDesc.setText(desc, TextView.BufferType.EDITABLE);
 
         super.onResume();
+
     }
 
     public void onClickHome(View v) {
@@ -960,6 +974,7 @@ public class AddIncident extends UserLocationMap{
             e.printStackTrace();
             return "";
         }
+
     }
 
     /**
@@ -1017,7 +1032,7 @@ public class AddIncident extends UserLocationMap{
             } else if (result == 0) {
                 clearFields();
                 // after a successful upload, delete the file
-                File f = new File(UshahidiPref.savePath, UshahidiPref.fileName);
+                File f = new File(UshahidiPref.fileName);
                 if (f.exists()) {
                     f.delete();
                 }

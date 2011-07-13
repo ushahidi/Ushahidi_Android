@@ -30,11 +30,14 @@ import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.util.Util;
@@ -91,6 +94,8 @@ public class Ushahidi extends DashboardActivity {
 
     private Button searchBtn;
 
+    private LinearLayout middleGrid;
+
     private String dialogErrorMsg = "An error occurred fetching the reports. "
             + "Make sure you have entered an Ushahidi instance.";
 
@@ -108,9 +113,30 @@ public class Ushahidi extends DashboardActivity {
         setTitleFromActivityLabel(R.id.title_text);
         mHandler = new Handler();
         bundle = new Bundle();
-
+        
         // load settings
         UshahidiPref.loadSettings(this);
+        // Check if default domain has been set.
+        if (!TextUtils.isEmpty(getString(R.string.default_deployment))) {
+            String domain = getString(R.string.default_deployment);
+            Log.i("Ushahidi", "Determing if default deployment has been set " + domain);
+
+            // validate URL
+            if (Util.validateUshahidiInstance(domain)) {
+                Log.i("Ushahidi", "Validate Domain " + domain);
+                middleGrid = (LinearLayout)findViewById(R.id.middle_grid);
+                middleGrid.setVisibility(View.GONE);
+                UshahidiPref.domain = domain;
+                UshahidiPref.saveSettings(this);
+
+                // refresh for new reports
+                if (UshahidiPref.appRunsFirstTime == 0) {
+                    refreshReports();
+                    UshahidiPref.appRunsFirstTime = 1;
+                    UshahidiPref.saveSettings(this);
+                }
+            }
+        }
 
         // check if domain has been set
         if (UshahidiPref.domain.length() == 0 || UshahidiPref.domain.equals("http://")) {
@@ -134,6 +160,10 @@ public class Ushahidi extends DashboardActivity {
 
     @Override
     public void onRefreshReports(View v) {
+        refreshReports();
+    }
+
+    public void refreshReports() {
         ReportsTask reportsTask = new ReportsTask();
         reportsTask.appContext = this;
         reportsTask.execute();
@@ -255,7 +285,7 @@ public class Ushahidi extends DashboardActivity {
                     CheckinActivity.class);
             startActivity(checkinActivityIntent);
             setResult(RESULT_OK);
-            
+
         } else {
             Intent intent = new Intent(Ushahidi.this, AddIncident.class);
             startActivityForResult(intent, ADD_INCIDENTS);

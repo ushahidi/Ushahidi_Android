@@ -37,7 +37,9 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.text.InputType;
+import android.util.Log;
 
+import com.ushahidi.android.app.ui.SeekBarPreference;
 import com.ushahidi.android.app.util.Util;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
@@ -64,6 +66,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
     private ListPreference totalReportsPref;
 
+    private SeekBarPreference photoSizePref;
+
     private SharedPreferences settings;
 
     private SharedPreferences.Editor editor;
@@ -88,6 +92,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
     public static final String CHECKIN_PREFERENCE = "checkin_preference";
 
+    public static final String PHOTO_SIZE_PREFERENCE = "photo_size_preference";
+
     private boolean checkin = false;
 
     private String recentReports = "";
@@ -97,6 +103,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     private String onSdCard = "";
 
     private String minutes = "";
+    
+    private static final String CLASS_TAG = Settings.class.getCanonicalName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +123,9 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         ringtoneCheckBoxPref = new CheckBoxPreference(this);
         flashLedCheckBoxPref = new CheckBoxPreference(this);
 
+        photoSizePref = (SeekBarPreference)getPreferenceScreen().findPreference(
+                PHOTO_SIZE_PREFERENCE);
+
         recentReports = getString(R.string.recent_reports);
         onPhone = getString(R.string.on_phone);
         onSdCard = getString(R.string.on_sd_card);
@@ -125,6 +136,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         autoUpdateTimePref = new ListPreference(this);
         saveItemsPref = new ListPreference(this);
         totalReportsPref = new ListPreference(this);
+
         new ListPreference(this);
 
         setPreferenceScreen(createPreferenceHierarchy());
@@ -140,7 +152,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         PreferenceCategory basicPrefCat = new PreferenceCategory(this);
         basicPrefCat.setTitle(R.string.basic_settings);
         root.addPreference(basicPrefCat);
-
+        
         // Total reports to fetch at a time
         // set list values
         // TODO:// need to look it how to properly handle this. It looks ugly
@@ -189,6 +201,9 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         emailAddressPref.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         basicPrefCat.addPreference(emailAddressPref);
 
+        // Photo resize seekbar
+        basicPrefCat.addPreference(photoSizePref);
+
         // Advanced Preferences
         PreferenceCategory advancedPrefCat = new PreferenceCategory(this);
         advancedPrefCat.setTitle(R.string.advanced_settings);
@@ -229,7 +244,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         CharSequence[] saveItemsEntries = {
                 onPhone, onSdCard
         };
-        
+
         CharSequence[] saveItemsValues = {
                 "phone", "card"
         };
@@ -281,7 +296,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         String saveItems = saveItemsPref.getValue();
         String totalReports = totalReportsPref.getValue();
         String newSavePath;
-
+        Log.i(CLASS_TAG, "SeekBar current value: "+UshahidiPref.photoWidth+" New value: "+photoSizePref.getProgress());
         int autoUdateDelay = 0;
 
         // "5 Minutes", "10 Minutes", "15 Minutes", "c", "60 Minutes"
@@ -313,6 +328,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         editor.putBoolean("AutoFetch", autoFetchCheckBoxPref.isChecked());
         editor.putString("TotalReports", totalReports);
         editor.putInt("CheckinEnabled", UshahidiPref.isCheckinEnabled);
+        editor.putInt("PhotoWidth", photoSizePref.getProgress());
         editor.commit();
 
     }
@@ -377,6 +393,14 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             if (!sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, "").equals(
                     UshahidiPref.domain)) {
                 validateUrl(sharedPreferences.getString(USHAHIDI_DEPLOYMENT_PREFERENCE, ""));
+
+            }
+        }
+        
+        //photo size
+        if (key.equals(PHOTO_SIZE_PREFERENCE)) {
+            if (sharedPreferences.getInt(PHOTO_SIZE_PREFERENCE, 200) > UshahidiPref.photoWidth) {
+                UshahidiPref.photoWidth = sharedPreferences.getInt(PHOTO_SIZE_PREFERENCE, 200);
 
             }
         }

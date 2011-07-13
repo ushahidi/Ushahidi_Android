@@ -20,6 +20,7 @@
 
 package com.ushahidi.android.app;
 
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -27,10 +28,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class About extends DashboardActivity {
@@ -46,6 +49,8 @@ public class About extends DashboardActivity {
     private Button contactUrlBtn;
 
     private TextView version;
+    
+    private ImageButton searchButton;
 
     private static final String MEDIA_URL = "http://www.ushahidi.com";
 
@@ -80,7 +85,12 @@ public class About extends DashboardActivity {
 
         setContentView(R.layout.about);
         setTitleFromActivityLabel(R.id.title_text);
-
+     // Check if default domain has been set.
+        if (!TextUtils.isEmpty(getString(R.string.default_deployment))) {
+            //remove search icon
+            searchButton = (ImageButton) findViewById(R.id.search_report_btn);
+            searchButton.setVisibility(View.GONE);
+        }
         mediaUrlBtn = (Button)findViewById(R.id.media_link);
         teamUrlBtn = (Button)findViewById(R.id.team_link);
         twitterUrlBtn = (Button)findViewById(R.id.twitter_link);
