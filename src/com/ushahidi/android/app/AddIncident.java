@@ -109,8 +109,6 @@ public class AddIncident extends UserLocationMap{
 
     private static final int REQUEST_CODE_CAMERA = 5;
 
-    private static final int VIEW_MAP = 1;
-
     private static final int VIEW_SEARCH = 2;
 
     private Geocoder mGc;
@@ -155,10 +153,6 @@ public class AddIncident extends UserLocationMap{
     private Button mPickDate;
 
     private Button mBtnPicture;
-
-    private Bundle mBundle;
-
-    private Bundle mExtras;
 
     private static final int DIALOG_ERROR_NETWORK = 0;
 

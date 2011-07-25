@@ -71,8 +71,6 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
 
     private String distance = "";
 
-    private static final String CLASS_TAG = DeploymentSearch.class.getCanonicalName();
-
     // Context menu items
     private static final int DELETE = Menu.FIRST + 1;
 
@@ -632,27 +630,27 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
         Location loc = null;
         boolean netAvail = (mLocationMgr.getProvider(LocationManager.NETWORK_PROVIDER) != null);
         boolean gpsAvail = (mLocationMgr.getProvider(LocationManager.GPS_PROVIDER) != null);
-        if(gpsAvail){
+        if (gpsAvail) {
             loc = mLocationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        }else if(netAvail){
+        } else if (netAvail) {
             loc = mLocationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
 
         // Just use last location if it's less than 10 minutes old
-        if(loc != null && ((new Date()).getTime() - loc.getTime() < 10*60*1000)){
+        if (loc != null && ((new Date()).getTime() - loc.getTime() < 10 * 60 * 1000)) {
             onLocationChanged(loc);
-        }else{
-            if(gpsAvail){
+        } else {
+            if (gpsAvail) {
                 mLocationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             }
-            if(netAvail){
+            if (netAvail) {
                 mLocationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
             }
         }
     }
 
     public void stopLocating() {
-        if (mLocationMgr != null){
+        if (mLocationMgr != null) {
             try {
                 mLocationMgr.removeUpdates(this);
             } catch (Exception ex) {

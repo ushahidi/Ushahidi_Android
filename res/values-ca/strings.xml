@@ -55,10 +55,12 @@
 		Caram! 
   </string>
 	<string name="invalid_email_address">
-		S\'ha introduit una adreça de correu electrònica no vàlida
+		S\'ha introduit una adreça de correu electrònica no
+		vàlida
   </string>
 	<string name="invalid_ushahidi_instance">
-		Sembla que la direcció URL especificada no és un desplegament d\'Ushahidi
+		Sembla que la direcció URL especificada no és un
+		desplegament d\'Ushahidi
   </string>
 	<string name="btn_save">
 		Guardar
@@ -151,7 +153,8 @@
 		Carpeta per defecte
   </string>
 	<string name="hint_option_location">
-		La ubicació on voleu emmagatzemar els elements guardats en el
+		La ubicació on voleu emmagatzemar els elements
+		guardats en el
 		desplegament seleccionat
   </string>
 	<string name="hint_SD_save_path">
@@ -185,19 +188,22 @@
 		Causa el parpelleig del LED del telèfoni
   </string>
 	<string name="hint_domain">
-		Seleccioneu el desplegament Ushahidi amb el que voleu interactuar
+		Seleccioneu el desplegament Ushahidi amb el que
+		voleu interactuar
   </string>
 	<string name="chk_auto_fetch">
 		Sincronització automàtica
   </string>
 	<string name="hint_auto_fetch">
-		L\'Ushahidi descarregarà nous informes automàticament
+		L\'Ushahidi descarregarà nous informes
+		automàticament
   </string>
 	<string name="txt_auto_update_delay">
 		Freqüència automàtica de sincronització
   </string>
 	<string name="hint_auto_update_delay">
-		Establir la freqüència amb la que l\'Ushahidi sincronitza amb el desplegament
+		Establir la freqüència amb la que l\'Ushahidi
+		sincronitza amb el desplegament
 		seleccionat.
   </string>
 	<string name="txt_path_SD">
@@ -216,13 +222,15 @@
 		Nom 
   </string>
 	<string name="hint_first_name">
-		Per l\'atribució de l\'hora d\'enviar un informe (opcional)
+		Per l\'atribució de l\'hora d\'enviar un informe
+		(opcional)
   </string>
 	<string name="txt_last_name">
 		Cognom
   </string>
 	<string name="hint_last_name">
-		També per l\'atribució de l\'hora de presentar un informe (opcional).
+		També per l\'atribució de l\'hora de presentar un
+		informe (opcional).
   </string>
 	<string name="txt_email">
 		E-mail
@@ -234,7 +242,8 @@
 		Nombre de informes
   </string>
 	<string name="hint_total_reports">
-		Nombre total de informes a recuperar del desplegament seleccionat.
+		Nombre total de informes a recuperar del
+		desplegament seleccionat.
   </string>
 	<string name="no_reports">
 		No hi ha informes per mostrar
@@ -255,32 +264,42 @@
 		ushahidi.com
   </string>
 	<string name="welcome_mgs">
-		La plataforma Ushahidi és un programari lliure i de codi obert per a la
-		recollida d\'informació, la seva visualització i la plasmació en mapes
-		interactius. Permet a qualsevol persona enviar informació a través de
-		missatges de text mitjançant un telèfon mòbil, el correu electrònic o
+		La plataforma Ushahidi és un programari lliure i de
+		codi obert per a la
+		recollida d\'informació, la seva visualització i la
+		plasmació en mapes
+		interactius. Permet a qualsevol persona enviar
+		informació a través de
+		missatges de text mitjançant un telèfon mòbil,
+		el correu electrònic o
 		un formulari web.
   </string>
 	<string name="internet_connection">
-		Error a la xarxa, si us plau assegureu-vos que esteu connectats a Internet
+		Error a la xarxa, si us plau assegureu-vos que
+		esteu connectats a Internet
   </string>
 	<string name="preferences_notifications">
 		Notificacions
   </string>
 	<string name="report_successfully_added_online">
-		Informe publicat amb èxit en línia i entrat en una cua de moderació
+		Informe publicat amb èxit en línia i entrat en una
+		cua de moderació
   </string>
 	<string name="report_successfully_added_offline">
-		Informe enviat a emmagatzematge local a causa de la manca de disponibilitat
-		d\'Internet. Recordeu de sincronitzar amb l\'instància en línia quan hi
+		Informe enviat a emmagatzematge local a causa de la
+		manca de disponibilitat
+		d\'Internet. Recordeu de sincronitzar amb
+		l\'instància en línia quan hi
 		hagi connexió a Internet.
   </string>
 	<string name="failed_to_add_report_offline">
-		No s\'ha pogut enviar la informació. Comproveu si heu omplenat tots els
+		No s\'ha pogut enviar la informació. Comproveu si
+		heu omplenat tots els
 		camps obligatoris.
   </string>
 	<string name="failed_to_add_report_online">
-		Error de connexió, no es pot enviar l\'informe. Probablement disposi d\'una
+		Error de connexió, no es pot enviar l\'informe.
+		Probablement disposi d\'una
 		connexió lenta.
   </string>
 	<string name="empty_report_title">
@@ -311,11 +330,14 @@
 		Trobant-se ...
   </string>
 	<string name="location_not_found">
-		No es pot determinar un localització. Cal activar més fonts d\'ubicació,
-		p.ex., satèl lits GPS en la Configuració de Seguretat i Ubicació.
+		No es pot determinar un localització. Cal activar
+		més fonts d\'ubicació,
+		p.ex., satèl lits GPS en la Configuració de
+		Seguretat i Ubicació.
   </string>
 	<string name="loc_not_found">
-		La seva ubicació no pot ser determinada. Comproveu si assenyalar el lloc
+		La seva ubicació no pot ser determinada. Comproveu
+		si assenyalar el lloc
 		exacte en el mapa.
   </string>
 	<string name="version">
@@ -373,13 +395,15 @@
 		Error de xarxa
   </string>
 	<string name="network_error_msg">
-		Error de xarxa, assegureu-vos d\'estar connectat a Internet
+		Error de xarxa, assegureu-vos d\'estar connectat a
+		Internet
   </string>
 	<string name="file_system_error">
 		Error del sistema de fitxers
   </string>
 	<string name="file_system_error_msg">
-		Error del sistema de fitxers, assegureu-vos que la ruta és correcta!
+		Error del sistema de fitxers, assegureu-vos que la
+		ruta és correcta!
   </string>
 	<string name="read_more">
 		Llegir més ...
@@ -439,10 +463,14 @@
 		Si us plau, introduïu un missatge de check-in.
   </string>
 	<string name="checkin_no_location">
-		No s\'ha pogut obtenir la seva ubicació. Si s\'utilitza la funció GPS del
-		telèfon asseguris que el telèfon estigui en una zona visible pel
-		satèl·lit (a l\'aire lliure). Si no és així, apagui el GPS per fer ús
-		de les xarxes dels mòbils per determinar la seva ubicació.
+		No s\'ha pogut obtenir la seva ubicació. Si
+		s\'utilitza la funció GPS del
+		telèfon asseguris que el telèfon estigui
+		en una zona visible pel
+		satèl·lit (a l\'aire lliure). Si no és així,
+		apagui el GPS per fer ús
+		de les xarxes dels mòbils per determinar la
+		seva ubicació.
   </string>
 	<string name="could_not_fetch_checkin">
 		No s\'ha pogut recuperar el check-in.
@@ -487,7 +515,8 @@
 		Desenvolupament recuperats amb èxit.
   </string>
 	<string name="could_not_fetch_data">
-		No podia \ \'t buscar desenvolupaments per un error de xarxa.
+		No podia \ \'t buscar desenvolupaments per un error
+		de xarxa.
   </string>
 	<string name="settings_description">
 		Trobat desenvolupaments
@@ -564,7 +593,8 @@
 		No s\'ha pogut eliminar
   </string>
 	<string name="fix_error">
-		Asseguris que s\'introdueixen un nom i una URL vàlida.
+		Asseguris que s\'introdueixen un nom i una URL
+		vàlida.
   </string>
 	<string name="sending_report_in_progress">
 		Enviant informe
