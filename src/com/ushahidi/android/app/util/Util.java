@@ -560,8 +560,8 @@ public class Util {
         return randomString() + ".jpg";
     }
 
-    protected static String randomString() {
-        return Long.toString(random.nextLong(), 10);
+    public static String randomString() {
+        return Long.toString(Math.abs(random.nextLong()), 10);
     }
 
     /**

@@ -20,8 +20,10 @@
 
 package com.ushahidi.android.app.data;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -600,7 +602,8 @@ public class UshahidiDatabase {
         initialValues.put(DEPLOYMENT_NAME, name);
         initialValues.put(DEPLOYMENT_DESC, name);
         initialValues.put(DEPLOYMENT_URL, url);
-        initialValues.put(DEPLOYMENT_DATE, "datetime()");
+        initialValues.put(DEPLOYMENT_DATE,
+            (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
         initialValues.put(DEPLOYMENT_LATITUDE, "0.0");
         initialValues.put(DEPLOYMENT_LONGITUDE, "0.0");
         return mDb.insert(DEPLOYMENT_TABLE, null, initialValues);

@@ -32,8 +32,6 @@ public class DeploymentSearchTest extends ActivityInstrumentationTestCase2<Deplo
 
     private Location location;
 
-    private DeviceCurrentLocation mCurrentLocation;
-
     public DeploymentSearchTest() {
         super("com.ushahidi.android.app", DeploymentSearch.class);
         // TODO Auto-generated constructor stub
@@ -51,10 +49,6 @@ public class DeploymentSearchTest extends ActivityInstrumentationTestCase2<Deplo
 
         mUshahidiDatabase = new UshahidiDatabase(mDeploymentSearchActivity);
         mUshahidiDatabase.open();
-
-        mCurrentLocation = new DeviceCurrentLocation(mDeploymentSearchActivity);
-
-        assertNotNull(mCurrentLocation);
 
         mDeployments = new Deployments(mDeploymentSearchActivity);
 

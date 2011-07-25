@@ -4,9 +4,6 @@ package com.ushahidi.android.app.checkin;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,12 +12,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,12 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.ItemizedOverlay;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.About;
 import com.ushahidi.android.app.CaptureImage;
 import com.ushahidi.android.app.DeploymentSearch;
@@ -53,6 +39,7 @@ import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.IncidentsTab;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
+import com.ushahidi.android.app.UserLocationMap;
 import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.util.Util;
@@ -62,21 +49,13 @@ import com.ushahidi.android.app.util.Util;
  * this template use File | Settings | File Templates.
  */
 
-public class CheckinActivity extends MapActivity implements LocationListener {
+public class CheckinActivity extends UserLocationMap {
 
     private Button checkinButton;
 
     private Button uploadPhotoButton;
 
     private ImageButton mSearchButton;
-
-    private MapView mapView = null;
-
-    private MapController mapController;
-
-    private static double latitude;
-
-    private static double longitude;
 
     private EditText checkinMessageText;
 
@@ -161,10 +140,6 @@ public class CheckinActivity extends MapActivity implements LocationListener {
 
     private String mErrorMessage = "";
 
-    private LocationManager mLocationMgr;
-
-    private Location location;
-
     private static final String CLASS_TAG = CheckinActivity.class.getCanonicalName();
 
     public void onCreate(Bundle savedInstanceState) {
@@ -202,7 +177,6 @@ public class CheckinActivity extends MapActivity implements LocationListener {
         mapController = mapView.getController();
         // location stuff
         mCheckinLocation.setText(getString(R.string.checkin_progress_message));
-        setDeviceLocation();
 
         // Validate so empty text isn't sent over
         checkinMessageText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -291,11 +265,11 @@ public class CheckinActivity extends MapActivity implements LocationListener {
 
     @Override
     protected void onResume() {
+        super.onResume();
         if (!TextUtils.isEmpty(selectedPhoto)) {
             uploadPhotoButton.setText(getString(R.string.change_photo));
         }
         UshahidiPref.loadSettings(CheckinActivity.this);
-        super.onResume();
     }
 
     @Override
@@ -304,19 +278,17 @@ public class CheckinActivity extends MapActivity implements LocationListener {
         if (!TextUtils.isEmpty(selectedPhoto)) {
             ImageManager.deleteImage(selectedPhoto, "");
         }
-        stopLocating();
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 
     protected void onSearchDeployments() {
         Intent intent = new Intent(CheckinActivity.this, DeploymentSearch.class);
         startActivityForResult(intent, VIEW_SEARCH);
         setResult(RESULT_OK);
+    }
+
+    // Implementation of UserLocationMap abstract methods
+    protected void updateInterface() {
+            mCheckinLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
     }
 
     // menu stuff
@@ -469,7 +441,7 @@ public class CheckinActivity extends MapActivity implements LocationListener {
                     break;
                 }
 
-                mFilename = "android_pic_upload" + randomString() + ".jpg";
+                mFilename = "android_pic_upload" + Util.randomString() + ".jpg";
                 ImageManager
                         .writeImage(byteArrayos.toByteArray(), mFilename, UshahidiPref.savePath);
                 UshahidiPref.fileName = mFilename;
@@ -493,12 +465,6 @@ public class CheckinActivity extends MapActivity implements LocationListener {
         Intent intent = new Intent(CheckinActivity.this, IncidentsTab.class);
         startActivityForResult(intent, INCIDENTS);
         setResult(RESULT_OK);
-    }
-
-    private static Random random = new Random();
-
-    protected static String randomString() {
-        return Long.toString(random.nextLong(), 10);
     }
 
     @Override
@@ -649,171 +615,12 @@ public class CheckinActivity extends MapActivity implements LocationListener {
             public void run() {
 
                 jsonResponse = NetworkServices.postToOnline(imei, domain, checkinDetails,
-                        selectedPhoto, firstname, lastname, email, CheckinActivity.latitude,
-                        CheckinActivity.longitude);
+                        selectedPhoto, firstname, lastname, email, sLatitude,
+                        sLongitude);
 
                 mHandler.post(mPostCheckin);
             }
         };
         t.start();
     }
-
-    private void placeMarker(int markerLatitude, int markerLongitude) {
-
-        Drawable marker = getResources().getDrawable(R.drawable.marker);
-
-        marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
-        mapView.getController().setZoom(14);
-
-        mapView.setBuiltInZoomControls(true);
-        mapView.getOverlays().add(new MapMarker(marker, markerLatitude, markerLongitude));
-    }
-
-    public GeoPoint getPoint(double lat, double lon) {
-        return (new GeoPoint((int)(lat * 1000000.0), (int)(lon * 1000000.0)));
-    }
-
-    private void centerLocation(GeoPoint centerGeoPoint) {
-
-        mapController.animateTo(centerGeoPoint);
-
-        // initilaize latitude and longitude for them to be passed to the
-        // CheckinActivity Activity.
-        CheckinActivity.latitude = centerGeoPoint.getLatitudeE6() / 1.0E6;
-        CheckinActivity.longitude = centerGeoPoint.getLongitudeE6() / 1.0E6;
-
-        placeMarker(centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6());
-
-    }
-
-    private class MapMarker extends ItemizedOverlay<OverlayItem> {
-
-        private List<OverlayItem> locations = new ArrayList<OverlayItem>();
-
-        private Drawable marker;
-
-        private OverlayItem myOverlayItem;
-
-        public MapMarker(Drawable defaultMarker, int LatitudeE6, int LongitudeE6) {
-            super(defaultMarker);
-            this.marker = defaultMarker;
-
-            // create locations of interest
-            GeoPoint myPlace = new GeoPoint(LatitudeE6, LongitudeE6);
-
-            myOverlayItem = new OverlayItem(myPlace, " ", " ");
-
-            locations.add(myOverlayItem);
-
-            populate();
-
-        }
-
-        @Override
-        protected OverlayItem createItem(int i) {
-            return locations.get(i);
-        }
-
-        @Override
-        public int size() {
-            return locations.size();
-        }
-
-        @Override
-        public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-            super.draw(canvas, mapView, shadow);
-            boundCenterBottom(marker);
-        }
-
-    }
-
-    // Fetches the current location of the device.
-    private void setDeviceLocation() {
-
-        mLocationMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-
-        long updateTimeMsec = 30 * 1000;
-        try {
-
-            // get low accuracy provider
-            LocationProvider low = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
-                    Util.createCoarseCriteria(), true));
-
-            // get high accuracy provider
-            LocationProvider high = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
-                    Util.createFineCriteria(), true));
-
-            mLocationMgr.requestLocationUpdates(low.getName(), updateTimeMsec, 0, this);
-
-            mLocationMgr.requestLocationUpdates(high.getName(), updateTimeMsec, 0, this);
-
-        } catch (Exception ex1) {
-            try {
-
-                if (mLocationMgr != null) {
-                    mLocationMgr.removeUpdates(this);
-                    mLocationMgr = null;
-                }
-            } catch (Exception ex2) {
-                Log.d(CLASS_TAG, ex2.getMessage());
-            }
-        }
-
-    }
-
-    public void stopLocating() {
-
-        try {
-
-            try {
-                mLocationMgr.removeUpdates(this);
-            } catch (Exception ex) {
-                Log.d(CLASS_TAG, ex.getMessage());
-            }
-            mLocationMgr = null;
-        } catch (Exception ex) {
-            Log.d(CLASS_TAG, ex.getMessage());
-        }
-    }
-
-    @Override
-    protected boolean isRouteDisplayed() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void onLocationChanged(Location loc) {
-        if (loc != null) {
-            location = loc;
-
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-
-            centerLocation(getPoint(latitude, longitude));
-            mCheckinLocation.setText(String.valueOf(latitude) + ", " + String.valueOf(longitude));
-
-            stopLocating();
-        }
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-
-    }
-
 }
