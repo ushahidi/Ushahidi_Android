@@ -9,9 +9,6 @@
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com. -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-	<string name="VARIABLES">
-		CATALAN
-  </string>
 	<string name="app_name">
 		Ushahidi
   </string>

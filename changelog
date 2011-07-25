@@ -4,6 +4,9 @@ Feature:
   * Improved UI when viewing details of a report/checkin
   * More code clean up. Thanks to https://github.com/jmschanck
 
+Bug:
+  * Removed hardware camera auto focus requirement 
+
 2.3:
 Feature:
   * Added a new settings field to allow resizing of images to be uploaded.
@@ -12,6 +15,7 @@ Feature:
   
 Bug:
   * Minor bug fixes. More tweaks to the white-labelling feature
+  
 2.2:
 Bug: 
   * Minor bug fix. Fixed more null pointer exception causing app to crash
