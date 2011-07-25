@@ -21,7 +21,8 @@
 package com.ushahidi.android.app;
 
 import java.io.File;
-import java.util.Random;
+
+import com.ushahidi.android.app.util.Util;
 
 import android.util.Log;
 
@@ -29,13 +30,7 @@ public class SaveIncidentsImage extends Thread {
 
     private byte[] mData;
 
-    private static Random random = new Random();
-
     public String filename;
-
-    protected static String randomString() {
-        return Long.toString(random.nextLong(), 36);
-    }
 
     public SaveIncidentsImage(byte[] data) {
         this.mData = data;
@@ -44,14 +39,14 @@ public class SaveIncidentsImage extends Thread {
     @Override
     public void run() {
 
-        filename = "pictureupload" + randomString() + ".jpg";
+        filename = "pictureupload" + Util.randomString() + ".jpg";
 
         Log.i("Capture Me", "What: " + filename);
 
         ImageManager.writeImage(mData, filename,UshahidiPref.savePath);
         UshahidiPref.fileName = filename;
 
-        File f = new File(UshahidiPref.savePath + filename);
+        File f = new File(UshahidiPref.savePath, filename);
         if (f.exists()) {
             f.delete();
         }

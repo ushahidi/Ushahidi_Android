@@ -26,6 +26,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
@@ -47,12 +48,15 @@ import java.util.List;
 
 public class HandleXml {
 
+    protected static final int MEDIA_TYPE_IMAGE = 1;
+    protected static final int MEDIA_TYPE_VIDEO = 2;
+    //TODO: Is there a 3?
+    protected static final int MEDIA_TYPE_NEWS = 4;
+
+
     public static List<IncidentsData> processIncidentsXml(String xmL) {
         Log.d("Incident", " Fetching Incident ");
         String xml = xmL.replaceAll( "&([^;]+(?!(?:\\w|;)))", "&amp;$1" );
-        String categories = "";
-        String thumbnail = "";
-        String image = "";
         List<IncidentsData> listIncidentsData = new ArrayList<IncidentsData>();
         DocumentBuilder builder = null;
         Document doc = null;
@@ -88,158 +92,161 @@ public class HandleXml {
         NodeList node = doc.getElementsByTagName("incident");
 
         for (int i = 0; i < node.getLength(); i++) {
-
             Node firstNode = node.item(i);
-            IncidentsData incidentData = new IncidentsData();
-            listIncidentsData.add(incidentData);
-
-            if (firstNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element element = (Element)firstNode;
-
-                NodeList idElementList = element.getElementsByTagName("id");
-                Element idElement = (Element)idElementList.item(0);
-
-                NodeList id = idElement.getChildNodes();
-
-                incidentData.setIncidentId(Integer.parseInt((id.item(0)).getNodeValue()));
-
-                NodeList titleElementList = element.getElementsByTagName("title");
-                Element titleElement = (Element)titleElementList.item(0);
-
-                NodeList title = titleElement.getChildNodes();
-                incidentData.setIncidentTitle((title.item(0)).getNodeValue());
-
-                NodeList descElementList = element.getElementsByTagName("description");
-                Element descElement = (Element)descElementList.item(0);
-
-                NodeList desc = descElement.getChildNodes();
-                incidentData.setIncidentDesc((desc.item(0)).getNodeValue());
-
-                NodeList dateElementList = element.getElementsByTagName("date");
-                Element dateElement = (Element)dateElementList.item(0);
-
-                NodeList date = dateElement.getChildNodes();
-                incidentData.setIncidentDate((date.item(0)).getNodeValue());
-
-                NodeList modeElementList = element.getElementsByTagName("mode");
-                Element modeElement = (Element)modeElementList.item(0);
-
-                NodeList mode = modeElement.getChildNodes();
-                incidentData.setIncidentMode(Integer.parseInt((mode.item(0)).getNodeValue()));
-
-                NodeList verifiedElementList = element.getElementsByTagName("verified");
-                Element verifiedElement = (Element)verifiedElementList.item(0);
-
-                NodeList verified = verifiedElement.getChildNodes();
-                incidentData
-                        .setIncidentVerified(Integer.parseInt((verified.item(0)).getNodeValue()));
-
-                // location
-                NodeList locationElementList = element.getElementsByTagName("location");
-
-                Node locationNode = locationElementList.item(0);
-
-                Element locationElement = (Element)locationNode;
-                NodeList locationNameList = locationElement.getElementsByTagName("name");
-
-                Element locationInnerNameElement = (Element)locationNameList.item(0);
-                NodeList locationInnerName = locationInnerNameElement.getChildNodes();
-                incidentData.setIncidentLocation((locationInnerName.item(0)).getNodeValue());
-
-                NodeList locationLatitudeList = locationElement.getElementsByTagName("latitude");
-
-                Element locationInnerLatitudeElement = (Element)locationLatitudeList.item(0);
-                NodeList locationInnerLatitude = locationInnerLatitudeElement.getChildNodes();
-                incidentData.setIncidentLocLatitude((locationInnerLatitude.item(0)).getNodeValue());
-
-                NodeList locationLongitudeList = locationElement.getElementsByTagName("longitude");
-
-                Element locationInnerLongitudeElement = (Element)locationLongitudeList.item(0);
-                NodeList locationInnerLongitude = locationInnerLongitudeElement.getChildNodes();
-                incidentData.setIncidentLocLongitude((locationInnerLongitude.item(0))
-                        .getNodeValue());
-
-                // categories
-                NodeList categoryList = element.getElementsByTagName("category");
-                for (int w = 0; w < categoryList.getLength(); w++) {
-
-                    Node categoryNode = categoryList.item(w);
-                    if (categoryNode.getNodeType() == Node.ELEMENT_NODE) {
-                        Element categoryElement = (Element)categoryNode;
-                        NodeList categoryNameList = categoryElement.getElementsByTagName("title");
-                        Element categoryInnerTitleElement = (Element)categoryNameList.item(0);
-                        NodeList categoryInnerTitle = categoryInnerTitleElement.getChildNodes();
-                        categories += (w == categoryList.getLength() - 1) ? (categoryInnerTitle
-                                .item(0)).getNodeValue() : (categoryInnerTitle.item(0))
-                                .getNodeValue() + ",";
-                    }
-                }
-
-                incidentData.setIncidentCategories(categories);
-                categories = "";
-                // UshahidiService.mNewIncidentsImages.clear();
-                // UshahidiService.mNewIncidentsThumbnails.clear();
-                // categories
-                NodeList mediaList = element.getElementsByTagName("media");
-                for (int j = 0; j < mediaList.getLength(); j++) {
-
-                    Node mediaNode = mediaList.item(j);
-                    if (mediaNode.getNodeType() == Node.ELEMENT_NODE) {
-                        Element mediaElement = (Element)mediaNode;
-                        NodeList mediaThumbList = mediaElement.getElementsByTagName("thumb");
-
-                        if (mediaThumbList.getLength() != 0) {
-
-                            Element mediaInnerThumbElement = (Element)mediaThumbList.item(0);
-                            NodeList mediaThumb = mediaInnerThumbElement.getChildNodes();
-
-                            if (!(mediaThumb.item(0)).getNodeValue().equals("")) {
-
-                                UshahidiService.mNewIncidentsThumbnails.add((mediaThumb.item(0))
-                                        .getNodeValue());
-                            }
-
-                            File thumbnailFilename = new File((mediaThumb.item(0)).getNodeValue());
-                            thumbnail += (j == mediaList.getLength() - 1) ? thumbnailFilename
-                                    .getName() : thumbnailFilename.getName() + ",";
-                        }
-
-                        NodeList mediaImageList = mediaElement.getElementsByTagName("link");
-
-                        if (mediaImageList.getLength() != 0) {
-                            Element mediaInnerImageElement = (Element)mediaImageList.item(0);
-                            NodeList mediaImage = mediaInnerImageElement.getChildNodes();
-                            if (!(mediaImage.item(0)).getNodeValue().equals("")) {
-                                UshahidiService.mNewIncidentsImages.add((mediaImage.item(0))
-                                        .getNodeValue());
-                            }
-                            // if( j != 0) {
-                            File imageFilename = new File((mediaImage.item(0)).getNodeValue());
-                            image += imageFilename.getName() + ",";
-                            // }
-                            // image += (j == mediaImageList.getLength() -1)? (
-                            // (Node)mediaImage.item(0)).getNodeValue(): (
-                            // (Node)mediaImage.item(0)).getNodeValue()+",";
-
-                        }
-                    }
-                }
-
-                incidentData.setIncidentThumbnail(thumbnail);
-                incidentData.setIncidentImage(image);
-                thumbnail = "";
-                image = "";
-
+            if (firstNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
             }
-
+            listIncidentsData.add(parseIncident((Element)firstNode));
         }
-
         // save images
         ImageManager.saveThumbnail(UshahidiPref.savePath);
         ImageManager.saveImage(UshahidiPref.savePath);
-
         return listIncidentsData;
+    }
 
+    private static IncidentsData parseIncident(Element element){
+        IncidentsData incidentData = new IncidentsData();
+
+        NodeList idElementList = element.getElementsByTagName("id");
+        Element idElement = (Element)idElementList.item(0);
+
+        NodeList id = idElement.getChildNodes();
+
+        incidentData.setIncidentId(Integer.parseInt((id.item(0)).getNodeValue()));
+
+        NodeList titleElementList = element.getElementsByTagName("title");
+        Element titleElement = (Element)titleElementList.item(0);
+
+        NodeList title = titleElement.getChildNodes();
+        incidentData.setIncidentTitle((title.item(0)).getNodeValue());
+
+        NodeList descElementList = element.getElementsByTagName("description");
+        Element descElement = (Element)descElementList.item(0);
+
+        NodeList desc = descElement.getChildNodes();
+        incidentData.setIncidentDesc((desc.item(0)).getNodeValue());
+
+        NodeList dateElementList = element.getElementsByTagName("date");
+        Element dateElement = (Element)dateElementList.item(0);
+
+        NodeList date = dateElement.getChildNodes();
+        incidentData.setIncidentDate((date.item(0)).getNodeValue());
+
+        NodeList modeElementList = element.getElementsByTagName("mode");
+        Element modeElement = (Element)modeElementList.item(0);
+
+        NodeList mode = modeElement.getChildNodes();
+        incidentData.setIncidentMode(Integer.parseInt((mode.item(0)).getNodeValue()));
+
+        NodeList verifiedElementList = element.getElementsByTagName("verified");
+        Element verifiedElement = (Element)verifiedElementList.item(0);
+
+        NodeList verified = verifiedElement.getChildNodes();
+        incidentData
+                .setIncidentVerified(Integer.parseInt((verified.item(0)).getNodeValue()));
+
+        // location
+        NodeList locationElementList = element.getElementsByTagName("location");
+
+        Node locationNode = locationElementList.item(0);
+
+        Element locationElement = (Element)locationNode;
+        NodeList locationNameList = locationElement.getElementsByTagName("name");
+
+        Element locationInnerNameElement = (Element)locationNameList.item(0);
+        NodeList locationInnerName = locationInnerNameElement.getChildNodes();
+        incidentData.setIncidentLocation((locationInnerName.item(0)).getNodeValue());
+
+        NodeList locationLatitudeList = locationElement.getElementsByTagName("latitude");
+
+        Element locationInnerLatitudeElement = (Element)locationLatitudeList.item(0);
+        NodeList locationInnerLatitude = locationInnerLatitudeElement.getChildNodes();
+        incidentData.setIncidentLocLatitude((locationInnerLatitude.item(0)).getNodeValue());
+
+        NodeList locationLongitudeList = locationElement.getElementsByTagName("longitude");
+
+        Element locationInnerLongitudeElement = (Element)locationLongitudeList.item(0);
+        NodeList locationInnerLongitude = locationInnerLongitudeElement.getChildNodes();
+        incidentData.setIncidentLocLongitude((locationInnerLongitude.item(0))
+                .getNodeValue());
+
+        // categories
+        NodeList categoryList = element.getElementsByTagName("category");
+        StringBuilder categories = new StringBuilder();
+        for (int w = 0; w < categoryList.getLength(); w++) {
+
+            Node categoryNode = categoryList.item(w);
+            if (categoryNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element categoryElement = (Element)categoryNode;
+                NodeList categoryNameList = categoryElement.getElementsByTagName("title");
+                Element categoryInnerTitleElement = (Element)categoryNameList.item(0);
+                NodeList categoryInnerTitle = categoryInnerTitleElement.getChildNodes();
+                categories.append(categoryInnerTitle.item(0).getNodeValue() + ",");
+            }
+        }
+        // Delete the last ","
+        if (categories.length() > 0) categories.deleteCharAt(categories.length()-1);
+        incidentData.setIncidentCategories(categories.toString());
+
+        StringBuilder thumbnail = new StringBuilder();
+        StringBuilder image = new StringBuilder();
+        // media
+        NodeList mediaList = element.getElementsByTagName("media");
+        for (int j = 0; j < mediaList.getLength(); j++) {
+
+            Node mediaNode = mediaList.item(j);
+            if (mediaNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element mediaElement = (Element)mediaNode;
+                NodeList mediaThumbList = mediaElement.getElementsByTagName("thumb");
+
+                if (mediaThumbList.getLength() != 0) {
+
+                    Element mediaInnerThumbElement = (Element)mediaThumbList.item(0);
+                    NodeList mediaThumb = mediaInnerThumbElement.getChildNodes();
+                    String thumbName = (mediaThumb.item(0)).getNodeValue();
+                    if (!TextUtils.isEmpty(thumbName)) {
+
+                        UshahidiService.mNewIncidentsThumbnails.add(thumbName);
+                    }
+
+                    File thumbnailFilename = new File(thumbName);
+                    thumbnail.append(thumbnailFilename.getName() + ",");
+                }
+
+                // Check media type
+                NodeList mediaTypeList = mediaElement.getElementsByTagName("type");
+                if (mediaTypeList.getLength() != 0){
+                    NodeList mediaTypes = ((Element)mediaTypeList.item(0)).getChildNodes();
+                    String mediaType = mediaTypes.item(0).getNodeValue();
+                    switch(Integer.parseInt(mediaType)){
+                        case MEDIA_TYPE_IMAGE:
+                            NodeList mediaImageList = mediaElement.getElementsByTagName("link");
+
+                            if (mediaImageList.getLength() != 0) {
+                                String imageName = ((Element)mediaImageList.item(0)).getNodeValue();
+                                if (!TextUtils.isEmpty(imageName)) {
+                                    UshahidiService.mNewIncidentsImages.add(imageName);
+                                    File imageFilename = new File(imageName);
+                                    image.append(imageFilename.getName() + ",");
+                                }
+                            }
+                            break;
+                        case MEDIA_TYPE_VIDEO:
+                            break;
+                        case MEDIA_TYPE_NEWS:
+                            break;
+                    }
+                }
+            }
+        }
+        // Delete the last ","
+        if (thumbnail.length() > 0) thumbnail.deleteCharAt(thumbnail.length()-1);
+        if (image.length() > 0) image.deleteCharAt(image.length()-1);
+
+        incidentData.setIncidentThumbnail(thumbnail.toString());
+        incidentData.setIncidentImage(image.toString());
+
+        return incidentData;
     }
 
     public static List<CategoriesData> processCategoriesXml(String xmL) {

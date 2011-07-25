@@ -2,6 +2,7 @@
 package com.ushahidi.android.app;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -13,7 +14,6 @@ import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +21,6 @@ import android.provider.BaseColumns;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -626,51 +625,40 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
 
     /** Location stuff **/
     // Fetches the current location of the device.
-    public void setDeviceLocation() {
-
+    protected void setDeviceLocation() {
         mLocationMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
-        long updateTimeMsec = 30 * 1000;
-        try {
-
-            // get low accuracy provider
-            LocationProvider low = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
-                    Util.createCoarseCriteria(), true));
-
-            // get high accuracy provider
-            LocationProvider high = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
-                    Util.createFineCriteria(), true));
-
-            mLocationMgr.requestLocationUpdates(low.getName(), updateTimeMsec, 0, this);
-
-            mLocationMgr.requestLocationUpdates(high.getName(), updateTimeMsec, 0, this);
-
-        } catch (Exception ex1) {
-            try {
-
-                if (mLocationMgr != null) {
-                    mLocationMgr.removeUpdates(this);
-                    mLocationMgr = null;
-                }
-            } catch (Exception ex2) {
-                Log.d(CLASS_TAG, ex2.getMessage());
-            }
+        // Get last known location from either GPS or Network provider
+        Location loc = null;
+        boolean netAvail = (mLocationMgr.getProvider(LocationManager.NETWORK_PROVIDER) != null);
+        boolean gpsAvail = (mLocationMgr.getProvider(LocationManager.GPS_PROVIDER) != null);
+        if(gpsAvail){
+            loc = mLocationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }else if(netAvail){
+            loc = mLocationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
 
+        // Just use last location if it's less than 10 minutes old
+        if(loc != null && ((new Date()).getTime() - loc.getTime() < 10*60*1000)){
+            onLocationChanged(loc);
+        }else{
+            if(gpsAvail){
+                mLocationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            }
+            if(netAvail){
+                mLocationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+            }
+        }
     }
 
     public void stopLocating() {
-
-        try {
-
+        if (mLocationMgr != null){
             try {
                 mLocationMgr.removeUpdates(this);
             } catch (Exception ex) {
-                Log.d(CLASS_TAG, ex.getMessage());
+                ex.printStackTrace();
             }
             mLocationMgr = null;
-        } catch (Exception ex) {
-            Log.d(CLASS_TAG, ex.getMessage());
         }
     }
 
@@ -678,13 +666,11 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
     public void onLocationChanged(Location loc) {
         if (loc != null) {
             location = loc;
-
             RefreshDeploymentTask deploymentTask = new RefreshDeploymentTask();
             deploymentTask.appContext = DeploymentSearch.this;
             deploymentTask.location = location;
             deploymentTask.distance = distance;
             deploymentTask.execute();
-
             stopLocating();
         }
 

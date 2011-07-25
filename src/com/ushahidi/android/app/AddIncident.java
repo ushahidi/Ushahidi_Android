@@ -24,11 +24,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.Vector;
 
 import android.app.AlertDialog;
@@ -43,14 +44,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -70,19 +65,14 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.ItemizedOverlay;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.checkin.NetworkServices;
 import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
 import com.ushahidi.android.app.util.Util;
 
-public class AddIncident extends MapActivity implements LocationListener {
+public class AddIncident extends UserLocationMap{
 
     /**
      * category that exists on the phone before any connection to a server, at
@@ -128,21 +118,9 @@ public class AddIncident extends MapActivity implements LocationListener {
     private List<Address> mFoundAddresses;
 
     // date and time
-    private int mYear;
-
-    private int mMonth;
-
-    private int mDay;
-
-    private int mHour;
-
-    private int mMinute;
+    private Calendar mCalendar;
 
     private int mCounter = 0;
-
-    private static double sLongitude = 0.0;
-
-    private static double sLatitude = 0.0;
 
     private String mErrorMessage = "";
 
@@ -178,15 +156,9 @@ public class AddIncident extends MapActivity implements LocationListener {
 
     private Button mBtnPicture;
 
-    private HashMap<Integer, Integer> mTimeDigits;
-
     private Bundle mBundle;
 
     private Bundle mExtras;
-
-    private MapView mapView = null;
-
-    private MapController mapController;
 
     private static final int DIALOG_ERROR_NETWORK = 0;
 
@@ -210,8 +182,6 @@ public class AddIncident extends MapActivity implements LocationListener {
 
     private HashMap<String, String> mParams = new HashMap<String, String>();
 
-    private LocationManager mLocationMgr;
-
     private static final String CLASS_TAG = AddIncident.class.getCanonicalName();
 
     @Override
@@ -225,7 +195,6 @@ public class AddIncident extends MapActivity implements LocationListener {
 
         // load settings
         UshahidiPref.loadSettings(AddIncident.this);
-        setDeviceLocation();
         initComponents();
     }
 
@@ -238,55 +207,6 @@ public class AddIncident extends MapActivity implements LocationListener {
             f.delete();
         }
         stopLocating();
-    }
-
-    // Fetches the current location of the device.
-    private void setDeviceLocation() {
-
-        mLocationMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-
-        long updateTimeMsec = 30 * 1000;
-        try {
-
-            // get low accuracy provider
-            LocationProvider low = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
-                    Util.createCoarseCriteria(), true));
-
-            // get high accuracy provider
-            LocationProvider high = mLocationMgr.getProvider(mLocationMgr.getBestProvider(
-                    Util.createFineCriteria(), true));
-
-            mLocationMgr.requestLocationUpdates(low.getName(), updateTimeMsec, 0, this);
-
-            mLocationMgr.requestLocationUpdates(high.getName(), updateTimeMsec, 0, this);
-
-        } catch (Exception ex1) {
-            try {
-
-                if (mLocationMgr != null) {
-                    mLocationMgr.removeUpdates(this);
-                    mLocationMgr = null;
-                }
-            } catch (Exception ex2) {
-                Log.d(CLASS_TAG, ex2.getMessage());
-            }
-        }
-
-    }
-
-    public void stopLocating() {
-
-        try {
-
-            try {
-                mLocationMgr.removeUpdates(this);
-            } catch (Exception ex) {
-                Log.d(CLASS_TAG, ex.getMessage());
-            }
-            mLocationMgr = null;
-        } catch (Exception ex) {
-            Log.d(CLASS_TAG, ex.getMessage());
-        }
     }
 
     // menu stuff
@@ -504,13 +424,7 @@ public class AddIncident extends MapActivity implements LocationListener {
             }
         });
 
-        final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-        mHour = c.get(Calendar.HOUR_OF_DAY);
-        mMinute = c.get(Calendar.MINUTE);
-        c.get(Calendar.AM_PM);
+        mCalendar = Calendar.getInstance();
         updateDisplay();
 
     }
@@ -645,7 +559,7 @@ public class AddIncident extends MapActivity implements LocationListener {
                     break;
                 }
 
-                mFilename = "android_pic_upload" + randomString() + ".jpg";
+                mFilename = "android_pic_upload" + Util.randomString() + ".jpg";
                 ImageManager
                         .writeImage(byteArrayos.toByteArray(), mFilename, UshahidiPref.savePath);
                 UshahidiPref.fileName = mFilename;
@@ -655,7 +569,8 @@ public class AddIncident extends MapActivity implements LocationListener {
                 mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 break;
 
-            case VIEW_MAP:
+            /* TODO: Is there a plan to use this?
+               case VIEW_MAP:
                 if (resultCode != RESULT_OK) {
                     return;
                 }
@@ -671,14 +586,8 @@ public class AddIncident extends MapActivity implements LocationListener {
                     AddIncident.sLatitude = mBundle.getDouble("latitude");
                     AddIncident.sLongitude = mBundle.getDouble("longitude");
                 }
-                break;
+                break;*/
         }
-    }
-
-    private static Random random = new Random();
-
-    protected static String randomString() {
-        return Long.toString(random.nextLong(), 10);
     }
 
     //
@@ -842,10 +751,14 @@ public class AddIncident extends MapActivity implements LocationListener {
             }
 
             case TIME_DIALOG_ID:
-                return new TimePickerDialog(this, mTimeSetListener, mHour, mMinute, false);
+                return new TimePickerDialog(this, mTimeSetListener,
+                        mCalendar.get(Calendar.HOUR), mCalendar.get(Calendar.MINUTE),
+                        false);
 
             case DATE_DIALOG_ID:
-                return new DatePickerDialog(this, mDateSetListener, mYear, mMonth, mDay);
+                return new DatePickerDialog(this, mDateSetListener,
+                        mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                        mCalendar.get(Calendar.DAY_OF_MONTH));
         }
         return null;
     }
@@ -854,73 +767,32 @@ public class AddIncident extends MapActivity implements LocationListener {
     protected void onPrepareDialog(int id, Dialog dialog) {
         switch (id) {
             case TIME_DIALOG_ID:
-                ((TimePickerDialog)dialog).updateTime(mHour, mMinute);
+                ((TimePickerDialog)dialog).updateTime(
+                        mCalendar.get(Calendar.HOUR_OF_DAY),
+                        mCalendar.get(Calendar.MINUTE));
                 break;
             case DATE_DIALOG_ID:
-                ((DatePickerDialog)dialog).updateDate(mYear, mMonth, mDay);
+                ((DatePickerDialog)dialog).updateDate(
+                        mCalendar.get(Calendar.YEAR),
+                        mCalendar.get(Calendar.MONTH),
+                        mCalendar.get(Calendar.DAY_OF_MONTH));
                 break;
         }
     }
 
     private void updateDisplay() {
-        String amPm;
-        mTimeDigits = new HashMap<Integer, Integer>();
+        SimpleDateFormat dispFormat = new SimpleDateFormat("MMMM dd, yyyy 'at' hh:mm a");
+        SimpleDateFormat submFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 
-        mTimeDigits.put(00, 12);
-        mTimeDigits.put(13, 1);
-        mTimeDigits.put(14, 2);
-        mTimeDigits.put(15, 3);
-        mTimeDigits.put(16, 4);
-        mTimeDigits.put(17, 5);
-        mTimeDigits.put(18, 6);
-        mTimeDigits.put(19, 7);
-        mTimeDigits.put(20, 8);
-        mTimeDigits.put(21, 9);
-        mTimeDigits.put(22, 10);
-        mTimeDigits.put(23, 11);
-        mTimeDigits.put(24, 12);
-        mTimeDigits.put(12, 12);
-        mTimeDigits.put(1, 1);
-        mTimeDigits.put(2, 2);
-        mTimeDigits.put(3, 3);
-        mTimeDigits.put(4, 4);
-        mTimeDigits.put(5, 5);
-        mTimeDigits.put(6, 6);
-        mTimeDigits.put(7, 7);
-        mTimeDigits.put(8, 8);
-        mTimeDigits.put(9, 9);
-        mTimeDigits.put(10, 10);
-        mTimeDigits.put(11, 11);
-        mTimeDigits.put(12, 12);
-        if (mHour >= 12)
-            amPm = "PM";
-        else
-            amPm = "AM";
-
-        String strDate = new StringBuilder()
-
-                // Month is 0 based so add 1
-                .append(mYear).append("-").append(pad(mMonth + 1)).append("-").append(pad(mDay))
-                .toString();
-
-        String dateTime = Util.formatDate("yyyy-MM-dd", strDate, "MMMM dd, yyyy");
-
-        mIncidentDate.setText(dateTime + " at " + pad(mTimeDigits.get(mHour)) + ":" + pad(mMinute)
-                + " " + amPm);
-
-        mDateToSubmit = new StringBuilder()
-                // Month is 0 based so add 1
-                .append(pad(mMonth + 1)).append("/").append(pad(mDay)).append("/").append(mYear)
-                .append(" ").append(pad(mTimeDigits.get(mHour))).append(":").append(pad(mMinute))
-                .append(" ").append(amPm).toString();
+        Date datetime = mCalendar.getTime();
+        mIncidentDate.setText(dispFormat.format(datetime));
+        mDateToSubmit = submFormat.format(datetime);
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
 
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            mYear = year;
-            mMonth = monthOfYear;
-            mDay = dayOfMonth;
+            mCalendar.set(year, monthOfYear, dayOfMonth);
             updateDisplay();
         }
     };
@@ -928,19 +800,11 @@ public class AddIncident extends MapActivity implements LocationListener {
     private TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            mHour = hourOfDay;
-            mMinute = minute;
-
+            mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            mCalendar.set(Calendar.MINUTE, minute);
             updateDisplay();
         }
     };
-
-    private static String pad(int c) {
-        if (c >= 10)
-            return String.valueOf(c);
-        else
-            return "0" + String.valueOf(c);
-    }
 
     /**
      * Insert incident data into db when app is offline.
@@ -1082,6 +946,12 @@ public class AddIncident extends MapActivity implements LocationListener {
         super.onPause();
     }
 
+    // Implementation of UserLocationMap abstract methods
+    protected void updateInterface(){
+        mReportLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
+        mIncidentLocation.setText(getLocationFromLatLon(sLatitude, sLongitude));
+    }
+
     /**
      * get the real location name from the latitude and longitude.
      */
@@ -1172,114 +1042,4 @@ public class AddIncident extends MapActivity implements LocationListener {
 
         }
     }
-
-    private void placeMarker(int markerLatitude, int markerLongitude) {
-
-        Drawable marker = getResources().getDrawable(R.drawable.marker);
-
-        marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
-        mapView.getController().setZoom(14);
-
-        mapView.setBuiltInZoomControls(true);
-        mapView.getOverlays().add(new MapMarker(marker, markerLatitude, markerLongitude));
-    }
-
-    // Location stuff
-    public GeoPoint getPoint(double lat, double lon) {
-        return (new GeoPoint((int)(lat * 1000000.0), (int)(lon * 1000000.0)));
-    }
-
-    private void centerLocation(GeoPoint centerGeoPoint) {
-        if (centerGeoPoint != null) {
-            mapController.animateTo(centerGeoPoint);
-
-            // initilaize latitude and longitude for them to be passed to the
-            // AddIncident Activity.
-            sLatitude = centerGeoPoint.getLatitudeE6() / 1.0E6;
-            sLongitude = centerGeoPoint.getLongitudeE6() / 1.0E6;
-            mIncidentLocation.setText(getLocationFromLatLon(sLatitude, sLongitude));
-            placeMarker(centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6());
-        }
-
-    }
-
-    private class MapMarker extends ItemizedOverlay<OverlayItem> {
-
-        private List<OverlayItem> locations = new ArrayList<OverlayItem>();
-
-        private Drawable marker;
-
-        private OverlayItem myOverlayItem;
-
-        public MapMarker(Drawable defaultMarker, int LatitudeE6, int LongitudeE6) {
-            super(defaultMarker);
-            this.marker = defaultMarker;
-
-            // create locations of interest
-            GeoPoint myPlace = new GeoPoint(LatitudeE6, LongitudeE6);
-
-            myOverlayItem = new OverlayItem(myPlace, " ", " ");
-
-            locations.add(myOverlayItem);
-
-            populate();
-
-        }
-
-        @Override
-        protected OverlayItem createItem(int i) {
-            return locations.get(i);
-        }
-
-        @Override
-        public int size() {
-            return locations.size();
-        }
-
-        @Override
-        public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-            super.draw(canvas, mapView, shadow);
-            boundCenterBottom(marker);
-        }
-
-    }
-
-    @Override
-    protected boolean isRouteDisplayed() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void onLocationChanged(Location loc) {
-        if (loc != null) {
-            sLatitude = loc.getLatitude();
-            sLongitude = loc.getLongitude();
-
-            centerLocation(getPoint(sLatitude, sLongitude));
-            mReportLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
-
-            stopLocating();
-        }
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-
-    }
-
 }

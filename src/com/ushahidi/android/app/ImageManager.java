@@ -43,7 +43,7 @@ public class ImageManager {
     public static Drawable getImages(String path,String fileName) {
 
         Drawable d = null;
-        BitmapDrawable bD = new BitmapDrawable(path + fileName);
+        BitmapDrawable bD = new BitmapDrawable((new File(path, fileName)).toString());
         d = bD.mutate();
 
         return d;
@@ -54,7 +54,7 @@ public class ImageManager {
         for (String image : UshahidiService.mNewIncidentsImages) {
             if (!TextUtils.isEmpty(image)) {
                 File imageFilename = new File(image);
-                File f = new File(path + imageFilename.getName());
+                File f = new File(path, imageFilename.getName());
                 if (!f.exists()) {
                     try {
                         is = UshahidiHttpClient.fetchImage(UshahidiPref.domain + "/media/uploads/"
@@ -87,7 +87,7 @@ public class ImageManager {
                 File thumbnailFilename = new File(image);
                 // Log.i("Save Images", "Image :" + UshahidiPref.savePath +
                 // thumbnailFilename.getName());
-                File f = new File(path + thumbnailFilename.getName());
+                File f = new File(path, thumbnailFilename.getName());
                 if (!f.exists()) {
                     try {
                         is = UshahidiHttpClient.fetchImage(UshahidiPref.domain + "/media/uploads/"
@@ -119,7 +119,7 @@ public class ImageManager {
         if (data != null) {
             FileOutputStream fOut;
             try {
-                fOut = new FileOutputStream(path + filename);
+                fOut = new FileOutputStream(new File(path, filename), false);
                 fOut.write(data);
                 fOut.flush();
                 fOut.close();
@@ -135,8 +135,7 @@ public class ImageManager {
     }
 
     public static void deleteImage(String filename, String path) {
-
-        File f = new File(path + filename);
+        File f = new File(path, filename);
         if (f.exists()) {
             f.delete();
         }
@@ -144,11 +143,11 @@ public class ImageManager {
 
     public static Bitmap getBitmap(String fileName,String path) {
         try {
+            File imageFile = new File(path, fileName);
             // Decode image size
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(new FileInputStream(UshahidiPref.savePath + fileName), null,
-                    o);
+            BitmapFactory.decodeStream(new FileInputStream(imageFile),null, o);
 
             // The new size we want to scale to
             final int REQUIRED_SIZE = 400;
@@ -168,7 +167,7 @@ public class ImageManager {
             BitmapFactory.Options o2 = new BitmapFactory.Options();
             o2.inSampleSize = scale;
             return BitmapFactory.decodeStream(
-                    new FileInputStream(path + fileName), null, o2);
+                    new FileInputStream(imageFile), null, o2);
         } catch (FileNotFoundException e) {
         }
         return null;
@@ -179,7 +178,7 @@ public class ImageManager {
         
         if (!TextUtils.isEmpty(url)) {
             File imageFilename = new File(fileName);
-            File f = new File(path + imageFilename.getName());
+            File f = new File(path, imageFilename.getName());
             if (!f.exists()) {
                 try {
                     is = UshahidiHttpClient.fetchImage(url);

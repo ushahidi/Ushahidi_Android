@@ -10,7 +10,8 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
+
+import com.ushahidi.android.app.util.Util;
 
 /**
  * <p>Title: Client HTTP Request class</p>
@@ -52,13 +53,7 @@ public class ClientHttpRequest {
     newline();
   }
 
-  private static Random random = new Random();
-
-  protected static String randomString() {
-    return Long.toString(random.nextLong(), 36);
-  }
-
-  String boundary = "---------------------------" + randomString() + randomString() + randomString();
+  String boundary = "---------------------------" + Util.randomString() + Util.randomString() + Util.randomString();
 
   private void boundary() throws IOException {
     write("--");

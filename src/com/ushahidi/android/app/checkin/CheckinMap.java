@@ -8,10 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,7 +18,6 @@ import android.view.View;
 import android.view.Window;
 
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.About;
@@ -30,6 +25,7 @@ import com.ushahidi.android.app.AddIncident;
 import com.ushahidi.android.app.IncidentsTab;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
+import com.ushahidi.android.app.UserLocationMap;
 import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiApplication;
 import com.ushahidi.android.app.UshahidiPref;
@@ -40,19 +36,13 @@ import com.ushahidi.android.app.util.Util;
  * Created by IntelliJ IDEA. User: Ahmed Date: 2/17/11 Time: 2:21 PM To change
  * this template use File | Settings | File Templates.
  */
-public class CheckinMap extends MapActivity {
-
-    private MapView mapView;
+public class CheckinMap extends UserLocationMap {
 
     private List<Checkin> checkinsList = null;
 
     private List<Checkin> checkins = null;
 
     private Cursor cursor;
-
-    protected double latitude = 0;
-
-    protected double longitude = 0;
 
     protected String locationName = "";
 
@@ -62,8 +52,6 @@ public class CheckinMap extends MapActivity {
     
     private Bundle checkinsBundle = new Bundle();
     
-    private DeviceLocationListener locListener;
-
     private static final int HOME = Menu.FIRST + 1;
 
     private static final int ADD_CHECKIN = Menu.FIRST + 2;
@@ -94,21 +82,15 @@ public class CheckinMap extends MapActivity {
 
         mapView = (MapView)findViewById(R.id.checkin_mapview);
         mapView.setBuiltInZoomControls(true);
+        mapController = mapView.getController();
+
         name = UshahidiPref.firstname + " " + UshahidiPref.lastname;
         checkins = new ArrayList<Checkin>();
-
-        locListener = new DeviceLocationListener(); // started during onResume
 
         // checkinsList = showCheckins();
         CheckinsTask checkinTask = new CheckinsTask();
         checkinTask.appContext = this;
         checkinTask.execute();
-
-    }
-
-    @Override
-    protected boolean isRouteDisplayed() {
-        return false;
     }
 
     /**
@@ -236,96 +218,12 @@ public class CheckinMap extends MapActivity {
         return (false);
     }
 
-    /**
-     * Add marker for current location of the device
-     */
-    private void addMarker() {
-        Drawable marker = getResources().getDrawable(R.drawable.green_dot);
-        marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
-        mapView.getController().setZoom(12);
-        mapView.getOverlays().add(new DeviceLocationOverlay(marker, mapView));
-    }
+    // Implementation of UserLocationMap methods
+    protected void updateInterface() {}
 
-    final Runnable mDeviceLocationMarkerOnMap = new Runnable() {
-        public void run() {
-            addMarker();
-        }
-    };
-
-    private void centerLocation(GeoPoint centerGeoPoint) {
-
-        mapView.getController().setCenter(centerGeoPoint);
-        addMarker();
-
-    }
-
-    public void onDestroy() {
-        super.onDestroy();
-        locListener.stop();
-    }
-    
-    public void onPause() {
-        super.onPause();
-        locListener.stop();
-    }
-    
-    public void onResume() {
-        super.onResume();
-        locListener.start();
-    }
-
-    // get the current location of the device/user
-    private class DeviceLocationListener implements LocationListener {
-        LocationManager manager;
-
-        public DeviceLocationListener(){
-            manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        }
-
-        public void start(){
-            long updateTimeMsec = 1000L;
-            // get low accuracy provider
-            LocationProvider low = manager.getProvider(manager.getBestProvider(
-                    Util.createCoarseCriteria(), true));
-            // get high accuracy provider
-            LocationProvider high = manager.getProvider(manager.getBestProvider(
-                    Util.createFineCriteria(), true));
-            manager.requestLocationUpdates(low.getName(), updateTimeMsec, 500.0f, locListener);
-            manager.requestLocationUpdates(high.getName(), updateTimeMsec, 500.0f, locListener);
-        }
-
-        public void stop(){
-            manager.removeUpdates(this);
-        }
-
-        public void onLocationChanged(Location location) {
-
-            if (location != null) {
-
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-
-                centerLocation(getPoint(latitude, longitude));
-
-                stop();
-            }
-        }
-
-        public void onProviderDisabled(String provider) {
-            Util.showToast(CheckinMap.this, R.string.location_not_found);
-        }
-
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-    }
-
-    public GeoPoint getPoint(double lat, double lon) {
-        return (new GeoPoint((int)(lat * 1000000.0), (int)(lon * 1000000.0)));
+    @Override
+    protected UpdatableMarker createUpdatableMarker(Drawable marker, GeoPoint point){
+        return new DeviceLocationOverlay(marker, point);
     }
 
     private class CheckinsOverlay extends CheckinItemizedOverlay<OverlayItem> {
@@ -362,39 +260,32 @@ public class CheckinMap extends MapActivity {
         }
     }
 
-    private class DeviceLocationOverlay extends CheckinItemizedOverlay<OverlayItem> {
-        private ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+    private class DeviceLocationOverlay extends CheckinItemizedOverlay<OverlayItem>
+                                        implements UpdatableMarker {
+        private OverlayItem device;
 
-        private String user = "";
-
-        public DeviceLocationOverlay(Drawable marker, MapView mapView) {
+        public DeviceLocationOverlay(Drawable marker, GeoPoint point) {
             super(boundCenterBottom(marker), mapView, CheckinMap.this, checkins, extras);
-            mapView.getContext();
-            if( TextUtils.isEmpty(name.trim())) {
-                user = getString(R.string.no_name);
-            } else {
-                user = name;
-            }
-            
-            items.add(new OverlayItem(getPoint(latitude, longitude), user,
-                    getString(R.string.curr_location)));
-            populate();
-
+            updateLocation(point);
         }
-
+        public void updateLocation(GeoPoint point){
+            String dispname = name.trim();
+            if( TextUtils.isEmpty(dispname))
+                dispname = getString(R.string.no_name);
+            device = new OverlayItem(point, dispname, getString(R.string.curr_location));
+            populate();
+        }
         @Override
         protected OverlayItem createItem(int i) {
-            return items.get(i);
+            return device;
         }
-
         @Override
         protected boolean onBalloonTap(int i) {
             return true;
         }
-
         @Override
         public int size() {
-            return (items.size());
+            return 1;
         }
     }
 
@@ -492,7 +383,5 @@ public class CheckinMap extends MapActivity {
 
             setProgressBarIndeterminateVisibility(false);
         }
-
     }
-
 }
