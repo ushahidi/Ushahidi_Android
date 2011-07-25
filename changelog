@@ -1,3 +1,9 @@
+2.4:
+Feature:
+  * Added Catalan langauge
+  * Improved UI when viewing details of a report/checkin
+  * More code clean up. Thanks to https://github.com/jmschanck
+
 2.3:
 Feature:
   * Added a new settings field to allow resizing of images to be uploaded.
