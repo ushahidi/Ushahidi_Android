@@ -1,3 +1,4 @@
+
 package com.ushahidi.android.app;
 
 import java.util.Date;
@@ -20,9 +21,9 @@ import com.ushahidi.android.app.util.Util;
 
 public abstract class UserLocationMap extends MapActivity implements LocationListener {
 
-    protected static final int ONE_MINUTE = 60*1000;
+    protected static final int ONE_MINUTE = 60 * 1000;
 
-    protected static final int FIVE_MINUTES = 5*ONE_MINUTE;
+    protected static final int FIVE_MINUTES = 5 * ONE_MINUTE;
 
     protected double sLongitude = 0.0;
 
@@ -38,13 +39,15 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
 
     protected Location curLocation;
 
-    /* Subclasses must implement a method which updates any relevant
-       interface elements when the location changes. e.g. TextViews
-       displaying the location. */
+    /*
+     * Subclasses must implement a method which updates any relevant interface
+     * elements when the location changes. e.g. TextViews displaying the
+     * location.
+     */
     protected abstract void updateInterface();
-    
+
     /* Override this to set a custom marker */
-    protected UpdatableMarker createUpdatableMarker(Drawable marker, GeoPoint point){
+    protected UpdatableMarker createUpdatableMarker(Drawable marker, GeoPoint point) {
         return new MapMarker(marker, point);
     }
 
@@ -55,30 +58,30 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
 
         boolean netAvail = mLocationMgr.getProvider(LocationManager.NETWORK_PROVIDER) != null;
         boolean gpsAvail = mLocationMgr.getProvider(LocationManager.GPS_PROVIDER) != null;
-        boolean anyEnabled = (mLocationMgr.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
-                              mLocationMgr.isProviderEnabled(LocationManager.GPS_PROVIDER));
+        boolean anyEnabled = (mLocationMgr.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || mLocationMgr
+                .isProviderEnabled(LocationManager.GPS_PROVIDER));
 
-        if((!netAvail && !gpsAvail) || !anyEnabled)
+        if ((!netAvail && !gpsAvail) || !anyEnabled)
             Util.showToast(UserLocationMap.this, R.string.location_not_found);
 
-        if(netAvail)
+        if (netAvail)
             nloc = mLocationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        if(gpsAvail)
+        if (gpsAvail)
             gloc = mLocationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         setBestLocation(nloc, gloc);
 
-        // If chosen location is more than a minute old, start querying network/GPS
-        if(curLocation == null ||
-                (new Date()).getTime() - curLocation.getTime() > ONE_MINUTE){
-            if(netAvail)
+        // If chosen location is more than a minute old, start querying
+        // network/GPS
+        if (curLocation == null || (new Date()).getTime() - curLocation.getTime() > ONE_MINUTE) {
+            if (netAvail)
                 mLocationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-            if(gpsAvail)
+            if (gpsAvail)
                 mLocationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         }
     }
 
     public void stopLocating() {
-        if (mLocationMgr != null){
+        if (mLocationMgr != null) {
             try {
                 mLocationMgr.removeUpdates(this);
             } catch (Exception ex) {
@@ -89,7 +92,7 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
     }
 
     protected void placeMarker(GeoPoint point) {
-        if(mMapMark == null){
+        if (mMapMark == null) {
             Drawable marker = getResources().getDrawable(R.drawable.green_dot);
 
             marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
@@ -121,29 +124,32 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
         }
     }
 
-    protected void setBestLocation(Location f1, Location f2){
-        if(f1 == null && f2 == null) return;
-        if(f1 == null){
+    protected void setBestLocation(Location f1, Location f2) {
+        if (f1 == null && f2 == null)
+            return;
+        if (f1 == null) {
             setLocation(f2);
             return;
         }
-        if(f2 == null) {
+        if (f2 == null) {
             setLocation(f1);
             return;
         }
         boolean f1SigNewer = f1.getTime() - f2.getTime() > FIVE_MINUTES;
         boolean f2SigNewer = f2.getTime() - f1.getTime() > FIVE_MINUTES;
-        if(f1SigNewer) setLocation(f1);
-        if(f2SigNewer) setLocation(f1);
-        boolean f1MoreAccurate = f1.getAccuracy() < f2.getAccuracy();
-        if(f1.hasAccuracy() && f2.hasAccuracy() && f1MoreAccurate){
+        if (f1SigNewer)
             setLocation(f1);
-        }else{
+        if (f2SigNewer)
+            setLocation(f1);
+        boolean f1MoreAccurate = f1.getAccuracy() < f2.getAccuracy();
+        if (f1.hasAccuracy() && f2.hasAccuracy() && f1MoreAccurate) {
+            setLocation(f1);
+        } else {
             setLocation(f2);
         }
     }
 
-    private class MapMarker extends ItemizedOverlay<OverlayItem> implements UpdatableMarker{
+    private class MapMarker extends ItemizedOverlay<OverlayItem> implements UpdatableMarker {
         private OverlayItem myOverlayItem;
 
         public MapMarker(Drawable defaultMarker, GeoPoint point) {
@@ -151,7 +157,7 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
             updateLocation(point);
         }
 
-        public void updateLocation(GeoPoint point){
+        public void updateLocation(GeoPoint point) {
             myOverlayItem = new OverlayItem(point, " ", " ");
             populate();
         }
@@ -177,7 +183,7 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
     public void onLocationChanged(Location loc) {
         if (loc != null) {
             setLocation(loc);
-            //TODO: Don't settle for first location, condition
+            // TODO: Don't settle for first location, condition
             // stopLocating on quality of fix + probability that we'll
             // get a better one.
             stopLocating();
@@ -221,7 +227,7 @@ public abstract class UserLocationMap extends MapActivity implements LocationLis
         stopLocating();
     }
 
-    public abstract interface UpdatableMarker{
+    public abstract interface UpdatableMarker {
         public abstract void updateLocation(GeoPoint point);
     }
 }

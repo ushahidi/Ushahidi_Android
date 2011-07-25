@@ -65,7 +65,7 @@
 				android:id="@+id/checkin_selected_photo_label" />
 			<ImageView android:layout_height="wrap_content"
 				android:adjustViewBounds="true" android:id="@+id/checkin_img_prev"
-				android:scaleType="centerCrop" android:layout_width="wrap_content"
+				android:scaleType="centerCrop" android:layout_width="fill_parent"
 				android:paddingBottom="20px" />
 			<Button android:id="@+id/upload_checkin_photo_button"
 				android:layout_width="fill_parent" android:text="@string/btn_add_photo"

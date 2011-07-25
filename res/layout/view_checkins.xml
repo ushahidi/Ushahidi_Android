@@ -12,51 +12,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical" android:background="@drawable/background_color">
-      <LinearLayout style="@style/ActionBarTitleContainer">
-         <ImageButton style="@style/ActionBarTitle"
-            android:contentDescription="@string/menu_home" android:src="@drawable/ushahidi_icon"
-            android:onClick="onClickHome" />
+	<LinearLayout style="@style/ActionBarTitleContainer">
+		<ImageButton style="@style/ActionBarTitle"
+			android:contentDescription="@string/menu_home" android:src="@drawable/ushahidi_icon"
+			android:onClick="onClickHome" />
 
-        <TextView style="@style/ActionBarTitleText" />
-        <ImageView style="@style/ActionBarTitleSeparator" />
-        <ImageButton style="@style/ActionBarTitle"
-            android:id="@+id/search_report_btn"
-            android:src="@drawable/report_share"
-            android:onClick="onShareClick" />
-    </LinearLayout>
-    <ImageView style="@style/ActionBarSeparator" />
+		<TextView style="@style/ActionBarTitleText" />
+		<ImageView style="@style/ActionBarTitleSeparator" />
+		<ImageButton style="@style/ActionBarTitle" android:id="@+id/search_report_btn"
+			android:src="@drawable/report_share" android:onClick="onShareClick" />
+	</LinearLayout>
+	<ImageView style="@style/ActionBarSeparator" />
 	<ScrollView android:id="@+id/view_checking"
 		android:layout_width="fill_parent" android:layout_height="fill_parent">
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="fill_parent" android:orientation="vertical"
-			android:padding="5dp">
+			>
 			<!-- Title starts -->
 			<LinearLayout android:id="@+id/top_items_layout"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:orientation="vertical">
+				android:orientation="vertical" android:background="@color/table_odd_row_color">
 
-				<TextView android:id="@+id/chek_title"
-					android:singleLine="false" android:layout_width="fill_parent"
-					android:layout_height="wrap_content" android:textStyle="bold"
-					android:paddingTop="15px" android:paddingBottom="15px"
-					android:paddingRight="10px" android:paddingLeft="10px"
-					android:textColor="@drawable/title_color" android:text="@string/report_title" />
+				<TextView android:id="@+id/chek_title" android:singleLine="false"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:textStyle="bold" android:paddingTop="15px"
+					android:paddingBottom="15px" android:paddingRight="10px"
+					android:paddingLeft="10px" android:textColor="@drawable/title_color"
+					android:text="@string/report_title" />
 			</LinearLayout>
 			<LinearLayout android:id="@+id/top_items_layout"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:background="@drawable/report_lable" android:orientation="vertical">
-				<TextView android:id="@+id/checkin_title" android:singleLine="false"
-					android:paddingTop="15px"
+				android:background="@color/table_even_row_color"
+				android:orientation="vertical">
+				<TextView android:id="@+id/checkin_title"
+					android:singleLine="false" android:paddingTop="15px"
 					android:paddingBottom="15px" android:paddingRight="10px"
-					android:paddingLeft="10px" 
-					android:layout_width="fill_parent" android:layout_height="wrap_content" />
+					android:paddingLeft="10px" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" />
 			</LinearLayout>
 			<!-- Title ends -->
 
 			<!-- Description starts -->
-			<LinearLayout 
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:orientation="vertical">
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:orientation="vertical"
+				android:background="@color/table_odd_row_color">
 
 				<TextView android:id="@+id/checkin_desc"
 					android:singleLine="false" android:layout_width="fill_parent"
@@ -66,19 +65,19 @@
 					android:textColor="@drawable/title_color" android:text="@string/report_desc" />
 			</LinearLayout>
 			<LinearLayout android:id="@+id/top_items_layout"
-				android:background="@drawable/report_lable" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:orientation="vertical">
+				android:background="@color/table_even_row_color"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:orientation="vertical">
 				<!-- Main content area. -->
 				<ScrollView android:id="@+id/description"
 					android:layout_width="fill_parent" android:layout_height="wrap_content"
 					android:paddingTop="5px" android:paddingLeft="10px"
 					android:paddingRight="10px" android:fadingEdge="none">
 					<TextView android:id="@+id/checkin_description"
-					   android:paddingTop="15px" android:paddingBottom="15px"
+						android:paddingTop="15px" android:paddingBottom="15px"
 						android:singleLine="false" android:layout_width="fill_parent"
 						android:layout_height="wrap_content" android:autoLink="all"
-						android:textColor="@drawable/black_color"
-						android:fadingEdge="none" />
+						android:textColor="@drawable/black_color" android:fadingEdge="none" />
 				</ScrollView>
 			</LinearLayout>
 			<!-- Description ends -->
@@ -86,7 +85,7 @@
 			<!-- Date starts -->
 			<LinearLayout android:id="@+id/top_items_layout"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:orientation="vertical">
+				android:orientation="vertical" android:background="@color/table_odd_row_color">
 
 				<TextView android:id="@+id/checkin_date"
 					android:singleLine="false" android:layout_width="fill_parent"
@@ -97,18 +96,19 @@
 			</LinearLayout>
 			<LinearLayout android:id="@+id/date_layout"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:background="@drawable/report_lable" android:orientation="vertical">
+				android:background="@color/table_even_row_color"
+				android:orientation="vertical">
 				<TextView android:paddingTop="15px" android:paddingBottom="15px"
 					android:paddingRight="10px" android:paddingLeft="10px" android:id="@+id/date"
-					android:singleLine="false"
-					android:layout_width="fill_parent" android:layout_height="wrap_content" />
+					android:singleLine="false" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" />
 			</LinearLayout>
 			<!-- Date ends -->
 
 			<!-- Location starts -->
 			<LinearLayout android:id="@+id/location_layout"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:orientation="vertical">
+				android:orientation="vertical" android:background="@color/table_odd_row_color">
 
 				<TextView android:id="@+id/checking_loc"
 					android:singleLine="false" android:layout_width="fill_parent"
@@ -124,12 +124,11 @@
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:paddingTop="15px" android:paddingBottom="15px"
 				android:paddingRight="10px" android:paddingLeft="10px"
-				android:orientation="vertical">
+				android:orientation="vertical" android:background="@color/table_even_row_color">
 
 				<com.google.android.maps.MapView
 					android:id="@+id/loc_map" android:layout_width="fill_parent"
-					android:layout_height="wrap_content" android:layout_below="@+id/location"
-
+					android:layout_height="300dip" android:layout_below="@+id/location"
 					android:apiKey="@string/google_map_api_key" android:enabled="true"
 					android:clickable="true" />
 			</LinearLayout>
@@ -138,7 +137,7 @@
 			<!-- Photo starts -->
 			<LinearLayout android:id="@+id/photo_layout"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:orientation="vertical">
+				android:orientation="vertical" android:background="@color/table_odd_row_color">
 
 				<TextView android:id="@+id/checkin_photo"
 					android:singleLine="false" android:layout_width="fill_parent"
@@ -147,16 +146,14 @@
 					android:paddingRight="10px" android:paddingLeft="10px"
 					android:textColor="@drawable/title_color" android:text="@string/report_photo" />
 			</LinearLayout>
-			<LinearLayout android:id="@+id/img_layout" android:orientation="vertical"
-				android:layout_width="fill_parent" android:layout_height="fill_parent"
-				android:background="@drawable/rectangleshape"
+			<LinearLayout android:id="@+id/img_layout"
+				android:orientation="vertical" android:layout_width="fill_parent"
+				android:layout_height="fill_parent" android:background="@color/table_even_row_color"
 				android:padding="10px">
-		    <ImageView android:layout_width="fill_parent"
-					android:layout_height="fill_parent"
-					android:scaleType="centerCrop"
-					android:onClick="onImageClick" 
-					android:id="@+id/checkin_img"/>
-			     	
+				<ImageView android:layout_width="fill_parent"
+					android:layout_height="fill_parent" android:scaleType="centerCrop"
+					android:onClick="onImageClick" android:id="@+id/checkin_img" />
+
 			</LinearLayout>
 			<!-- Photo ends -->
 		</LinearLayout>
