@@ -24,7 +24,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
+
+import com.ushahidi.android.app.util.Util;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -117,12 +118,6 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    private static Random random = new Random();
-
-    protected static String randomString() {
-        return Long.toString(random.nextLong(), 10);
-    }
-
     PictureCallback mPictureCallbackRaw = new PictureCallback() {
         public void onPictureTaken(byte[] data, Camera c) {
             // TODO: do something with raw image
@@ -134,8 +129,8 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
         public void onPictureTaken(byte[] data, Camera c) {
 
             mCamera.startPreview();
-            String filename = "ushandroid_" + randomString() + ".jpg";
-            ImageManager.writeImage(data, filename,UshahidiPref.savePath);
+            String filename = "ushandroid_" + Util.randomString() + ".jpg";
+            ImageManager.writeImage(data, filename, UshahidiPref.savePath);
             mBundle.putString("name", filename);
             mIntent.putExtra("filename", mBundle);
 

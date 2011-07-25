@@ -313,10 +313,10 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         }
 
         if (saveItems.equalsIgnoreCase("phone")) {
-            newSavePath = this.getDir("", MODE_WORLD_READABLE | MODE_WORLD_WRITEABLE).toString();
+            newSavePath = this.getDir("", MODE_WORLD_READABLE | MODE_WORLD_WRITEABLE).toString() + "/";
 
         } else { // means on sd is checked
-            newSavePath = Environment.getExternalStorageDirectory().toString() + "ushahidi";
+            newSavePath = Environment.getExternalStorageDirectory().toString() + "ushahidi/";
         }
 
         editor.putString("Domain", UshahidiPref.domain);
