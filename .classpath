@@ -3,5 +3,9 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="lib/apache-mime4j-core-0.7.jar"/>
+	<classpathentry kind="lib" path="lib/httpclient-4.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/httpcore-4.1.jar"/>
+	<classpathentry kind="lib" path="lib/httpmime-4.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

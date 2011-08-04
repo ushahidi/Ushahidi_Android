@@ -1,5 +1,5 @@
 /** 
- ** Copyright (c) 2010 Ushahidi Inc
+ ** Copyright (c) 2011 Ushahidi Inc
  ** All rights reserved
  ** Contact: team@ushahidi.com
  ** Website: http://www.ushahidi.com
@@ -33,23 +33,29 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
-
-import com.ushahidi.android.app.UshahidiPref;
-import com.ushahidi.android.app.UshahidiService;
-import com.ushahidi.android.app.util.Util;
 
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.ushahidi.android.app.UshahidiPref;
+import com.ushahidi.android.app.util.Util;
 
 public class UshahidiHttpClient {
 
@@ -80,15 +86,37 @@ public class UshahidiHttpClient {
     public static final String PERSON_LAST = "person_last";
 
     public static final String PERSON_EMAIL = "person_email";
-    
+
     public static final String PHOTO = "filename";
-    
+
+    private static DefaultHttpClient httpClient;
+
+    private HttpParams httpParameters;
+
+    private static MultipartEntity entity;
+
+    private static final String CLASS_TAG = UshahidiHttpClient.class.getCanonicalName();
+
+    private int timeoutConnection = 3000;
+
+    private int timeoutSocket = 3000;
+
     private static final int IO_BUFFER_SIZE = 512;
 
-    final public static List<NameValuePair> blankNVPS = new ArrayList<NameValuePair>();
+    public UshahidiHttpClient() {
+
+        httpParameters = new BasicHttpParams();
+
+        // Set the timeout in milliseconds until a connection is established.
+        HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+
+        // in milliseconds which is the timeout for waiting for data.
+        HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+
+        httpClient = new DefaultHttpClient(httpParameters);
+    }
 
     public static HttpResponse GetURL(String URL) throws IOException {
-
         UshahidiPref.httpRunning = true;
 
         try {
@@ -98,7 +126,7 @@ public class UshahidiHttpClient {
 
             // Post, check and show the result (not really spectacular, but
             // works):
-            HttpResponse response = UshahidiService.httpclient.execute(httpget);
+            HttpResponse response = httpClient.execute(httpget);
             UshahidiPref.httpRunning = false;
 
             return response;
@@ -109,6 +137,7 @@ public class UshahidiHttpClient {
         }
         UshahidiPref.httpRunning = false;
         return null;
+
     }
 
     public static HttpResponse PostURL(String URL, List<NameValuePair> data, String Referer)
@@ -126,7 +155,9 @@ public class UshahidiHttpClient {
                 try {
                     // NEED THIS NOW TO FIX ERROR 417
                     httpost.getParams().setBooleanParameter("http.protocol.expect-continue", false);
+
                     httpost.setEntity(new UrlEncodedFormEntity(data, HTTP.UTF_8));
+
                 } catch (final UnsupportedEncodingException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -138,7 +169,7 @@ public class UshahidiHttpClient {
             // Post, check and show the result (not really spectacular, but
             // works):
             try {
-                HttpResponse response = UshahidiService.httpclient.execute(httpost);
+                HttpResponse response = httpClient.execute(httpost);
                 UshahidiPref.httpRunning = false;
                 return response;
 
@@ -151,6 +182,7 @@ public class UshahidiHttpClient {
 
         UshahidiPref.httpRunning = false;
         return null;
+
     }
 
     public static HttpResponse PostURL(String URL, List<NameValuePair> data) throws IOException {
@@ -159,41 +191,60 @@ public class UshahidiHttpClient {
 
     public static boolean PostFileUpload(String URL, HashMap<String, String> params)
             throws IOException {
-        ClientHttpRequest req = null;
+        Log.d(CLASS_TAG, "PostFileUpload(): upload file to server.");
 
+        entity = new MultipartEntity();
+        // Dipo Fix
         try {
-            URL url = new URL(URL);
-            req = new ClientHttpRequest(url);
+            // wrap try around because this constructor can throw Error
+            final HttpPost httpost = new HttpPost(URL);
 
-            req.setParameter("task", params.get("task"));
-            req.setParameter("incident_title", params.get("incident_title"));
-            req.setParameter("incident_description", params.get("incident_description"));
-            req.setParameter("incident_date", params.get("incident_date"));
-            req.setParameter("incident_hour", params.get("incident_hour"));
-            req.setParameter("incident_minute", params.get("incident_minute"));
-            req.setParameter("incident_ampm", params.get("incident_ampm"));
-            req.setParameter("incident_category", params.get("incident_category"));
-            req.setParameter("latitude", params.get("latitude"));
-            req.setParameter("longitude", params.get("longitude"));
-            req.setParameter("location_name", params.get("location_name"));
-            req.setParameter("person_first", params.get("person_first"));
-            req.setParameter("person_last", params.get("person_last"));
-            req.setParameter("person_email", params.get("person_email"));
-            Log.i("HTTP Client:", "filename:" + UshahidiPref.savePath + params.get("filename"));
-            if (!TextUtils.isEmpty(params.get("filename")))
-                req.setParameter("incident_photo[]",
-                        new File(params.get("filename")));
+            if (params != null) {
 
-            InputStream serverInput = req.post();
+                entity.addPart("task", new StringBody(params.get("task")));
+                entity.addPart("incident_title", new StringBody(params.get("incident_title")));
+                entity.addPart("incident_description",
+                        new StringBody(params.get("incident_description")));
+                entity.addPart("incident_date", new StringBody(params.get("incident_date")));
+                entity.addPart("incident_hour", new StringBody(params.get("incident_hour")));
+                entity.addPart("incident_minute", new StringBody(params.get("incident_minute")));
+                entity.addPart("incident_ampm", new StringBody(params.get("incident_ampm")));
+                entity.addPart("incident_category", new StringBody(params.get("incident_category")));
+                entity.addPart("latitude", new StringBody(params.get("latitude")));
+                entity.addPart("longitude", new StringBody(params.get("longitude")));
+                entity.addPart("location_name", new StringBody(params.get("location_name")));
+                entity.addPart("person_first", new StringBody(params.get("person_first")));
+                entity.addPart("person_last", new StringBody(params.get("person_last")));
+                entity.addPart("person_email", new StringBody(params.get("person_email")));
+                Log.i("HTTP Client:", "filename:" + UshahidiPref.savePath + params.get("filename"));
+                if (!TextUtils.isEmpty(params.get("filename")))
+                    entity.addPart("incident_photo[]", new FileBody(
+                            new File(params.get("filename"))));
 
-            if (Util.extractPayloadJSON(GetText(serverInput))) {
+                // NEED THIS NOW TO FIX ERROR 417
+                httpost.getParams().setBooleanParameter("http.protocol.expect-continue", false);
+                httpost.setEntity(entity);
 
-                return true;
+                HttpResponse response = httpClient.execute(httpost);
+                UshahidiPref.httpRunning = false;
+
+                HttpEntity respEntity = response.getEntity();
+                if (respEntity != null) {
+                    InputStream serverInput = respEntity.getContent();
+                    if (Util.extractPayloadJSON(GetText(serverInput))) {
+
+                        return true;
+                    }
+                }
             }
 
         } catch (MalformedURLException ex) {
+            Log.d(CLASS_TAG, "PostFileUpload(): MalformedURLException");
+            ex.printStackTrace();
             return false;
             // fall through and return false
+        } catch (Exception ex) {
+            return false;
         }
         return false;
     }
@@ -271,14 +322,22 @@ public class UshahidiHttpClient {
 
     public static String GetText(InputStream in) {
         String text = "";
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(in), 1024);
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(in, "UTF-8"), 1024);
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         final StringBuilder sb = new StringBuilder();
         String line = null;
         try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+            if (reader != null) {
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                text = sb.toString();
             }
-            text = sb.toString();
         } catch (final Exception ex) {
         } finally {
             try {

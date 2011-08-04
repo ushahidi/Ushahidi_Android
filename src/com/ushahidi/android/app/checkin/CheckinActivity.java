@@ -288,7 +288,7 @@ public class CheckinActivity extends UserLocationMap {
 
     // Implementation of UserLocationMap abstract methods
     protected void updateInterface() {
-            mCheckinLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
+        mCheckinLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
     }
 
     // menu stuff
@@ -407,7 +407,7 @@ public class CheckinActivity extends UserLocationMap {
 
                     // use resized images
                     mSelectedPhotoText.setVisibility(View.VISIBLE);
-                    
+
                     if (scaled != null) {
                         mCheckImgPrev.setImageBitmap(scaled);
                     }
@@ -615,8 +615,7 @@ public class CheckinActivity extends UserLocationMap {
             public void run() {
 
                 jsonResponse = NetworkServices.postToOnline(imei, domain, checkinDetails,
-                        selectedPhoto, firstname, lastname, email, sLatitude,
-                        sLongitude);
+                        selectedPhoto, firstname, lastname, email, sLatitude, sLongitude);
 
                 mHandler.post(mPostCheckin);
             }

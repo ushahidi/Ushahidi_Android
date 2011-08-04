@@ -519,7 +519,6 @@ public class AddIncident extends UserLocationMap{
                     // use resized images
                     if (scaled != null) {
                         mSelectedPhoto.setImageBitmap(scaled);
-                        mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     }
                 }
                 break;
@@ -840,7 +839,7 @@ public class AddIncident extends UserLocationMap{
      * @author henryaddo
      */
     public boolean postToOnline() {
-
+        Log.d(CLASS_TAG, "postToOnline(): posting report to online");
         if (TextUtils.isEmpty(UshahidiPref.domain)
                 || UshahidiPref.domain.equalsIgnoreCase("http://")) {
             return false;
@@ -872,6 +871,7 @@ public class AddIncident extends UserLocationMap{
         try {
             return UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), mParams);
         } catch (IOException e) {
+            Log.d(CLASS_TAG, "postToOnline(): IO exception failed to submit report "+UshahidiPref.domain);
             e.printStackTrace();
             return false;
         }
@@ -1022,7 +1022,7 @@ public class AddIncident extends UserLocationMap{
                 clearFields();
                 Util.showToast(appContext, R.string.report_successfully_added_offline);
             } else if (result == 1) {
-                clearFields();
+                
                 Util.showToast(appContext, R.string.failed_to_add_report_online);
             } else if (result == 0) {
                 clearFields();

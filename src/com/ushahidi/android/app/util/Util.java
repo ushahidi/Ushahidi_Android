@@ -146,10 +146,10 @@ public class Util {
         networkInfo = connectivity.getActiveNetworkInfo();
         // NetworkInfo info
 
-        if (networkInfo == null || !networkInfo.isConnected()) {
-            return false;
+        if (networkInfo != null && networkInfo.isConnected() && networkInfo.isAvailable()) {
+            return true;
         }
-        return true;
+        return false;
 
     }
 
@@ -327,7 +327,7 @@ public class Util {
                 }
 
                 if (mNewCategories != null && mNewIncidents != null) {
-                    //delete all categories
+                    // delete all categories
                     UshahidiApplication.mDb.deleteAllCategories();
                     UshahidiApplication.mDb.addCategories(mNewCategories, false);
                     UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
@@ -384,7 +384,7 @@ public class Util {
     public static boolean validateUshahidiInstance(String ushahidiUrl) {
         // make an http get request to a dummy api call
         // TODO improve on how to do this
-        
+
         if (!TextUtils.isEmpty(ushahidiUrl)) {
             pattern = Pattern.compile(VALID_URL_PATTERN);
             matcher = pattern.matcher(ushahidiUrl);
