@@ -1,6 +1,7 @@
 
 package com.ushahidi.android.app;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
@@ -449,6 +451,26 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
         setResult(RESULT_OK);
         finish();
     }
+    
+    /**
+     * Clear saved reports
+     */
+    public void clearCachedReports(){
+        
+        // delete unset photo
+        File f = new File(UshahidiPref.fileName);
+        if (f.exists()) {
+            f.delete();
+        }
+        // clear persistent data
+        SharedPreferences.Editor editor = getPreferences(0).edit();
+        editor.putString("title", "");
+        editor.putString("desc", "");
+        editor.putString("date", "");
+        editor.putString("selectedphoto", "");
+        editor.putInt("requestedcode", 0);
+        editor.commit();
+    }
 
     /**
      * Fetch deployments
@@ -596,9 +618,13 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
         @Override
         protected Integer doInBackground(Void... params) {
             activateDeployment(id);
-            UshahidiApplication.mDb.clearReports();
-            status = Util.processReports(appContext);
             isCheckinsEnabled();
+            if(UshahidiPref.isCheckinEnabled == 0 ) {
+                status = Util.processReports(appContext);
+            } else {
+                status = Util.processCheckins(appContext);
+            }
+            
             return status;
         }
 
@@ -609,10 +635,11 @@ public class DeploymentSearch extends DashboardActivity implements LocationListe
             } else if (result == 3) {
                 Util.showToast(appContext, R.string.invalid_ushahidi_instance);
             } else if (result == 2) {
-                Util.showToast(appContext, R.string.could_not_fetch_reports);
+                Util.showToast(appContext, R.string.ushahidi_sync);
             } else if (result == 1) {
                 Util.showToast(appContext, R.string.could_not_fetch_reports);
-            } else {
+            } else if(result == 0 ){
+                clearCachedReports();
                 goToReports();
             }
             this.dialog.cancel();

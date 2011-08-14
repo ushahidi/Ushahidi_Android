@@ -500,8 +500,12 @@ public class Ushahidi extends DashboardActivity {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            status = Util.processReports(appContext);
             Util.checkForCheckin(appContext);
+            if(UshahidiPref.isCheckinEnabled == 0 ) {
+                status = Util.processReports(appContext);
+            } else {
+                status = Util.processCheckins(appContext);
+            }
             return status;
         }
 

@@ -2,6 +2,7 @@
 package com.ushahidi.android.app.checkin;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -11,7 +12,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,7 +45,6 @@ import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.UserLocationMap;
 import com.ushahidi.android.app.Ushahidi;
 import com.ushahidi.android.app.UshahidiPref;
-import com.ushahidi.android.app.util.Util;
 
 /**
  * Created by IntelliJ IDEA. User: Ahmed Date: 2/15/11 Time: 3:05 PM To change
@@ -113,6 +115,8 @@ public class CheckinActivity extends UserLocationMap {
     // Used for the camera
     private static final int REQUEST_CODE_CAMERA = 5;
 
+    private static int requestedCode = 5;
+
     // Used to choose the method for picture selection
     private static final int DIALOG_CHOOSE_IMAGE_METHOD = 7;
 
@@ -142,10 +146,14 @@ public class CheckinActivity extends UserLocationMap {
 
     private static final String CLASS_TAG = CheckinActivity.class.getCanonicalName();
 
+    private CaptureImage captureImage;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.checkin);
+        captureImage = new CaptureImage();
+
         UshahidiPref.loadSettings(CheckinActivity.this);
 
         // manager =
@@ -263,21 +271,85 @@ public class CheckinActivity extends UserLocationMap {
         UshahidiPref.loadSettings(CheckinActivity.this);
     }
 
+    /**
+     * Any time we are paused we need to save away the current state, so it will
+     * be restored correctly when we are resumed.
+     */
+    @Override
+    protected void onPause() {
+
+        SharedPreferences.Editor editor = getPreferences(0).edit();
+        editor.putString("message", checkinMessageText.getText().toString());
+        editor.putString("firstname", firstName.getText().toString());
+        editor.putString("lastname", lastName.getText().toString());
+        editor.putString("email", emailAddress.getText().toString());
+        editor.putString("selectedphoto", UshahidiPref.fileName);
+        editor.putInt("requestedcode", requestedCode);
+        editor.commit();
+        super.onPause();
+    }
+
     @Override
     protected void onResume() {
-        super.onResume();
-        if (!TextUtils.isEmpty(selectedPhoto)) {
-            uploadPhotoButton.setText(getString(R.string.change_photo));
+        SharedPreferences prefs = getPreferences(0);
+        String message = prefs.getString("message", null);
+        String firstname = prefs.getString("firstname", null);
+        String lastname = prefs.getString("lastname", null);
+        String email = prefs.getString("email", null);
+        String filename = prefs.getString("selectedphoto", null);
+        int requestcode = prefs.getInt("requestedcode", REQUEST_CODE_IMAGE);
+
+        Intent data = null;
+
+        if (message != null)
+            checkinMessageText.setText(message, TextView.BufferType.EDITABLE);
+        if (firstname != null)
+            firstName.setText(firstname, TextView.BufferType.EDITABLE);
+
+        if (lastname != null)
+            lastName.setText(lastname, TextView.BufferType.EDITABLE);
+
+        if (email != null)
+            emailAddress.setText(email, TextView.BufferType.EDITABLE);
+
+        if (filename != null) {
+            UshahidiPref.fileName = filename;
+            if (captureImage.imageExist(filename, this))
+                uploadPhotoButton.setText(getString(R.string.change_photo));
+            setSelectedImage(requestcode, data);
         }
-        UshahidiPref.loadSettings(CheckinActivity.this);
+
+        super.onResume();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (!TextUtils.isEmpty(selectedPhoto)) {
-            ImageManager.deleteImage(selectedPhoto, "");
+
+    }
+
+    protected void clearFields() {
+        Log.d(CLASS_TAG, "clearFields(): clearing fields");
+        // delete unset photo
+        File f = new File(UshahidiPref.fileName);
+        if (f.exists()) {
+            f.delete();
         }
+
+        UshahidiPref.fileName = "";
+        if (!captureImage.imageExist(UshahidiPref.fileName, this))
+            uploadPhotoButton.setText(getString(R.string.btn_add_photo));
+        mCheckImgPrev.setImageDrawable(null);
+        mCheckImgPrev.setImageBitmap(null);
+        SharedPreferences.Editor editor = getPreferences(0).edit();
+        editor.putString("message", "");
+        editor.putString("firstname", "");
+        editor.putString("lastname", "");
+        editor.putString("email", "");
+        editor.putString("selectedphoto", "");
+        editor.putInt("requestedcode", 0);
+        editor.commit();
+
     }
 
     protected void onSearchDeployments() {
@@ -380,6 +452,140 @@ public class CheckinActivity extends UserLocationMap {
         return false;
     }
 
+    /**
+     * Set selected / captured image
+     * 
+     * @param int
+     * @param Intent
+     */
+    public void setSelectedImage(int requestCode, Intent data) {
+
+        Log.i(CLASS_TAG, "setSelectedImage(): requestCode: " + requestCode);
+
+        switch (requestCode) {
+
+            case REQUEST_CODE_CAMERA:
+                Log.i(CLASS_TAG, "ActivityResult has returned");
+                // Do something with image taken with camera
+                Bitmap original = new CaptureImage().getBitmap(
+                        new CaptureImage().getPhotoUri("photo.jpg", CheckinActivity.this),
+                        CheckinActivity.this);
+                Log.d(CLASS_TAG, "image path" + UshahidiPref.fileName);
+                if (original != null) {
+
+                    Bitmap scaled = new CaptureImage().scaleBitmap(original);
+                    original.recycle();
+
+                    // get image URL
+                    Uri u = new CaptureImage().getPhotoUri("photo.jpg", CheckinActivity.this);
+
+                    Log.i(CLASS_TAG, "Image File Path" + u.getPath());
+                    selectedPhoto = u.getPath();
+                    NetworkServices.fileName = u.getPath();
+                    mSelectedPhotoText.setVisibility(View.VISIBLE);
+
+                    // use resized images
+                    if (scaled != null) {
+                        if (captureImage.imageExist(UshahidiPref.fileName, this))
+                            uploadPhotoButton.setText(getString(R.string.change_photo));
+                        mCheckImgPrev.setImageBitmap(scaled);
+                    }
+
+                }
+                break;
+            case REQUEST_CODE_IMAGE:
+                // do something with image taken from image gallery
+                mFilename = "photo.jpg";
+                final String filepath = new CaptureImage().getPhotoPath(CheckinActivity.this);
+
+                if (data != null) {
+
+                    Uri uri = data.getData();
+                    Bitmap b = null;
+
+                    try {
+                        b = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                    } catch (FileNotFoundException e) {
+                        break;
+                    } catch (IOException e) {
+                        break;
+                    }
+
+                    ByteArrayOutputStream byteArrayos = new ByteArrayOutputStream();
+
+                    try {
+                        b.compress(CompressFormat.JPEG, 75, byteArrayos);
+                        b.recycle();
+                        byteArrayos.flush();
+
+                    } catch (OutOfMemoryError e) {
+                        break;
+                    } catch (IOException e) {
+                        break;
+                    }
+
+                    if (!TextUtils.isEmpty(filepath)) {
+                        ImageManager.writeImage(byteArrayos.toByteArray(), mFilename, filepath);
+                        UshahidiPref.fileName = mFilename;
+
+                        Bitmap selectedImage = ImageManager.getBitmap(UshahidiPref.fileName,
+                                filepath);
+                        if (selectedImage != null) {
+                            Bitmap scaled = new CaptureImage().scaleBitmap(selectedImage);
+                            selectedImage.recycle();
+
+                            // get image URL
+                            Uri u = new CaptureImage().getPhotoUri("photo.jpg",
+                                    CheckinActivity.this);
+
+                            Log.i(CLASS_TAG, "Image File Path" + u.getPath());
+                            UshahidiPref.fileName = u.getPath();
+                            selectedPhoto = u.getPath();
+                            mSelectedPhotoText.setVisibility(View.VISIBLE);
+
+                            // use resized images
+                            if (scaled != null) {
+                                if (captureImage.imageExist(UshahidiPref.fileName, this))
+                                    uploadPhotoButton.setText(getString(R.string.change_photo));
+                                mCheckImgPrev.setImageBitmap(scaled);
+                            }
+                        }
+
+                    }
+
+                } else {
+
+                    if (!TextUtils.isEmpty(filepath)) {
+
+                        Bitmap selectedImage = ImageManager.getBitmap(UshahidiPref.fileName,
+                                filepath);
+                        if (selectedImage != null) {
+                            Bitmap scaled = new CaptureImage().scaleBitmap(selectedImage);
+                            selectedImage.recycle();
+
+                            // get image URL
+                            Uri u = new CaptureImage().getPhotoUri("photo.jpg",
+                                    CheckinActivity.this);
+
+                            Log.i(CLASS_TAG, "Image File Path" + u.getPath());
+                            UshahidiPref.fileName = u.getPath();
+                            selectedPhoto = u.getPath();
+                            mSelectedPhotoText.setVisibility(View.VISIBLE);
+
+                            // use resized images
+                            if (scaled != null) {
+                                if (captureImage.imageExist(UshahidiPref.fileName, this))
+                                    uploadPhotoButton.setText(getString(R.string.change_photo));
+                                mCheckImgPrev.setImageBitmap(scaled);
+                            }
+                        }
+
+                    }
+                }
+                break;
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -391,69 +597,12 @@ public class CheckinActivity extends UserLocationMap {
                 if (resultCode != RESULT_OK) {
                     return;
                 }
-                Log.i(CLASS_TAG, "ActivityResult has returned");
-                // Do something with image
-                Bitmap original = new CaptureImage().getBitmap(
-                        new CaptureImage().getPhotoUri("photo.jpg", CheckinActivity.this),
-                        CheckinActivity.this);
-                if (original != null) {
-                    Bitmap scaled = new CaptureImage().scaleBitmap(original);
-                    // get image URL
-                    Uri u = new CaptureImage().getPhotoUri("photo.jpg", CheckinActivity.this);
-
-                    Log.i(CLASS_TAG, "Image File Path" + u.getPath());
-                    selectedPhoto = u.getPath();
-                    NetworkServices.fileName = u.getPath();
-
-                    // use resized images
-                    mSelectedPhotoText.setVisibility(View.VISIBLE);
-
-                    if (scaled != null) {
-                        mCheckImgPrev.setImageBitmap(scaled);
-                    }
-
-                }
+                requestedCode = REQUEST_CODE_CAMERA;
+                setSelectedImage(requestCode, data);
                 break;
             case REQUEST_CODE_IMAGE:
-                if (resultCode != RESULT_OK) {
-                    return;
-                }
-
-                Uri uri = data.getData();
-                Bitmap b = null;
-
-                try {
-                    b = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                } catch (FileNotFoundException e) {
-                    break;
-                } catch (IOException e) {
-                    break;
-                }
-
-                ByteArrayOutputStream byteArrayos = new ByteArrayOutputStream();
-
-                try {
-                    b.compress(Bitmap.CompressFormat.JPEG, 75, byteArrayos);
-                    byteArrayos.flush();
-                } catch (OutOfMemoryError e) {
-                    break;
-                } catch (IOException e) {
-                    break;
-                }
-
-                mFilename = "android_pic_upload" + Util.randomString() + ".jpg";
-                ImageManager
-                        .writeImage(byteArrayos.toByteArray(), mFilename, UshahidiPref.savePath);
-                UshahidiPref.fileName = mFilename;
-                selectedPhoto = mFilename;
-
-                if (!TextUtils.isEmpty(selectedPhoto)) {
-                    mSelectedPhotoText.setVisibility(View.VISIBLE);
-                    mCheckImgPrev.refreshDrawableState();
-                    mCheckImgPrev.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName,
-                            UshahidiPref.savePath));
-                }
-
+                requestedCode = REQUEST_CODE_IMAGE;
+                setSelectedImage(requestCode, data);
                 break;
         }
     }
@@ -571,8 +720,9 @@ public class CheckinActivity extends UserLocationMap {
 
     final Runnable mPostCheckin = new Runnable() {
         public void run() {
-
+            Log.i(CLASS_TAG, "mPostCheckin: posting checking");
             if (jsonResponse != null) {
+                Log.i(CLASS_TAG, "mPostCheckin: jsonResponse is not null");
                 jsonServices = new PostCheckinsJSONServices(jsonResponse);
 
                 // JSON Post
@@ -581,21 +731,27 @@ public class CheckinActivity extends UserLocationMap {
 
                     postCheckinJsonErrorCode = jsonServices.getErrorCode();
                     errorMessage = jsonServices.getErrorMessage();
-
+                    Log.i(CLASS_TAG, "error code " + postCheckinJsonErrorCode);
                 }
 
                 // Display checkin status and return back to main screen
-                if (postCheckinJsonErrorCode != "0") {
+                if (postCheckinJsonErrorCode.equals("0")) {
+                    Log.i(CLASS_TAG, "mPostCheckin: posting went successful. error code "
+                            + postCheckinJsonErrorCode);
+
+                    clearFields();
 
                     com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
                             R.string.checkin_success_toast);
 
+                    CheckinActivity.this.finish();
+                    goToCheckins();
+
                 } else {
-                    Toast.makeText(getApplicationContext(), "message: " + errorMessage,
-                            Toast.LENGTH_SHORT);
+                    com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
+                            R.string.checkin_error_toast);
                 }
-                CheckinActivity.this.finish();
-                goToCheckins();
+
             } else {
                 com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
                         R.string.checkin_error_toast);

@@ -6,25 +6,33 @@ import android.util.Log;
 
 import com.ushahidi.android.app.UshahidiPref;
 import com.ushahidi.android.app.net.ClientHttpRequest;
+import com.ushahidi.android.app.net.UshahidiHttpClient;
 
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+
 /**
  * Created by IntelliJ IDEA. User: Ahmed Date: 2/10/11 Time: 4:34 PM To change
  * this template use File | Settings | File Templates.
  */
 public class NetworkServices {
+
     public static String fileName;
+
+    private static MultipartEntity entity = new MultipartEntity();
 
     public static String postToOnline(String IMEI, String domainName, String checkinDetails,
             String filename, String firstname, String lastname, String email, double latitude,
             double longitude) {
 
         HashMap<String, String> myParams = new HashMap<String, String>();
-        
+
         // Build the HTTP response
         StringBuilder urlBuilder = new StringBuilder(domainName);
         urlBuilder.append("/api");
@@ -44,48 +52,43 @@ public class NetworkServices {
         try {
             return PostFileUpload(urlBuilder.toString(), myParams);
         } catch (IOException e) {
-            
+
             return null;
         }
     }
 
     public static String PostFileUpload(String URL, HashMap<String, String> params)
             throws IOException {
-        ClientHttpRequest req = null;
         Log.i("NeworkServices", "Posting Checkins online");
-        try {
-            URL url = new URL(URL);
-            req = new ClientHttpRequest(url);
-            req.setParameter("task", params.get("task"));
-            req.setParameter("action", params.get("action"));
-            req.setParameter("mobileid", params.get("mobileid"));
-            req.setParameter("lat", params.get("lat"));
-            req.setParameter("lon", params.get("lon"));
-            req.setParameter("message", params.get("message"));
-            req.setParameter("firstname", params.get("firstname"));
-            req.setParameter("lastname", params.get("lastname"));
-            req.setParameter("email", params.get("email"));
 
+        entity = new MultipartEntity();
+
+        if (params != null) {
+            Log.i("NeworkServices", "UploadFile "+params.size());
+            entity.addPart("task", new StringBody(params.get("task")));
+            entity.addPart("action", new StringBody(params.get("action")));
+            entity.addPart("mobileid", new StringBody(params.get("mobileid")));
+            entity.addPart("lat", new StringBody(params.get("lat")));
+            entity.addPart("lon", new StringBody(params.get("lon")));
+            entity.addPart("message", new StringBody(params.get("message")));
+            entity.addPart("firstname", new StringBody(params.get("firstname")));
+            entity.addPart("lastname", new StringBody(params.get("lastname")));
+            entity.addPart("email", new StringBody(params.get("email")));
+            
             if (!TextUtils.isEmpty(params.get("filename")) || !(params.get("filename").equals(""))) {
                 Log.i("NeworkServices", "Posting file online");
-                req.setParameter("photo", new File(params.get("filename")));
+                entity.addPart("photo", new FileBody(new File(params.get("filename"))));
             }
-
-            InputStream serverInput = req.post();
-
-            return GetText(serverInput);
-
-        } catch (MalformedURLException ex) {
-            // fall through and return false
+            
+            return UshahidiHttpClient.SendMultiPartData(URL,entity);
         }
-
         return null;
     }
 
     public static String getCheckins(String URL, String mobileId, String checkinId) {
         StringBuilder fullUrl = new StringBuilder(URL);
         fullUrl.append("/api");
-        
+
         try {
             URL url = new URL(fullUrl.toString());
             ClientHttpRequest req = new ClientHttpRequest(url);
@@ -110,7 +113,13 @@ public class NetworkServices {
 
     public static String GetText(InputStream in) {
         String text = "";
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(in), 1024);
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(in, "UTF-8"), 1024);
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         final StringBuilder sb = new StringBuilder();
         String line = null;
         try {

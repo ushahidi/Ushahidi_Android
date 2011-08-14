@@ -100,7 +100,8 @@ public class Checkin {
     }
     
     public void setThumbnail(String checkinId)  {
-        this.thumbnail = CheckinUtil.getCheckinThumbnail(checkinId);
+        if(CheckinUtil.getCheckinThumbnail(checkinId) !=null)
+            this.thumbnail = CheckinUtil.getCheckinThumbnail(checkinId);
     }
     
     public String getThumbnail() {

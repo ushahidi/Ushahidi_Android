@@ -32,6 +32,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -92,7 +93,7 @@ public class ListCheckin extends Activity {
     public static UshahidiDatabase mDb;
 
     private List<Checkin> checkins;
-    
+
     private TextView emptyListText;
 
     @Override
@@ -133,11 +134,10 @@ public class ListCheckin extends Activity {
 
         });
         refreshForNewCheckins();
-        
 
     }
-    
-    public  void displayEmptyListText() {
+
+    public void displayEmptyListText() {
 
         if (ila.getCount() == 0) {
             emptyListText.setVisibility(View.VISIBLE);
@@ -146,7 +146,7 @@ public class ListCheckin extends Activity {
         }
 
     }
-    
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -198,24 +198,24 @@ public class ListCheckin extends Activity {
 
         return (applyMenuChoice(item) || super.onContextItemSelected(item));
     }
-    
+
     public void onAddReport(View v) {
-        
+
         UshahidiPref.loadSettings(ListCheckin.this);
         if (UshahidiPref.isCheckinEnabled == 1) {
             Intent checkinActivityIntent = new Intent().setClass(ListCheckin.this,
                     CheckinActivity.class);
             startActivity(checkinActivityIntent);
             setResult(RESULT_OK);
-            
+
         } else {
             Intent intent = new Intent(ListCheckin.this, AddIncident.class);
             startActivityForResult(intent, 0);
             setResult(RESULT_OK);
         }
-        
+
     }
-    
+
     private void populateMenu(Menu menu) {
         MenuItem i;
         i = menu.add(Menu.NONE, HOME, Menu.NONE, R.string.menu_home);
@@ -393,6 +393,8 @@ public class ListCheckin extends Activity {
                 checkinsData.setThumbnail(String.valueOf(id));
 
                 if (!TextUtils.isEmpty(checkinsData.getThumbnail())) {
+                    Log.i("CLASS_TAG", " Image path: " + UshahidiPref.savePath + " File path "
+                            + checkinsData.getThumbnail());
                     d = ImageManager.getImages(UshahidiPref.savePath, checkinsData.getThumbnail());
                 } else {
                     d = null;

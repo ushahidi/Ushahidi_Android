@@ -47,7 +47,7 @@ public class CheckinUtil {
         String thumbnail = null;
         if (cursor.moveToFirst()) {
             int mediaMediumLink = cursor.getColumnIndexOrThrow(UshahidiDatabase.MEDIA_THUMBNAIL_LINK);
-            thumbnail = cursor.getString(mediaMediumLink);
+            return cursor.getString(mediaMediumLink);
         }
         cursor.close();
         return thumbnail;

@@ -72,7 +72,7 @@ import com.ushahidi.android.app.data.UshahidiDatabase;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
 import com.ushahidi.android.app.util.Util;
 
-public class AddIncident extends UserLocationMap{
+public class AddIncident extends UserLocationMap {
 
     /**
      * category that exists on the phone before any connection to a server, at
@@ -110,6 +110,8 @@ public class AddIncident extends UserLocationMap{
     private static final int REQUEST_CODE_CAMERA = 5;
 
     private static final int VIEW_SEARCH = 2;
+
+    private static int requestedCode = 5;
 
     private Geocoder mGc;
 
@@ -178,6 +180,8 @@ public class AddIncident extends UserLocationMap{
 
     private static final String CLASS_TAG = AddIncident.class.getCanonicalName();
 
+    private CaptureImage captureImage;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,17 +193,13 @@ public class AddIncident extends UserLocationMap{
 
         // load settings
         UshahidiPref.loadSettings(AddIncident.this);
+        captureImage = new CaptureImage();
         initComponents();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // delete unset photo
-        File f = new File(UshahidiPref.fileName);
-        if (f.exists()) {
-            f.delete();
-        }
         stopLocating();
     }
 
@@ -467,10 +467,149 @@ public class AddIncident extends UserLocationMap{
 
     }
 
+    /**
+     * Set selected / captured image
+     * 
+     * @param int
+     * @param Intent
+     */
+    public void setSelectedImage(int requestCode, Intent data) {
+        Log.i(CLASS_TAG, "setSelectedImage(): requestCode: " + requestCode);
+        switch (requestCode) {
+
+            case REQUEST_CODE_CAMERA:
+                // Do something with image taken with camera
+                Bitmap original = new CaptureImage().getBitmap(
+                        new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this),
+                        AddIncident.this);
+                // Log.d(CLASS_TAG, "image path" + UshahidiPref.fileName);
+                if (original != null) {
+
+                    Bitmap scaled = new CaptureImage().scaleBitmap(original);
+                    original.recycle();
+
+                    // get image URL
+                    Uri u = new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this);
+
+                    Log.i(CLASS_TAG, "Image File Path" + u.getPath());
+                    UshahidiPref.fileName = u.getPath();
+                    NetworkServices.fileName = u.getPath();
+
+                    // use resized images
+                    if (scaled != null) {
+                        if (captureImage.imageExist(UshahidiPref.fileName, this))
+                            mBtnPicture.setText(getString(R.string.change_photo));
+                        mSelectedPhoto.setImageBitmap(scaled);
+                    }
+                }
+                break;
+
+            case REQUEST_CODE_IMAGE:
+                // do something with image taken from image gallery
+                mFilename = "photo.jpg";
+                final String filepath = new CaptureImage().getPhotoPath(AddIncident.this);
+
+                if (data != null) {
+
+                    Uri uri = data.getData();
+                    Bitmap b = null;
+
+                    try {
+                        b = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                    } catch (FileNotFoundException e) {
+                        break;
+                    } catch (IOException e) {
+                        break;
+                    }
+
+                    ByteArrayOutputStream byteArrayos = new ByteArrayOutputStream();
+
+                    try {
+                        b.compress(CompressFormat.JPEG, 75, byteArrayos);
+                        b.recycle();
+                        byteArrayos.flush();
+
+                    } catch (OutOfMemoryError e) {
+                        break;
+                    } catch (IOException e) {
+                        break;
+                    }
+
+                    if (!TextUtils.isEmpty(filepath)) {
+                        ImageManager.writeImage(byteArrayos.toByteArray(), mFilename, filepath);
+                        UshahidiPref.fileName = mFilename;
+
+                        Bitmap selectedImage = ImageManager.getBitmap(UshahidiPref.fileName,
+                                filepath);
+
+                        if (selectedImage != null) {
+                            Bitmap scaled = new CaptureImage().scaleBitmap(selectedImage);
+                            selectedImage.recycle();
+
+                            // get image URL
+                            Uri u = new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this);
+
+                            Log.i(CLASS_TAG, "Image File Path" + u.getPath());
+                            UshahidiPref.fileName = u.getPath();
+                            NetworkServices.fileName = u.getPath();
+
+                            // use resized images
+                            if (scaled != null) {
+                                if (captureImage.imageExist(UshahidiPref.fileName, this))
+                                    mBtnPicture.setText(getString(R.string.change_photo));
+                                mSelectedPhoto.setImageBitmap(scaled);
+                            }
+
+                        }
+                    }
+
+                } else {
+
+                    if (!TextUtils.isEmpty(filepath)) {
+
+                        Bitmap selectedImage = ImageManager.getBitmap(UshahidiPref.fileName,
+                                filepath);
+                        if (selectedImage != null) {
+                            Bitmap scaled = new CaptureImage().scaleBitmap(selectedImage);
+                            selectedImage.recycle();
+                            
+                            
+                            // get image URL
+                            Uri u = new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this);
+
+                            Log.i(CLASS_TAG, "Image File Path" + u.getPath());
+                            UshahidiPref.fileName = u.getPath();
+                            NetworkServices.fileName = u.getPath();
+
+                            // use resized images
+                            if (scaled != null) {
+                                if (captureImage.imageExist(UshahidiPref.fileName, this))
+                                    mBtnPicture.setText(getString(R.string.change_photo));
+                                mSelectedPhoto.setImageBitmap(scaled);
+                            }
+                        }
+
+                    }
+                }
+                break;
+        }
+    }
+
     // reset records in the field
     private void clearFields() {
+        Log.d(CLASS_TAG, "clearFields(): clearing fields");
         mBtnPicture = (Button)findViewById(R.id.btnPicture);
         mBtnAddCategory = (Button)findViewById(R.id.add_category);
+
+        // delete unset photo
+        File f = new File(UshahidiPref.fileName);
+        if (f.exists()) {
+            f.delete();
+        }
+
+        UshahidiPref.fileName = "";
+        if (!captureImage.imageExist(UshahidiPref.fileName, this))
+            mBtnPicture.setText(getString(R.string.btn_add_photo));
         mIncidentTitle.setText("");
         mIncidentLocation.setText("");
         mIncidentDesc.setText("");
@@ -486,6 +625,8 @@ public class AddIncident extends UserLocationMap{
         editor.putString("title", "");
         editor.putString("desc", "");
         editor.putString("date", "");
+        editor.putString("selectedphoto", "");
+        editor.putInt("requestedcode", 0);
         editor.commit();
 
     }
@@ -502,84 +643,21 @@ public class AddIncident extends UserLocationMap{
                     return;
                 }
 
-                // Do something with image
-                Bitmap original = new CaptureImage().getBitmap(
-                        new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this),
-                        AddIncident.this);
-                if (original != null) {
-
-                    Bitmap scaled = new CaptureImage().scaleBitmap(original);
-                    // get image URL
-                    Uri u = new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this);
-
-                    Log.i(CLASS_TAG, "Image File Path" + u.getPath());
-                    UshahidiPref.fileName = u.getPath();
-                    NetworkServices.fileName = u.getPath();
-
-                    // use resized images
-                    if (scaled != null) {
-                        mSelectedPhoto.setImageBitmap(scaled);
-                    }
-                }
+                requestedCode = REQUEST_CODE_CAMERA;
+                setSelectedImage(requestCode, data);
                 break;
 
             case REQUEST_CODE_IMAGE:
 
+                requestedCode = REQUEST_CODE_IMAGE;
+
                 if (resultCode != RESULT_OK) {
                     return;
                 }
 
-                Uri uri = data.getData();
-                Bitmap b = null;
-
-                try {
-                    b = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                } catch (FileNotFoundException e) {
-                    break;
-                } catch (IOException e) {
-                    break;
-                }
-
-                ByteArrayOutputStream byteArrayos = new ByteArrayOutputStream();
-
-                try {
-                    b.compress(CompressFormat.JPEG, 75, byteArrayos);
-                    byteArrayos.flush();
-
-                } catch (OutOfMemoryError e) {
-                    break;
-                } catch (IOException e) {
-                    break;
-                }
-
-                mFilename = "android_pic_upload" + Util.randomString() + ".jpg";
-                ImageManager
-                        .writeImage(byteArrayos.toByteArray(), mFilename, UshahidiPref.savePath);
-                UshahidiPref.fileName = mFilename;
-
-                mSelectedPhoto.setImageBitmap(ImageManager.getBitmap(UshahidiPref.fileName,
-                        UshahidiPref.savePath));
-                mSelectedPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                setSelectedImage(requestCode, data);
                 break;
 
-            /* TODO: Is there a plan to use this?
-               case VIEW_MAP:
-                if (resultCode != RESULT_OK) {
-                    return;
-                }
-
-                mBundle = null;
-                mExtras = data.getExtras();
-                if (mExtras != null)
-                    mBundle = mExtras.getBundle("locations");
-
-                if (mBundle != null && !mBundle.isEmpty()) {
-                    mIncidentLocation.setText(mBundle.getString("location"));
-
-                    AddIncident.sLatitude = mBundle.getDouble("latitude");
-                    AddIncident.sLongitude = mBundle.getDouble("longitude");
-                }
-                break;*/
         }
     }
 
@@ -744,14 +822,12 @@ public class AddIncident extends UserLocationMap{
             }
 
             case TIME_DIALOG_ID:
-                return new TimePickerDialog(this, mTimeSetListener,
-                        mCalendar.get(Calendar.HOUR), mCalendar.get(Calendar.MINUTE),
-                        false);
+                return new TimePickerDialog(this, mTimeSetListener, mCalendar.get(Calendar.HOUR),
+                        mCalendar.get(Calendar.MINUTE), false);
 
             case DATE_DIALOG_ID:
-                return new DatePickerDialog(this, mDateSetListener,
-                        mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
-                        mCalendar.get(Calendar.DAY_OF_MONTH));
+                return new DatePickerDialog(this, mDateSetListener, mCalendar.get(Calendar.YEAR),
+                        mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
         }
         return null;
     }
@@ -760,15 +836,12 @@ public class AddIncident extends UserLocationMap{
     protected void onPrepareDialog(int id, Dialog dialog) {
         switch (id) {
             case TIME_DIALOG_ID:
-                ((TimePickerDialog)dialog).updateTime(
-                        mCalendar.get(Calendar.HOUR_OF_DAY),
+                ((TimePickerDialog)dialog).updateTime(mCalendar.get(Calendar.HOUR_OF_DAY),
                         mCalendar.get(Calendar.MINUTE));
                 break;
             case DATE_DIALOG_ID:
-                ((DatePickerDialog)dialog).updateDate(
-                        mCalendar.get(Calendar.YEAR),
-                        mCalendar.get(Calendar.MONTH),
-                        mCalendar.get(Calendar.DAY_OF_MONTH));
+                ((DatePickerDialog)dialog).updateDate(mCalendar.get(Calendar.YEAR),
+                        mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
                 break;
         }
     }
@@ -871,7 +944,8 @@ public class AddIncident extends UserLocationMap{
         try {
             return UshahidiHttpClient.PostFileUpload(urlBuilder.toString(), mParams);
         } catch (IOException e) {
-            Log.d(CLASS_TAG, "postToOnline(): IO exception failed to submit report "+UshahidiPref.domain);
+            Log.d(CLASS_TAG, "postToOnline(): IO exception failed to submit report "
+                    + UshahidiPref.domain);
             e.printStackTrace();
             return false;
         }
@@ -884,19 +958,32 @@ public class AddIncident extends UserLocationMap{
      */
     @Override
     protected void onResume() {
-        if (!TextUtils.isEmpty(UshahidiPref.fileName)) {
-            mBtnPicture.setText(getString(R.string.change_photo));
-        }
 
         SharedPreferences prefs = getPreferences(0);
+
         String title = prefs.getString("title", null);
+
         String desc = prefs.getString("desc", null);
+
+        String filename = prefs.getString("selectedphoto", null);
+
+        Log.d(CLASS_TAG, "selectedPhoto: " + filename);
+        int requestcode = prefs.getInt("requestedcode", REQUEST_CODE_IMAGE);
+
+        Intent data = null;
 
         if (title != null)
             mIncidentTitle.setText(title, TextView.BufferType.EDITABLE);
 
         if (desc != null)
             mIncidentDesc.setText(desc, TextView.BufferType.EDITABLE);
+
+        if (filename != null) {
+            UshahidiPref.fileName = filename;
+            if (captureImage.imageExist(filename, this))
+                mBtnPicture.setText(getString(R.string.change_photo));
+            setSelectedImage(requestcode, data);
+        }
 
         super.onResume();
 
@@ -936,12 +1023,14 @@ public class AddIncident extends UserLocationMap{
         editor.putString("title", mIncidentTitle.getText().toString());
         editor.putString("desc", mIncidentDesc.getText().toString());
         editor.putString("location", mIncidentLocation.getText().toString());
+        editor.putString("selectedphoto", UshahidiPref.fileName);
+        editor.putInt("requestedcode", requestedCode);
         editor.commit();
         super.onPause();
     }
 
     // Implementation of UserLocationMap abstract methods
-    protected void updateInterface(){
+    protected void updateInterface() {
         mReportLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
         mIncidentLocation.setText(getLocationFromLatLon(sLatitude, sLongitude));
     }
@@ -1022,7 +1111,7 @@ public class AddIncident extends UserLocationMap{
                 clearFields();
                 Util.showToast(appContext, R.string.report_successfully_added_offline);
             } else if (result == 1) {
-                
+
                 Util.showToast(appContext, R.string.failed_to_add_report_online);
             } else if (result == 0) {
                 clearFields();

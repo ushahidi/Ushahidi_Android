@@ -210,6 +210,7 @@ public class UshahidiDatabase {
                                                                         // active,
                                                                         // 0 4
                                                                         // inactive
+    
 
     public static final String[] INCIDENTS_COLUMNS = new String[] {
             INCIDENT_ID, INCIDENT_TITLE, INCIDENT_DESC, INCIDENT_DATE, INCIDENT_MODE,
@@ -824,30 +825,37 @@ public class UshahidiDatabase {
     }
 
     public boolean deleteAllIncidents() {
+        Log.i(TAG, "Deleting all incidents");
         return mDb.delete(INCIDENTS_TABLE, null, null) > 0;
     }
 
     public boolean deleteAllCategories() {
+        Log.i(TAG, "Deleting all categories");
         return mDb.delete(CATEGORIES_TABLE, null, null) > 0;
     }
 
     public boolean deleteCategory(int id) {
+        Log.i(TAG, "Deleteing all Category by id "+id);
         return mDb.delete(CATEGORIES_TABLE, CATEGORY_ID + "=" + id, null) > 0;
     }
 
     public boolean deleteAllCheckins() {
+        Log.i(TAG, "Deleting all Checkins");
         return mDb.delete(CHECKINS_TABLE, null, null) > 0;
     }
 
     public boolean deleteUsers() {
+        Log.i(TAG, "Deleting all Users");
         return mDb.delete(USERS_TABLE, null, null) > 0;
     }
 
     public boolean deleteCheckinMedia() {
+        Log.i(TAG, "Deleting all Media Checkins");
         return mDb.delete(CHECKINS_MEDIA_TABLE, null, null) > 0;
     }
 
     public boolean deleteAllDeployment() {
+        Log.i(TAG, "Deleting all Deployment");
         return mDb.delete(DEPLOYMENT_TABLE, null, null) > 0;
     }
     

@@ -29,6 +29,7 @@ public class PostCheckinsJSONServices {
         try {
             return jsonObject.getJSONObject("error");
         } catch (JSONException e) {
+            
             return null;
         }
     }
@@ -51,10 +52,12 @@ public class PostCheckinsJSONServices {
             try {
                 return getErrorObject().getString("message");
             } catch (JSONException e) {
+                
                 return null;
             }
         }
         else {
+            
             return null;
         }
     }

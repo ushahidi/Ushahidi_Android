@@ -44,6 +44,7 @@ public class ImageManager {
 
         Drawable d = null;
         BitmapDrawable bD = new BitmapDrawable((new File(path, fileName)).toString());
+        
         d = bD.mutate();
 
         return d;
@@ -172,6 +173,7 @@ public class ImageManager {
         }
         return null;
     }
+    
 
     public static void saveImageFromURL(String url, String fileName, String path) {
         byte[] is;

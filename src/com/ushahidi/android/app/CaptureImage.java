@@ -57,10 +57,31 @@ public class CaptureImage {
 
     public Uri getPhotoUri(String filename, Activity activity) {
         File path = new File(Environment.getExternalStorageDirectory(), activity.getPackageName());
-        if (!path.exists() && path.mkdir()) {
-            // /directory created
-        }
+        if (!path.exists())
+            return null;
+
         return Uri.fromFile(new File(path, filename));
+    }
+
+    public String getPhotoPath(Activity activity) {
+        Log.d(CLASS_TAG, "getPhotoPath ");
+        File path = new File(Environment.getExternalStorageDirectory(), activity.getPackageName());
+        if (!path.exists())
+            return null;
+
+        return path.getAbsolutePath();
+    }
+
+    public boolean imageExist(String filename, Activity activity) {
+        Log.d(CLASS_TAG, "imageExist(): " + filename);
+        File path = new File(filename);
+        if (!path.exists()) {
+            Log.d(CLASS_TAG, "image doest not exist");
+            return false;
+        }
+
+        Log.d(CLASS_TAG, "image does exist");
+        return true;
     }
 
     public Bitmap getBitmap(Uri uri, Activity activity) {
@@ -87,17 +108,18 @@ public class CaptureImage {
             BitmapFactory.Options options2 = new BitmapFactory.Options();
             options2.inSampleSize = scale;
             Bitmap original = BitmapFactory.decodeFile(uri.getPath(), options2);
-
-            if (getScreenOrientation(activity) == Configuration.ORIENTATION_PORTRAIT
-                    && original.getWidth() > original.getHeight()) {
-                Matrix matrix = new Matrix();
-                matrix.postRotate(90);
-                Bitmap rotated = Bitmap.createBitmap(original, 0, 0, original.getWidth(),
-                        original.getHeight(), matrix, true);
-                original.recycle();
-                return rotated;
+            if (original != null) {
+                if (getScreenOrientation(activity) == Configuration.ORIENTATION_PORTRAIT
+                        && original.getWidth() > original.getHeight()) {
+                    Matrix matrix = new Matrix();
+                    matrix.postRotate(90);
+                    Bitmap rotated = Bitmap.createBitmap(original, 0, 0, original.getWidth(),
+                            original.getHeight(), matrix, true);
+                    original.recycle();
+                    return rotated;
+                }
+                return original;
             }
-            return original;
         }
         return null;
     }

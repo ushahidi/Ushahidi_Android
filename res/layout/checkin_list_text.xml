@@ -15,6 +15,7 @@
 
 	<ImageView android:layout_width="60dip" android:layout_height="60dip"
 		android:id="@+id/checkin_thumbnail" android:layout_alignParentTop="true"
+		android:adjustViewBounds="true"
 		android:layout_alignParentLeft="true" android:paddingRight="2dip"
 		 />
 	<TextView android:id="@+id/checkin_title"

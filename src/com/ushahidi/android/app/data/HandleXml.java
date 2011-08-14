@@ -49,18 +49,18 @@ import java.util.List;
 public class HandleXml {
 
     protected static final int MEDIA_TYPE_IMAGE = 1;
-    protected static final int MEDIA_TYPE_VIDEO = 2;
-    //TODO: Is there a 3?
-    protected static final int MEDIA_TYPE_NEWS = 4;
 
+    protected static final int MEDIA_TYPE_VIDEO = 2;
+
+    // TODO: Is there a 3?
+    protected static final int MEDIA_TYPE_NEWS = 4;
 
     public static List<IncidentsData> processIncidentsXml(String xmL) {
         Log.d("Incident", " Fetching Incident ");
-        String xml = xmL.replaceAll( "&([^;]+(?!(?:\\w|;)))", "&amp;$1" );
+        String xml = xmL.replaceAll("&([^;]+(?!(?:\\w|;)))", "&amp;$1");
         List<IncidentsData> listIncidentsData = new ArrayList<IncidentsData>();
         DocumentBuilder builder = null;
         Document doc = null;
-
 
         try {
             builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -86,9 +86,10 @@ public class HandleXml {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
-        if( doc == null ) return listIncidentsData;
-        
+
+        if (doc == null)
+            return listIncidentsData;
+
         NodeList node = doc.getElementsByTagName("incident");
 
         for (int i = 0; i < node.getLength(); i++) {
@@ -104,72 +105,87 @@ public class HandleXml {
         return listIncidentsData;
     }
 
-    private static IncidentsData parseIncident(Element element){
+    private static IncidentsData parseIncident(Element element) {
         IncidentsData incidentData = new IncidentsData();
 
         NodeList idElementList = element.getElementsByTagName("id");
-        Element idElement = (Element)idElementList.item(0);
+        if (idElementList.getLength() != 0) {
+            Element idElement = (Element)idElementList.item(0);
 
-        NodeList id = idElement.getChildNodes();
+            NodeList id = idElement.getChildNodes();
 
-        incidentData.setIncidentId(Integer.parseInt((id.item(0)).getNodeValue()));
+            incidentData.setIncidentId(Integer.parseInt((id.item(0)).getNodeValue()));
+        }
 
         NodeList titleElementList = element.getElementsByTagName("title");
-        Element titleElement = (Element)titleElementList.item(0);
+        if (titleElementList.getLength() != 0) {
+            Element titleElement = (Element)titleElementList.item(0);
 
-        NodeList title = titleElement.getChildNodes();
-        incidentData.setIncidentTitle((title.item(0)).getNodeValue());
+            NodeList title = titleElement.getChildNodes();
+            incidentData.setIncidentTitle((title.item(0)).getNodeValue());
+        }
 
         NodeList descElementList = element.getElementsByTagName("description");
-        Element descElement = (Element)descElementList.item(0);
+        if (descElementList.getLength() != 0) {
+            Element descElement = (Element)descElementList.item(0);
 
-        NodeList desc = descElement.getChildNodes();
-        incidentData.setIncidentDesc((desc.item(0)).getNodeValue());
+            NodeList desc = descElement.getChildNodes();
+            incidentData.setIncidentDesc((desc.item(0)).getNodeValue());
+        }
 
         NodeList dateElementList = element.getElementsByTagName("date");
-        Element dateElement = (Element)dateElementList.item(0);
+        if (dateElementList.getLength() != 0) {
+            Element dateElement = (Element)dateElementList.item(0);
 
-        NodeList date = dateElement.getChildNodes();
-        incidentData.setIncidentDate((date.item(0)).getNodeValue());
+            NodeList date = dateElement.getChildNodes();
+            incidentData.setIncidentDate((date.item(0)).getNodeValue());
+        }
 
         NodeList modeElementList = element.getElementsByTagName("mode");
-        Element modeElement = (Element)modeElementList.item(0);
+        if (modeElementList.getLength() != 0) {
+            Element modeElement = (Element)modeElementList.item(0);
 
-        NodeList mode = modeElement.getChildNodes();
-        incidentData.setIncidentMode(Integer.parseInt((mode.item(0)).getNodeValue()));
+            NodeList mode = modeElement.getChildNodes();
+            incidentData.setIncidentMode(Integer.parseInt((mode.item(0)).getNodeValue()));
+        }
 
         NodeList verifiedElementList = element.getElementsByTagName("verified");
-        Element verifiedElement = (Element)verifiedElementList.item(0);
+        if (verifiedElementList.getLength() != 0) {
+            Element verifiedElement = (Element)verifiedElementList.item(0);
 
-        NodeList verified = verifiedElement.getChildNodes();
-        incidentData
-                .setIncidentVerified(Integer.parseInt((verified.item(0)).getNodeValue()));
+            NodeList verified = verifiedElement.getChildNodes();
+            incidentData.setIncidentVerified(Integer.parseInt((verified.item(0)).getNodeValue()));
+        }
 
         // location
         NodeList locationElementList = element.getElementsByTagName("location");
+        if (locationElementList.getLength() != 0) {
+            Node locationNode = locationElementList.item(0);
 
-        Node locationNode = locationElementList.item(0);
+            Element locationElement = (Element)locationNode;
 
-        Element locationElement = (Element)locationNode;
-        NodeList locationNameList = locationElement.getElementsByTagName("name");
+            NodeList locationNameList = locationElement.getElementsByTagName("name");
+            if (locationNameList.getLength() != 0) {
+                Element locationInnerNameElement = (Element)locationNameList.item(0);
+                NodeList locationInnerName = locationInnerNameElement.getChildNodes();
+                incidentData.setIncidentLocation((locationInnerName.item(0)).getNodeValue());
+            }
 
-        Element locationInnerNameElement = (Element)locationNameList.item(0);
-        NodeList locationInnerName = locationInnerNameElement.getChildNodes();
-        incidentData.setIncidentLocation((locationInnerName.item(0)).getNodeValue());
+            NodeList locationLatitudeList = locationElement.getElementsByTagName("latitude");
+            if (locationLatitudeList.getLength() != 0) {
+                Element locationInnerLatitudeElement = (Element)locationLatitudeList.item(0);
+                NodeList locationInnerLatitude = locationInnerLatitudeElement.getChildNodes();
+                incidentData.setIncidentLocLatitude((locationInnerLatitude.item(0)).getNodeValue());
+            }
 
-        NodeList locationLatitudeList = locationElement.getElementsByTagName("latitude");
-
-        Element locationInnerLatitudeElement = (Element)locationLatitudeList.item(0);
-        NodeList locationInnerLatitude = locationInnerLatitudeElement.getChildNodes();
-        incidentData.setIncidentLocLatitude((locationInnerLatitude.item(0)).getNodeValue());
-
-        NodeList locationLongitudeList = locationElement.getElementsByTagName("longitude");
-
-        Element locationInnerLongitudeElement = (Element)locationLongitudeList.item(0);
-        NodeList locationInnerLongitude = locationInnerLongitudeElement.getChildNodes();
-        incidentData.setIncidentLocLongitude((locationInnerLongitude.item(0))
-                .getNodeValue());
-
+            NodeList locationLongitudeList = locationElement.getElementsByTagName("longitude");
+            if (locationLongitudeList.getLength() != 0) {
+                Element locationInnerLongitudeElement = (Element)locationLongitudeList.item(0);
+                NodeList locationInnerLongitude = locationInnerLongitudeElement.getChildNodes();
+                incidentData.setIncidentLocLongitude((locationInnerLongitude.item(0))
+                        .getNodeValue());
+            }
+        }
         // categories
         NodeList categoryList = element.getElementsByTagName("category");
         StringBuilder categories = new StringBuilder();
@@ -185,7 +201,8 @@ public class HandleXml {
             }
         }
         // Delete the last ","
-        if (categories.length() > 0) categories.deleteCharAt(categories.length()-1);
+        if (categories.length() > 0)
+            categories.deleteCharAt(categories.length() - 1);
         incidentData.setIncidentCategories(categories.toString());
 
         StringBuilder thumbnail = new StringBuilder();
@@ -215,10 +232,10 @@ public class HandleXml {
 
                 // Check media type
                 NodeList mediaTypeList = mediaElement.getElementsByTagName("type");
-                if (mediaTypeList.getLength() != 0){
+                if (mediaTypeList.getLength() != 0) {
                     NodeList mediaTypes = ((Element)mediaTypeList.item(0)).getChildNodes();
                     String mediaType = mediaTypes.item(0).getNodeValue();
-                    switch(Integer.parseInt(mediaType)){
+                    switch (Integer.parseInt(mediaType)) {
                         case MEDIA_TYPE_IMAGE:
                             NodeList mediaImageList = mediaElement.getElementsByTagName("link");
 
@@ -240,8 +257,10 @@ public class HandleXml {
             }
         }
         // Delete the last ","
-        if (thumbnail.length() > 0) thumbnail.deleteCharAt(thumbnail.length()-1);
-        if (image.length() > 0) image.deleteCharAt(image.length()-1);
+        if (thumbnail.length() > 0)
+            thumbnail.deleteCharAt(thumbnail.length() - 1);
+        if (image.length() > 0)
+            image.deleteCharAt(image.length() - 1);
 
         incidentData.setIncidentThumbnail(thumbnail.toString());
         incidentData.setIncidentImage(image.toString());
@@ -252,7 +271,7 @@ public class HandleXml {
     public static List<CategoriesData> processCategoriesXml(String xmL) {
         Log.d("Categories XML", "Fetching categories ");
         List<CategoriesData> categoriesData = new ArrayList<CategoriesData>();
-        String xml = xmL.replaceAll( "&([^;]+(?!(?:\\w|;)))", "&amp;$1" );
+        String xml = xmL.replaceAll("&([^;]+(?!(?:\\w|;)))", "&amp;$1");
         String categories = "";
         DocumentBuilder builder = null;
         Document doc = null;
@@ -299,29 +318,45 @@ public class HandleXml {
                 Element element = (Element)firstNode;
 
                 NodeList idElementList = element.getElementsByTagName("id");
-                Element idElement = (Element)idElementList.item(0);
 
-                NodeList id = idElement.getChildNodes();
-                category.setCategoryId(Integer.parseInt((id.item(0)).getNodeValue()));
+                if (idElementList.getLength() != 0) {
+                    Element idElement = (Element)idElementList.item(0);
+                    if (idElement != null) {
+                        NodeList id = idElement.getChildNodes();
+                        category.setCategoryId(Integer.parseInt((id.item(0)).getNodeValue()));
+                    }
+                }
 
                 NodeList titleElementList = element.getElementsByTagName("title");
-                Element titleElement = (Element)titleElementList.item(0);
 
-                NodeList title = titleElement.getChildNodes();
-                category.setCategoryTitle((title.item(0)).getNodeValue());
-                categories += (title.item(0)).getNodeValue() + ", ";
+                if (titleElementList.getLength() != 0) {
+                    Element titleElement = (Element)titleElementList.item(0);
+
+                    NodeList title = titleElement.getChildNodes();
+                    category.setCategoryTitle((title.item(0)).getNodeValue());
+                    categories += (title.item(0)).getNodeValue() + ", ";
+
+                }
 
                 NodeList descElementList = element.getElementsByTagName("description");
-                Element descElement = (Element)descElementList.item(0);
 
-                NodeList desc = descElement.getChildNodes();
-                category.setCategoryDescription((desc.item(0)).getNodeValue());
+                if (descElementList.getLength() != 0) {
+                    Element descElement = (Element)descElementList.item(0);
 
-                NodeList dateElementList = element.getElementsByTagName("color");
-                Element dateElement = (Element)dateElementList.item(0);
+                    NodeList desc = descElement.getChildNodes();
+                    category.setCategoryDescription((desc.item(0)).getNodeValue());
 
-                NodeList date = dateElement.getChildNodes();
-                category.setCategoryColor((date.item(0)).getNodeValue());
+                }
+
+                NodeList colorElementList = element.getElementsByTagName("color");
+
+                if (colorElementList.getLength() != 0) {
+                    Element colorElement = (Element)colorElementList.item(0);
+
+                    NodeList color = colorElement.getChildNodes();
+                    category.setCategoryColor((color.item(0)).getNodeValue());
+
+                }
 
             }
         }

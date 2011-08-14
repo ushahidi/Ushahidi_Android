@@ -80,13 +80,11 @@ public class ImagePreviewer extends DashboardActivity implements
         if (images.length > 0) {
             for (int i = 0; i < images.length; i++) {
                 
-                ///thumbnailAdapter.mImageIds.add(ImageManager.getImages(UshahidiPref.savePath,images[i]));
                 imageAdapter.mImageIds.add(ImageManager.getImages(UshahidiPref.savePath,images[i]));
                 
             }
         }
         
-        //mSwitcher.setImageDrawable(imageAdapter.mImageIds.get(ImagePreviewer.photoPosition));
         imageAdapter.selectedImage = ImagePreviewer.photoPosition;
         Gallery g = (Gallery)findViewById(R.id.gallery);
 
@@ -96,6 +94,7 @@ public class ImagePreviewer extends DashboardActivity implements
     }
 
     public void onShareClick(View v) {
+        
         // TODO: consider bringing in shortlink to session
         UshahidiPref.loadSettings(this);
         savePhoto(images[ImagePreviewer.photoPosition]);

@@ -20,7 +20,9 @@
 
 package com.ushahidi.android.app.util;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -42,6 +44,7 @@ import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -84,7 +87,8 @@ public class Util {
             + "[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
     private static final String VALID_URL_PATTERN = "^(https?|ftp)://[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].+)?$";
-
+    
+    private static final String CLASS_TAG = Util.class.getCanonicalName();
     /**
      * joins two strings together
      * 
@@ -246,7 +250,8 @@ public class Util {
      * @return String
      */
     public static boolean extractPayloadJSON(String json_data) {
-
+        Log.d(CLASS_TAG, "extractPayloadJSON(): "+json_data);
+        
         try {
             jsonObject = new JSONObject(json_data);
             return jsonObject.getJSONObject("payload").getBoolean("success");
@@ -256,6 +261,41 @@ public class Util {
             return false;
         }
 
+    }
+    
+    /**
+     * For debugging purposes. Append content of a string to a file
+     * 
+     * @param text
+     */
+    public static void appendLog(String text)
+    {       
+       File logFile = new File(Environment.getExternalStorageDirectory(),"ush_log.txt");
+       if (!logFile.exists())
+       {
+          try
+          {
+             logFile.createNewFile();
+          } 
+          catch (IOException e)
+          {
+             // TODO Auto-generated catch block
+             e.printStackTrace();
+          }
+       }
+       try
+       {
+          //BufferedWriter for performance, true to set append to file flag
+          BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true)); 
+          buf.append(text);
+          buf.newLine();
+          buf.close();
+       }
+       catch (IOException e)
+       {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+       }
     }
 
     /**
@@ -316,6 +356,7 @@ public class Util {
                     mNewCategories = HandleXml
                             .processCategoriesXml(UshahidiPref.categoriesResponse);
                 } else {
+                    Log.d(CLASS_TAG,"processReport(): categories total: "+mNewCategories.size());
                     return 1;
                 }
 
@@ -323,12 +364,15 @@ public class Util {
                     mNewIncidents = HandleXml.processIncidentsXml(UshahidiPref.incidentsResponse);
 
                 } else {
+                    Log.d(CLASS_TAG,"processReport():  incidents total:"+mNewIncidents.size());
                     return 2;
                 }
 
                 if (mNewCategories != null && mNewIncidents != null) {
+                    Log.d(CLASS_TAG,"processReport(): categories total: "+mNewCategories.size()+ " incidents total:"+mNewIncidents.size());
                     // delete all categories
                     UshahidiApplication.mDb.deleteAllCategories();
+                    UshahidiApplication.mDb.deleteAllIncidents();
                     UshahidiApplication.mDb.addCategories(mNewCategories, false);
                     UshahidiApplication.mDb.addIncidents(mNewIncidents, false);
                     return 0;

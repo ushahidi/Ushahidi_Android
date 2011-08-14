@@ -101,6 +101,7 @@ public class ListCheckinText {
 
     public void setThumbnail(Drawable thumbnail) {
         this.thumbnail = thumbnail;
+        
     }
 
     public Drawable getThumbnail() {

@@ -67,7 +67,7 @@ public class UshahidiPref {
         final String path = context.getDir("",
                 Context.MODE_WORLD_READABLE | Context.MODE_WORLD_WRITEABLE).toString();
 
-        savePath = settings.getString("savePath", path + "/");
+        savePath = settings.getString("savePath", path);
 
         domain = settings.getString("Domain", UshahidiPref.domain);
         firstname = settings.getString("Firstname", "");
