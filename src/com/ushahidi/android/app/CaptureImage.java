@@ -92,22 +92,7 @@ public class CaptureImage {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
 
-            BitmapFactory.decodeFile(uri.getPath(), options);
-            final int IMAGE_MAX_SIZE = UshahidiPref.photoWidth;
-
-            int scale = 1;
-            if (options.outHeight > IMAGE_MAX_SIZE || options.outWidth > IMAGE_MAX_SIZE) {
-                scale = (int)Math.pow(
-                        2,
-                        (int)Math.round(Math.log(IMAGE_MAX_SIZE
-                                / (double)Math.max(options.outHeight, options.outWidth))
-                                / Math.log(0.5)));
-            }
-
-            // Decode with inSampleSize
-            BitmapFactory.Options options2 = new BitmapFactory.Options();
-            options2.inSampleSize = scale;
-            Bitmap original = BitmapFactory.decodeFile(uri.getPath(), options2);
+            Bitmap original = BitmapFactory.decodeFile(uri.getPath());
             if (original != null) {
                 if (getScreenOrientation(activity) == Configuration.ORIENTATION_PORTRAIT
                         && original.getWidth() > original.getHeight()) {
@@ -126,11 +111,17 @@ public class CaptureImage {
 
     public Bitmap scaleBitmap(Bitmap original) {
         Log.i(CLASS_TAG, "scaleBitmap is called ");
+        int width = 0;
         if (original != null) {
             float ratio = (float)original.getWidth() / (float)original.getHeight();
             Log.i(CLASS_TAG, "Scalling image to " + UshahidiPref.photoWidth + " x " + ratio);
-            scaled = Bitmap.createScaledBitmap(original, (int)(UshahidiPref.photoWidth * ratio),
-                    UshahidiPref.photoWidth, true);
+            if(UshahidiPref.photoWidth == 0 ){
+                width = 200;
+            } else{
+                width = UshahidiPref.photoWidth;
+            }
+            scaled = Bitmap.createScaledBitmap(original, (int)(width * ratio),
+                    width, true);
             original.recycle();
 
             return scaled;

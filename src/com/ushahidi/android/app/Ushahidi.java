@@ -113,9 +113,37 @@ public class Ushahidi extends DashboardActivity {
         setTitleFromActivityLabel(R.id.title_text);
         mHandler = new Handler();
         bundle = new Bundle();
-        
+
         // load settings
         UshahidiPref.loadSettings(this);
+
+        // check for default deployment
+        checkDefaultDeployment();
+
+        // check if domain has been set
+        if (UshahidiPref.domain.length() == 0 || UshahidiPref.domain.equals("http://")) {
+            mHandler.post(mDisplayPrompt);
+        }
+
+        listBtn = (Button)findViewById(R.id.incident_list);
+        checkinListBtn = (Button)findViewById(R.id.checkin_list_btn);
+
+        addBtn = (Button)findViewById(R.id.incident_add);
+        checkinAddBtn = (Button)findViewById(R.id.checkin_add_btn);
+
+        settingsBtn = (Button)findViewById(R.id.deployment_settings);
+        mapBtn = (Button)findViewById(R.id.incident_map);
+        searchBtn = (Button)findViewById(R.id.deployment_search);
+        aboutBtn = (Button)findViewById(R.id.deployment_about);
+
+        initializeUI();
+
+    }
+
+    /**
+     * Check if default deployment has been set.
+     */
+    private void checkDefaultDeployment() {
         // Check if default domain has been set.
         if (!TextUtils.isEmpty(getString(R.string.default_deployment))) {
             String domain = getString(R.string.default_deployment);
@@ -138,24 +166,6 @@ public class Ushahidi extends DashboardActivity {
             }
         }
 
-        // check if domain has been set
-        if (UshahidiPref.domain.length() == 0 || UshahidiPref.domain.equals("http://")) {
-            mHandler.post(mDisplayPrompt);
-        }
-
-        listBtn = (Button)findViewById(R.id.incident_list);
-        checkinListBtn = (Button)findViewById(R.id.checkin_list_btn);
-
-        addBtn = (Button)findViewById(R.id.incident_add);
-        checkinAddBtn = (Button)findViewById(R.id.checkin_add_btn);
-
-        settingsBtn = (Button)findViewById(R.id.deployment_settings);
-        mapBtn = (Button)findViewById(R.id.incident_map);
-        searchBtn = (Button)findViewById(R.id.deployment_search);
-        aboutBtn = (Button)findViewById(R.id.deployment_about);
-
-        initializeUI();
-
     }
 
     @Override
@@ -163,10 +173,15 @@ public class Ushahidi extends DashboardActivity {
         refreshReports();
     }
 
-    public void refreshReports() {
-        ReportsTask reportsTask = new ReportsTask();
-        reportsTask.appContext = this;
-        reportsTask.execute();
+    private void refreshReports() {
+        // make sure there is a deployment to fetch reports/checkins from
+        if (UshahidiPref.domain.length() == 0 || UshahidiPref.domain.equals("http://")) {
+            mHandler.post(mDisplayPrompt);
+        } else {
+            ReportsTask reportsTask = new ReportsTask();
+            reportsTask.appContext = this;
+            reportsTask.execute();
+        }
     }
 
     @Override
@@ -178,7 +193,7 @@ public class Ushahidi extends DashboardActivity {
     /**
      * Initializes some of the UI components and test
      */
-    public void initializeUI() {
+    protected void initializeUI() {
         UshahidiPref.loadSettings(this);
         // This is to temporarily disable reports stuff
         if (UshahidiPref.isCheckinEnabled == 1) {
@@ -471,9 +486,8 @@ public class Ushahidi extends DashboardActivity {
                 return true;
 
             case SYNC:
-                ReportsTask reportsTask = new ReportsTask();
-                reportsTask.appContext = this;
-                reportsTask.execute();
+                this.checkDefaultDeployment();
+                this.refreshReports();
                 return true;
 
         }
@@ -501,7 +515,7 @@ public class Ushahidi extends DashboardActivity {
         @Override
         protected Integer doInBackground(Void... params) {
             Util.checkForCheckin(appContext);
-            if(UshahidiPref.isCheckinEnabled == 0 ) {
+            if (UshahidiPref.isCheckinEnabled == 0) {
                 status = Util.processReports(appContext);
             } else {
                 status = Util.processCheckins(appContext);

@@ -356,7 +356,7 @@ public class Util {
                     mNewCategories = HandleXml
                             .processCategoriesXml(UshahidiPref.categoriesResponse);
                 } else {
-                    Log.d(CLASS_TAG,"processReport(): categories total: "+mNewCategories.size());
+                    
                     return 1;
                 }
 
@@ -364,7 +364,7 @@ public class Util {
                     mNewIncidents = HandleXml.processIncidentsXml(UshahidiPref.incidentsResponse);
 
                 } else {
-                    Log.d(CLASS_TAG,"processReport():  incidents total:"+mNewIncidents.size());
+                    
                     return 2;
                 }
 
