@@ -66,6 +66,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.maps.MapView;
+import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.checkin.NetworkServices;
 import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
@@ -485,9 +486,6 @@ public class AddIncident extends UserLocationMap {
                 // Log.d(CLASS_TAG, "image path" + UshahidiPref.fileName);
                 if (original != null) {
 
-                    Bitmap scaled = new CaptureImage().scaleBitmap(original);
-                    original.recycle();
-
                     // get image URL
                     Uri u = new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this);
 
@@ -496,11 +494,11 @@ public class AddIncident extends UserLocationMap {
                     NetworkServices.fileName = u.getPath();
 
                     // use resized images
-                    if (scaled != null) {
-                        if (captureImage.imageExist(UshahidiPref.fileName, this))
-                            mBtnPicture.setText(getString(R.string.change_photo));
-                        mSelectedPhoto.setImageBitmap(scaled);
-                    }
+
+                    if (captureImage.imageExist(UshahidiPref.fileName, this))
+                        mBtnPicture.setText(getString(R.string.change_photo));
+                    mSelectedPhoto.setImageBitmap(original);
+
                 }
                 break;
 
@@ -539,12 +537,11 @@ public class AddIncident extends UserLocationMap {
                         ImageManager.writeImage(byteArrayos.toByteArray(), mFilename, filepath);
                         UshahidiPref.fileName = mFilename;
 
-                        Bitmap selectedImage = ImageManager.getBitmap(UshahidiPref.fileName,
-                                filepath);
+                        Bitmap selectedImage = new CaptureImage().getBitmap(
+                                new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this),
+                                AddIncident.this);
 
                         if (selectedImage != null) {
-                            Bitmap scaled = new CaptureImage().scaleBitmap(selectedImage);
-                            selectedImage.recycle();
 
                             // get image URL
                             Uri u = new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this);
@@ -554,26 +551,24 @@ public class AddIncident extends UserLocationMap {
                             NetworkServices.fileName = u.getPath();
 
                             // use resized images
-                            if (scaled != null) {
-                                if (captureImage.imageExist(UshahidiPref.fileName, this))
-                                    mBtnPicture.setText(getString(R.string.change_photo));
-                                mSelectedPhoto.setImageBitmap(scaled);
-                            }
 
+                            if (captureImage.imageExist(UshahidiPref.fileName, this))
+                                mBtnPicture.setText(getString(R.string.change_photo));
+                            mSelectedPhoto.setImageBitmap(selectedImage);
                         }
+
                     }
 
                 } else {
 
                     if (!TextUtils.isEmpty(filepath)) {
 
-                        Bitmap selectedImage = ImageManager.getBitmap(UshahidiPref.fileName,
-                                filepath);
+                        Bitmap selectedImage = new CaptureImage().getBitmap(
+                                new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this),
+                                AddIncident.this);
+
                         if (selectedImage != null) {
-                            Bitmap scaled = new CaptureImage().scaleBitmap(selectedImage);
-                            selectedImage.recycle();
-                            
-                            
+
                             // get image URL
                             Uri u = new CaptureImage().getPhotoUri("photo.jpg", AddIncident.this);
 
@@ -582,11 +577,11 @@ public class AddIncident extends UserLocationMap {
                             NetworkServices.fileName = u.getPath();
 
                             // use resized images
-                            if (scaled != null) {
-                                if (captureImage.imageExist(UshahidiPref.fileName, this))
-                                    mBtnPicture.setText(getString(R.string.change_photo));
-                                mSelectedPhoto.setImageBitmap(scaled);
-                            }
+
+                            if (captureImage.imageExist(UshahidiPref.fileName, this))
+                                mBtnPicture.setText(getString(R.string.change_photo));
+                            mSelectedPhoto.setImageBitmap(selectedImage);
+
                         }
 
                     }

@@ -326,6 +326,7 @@ public class CheckinActivity extends UserLocationMap {
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
 
     }
@@ -484,10 +485,6 @@ public class CheckinActivity extends UserLocationMap {
                         CheckinActivity.this);
                 Log.d(CLASS_TAG, "image path" + UshahidiPref.fileName);
                 if (original != null) {
-
-                    Bitmap scaled = new CaptureImage().scaleBitmap(original);
-                    original.recycle();
-
                     // get image URL
                     Uri u = new CaptureImage().getPhotoUri("photo.jpg", CheckinActivity.this);
 
@@ -498,11 +495,10 @@ public class CheckinActivity extends UserLocationMap {
                     UshahidiPref.fileName = u.getPath();
 
                     // use resized images
-                    if (scaled != null) {
-                        if (captureImage.imageExist(UshahidiPref.fileName, this))
-                            uploadPhotoButton.setText(getString(R.string.change_photo));
-                        mCheckImgPrev.setImageBitmap(scaled);
-                    }
+
+                    if (captureImage.imageExist(UshahidiPref.fileName, this))
+                        uploadPhotoButton.setText(getString(R.string.change_photo));
+                    mCheckImgPrev.setImageBitmap(original);
 
                 }
                 break;
@@ -539,13 +535,12 @@ public class CheckinActivity extends UserLocationMap {
 
                     if (!TextUtils.isEmpty(filepath)) {
                         ImageManager.writeImage(byteArrayos.toByteArray(), mFilename, filepath);
-                        
+                        // Do something with image taken with camera
+                        Bitmap selectedImage = new CaptureImage().getBitmap(
+                                new CaptureImage().getPhotoUri("photo.jpg", CheckinActivity.this),
+                                CheckinActivity.this);
 
-                        Bitmap selectedImage = ImageManager.getBitmap(UshahidiPref.fileName,
-                                filepath);
                         if (selectedImage != null) {
-                            Bitmap scaled = new CaptureImage().scaleBitmap(selectedImage);
-                            selectedImage.recycle();
 
                             // get image URL
                             Uri u = new CaptureImage().getPhotoUri("photo.jpg",
@@ -557,11 +552,11 @@ public class CheckinActivity extends UserLocationMap {
                             mSelectedPhotoText.setVisibility(View.VISIBLE);
 
                             // use resized images
-                            if (scaled != null) {
-                                if (captureImage.imageExist(UshahidiPref.fileName, this))
-                                    uploadPhotoButton.setText(getString(R.string.change_photo));
-                                mCheckImgPrev.setImageBitmap(scaled);
-                            }
+
+                            if (captureImage.imageExist(UshahidiPref.fileName, this))
+                                uploadPhotoButton.setText(getString(R.string.change_photo));
+                            mCheckImgPrev.setImageBitmap(selectedImage);
+
                         }
 
                     }
@@ -569,12 +564,11 @@ public class CheckinActivity extends UserLocationMap {
                 } else {
 
                     if (!TextUtils.isEmpty(filepath)) {
+                        Bitmap selectedImage = new CaptureImage().getBitmap(
+                                new CaptureImage().getPhotoUri("photo.jpg", CheckinActivity.this),
+                                CheckinActivity.this);
 
-                        Bitmap selectedImage = ImageManager.getBitmap(UshahidiPref.fileName,
-                                filepath);
                         if (selectedImage != null) {
-                            Bitmap scaled = new CaptureImage().scaleBitmap(selectedImage);
-                            selectedImage.recycle();
 
                             // get image URL
                             Uri u = new CaptureImage().getPhotoUri("photo.jpg",
@@ -586,11 +580,11 @@ public class CheckinActivity extends UserLocationMap {
                             mSelectedPhotoText.setVisibility(View.VISIBLE);
 
                             // use resized images
-                            if (scaled != null) {
-                                if (captureImage.imageExist(UshahidiPref.fileName, this))
-                                    uploadPhotoButton.setText(getString(R.string.change_photo));
-                                mCheckImgPrev.setImageBitmap(scaled);
-                            }
+
+                            if (captureImage.imageExist(UshahidiPref.fileName, this))
+                                uploadPhotoButton.setText(getString(R.string.change_photo));
+                            mCheckImgPrev.setImageBitmap(selectedImage);
+
                         }
 
                     }
@@ -753,7 +747,7 @@ public class CheckinActivity extends UserLocationMap {
                             + postCheckinJsonErrorCode);
 
                     clearFields();
-                    
+
                     // after a successful upload, delete the file
                     File f = new File(UshahidiPref.fileName);
                     if (f.exists()) {

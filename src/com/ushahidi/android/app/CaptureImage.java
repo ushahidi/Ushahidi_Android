@@ -89,21 +89,24 @@ public class CaptureImage {
 
             // Decode image size to handle proper image consumption
             Log.i(CLASS_TAG, "Decoding bitmap image to handle proper memory consumption ");
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
 
             Bitmap original = BitmapFactory.decodeFile(uri.getPath());
             if (original != null) {
-                if (getScreenOrientation(activity) == Configuration.ORIENTATION_PORTRAIT
-                        && original.getWidth() > original.getHeight()) {
-                    Matrix matrix = new Matrix();
-                    matrix.postRotate(90);
-                    Bitmap rotated = Bitmap.createBitmap(original, 0, 0, original.getWidth(),
-                            original.getHeight(), matrix, true);
-                    original.recycle();
-                    return rotated;
+                // scale image.
+                Bitmap scale = scaleBitmap(original);
+                // rotate image
+                if (scale != null) {
+                    if (getScreenOrientation(activity) == Configuration.ORIENTATION_PORTRAIT
+                            && scale.getWidth() > scale.getHeight()) {
+                        Matrix matrix = new Matrix();
+                        matrix.postRotate(90);
+                        Bitmap rotated = Bitmap.createBitmap(scale, 0, 0, scale.getWidth(),
+                                scale.getHeight(), matrix, true);
+                        scale.recycle();
+                        return rotated;
+                    }
+                    return scale;
                 }
-                return original;
             }
         }
         return null;
@@ -115,13 +118,12 @@ public class CaptureImage {
         if (original != null) {
             float ratio = (float)original.getWidth() / (float)original.getHeight();
             Log.i(CLASS_TAG, "Scalling image to " + UshahidiPref.photoWidth + " x " + ratio);
-            if(UshahidiPref.photoWidth == 0 ){
+            if (UshahidiPref.photoWidth == 0) {
                 width = 200;
-            } else{
+            } else {
                 width = UshahidiPref.photoWidth;
             }
-            scaled = Bitmap.createScaledBitmap(original, (int)(width * ratio),
-                    width, true);
+            scaled = Bitmap.createScaledBitmap(original, (int)(width * ratio), width, true);
             original.recycle();
 
             return scaled;
