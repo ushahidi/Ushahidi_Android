@@ -148,6 +148,8 @@ public class CheckinActivity extends UserLocationMap {
 
     private CaptureImage captureImage;
 
+    private static final int CHECKIN_PREF = 1;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -278,7 +280,7 @@ public class CheckinActivity extends UserLocationMap {
     @Override
     protected void onPause() {
 
-        SharedPreferences.Editor editor = getPreferences(0).edit();
+        SharedPreferences.Editor editor = getPreferences(CHECKIN_PREF).edit();
         editor.putString("message", checkinMessageText.getText().toString());
         editor.putString("firstname", firstName.getText().toString());
         editor.putString("lastname", lastName.getText().toString());
@@ -291,7 +293,7 @@ public class CheckinActivity extends UserLocationMap {
 
     @Override
     protected void onResume() {
-        SharedPreferences prefs = getPreferences(0);
+        SharedPreferences prefs = getPreferences(CHECKIN_PREF);
         String message = prefs.getString("message", null);
         String firstname = prefs.getString("firstname", null);
         String lastname = prefs.getString("lastname", null);
@@ -328,7 +330,7 @@ public class CheckinActivity extends UserLocationMap {
 
     }
 
-    protected void clearFields() {
+    private void clearFields() {
         Log.d(CLASS_TAG, "clearFields(): clearing fields");
         // delete unset photo
         File f = new File(UshahidiPref.fileName);
@@ -339,9 +341,19 @@ public class CheckinActivity extends UserLocationMap {
         UshahidiPref.fileName = "";
         if (!captureImage.imageExist(UshahidiPref.fileName, this))
             uploadPhotoButton.setText(getString(R.string.btn_add_photo));
+
+        checkinMessageText.setText("");
+
+        firstName.setText("");
+
+        lastName.setText("");
+
+        emailAddress.setText("");
+
         mCheckImgPrev.setImageDrawable(null);
         mCheckImgPrev.setImageBitmap(null);
-        SharedPreferences.Editor editor = getPreferences(0).edit();
+
+        SharedPreferences.Editor editor = getPreferences(CHECKIN_PREF).edit();
         editor.putString("message", "");
         editor.putString("firstname", "");
         editor.putString("lastname", "");
@@ -483,6 +495,7 @@ public class CheckinActivity extends UserLocationMap {
                     selectedPhoto = u.getPath();
                     NetworkServices.fileName = u.getPath();
                     mSelectedPhotoText.setVisibility(View.VISIBLE);
+                    UshahidiPref.fileName = u.getPath();
 
                     // use resized images
                     if (scaled != null) {
@@ -526,7 +539,7 @@ public class CheckinActivity extends UserLocationMap {
 
                     if (!TextUtils.isEmpty(filepath)) {
                         ImageManager.writeImage(byteArrayos.toByteArray(), mFilename, filepath);
-                        UshahidiPref.fileName = mFilename;
+                        
 
                         Bitmap selectedImage = ImageManager.getBitmap(UshahidiPref.fileName,
                                 filepath);
@@ -567,7 +580,7 @@ public class CheckinActivity extends UserLocationMap {
                             Uri u = new CaptureImage().getPhotoUri("photo.jpg",
                                     CheckinActivity.this);
 
-                            Log.i(CLASS_TAG, "Image File Path" + u.getPath());
+                            Log.i(CLASS_TAG, "Image File Path " + u.getPath());
                             UshahidiPref.fileName = u.getPath();
                             selectedPhoto = u.getPath();
                             mSelectedPhotoText.setVisibility(View.VISIBLE);
@@ -740,11 +753,15 @@ public class CheckinActivity extends UserLocationMap {
                             + postCheckinJsonErrorCode);
 
                     clearFields();
-
+                    
+                    // after a successful upload, delete the file
+                    File f = new File(UshahidiPref.fileName);
+                    if (f.exists()) {
+                        f.delete();
+                    }
                     com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
                             R.string.checkin_success_toast);
 
-                    CheckinActivity.this.finish();
                     goToCheckins();
 
                 } else {

@@ -76,7 +76,7 @@ public class CaptureImage {
         Log.d(CLASS_TAG, "imageExist(): " + filename);
         File path = new File(filename);
         if (!path.exists()) {
-            Log.d(CLASS_TAG, "image doest not exist");
+            Log.d(CLASS_TAG, "image does not exist");
             return false;
         }
 
