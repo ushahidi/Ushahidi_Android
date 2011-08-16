@@ -57,8 +57,10 @@ public class CaptureImage {
 
     public Uri getPhotoUri(String filename, Activity activity) {
         File path = new File(Environment.getExternalStorageDirectory(), activity.getPackageName());
-        if (!path.exists())
-            return null;
+        if (!path.exists()) {
+            path.mkdir();
+            return Uri.fromFile(new File(path, filename));
+        }
 
         return Uri.fromFile(new File(path, filename));
     }

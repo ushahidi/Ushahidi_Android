@@ -506,7 +506,7 @@ public class CheckinActivity extends UserLocationMap {
                 // do something with image taken from image gallery
                 mFilename = "photo.jpg";
                 final String filepath = new CaptureImage().getPhotoPath(CheckinActivity.this);
-
+                Log.i(CLASS_TAG, "Image File Path" + filepath);
                 if (data != null) {
 
                     Uri uri = data.getData();
@@ -534,12 +534,14 @@ public class CheckinActivity extends UserLocationMap {
                     }
 
                     if (!TextUtils.isEmpty(filepath)) {
+                        
                         ImageManager.writeImage(byteArrayos.toByteArray(), mFilename, filepath);
                         // Do something with image taken with camera
                         Bitmap selectedImage = new CaptureImage().getBitmap(
                                 new CaptureImage().getPhotoUri("photo.jpg", CheckinActivity.this),
                                 CheckinActivity.this);
-
+                        Log.i(CLASS_TAG, "Image File Path" + new CaptureImage().getPhotoUri("photo.jpg",
+                                CheckinActivity.this));
                         if (selectedImage != null) {
 
                             // get image URL

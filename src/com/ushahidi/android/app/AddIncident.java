@@ -66,7 +66,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.maps.MapView;
-import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.checkin.NetworkServices;
 import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.UshahidiDatabase;
