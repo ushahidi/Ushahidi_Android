@@ -50,6 +50,7 @@ import xml.dom.minidom
 import csv
 import os
 import sys
+import textwrap
 
 from optparse import OptionParser
 from xml.dom.minidom import Node
@@ -111,7 +112,7 @@ class StringGenerator:
             for string_element in node.childNodes:
                 if string_element.nodeType == Node.TEXT_NODE:
                     f.write('#Key: %s\n'% name)
-                    f.write('msgid "%s"\n'% string_element.data.rstrip('\r\n'))
+                    f.write('msgid "%s"\n'% textwrap.fill(string_element.data.replace('\t','')))
                     f.write('msgstr ""\n\n')
         
         """ Include plurals in the string """
@@ -126,7 +127,7 @@ class StringGenerator:
                         for item in item_element.childNodes:
                             if item.nodeType == Node.TEXT_NODE:
                                 f.write('#Key: %s\n'%quantity)
-                                f.write('msgid "%s"\n'%item.data)
+                                f.write('msgid "%s"\n'% textwrap.fill(item.data.replace('\t','\n').replace('\t',''.strip())))
                                 f.write('msgstr ""\n\n')
 
 
