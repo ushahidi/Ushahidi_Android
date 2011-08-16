@@ -3,6 +3,7 @@ Feature:
   * Added Catalan langauge
   * Improved UI when viewing details of a report/checkin
   * More code clean up. Thanks to https://github.com/jmschanck
+  * Added automatic state saving when adding a report/checkin.
 
 Bug:
   * Removed hardware camera auto focus requirement 
