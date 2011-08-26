@@ -45,6 +45,7 @@ import android.location.Criteria;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -63,6 +64,12 @@ import com.ushahidi.android.app.net.Incidents;
 import com.ushahidi.android.app.net.UshahidiGeocoder;
 import com.ushahidi.android.app.net.UshahidiHttpClient;
 
+/**
+ * This is a utility class that has common methods to be used by most clsses.
+ *  
+ * @author eyedol
+ *
+ */
 public class Util {
 
     private static NetworkInfo networkInfo;
@@ -88,7 +95,7 @@ public class Util {
 
     private static final String VALID_URL_PATTERN = "^(https?|ftp)://[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].+)?$";
     
-    private static final String CLASS_TAG = Util.class.getCanonicalName();
+    private static final String CLASS_TAG = Util.class.getSimpleName();
     /**
      * joins two strings together
      * 
@@ -640,5 +647,27 @@ public class Util {
         } else {
             return false;
         }
+    }
+    
+    /**
+     * Get the current phone number. 
+     * 
+     * Known issue. This doesn't not always return the phone's number.
+     * 
+     * @return
+     */
+    private String getMyPhoneNumber(Context context){
+        TelephonyManager mTelephonyMgr;
+        mTelephonyMgr = (TelephonyManager)
+            context.getSystemService(Context.TELEPHONY_SERVICE); 
+        final String phoneNumber = mTelephonyMgr.getLine1Number();
+        Log.i(CLASS_TAG, "Phone Number: "+phoneNumber );
+        return phoneNumber;
+    }
+
+    private String getMy10DigitPhoneNumber(){
+        //String s = this.getMyPhoneNumber();
+        //return s.substring(2);
+        return "";
     }
 }

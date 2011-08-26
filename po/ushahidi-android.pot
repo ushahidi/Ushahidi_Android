@@ -1,0 +1,833 @@
+# 
+ # Copyright (c) 2010 Ushahidi Inc
+ # All rights reserved
+ # Contact: team@ushahidi.com
+ # Website: http://www.ushahidi.com
+ # 
+ # GNU Lesser General Public License Usage
+ # This file may be used under the terms of the GNU Lesser
+ # General Public License version 3 as published by the Free Software
+ # Foundation and appearing in the file LICENSE.LGPL included in the
+ # packaging of this file. Please review the following information to
+ # ensure the GNU Lesser General Public License version 3 requirements
+ # will be met: http://www.gnu.org/licenses/lgpl.html.	
+ #	
+ #
+ # If you have questions regarding the use of this file, please contact
+ # Ushahidi developers at team@ushahidi.com.
+ # 
+ #
+msgid ""
+msgstr ""
+"Project-Id-Version: 2.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-26-08 08:06-0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+
+#Key: app_name
+msgid "Ushahidi"
+msgstr ""
+
+#Key: add_incident
+msgid "Add Report"
+msgstr ""
+
+#Key: view_incident
+msgid "View Reports"
+msgstr ""
+
+#Key: incident_details
+msgid "Report Detail"
+msgstr ""
+
+#Key: app_settings
+msgid "Settings"
+msgstr ""
+
+#Key: ushahidi_about
+msgid "About"
+msgstr ""
+
+#Key: ushahidi_sync
+msgid "Synchronize"
+msgstr ""
+
+#Key: ushahidi_splash_screen
+msgid "Splash Screen"
+msgstr ""
+
+#Key: prompt_mesg
+msgid "Choose A Category to Filter"
+msgstr ""
+
+#Key: btn_country
+msgid "Default location"
+msgstr ""
+
+#Key: btn_confirm
+msgid "Save"
+msgstr ""
+
+#Key: str_post_photos
+msgid "Add a Photo"
+msgstr ""
+
+#Key: add_categories
+msgid "Choose Categories"
+msgstr ""
+
+#Key: alert_dialog_error_title
+msgid "Oops"
+msgstr ""
+
+#Key: invalid_email_address
+msgid "An invalid email address was entered"
+msgstr ""
+
+#Key: invalid_ushahidi_instance
+msgid "Looks like the URL entered is not an Ushahidi deployment."
+msgstr ""
+
+#Key: btn_save
+#msgid "Save"
+#msgstr ""
+
+#Key: btn_find
+msgid "Find me"
+msgstr ""
+
+#Key: btn_reset
+msgid "Reset"
+msgstr ""
+
+#Key: btn_ok
+msgid "Ok"
+msgstr ""
+
+#Key: btn_add_photo
+msgid "Add Photo"
+msgstr ""
+
+#Key: btn_cancel
+msgid "Cancel"
+msgstr ""
+
+#Key: btn_send
+msgid "Send"
+msgstr ""
+
+#Key: incident_date
+msgid "Change the date"
+msgstr ""
+
+#Key: incident_verified
+msgid "Verified"
+msgstr ""
+
+#Key: incident_unverified
+msgid "Unverified"
+msgstr ""
+
+#Key: incident_location
+msgid "Location:"
+msgstr ""
+
+#Key: add_location
+msgid "Add a location"
+msgstr ""
+
+#Key: view_map
+msgid "Map"
+msgstr ""
+
+#Key: incident_description
+msgid "Description:"
+msgstr ""
+
+#Key: incident_time
+msgid "Change the time"
+msgstr ""
+
+#Key: incident_title
+msgid "Title:"
+msgstr ""
+
+#Key: incident_add_category
+msgid "Select Category"
+msgstr ""
+
+#Key: incident_menu_add
+#msgid "Add Report"
+#msgstr ""
+
+#Key: incident_list
+# msgid "View Reports"
+# msgstr ""
+
+#Key: google_map_api_key_dev
+msgid "02cv5Q8Rob0ChOFNh6Gf_ePmVHYlVgA_pgJIHRA"
+msgstr ""
+
+#Key: google_map_api_key
+msgid "02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA"
+msgstr ""
+
+#Key: menu_home
+msgid "Home"
+msgstr ""
+
+#Key: menu_sync
+msgid "Sync"
+msgstr ""
+
+#Key: instructions
+msgid "Tap your location on the map"
+msgstr ""
+
+#Key: menu_settings
+# msgid "Settings"
+# msgstr ""
+
+#Key: basic_settings
+msgid "Basic settings"
+msgstr ""
+
+#Key: advanced_settings
+msgid "Advanced settings"
+msgstr ""
+
+#Key: hint_advanced_settings
+msgid "For more advanced settings"
+msgstr ""
+
+#Key: txt_clear_cache
+msgid "Clear cache"
+msgstr ""
+
+#Key: txt_confirm_clear_cache
+msgid "Are you sure you want to clear the cache?"
+msgstr ""
+
+#Key: hint_clear_cache
+msgid "Clear all stored data."
+msgstr ""
+
+#Key: option_location
+msgid "Default folder"
+msgstr ""
+
+#Key: hint_option_location
+msgid "The location where you want to store items saved from the selected deployment."
+msgstr ""
+
+#Key: hint_SD_save_path
+msgid "Type a folder name"
+msgstr ""
+
+#Key: bg_notification
+msgid "Background Notifications"
+msgstr ""
+
+#Key: vibrate
+msgid "Vibrate"
+msgstr ""
+
+#Key: hint_vibrate
+msgid "Will cause phone to vibrate"
+msgstr ""
+
+#Key: ringtone
+msgid "Ringtone"
+msgstr ""
+
+#Key: hint_ringtone
+msgid "Play a ringtone"
+msgstr ""
+
+#Key: select_ringtone
+msgid "Select Ringtone"
+msgstr ""
+
+#Key: hint_select_ringtone
+msgid "Change which ringtone to use"
+msgstr ""
+
+#Key: flash_led
+msgid "Flashing LED"
+msgstr ""
+
+#Key: hint_flash_led
+msgid "Cause phone's LED to flash"
+msgstr ""
+
+#Key: hint_domain
+msgid "Select the Ushahidi deployment that you wish to interact with."
+msgstr ""
+
+#Key: chk_auto_fetch
+msgid "Auto sync"
+msgstr ""
+
+#Key: hint_auto_fetch
+msgid "Ushahidi will automatically download new reports."
+msgstr ""
+
+#Key: txt_auto_update_delay
+msgid "Auto sync frequency"
+msgstr ""
+
+#Key: hint_auto_update_delay
+msgid "Set how often Ushahidi syncronizes with the selected deployment."
+msgstr ""
+
+#Key: txt_path_SD
+msgid "Path on SD:"
+msgstr ""
+
+#Key: txt_cache
+msgid "Cache files:"
+msgstr ""
+
+#Key: txt_countries
+msgid "Select a default country"
+msgstr ""
+
+#Key: txt_domain
+msgid "Choose your website"
+msgstr ""
+
+#Key: txt_first_name
+msgid "First name"
+msgstr ""
+
+#Key: hint_first_name
+msgid "For attribution when submitting a report (optional)."
+msgstr ""
+
+#Key: txt_last_name
+msgid "Last name"
+msgstr ""
+
+#Key: hint_last_name
+msgid "Also for attribution when submitting a report (optional)."
+msgstr ""
+
+#Key: txt_email
+msgid "E-mail address"
+msgstr ""
+
+#Key: hint_email
+msgid "For contact purposes only."
+msgstr ""
+
+#Key: total_reports
+msgid "Number of reports"
+msgstr ""
+
+#Key: hint_total_reports
+msgid "The total number of reports to fetch from the selected deployment."
+msgstr ""
+
+#Key: no_reports
+msgid "There are no reports to be shown"
+msgstr ""
+
+#Key: incident_menu_map
+msgid "View Map"
+msgstr ""
+
+#Key: incident_menu_refresh
+msgid "Refresh"
+msgstr ""
+
+#Key: reports
+msgid "Reports"
+msgstr ""
+
+#Key: menu_about
+#msgid "About"
+#msgstr ""
+
+#Key: ushahidi_url
+msgid "ushahidi.com"
+msgstr ""
+
+#Key: welcome_mgs
+msgid "Ushahidi is a non-profit tech company that develops free and open source software for information collection, visualization and interactive mapping. We built the Ushahidi platform as a tool to easily crowdsource information using multiple channels, including SMS, email, Twitter and the web."
+msgstr ""
+
+#Key: internet_connection
+msgid "Network error, please ensure you are connected to the Internet"
+msgstr ""
+
+#Key: preferences_notifications
+msgid "Notifications"
+msgstr ""
+
+#Key: report_successfully_added_online
+msgid "Report successfully posted online and entered into a moderation queue"
+msgstr ""
+
+#Key: report_successfully_added_offline
+msgid "Report sent to local storage due to unavailability of Internet. Remember to sync to the online instance when there there is Internet connection."
+msgstr ""
+
+#Key: failed_to_add_report_offline
+msgid "Failed to send report.Check to see if you filled all required fields."
+msgstr ""
+
+#Key: failed_to_add_report_online
+msgid "Connection failure, cannot submit your report. Probably you are on a very slow connection or the server is down or very slow at the moment."
+msgstr ""
+
+#Key: empty_report_title
+msgid "Enter a title for the report."
+msgstr ""
+
+#Key: empty_report_description
+msgid "Enter a description for the report."
+msgstr ""
+
+#Key: empty_report_location
+msgid "The location name field is required."
+msgstr ""
+
+#Key: empty_report_categories
+msgid "Select at least one category."
+msgstr ""
+
+#Key: hint_location
+msgid "Location here"
+msgstr ""
+
+#Key: could_not_fetch_reports
+msgid "Could not fetch reports."
+msgstr ""
+
+#Key: no_categories
+msgid "Could not fetch categories."
+msgstr ""
+
+#Key: reports_successfully_fetched
+msgid "Reports successfully fetched."
+msgstr ""
+
+#Key: find_location
+msgid "Finding you..."
+msgstr ""
+
+#Key: location_not_found
+msgid "A location can not currently be determined. Enable more location sources i.e. GPS Satellites in Security and Location Settings."
+msgstr ""
+
+#Key: loc_not_found
+msgid "Your location could not be determined. Make sure you have pin point the exact location on the map."
+msgstr ""
+
+#Key: version
+msgid "v1.1"
+msgstr ""
+
+#Key: report_title
+msgid "Title"
+msgstr ""
+
+#Key: report_verified
+#msgid "Verified"
+#msgstr ""
+
+#Key: report_unverified
+#msgid "Unverified"
+#msgstr ""
+
+#Key: report_desc
+msgid "Description"
+msgstr ""
+
+#Key: report_category
+msgid "Category"
+msgstr ""
+
+#Key: report_date
+msgid "Date"
+msgstr ""
+
+#Key: report_location
+msgid "Location"
+msgstr ""
+
+#Key: report_photo
+msgid "Photo"
+msgstr ""
+
+#Key: status_no
+msgid "No"
+msgstr ""
+
+#Key: status_yes
+msgid "Yes"
+msgstr ""
+
+#Key: please_wait
+msgid "Please wait..."
+msgstr ""
+
+#Key: fetching_new_reports
+msgid "Fetching new reports"
+msgstr ""
+
+#Key: choose_method
+msgid "Choose Method"
+msgstr ""
+
+#Key: how_to_select_pic
+#msgid "Please choose how you would like to get the picture."
+#msgstr ""
+
+#Key: camera_option
+msgid "Camera"
+msgstr ""
+
+#Key: gallery_option
+msgid "Gallery"
+msgstr ""
+
+#Key: network_error
+msgid "Network Error"
+msgstr ""
+
+#Key: network_error_msg
+msgid "Network Error, please ensure you are connected to the Internet"
+msgstr ""
+
+#Key: file_system_error
+msgid "File System Error"
+msgstr ""
+
+#Key: file_system_error_msg
+msgid "File System Error, please ensure your save path is correct!"
+msgstr ""
+
+#Key: read_more
+msgid "Read more..."
+msgstr ""
+
+#Key: tab_item_report_list
+msgid "List"
+msgstr ""
+
+#Key: tab_item_report_map
+#msgid "Map"
+#msgstr ""
+
+#Key: tab_item_checkin
+msgid "Check Ins"
+msgstr ""
+
+#Key: checkin_btn
+msgid "Check In"
+msgstr ""
+
+#Key: checkin_message
+msgid "Message"
+msgstr ""
+
+#Key: checkin_enter_msg_hint
+msgid "Enter message"
+msgstr ""
+
+#Key: checkin_how_to_select_pic
+msgid "Please choose how you would like to get the picture."
+msgstr ""
+
+#Key: checkin_list
+msgid "View Check In"
+msgstr ""
+
+#Key: checkin_select_pic_file
+msgid "File"
+msgstr ""
+
+#Key: checkin_selected_photo
+msgid "Selected photo"
+msgstr ""
+
+#Key: view_checkins
+msgid "View Check Ins"
+msgstr ""
+
+#Key: checkin_progress_title
+msgid "Working"
+msgstr ""
+
+#Key: checkin_in_progress
+msgid "Sending Check-in..."
+msgstr ""
+
+#Key: checkin_progress_message
+msgid "Getting location data..."
+msgstr ""
+
+#Key: checkin_contact
+msgid "Contact Info"
+msgstr ""
+
+#Key: checkin_success_toast
+msgid "Check in successful"
+msgstr ""
+
+#Key: checkin_error_toast
+msgid "Error encountered during check in"
+msgstr ""
+
+#Key: checkin_empty_message
+msgid "Please enter a check in message."
+msgstr ""
+
+#Key: checkin_no_location
+msgid "Could not get your location. If you are using the GPS feature of the phone make sure the phone can see the sky. If the phone cannot see the sky, turn of the GPS to make use of your network providers cell towers for location."
+msgstr ""
+
+#Key: could_not_fetch_checkin
+msgid "Could not fetch check ins."
+msgstr ""
+
+#Key: checkins_successfully_fetched
+msgid "Checkins successfully fetched."
+msgstr ""
+
+#Key: checkin_enter_firstname_hint
+msgid "Enter first name"
+msgstr ""
+
+#Key: checkin_enter_lastname_hint
+msgid "Enter last name"
+msgstr ""
+
+#Key: checkin_enter_email_hint
+msgid "Enter email"
+msgstr ""
+
+#Key: no_name
+msgid "No name"
+msgstr ""
+
+#Key: curr_location
+msgid "Current location"
+msgstr ""
+
+#Key: notification_status_bar_message
+msgid "Report Sent"
+msgstr ""
+
+#Key: notification_expanded_title
+msgid "Ushahidi Report"
+msgstr ""
+
+#Key: notification_expanded_message
+msgid "Reports Sent Successfully"
+msgstr ""
+
+#Key: change_photo
+msgid "Change Photo"
+msgstr ""
+
+#Key: search_label
+msgid "Deployments"
+msgstr ""
+
+#Key: search_hint
+msgid "Type here to filter the list below..."
+msgstr ""
+
+#Key: deployment_fetched_successful
+msgid "Deployments successfully fetched"
+msgstr ""
+
+#Key: could_not_fetch_data
+msgid "Couldn't fetch new deployments due to network error."
+msgstr ""
+
+#Key: settings_description
+msgid "Found deployments"
+msgstr ""
+
+#Key: no_results
+msgid "No results found for \"%s\""
+msgstr ""
+
+#Key: pull_to_refresh_pull_label
+msgid "Pull to refresh..."
+msgstr ""
+
+#Key: pull_to_refresh_release_label
+msgid "Release to refresh..."
+msgstr ""
+
+#Key: pull_to_refresh_refreshing_label
+msgid "Loading..."
+msgstr ""
+
+#Key: pull_to_refresh_tap_label
+msgid "Tap to refresh..."
+msgstr ""
+
+#Key: share_template
+msgid " Check out"
+msgstr ""
+
+#Key: share_template
+msgid " at"
+msgstr ""
+
+#Key: share_template
+#msgid ""
+#msgstr ""
+
+#Key: title_share
+msgid "Share using"
+msgstr ""
+
+#Key: select_distance
+msgid "Select distance in km"
+msgstr ""
+
+#Key: preview_photo
+msgid "Photo % "
+msgstr ""
+
+#Key: empty_checkins
+msgid "No check ins"
+msgstr ""
+
+#Key: empty_reports
+msgid "No reports"
+msgstr ""
+
+#Key: empty_deployments
+msgid "No deployments"
+msgstr ""
+
+#Key: clear_all
+msgid "Clear all"
+msgstr ""
+
+#Key: confirm_clear
+msgid "Are you sure you want to clear everything?"
+msgstr ""
+
+#Key: items_cleared
+msgid "Everything was successfully cleared"
+msgstr ""
+
+#Key: no_items_cleared
+msgid "No items to clear"
+msgstr ""
+
+#Key: loading
+#msgid "Loading..."
+#msgstr ""
+
+#Key: deploymet_url
+msgid "Deployment URL"
+msgstr ""
+
+#Key: add_deployment
+msgid "Add Deployment"
+msgstr ""
+
+#Key: delete
+msgid "Delete"
+msgstr ""
+
+#Key: deployment_deleted
+msgid "Deployment deleted"
+msgstr ""
+
+#Key: deployment_deleted_failed
+msgid "Failed to delete"
+msgstr ""
+
+#Key: fix_error
+msgid "Please make sure a name and a valid URL are entered."
+msgstr ""
+
+#Key: sending_report_in_progress
+msgid "Sending report..."
+msgstr ""
+
+#Key: ushahidi_setup_title
+msgid "Ushahidi Setup"
+msgstr ""
+
+#Key: ushahidi_setup_blub
+msgid "Setup an ushahidi deployment."
+msgstr ""
+
+#Key: all_categories
+msgid "All"
+msgstr ""
+
+#Key: recent_reports
+msgid "Recent Reports"
+msgstr ""
+
+#Key: on_phone
+msgid "On Phone"
+msgstr ""
+
+#Key: on_sd_card
+msgid "On SD Card"
+msgstr ""
+
+#Key: minutes
+msgid "Minutes"
+msgstr ""
+
+#Key: team
+msgid "Team"
+msgstr ""
+
+#Key: twitter
+msgid "Twitter"
+msgstr ""
+
+#Key: contact
+msgid "Contact"
+msgstr ""
+
+#Key: media
+msgid "Media"
+msgstr ""
+
+#Key: facebook
+msgid "Facebook"
+msgstr ""
+
+#Key: photo_resize_title
+msgid "Photo Settings"
+msgstr ""
+
+#Key: photo_resize_summary
+msgid "Resize image width"
+msgstr ""
+
+#Key: photo_size_pixels
+msgid "pixels"
+msgstr ""
+
+##PLURALS##
+#Key: one
+msgid "%1$d result for \"%2$s\":"
+msgstr ""
+
+#Key: other
+msgid "%1$d results for \"%2$s\":"
+msgstr ""
+
