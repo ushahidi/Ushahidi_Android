@@ -1,3 +1,7 @@
+2.5:
+Bug:
+  * Fixed old check-in messages showing up when a different check-in deployment is selected.
+  
 2.4:
 Feature:
   * Added Catalan langauge
