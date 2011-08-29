@@ -99,9 +99,29 @@ class StringGenerator:
     def write_xml_to_screen(self,doc):
         xml.dom.ext.PrettyPrint(doc, file_obj)
 
+    def generate_pot_from_csv(self):
+        """ generate a pot file from csv """
+        destfile = self.destination + "translation.po"
+
+        """ read csv file """
+        csv_data = csv.reader(open(self.source,"rb"))
+
+        if os.path.exists(destfile):
+            os.remove(destfile)
+        f = open(destfile,'w')
+        for row in csv_data:
+            
+            if len(row) and len(row) == 3:
+                
+                f.write('#Key: %s\n'% row[0])
+                f.write('msgid "%s"\n' % row[1])
+                f.write('msgstr "%s"\n\n' % row[2])
+        
+        f.close();
+
     def generate_pot_file(self):
         xml_doc = xml.dom.minidom.parse(self.source)
-        destfile = self.destination + "/ushahidi-android.pot"
+        destfile = self.destination + "/ushahidi-android.po"
 
         if os.path.exists(destfile):
             os.remove(destfile)
@@ -112,7 +132,7 @@ class StringGenerator:
             for string_element in node.childNodes:
                 if string_element.nodeType == Node.TEXT_NODE:
                     f.write('#Key: %s\n'% name)
-                    f.write('msgid "%s"\n'% textwrap.fill(string_element.data.replace('\t','')))
+                    f.write('msgid "%s"\n'% textwrap.fill(string_element.data.replace('\t','').encode('UTF-8')))
                     f.write('msgstr ""\n\n')
         
         """ Include plurals in the string """
@@ -142,6 +162,10 @@ def main(args,options,parser):
         stringgen = StringGenerator(args[0],args[1])
         if options.pot == True:
             stringgen.generate_pot_file()
+
+        if options.csv == True:
+            stringgen.generate_pot_from_csv()
+
     elif len(args) == 3:
         stringgen = StringGenerator(args[1],args[2])
         stringgen.generate_string_xml(args[0])
@@ -151,6 +175,7 @@ usage = "usage: %prog <language_2_letter_iso> <source_file> <destination_folder>
 parser = OptionParser(usage=usage)
 
 parser.add_option("-p","--pot",action="store_true",help="generate pot file from string.xml file", dest="pot")
+parser.add_option("-c","--csv",action="store_true",help="generate pot file from csv file",dest="csv")
 (options, args) = parser.parse_args()
 
 if __name__ == "__main__":

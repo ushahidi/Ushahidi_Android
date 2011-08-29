@@ -590,6 +590,9 @@ public class Util {
             }
 
             if (mCheckins != null && mUsers != null) {
+                //clear existin data
+                UshahidiApplication.mDb.deleteAllCheckins();
+                UshahidiApplication.mDb.deleteUsers();
                 UshahidiApplication.mDb.addUsers(mUsers);
                 UshahidiApplication.mDb.addCheckins(mCheckins);
                 return 0;
