@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+  Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
+  This file may be used under the terms of the GNU Lesser General Public License 
+  version 3 as published by the Free Software Foundation and appearing in the 
+  file LICENSE.LGPL included in the packaging of this file. Please review the 
+  following information to ensure the GNU Lesser General Public License version 
+  3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
+  have questions regarding the use of this file, please contact Ushahidi developers 
+  at team@ushahidi.com. -->
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:orientation="horizontal"
+  android:paddingBottom="35dip"
+  android:paddingLeft="10dip"
+  android:minWidth="200dip"
+  android:id="@+id/balloon_main_layout"
+  android:background="@drawable/popup_selector"
+  android:paddingTop="0dip"
+  android:paddingRight="0dip">
+
+  <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_weight="1"
+    android:paddingTop="10dip"
+    android:id="@+id/balloon_inner_layout">
+
+    <TextView
+      android:layout_height="wrap_content"
+      android:layout_width="fill_parent"
+      android:id="@+id/balloon_item_title"
+      android:text="balloon_item_title"
+      android:textSize="16dip"
+      android:textColor="#000000" />
+    <TextView
+      android:layout_height="wrap_content"
+      android:layout_width="fill_parent"
+      android:id="@+id/balloon_item_snippet"
+      android:text="balloon_item_snippet"
+      android:textColor="#000000"
+      android:textSize="12dip" />
+    <TextView
+      android:layout_height="wrap_content"
+      android:layout_width="fill_parent"
+      android:id="@+id/balloon_item_readmore"
+      android:text="balloon_item_snippet"
+      android:textStyle="bold"
+      android:textColor="#7C2811"
+      android:textSize="12dip" />
+
+  </LinearLayout>
+
+  <ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/popup_close"
+    android:id="@+id/close_img_button"
+    android:paddingLeft="10dip"
+    android:paddingBottom="10dip"
+    android:paddingRight="8dip"
+    android:paddingTop="8dip"></ImageView>
+
+</LinearLayout>

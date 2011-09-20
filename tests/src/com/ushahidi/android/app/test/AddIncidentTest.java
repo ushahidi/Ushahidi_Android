@@ -11,16 +11,16 @@ import android.test.UiThreadTest;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.ushahidi.android.app.AddIncident;
+import com.ushahidi.android.app.IncidentAdd;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.UshahidiPref;
-import com.ushahidi.android.app.data.UshahidiDatabase;
+import com.ushahidi.android.app.Preferences;
+import com.ushahidi.android.app.data.Database;
 
-public class AddIncidentTest extends ActivityInstrumentationTestCase2<AddIncident> {
+public class AddIncidentTest extends ActivityInstrumentationTestCase2<IncidentAdd> {
 
-    private AddIncident mAddIncidentActivity;
+    private IncidentAdd mAddIncidentActivity;
 
-    private UshahidiDatabase mUshahidiDatabase;
+    private Database mUshahidiDatabase;
 
     private EditText mTitle;
 
@@ -33,7 +33,7 @@ public class AddIncidentTest extends ActivityInstrumentationTestCase2<AddInciden
     private Button mSendButton;
 
     public AddIncidentTest() {
-        super("com.ushahidi.android.app", AddIncident.class);
+        super("com.ushahidi.android.app", IncidentAdd.class);
     }
 
     /**
@@ -49,7 +49,7 @@ public class AddIncidentTest extends ActivityInstrumentationTestCase2<AddInciden
         mVectorCategories = new Vector<String>();
         mVectorCategories.add("4");
 
-        mUshahidiDatabase = new UshahidiDatabase(mAddIncidentActivity);
+        mUshahidiDatabase = new Database(mAddIncidentActivity);
         mUshahidiDatabase.open();
         mUshahidiDatabase.deleteAddIncidents();
 
@@ -74,7 +74,7 @@ public class AddIncidentTest extends ActivityInstrumentationTestCase2<AddInciden
     public void testSendReport() {
 
         final SharedPreferences settings = getInstrumentation().getContext().getSharedPreferences(
-                UshahidiPref.PREFS_NAME, 0);
+                Preferences.PREFS_NAME, 0);
         Editor editor = settings.edit();
         editor.putString("Domain", "http://demo.ushahidi.com");
         editor.commit();

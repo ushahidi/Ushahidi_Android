@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+	Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
+	This file may be used under the terms of the GNU Lesser General Public License 
+	version 3 as published by the Free Software Foundation and appearing in the 
+	file LICENSE.LGPL included in the packaging of this file. Please review the 
+	following information to ensure the GNU Lesser General Public License version 
+	3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
+	have questions regarding the use of this file, please contact Ushahidi developers 
+	at team@ushahidi.com. -->
+<RelativeLayout android:id="@+id/relativeLayout1"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="vertical"
+		android:layout_alignParentTop="true" android:background="@drawable/about_background">
+		<LinearLayout style="@style/ActionBarTitleContainer">
+			<ImageButton style="@style/ActionBarTitle"
+				android:contentDescription="@string/menu_home"
+				android:onClick="onClickHome" />
+
+			<ImageView style="@style/ActionBarTitleSeparator" />
+			<TextView style="@style/ActionBarTitleText" />
+			<ImageView style="@style/ActionBarTitleSeparator" />
+			<ImageButton style="@style/ActionBarTitle" android:id="@+id/search_report_btn"
+				android:src="@drawable/button_search" android:onClick="onSearchDeployments" />
+
+		</LinearLayout>
+		<ImageView style="@style/ActionBarSeparator"
+			android:layout_below="@+id/search_report_btn" android:id="@+id/menu_bar_separator" />
+		<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:gravity="center" android:padding="25px"
+			android:layout_alignBottom="@+id/relativeLayout1" android:scrollbars="vertical"
+			android:fadeScrollbars="true">
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:orientation="vertical"
+				android:gravity="center" android:paddingRight="15px"
+				android:layout_alignBottom="@+id/relativeLayout1">
+				<TextView android:background="@drawable/logo_icon"
+					android:id="@+id/title" android:layout_height="wrap_content"
+					android:layout_width="wrap_content" />
+				<TextView android:id="@+id/version" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:textColor="@color/date_color"
+					android:textStyle="bold" android:text="@string/version" />
+				<TextView android:id="@+id/spacer" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" />
+				<TextView android:layout_marginLeft="0px"
+					android:textColor="@color/date_color" android:id="@+id/about_text"
+					android:layout_height="wrap_content" android:text="@string/about_text"
+					android:textStyle="bold" android:layout_width="fill_parent"></TextView>
+				<TextView android:id="@+id/spacer" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" />
+			</LinearLayout>
+		</ScrollView>
+	</LinearLayout>
+	<TextView
+		android:id="@+id/sky_bg" android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:layout_above="@+id/bottom_menu_bar_separator" />
+	<LinearLayout style="@style/BottomActionBarContainer"
+		android:layout_alignParentBottom="true" android:id="@+id/bottom_menu_bar_separator">
+		<LinearLayout android:orientation="horizontal"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_weight="15">
+			<Button android:id="@+id/team_link" style="@style/BottomActionbarButton"
+				android:text="@string/team" android:drawableTop="@drawable/button_team" />
+			<Button android:id="@+id/media_link" style="@style/BottomActionbarButton"
+				android:text="@string/media" android:drawableTop="@drawable/button_media" />
+
+			<Button android:id="@+id/twitter_link" style="@style/BottomActionbarButton"
+				android:text="@string/twitter" android:drawableTop="@drawable/button_twitter" />
+
+			<Button android:id="@+id/facebook_link" style="@style/BottomActionbarButton"
+				android:text="@string/facebook" android:drawableTop="@drawable/button_facebook" />
+
+			<Button android:id="@+id/contact_link" style="@style/BottomActionbarButton"
+				android:text="@string/contact" android:drawableTop="@drawable/button_contact" />
+		</LinearLayout>
+	</LinearLayout>
+</RelativeLayout>
+	

@@ -11,13 +11,13 @@ import android.widget.SimpleCursorAdapter;
 
 import com.ushahidi.android.app.DeploymentSearch;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.UshahidiApplication;
-import com.ushahidi.android.app.data.UshahidiDatabase;
+import com.ushahidi.android.app.MainApplication;
+import com.ushahidi.android.app.data.Database;
 import com.ushahidi.android.app.net.Deployments;
 
 public class DeploymentSearchTest extends ActivityInstrumentationTestCase2<DeploymentSearch> {
 
-    private UshahidiDatabase mUshahidiDatabase;
+    private Database mUshahidiDatabase;
 
     private DeploymentSearch mDeploymentSearchActivity;
 
@@ -46,7 +46,7 @@ public class DeploymentSearchTest extends ActivityInstrumentationTestCase2<Deplo
         setActivityIntent(new Intent(Intent.ACTION_VIEW));
         mDeploymentSearchActivity = getActivity();
 
-        mUshahidiDatabase = new UshahidiDatabase(mDeploymentSearchActivity);
+        mUshahidiDatabase = new Database(mDeploymentSearchActivity);
         mUshahidiDatabase.open();
 
         mDeployments = new Deployments(mDeploymentSearchActivity);
@@ -94,12 +94,12 @@ public class DeploymentSearchTest extends ActivityInstrumentationTestCase2<Deplo
     @UiThreadTest
     public void testShowResults() {
 
-        Cursor cursor = UshahidiApplication.mDb.fetchAllDeployments();
+        Cursor cursor = MainApplication.mDb.fetchAllDeployments();
         assertTrue("Couldn't fetch deployments from online because app is offline",
                 cursor.getCount() > 0);
         String[] from = new String[] {
-                UshahidiDatabase.DEPLOYMENT_ID, UshahidiDatabase.DEPLOYMENT_NAME,
-                UshahidiDatabase.DEPLOYMENT_DESC, UshahidiDatabase.DEPLOYMENT_URL
+                Database.DEPLOYMENT_ID, Database.DEPLOYMENT_NAME,
+                Database.DEPLOYMENT_DESC, Database.DEPLOYMENT_URL
         };
 
         // Specify the corresponding layout elements where we want the

@@ -14,28 +14,45 @@ For more information visit:
 * [Code Repository](http://github.com/ushahidi/Ushahidi_Android)
 
 ** How To White-Label The App **
-*** Splash Screen ***
 
-Replace the file  "res/drawable/ushahidi_android_splash.png" with your custom designed splash image. It should be of the size 320px x 680px
-
+Duplicate the /Ushahidi folder and rename with your theme name, for example /MyTheme. Note, you can use /Beijing or /Inherity themes as an example.
+  
 *** Application Icon ***
 
-Replace the files "res/drawable-hdpi/ushahidi_icon.png" (72 x 72), "res/drawable-ldpi/ushahidi_icon.png" (36px x 36px) and "res/drawable-mdpi/ushahidi_icon.png"(48px x 48px) with your custom designed application icon. The size should be 48px x 48px
+Replace the files "/MyTheme/res/drawable-hdpi/icon.png" (72 x 72), "/MyTheme/res/drawable-ldpi/icon.png" (36px x 36px) and "/MyTheme/res/drawable-mdpi/icon.png"(48px x 48px) with your custom designed application icon. 
+
+*** Splash Screen ***
+
+Replace the file "/MyTheme/res/drawable/splash.png" with your custom designed splash image. It should be of the size 320px x 480px
+
+*** Dashboard Background ***
+
+Replace the file "/MyTheme/res/drawable/dashboard.png" (320px x 480px) with your custom dashboard background image. 
+
+*** About Background ***
+
+Replace the file "/MyTheme/res/drawable/about.png" (320px x 440px) with your custom about background image.
 
 *** Deployment Logo ***
-Replace the file "res/drawable/ushahidi_android_logo" (260px x 68px) with your deployment logo.
 
-*** Report Image Place Holder ***
-Replace the file "res/drawable/ushahidi_report_icon" (50px x 50px) with your placeholder if report images
+Replace the file "/MyTheme/res/drawable/logo.png" (260px x 68px) with your deployment logo.
 
-*** ListView Odd Row Color ***
-To change the list view odd row color when viewing items in the list view, change the hexadecimal code in res/values/colors.xml -- <color name="table_odd_row_color">#replace this with your color's hexadecimal code</color> example. <color name="table_odd_row_color">#edd5c9</color> 
+*** Notification Image ***
 
-*** ListView Even Row Color ***
-To change the list view even row color when viewing items in the list view, change the hexadecimal code in res/values/colors.xml -- <color name="table_odd_row_color">#replace this with your color's hexadecimal code</color> example. <color name="table_even_row_color">#f9f6ee</color> 
+Replace the file "/MyTheme/res/drawable/notification.png" (21px x 21px) with your custom notification image.
 
-*** Background Color ***
-To change the background color for the app, change the hexadecimal code in res/values/colors.xml -- Lookout for the element <drawable name="background_color">#ede7d1</drawable> and replace #ede7d1 with your color's hexadecimal code. Example. <drawable name="background_color">#0000ff</drawable>
-Or you can put an image there instead of an hexadecimal color code. In that case, it would be <drawable name="background_color">@drawable/image_name</drawable>
+*** Report Placeholder ***
 
-*** Dashboard Background Image ***
+Replace the file "/MyTheme/res/drawable/report.png" (50px x 50px) with your placeholder if report images
+
+*** Color Codes ***
+
+In the "/MyTheme/res/values/theme.xml", replace the various hexadecimal color codes with your own colors that match your deployment, for example <color name="table_odd_row_color">#edd5c9</color> 
+
+*** Deployment Information ***
+
+In the "/MyTheme/res/values/theme.xml", specify the 'app_title' and also various URLs for your deployment: 'deployment_url', 'team_url', 'media_url', 'twitter_url', 'facebook_url' and 'contact_url'. Note, if you do not have a Facebook or Twitter account, leaving these values blank will hide these About screen buttons.
+
+*** Deployment Text ***
+ 
+In the "/MyTheme/res/values/theme.xml", update the 'about_text' with a description of your deployment.
