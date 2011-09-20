@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent" android:layout_width="fill_parent"
+	android:padding="5dip">
+
+	<TextView android:id="@+id/deployment_list_name" style="@android:style/TextAppearance.Medium"
+		 android:layout_toLeftOf="@+id/deployment_arrow"
+		 android:focusable="false" 
+		android:layout_alignParentLeft="true" android:singleLine="true" android:ellipsize="end"
+		android:textColor="@color/date_color" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+	
+	<TextView android:id="@+id/deployment_list_desc" style="@android:style/TextAppearance.Small"
+		android:ellipsize="end"  android:capitalize="sentences"
+		android:textColor="@color/date_color" android:layout_width="wrap_content"
+		android:focusable="false"
+		android:layout_height="wrap_content" android:layout_toLeftOf="@+id/deployment_arrow"
+		android:layout_alignParentLeft="true" android:layout_below="@+id/deployment_list_name"/>
+	
+	<TextView android:id="@+id/deployment_list_url" style="@android:style/TextAppearance.Small"
+		android:textColor="@color/date_color" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_toLeftOf="@+id/deployment_arrow"
+		android:focusable="false"
+		android:layout_alignParentLeft="true" android:layout_below="@+id/deployment_list_desc"/>
+	
+	<TextView android:id="@+id/deployment_list_id" style="@android:style/TextAppearance.Small"
+		android:singleLine="true" android:capitalize="sentences"
+		android:layout_toLeftOf="@+id/deployment_arrow"
+		android:layout_alignParentLeft="true"
+		android:focusable="false"
+		android:visibility="gone"
+		android:textColor="@color/date_color" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_below="@+id/deployment_list_url" />
+
+	<ImageView android:padding="5dip" android:layout_height="fill_parent"
+		android:id="@+id/deployment_arrow" android:layout_width="wrap_content"
+		android:layout_alignParentRight="true" android:layout_centerInParent="true"
+		android:layout_weight="1" android:gravity="center_vertical|center_horizontal"/>
+</RelativeLayout>

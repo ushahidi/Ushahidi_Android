@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+	Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
+	This file may be used under the terms of the GNU Lesser General Public License 
+	version 3 as published by the Free Software Foundation and appearing in the 
+	file LICENSE.LGPL included in the packaging of this file. Please review the 
+	following information to ensure the GNU Lesser General Public License version 
+	3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
+	have questions regarding the use of this file, please contact Ushahidi developers 
+	at team@ushahidi.com. -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical" android:background="@color/background_color">
+	<LinearLayout style="@style/ActionBarTitleContainer">
+		<ImageButton style="@style/ActionBarTitle"
+			android:contentDescription="@string/menu_home"
+			android:onClick="onClickHome" />
+
+		<TextView style="@style/ActionBarTitleText" />
+		<ImageView style="@style/ActionBarTitleSeparator" />
+		<ImageButton style="@style/ActionBarTitle" android:id="@+id/search_report_btn"
+			android:src="@drawable/button_share" android:onClick="onShareClick" />
+	</LinearLayout>
+	<ImageView style="@style/ActionBarSeparator" />
+	<ScrollView android:id="@+id/view_report"
+		android:layout_width="fill_parent" android:layout_height="fill_parent">
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="fill_parent" android:orientation="vertical">
+			<!-- Title starts -->
+			<LinearLayout android:id="@+id/top_items_layout"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:background="@color/table_odd_row_color" android:orientation="vertical">
+
+				<TextView android:id="@+id/report_title"
+					android:singleLine="false" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:textStyle="bold"
+					android:paddingTop="15px" android:paddingBottom="15px"
+					android:paddingRight="10px" android:paddingLeft="10px"
+					android:textColor="@color/title_color" android:text="@string/report_title" />
+			</LinearLayout>
+			<LinearLayout android:id="@+id/top_items_layout"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:background="@color/table_even_row_color"
+				android:orientation="vertical">
+				<TextView android:id="@+id/title" android:singleLine="false"
+					android:textStyle="bold" android:paddingTop="15px"
+					android:paddingBottom="15px" android:paddingRight="10px"
+					android:paddingLeft="10px" android:textColor="@color/black_color"
+					android:layout_width="fill_parent" android:layout_height="wrap_content" />
+			</LinearLayout>
+			<!-- Title ends -->
+
+			<!-- Status starts -->
+			<LinearLayout android:id="@+id/top_items_layout"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:background="@color/table_odd_row_color" android:orientation="vertical">
+
+				<TextView android:id="@+id/report_status"
+					android:singleLine="false" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:textStyle="bold"
+					android:paddingTop="15px" android:paddingBottom="15px"
+					android:paddingRight="10px" android:paddingLeft="10px"
+					android:textColor="@color/title_color" android:text="@string/report_verified" />
+			</LinearLayout>
+
+			<LinearLayout android:id="@+id/top_items_layout"
+				android:background="@color/table_even_row_color"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:orientation="vertical">
+				<TextView android:id="@+id/status" android:paddingTop="15px"
+					android:paddingBottom="15px" android:paddingRight="10px"
+					android:paddingLeft="10px" android:singleLine="false"
+					android:textColor="@color/black_color" android:textStyle="bold"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+			</LinearLayout>
+
+			<!-- Status ends -->
+
+			<!-- Description starts -->
+			<LinearLayout android:id="@+id/report_status_layout"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:orientation="vertical" android:background="@color/table_odd_row_color">
+
+				<TextView android:id="@+id/report_status"
+					android:singleLine="false" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:textStyle="bold"
+					android:paddingTop="15px" android:paddingBottom="15px"
+					android:paddingRight="10px" android:paddingLeft="10px"
+					android:textColor="@color/title_color" android:text="@string/report_desc" />
+			</LinearLayout>
+			<LinearLayout android:id="@+id/top_items_layout"
+				android:background="@color/table_even_row_color"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:orientation="vertical">
+				<!-- Main content area. -->
+				<ScrollView android:id="@+id/description"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:paddingTop="5px" android:paddingLeft="10px"
+					android:paddingRight="10px" android:fadingEdge="none">
+					<TextView android:id="@+id/webview" android:singleLine="false"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:autoLink="all" android:textColor="@color/black_color"
+						android:textStyle="bold" android:fadingEdge="none" />
+				</ScrollView>
+			</LinearLayout>
+			<!-- Description ends -->
+
+			<!-- Category starts -->
+			<LinearLayout android:id="@+id/top_items_layout"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:orientation="vertical" android:background="@color/table_odd_row_color">
+
+				<TextView android:id="@+id/report_category"
+					android:singleLine="false" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:textStyle="bold"
+					android:paddingTop="15px" android:paddingBottom="15px"
+					android:paddingRight="10px" android:paddingLeft="10px"
+					android:textColor="@color/title_color" android:text="@string/report_category" />
+			</LinearLayout>
+
+			<LinearLayout android:id="@+id/top_items_layout"
+				android:background="@color/table_even_row_color"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:orientation="vertical">
+				<TextView android:id="@+id/category" android:singleLine="false"
+					android:paddingTop="15px" android:paddingBottom="15px"
+					android:paddingRight="10px" android:paddingLeft="10px"
+					android:textStyle="bold" android:textColor="@color/black_color"
+					android:layout_width="fill_parent" android:layout_height="wrap_content" />
+			</LinearLayout>
+			<!-- Category ends -->
+
+			<!-- Date starts -->
+			<LinearLayout android:id="@+id/top_items_layout"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:orientation="vertical" android:background="@color/table_odd_row_color">
+
+				<TextView android:id="@+id/report_date" android:singleLine="false"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:textStyle="bold" android:paddingTop="15px"
+					android:paddingBottom="15px" android:paddingRight="10px"
+					android:paddingLeft="10px" android:textColor="@color/title_color"
+					android:text="@string/report_date" />
+			</LinearLayout>
+			<LinearLayout android:id="@+id/date_layout"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:background="@color/table_even_row_color"
+				android:orientation="vertical">
+				<TextView android:paddingTop="15px" android:paddingBottom="15px"
+					android:paddingRight="10px" android:paddingLeft="10px" android:id="@+id/date"
+					android:textStyle="bold" android:singleLine="false"
+					android:layout_width="fill_parent" android:layout_height="wrap_content" />
+			</LinearLayout>
+			<!-- Date ends -->
+
+			<!-- Location starts -->
+			<LinearLayout android:id="@+id/location_layout"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:orientation="vertical" android:background="@color/table_odd_row_color">
+
+				<TextView android:id="@+id/report_title"
+					android:singleLine="false" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:textStyle="bold"
+					android:paddingTop="15px" android:paddingBottom="15px"
+					android:paddingRight="10px" android:paddingLeft="10px"
+					android:textColor="@color/title_color" android:text="@string/report_location" />
+			</LinearLayout>
+			<LinearLayout android:id="@+id/location_layout"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:background="@color/table_even_row_color"
+				android:orientation="vertical">
+				<TextView android:id="@+id/location" android:singleLine="false"
+					android:paddingTop="15px" android:paddingBottom="15px"
+					android:paddingRight="10px" android:paddingLeft="10px"
+					android:textStyle="bold" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" />
+			</LinearLayout>
+			<!-- Location ends -->
+			<!-- Map starts -->
+			<LinearLayout android:id="@+id/top_items_layout"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:paddingTop="15px" android:paddingBottom="15px"
+				android:paddingRight="10px" android:paddingLeft="10px"
+				android:orientation="vertical" android:background="@color/table_even_row_color">
+
+				<com.google.android.maps.MapView
+					android:id="@+id/loc_map" android:layout_width="fill_parent"
+					android:layout_height="300dip" android:layout_below="@+id/location"
+					android:apiKey="@string/google_map_api_key" android:enabled="true"
+					android:clickable="true" />
+			</LinearLayout>
+			<!-- Map ends -->
+
+			<!-- Photo starts -->
+			<LinearLayout android:id="@+id/photo_layout"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:background="@color/table_odd_row_color" android:orientation="vertical">
+
+				<TextView android:id="@+id/report_photo"
+					android:singleLine="false" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:textStyle="bold"
+					android:paddingTop="15px" android:paddingBottom="15px"
+					android:paddingRight="10px" android:paddingLeft="10px"
+					android:textColor="@color/title_color" android:text="@string/report_photo" />
+			</LinearLayout>
+			<LinearLayout android:orientation="vertical"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:paddingBottom="5px" android:paddingLeft="7px"
+				android:paddingRight="9px">
+				<LinearLayout android:orientation="horizontal"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+					<Gallery android:id="@+id/gallery" android:layout_below="@id/description"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:layout_alignParentBottom="true"
+						android:layout_alignParentLeft="true" android:spacing="0dp" />
+				</LinearLayout>
+				<LinearLayout android:orientation="horizontal"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<ImageSwitcher android:id="@+id/switcher"
+						android:layout_width="wrap_content" android:layout_height="wrap_content"
+						android:layout_alignParentBottom="true"
+						android:layout_alignParentLeft="true" android:paddingTop="0dp"
+						android:paddingBottom="0dp" />
+				</LinearLayout>
+			</LinearLayout>
+			<!-- Photo ends -->
+		</LinearLayout>
+	</ScrollView>
+</LinearLayout>
