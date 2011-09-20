@@ -1,6 +1,6 @@
 <resources>
     <!-- DEPLOYMENT INFORMATION -->
-    <string name="app_title">Inherity</string>
+    <string name="app_name">Inherity</string>
     <string name="deployment_url">http://inherity.crowdmap.com</string>
     <string name="team_url">http://inherity.org</string>
     <string name="media_url"/>

@@ -1,13 +1,13 @@
 <resources>
     <!-- DEPLOYMENT INFORMATION -->
-    <string name="app_title">交通出行互动平台</string>
+    <string name="app_name">交通出行互动平台</string>
     <string name="deployment_url">http://114.251.208.133/ushahidi/</string>
     <string name="team_url">http://114.251.208.133/ushahidi/</string>
     <string name="media_url"/>
     <string name="twitter_url"/>
     <string name="facebook_url"/>
     <string name="contact_url"/>
-
+    
 	<!-- ICON IMAGES -->
     <drawable name="app_icon">@drawable/icon</drawable>
     <drawable name="logo_icon">@drawable/logo</drawable>

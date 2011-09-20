@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.TypedArray;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,11 +21,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.util.Util;
 
 public class Dashboard extends Activity {
-    
+
     public void onClickHome(View v) {
         goHome(this);
     }
@@ -41,8 +41,8 @@ public class Dashboard extends Activity {
     public void onClickSearch(View v) {
         onSearchRequested();
     }
-    
-    public void onSearchDeployments( View v ) {
+
+    public void onSearchDeployments(View v) {
         Intent intent = new Intent(Dashboard.this, DeploymentSearch.class);
         startActivityForResult(intent, VIEW_SEARCH);
         setResult(RESULT_OK);
@@ -55,9 +55,8 @@ public class Dashboard extends Activity {
      * @return void
      */
     public void onClickAdd(View v) {
-        startActivity(new Intent(getApplicationContext(),Object.class));
+        startActivity(new Intent(getApplicationContext(), Object.class));
     }
-    
 
     /**
      * Go back to the home activity.
@@ -66,28 +65,27 @@ public class Dashboard extends Activity {
      * @return void
      */
 
-    public void goHome(Context context) 
-    {
+    public void goHome(Context context) {
         final Intent intent = new Intent(context, Dashboard.class);
-        intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity (intent);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
     }
 
     /**
      * Use the activity label to set the text in the activity's title text view.
      * The argument gives the name of the view.
-     *
-     * <p> This method is needed because we have a custom title bar rather than the default Android title bar.
-     * See the theme definitons in styles.xml.
+     * <p>
+     * This method is needed because we have a custom title bar rather than the
+     * default Android title bar. See the theme definitons in styles.xml.
      * 
      * @param textViewId int
      * @return void
      */
 
-    public void setTitleFromActivityLabel (int textViewId)
-    {
-        TextView tv = (TextView) findViewById (textViewId);
-        if (tv != null) tv.setText (getTitle ());
+    public void setTitleFromActivityLabel(int textViewId) {
+        TextView tv = (TextView)findViewById(textViewId);
+        if (tv != null)
+            tv.setText(getTitle());
     } // end setTitleText
 
     /** Called when the activity is first created. */
@@ -362,7 +360,7 @@ public class Dashboard extends Activity {
                 dialog.setMessage(getString(R.string.ushahidi_setup_blub));
                 dialog.setButton2(getString(R.string.btn_ok), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent launchPreferencesIntent = new Intent().setClass(Dashboard.this,
+                        Intent launchPreferencesIntent = new Intent(Dashboard.this,
                                 DeploymentSearch.class);
 
                         // Make it a subactivity so we know when it returns

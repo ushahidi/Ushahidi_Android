@@ -10,8 +10,8 @@
 	at team@ushahidi.com. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.ushahidi.android.app"
-          android:versionCode="16"
-          android:versionName="v2.5">
+          android:versionCode="17"
+          android:versionName="v2.6">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -213,7 +213,7 @@
 
         <!-- Provides search suggestions for deployments. -->
         <provider android:name=".data.DeploymentProvider"
-                  android:authorities="com.ushahidi.android.app.data.deploymentprovider"
+                  android:authorities=".data.deploymentprovider"
                   android:syncable="false" />
     </application>
 </manifest>
