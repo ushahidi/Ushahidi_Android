@@ -4,6 +4,7 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+	<!-- DEPLOYMENT INFORMATION -->
     <string name="app_title"/>
     <string name="deployment_url"/>
     <string name="team_url"/>
@@ -12,17 +13,20 @@
     <string name="facebook_url"/>
     <string name="contact_url"/>
 
+	<!-- ICON IMAGES -->
     <drawable name="app_icon">@null</drawable>
     <drawable name="logo_icon">@null</drawable>
     <drawable name="report_icon">@null</drawable>
     <drawable name="actionbar_icon">@null</drawable>
     <drawable name="notification_icon">@null</drawable>
 
+	<!-- BACKROUND IMAGES -->
     <drawable name="splash_background">@null</drawable>
     <drawable name="dashboard_background">@null</drawable>
     <drawable name="about_background">@null</drawable>
     <drawable name="actionbar_background">@null</drawable>
 
+	<!-- COLOR CODES -->
     <color name="title_color">#7C2811</color>
     <color name="date_color">#262321</color>
     <color name="report_table">#f6f6ee</color>
@@ -59,6 +63,7 @@
     <color name="tab_selected_color">#8A1F03</color>
     <color name="tab_unselected_color">#404041</color>
 
+	<!-- TEXT SIZE -->
     <dimen name="text_size_small">14sp</dimen>
     <dimen name="text_size_medium">18sp</dimen>
     <dimen name="text_size_large">22sp</dimen>
@@ -68,5 +73,6 @@
     <dimen name="actionbar_button_height">30dip</dimen>
     <dimen name="bottom_actionbar_height">65dip</dimen>
 
+	<!-- DEPLOYMENT TEXT -->
     <string name="about_text"/>
 </resources>
