@@ -184,7 +184,7 @@ deployment.</string>
 	<string name="checkin_empty_message">Please enter a check in message.</string>
 	<string name="checkin_no_location">Could not get your location. If you are using the
 		GPS feature of the phone make sure the phone can see the sky. If the
-		phone cannot see the sky, turn of the GPS to make use of your network
+		phone cannot see the sky, turn off the GPS to make use of your network
 		providers cell towers for location.</string>
 	<string name="could_not_fetch_checkin">Could not fetch check ins.</string>
 	<string name="checkins_successfully_fetched">Checkins successfully fetched.</string>
