@@ -23,19 +23,17 @@ package com.ushahidi.android.app;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.AndroidCharacter;
 import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.checkin.CheckinActivity;
-import com.ushahidi.android.app.checkin.CheckinMap;
 import com.ushahidi.android.app.checkin.CheckinList;
+import com.ushahidi.android.app.checkin.CheckinMap;
 
 public class IncidentTab extends TabActivity {
 
