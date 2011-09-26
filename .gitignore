@@ -1,10 +1,5 @@
-*/bin
-*/bin/*
-*/gen
-*/gen/*
+bin/
+out/
 *.swp
-.settings/*
-*/*/.settings
-*/*/.settings/*
-*/.DS_Store
-*/*/.DS_Store
+.settings
+.DS_Store
