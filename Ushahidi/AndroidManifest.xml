@@ -35,14 +35,14 @@
                  android:debuggable="true">
         <service android:name=".BackgroundService" />
         <uses-library android:name="com.google.android.maps" />
-        <activity android:name=".SplashScreen">
+        <activity android:name="com.ushahidi.android.app.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".Dashboard"
+        <activity android:name="com.ushahidi.android.app.Dashboard"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -51,7 +51,7 @@
         </activity>
 
         <!-- Incidents List -->
-        <activity android:name=".IncidentList"
+        <activity android:name="com.ushahidi.android.app.IncidentList"
                   android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
                   android:label="@string/view_incident">
             <intent-filter>
@@ -69,7 +69,7 @@
         </activity>
 
         <!-- Incidents Map -->
-        <activity android:name=".IncidentMap"
+        <activity android:name="com.ushahidi.android.app.IncidentMap"
                   android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
                   android:label="@string/view_incident">
             <intent-filter>
@@ -79,7 +79,7 @@
         </activity>
 
         <!-- Checkins Map -->
-        <activity android:name=".checkin.CheckinMap"
+        <activity android:name="com.ushahidi.android.app.checkin.CheckinMap"
                   android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
                   android:label="@string/view_checkins">
             <intent-filter>
@@ -89,7 +89,7 @@
         </activity>
 
         <!-- List Checkins -->
-        <activity android:name=".checkin.CheckinList"
+        <activity android:name="com.ushahidi.android.app.checkin.CheckinList"
                   android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
                   android:label="@string/view_checkins">
             <intent-filter>
@@ -99,7 +99,7 @@
         </activity>
 
         <!-- View Incidents -->
-        <activity android:name=".IncidentView"
+        <activity android:name="com.ushahidi.android.app.IncidentView"
                   android:label="@string/view_incident">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -108,7 +108,7 @@
         </activity>
 
         <!-- reports tabs -->
-        <activity  android:name=".IncidentTab"
+        <activity  android:name="com.ushahidi.android.app.IncidentTab"
                    android:label="@string/reports">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -119,7 +119,7 @@
         <!-- Add a new incidents -->
         <activity
                 android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-                android:name=".IncidentAdd"
+                android:name="com.ushahidi.android.app.IncidentAdd"
                 android:label="@string/add_incident">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -128,14 +128,14 @@
         </activity>
 
         <!-- Add location -->
-        <activity android:name=".MapLocation" android:label="@string/add_location">
+        <activity android:name="com.ushahidi.android.app.MapLocation" android:label="@string/add_location">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <!-- Settings -->
-        <activity android:name=".Settings"
+        <activity android:name="com.ushahidi.android.app.Settings"
                   android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
                   android:label="@string/app_settings">
             <intent-filter>
@@ -147,7 +147,7 @@
         <!-- Image capture -->
         <activity
                 android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-                android:name=".ImageCapture" android:label="@string/str_post_photos">
+                android:name="com.ushahidi.android.app.ImageCapture" android:label="@string/str_post_photos">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -155,7 +155,7 @@
         </activity>
 
         <!-- View Checkins -->
-        <activity android:name=".checkin.CheckinView"
+        <activity android:name="com.ushahidi.android.app.checkin.CheckinView"
                   android:label="@string/view_checkins">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -164,7 +164,7 @@
         </activity>
 
         <!-- Preview Images -->
-        <activity android:name=".ui.ImagePreviewer" android:label="@string/preview_photo"
+        <activity android:name="com.ushahidi.android.app.ui.ImagePreviewer" android:label="@string/preview_photo"
 
                   android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation">
             <intent-filter>
@@ -174,21 +174,20 @@
         </activity>
 
         <!-- About -->
-        <activity android:name=".About" android:label="@string/ushahidi_about"
+        <activity android:name="com.ushahidi.android.app.About" android:label="@string/ushahidi_about"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".checkin.CheckinActivity"
-
+        <activity android:name="com.ushahidi.android.app.checkin.CheckinActivity"
                   android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
                   android:label="@string/checkin_btn" />
 
         <!-- Receiver waits for connectivity change so offline messages can be
               sent -->
-        <receiver android:name=".OfflineIncidentSendReceiver"
+        <receiver android:name="com.ushahidi.android.app.OfflineIncidentSendReceiver"
                   android:enabled="true" android:priority="0">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -197,7 +196,7 @@
 
         <!-- Search dialog -->
         <!-- The default activity of the app. Can also display search results. -->
-        <activity android:name=".DeploymentSearch"
+        <activity android:name="com.ushahidi.android.app.DeploymentSearch"
                   android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
                   android:label="@string/search_label">
 
@@ -212,7 +211,7 @@
         </activity>
 
         <!-- Provides search suggestions for deployments. -->
-        <provider android:name=".data.DeploymentProvider"
+        <provider android:name="com.ushahidi.android.app.data.DeploymentProvider"
                   android:authorities=".data.deploymentprovider"
                   android:syncable="false" />
     </application>

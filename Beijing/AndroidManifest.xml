@@ -9,7 +9,7 @@
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.beijigntransport.ushahidi.android.app"
+          package="com.ushahidi.android.beijigntransport"
           android:versionCode="16"
           android:versionName="v2.5">
     <uses-permission android:name="android.permission.INTERNET" />
@@ -147,7 +147,7 @@
         <!-- Image capture -->
         <activity
                 android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-                android:name=".ImageCapture" android:label="@string/str_post_photos">
+                android:name="com.ushahidi.android.ImageCapture" android:label="@string/str_post_photos">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT"/>

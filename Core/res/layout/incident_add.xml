@@ -34,7 +34,7 @@
 			<!-- Title layout begins -->
 			<LinearLayout android:orientation="vertical"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:paddingBottom="15px">
+				android:paddingBottom="10px">
 
 				<TextView android:id="@+id/lbl_title" android:layout_width="fill_parent"
 					android:layout_height="wrap_content" android:textColor="@color/title_color"
@@ -50,20 +50,19 @@
 			<!-- Date layout starts. -->
 			<LinearLayout android:orientation="vertical"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:paddingBottom="15px">
+				android:paddingBottom="10px">
 
-				<TextView android:id="@+id/lbl_date" android:layout_width="wrap_content"
+                <TextView android:id="@+id/lbl_date" android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:textStyle="bold"
-					android:textColor="@color/title_color" />
+					android:textColor="@color/title_color" android:text="@string/incident_datetime" />
 				<LinearLayout android:orientation="horizontal"
-					android:layout_width="fill_parent" android:layout_height="wrap_content"
-					android:paddingBottom="15px">
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
 					<Button android:id="@+id/pick_date" android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:textStyle="bold"
+						android:layout_height="wrap_content" android:textStyle="bold" android:layout_weight="1"
 						android:text="@string/incident_date" />
 
 					<Button android:id="@+id/pick_time" android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:textStyle="bold"
+						android:layout_height="wrap_content" android:textStyle="bold" android:layout_weight="1"
 						android:text="@string/incident_time" />
 				</LinearLayout>
 			</LinearLayout>
@@ -72,7 +71,7 @@
 			<!-- Location layout starts. -->
 			<LinearLayout android:orientation="vertical"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:paddingBottom="15px">
+				android:paddingBottom="10px">
 
 				<TextView android:id="@+id/incident_loc"
 					android:layout_width="fill_parent" android:layout_height="wrap_content"
@@ -97,24 +96,22 @@
 			<!-- Location layout ends. -->
 
 			<!-- Categories layout starts -->
-			<LinearLayout android:orientation="horizontal"
+			<LinearLayout android:orientation="vertical"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:padding="15px">
+				android:paddingBottom="10px">
+                <TextView android:id="@+id/lbl_date" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:textStyle="bold"
+					android:textColor="@color/title_color" android:text="@string/incident_category" />
 
-				<Button android:id="@+id/add_category" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:paddingLeft="15px"
-					android:textStyle="bold" android:text="@string/incident_add_category" />
-				<TextView android:id="@+id/lbl_category"
-					android:layout_width="fill_parent" android:layout_height="wrap_content"
-					android:textStyle="bold" android:singleLine="false"
-					android:textColor="@color/title_color" />
+				<Button android:id="@+id/add_category" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:textStyle="bold" android:text="@string/incident_add_category" android:layout_weight="1" />
 			</LinearLayout>
 			<!-- Categories layout ends. -->
 
 			<!-- Description layout starts -->
 			<LinearLayout android:orientation="vertical"
 				android:layout_width="fill_parent" android:layout_height="fill_parent"
-				android:paddingBottom="15px">
+				android:paddingBottom="10px">
 
 				<TextView android:id="@+id/lbl_incidents_dec"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -131,9 +128,14 @@
 			<!-- Photo layout starts. -->
 			<LinearLayout android:orientation="vertical"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:padding="15px">
+				android:paddingBottom="10px">
 
-				<Button android:id="@+id/btnPicture" android:layout_width="wrap_content"
+                <TextView
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:textStyle="bold" android:textColor="@color/title_color"
+					android:text="@string/incident_photos" />
+
+				<Button android:id="@+id/btnPicture" android:layout_width="fill_parent"
 					android:layout_height="wrap_content" android:textStyle="bold"
 					android:text="@string/btn_add_photo" />
 

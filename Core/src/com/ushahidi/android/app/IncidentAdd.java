@@ -52,6 +52,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.text.method.DateTimeKeyListener;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -136,11 +137,7 @@ public class IncidentAdd extends MapUserLocation {
 
     private EditText mIncidentDesc;
 
-    private TextView mIncidentDate;
-
     private ImageView mSelectedPhoto;
-
-    private TextView mSelectedCategories;
 
     private TextView mReportLocation;
 
@@ -297,12 +294,11 @@ public class IncidentAdd extends MapUserLocation {
         mBtnPicture = (Button)findViewById(R.id.btnPicture);
         mBtnAddCategory = (Button)findViewById(R.id.add_category);
         mBtnSend = (Button)findViewById(R.id.incident_add_btn);
-        mIncidentDate = (TextView)findViewById(R.id.lbl_date);
+        //mIncidentDate = (TextView)findViewById(R.id.lbl_date);
         mPickDate = (Button)findViewById(R.id.pick_date);
         mPickTime = (Button)findViewById(R.id.pick_time);
         mReportLocation = (TextView)findViewById(R.id.latlon);
         mSelectedPhoto = (ImageView)findViewById(R.id.sel_photo_prev);
-        mSelectedCategories = (TextView)findViewById(R.id.lbl_category);
         activityTitle = (TextView)findViewById(R.id.title_text);
         if (activityTitle != null)
             activityTitle.setText(getTitle());
@@ -606,7 +602,7 @@ public class IncidentAdd extends MapUserLocation {
         mIncidentLocation.setText("");
         mIncidentDesc.setText("");
         mVectorCategories.clear();
-        mSelectedCategories.setText("");
+        mBtnAddCategory.setText(R.string.incident_add_category);
         mSelectedPhoto.setImageDrawable(null);
         mSelectedPhoto.setImageBitmap(null);
         mCounter = 0;
@@ -778,31 +774,27 @@ public class IncidentAdd extends MapUserLocation {
                         .setTitle(R.string.add_categories)
                         .setMultiChoiceItems(showCategories(), null,
                                 new DialogInterface.OnMultiChoiceClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton,
-                                            boolean isChecked) {
-
+                                    public void onClick(DialogInterface dialog, int whichButton, boolean isChecked) {
                                         if (isChecked) {
-
                                             mVectorCategories.add(mCategoriesId.get(whichButton));
-                                            if (!mVectorCategories.isEmpty()) {
-                                                mSelectedCategories.setText(Util.limitString(
-                                                        mCategoriesTitle.get(mVectorCategories
-                                                                .get(0)), 15));
-                                            }
                                             mError = false;
-                                        } else {
-                                            // fixed a crash here.
-                                            mVectorCategories.remove(mCategoriesId.get(whichButton));
-
-                                            if (mVectorCategories.isEmpty()) {
-                                                mSelectedCategories.setText("");
-                                            } else {
-                                                mSelectedCategories.setText(Util.limitString(
-                                                        mCategoriesTitle.get(mVectorCategories
-                                                                .get(0)), 15));
-                                            }
                                         }
-
+                                        else {
+                                            mVectorCategories.remove(mCategoriesId.get(whichButton));
+                                        }
+                                        if (mVectorCategories.size() > 0) {
+                                            StringBuilder categories = new StringBuilder();
+                                            for (String catetory : mVectorCategories) {
+                                                if (categories.length() > 0) {
+                                                    categories.append(", ");
+                                                }
+                                                categories.append(mCategoriesTitle.get(catetory));
+                                            }
+                                            mBtnAddCategory.setText(categories.toString());
+                                        }
+                                        else {
+                                            mBtnAddCategory.setText(R.string.incident_add_category);
+                                        }
                                     }
                                 })
                         .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
@@ -839,12 +831,22 @@ public class IncidentAdd extends MapUserLocation {
     }
 
     private void updateDisplay() {
-        SimpleDateFormat dispFormat = new SimpleDateFormat("MMMM dd, yyyy 'at' hh:mm a");
-        SimpleDateFormat submFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+        Date date = mCalendar.getTime();
+        if (date != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+            mPickDate.setText(dateFormat.format(date));
 
-        Date datetime = mCalendar.getTime();
-        mIncidentDate.setText(dispFormat.format(datetime));
-        mDateToSubmit = submFormat.format(datetime);
+            SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+            mPickTime.setText(timeFormat.format(date));
+
+            SimpleDateFormat submitFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+            mDateToSubmit = submitFormat.format(date);
+        }
+        else {
+            mPickDate.setText(R.string.incident_date);
+            mPickTime.setText(R.string.incident_time);
+            mDateToSubmit = null;
+        }
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
