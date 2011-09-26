@@ -3,13 +3,18 @@ package com.ushahidi.android.app;
 
 import java.util.Date;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
+import android.util.Log;
+import android.view.MotionEvent;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
@@ -17,7 +22,6 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
-import com.ushahidi.android.app.util.Util;
 
 public abstract class MapUserLocation extends MapActivity implements LocationListener {
 
@@ -25,26 +29,24 @@ public abstract class MapUserLocation extends MapActivity implements LocationLis
 
     protected static final int FIVE_MINUTES = 5 * ONE_MINUTE;
 
-    protected double sLongitude = 0.0;
+    protected static final int ACCURACY_THRESHOLD = 30; //in meters
 
-    protected double sLatitude = 0.0;
-
-    protected MapView mapView = null;
+    protected MapView mapView;
 
     protected MapController mapController;
 
-    protected LocationManager mLocationMgr;
+    protected LocationManager locationManager;
 
-    protected UpdatableMarker mMapMark;
+    protected UpdatableMarker updatableMarker;
 
-    protected Location curLocation;
+    protected Location currrentLocation;
 
     /*
      * Subclasses must implement a method which updates any relevant interface
      * elements when the location changes. e.g. TextViews displaying the
      * location.
      */
-    protected abstract void updateInterface();
+    protected abstract void locationChanged(double latitude, double longitude);
 
     /* Override this to set a custom marker */
     protected UpdatableMarker createUpdatableMarker(Drawable marker, GeoPoint point) {
@@ -52,112 +54,125 @@ public abstract class MapUserLocation extends MapActivity implements LocationLis
     }
 
     protected void setDeviceLocation() {
-        mLocationMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        Location nloc = null;
-        Location gloc = null;
+        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
-        boolean netAvail = mLocationMgr.getProvider(LocationManager.NETWORK_PROVIDER) != null;
-        boolean gpsAvail = mLocationMgr.getProvider(LocationManager.GPS_PROVIDER) != null;
-        boolean anyEnabled = (mLocationMgr.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || mLocationMgr
-                .isProviderEnabled(LocationManager.GPS_PROVIDER));
+        Location lastNetLocation = null;
+        Location lastGpsLocation = null;
 
-        if ((!netAvail && !gpsAvail) || !anyEnabled)
-            Util.showToast(MapUserLocation.this, R.string.location_not_found);
+        boolean netAvailable = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        boolean gpsAvailable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-        if (netAvail)
-            nloc = mLocationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        if (gpsAvail)
-            gloc = mLocationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        setBestLocation(nloc, gloc);
-
-        // If chosen location is more than a minute old, start querying
-        // network/GPS
-        if (curLocation == null || (new Date()).getTime() - curLocation.getTime() > ONE_MINUTE) {
-            if (netAvail)
-                mLocationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-            if (gpsAvail)
-                mLocationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        if (!netAvailable && !gpsAvailable) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getString(R.string.location_disabled))
+                   .setMessage(getString(R.string.location_reenable))
+                   .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                       public void onClick(DialogInterface dialog, int id) {
+                           startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                       }
+                   })
+                   .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                       public void onClick(DialogInterface dialog, int id) {
+                           dialog.cancel();
+                       }
+                   })
+            .create()
+            .show();
+        }
+        if (netAvailable) {
+            lastNetLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }
+        if (gpsAvailable) {
+            lastGpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+        setBestLocation(lastNetLocation, lastGpsLocation);
+        // If chosen location is more than a minute old, start querying network/GPS
+        if (currrentLocation == null || (new Date()).getTime() - currrentLocation.getTime() > ONE_MINUTE) {
+            if (netAvailable) {
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+            }
+            if (gpsAvailable) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            }
         }
     }
 
     public void stopLocating() {
-        if (mLocationMgr != null) {
+        if (locationManager != null) {
             try {
-                mLocationMgr.removeUpdates(this);
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                locationManager.removeUpdates(this);
             }
-            mLocationMgr = null;
+            catch (Exception ex) {
+                Log.e(getClass().getSimpleName(), "stopLocating", ex);
+            }
+            locationManager = null;
         }
     }
 
-    protected void placeMarker(GeoPoint point) {
-        if (mMapMark == null) {
+    protected void updateMarker(double latitude, double longitude, boolean center) {
+        updateMarker(getPoint(latitude, longitude), center);
+    }
+
+    protected void updateMarker(GeoPoint point, boolean center) {
+        if (updatableMarker == null) {
             Drawable marker = getResources().getDrawable(R.drawable.map_marker_green);
 
             marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
             mapController.setZoom(14);
 
             mapView.setBuiltInZoomControls(true);
-            mMapMark = createUpdatableMarker(marker, point);
-            mapView.getOverlays().add((Overlay)mMapMark);
-        } else {
-            mMapMark.updateLocation(point);
+            updatableMarker = createUpdatableMarker(marker, point);
+            mapView.getOverlays().add((Overlay) updatableMarker);
+        }
+        else {
+            updatableMarker.update(point);
+        }
+        if (center) {
+            mapController.animateTo(point);
         }
     }
 
-    // Location stuff
-    public GeoPoint getPoint(double lat, double lon) {
-        return (new GeoPoint((int)(lat * 1E6), (int)(lon * 1E6)));
+    /**
+     * Convert latitude and longitude to a GeoPoint
+     * @param latitude Latitude
+     * @param longitude Lingitude
+     * @return GeoPoint
+     */
+    protected GeoPoint getPoint(double latitude, double longitude) {
+        return (new GeoPoint((int)(latitude * 1E6), (int)(longitude * 1E6)));
     }
 
-    protected void setLocation(Location loc) {
-        if (loc != null) {
-            curLocation = loc;
-            sLatitude = loc.getLatitude();
-            sLongitude = loc.getLongitude();
-
-            GeoPoint gp = getPoint(sLatitude, sLongitude);
-            mapController.animateTo(gp);
-            placeMarker(gp);
-            updateInterface();
+    protected void setBestLocation(Location location1, Location location2) {
+        if (location1 != null && location2 != null) {
+            boolean location1Newer = location1.getTime() - location2.getTime() > FIVE_MINUTES;
+            boolean location2Newer = location2.getTime() - location1.getTime() > FIVE_MINUTES;
+            boolean location1MoreAccurate = location1.getAccuracy() < location2.getAccuracy();
+            boolean location2MoreAccurate = location2.getAccuracy() < location1.getAccuracy();
+            if (location1Newer || location1MoreAccurate) {
+                locationChanged(location1.getLatitude(), location1.getLongitude());
+            }
+            else if (location2Newer || location2MoreAccurate) {
+                locationChanged(location2.getLatitude(), location2.getLongitude());
+            }
         }
-    }
-
-    protected void setBestLocation(Location f1, Location f2) {
-        if (f1 == null && f2 == null)
-            return;
-        if (f1 == null) {
-            setLocation(f2);
-            return;
+        else if (location1 != null) {
+            locationChanged(location1.getLatitude(), location1.getLongitude());
         }
-        if (f2 == null) {
-            setLocation(f1);
-            return;
-        }
-        boolean f1SigNewer = f1.getTime() - f2.getTime() > FIVE_MINUTES;
-        boolean f2SigNewer = f2.getTime() - f1.getTime() > FIVE_MINUTES;
-        if (f1SigNewer)
-            setLocation(f1);
-        if (f2SigNewer)
-            setLocation(f1);
-        boolean f1MoreAccurate = f1.getAccuracy() < f2.getAccuracy();
-        if (f1.hasAccuracy() && f2.hasAccuracy() && f1MoreAccurate) {
-            setLocation(f1);
-        } else {
-            setLocation(f2);
+        else if (location2 != null) {
+            locationChanged(location2.getLatitude(), location2.getLongitude());
         }
     }
 
     private class MapMarker extends ItemizedOverlay<OverlayItem> implements UpdatableMarker {
         private OverlayItem myOverlayItem;
+        private long lastTouchTime = -1;
 
         public MapMarker(Drawable defaultMarker, GeoPoint point) {
             super(boundCenterBottom(defaultMarker));
-            updateLocation(point);
+            update(point);
         }
 
-        public void updateLocation(GeoPoint point) {
+        public void update(GeoPoint point) {
             myOverlayItem = new OverlayItem(point, " ", " ");
             populate();
         }
@@ -171,39 +186,51 @@ public abstract class MapUserLocation extends MapActivity implements LocationLis
         public int size() {
             return 1;
         }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent event, MapView mapView) {
+            final int action = event.getAction();
+            final int x = (int)event.getX();
+            final int y = (int)event.getY();
+            if (action == MotionEvent.ACTION_DOWN) {
+                long thisTime = System.currentTimeMillis();
+                if (thisTime - lastTouchTime < 250) {
+                    lastTouchTime = -1;
+                    GeoPoint geoPoint = mapView.getProjection().fromPixels((int) event.getX(), (int) event.getY());
+                    double latitude = geoPoint.getLatitudeE6() / 1E6;
+                    double longitude = geoPoint.getLongitudeE6() / 1E6;
+                    Log.i(getClass().getSimpleName(), String.format("%d, %d >> %f, %f", x, y, latitude, longitude));
+                    locationChanged(latitude, longitude);
+                    return true;
+                }
+                else {
+                    lastTouchTime = thisTime;
+                }
+            }
+            return super.onTouchEvent(event, mapView);
+        }
     }
 
     @Override
     protected boolean isRouteDisplayed() {
-        // TODO Auto-generated method stub
         return false;
     }
 
-    public void onLocationChanged(Location loc) {
-        if (loc != null) {
-            setLocation(loc);
-            // TODO: Don't settle for first location, condition
-            // stopLocating on quality of fix + probability that we'll
-            // get a better one.
-            stopLocating();
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            locationChanged(location.getLatitude(), location.getLongitude());
+            if (location.hasAccuracy() && location.getAccuracy() < ACCURACY_THRESHOLD) {
+                //accuracy is within ACCURACY_THRESHOLD, de-activate location detection
+                stopLocating();
+            }
         }
-
     }
 
-    public void onProviderDisabled(String provider) {
-        // TODO Auto-generated method stub
+    public void onProviderDisabled(String provider) {}
 
-    }
+    public void onProviderEnabled(String provider) {}
 
-    public void onProviderEnabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
 
     @Override
     protected void onResume() {
@@ -224,6 +251,6 @@ public abstract class MapUserLocation extends MapActivity implements LocationLis
     }
 
     public abstract interface UpdatableMarker {
-        public abstract void updateLocation(GeoPoint point);
+        public abstract void update(GeoPoint point);
     }
 }

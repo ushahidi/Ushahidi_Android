@@ -81,17 +81,25 @@
 				<!-- location name -->
 				<EditText android:id="@+id/incident_location"
 					android:layout_width="fill_parent" android:layout_height="wrap_content"
-					android:hint="@string/hint_location" android:capitalize="words"
+					android:hint="@string/hint_location" android:capitalize="words" android:inputType="textCapWords"
 					android:autoText="true" />
 
 				<com.google.android.maps.MapView
 					android:id="@+id/location_map" android:layout_width="fill_parent"
-					android:layout_height="300dip" android:apiKey="@string/google_map_api_key"
+					android:layout_height="275dip" android:apiKey="@string/google_map_api_key"
 					android:enabled="true" android:clickable="true" />
 
-				<TextView android:textStyle="bold" android:gravity="center_horizontal"
-					android:layout_width="wrap_content" android:layout_height="wrap_content"
-					android:textColor="@color/title_color" android:id="@+id/latlon" />
+                <LinearLayout android:orientation="horizontal"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+                    android:paddingTop="5px">
+                    <EditText android:id="@+id/incident_latitude"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:hint="@string/incident_latitude" android:inputType="numberDecimal|numberSigned" />
+
+                    <EditText android:id="@+id/incident_longitude"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:hint="@string/incident_longitude" android:inputType="numberDecimal|numberSigned"  />
+                 </LinearLayout>
 			</LinearLayout>
 			<!-- Location layout ends. -->
 
@@ -121,7 +129,7 @@
 				<EditText android:id="@+id/incident_desc"
 					android:layout_width="fill_parent" android:layout_height="wrap_content"
 					android:gravity="top" android:singleLine="false" android:lines="5"
-					android:autoText="true" android:scrollbars="vertical" />
+					android:autoText="true" android:scrollbars="vertical" android:inputType="textCapSentences" />
 			</LinearLayout>
 			<!-- Description layout ends. -->
 

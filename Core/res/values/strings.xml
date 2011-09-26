@@ -37,6 +37,8 @@
 	<string name="incident_verified">Verified</string>
 	<string name="incident_unverified">Unverified</string>
 	<string name="incident_location">Location:</string>
+    <string name="incident_latitude">Latitude</string>
+    <string name="incident_longitude">Longitude</string>
 	<string name="add_location">Add a location</string>
 	<string name="view_map">Map</string>
 	<string name="incident_description">Description:</string>
@@ -47,8 +49,6 @@
 	<string name="incident_menu_add">Add Report</string>
 	<string name="incident_list">View Reports</string>
     <string name="incident_photos">Photos:</string>
-	<string name="google_map_api_key_dev">02cv5Q8Rob0ChOFNh6Gf_ePmVHYlVgA_pgJIHRA</string>
-	<string name="google_map_api_key">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string>
 	<string name="menu_home">Home</string>
 	<string name="menu_sync">Sync</string>
 	<string name="instructions">Tap your location on the map</string>
@@ -123,12 +123,14 @@
 	<string name="empty_report_description">Enter a description for the report.</string>
 	<string name="empty_report_location">The location name field is required.</string>
 	<string name="empty_report_categories">Select at least one category.</string>
-	<string name="hint_location">Location here</string>
+	<string name="hint_location">Enter location</string>
 	<string name="could_not_fetch_reports">Could not fetch reports.</string>
 	<string name="no_categories">Could not fetch categories.</string>
 	<string name="reports_successfully_fetched">Reports successfully fetched.</string>
 	<!-- Add location screen -->
 	<string name="find_location">Finding you...</string>
+    <string name="location_disabled">Location Detection Disabled</string>
+    <string name="location_reenable">Would you like to visit Location &amp; Security settings to re-enable location detection?</string>
 	<string name="location_not_found">A location can not currently be determined. Enable
 		more location sources i.e. GPS Satellites in Security and Location
 		Settings.</string>

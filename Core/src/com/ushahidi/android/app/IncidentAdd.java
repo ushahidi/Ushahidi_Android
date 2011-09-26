@@ -44,15 +44,14 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.TextUtils;
-import android.text.method.DateTimeKeyListener;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -114,9 +113,7 @@ public class IncidentAdd extends MapUserLocation {
 
     private static int requestedCode = 5;
 
-    private Geocoder mGc;
-
-    private List<Address> mFoundAddresses;
+    private ReverseGeocoderTask reverseGeocoderTask;
 
     // date and time
     private Calendar mCalendar;
@@ -139,7 +136,9 @@ public class IncidentAdd extends MapUserLocation {
 
     private ImageView mSelectedPhoto;
 
-    private TextView mReportLocation;
+    private EditText mLatitude;
+
+    private EditText mLongitude;
 
     private TextView activityTitle;
 
@@ -184,10 +183,6 @@ public class IncidentAdd extends MapUserLocation {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.incident_add);
 
-        mFoundAddresses = new ArrayList<Address>();
-
-        mGc = new Geocoder(this);
-
         // load settings
         Preferences.loadSettings(IncidentAdd.this);
         captureImage = new CaptureImage();
@@ -209,19 +204,16 @@ public class IncidentAdd extends MapUserLocation {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         populateMenu(menu);
-
         return (super.onCreateOptionsMenu(menu));
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         return (applyMenuChoice(item) || super.onOptionsItemSelected(item));
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-
         return (applyMenuChoice(item) || super.onContextItemSelected(item));
     }
 
@@ -245,43 +237,32 @@ public class IncidentAdd extends MapUserLocation {
 
         i = menu.add(Menu.NONE, ABOUT, Menu.NONE, R.string.menu_about);
         i.setIcon(R.drawable.menu_about);
-
     }
 
     private boolean applyMenuChoice(MenuItem item) {
-        Intent launchPreferencesIntent;
         switch (item.getItemId()) {
-
             case LIST_INCIDENT:
-                launchPreferencesIntent = new Intent(IncidentAdd.this, IncidentList.class);
-                startActivityForResult(launchPreferencesIntent, LIST_INCIDENTS);
+                startActivityForResult(new Intent(IncidentAdd.this, IncidentList.class), LIST_INCIDENTS);
                 setResult(RESULT_OK);
                 return true;
 
             case INCIDENT_MAP:
-                launchPreferencesIntent = new Intent(IncidentAdd.this, IncidentView.class);
-                startActivityForResult(launchPreferencesIntent, MAP_INCIDENTS);
+                startActivityForResult(new Intent(IncidentAdd.this, IncidentView.class), MAP_INCIDENTS);
                 return true;
 
             case HOME:
-                launchPreferencesIntent = new Intent(IncidentAdd.this, Dashboard.class);
-                startActivityForResult(launchPreferencesIntent, GOTOHOME);
+                startActivityForResult(new Intent(IncidentAdd.this, Dashboard.class), GOTOHOME);
                 setResult(RESULT_OK);
                 return true;
 
             case ABOUT:
-                launchPreferencesIntent = new Intent(IncidentAdd.this, About.class);
-                startActivityForResult(launchPreferencesIntent, REQUEST_CODE_ABOUT);
+                startActivityForResult(new Intent(IncidentAdd.this, About.class), REQUEST_CODE_ABOUT);
                 setResult(RESULT_OK);
                 return true;
 
             case SETTINGS:
-                launchPreferencesIntent = new Intent().setClass(IncidentAdd.this, Settings.class);
-
-                // Make it a subactivity so we know when it returns
-                startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);
+                startActivityForResult(new Intent(IncidentAdd.this, Settings.class), REQUEST_CODE_SETTINGS);
                 return true;
-
         }
         return false;
     }
@@ -290,37 +271,34 @@ public class IncidentAdd extends MapUserLocation {
      * Initialize UI components
      */
     private void initComponents() {
-
         mBtnPicture = (Button)findViewById(R.id.btnPicture);
         mBtnAddCategory = (Button)findViewById(R.id.add_category);
         mBtnSend = (Button)findViewById(R.id.incident_add_btn);
-        //mIncidentDate = (TextView)findViewById(R.id.lbl_date);
         mPickDate = (Button)findViewById(R.id.pick_date);
         mPickTime = (Button)findViewById(R.id.pick_time);
-        mReportLocation = (TextView)findViewById(R.id.latlon);
+        mLatitude = (EditText)findViewById(R.id.incident_latitude);
+        mLatitude.addTextChangedListener(latitudeLongitudeTextWatcher);
+        mLongitude = (EditText)findViewById(R.id.incident_longitude);
+        mLongitude.addTextChangedListener(latitudeLongitudeTextWatcher);
         mSelectedPhoto = (ImageView)findViewById(R.id.sel_photo_prev);
         activityTitle = (TextView)findViewById(R.id.title_text);
-        if (activityTitle != null)
+        if (activityTitle != null) {
             activityTitle.setText(getTitle());
+        }
         mIncidentTitle = (EditText)findViewById(R.id.incident_title);
         mIncidentLocation = (EditText)findViewById(R.id.incident_location);
         mapView = (MapView)findViewById(R.id.location_map);
         mapController = mapView.getController();
         mIncidentTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     if (TextUtils.isEmpty(mIncidentTitle.getText())) {
                         mIncidentTitle.setError(getString(R.string.empty_report_title));
                     }
                 }
-
             }
-
         });
-
         mIncidentLocation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     if (TextUtils.isEmpty(mIncidentLocation.getText())) {
@@ -329,10 +307,8 @@ public class IncidentAdd extends MapUserLocation {
                 }
             }
         });
-
         mIncidentDesc = (EditText)findViewById(R.id.incident_desc);
         mIncidentDesc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     if (TextUtils.isEmpty(mIncidentDesc.getText())) {
@@ -340,9 +316,7 @@ public class IncidentAdd extends MapUserLocation {
                     }
                 }
             }
-
         });
-
         mBtnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Dipo Fix
@@ -369,15 +343,12 @@ public class IncidentAdd extends MapUserLocation {
                 }
 
                 if (!mError) {
-
                     AddReportsTask addReportsTask = new AddReportsTask();
                     addReportsTask.appContext = IncidentAdd.this;
                     addReportsTask.execute();
 
                 } else {
-                    final Toast t = Toast.makeText(IncidentAdd.this, "Error!\n\n" + mErrorMessage,
-                            Toast.LENGTH_LONG);
-                    t.show();
+                    Toast.makeText(IncidentAdd.this, "Error!\n\n" + mErrorMessage, Toast.LENGTH_LONG).show();
                     mErrorMessage = "";
                 }
 
@@ -401,14 +372,12 @@ public class IncidentAdd extends MapUserLocation {
         });
 
         mPickDate.setOnClickListener(new View.OnClickListener() {
-
             public void onClick(View v) {
                 showDialog(DATE_DIALOG_ID);
             }
         });
 
         mPickTime.setOnClickListener(new View.OnClickListener() {
-
             public void onClick(View v) {
                 showDialog(TIME_DIALOG_ID);
             }
@@ -416,7 +385,6 @@ public class IncidentAdd extends MapUserLocation {
 
         mCalendar = Calendar.getInstance();
         updateDisplay();
-
     }
 
     // fetch categories
@@ -428,7 +396,8 @@ public class IncidentAdd extends MapUserLocation {
         int categoryAmount = 0;
         if (categoryCount > 0) {
             categoryAmount = categoryCount;
-        } else {
+        }
+        else {
             categoryAmount = 1;
         }
 
@@ -436,9 +405,7 @@ public class IncidentAdd extends MapUserLocation {
 
         int i = 0;
         if (cursor.moveToFirst()) {
-
             int titleIndex = cursor.getColumnIndexOrThrow(Database.CATEGORY_TITLE);
-
             int idIndex = cursor.getColumnIndexOrThrow(Database.CATEGORY_ID);
 
             do {
@@ -460,7 +427,6 @@ public class IncidentAdd extends MapUserLocation {
 
         cursor.close();
         return categories;
-
     }
 
     /**
@@ -473,12 +439,9 @@ public class IncidentAdd extends MapUserLocation {
 
             case REQUEST_CODE_CAMERA:
                 // Do something with image taken with camera
-                Bitmap original = new CaptureImage().getBitmap(
-                        new CaptureImage().getPhotoUri("photo.jpg", IncidentAdd.this),
-                        IncidentAdd.this);
+                Bitmap original = new CaptureImage().getBitmap(new CaptureImage().getPhotoUri("photo.jpg", IncidentAdd.this), IncidentAdd.this);
                 // Log.d(CLASS_TAG, "image path" + UshahidiPref.fileName);
                 if (original != null) {
-
                     // get image URL
                     Uri u = new CaptureImage().getPhotoUri("photo.jpg", IncidentAdd.this);
 
@@ -488,10 +451,10 @@ public class IncidentAdd extends MapUserLocation {
 
                     // use resized images
 
-                    if (captureImage.imageExist(Preferences.fileName, this))
+                    if (captureImage.imageExist(Preferences.fileName, this)) {
                         mBtnPicture.setText(getString(R.string.change_photo));
+                    }
                     mSelectedPhoto.setImageBitmap(original);
-
                 }
                 break;
 
@@ -590,9 +553,9 @@ public class IncidentAdd extends MapUserLocation {
         mBtnAddCategory = (Button)findViewById(R.id.add_category);
 
         // delete unset photo
-        File f = new File(Preferences.fileName);
-        if (f.exists()) {
-            f.delete();
+        File file = new File(Preferences.fileName);
+        if (file.exists() && file.delete()) {
+            Log.i("IncidentAdd", "File deleted " + file.getName());
         }
 
         Preferences.fileName = "";
@@ -654,7 +617,8 @@ public class IncidentAdd extends MapUserLocation {
         public void run() {
             if (addToDb() == -1) {
                 mHandler.post(mSentIncidentFail);
-            } else {
+            }
+            else {
                 mHandler.post(mSentIncidentOfflineSuccess);
                 // clearFields();
             }
@@ -676,7 +640,6 @@ public class IncidentAdd extends MapUserLocation {
     final Runnable mSentIncidentOfflineSuccess = new Runnable() {
         public void run() {
             Util.showToast(IncidentAdd.this, R.string.report_successfully_added_offline);
-
         }
     };
 
@@ -888,8 +851,8 @@ public class IncidentAdd extends MapUserLocation {
         addIncidentData.setIncidentAmPm(dates[2].toLowerCase());
         addIncidentData.setIncidentCategories(Util.implode(mVectorCategories));
         addIncidentData.setIncidentLocName(mIncidentLocation.getText().toString());
-        addIncidentData.setIncidentLocLatitude(String.valueOf(sLatitude));
-        addIncidentData.setIncidentLocLongitude(String.valueOf(sLongitude));
+        addIncidentData.setIncidentLocLatitude(mLatitude.getText().toString());
+        addIncidentData.setIncidentLocLongitude(mLongitude.getText().toString());
         addIncidentData.setIncidentPhoto(Preferences.fileName);
         addIncidentData.setPersonFirst(Preferences.firstname);
         addIncidentData.setPersonLast(Preferences.lastname);
@@ -927,8 +890,8 @@ public class IncidentAdd extends MapUserLocation {
         mParams.put("incident_minute", time[1]);
         mParams.put("incident_ampm", dates[2].toLowerCase());
         mParams.put("incident_category", categories);
-        mParams.put("latitude", String.valueOf(sLatitude));
-        mParams.put("longitude", String.valueOf(sLongitude));
+        mParams.put("latitude", mLatitude.getText().toString());
+        mParams.put("longitude", mLongitude.getText().toString());
         mParams.put("location_name", mIncidentLocation.getText().toString());
         mParams.put("person_first", Preferences.firstname);
         mParams.put("person_last", Preferences.lastname);
@@ -1012,7 +975,9 @@ public class IncidentAdd extends MapUserLocation {
      */
     @Override
     protected void onPause() {
-
+        if (reverseGeocoderTask != null) {
+            reverseGeocoderTask.cancel(true);
+        }
         SharedPreferences.Editor editor = getPreferences(0).edit();
         editor.putString("title", mIncidentTitle.getText().toString());
         editor.putString("desc", mIncidentDesc.getText().toString());
@@ -1023,42 +988,59 @@ public class IncidentAdd extends MapUserLocation {
         super.onPause();
     }
 
-    // Implementation of UserLocationMap abstract methods
-    protected void updateInterface() {
-        mReportLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
-        mIncidentLocation.setText(getLocationFromLatLon(sLatitude, sLongitude));
+    /*
+     * Implementation of MapUserLocation abstract methods
+     */
+    protected void locationChanged(double latitude, double longitude) {
+        updateMarker(latitude, longitude, true);
+        if (!mLatitude.hasFocus() && !mLongitude.hasFocus()) {
+            mLatitude.setText(String.valueOf(latitude));
+            mLongitude.setText(String.valueOf(longitude));
+        }
+        if (reverseGeocoderTask == null ||
+            !reverseGeocoderTask.isExecuting()) {
+            reverseGeocoderTask = new ReverseGeocoderTask(this);
+            reverseGeocoderTask.execute(latitude, longitude);
+        }
     }
 
     /**
-     * get the real location name from the latitude and longitude.
+     * Asynchronous Reverse Geocoder Task
      */
-    private String getLocationFromLatLon(double lat, double lon) {
-        String formattedAddress = "";
-        try {
-            Address address;
-            mFoundAddresses = mGc.getFromLocation(lat, lon, 5);
-            if (mFoundAddresses.size() > 0) {
-                address = mFoundAddresses.get(0);
+    private class ReverseGeocoderTask extends GeocoderTask {
 
-                formattedAddress = address.getThoroughfare() + "," + address.getSubAdminArea()
-                        + "," + address.getCountryName();
-                return formattedAddress;
-
-            } else {
-                return "";
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
+        public ReverseGeocoderTask(Context context) {
+            super(context);
         }
 
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i(getClass().getSimpleName(), String.format("onPostExecute %s", result));
+            mIncidentLocation.setText(result);
+            executing = false;
+        }
     }
+
+    private TextWatcher latitudeLongitudeTextWatcher = new TextWatcher(){
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+        public void onTextChanged(CharSequence s, int start, int before, int count){
+            try {
+                if (mLatitude.hasFocus() || mLongitude.hasFocus()) {
+                    locationChanged(Double.parseDouble(mLatitude.getText().toString()),
+                                    Double.parseDouble(mLongitude.getText().toString()));
+                }
+            }
+            catch (Exception ex) {
+                Log.w("IncidentAdd", "Exception TextWatcher", ex);
+            }
+        }
+    };
 
     /**
      * Sets nVectorCategories
-     * 
-     * @param aVectorCategories
+     *
+     * @param aVectorCategories categories
      */
     public void setVectorCategories(Vector<String> aVectorCategories) {
         mVectorCategories = aVectorCategories;
@@ -1078,20 +1060,20 @@ public class IncidentAdd extends MapUserLocation {
             this.progressDialog = ProgressDialog.show(IncidentAdd.this,
                     getString(R.string.checkin_progress_title),
                     getString(R.string.sending_report_in_progress), true);
-
         }
 
         @Override
         protected Integer doInBackground(Void... mParams) {
             if (Util.isConnected(IncidentAdd.this)) {
-
                 if (!postToOnline()) {
                     addToDb();
                     status = 1; // fail
-                } else {
+                }
+                else {
                     status = 0; // success
                 }
-            } else {
+            }
+            else {
                 addToDb();
                 status = 2; // no internet connection
             }
@@ -1104,15 +1086,17 @@ public class IncidentAdd extends MapUserLocation {
             if (result == 2) {
                 clearFields();
                 Util.showToast(appContext, R.string.report_successfully_added_offline);
-            } else if (result == 1) {
+            }
+            else if (result == 1) {
 
                 Util.showToast(appContext, R.string.failed_to_add_report_online);
-            } else if (result == 0) {
+            }
+            else if (result == 0) {
                 clearFields();
                 // after a successful upload, delete the file
-                File f = new File(Preferences.fileName);
-                if (f.exists()) {
-                    f.delete();
+                File file = new File(Preferences.fileName);
+                if (file.exists() && file.delete()) {
+                    Log.i(getClass().getSimpleName(), "File deleted " + file.getName());
                 }
                 Util.showToast(appContext, R.string.report_successfully_added_online);
             }

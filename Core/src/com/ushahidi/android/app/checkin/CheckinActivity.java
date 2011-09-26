@@ -150,6 +150,10 @@ public class CheckinActivity extends MapUserLocation {
 
     private static final int CHECKIN_PREF = 1;
 
+    private double latitude;
+
+    private double longitude;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -371,9 +375,15 @@ public class CheckinActivity extends MapUserLocation {
         setResult(RESULT_OK);
     }
 
-    // Implementation of UserLocationMap abstract methods
-    protected void updateInterface() {
-        mCheckinLocation.setText(String.valueOf(sLatitude) + ", " + String.valueOf(sLongitude));
+    /**
+     * Implementation of MapUserLocation methods
+     * @param latitude Latitude
+     * @param longitude Longitude
+     */
+    protected void locationChanged(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        mCheckinLocation.setText(String.format("%f, %f", latitude, longitude));
     }
 
     // menu stuff
@@ -749,31 +759,28 @@ public class CheckinActivity extends MapUserLocation {
                     clearFields();
 
                     // after a successful upload, delete the file
-                    File f = new File(Preferences.fileName);
-                    if (f.exists()) {
-                        f.delete();
+                    File file = new File(Preferences.fileName);
+                    if (file.exists() & file.delete()) {
+                        Log.i(getClass().getSimpleName(), String.format("File deleted %s", file));
                     }
-                    com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
-                            R.string.checkin_success_toast);
+                    com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this, R.string.checkin_success_toast);
 
                     goToCheckins();
 
-                } else {
-                    com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
-                            R.string.checkin_error_toast);
+                }
+                else {
+                    com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this, R.string.checkin_error_toast);
                 }
 
             } else {
-                com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
-                        R.string.checkin_error_toast);
+                com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this, R.string.checkin_error_toast);
             }
             progressDialog.dismiss();
             setProgressBarIndeterminateVisibility(false);
         }
     };
 
-    public void postCheckin(final String imei, final String domain, final String firstname,
-            final String lastname, final String email) {
+    public void postCheckin(final String imei, final String domain, final String firstname, final String lastname, final String email) {
         setProgressBarIndeterminateVisibility(true);
         this.progressDialog = ProgressDialog.show(CheckinActivity.this,
                 getString(R.string.checkin_progress_title),
@@ -782,7 +789,7 @@ public class CheckinActivity extends MapUserLocation {
             public void run() {
 
                 jsonResponse = NetworkServices.postToOnline(imei, domain, checkinDetails,
-                        selectedPhoto, firstname, lastname, email, sLatitude, sLongitude);
+                        selectedPhoto, firstname, lastname, email, latitude, longitude);
 
                 mHandler.post(mPostCheckin);
             }

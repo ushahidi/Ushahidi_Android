@@ -69,7 +69,7 @@
     <dimen name="actionbar_button_height">30dip</dimen>
     <dimen name="bottom_actionbar_height">65dip</dimen>
 
-	<!-- DEPLOYMENT TEXT -->
+    <!-- DEPLOYMENT TEXT -->
     <string name="about_text">北京“交通出行互动平台”手机软件介绍
         “交通出行互动平台”是北京市交通发展研究中心在世界银行支
         持下开发的信息交互平台,主要以Ushahidi现有的平台为基础,结合
