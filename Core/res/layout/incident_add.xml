@@ -86,7 +86,7 @@
 
 				<com.google.android.maps.MapView
 					android:id="@+id/location_map" android:layout_width="fill_parent"
-					android:layout_height="275dip" android:apiKey="@string/google_map_api_key"
+					android:layout_height="250dip" android:apiKey="@string/google_map_api_key"
 					android:enabled="true" android:clickable="true" />
 
                 <LinearLayout android:orientation="horizontal"
@@ -129,7 +129,7 @@
 				<EditText android:id="@+id/incident_desc"
 					android:layout_width="fill_parent" android:layout_height="wrap_content"
 					android:gravity="top" android:singleLine="false" android:lines="5"
-					android:autoText="true" android:scrollbars="vertical" android:inputType="textCapSentences" />
+					android:autoText="true" android:scrollbars="vertical" android:inputType="textMultiLine|textCapSentences" />
 			</LinearLayout>
 			<!-- Description layout ends. -->
 

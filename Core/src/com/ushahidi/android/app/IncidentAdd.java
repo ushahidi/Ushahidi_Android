@@ -1,21 +1,21 @@
-/** 
+/**
  ** Copyright (c) 2010 Ushahidi Inc
  ** All rights reserved
  ** Contact: team@ushahidi.com
  ** Website: http://www.ushahidi.com
- ** 
+ **
  ** GNU Lesser General Public License Usage
  ** This file may be used under the terms of the GNU Lesser
  ** General Public License version 3 as published by the Free Software
  ** Foundation and appearing in the file LICENSE.LGPL included in the
  ** packaging of this file. Please review the following information to
  ** ensure the GNU Lesser General Public License version 3 requirements
- ** will be met: http://www.gnu.org/licenses/lgpl.html. 
- ** 
+ ** will be met: http://www.gnu.org/licenses/lgpl.html.
+ **
  **
  ** If you have questions regarding the use of this file, please contact
  ** Ushahidi developers at team@ushahidi.com.
- ** 
+ **
  **/
 
 package com.ushahidi.android.app;
@@ -831,7 +831,7 @@ public class IncidentAdd extends MapUserLocation {
 
     /**
      * Insert incident data into db when app is offline.
-     * 
+     *
      * @author henryaddo
      */
     public long addToDb() {
@@ -865,7 +865,7 @@ public class IncidentAdd extends MapUserLocation {
 
     /**
      * Post directly to online.
-     * 
+     *
      * @author henryaddo
      */
     public boolean postToOnline() {
@@ -952,7 +952,7 @@ public class IncidentAdd extends MapUserLocation {
 
     /**
      * Go back to the home activity.
-     * 
+     *
      * @param context Context
      * @return void
      */

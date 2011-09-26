@@ -318,7 +318,6 @@ public class HandleXml {
                 Element element = (Element)firstNode;
 
                 NodeList idElementList = element.getElementsByTagName("id");
-
                 if (idElementList.getLength() != 0) {
                     Element idElement = (Element)idElementList.item(0);
                     if (idElement != null) {
@@ -328,39 +327,51 @@ public class HandleXml {
                 }
 
                 NodeList titleElementList = element.getElementsByTagName("title");
-
                 if (titleElementList.getLength() != 0) {
                     Element titleElement = (Element)titleElementList.item(0);
 
                     NodeList title = titleElement.getChildNodes();
                     category.setCategoryTitle((title.item(0)).getNodeValue());
                     categories += (title.item(0)).getNodeValue() + ", ";
-
                 }
 
                 NodeList descElementList = element.getElementsByTagName("description");
-
                 if (descElementList.getLength() != 0) {
                     Element descElement = (Element)descElementList.item(0);
 
                     NodeList desc = descElement.getChildNodes();
                     category.setCategoryDescription((desc.item(0)).getNodeValue());
-
                 }
 
                 NodeList colorElementList = element.getElementsByTagName("color");
-
                 if (colorElementList.getLength() != 0) {
                     Element colorElement = (Element)colorElementList.item(0);
 
                     NodeList color = colorElement.getChildNodes();
                     category.setCategoryColor((color.item(0)).getNodeValue());
-
                 }
 
+                NodeList positionElementList = element.getElementsByTagName("position");
+                if (positionElementList.getLength() != 0) {
+                    Element positionElement = (Element)positionElementList.item(0);
+
+                    NodeList position = positionElement.getChildNodes();
+                    String positionString = (position.item(0)).getNodeValue();
+                    if (positionString != null && positionString.length() > 0) {
+                        try {
+                            category.setCategoryPosition(Integer.parseInt(positionString));
+                        }
+                        catch(NumberFormatException nfe) {
+                            Log.w("HandleXML", "NumberFormatException: " + positionString, nfe);
+                            category.setCategoryPosition(category.getCategoryId());
+                        }
+                    }
+                    else {
+                        category.setCategoryPosition(category.getCategoryId());
+                    }
+                }
             }
         }
-
         return categoriesData;
     }
 

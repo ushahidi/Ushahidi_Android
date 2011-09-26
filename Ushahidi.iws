@@ -143,10 +143,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="incident_add.xml" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="incident_add.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Core/res/layout/incident_add.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="83" column="115" selection-start="4278" selection-end="4278" vertical-scroll-proportion="0.9962406">
+            <state line="88" column="46" selection-start="4452" selection-end="4452" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -173,8 +173,10 @@
       <file leaf-file-name="IncidentAdd.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/IncidentAdd.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="995" column="62" selection-start="36476" selection-end="36476" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="1105" column="1" selection-start="40140" selection-end="40140" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -206,6 +208,51 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="Database.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/data/Database.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="382" column="12" selection-start="15730" selection-end="15730" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HandleXml.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/data/HandleXml.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="356" column="21" selection-start="14945" selection-end="14945" vertical-scroll-proportion="0.8731343">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DeploymentSearch.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/DeploymentSearch.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="621" column="0" selection-start="20380" selection-end="20380" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Util.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/util/Util.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="382" column="0" selection-start="11326" selection-end="11326" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CategoriesData.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/data/CategoriesData.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="46" column="38" selection-start="1263" selection-end="1285" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
     </leaf>
   </component>
   <component name="FindManager">
@@ -216,17 +263,17 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/Core/res/values/strings.xml" />
-        <option value="$PROJECT_DIR$/Beijing/res/values/theme.xml" />
-        <option value="$PROJECT_DIR$/Core/res/values/theme.xml" />
-        <option value="$PROJECT_DIR$/Core/src/ReverseGeocodeTask.java" />
         <option value="$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapGeocoderTask.java" />
         <option value="$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapLocation.java" />
         <option value="$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapUserLocation.java" />
-        <option value="$PROJECT_DIR$/Core/src/com/ushahidi/android/app/IncidentAdd.java" />
         <option value="$PROJECT_DIR$/Core/src/com/ushahidi/android/app/checkin/CheckinMap.java" />
         <option value="$PROJECT_DIR$/Core/src/com/ushahidi/android/app/checkin/CheckinActivity.java" />
+        <option value="$PROJECT_DIR$/Core/src/com/ushahidi/android/app/data/CategoriesData.java" />
+        <option value="$PROJECT_DIR$/Core/src/com/ushahidi/android/app/data/Database.java" />
+        <option value="$PROJECT_DIR$/Core/res/layout/category_list_item.xml" />
+        <option value="$PROJECT_DIR$/Core/src/com/ushahidi/android/app/IncidentAdd.java" />
         <option value="$PROJECT_DIR$/Core/res/layout/incident_add.xml" />
+        <option value="$PROJECT_DIR$/Core/src/com/ushahidi/android/app/data/HandleXml.java" />
       </list>
     </option>
   </component>
@@ -261,6 +308,8 @@
     </navigator>
     <panes>
       <pane id="Favorites" />
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -289,18 +338,30 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Ushahidi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Core" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -318,8 +379,8 @@
     <property name="AndroidTargetDevices" value="3930EC9FDFD800EC" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -525,13 +586,13 @@
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="true" weight="0.18785311" sideWeight="0.67" order="0" side_tool="false" content_ui="tabs" x="1440" y="22" width="267" height="1130" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32875" sideWeight="0.49717513" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Logcat" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="true" weight="0.52875" sideWeight="0.49717513" order="9" side_tool="false" content_ui="tabs" x="1708" y="22" width="798" height="1130" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3275" sideWeight="0.49717513" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.52875" sideWeight="0.49717513" order="9" side_tool="false" content_ui="tabs" x="1708" y="22" width="798" height="1130" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32958803" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="true" weight="0.32958803" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" x="1708" y="22" width="797" height="1130" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -580,58 +641,9 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Inherity/res/values/theme.xml">
+    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/checkin/CheckinActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="4" selection-start="2852" selection-end="3129" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Beijing/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="88" selection-start="1556" selection-end="1556" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Beijing/res/values/theme.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="4" selection-start="2889" selection-end="2889" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="51" column="4" selection-start="2904" selection-end="2904" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/GeocoderTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="36" selection-start="1023" selection-end="1023" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapLocation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="180" column="8" selection-start="5326" selection-end="5326" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapUserLocation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="221" column="42" selection-start="8474" selection-end="8474" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/IncidentAdd.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="995" column="62" selection-start="36476" selection-end="36476" vertical-scroll-proportion="0.0">
+        <state line="770" column="16" selection-start="27122" selection-end="27122" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -643,16 +655,67 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/checkin/CheckinActivity.java">
+    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/GeocoderTask.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="770" column="16" selection-start="27122" selection-end="27122" vertical-scroll-proportion="0.0">
+        <state line="33" column="36" selection-start="1023" selection-end="1023" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/data/Database.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="382" column="12" selection-start="15730" selection-end="15730" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/DeploymentSearch.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="621" column="0" selection-start="20380" selection-end="20380" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/util/Util.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="382" column="0" selection-start="11326" selection-end="11326" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/data/CategoriesData.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="38" selection-start="1263" selection-end="1285" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Developer/Android/android-sdk-mac_x86/platforms/android-7/android.jar!/android/app/AlertDialog.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="101" column="66" selection-start="6289" selection-end="6308" vertical-scroll-proportion="0.46496814">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/IncidentAdd.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1105" column="1" selection-start="40140" selection-end="40140" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Core/res/layout/incident_add.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="115" selection-start="4278" selection-end="4278" vertical-scroll-proportion="0.9962406">
+        <state line="88" column="46" selection-start="4452" selection-end="4452" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/data/HandleXml.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="356" column="21" selection-start="14945" selection-end="14945" vertical-scroll-proportion="0.8731343">
           <folding />
         </state>
       </provider>

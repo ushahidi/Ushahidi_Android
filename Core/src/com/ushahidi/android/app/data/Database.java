@@ -124,6 +124,8 @@ public class Database {
 
     public static final String CATEGORY_IS_UNREAD = "is_unread";
 
+    public static final String CATEGORY_POS = "position";
+
     public static final String ADD_INCIDENT_ID = "_id";
 
     public static final String ADD_INCIDENT_TITLE = "incident_title";
@@ -219,7 +221,7 @@ public class Database {
     };
 
     public static final String[] CATEGORIES_COLUMNS = new String[] {
-            CATEGORY_ID, CATEGORY_TITLE, CATEGORY_DESC, CATEGORY_COLOR, CATEGORY_IS_UNREAD
+            CATEGORY_ID, CATEGORY_TITLE, CATEGORY_DESC, CATEGORY_COLOR, CATEGORY_IS_UNREAD, CATEGORY_POS
     };
 
     /**
@@ -275,7 +277,7 @@ public class Database {
 
     private static final String DEPLOYMENT_TABLE = "deployment";
 
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
 
     // NOTE: the incident ID is used as the row ID.
     // Furthermore, if a row already exists, an insert will replace
@@ -304,7 +306,7 @@ public class Database {
     private static final String CATEGORIES_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
             + CATEGORIES_TABLE + " (" + CATEGORY_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
             + CATEGORY_TITLE + " TEXT NOT NULL, " + CATEGORY_DESC + " TEXT, " + CATEGORY_COLOR
-            + " TEXT, " + CATEGORY_IS_UNREAD + " BOOLEAN NOT NULL " + ")";
+            + " TEXT, " + CATEGORY_IS_UNREAD + " BOOLEAN NOT NULL, " + CATEGORY_POS + " INTEGER " + ")";
 
     private static final String CHECKINS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
             + CHECKINS_TABLE + " (" + CHECKIN_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
@@ -540,6 +542,7 @@ public class Database {
         initialValues.put(CATEGORY_TITLE, categories.getCategoryTitle());
         initialValues.put(CATEGORY_DESC, categories.getCategoryDescription());
         initialValues.put(CATEGORY_COLOR, categories.getCategoryColor());
+        initialValues.put(CATEGORY_POS, categories.getCategoryPosition());
         initialValues.put(CATEGORY_IS_UNREAD, isUnread);
         return mDb.insert(CATEGORIES_TABLE, null, initialValues);
     }
@@ -614,18 +617,15 @@ public class Database {
     }
 
     public Cursor fetchAllIncidents() {
-        return mDb.query(INCIDENTS_TABLE, INCIDENTS_COLUMNS, null, null, null, null, INCIDENT_DATE
-                + " DESC");
+        return mDb.query(INCIDENTS_TABLE, INCIDENTS_COLUMNS, null, null, null, null, INCIDENT_DATE + " DESC");
     }
 
     public Cursor fetchAllOfflineIncidents() {
-        return mDb.query(ADD_INCIDENTS_TABLE, ADD_INCIDENTS_COLUMNS, null, null, null, null,
-                ADD_INCIDENT_ID + " DESC");
+        return mDb.query(ADD_INCIDENTS_TABLE, ADD_INCIDENTS_COLUMNS, null, null, null, null, ADD_INCIDENT_ID + " DESC");
     }
 
     public Cursor fetchAllCategories() {
-        return mDb.query(CATEGORIES_TABLE, CATEGORIES_COLUMNS, null, null, null, null, CATEGORY_ID
-                + " DESC");
+        return mDb.query(CATEGORIES_TABLE, CATEGORIES_COLUMNS, null, null, null, null, CATEGORY_POS + " DESC");
     }
 
     public Cursor fetchIncidentsByCategories(String filter) {
