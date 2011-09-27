@@ -75,4 +75,8 @@
 
 	<!-- DEPLOYMENT TEXT -->
     <string name="about_text"/>
+
+    <!--GOOGLE MAPS API-->
+    <string name="google_map_api_key_dev">02cv5Q8Rob0ChOFNh6Gf_ePmVHYlVgA_pgJIHRA</string>
+	<string name="google_map_api_key">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string>
 </resources>

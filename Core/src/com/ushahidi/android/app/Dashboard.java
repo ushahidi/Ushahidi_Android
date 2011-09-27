@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.TypedArray;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,11 +21,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.util.Util;
 
 public class Dashboard extends Activity {
-    
+
     public void onClickHome(View v) {
         goHome(this);
     }
@@ -41,8 +41,8 @@ public class Dashboard extends Activity {
     public void onClickSearch(View v) {
         onSearchRequested();
     }
-    
-    public void onSearchDeployments( View v ) {
+
+    public void onSearchDeployments(View v) {
         Intent intent = new Intent(Dashboard.this, DeploymentSearch.class);
         startActivityForResult(intent, VIEW_SEARCH);
         setResult(RESULT_OK);
@@ -55,9 +55,8 @@ public class Dashboard extends Activity {
      * @return void
      */
     public void onClickAdd(View v) {
-        startActivity(new Intent(getApplicationContext(),Object.class));
+        startActivity(new Intent(getApplicationContext(), Object.class));
     }
-    
 
     /**
      * Go back to the home activity.
@@ -66,28 +65,27 @@ public class Dashboard extends Activity {
      * @return void
      */
 
-    public void goHome(Context context) 
-    {
+    public void goHome(Context context) {
         final Intent intent = new Intent(context, Dashboard.class);
-        intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity (intent);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
     }
 
     /**
      * Use the activity label to set the text in the activity's title text view.
      * The argument gives the name of the view.
-     *
-     * <p> This method is needed because we have a custom title bar rather than the default Android title bar.
-     * See the theme definitons in styles.xml.
+     * <p>
+     * This method is needed because we have a custom title bar rather than the
+     * default Android title bar. See the theme definitons in styles.xml.
      * 
      * @param textViewId int
      * @return void
      */
 
-    public void setTitleFromActivityLabel (int textViewId)
-    {
-        TextView tv = (TextView) findViewById (textViewId);
-        if (tv != null) tv.setText (getTitle ());
+    public void setTitleFromActivityLabel(int textViewId) {
+        TextView tv = (TextView)findViewById(textViewId);
+        if (tv != null)
+            tv.setText(getTitle());
     } // end setTitleText
 
     /** Called when the activity is first created. */
@@ -184,33 +182,37 @@ public class Dashboard extends Activity {
         aboutBtn = (Button)findViewById(R.id.deployment_about);
 
         initializeUI();
-
     }
 
     /**
      * Check if default deployment has been set.
      */
     private void checkDefaultDeployment() {
-        // Check if default domain has been set.
-        final String deployment = getString(R.string.deployment_url);
-        if (!TextUtils.isEmpty(deployment)) {
-            Log.i("Ushahidi", "Determing if default deployment has been set " + deployment);
+        try {
+            // Check if default domain has been set.
+            final String deployment = getString(R.string.deployment_url);
+            if (!TextUtils.isEmpty(deployment)) {
+                Log.i("Dashboard", "Determing if default deployment has been set " + deployment);
 
-            // validate URL
-            if (Util.validateUshahidiInstance(deployment)) {
-                Log.i("Ushahidi", "Validate Domain " + deployment);
-                middleGrid = (LinearLayout)findViewById(R.id.middle_grid);
-                middleGrid.setVisibility(View.GONE);
-                Preferences.domain = deployment;
-                Preferences.saveSettings(this);
-
-                // refresh for new reports
-                if (Preferences.appRunsFirstTime == 0) {
-                    refreshReports();
-                    Preferences.appRunsFirstTime = 1;
+                // validate URL
+                if (Util.validateUshahidiInstance(deployment)) {
+                    Log.i("Dashboard", "Validate Domain " + deployment);
+                    middleGrid = (LinearLayout)findViewById(R.id.middle_grid);
+                    middleGrid.setVisibility(View.GONE);
+                    Preferences.domain = deployment;
                     Preferences.saveSettings(this);
+
+                    // refresh for new reports
+                    if (Preferences.appRunsFirstTime == 0) {
+                        refreshReports();
+                        Preferences.appRunsFirstTime = 1;
+                        Preferences.saveSettings(this);
+                    }
                 }
             }
+        }
+        catch (Exception ex) {
+            Log.e("Dashboard", "checkDefaultDeployment Exception", ex);
         }
     }
 
@@ -242,15 +244,12 @@ public class Dashboard extends Activity {
         Preferences.loadSettings(this);
         // This is to temporarily disable reports stuff
         if (Preferences.isCheckinEnabled == 1) {
-
             listBtn.setVisibility(View.GONE);
             addBtn.setVisibility(View.GONE);
             checkinListBtn.setVisibility(View.VISIBLE);
-
             checkinAddBtn.setVisibility(View.VISIBLE);
-
-        } else {
-
+        }
+        else {
             listBtn.setVisibility(View.VISIBLE);
             addBtn.setVisibility(View.VISIBLE);
             checkinListBtn.setVisibility(View.GONE);
@@ -259,7 +258,6 @@ public class Dashboard extends Activity {
 
         listBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 Intent intent = new Intent(Dashboard.this, IncidentTab.class);
                 startActivityForResult(intent, INCIDENTS);
                 setResult(RESULT_OK);
@@ -269,17 +267,14 @@ public class Dashboard extends Activity {
 
         checkinListBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 Intent intent = new Intent(Dashboard.this, IncidentTab.class);
                 startActivityForResult(intent, INCIDENTS);
                 setResult(RESULT_OK);
-
             }
         });
 
         settingsBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 Intent intent = new Intent(Dashboard.this, Settings.class);
                 startActivityForResult(intent, VIEW_SETTINGS);
                 setResult(RESULT_OK);
@@ -288,28 +283,22 @@ public class Dashboard extends Activity {
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 Intent intent = new Intent(Dashboard.this, IncidentAdd.class);
                 startActivityForResult(intent, ADD_INCIDENTS);
                 setResult(RESULT_OK);
-
             }
         });
 
         checkinAddBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent checkinActivityIntent = new Intent().setClass(Dashboard.this,
-                        CheckinActivity.class);
+                Intent checkinActivityIntent = new Intent().setClass(Dashboard.this, CheckinActivity.class);
                 startActivity(checkinActivityIntent);
                 setResult(RESULT_OK);
-
             }
         });
 
         searchBtn.setOnClickListener(new View.OnClickListener() {
-
             public void onClick(View v) {
-
                 Intent intent = new Intent(Dashboard.this, DeploymentSearch.class);
                 startActivityForResult(intent, VIEW_SEARCH);
                 setResult(RESULT_OK);
@@ -317,7 +306,6 @@ public class Dashboard extends Activity {
         });
 
         aboutBtn.setOnClickListener(new View.OnClickListener() {
-
             public void onClick(View v) {
                 Intent launchIntent = new Intent(Dashboard.this, About.class);
                 startActivityForResult(launchIntent, REQUEST_CODE_ABOUT);
@@ -327,7 +315,6 @@ public class Dashboard extends Activity {
         });
 
         mapBtn.setOnClickListener(new View.OnClickListener() {
-
             public void onClick(View v) {
                 bundle.putInt("tab_index", 1);
                 Intent launchIntent = new Intent(Dashboard.this, IncidentTab.class);
@@ -341,12 +328,12 @@ public class Dashboard extends Activity {
     public void onAddReport(View v) {
         Preferences.loadSettings(Dashboard.this);
         if (Preferences.isCheckinEnabled == 1) {
-            Intent checkinActivityIntent = new Intent().setClass(Dashboard.this,
-                    CheckinActivity.class);
+            Intent checkinActivityIntent = new Intent().setClass(Dashboard.this, CheckinActivity.class);
             startActivity(checkinActivityIntent);
             setResult(RESULT_OK);
 
-        } else {
+        }
+        else {
             Intent intent = new Intent(Dashboard.this, IncidentAdd.class);
             startActivityForResult(intent, ADD_INCIDENTS);
             setResult(RESULT_OK);
@@ -362,11 +349,8 @@ public class Dashboard extends Activity {
                 dialog.setMessage(getString(R.string.ushahidi_setup_blub));
                 dialog.setButton2(getString(R.string.btn_ok), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent launchPreferencesIntent = new Intent().setClass(Dashboard.this,
-                                DeploymentSearch.class);
-
-                        // Make it a subactivity so we know when it returns
-                        startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);
+                        Intent intent = new Intent(Dashboard.this, DeploymentSearch.class);
+                        startActivityForResult(intent, REQUEST_CODE_SETTINGS);
                         dialog.dismiss();
                     }
                 });
@@ -378,14 +362,10 @@ public class Dashboard extends Activity {
                 AlertDialog dialog = (new AlertDialog.Builder(this)).create();
                 dialog.setTitle(R.string.alert_dialog_error_title);
                 dialog.setMessage(dialogErrorMsg);
-                dialog.setButton2("Ok", new Dialog.OnClickListener() {
+                dialog.setButton2(getString(R.string.btn_ok), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
-                        Intent launchPreferencesIntent = new Intent(Dashboard.this, Settings.class);
-
-                        // Make it a subactivity so we know when it returns
-                        startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);
-
+                        Intent intent = new Intent(Dashboard.this, Settings.class);
+                        startActivityForResult(intent, REQUEST_CODE_SETTINGS);
                         dialog.dismiss();
                     }
                 });
@@ -446,10 +426,8 @@ public class Dashboard extends Activity {
     }
 
     private void updateRefreshStatus() {
-        findViewById(R.id.refresh_report_btn)
-                .setVisibility(refreshState ? View.GONE : View.VISIBLE);
-        findViewById(R.id.title_refresh_progress).setVisibility(
-                refreshState ? View.VISIBLE : View.GONE);
+        findViewById(R.id.refresh_report_btn).setVisibility(refreshState ? View.GONE : View.VISIBLE);
+        findViewById(R.id.title_refresh_progress).setVisibility(refreshState ? View.VISIBLE : View.GONE);
     }
 
     private void populateMenu(Menu menu) {
@@ -572,13 +550,17 @@ public class Dashboard extends Activity {
         protected void onPostExecute(Integer result) {
             if (result == 4) {
                 Util.showToast(appContext, R.string.internet_connection);
-            } else if (result == 3) {
+            }
+            else if (result == 3) {
                 Util.showToast(appContext, R.string.invalid_ushahidi_instance);
-            } else if (result == 2) {
+            }
+            else if (result == 2) {
                 Util.showToast(appContext, R.string.could_not_fetch_reports);
-            } else if (result == 1) {
+            }
+            else if (result == 1) {
                 Util.showToast(appContext, R.string.could_not_fetch_reports);
-            } else {
+            }
+            else {
                 Util.showToast(appContext, R.string.reports_successfully_fetched);
             }
             this.dialog.cancel();

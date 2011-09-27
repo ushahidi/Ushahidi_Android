@@ -33,6 +33,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 
@@ -240,9 +241,9 @@ public class MainHttpClient {
             if (params != null) {
 
                 entity.addPart("task", new StringBody(params.get("task")));
-                entity.addPart("incident_title", new StringBody(params.get("incident_title")));
+                entity.addPart("incident_title", new StringBody(params.get("incident_title"),Charset.forName("UTF-8")));
                 entity.addPart("incident_description",
-                        new StringBody(params.get("incident_description")));
+                        new StringBody(params.get("incident_description"),Charset.forName("UTF-8")));
                 entity.addPart("incident_date", new StringBody(params.get("incident_date")));
                 entity.addPart("incident_hour", new StringBody(params.get("incident_hour")));
                 entity.addPart("incident_minute", new StringBody(params.get("incident_minute")));
@@ -250,10 +251,10 @@ public class MainHttpClient {
                 entity.addPart("incident_category", new StringBody(params.get("incident_category")));
                 entity.addPart("latitude", new StringBody(params.get("latitude")));
                 entity.addPart("longitude", new StringBody(params.get("longitude")));
-                entity.addPart("location_name", new StringBody(params.get("location_name")));
-                entity.addPart("person_first", new StringBody(params.get("person_first")));
-                entity.addPart("person_last", new StringBody(params.get("person_last")));
-                entity.addPart("person_email", new StringBody(params.get("person_email")));
+                entity.addPart("location_name", new StringBody(params.get("location_name"),Charset.forName("UTF-8")));
+                entity.addPart("person_first", new StringBody(params.get("person_first"),Charset.forName("UTF-8")));
+                entity.addPart("person_last", new StringBody(params.get("person_last"),Charset.forName("UTF-8")));
+                entity.addPart("person_email", new StringBody(params.get("person_email"),Charset.forName("UTF-8")));
 
                 Log.i("HTTP Client:", "filename:" + Preferences.savePath + params.get("filename"));
 

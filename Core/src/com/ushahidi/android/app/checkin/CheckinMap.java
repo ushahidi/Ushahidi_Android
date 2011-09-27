@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -218,8 +219,14 @@ public class CheckinMap extends MapUserLocation {
         return (false);
     }
 
-    // Implementation of UserLocationMap methods
-    protected void updateInterface() {}
+    /**
+     * Implementation of MapUserLocation methods
+     * @param latitude Latitude
+     * @param longitude Longitude
+     */
+    protected void locationChanged(double latitude, double longitude) {
+        Log.i(getClass().getSimpleName(), String.format("locationChanged: %f, %f", latitude, longitude));
+    }
 
     @Override
     protected UpdatableMarker createUpdatableMarker(Drawable marker, GeoPoint point){
@@ -266,9 +273,9 @@ public class CheckinMap extends MapUserLocation {
 
         public DeviceLocationOverlay(Drawable marker, GeoPoint point) {
             super(boundCenterBottom(marker), mapView, CheckinMap.this, checkins, extras);
-            updateLocation(point);
+            update(point);
         }
-        public void updateLocation(GeoPoint point){
+        public void update(GeoPoint point){
             String dispname = name.trim();
             if( TextUtils.isEmpty(dispname))
                 dispname = getString(R.string.no_name);

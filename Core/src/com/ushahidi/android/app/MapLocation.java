@@ -178,7 +178,6 @@ public class MapLocation extends MapActivity {
     }
 
     private void updateResultsInUi() {
-
         Toast.makeText(MapLocation.this, "Found you at " + locationName, Toast.LENGTH_SHORT).show();
     }
 

@@ -1,12 +1,6 @@
-bin
-gen
-bin/*
-gen/*
+bin/
+out/
+gen/
 *.swp
-tests/bin/*
-tests/gen/*
-tests/.settings/*
-tests/.settings
-.settings/*
+.settings
 .DS_Store
-test/.DS_Store
