@@ -193,6 +193,7 @@
 	<string name="checkin_enter_firstname_hint">Enter first name</string>
 	<string name="checkin_enter_lastname_hint">Enter last name</string>
 	<string name="checkin_enter_email_hint">Enter email</string>
+    <string name="checkin_photo">Photo</string>
 	<string name="no_name">No name</string>
 	<string name="curr_location">Current location</string>
 

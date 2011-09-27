@@ -20,9 +20,7 @@
 
 package com.ushahidi.android.app;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,7 +41,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -111,8 +109,6 @@ public class IncidentAdd extends MapUserLocation {
 
     private static final int VIEW_SEARCH = 2;
 
-    private static int requestedCode = 5;
-
     private ReverseGeocoderTask reverseGeocoderTask;
 
     // date and time
@@ -123,8 +119,6 @@ public class IncidentAdd extends MapUserLocation {
     private String mErrorMessage = "";
 
     private String mDateToSubmit = "";
-
-    private String mFilename = "";
 
     private boolean mError = false;
 
@@ -176,8 +170,6 @@ public class IncidentAdd extends MapUserLocation {
 
     private static final String CLASS_TAG = IncidentAdd.class.getCanonicalName();
 
-    private CaptureImage captureImage;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,7 +177,6 @@ public class IncidentAdd extends MapUserLocation {
 
         // load settings
         Preferences.loadSettings(IncidentAdd.this);
-        captureImage = new CaptureImage();
         initComponents();
     }
 
@@ -277,9 +268,9 @@ public class IncidentAdd extends MapUserLocation {
         mPickDate = (Button)findViewById(R.id.pick_date);
         mPickTime = (Button)findViewById(R.id.pick_time);
         mLatitude = (EditText)findViewById(R.id.incident_latitude);
-        mLatitude.addTextChangedListener(latitudeLongitudeTextWatcher);
+        mLatitude.addTextChangedListener(latLonTextWatcher);
         mLongitude = (EditText)findViewById(R.id.incident_longitude);
-        mLongitude.addTextChangedListener(latitudeLongitudeTextWatcher);
+        mLongitude.addTextChangedListener(latLonTextWatcher);
         mSelectedPhoto = (ImageView)findViewById(R.id.sel_photo_prev);
         activityTitle = (TextView)findViewById(R.id.title_text);
         if (activityTitle != null) {
@@ -429,138 +420,17 @@ public class IncidentAdd extends MapUserLocation {
         return categories;
     }
 
-    /**
-     * Set selected / captured image
-     *
-     */
-    public void setSelectedImage(int requestCode, Intent data) {
-        Log.i(CLASS_TAG, "setSelectedImage(): requestCode: " + requestCode);
-        switch (requestCode) {
-
-            case REQUEST_CODE_CAMERA:
-                // Do something with image taken with camera
-                Bitmap original = new CaptureImage().getBitmap(new CaptureImage().getPhotoUri("photo.jpg", IncidentAdd.this), IncidentAdd.this);
-                // Log.d(CLASS_TAG, "image path" + UshahidiPref.fileName);
-                if (original != null) {
-                    // get image URL
-                    Uri u = new CaptureImage().getPhotoUri("photo.jpg", IncidentAdd.this);
-
-                    Log.i(CLASS_TAG, "Image File Path" + u.getPath());
-                    Preferences.fileName = u.getPath();
-                    NetworkServices.fileName = u.getPath();
-
-                    // use resized images
-
-                    if (captureImage.imageExist(Preferences.fileName, this)) {
-                        mBtnPicture.setText(getString(R.string.change_photo));
-                    }
-                    mSelectedPhoto.setImageBitmap(original);
-                }
-                break;
-
-            case REQUEST_CODE_IMAGE:
-                // do something with image taken from image gallery
-                mFilename = "photo.jpg";
-                final String filepath = new CaptureImage().getPhotoPath(IncidentAdd.this);
-
-                if (data != null) {
-
-                    Uri uri = data.getData();
-                    Bitmap b = null;
-
-                    try {
-                        b = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                    } catch (FileNotFoundException e) {
-                        break;
-                    } catch (IOException e) {
-                        break;
-                    }
-
-                    ByteArrayOutputStream byteArrayos = new ByteArrayOutputStream();
-
-                    try {
-                        b.compress(CompressFormat.JPEG, 75, byteArrayos);
-                        b.recycle();
-                        byteArrayos.flush();
-
-                    } catch (OutOfMemoryError e) {
-                        break;
-                    } catch (IOException e) {
-                        break;
-                    }
-
-                    if (!TextUtils.isEmpty(filepath)) {
-                        ImageManager.writeImage(byteArrayos.toByteArray(), mFilename, filepath);
-                        Preferences.fileName = mFilename;
-
-                        Bitmap selectedImage = new CaptureImage().getBitmap(
-                                new CaptureImage().getPhotoUri("photo.jpg", IncidentAdd.this),
-                                IncidentAdd.this);
-
-                        if (selectedImage != null) {
-
-                            // get image URL
-                            Uri u = new CaptureImage().getPhotoUri("photo.jpg", IncidentAdd.this);
-
-                            Log.i(CLASS_TAG, "Image File Path" + u.getPath());
-                            Preferences.fileName = u.getPath();
-                            NetworkServices.fileName = u.getPath();
-
-                            // use resized images
-
-                            if (captureImage.imageExist(Preferences.fileName, this))
-                                mBtnPicture.setText(getString(R.string.change_photo));
-                            mSelectedPhoto.setImageBitmap(selectedImage);
-                        }
-
-                    }
-
-                } else {
-
-                    if (!TextUtils.isEmpty(filepath)) {
-
-                        Bitmap selectedImage = new CaptureImage().getBitmap(
-                                new CaptureImage().getPhotoUri("photo.jpg", IncidentAdd.this),
-                                IncidentAdd.this);
-
-                        if (selectedImage != null) {
-
-                            // get image URL
-                            Uri u = new CaptureImage().getPhotoUri("photo.jpg", IncidentAdd.this);
-
-                            Log.i(CLASS_TAG, "Image File Path" + u.getPath());
-                            Preferences.fileName = u.getPath();
-                            NetworkServices.fileName = u.getPath();
-
-                            // use resized images
-
-                            if (captureImage.imageExist(Preferences.fileName, this))
-                                mBtnPicture.setText(getString(R.string.change_photo));
-                            mSelectedPhoto.setImageBitmap(selectedImage);
-
-                        }
-
-                    }
-                }
-                break;
-        }
-    }
-
     // reset records in the field
     private void clearFields() {
         Log.d(CLASS_TAG, "clearFields(): clearing fields");
         mBtnPicture = (Button)findViewById(R.id.btnPicture);
         mBtnAddCategory = (Button)findViewById(R.id.add_category);
-
         // delete unset photo
         File file = new File(Preferences.fileName);
         if (file.exists() && file.delete()) {
             Log.i("IncidentAdd", "File deleted " + file.getName());
         }
-
-        Preferences.fileName = "";
-        if (!captureImage.imageExist(Preferences.fileName, this))
-            mBtnPicture.setText(getString(R.string.btn_add_photo));
+        mBtnPicture.setText(getString(R.string.btn_add_photo));
         mIncidentTitle.setText("");
         mIncidentLocation.setText("");
         mIncidentDesc.setText("");
@@ -568,51 +438,40 @@ public class IncidentAdd extends MapUserLocation {
         mBtnAddCategory.setText(R.string.incident_add_category);
         mSelectedPhoto.setImageDrawable(null);
         mSelectedPhoto.setImageBitmap(null);
+        mSelectedPhoto.setMinimumHeight(0);
         mCounter = 0;
         updateDisplay();
 
         // clear persistent data
         SharedPreferences.Editor editor = getPreferences(0).edit();
         editor.putString("title", "");
-        editor.putString("desc", "");
+        editor.putString("description", "");
         editor.putString("date", "");
-        editor.putString("selectedphoto", "");
-        editor.putInt("requestedcode", 0);
+        editor.putString("photo", "");
         editor.commit();
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // The preferences returned if the request code is what we had given
-        // earlier in startSubActivity
-        switch (requestCode) {
-
-            case REQUEST_CODE_CAMERA:
-                if (resultCode != RESULT_OK) {
-                    return;
-                }
-
-                requestedCode = REQUEST_CODE_CAMERA;
-                setSelectedImage(requestCode, data);
-                break;
-
-            case REQUEST_CODE_IMAGE:
-
-                requestedCode = REQUEST_CODE_IMAGE;
-
-                if (resultCode != RESULT_OK) {
-                    return;
-                }
-
-                setSelectedImage(requestCode, data);
-                break;
-
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE_CAMERA) {
+                Uri uri = PhotoUtils.getPhotoUri("photo.jpg", this);
+                Bitmap bitmap = PhotoUtils.getCameraPhoto(this, uri);
+                PhotoUtils.savePhoto(this, bitmap);
+                Log.i(CLASS_TAG, String.format("REQUEST_CODE_CAMERA %dx%d", bitmap.getWidth(), bitmap.getHeight()));
+            }
+            else if (requestCode == REQUEST_CODE_IMAGE){
+                Bitmap bitmap = PhotoUtils.getGalleryPhoto(this, data.getData());
+                PhotoUtils.savePhoto(this, bitmap);
+                Log.i(CLASS_TAG, String.format("REQUEST_CODE_IMAGE %dx%d", bitmap.getWidth(), bitmap.getHeight()));
+            }
+            SharedPreferences.Editor editor = getPreferences(0).edit();
+            editor.putString("photo", PhotoUtils.getPhotoUri("photo.jpg", this).getPath());
+            editor.commit();
         }
     }
 
-    //
     final Runnable mSentIncidentOffline = new Runnable() {
         public void run() {
             if (addToDb() == -1) {
@@ -648,9 +507,9 @@ public class IncidentAdd extends MapUserLocation {
         public void run() {
             if (!postToOnline()) {
                 mHandler.post(mSentIncidentFail);
-            } else {
+            }
+            else {
                 mHandler.post(mSentIncidentSuccess);
-
             }
         }
     };
@@ -699,7 +558,6 @@ public class IncidentAdd extends MapUserLocation {
                 dialog.setTitle(getString(R.string.choose_method));
                 dialog.setMessage(getString(R.string.how_to_select_pic));
                 dialog.setButton(getString(R.string.gallery_option), new Dialog.OnClickListener() {
-
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_PICK);
@@ -713,23 +571,17 @@ public class IncidentAdd extends MapUserLocation {
                         dialog.dismiss();
                     }
                 });
-
                 dialog.setButton3(getString(R.string.camera_option), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
                         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                                new CaptureImage().getPhotoUri("photo.jpg", IncidentAdd.this));
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, new PhotoUtils().getPhotoUri("photo.jpg", IncidentAdd.this));
                         startActivityForResult(intent, REQUEST_CODE_CAMERA);
-
                         dialog.dismiss();
-
                     }
                 });
 
                 dialog.setCancelable(false);
                 return dialog;
-
             }
 
             case DIALOG_MULTIPLE_CATEGORY: {
@@ -813,7 +665,6 @@ public class IncidentAdd extends MapUserLocation {
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             mCalendar.set(year, monthOfYear, dayOfMonth);
             updateDisplay();
@@ -821,7 +672,6 @@ public class IncidentAdd extends MapUserLocation {
     };
 
     private TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             mCalendar.set(Calendar.MINUTE, minute);
@@ -900,7 +750,8 @@ public class IncidentAdd extends MapUserLocation {
 
         try {
             return MainHttpClient.PostFileUpload(urlBuilder.toString(), mParams);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             Log.d(CLASS_TAG, "postToOnline(): IO exception failed to submit report "
                     + Preferences.domain);
             e.printStackTrace();
@@ -915,35 +766,37 @@ public class IncidentAdd extends MapUserLocation {
      */
     @Override
     protected void onResume() {
-
         SharedPreferences prefs = getPreferences(0);
-
         String title = prefs.getString("title", null);
-
-        String desc = prefs.getString("desc", null);
-
-        String filename = prefs.getString("selectedphoto", null);
-
-        Log.d(CLASS_TAG, "selectedPhoto: " + filename);
-        int requestcode = prefs.getInt("requestedcode", REQUEST_CODE_IMAGE);
-
-        Intent data = null;
-
-        if (title != null)
+        if (title != null) {
             mIncidentTitle.setText(title, TextView.BufferType.EDITABLE);
-
-        if (desc != null)
-            mIncidentDesc.setText(desc, TextView.BufferType.EDITABLE);
-
-        if (filename != null) {
-            Preferences.fileName = filename;
-            if (captureImage.imageExist(filename, this))
-                mBtnPicture.setText(getString(R.string.change_photo));
-            setSelectedImage(requestcode, data);
         }
-
+        String description = prefs.getString("description", null);
+        if (description != null) {
+            mIncidentDesc.setText(description, TextView.BufferType.EDITABLE);
+        }
+        String photo = prefs.getString("photo", null);
+        if (photo != null) {
+            Preferences.fileName = photo;
+            NetworkServices.fileName = photo;
+            Bitmap bitmap = BitmapFactory.decodeFile(photo);
+            if (bitmap != null) {
+                Log.i(CLASS_TAG, String.format("Photo %dx%d", bitmap.getWidth(), bitmap.getHeight()));
+                mSelectedPhoto.setImageBitmap(bitmap);
+                mSelectedPhoto.setMinimumHeight(mSelectedPhoto.getWidth() * bitmap.getHeight() / bitmap.getWidth());
+                mBtnPicture.setText(R.string.change_photo);
+            }
+            else {
+                mSelectedPhoto.setImageBitmap(null);
+                mSelectedPhoto.setMinimumHeight(0);
+                mBtnPicture.setText(R.string.btn_add_photo);
+            }
+        }
+        else {
+            Preferences.fileName = null;
+            NetworkServices.fileName = null;
+        }
         super.onResume();
-
     }
 
     public void onClickHome(View v) {
@@ -980,10 +833,9 @@ public class IncidentAdd extends MapUserLocation {
         }
         SharedPreferences.Editor editor = getPreferences(0).edit();
         editor.putString("title", mIncidentTitle.getText().toString());
-        editor.putString("desc", mIncidentDesc.getText().toString());
+        editor.putString("description", mIncidentDesc.getText().toString());
         editor.putString("location", mIncidentLocation.getText().toString());
-        editor.putString("selectedphoto", Preferences.fileName);
-        editor.putInt("requestedcode", requestedCode);
+        editor.putString("photo", Preferences.fileName);
         editor.commit();
         super.onPause();
     }
@@ -1021,7 +873,7 @@ public class IncidentAdd extends MapUserLocation {
         }
     }
 
-    private TextWatcher latitudeLongitudeTextWatcher = new TextWatcher(){
+    private TextWatcher latLonTextWatcher = new TextWatcher(){
         public void afterTextChanged(Editable s) {}
         public void beforeTextChanged(CharSequence s, int start, int count, int after){}
         public void onTextChanged(CharSequence s, int start, int before, int count){

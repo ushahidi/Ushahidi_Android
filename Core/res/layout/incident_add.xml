@@ -149,7 +149,7 @@
 
 				<ImageView android:id="@+id/sel_photo_prev"
 					android:layout_height="wrap_content" android:layout_width="fill_parent"
-					android:adjustViewBounds="true" android:scaleType="centerCrop" />
+					android:scaleType="fitCenter" />
 
 			</LinearLayout>
 			<!-- Photo layout ends. -->
