@@ -113,9 +113,11 @@ public class Dashboard extends Activity {
 
     private static final int VIEW_SEARCH = 5;
 
-    private static final int REQUEST_CODE_SETTINGS = 1;
+    private static final int REQUEST_CODE_DEPLOYMENT_SEARCH = 1;
 
     private static final int REQUEST_CODE_ABOUT = 2;
+    
+    private static final int REQUEST_CODE_SETTINGS = 3;
 
     private static final int DIALOG_PROMPT = 0;
 
@@ -350,7 +352,7 @@ public class Dashboard extends Activity {
                 dialog.setButton2(getString(R.string.btn_ok), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Dashboard.this, DeploymentSearch.class);
-                        startActivityForResult(intent, REQUEST_CODE_SETTINGS);
+                        startActivityForResult(intent, REQUEST_CODE_DEPLOYMENT_SEARCH);
                         dialog.dismiss();
                     }
                 });
@@ -392,7 +394,7 @@ public class Dashboard extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_CODE_SETTINGS:
+            case REQUEST_CODE_DEPLOYMENT_SEARCH:
                 if (resultCode != RESULT_OK) {
                     break;
                 }

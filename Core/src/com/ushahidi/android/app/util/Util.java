@@ -45,7 +45,6 @@ import android.location.Criteria;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -652,25 +651,4 @@ public class Util {
         }
     }
     
-    /**
-     * Get the current phone number. 
-     * 
-     * Known issue. This doesn't not always return the phone's number.
-     * 
-     * @return
-     */
-    private String getMyPhoneNumber(Context context){
-        TelephonyManager mTelephonyMgr;
-        mTelephonyMgr = (TelephonyManager)
-            context.getSystemService(Context.TELEPHONY_SERVICE); 
-        final String phoneNumber = mTelephonyMgr.getLine1Number();
-        Log.i(CLASS_TAG, "Phone Number: "+phoneNumber );
-        return phoneNumber;
-    }
-
-    private String getMy10DigitPhoneNumber(){
-        //String s = this.getMyPhoneNumber();
-        //return s.substring(2);
-        return "";
-    }
 }
