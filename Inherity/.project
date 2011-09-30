@@ -30,4 +30,11 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>Core_src</name>
+			<type>2</type>
+			<locationURI>_android_Core_2023bf/src</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

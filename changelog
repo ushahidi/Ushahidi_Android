@@ -1,3 +1,15 @@
+2.6:
+Bug:
+  * Fixed photo rotation issue for nexus one phones
+  * Fixed issue of ordering category by position
+
+
+Feature:
+  * Easier whitelabeling process for developers.
+  * Enabled Location Detection Inside App
+  * Improved add incident UI
+  * Added the ability for users move map pin to set a new location
+
 2.5:
 Bug:
   * Fixed old check-in messages showing up when a different check-in deployment is selected.

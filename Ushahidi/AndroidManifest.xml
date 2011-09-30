@@ -9,7 +9,6 @@
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-<<<<<<< HEAD
 	package="com.ushahidi.android.app" android:versionCode="17"
 	android:versionName="v2.6">
 	<uses-permission android:name="android.permission.INTERNET" />
@@ -417,5 +416,4 @@
                   android:authorities=".data.deploymentprovider"
                   android:syncable="false" />
     </application>
->>>>>>> 102ee1e1ddce401e4bf190a6f49fa5a3403cf526
 </manifest>

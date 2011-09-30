@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-<<<<<<< HEAD
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ApacheMime"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/HttpClient"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/HttpCore"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/HttpMime"/>
-	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-=======
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="/home/eyedol/Devel/Workspace/Ushahidi_Android/Core/libs/apache-mime4j-core-0.7.jar"/>
 	<classpathentry kind="lib" path="/home/eyedol/Devel/Workspace/Ushahidi_Android/Core/libs/httpclient-4.1.1.jar"/>
 	<classpathentry kind="lib" path="/home/eyedol/Devel/Workspace/Ushahidi_Android/Core/libs/httpcore-4.1.jar"/>
 	<classpathentry kind="lib" path="/home/eyedol/Devel/Workspace/Ushahidi_Android/Core/libs/httpmime-4.1.1.jar"/>
->>>>>>> 7e05fa4bac0ca9f915ec7aa7ff3f3dbb2706722e
 	<classpathentry kind="output" path="bin"/>
 </classpath>
