@@ -24,8 +24,7 @@
 	<string name="add_categories">Choose Categories</string>
 	<string name="alert_dialog_error_title">Oops</string>
 	<string name="invalid_email_address">An invalid email address was entered</string>
-	<string name="invalid_ushahidi_instance">Looks like the URL entered is not an Ushahidi
-deployment.</string>
+	<string name="invalid_ushahidi_instance">Looks like the URL entered is not an Ushahidi deployment.</string>
 	<string name="btn_save">Save</string>
 	<string name="btn_find">Find me</string>
 	<string name="btn_reset">Reset</string>
@@ -33,20 +32,23 @@ deployment.</string>
 	<string name="btn_add_photo">Add Photo</string>
 	<string name="btn_cancel">Cancel</string>
 	<string name="btn_send">Send</string>
+    <string name="incident_datetime">Date and Time:</string>
 	<string name="incident_date">Change the date</string>
 	<string name="incident_verified">Verified</string>
 	<string name="incident_unverified">Unverified</string>
 	<string name="incident_location">Location:</string>
+    <string name="incident_latitude">Latitude</string>
+    <string name="incident_longitude">Longitude</string>
 	<string name="add_location">Add a location</string>
 	<string name="view_map">Map</string>
 	<string name="incident_description">Description:</string>
 	<string name="incident_time">Change the time</string>
 	<string name="incident_title">Title:</string>
+    <string name="incident_category">Category:</string>
 	<string name="incident_add_category">Select Category</string>
 	<string name="incident_menu_add">Add Report</string>
 	<string name="incident_list">View Reports</string>
-	<string name="google_map_api_key_dev">02cv5Q8Rob0ChOFNh6Gf_ePmVHYlVgA_pgJIHRA</string>
-	<string name="google_map_api_key">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string>
+    <string name="incident_photos">Photos:</string>
 	<string name="menu_home">Home</string>
 	<string name="menu_sync">Sync</string>
 	<string name="instructions">Tap your location on the map</string>
@@ -59,9 +61,7 @@ deployment.</string>
 	<string name="txt_confirm_clear_cache">Are you sure you want to clear the cache?</string>
 	<string name="hint_clear_cache">Clear all stored data.</string>
 	<string name="option_location">Default folder</string>
-	<string name="hint_option_location">The location where you want to store items saved
-		from the selected deployment.
-</string>
+	<string name="hint_option_location">The location where you want to store items saved from the selected deployment.</string>
 	<string name="hint_SD_save_path">Type a folder name</string>
 	<string name="bg_notification">Background Notifications</string>
 	<string name="vibrate">Vibrate</string>
@@ -123,12 +123,14 @@ deployment.</string>
 	<string name="empty_report_description">Enter a description for the report.</string>
 	<string name="empty_report_location">The location name field is required.</string>
 	<string name="empty_report_categories">Select at least one category.</string>
-	<string name="hint_location">Location here</string>
+	<string name="hint_location">Enter location</string>
 	<string name="could_not_fetch_reports">Could not fetch reports.</string>
 	<string name="no_categories">Could not fetch categories.</string>
 	<string name="reports_successfully_fetched">Reports successfully fetched.</string>
 	<!-- Add location screen -->
 	<string name="find_location">Finding you...</string>
+    <string name="location_disabled">Location Detection Disabled</string>
+    <string name="location_reenable">Would you like to visit Location &amp; Security settings to re-enable location detection?</string>
 	<string name="location_not_found">A location can not currently be determined. Enable
 		more location sources i.e. GPS Satellites in Security and Location
 		Settings.</string>
@@ -191,6 +193,7 @@ deployment.</string>
 	<string name="checkin_enter_firstname_hint">Enter first name</string>
 	<string name="checkin_enter_lastname_hint">Enter last name</string>
 	<string name="checkin_enter_email_hint">Enter email</string>
+    <string name="checkin_photo">Photo</string>
 	<string name="no_name">No name</string>
 	<string name="curr_location">Current location</string>
 

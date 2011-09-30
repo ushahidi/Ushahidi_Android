@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Beijing</name>
+	<name>UshahidiAndroidTests</name>
 	<comment></comment>
 	<projects>
+		<project>Ushahidi_Android</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

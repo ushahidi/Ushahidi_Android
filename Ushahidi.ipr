@@ -65,7 +65,6 @@
       <module fileurl="file://$PROJECT_DIR$/Beijing/Beijing.iml" filepath="$PROJECT_DIR$/Beijing/Beijing.iml" />
       <module fileurl="file://$PROJECT_DIR$/Core/Core.iml" filepath="$PROJECT_DIR$/Core/Core.iml" />
       <module fileurl="file://$PROJECT_DIR$/Inherity/Inherity.iml" filepath="$PROJECT_DIR$/Inherity/Inherity.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Tests/Tests.iml" filepath="$PROJECT_DIR$/Tests/Tests.iml" />
       <module fileurl="file://$PROJECT_DIR$/Ushahidi/Ushahidi.iml" filepath="$PROJECT_DIR$/Ushahidi/Ushahidi.iml" />
     </modules>
   </component>

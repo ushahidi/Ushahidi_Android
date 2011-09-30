@@ -30,6 +30,8 @@ public class CategoriesData {
 
     private String categoryColor = "";
 
+    private int categoryPosition = 0;
+
     public String getCategoryTitle() {
         return categoryTitle;
     }
@@ -60,5 +62,13 @@ public class CategoriesData {
 
     public void setCategoryColor(String color) {
         this.categoryColor = color;
+    }
+
+    public int getCategoryPosition() {
+        return categoryPosition;
+    }
+
+    public void setCategoryPosition(int position) {
+        this.categoryPosition = categoryPosition;
     }
 }

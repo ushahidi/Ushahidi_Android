@@ -143,7 +143,39 @@ class StringGenerator:
         
         f.close();
 
+<<<<<<< HEAD
     def generate_pot_file(self,filename):
+=======
+    def generate_pot_from_csv2(self):
+        """ generate a pot file from csv """
+        destfile = self.destination
+        col = 1
+        r = 1
+        """ read csv file """
+        csv_data = csv.reader(open(self.source,"rb"))
+
+        #if os.path.exists(destfile):
+        #    os.remove(destfile)
+        f = open(destfile + 'test.po','w')
+        for row in csv_data:
+            #if r < 197:
+            #print row[0]
+            print row[1]
+            #print row[22]
+            #r +=1
+            #if col < 28:
+                #f = open(destfile + 'test.po','w')
+                #f.write ('#key: %s\n'% row[col])
+             #   for data in row: 
+              #      f.write ('#key: %s\n'% csv_data[0])
+                    #f.write ('#msgid "%s"\n'% row[1])
+                    #f.write ('#msgstr "%s"\n\n'% row[col])
+               # f.close()    
+            #col += 1
+            #r +=1;
+
+    def generate_pot_file(self):
+>>>>>>> 102ee1e1ddce401e4bf190a6f49fa5a3403cf526
         xml_doc = xml.dom.minidom.parse(self.source)
         destfile = self.destination + filename
 
@@ -239,7 +271,7 @@ def main(args,options,parser):
             stringgen.generate_pot_file()
 
         if options.csv == True:
-            stringgen.generate_pot_from_csv()
+            stringgen.generate_pot_from_csv2()
 
     elif len(args) == 3:
         stringgen = StringGenerator(args[1],args[2])
