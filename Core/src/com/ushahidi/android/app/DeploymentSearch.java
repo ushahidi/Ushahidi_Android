@@ -82,6 +82,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
 
     private List<DeploymentsData> mDeployments;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.deployment_search);

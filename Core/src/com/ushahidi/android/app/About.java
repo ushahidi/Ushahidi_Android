@@ -49,9 +49,6 @@ public class About extends Dashboard {
 
     private static final int DIALOG_ERROR = 0;
 
-    private String dialogErrorMsg = "An error occurred fetching the reports. "
-            + "Make sure you have entered an Ushahidi instance.";
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,11 +140,11 @@ public class About extends Dashboard {
             case DIALOG_ERROR: {
                 AlertDialog dialog = (new AlertDialog.Builder(this)).create();
                 dialog.setTitle(R.string.alert_dialog_error_title);
-                dialog.setMessage(dialogErrorMsg);
+                dialog.setMessage(getString(R.string.ushahidi_setup_blub));
                 dialog.setButton2(getString(R.string.btn_ok), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
-                        Intent launchPreferencesIntent = new Intent(About.this, Settings.class);
+                        Intent launchPreferencesIntent = new Intent(About.this, DeploymentSearch.class);
 
                         // Make it a sub activity so we know when it returns
                         startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);

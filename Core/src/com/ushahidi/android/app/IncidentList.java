@@ -27,7 +27,6 @@ import java.util.Vector;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -44,8 +43,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.data.Database;
+import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.ui.PullToRefreshListView;
 import com.ushahidi.android.app.ui.PullToRefreshListView.OnRefreshListener;
 import com.ushahidi.android.app.util.Util;

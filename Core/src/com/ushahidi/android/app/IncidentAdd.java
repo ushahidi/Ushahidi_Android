@@ -69,9 +69,6 @@ import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.Database;
 import com.ushahidi.android.app.net.MainHttpClient;
 import com.ushahidi.android.app.util.PhotoUtils;
-import com.ushahidi.android.app.util.PhotoUtils;
-import com.ushahidi.android.app.util.PhotoUtils;
-import com.ushahidi.android.app.util.PhotoUtils;
 import com.ushahidi.android.app.util.Util;
 
 public class IncidentAdd extends MapUserLocation {

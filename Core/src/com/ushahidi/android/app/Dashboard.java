@@ -44,7 +44,7 @@ public class Dashboard extends Activity {
 
     public void onSearchDeployments(View v) {
         Intent intent = new Intent(Dashboard.this, DeploymentSearch.class);
-        startActivityForResult(intent, VIEW_SEARCH);
+        startActivityForResult(intent, REQUEST_CODE_DEPLOYMENT_SEARCH);
         setResult(RESULT_OK);
     }
 
@@ -111,8 +111,6 @@ public class Dashboard extends Activity {
 
     private static final int VIEW_SETTINGS = 4;
 
-    private static final int VIEW_SEARCH = 5;
-
     private static final int REQUEST_CODE_DEPLOYMENT_SEARCH = 1;
 
     private static final int REQUEST_CODE_ABOUT = 2;
@@ -142,9 +140,6 @@ public class Dashboard extends Activity {
     private Button searchBtn;
 
     private LinearLayout middleGrid;
-
-    private String dialogErrorMsg = "An error occurred fetching the reports. "
-            + "Make sure you have entered an Ushahidi instance.";
 
     private Bundle bundle;
 
@@ -301,7 +296,7 @@ public class Dashboard extends Activity {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(Dashboard.this, DeploymentSearch.class);
-                startActivityForResult(intent, VIEW_SEARCH);
+                startActivityForResult(intent, REQUEST_CODE_DEPLOYMENT_SEARCH);
                 setResult(RESULT_OK);
             }
         });
@@ -362,7 +357,7 @@ public class Dashboard extends Activity {
             case DIALOG_ERROR: {
                 AlertDialog dialog = (new AlertDialog.Builder(this)).create();
                 dialog.setTitle(R.string.alert_dialog_error_title);
-                dialog.setMessage(dialogErrorMsg);
+                dialog.setMessage(getString(R.string.ushahidi_setup_blub));
                 dialog.setButton2(getString(R.string.btn_ok), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Dashboard.this, Settings.class);
