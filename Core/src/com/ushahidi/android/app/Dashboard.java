@@ -116,7 +116,7 @@ public class Dashboard extends Activity {
     private static final int REQUEST_CODE_DEPLOYMENT_SEARCH = 1;
 
     private static final int REQUEST_CODE_ABOUT = 2;
-    
+
     private static final int REQUEST_CODE_SETTINGS = 3;
 
     private static final int DIALOG_PROMPT = 0;
@@ -212,8 +212,7 @@ public class Dashboard extends Activity {
                     }
                 }
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Log.e("Dashboard", "checkDefaultDeployment Exception", ex);
         }
     }
@@ -250,8 +249,7 @@ public class Dashboard extends Activity {
             addBtn.setVisibility(View.GONE);
             checkinListBtn.setVisibility(View.VISIBLE);
             checkinAddBtn.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             listBtn.setVisibility(View.VISIBLE);
             addBtn.setVisibility(View.VISIBLE);
             checkinListBtn.setVisibility(View.GONE);
@@ -293,7 +291,8 @@ public class Dashboard extends Activity {
 
         checkinAddBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent checkinActivityIntent = new Intent().setClass(Dashboard.this, CheckinActivity.class);
+                Intent checkinActivityIntent = new Intent().setClass(Dashboard.this,
+                        CheckinActivity.class);
                 startActivity(checkinActivityIntent);
                 setResult(RESULT_OK);
             }
@@ -330,12 +329,12 @@ public class Dashboard extends Activity {
     public void onAddReport(View v) {
         Preferences.loadSettings(Dashboard.this);
         if (Preferences.isCheckinEnabled == 1) {
-            Intent checkinActivityIntent = new Intent().setClass(Dashboard.this, CheckinActivity.class);
+            Intent checkinActivityIntent = new Intent().setClass(Dashboard.this,
+                    CheckinActivity.class);
             startActivity(checkinActivityIntent);
             setResult(RESULT_OK);
 
-        }
-        else {
+        } else {
             Intent intent = new Intent(Dashboard.this, IncidentAdd.class);
             startActivityForResult(intent, ADD_INCIDENTS);
             setResult(RESULT_OK);
@@ -394,7 +393,7 @@ public class Dashboard extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_CODE_DEPLOYMENT_SEARCH:
+            case REQUEST_CODE_SETTINGS:
                 if (resultCode != RESULT_OK) {
                     break;
                 }
@@ -428,8 +427,10 @@ public class Dashboard extends Activity {
     }
 
     private void updateRefreshStatus() {
-        findViewById(R.id.refresh_report_btn).setVisibility(refreshState ? View.GONE : View.VISIBLE);
-        findViewById(R.id.title_refresh_progress).setVisibility(refreshState ? View.VISIBLE : View.GONE);
+        findViewById(R.id.refresh_report_btn)
+                .setVisibility(refreshState ? View.GONE : View.VISIBLE);
+        findViewById(R.id.title_refresh_progress).setVisibility(
+                refreshState ? View.VISIBLE : View.GONE);
     }
 
     private void populateMenu(Menu menu) {
@@ -552,17 +553,13 @@ public class Dashboard extends Activity {
         protected void onPostExecute(Integer result) {
             if (result == 4) {
                 Util.showToast(appContext, R.string.internet_connection);
-            }
-            else if (result == 3) {
+            } else if (result == 3) {
                 Util.showToast(appContext, R.string.invalid_ushahidi_instance);
-            }
-            else if (result == 2) {
+            } else if (result == 2) {
                 Util.showToast(appContext, R.string.could_not_fetch_reports);
-            }
-            else if (result == 1) {
+            } else if (result == 1) {
                 Util.showToast(appContext, R.string.could_not_fetch_reports);
-            }
-            else {
+            } else {
                 Util.showToast(appContext, R.string.reports_successfully_fetched);
             }
             this.dialog.cancel();

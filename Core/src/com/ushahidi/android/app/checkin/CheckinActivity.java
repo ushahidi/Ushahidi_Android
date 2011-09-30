@@ -33,16 +33,16 @@ import android.widget.Toast;
 
 import com.google.android.maps.MapView;
 import com.ushahidi.android.app.About;
-dentTab;
+import com.ushahidi.android.app.DeploymentSearch;
+import com.ushahidi.android.app.ImageManager;
+import com.ushahidi.android.app.IncidentTab;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.MapUserLocation;
 import com.ushahidi.android.app.Dashboard;
 import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.util.PhotoUtimport com.ushahidi.android.app.util.PhotoUtimport com.ushahidi.android.app.util.PhotoUtimport com.ushahidi.android.app.util.PhotoUtils;
-ils;
-ils;
-ils;
+import com.ushahidi.android.app.util.PhotoUtils; 
+
 
 public class CheckinActivity extends MapUserLocation {
 
