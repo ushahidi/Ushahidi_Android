@@ -13,46 +13,46 @@ For more information visit:
 * [API Documentation](http://wiki.ushahidi.com/doku.php?id=ushahidi_api)
 * [Code Repository](http://github.com/ushahidi/Ushahidi_Android)
 
-** How To White-Label The App **
+### How To White-Label The App ###
 
-Duplicate the /Ushahidi folder and rename with your theme name, for example /MyTheme. Note, you can use /Beijing or /Inherity themes as an example.
+Duplicate the /Ushahidi folder and rename with your theme name, for example **/MyTheme**. Note, you can use **/Beijing** or **/Inherity** themes as an example.
   
-*** Application Icon ***
+### Application Icon ###
 
-Replace the files "/MyTheme/res/drawable-hdpi/icon.png" (72 x 72), "/MyTheme/res/drawable-ldpi/icon.png" (36px x 36px) and "/MyTheme/res/drawable-mdpi/icon.png"(48px x 48px) with your custom designed application icon. 
+Replace the files **"/MyTheme/res/drawable-hdpi/icon.png" (72 x 72), "/MyTheme/res/drawable-ldpi/icon.png" (36px x 36px) and "/MyTheme/res/drawable-mdpi/icon.png"(48px x 48px)** with your custom designed application icon. 
 
-*** Splash Screen ***
+### Splash Screen ###
 
-Replace the file "/MyTheme/res/drawable/splash.png" with your custom designed splash image. It should be of the size 320px x 480px
+Replace the file **"/MyTheme/res/drawable/splash.png"** with your custom designed splash image. It should be of the size 320px x 480px
 
-*** Dashboard Background ***
+### Dashboard Background ###
 
-Replace the file "/MyTheme/res/drawable/dashboard.png" (320px x 480px) with your custom dashboard background image. 
+Replace the file **"/MyTheme/res/drawable/dashboard.png" (320px x 480px)** with your custom dashboard background image. 
 
-*** About Background ***
+### About Background ###
 
-Replace the file "/MyTheme/res/drawable/about.png" (320px x 440px) with your custom about background image.
+Replace the file **"/MyTheme/res/drawable/about.png" (320px x 440px)** with your custom about background image.
 
-*** Deployment Logo ***
+### Deployment Logo ###
 
-Replace the file "/MyTheme/res/drawable/logo.png" (260px x 68px) with your deployment logo.
+Replace the file **"/MyTheme/res/drawable/logo.png" (260px x 68px)** with your deployment logo.
 
-*** Notification Image ***
+### Notification Image ###
 
-Replace the file "/MyTheme/res/drawable/notification.png" (21px x 21px) with your custom notification image.
+Replace the file **"/MyTheme/res/drawable/notification.png" (21px x 21px)** with your custom notification image.
 
-*** Report Placeholder ***
+### Report Placeholder ###
 
-Replace the file "/MyTheme/res/drawable/report.png" (50px x 50px) with your placeholder if report images
+Replace the file **"/MyTheme/res/drawable/report.png" (50px x 50px)** with your placeholder if report images
 
-*** Color Codes ***
+### Color Codes ###
 
-In the "/MyTheme/res/values/theme.xml", replace the various hexadecimal color codes with your own colors that match your deployment, for example <color name="table_odd_row_color">#edd5c9</color> 
+In the **"/MyTheme/res/values/theme.xml"**, replace the various hexadecimal color codes with your own colors that match your deployment, for example <color name="table_odd_row_color">#edd5c9</color> 
 
-*** Deployment Information ***
+### Deployment Information ###
 
-In the "/MyTheme/res/values/theme.xml", specify the 'app_title' and also various URLs for your deployment: 'deployment_url', 'team_url', 'media_url', 'twitter_url', 'facebook_url' and 'contact_url'. Note, if you do not have a Facebook or Twitter account, leaving these values blank will hide these About screen buttons.
+In the **"/MyTheme/res/values/theme.xml"**, specify the 'app_title' and also various URLs for your deployment: 'deployment_url', 'team_url', 'media_url', 'twitter_url', 'facebook_url' and 'contact_url'. Note, if you do not have a Facebook or Twitter account, leaving these values blank will hide these About screen buttons.
 
-*** Deployment Text ***
+### Deployment Text ###
  
-In the "/MyTheme/res/values/theme.xml", update the 'about_text' with a description of your deployment.
+In the **"/MyTheme/res/values/theme.xml"**, update the 'about_text' with a description of your deployment.
