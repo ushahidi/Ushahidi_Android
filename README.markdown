@@ -10,8 +10,9 @@ For more information visit:
 
 * [About Ushahidi](http://www.ushahidi.com)
 * [Issue Tracker](http://dev.ushahidi.com/projects/roadmap/Ushahidi_Android)
-* [API Documentation](http://wiki.ushahidi.com/doku.php?id=ushahidi_api)
+* [API Documentation For Ushahidi](http://wiki.ushahidi.com/doku.php?id=ushahidi_api)
 * [Code Repository](http://github.com/ushahidi/Ushahidi_Android)
+* [Release Status](http://dev.ushahidi.com/projects/Ushahidi_Android/news) 
 
 ### How To White-Label The App ###
 
