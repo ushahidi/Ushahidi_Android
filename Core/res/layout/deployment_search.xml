@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+	android:layout_height="fill_parent" android:background="@color/background_color">
 	<LinearLayout style="@style/ActionBarTitleContainer">
 		<ImageButton style="@style/ActionBarTitle"
-			android:contentDescription="@string/menu_home"
-			android:onClick="onClickHome" />
+			android:contentDescription="@string/menu_home" android:onClick="onClickHome" />
 
 		<ImageView style="@style/ActionBarTitleSeparator" />
 		<TextView style="@style/ActionBarTitleText" />

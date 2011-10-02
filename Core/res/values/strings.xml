@@ -273,6 +273,8 @@
 	<string name="photo_resize_summary">Resize image width</string>
 	<string name="photo_size_pixels">pixels</string>
 	
+	<!-- Public deployment search / Add -->
+	<string name="deployment_search">Here you can search for public ushahidi deployments or manually add one.</string>
 	<!-- DEFAULT USHAHIDI DEPLOYMENT TO USE. DON'T REMOVE THIS LINE. RATHER EDIT THE VALUE -->
 	<string name="default_deployment"/>
 </resources>

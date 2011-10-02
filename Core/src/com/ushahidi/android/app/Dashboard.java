@@ -163,9 +163,7 @@ public class Dashboard extends Activity {
         checkDefaultDeployment();
 
         // check if domain has been set
-        if (Preferences.domain.length() == 0 || Preferences.domain.equals("http://")) {
-            mHandler.post(mDisplayPrompt);
-        }
+        promptForDeployment();
 
         listBtn = (Button)findViewById(R.id.incident_list);
         checkinListBtn = (Button)findViewById(R.id.checkin_list_btn);
@@ -179,6 +177,16 @@ public class Dashboard extends Activity {
         aboutBtn = (Button)findViewById(R.id.deployment_about);
 
         initializeUI();
+    }
+
+    /**
+     * Prompt user for deployment because there is not default deployment set.
+     */
+    protected void promptForDeployment() {
+        // check if domain has been set
+        if (Preferences.domain.length() == 0 || Preferences.domain.equals("http://")) {
+            mHandler.post(mDisplayPrompt);
+        }
     }
 
     /**
@@ -229,6 +237,7 @@ public class Dashboard extends Activity {
 
     @Override
     public void onResume() {
+        
         initializeUI();
         super.onResume();
     }
@@ -350,6 +359,7 @@ public class Dashboard extends Activity {
                         dialog.dismiss();
                     }
                 });
+
                 dialog.setCancelable(false);
                 return dialog;
             }

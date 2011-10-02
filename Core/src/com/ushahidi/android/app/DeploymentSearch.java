@@ -87,7 +87,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.deployment_search);
         setTitleFromActivityLabel(R.id.title_text);
-
+        promptForDeployment();
         mTextView = (TextView)findViewById(R.id.search_deployment);
         mListView = (ListView)findViewById(R.id.deployment_list);
         mEmptyList = (TextView)findViewById(R.id.empty_list_for_deployments);
@@ -111,7 +111,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                showResults(mTextView.getText().toString());
+                showResults(s.toString());
 
             }
 
@@ -224,6 +224,20 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
     }
 
     @Override
+    public void promptForDeployment() {
+        // Show a toast the user that they search for public Ushahidi
+        // deployments
+        if (Preferences.domain.length() == 0 || Preferences.domain.equals("http://")) {
+            Util.showToast(this, R.string.deployment_search);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
     }
@@ -256,18 +270,6 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
     }
 
     /**
-     * Searches the deployment database and displays results for the given
-     * query.
-     * 
-     * @param query The search query
-     */
-    /*
-     * private Cursor showResults(String query) { Cursor cursor =
-     * managedQuery(DeploymentProvider.CONTENT_URI, null, null, new String[] {
-     * query }, null); return cursor; }
-     */
-
-    /**
      * Searches the dictionary and displays results for the given query.
      * 
      * @param query The search query
@@ -294,12 +296,9 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
 
             if (cursor.moveToFirst()) {
                 int deploymentIdIndex = cursor.getColumnIndexOrThrow(BaseColumns._ID);
-                int deploymentNameIndex = cursor
-                        .getColumnIndexOrThrow(Database.DEPLOYMENT_NAME);
-                int deploymentDescIndex = cursor
-                        .getColumnIndexOrThrow(Database.DEPLOYMENT_DESC);
-                int deploymentUrlIndex = cursor
-                        .getColumnIndexOrThrow(Database.DEPLOYMENT_URL);
+                int deploymentNameIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_NAME);
+                int deploymentDescIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_DESC);
+                int deploymentUrlIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_URL);
                 if (deploymentAdapter != null) {
                     deploymentAdapter.removeItems();
                     deploymentAdapter.notifyDataSetChanged();
@@ -451,12 +450,12 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
         setResult(RESULT_OK);
         finish();
     }
-    
+
     /**
      * Clear saved reports
      */
-    public void clearCachedReports(){
-        
+    public void clearCachedReports() {
+
         // delete unset photo
         File f = new File(Preferences.fileName);
         if (f.exists()) {
@@ -490,10 +489,8 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 int urlIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_URL);
-                int latitudeIndex = cursor
-                        .getColumnIndexOrThrow(Database.DEPLOYMENT_LATITUDE);
-                int longitudeIndex = cursor
-                        .getColumnIndexOrThrow(Database.DEPLOYMENT_LONGITUDE);
+                int latitudeIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_LATITUDE);
+                int longitudeIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_LONGITUDE);
 
                 do {
                     url = cursor.getString(urlIndex);
@@ -619,12 +616,12 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
         protected Integer doInBackground(Void... params) {
             activateDeployment(id);
             isCheckinsEnabled();
-            if(Preferences.isCheckinEnabled == 0 ) {
+            if (Preferences.isCheckinEnabled == 0) {
                 status = Util.processReports(appContext);
             } else {
                 status = Util.processCheckins(appContext);
             }
-            
+
             return status;
         }
 
@@ -638,7 +635,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
                 Util.showToast(appContext, R.string.ushahidi_sync);
             } else if (result == 1) {
                 Util.showToast(appContext, R.string.could_not_fetch_reports);
-            } else if(result == 0 ){
+            } else if (result == 0) {
                 clearCachedReports();
                 goToReports();
             }
