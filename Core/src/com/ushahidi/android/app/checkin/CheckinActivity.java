@@ -74,9 +74,6 @@ public class CheckinActivity extends MapUserLocation {
 
     private TextView activityTitle;
 
-    // Photo functionality
-    private String mFilename = "";
-
     private String selectedPhoto = "";
 
     private String checkinDetails;

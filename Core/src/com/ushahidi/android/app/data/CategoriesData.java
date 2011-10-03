@@ -69,6 +69,6 @@ public class CategoriesData {
     }
 
     public void setCategoryPosition(int position) {
-        this.categoryPosition = categoryPosition;
+        this.categoryPosition = position;
     }
 }

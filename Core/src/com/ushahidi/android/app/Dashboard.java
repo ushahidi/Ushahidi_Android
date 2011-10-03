@@ -237,7 +237,7 @@ public class Dashboard extends Activity {
 
     @Override
     public void onResume() {
-        
+        promptForDeployment();
         initializeUI();
         super.onResume();
     }

@@ -44,7 +44,6 @@ public class About extends Dashboard {
 
     private static final int REQUEST_CODE_SETTINGS = 1;
 
-    private static final int DIALOG_ERROR = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
