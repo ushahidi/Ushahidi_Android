@@ -113,8 +113,9 @@ public class HandleXml {
             Element idElement = (Element)idElementList.item(0);
 
             NodeList id = idElement.getChildNodes();
+            if (id != null)
+                incidentData.setIncidentId(Integer.parseInt((id.item(0)).getNodeValue()));
 
-            incidentData.setIncidentId(Integer.parseInt((id.item(0)).getNodeValue()));
         }
 
         NodeList titleElementList = element.getElementsByTagName("title");
@@ -122,7 +123,8 @@ public class HandleXml {
             Element titleElement = (Element)titleElementList.item(0);
 
             NodeList title = titleElement.getChildNodes();
-            incidentData.setIncidentTitle((title.item(0)).getNodeValue());
+            if (title != null)
+                incidentData.setIncidentTitle((title.item(0)).getNodeValue());
         }
 
         NodeList descElementList = element.getElementsByTagName("description");
@@ -130,7 +132,8 @@ public class HandleXml {
             Element descElement = (Element)descElementList.item(0);
 
             NodeList desc = descElement.getChildNodes();
-            incidentData.setIncidentDesc((desc.item(0)).getNodeValue());
+            if (desc != null)
+                incidentData.setIncidentDesc((desc.item(0)).getNodeValue());
         }
 
         NodeList dateElementList = element.getElementsByTagName("date");
@@ -138,7 +141,8 @@ public class HandleXml {
             Element dateElement = (Element)dateElementList.item(0);
 
             NodeList date = dateElement.getChildNodes();
-            incidentData.setIncidentDate((date.item(0)).getNodeValue());
+            if (date.getLength() != 0)
+                incidentData.setIncidentDate((date.item(0)).getNodeValue());
         }
 
         NodeList modeElementList = element.getElementsByTagName("mode");
@@ -146,7 +150,8 @@ public class HandleXml {
             Element modeElement = (Element)modeElementList.item(0);
 
             NodeList mode = modeElement.getChildNodes();
-            incidentData.setIncidentMode(Integer.parseInt((mode.item(0)).getNodeValue()));
+            if (mode.getLength() != 0)
+                incidentData.setIncidentMode(Integer.parseInt((mode.item(0)).getNodeValue()));
         }
 
         NodeList verifiedElementList = element.getElementsByTagName("verified");
@@ -154,7 +159,9 @@ public class HandleXml {
             Element verifiedElement = (Element)verifiedElementList.item(0);
 
             NodeList verified = verifiedElement.getChildNodes();
-            incidentData.setIncidentVerified(Integer.parseInt((verified.item(0)).getNodeValue()));
+            if (verified.getLength() != 0)
+                incidentData
+                        .setIncidentVerified(Integer.parseInt((verified.item(0)).getNodeValue()));
         }
 
         // location
@@ -168,14 +175,17 @@ public class HandleXml {
             if (locationNameList.getLength() != 0) {
                 Element locationInnerNameElement = (Element)locationNameList.item(0);
                 NodeList locationInnerName = locationInnerNameElement.getChildNodes();
-                incidentData.setIncidentLocation((locationInnerName.item(0)).getNodeValue());
+                if (locationInnerName.getLength() != 0)
+                    incidentData.setIncidentLocation((locationInnerName.item(0)).getNodeValue());
             }
 
             NodeList locationLatitudeList = locationElement.getElementsByTagName("latitude");
             if (locationLatitudeList.getLength() != 0) {
                 Element locationInnerLatitudeElement = (Element)locationLatitudeList.item(0);
                 NodeList locationInnerLatitude = locationInnerLatitudeElement.getChildNodes();
-                incidentData.setIncidentLocLatitude((locationInnerLatitude.item(0)).getNodeValue());
+                if (locationInnerLatitude.getLength() != 0)
+                    incidentData.setIncidentLocLatitude((locationInnerLatitude.item(0))
+                            .getNodeValue());
             }
 
             NodeList locationLongitudeList = locationElement.getElementsByTagName("longitude");
@@ -197,7 +207,8 @@ public class HandleXml {
                 NodeList categoryNameList = categoryElement.getElementsByTagName("title");
                 Element categoryInnerTitleElement = (Element)categoryNameList.item(0);
                 NodeList categoryInnerTitle = categoryInnerTitleElement.getChildNodes();
-                categories.append(categoryInnerTitle.item(0).getNodeValue() + ",");
+                if (categoryInnerTitle.getLength() != 0)
+                    categories.append(categoryInnerTitle.item(0).getNodeValue() + ",");
             }
         }
         // Delete the last ","
@@ -220,14 +231,16 @@ public class HandleXml {
 
                     Element mediaInnerThumbElement = (Element)mediaThumbList.item(0);
                     NodeList mediaThumb = mediaInnerThumbElement.getChildNodes();
-                    String thumbName = (mediaThumb.item(0)).getNodeValue();
-                    if (!TextUtils.isEmpty(thumbName)) {
+                    if (mediaThumb.getLength() != 0) {
+                        String thumbName = (mediaThumb.item(0)).getNodeValue();
+                        if (!TextUtils.isEmpty(thumbName)) {
 
-                        BackgroundService.mNewIncidentsThumbnails.add(thumbName);
+                            BackgroundService.mNewIncidentsThumbnails.add(thumbName);
+                        }
+
+                        File thumbnailFilename = new File(thumbName);
+                        thumbnail.append(thumbnailFilename.getName() + ",");
                     }
-
-                    File thumbnailFilename = new File(thumbName);
-                    thumbnail.append(thumbnailFilename.getName() + ",");
                 }
 
                 // Check media type
@@ -322,7 +335,8 @@ public class HandleXml {
                     Element idElement = (Element)idElementList.item(0);
                     if (idElement != null) {
                         NodeList id = idElement.getChildNodes();
-                        category.setCategoryId(Integer.parseInt((id.item(0)).getNodeValue()));
+                        if (id.getLength() != 0)
+                            category.setCategoryId(Integer.parseInt((id.item(0)).getNodeValue()));
                     }
                 }
 
@@ -331,8 +345,10 @@ public class HandleXml {
                     Element titleElement = (Element)titleElementList.item(0);
 
                     NodeList title = titleElement.getChildNodes();
-                    category.setCategoryTitle((title.item(0)).getNodeValue());
-                    categories += (title.item(0)).getNodeValue() + ", ";
+                    if (title.getLength() != 0) {
+                        category.setCategoryTitle((title.item(0)).getNodeValue());
+                        categories += (title.item(0)).getNodeValue() + ", ";
+                    }
                 }
 
                 NodeList descElementList = element.getElementsByTagName("description");
@@ -340,7 +356,9 @@ public class HandleXml {
                     Element descElement = (Element)descElementList.item(0);
 
                     NodeList desc = descElement.getChildNodes();
-                    category.setCategoryDescription((desc.item(0)).getNodeValue());
+                    if (desc.getLength() != 0) {
+                        category.setCategoryDescription((desc.item(0)).getNodeValue());
+                    }
                 }
 
                 NodeList colorElementList = element.getElementsByTagName("color");
@@ -348,7 +366,8 @@ public class HandleXml {
                     Element colorElement = (Element)colorElementList.item(0);
 
                     NodeList color = colorElement.getChildNodes();
-                    category.setCategoryColor((color.item(0)).getNodeValue());
+                    if (color.getLength() != 0)
+                        category.setCategoryColor((color.item(0)).getNodeValue());
                 }
 
                 NodeList positionElementList = element.getElementsByTagName("position");
@@ -356,18 +375,18 @@ public class HandleXml {
                     Element positionElement = (Element)positionElementList.item(0);
 
                     NodeList position = positionElement.getChildNodes();
-                    String positionString = (position.item(0)).getNodeValue();
-                    if (positionString != null && positionString.length() > 0) {
-                        try {
-                            category.setCategoryPosition(Integer.parseInt(positionString));
-                        }
-                        catch(NumberFormatException nfe) {
-                            Log.w("HandleXML", "NumberFormatException: " + positionString, nfe);
+                    if (position.getLength() != 0) {
+                        String positionString = (position.item(0)).getNodeValue();
+                        if (positionString != null && positionString.length() > 0) {
+                            try {
+                                category.setCategoryPosition(Integer.parseInt(positionString));
+                            } catch (NumberFormatException nfe) {
+                                Log.w("HandleXML", "NumberFormatException: " + positionString, nfe);
+                                category.setCategoryPosition(category.getCategoryId());
+                            }
+                        } else {
                             category.setCategoryPosition(category.getCategoryId());
                         }
-                    }
-                    else {
-                        category.setCategoryPosition(category.getCategoryId());
                     }
                 }
             }
