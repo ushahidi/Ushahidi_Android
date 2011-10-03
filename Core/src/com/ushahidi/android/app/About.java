@@ -21,9 +21,6 @@
 package com.ushahidi.android.app;
 
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
@@ -78,6 +75,10 @@ public class About extends Dashboard {
         setButtonVisibility((Button)findViewById(R.id.facebook_link), getString(R.string.facebook_url));
         setButtonVisibility((Button)findViewById(R.id.contact_link), getString(R.string.contact_url));
     }
+    
+    // override the prompt display so it doesn't show a prompt
+    @Override
+    public void promptForDeployment() {}
 
     private void setButtonVisibility(final Button button, final String url) {
         if (!TextUtils.isEmpty(url)) {
@@ -133,35 +134,5 @@ public class About extends Dashboard {
         }
         return false;
     }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case DIALOG_ERROR: {
-                AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-                dialog.setTitle(R.string.alert_dialog_error_title);
-                dialog.setMessage(getString(R.string.ushahidi_setup_blub));
-                dialog.setButton2(getString(R.string.btn_ok), new Dialog.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        Intent launchPreferencesIntent = new Intent(About.this, DeploymentSearch.class);
-
-                        // Make it a sub activity so we know when it returns
-                        startActivityForResult(launchPreferencesIntent, REQUEST_CODE_SETTINGS);
-                        dialog.dismiss();
-                    }
-                });
-                dialog.setCancelable(false);
-                return dialog;
-            }
-        }
-        return null;
-    }
-
-    final Runnable mDisplayErrorPrompt = new Runnable() {
-        public void run() {
-            showDialog(DIALOG_ERROR);
-        }
-    };
 
 }
