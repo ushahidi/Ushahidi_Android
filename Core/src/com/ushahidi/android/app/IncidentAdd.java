@@ -234,12 +234,14 @@ public class IncidentAdd extends MapUserLocation {
     private boolean applyMenuChoice(MenuItem item) {
         switch (item.getItemId()) {
             case LIST_INCIDENT:
-                startActivityForResult(new Intent(IncidentAdd.this, IncidentList.class), LIST_INCIDENTS);
+                startActivityForResult(new Intent(IncidentAdd.this, IncidentList.class),
+                        LIST_INCIDENTS);
                 setResult(RESULT_OK);
                 return true;
 
             case INCIDENT_MAP:
-                startActivityForResult(new Intent(IncidentAdd.this, IncidentView.class), MAP_INCIDENTS);
+                startActivityForResult(new Intent(IncidentAdd.this, IncidentView.class),
+                        MAP_INCIDENTS);
                 return true;
 
             case HOME:
@@ -248,12 +250,14 @@ public class IncidentAdd extends MapUserLocation {
                 return true;
 
             case ABOUT:
-                startActivityForResult(new Intent(IncidentAdd.this, About.class), REQUEST_CODE_ABOUT);
+                startActivityForResult(new Intent(IncidentAdd.this, About.class),
+                        REQUEST_CODE_ABOUT);
                 setResult(RESULT_OK);
                 return true;
 
             case SETTINGS:
-                startActivityForResult(new Intent(IncidentAdd.this, Settings.class), REQUEST_CODE_SETTINGS);
+                startActivityForResult(new Intent(IncidentAdd.this, Settings.class),
+                        REQUEST_CODE_SETTINGS);
                 return true;
         }
         return false;
@@ -340,7 +344,8 @@ public class IncidentAdd extends MapUserLocation {
                     addReportsTask.execute();
 
                 } else {
-                    Toast.makeText(IncidentAdd.this, "Error!\n\n" + mErrorMessage, Toast.LENGTH_LONG).show();
+                    Toast.makeText(IncidentAdd.this, "Error!\n\n" + mErrorMessage,
+                            Toast.LENGTH_LONG).show();
                     mErrorMessage = "";
                 }
 
@@ -388,8 +393,7 @@ public class IncidentAdd extends MapUserLocation {
         int categoryAmount = 0;
         if (categoryCount > 0) {
             categoryAmount = categoryCount;
-        }
-        else {
+        } else {
             categoryAmount = 1;
         }
 
@@ -427,9 +431,11 @@ public class IncidentAdd extends MapUserLocation {
         mBtnPicture = (Button)findViewById(R.id.btnPicture);
         mBtnAddCategory = (Button)findViewById(R.id.add_category);
         // delete unset photo
-        File file = new File(Preferences.fileName);
-        if (file.exists() && file.delete()) {
-            Log.i("IncidentAdd", "File deleted " + file.getName());
+        if (Preferences.fileName != null) {
+            File file = new File(Preferences.fileName);
+            if (file.exists() && file.delete()) {
+                Log.i("IncidentAdd", "File deleted " + file.getName());
+            }
         }
         mBtnPicture.setText(getString(R.string.btn_add_photo));
         mIncidentTitle.setText("");
@@ -460,12 +466,15 @@ public class IncidentAdd extends MapUserLocation {
                 Uri uri = PhotoUtils.getPhotoUri("photo.jpg", this);
                 Bitmap bitmap = PhotoUtils.getCameraPhoto(this, uri);
                 PhotoUtils.savePhoto(this, bitmap);
-                Log.i(CLASS_TAG, String.format("REQUEST_CODE_CAMERA %dx%d", bitmap.getWidth(), bitmap.getHeight()));
-            }
-            else if (requestCode == REQUEST_CODE_IMAGE){
+                Log.i(CLASS_TAG,
+                        String.format("REQUEST_CODE_CAMERA %dx%d", bitmap.getWidth(),
+                                bitmap.getHeight()));
+            } else if (requestCode == REQUEST_CODE_IMAGE) {
                 Bitmap bitmap = PhotoUtils.getGalleryPhoto(this, data.getData());
                 PhotoUtils.savePhoto(this, bitmap);
-                Log.i(CLASS_TAG, String.format("REQUEST_CODE_IMAGE %dx%d", bitmap.getWidth(), bitmap.getHeight()));
+                Log.i(CLASS_TAG,
+                        String.format("REQUEST_CODE_IMAGE %dx%d", bitmap.getWidth(),
+                                bitmap.getHeight()));
             }
             SharedPreferences.Editor editor = getPreferences(0).edit();
             editor.putString("photo", PhotoUtils.getPhotoUri("photo.jpg", this).getPath());
@@ -477,8 +486,7 @@ public class IncidentAdd extends MapUserLocation {
         public void run() {
             if (addToDb() == -1) {
                 mHandler.post(mSentIncidentFail);
-            }
-            else {
+            } else {
                 mHandler.post(mSentIncidentOfflineSuccess);
                 // clearFields();
             }
@@ -508,8 +516,7 @@ public class IncidentAdd extends MapUserLocation {
         public void run() {
             if (!postToOnline()) {
                 mHandler.post(mSentIncidentFail);
-            }
-            else {
+            } else {
                 mHandler.post(mSentIncidentSuccess);
             }
         }
@@ -575,7 +582,8 @@ public class IncidentAdd extends MapUserLocation {
                 dialog.setButton3(getString(R.string.camera_option), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, new PhotoUtils().getPhotoUri("photo.jpg", IncidentAdd.this));
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                                new PhotoUtils().getPhotoUri("photo.jpg", IncidentAdd.this));
                         startActivityForResult(intent, REQUEST_CODE_CAMERA);
                         dialog.dismiss();
                     }
@@ -590,12 +598,12 @@ public class IncidentAdd extends MapUserLocation {
                         .setTitle(R.string.add_categories)
                         .setMultiChoiceItems(showCategories(), null,
                                 new DialogInterface.OnMultiChoiceClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton, boolean isChecked) {
+                                    public void onClick(DialogInterface dialog, int whichButton,
+                                            boolean isChecked) {
                                         if (isChecked) {
                                             mVectorCategories.add(mCategoriesId.get(whichButton));
                                             mError = false;
-                                        }
-                                        else {
+                                        } else {
                                             mVectorCategories.remove(mCategoriesId.get(whichButton));
                                         }
                                         if (mVectorCategories.size() > 0) {
@@ -607,8 +615,7 @@ public class IncidentAdd extends MapUserLocation {
                                                 categories.append(mCategoriesTitle.get(catetory));
                                             }
                                             mBtnAddCategory.setText(categories.toString());
-                                        }
-                                        else {
+                                        } else {
                                             mBtnAddCategory.setText(R.string.incident_add_category);
                                         }
                                     }
@@ -657,8 +664,7 @@ public class IncidentAdd extends MapUserLocation {
 
             SimpleDateFormat submitFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
             mDateToSubmit = submitFormat.format(date);
-        }
-        else {
+        } else {
             mPickDate.setText(R.string.incident_date);
             mPickTime.setText(R.string.incident_time);
             mDateToSubmit = null;
@@ -682,7 +688,7 @@ public class IncidentAdd extends MapUserLocation {
 
     /**
      * Insert incident data into db when app is offline.
-     *
+     * 
      * @author henryaddo
      */
     public long addToDb() {
@@ -716,13 +722,12 @@ public class IncidentAdd extends MapUserLocation {
 
     /**
      * Post directly to online.
-     *
+     * 
      * @author henryaddo
      */
     public boolean postToOnline() {
         Log.d(CLASS_TAG, "postToOnline(): posting report to online");
-        if (TextUtils.isEmpty(Preferences.domain)
-                || Preferences.domain.equalsIgnoreCase("http://")) {
+        if (TextUtils.isEmpty(Preferences.domain) || Preferences.domain.equalsIgnoreCase("http://")) {
             return false;
         }
 
@@ -751,8 +756,7 @@ public class IncidentAdd extends MapUserLocation {
 
         try {
             return MainHttpClient.PostFileUpload(urlBuilder.toString(), mParams);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Log.d(CLASS_TAG, "postToOnline(): IO exception failed to submit report "
                     + Preferences.domain);
             e.printStackTrace();
@@ -782,18 +786,18 @@ public class IncidentAdd extends MapUserLocation {
             NetworkServices.fileName = photo;
             Bitmap bitmap = BitmapFactory.decodeFile(photo);
             if (bitmap != null) {
-                Log.i(CLASS_TAG, String.format("Photo %dx%d", bitmap.getWidth(), bitmap.getHeight()));
+                Log.i(CLASS_TAG,
+                        String.format("Photo %dx%d", bitmap.getWidth(), bitmap.getHeight()));
                 mSelectedPhoto.setImageBitmap(bitmap);
-                mSelectedPhoto.setMinimumHeight(mSelectedPhoto.getWidth() * bitmap.getHeight() / bitmap.getWidth());
+                mSelectedPhoto.setMinimumHeight(mSelectedPhoto.getWidth() * bitmap.getHeight()
+                        / bitmap.getWidth());
                 mBtnPicture.setText(R.string.change_photo);
-            }
-            else {
+            } else {
                 mSelectedPhoto.setImageBitmap(null);
                 mSelectedPhoto.setMinimumHeight(0);
                 mBtnPicture.setText(R.string.btn_add_photo);
             }
-        }
-        else {
+        } else {
             Preferences.fileName = null;
             NetworkServices.fileName = null;
         }
@@ -806,7 +810,7 @@ public class IncidentAdd extends MapUserLocation {
 
     /**
      * Go back to the home activity.
-     *
+     * 
      * @param context Context
      * @return void
      */
@@ -850,8 +854,7 @@ public class IncidentAdd extends MapUserLocation {
             mLatitude.setText(String.valueOf(latitude));
             mLongitude.setText(String.valueOf(longitude));
         }
-        if (reverseGeocoderTask == null ||
-            !reverseGeocoderTask.isExecuting()) {
+        if (reverseGeocoderTask == null || !reverseGeocoderTask.isExecuting()) {
             reverseGeocoderTask = new ReverseGeocoderTask(this);
             reverseGeocoderTask.execute(latitude, longitude);
         }
@@ -874,17 +877,20 @@ public class IncidentAdd extends MapUserLocation {
         }
     }
 
-    private TextWatcher latLonTextWatcher = new TextWatcher(){
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-        public void onTextChanged(CharSequence s, int start, int before, int count){
+    private TextWatcher latLonTextWatcher = new TextWatcher() {
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
             try {
                 if (mLatitude.hasFocus() || mLongitude.hasFocus()) {
                     locationChanged(Double.parseDouble(mLatitude.getText().toString()),
-                                    Double.parseDouble(mLongitude.getText().toString()));
+                            Double.parseDouble(mLongitude.getText().toString()));
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Log.w("IncidentAdd", "Exception TextWatcher", ex);
             }
         }
@@ -892,7 +898,7 @@ public class IncidentAdd extends MapUserLocation {
 
     /**
      * Sets nVectorCategories
-     *
+     * 
      * @param aVectorCategories categories
      */
     public void setVectorCategories(Vector<String> aVectorCategories) {
@@ -921,12 +927,10 @@ public class IncidentAdd extends MapUserLocation {
                 if (!postToOnline()) {
                     addToDb();
                     status = 1; // fail
-                }
-                else {
+                } else {
                     status = 0; // success
                 }
-            }
-            else {
+            } else {
                 addToDb();
                 status = 2; // no internet connection
             }
@@ -939,18 +943,19 @@ public class IncidentAdd extends MapUserLocation {
             if (result == 2) {
                 clearFields();
                 Util.showToast(appContext, R.string.report_successfully_added_offline);
-            }
-            else if (result == 1) {
+            } else if (result == 1) {
 
                 Util.showToast(appContext, R.string.failed_to_add_report_online);
-            }
-            else if (result == 0) {
+            } else if (result == 0) {
                 clearFields();
                 // after a successful upload, delete the file
-                File file = new File(Preferences.fileName);
-                if (file.exists() && file.delete()) {
-                    Log.i(getClass().getSimpleName(), "File deleted " + file.getName());
+                if (Preferences.fileName != null) {
+                    File file = new File(Preferences.fileName);
+                    if (file.exists() && file.delete()) {
+                        Log.i(getClass().getSimpleName(), "File deleted " + file.getName());
+                    }
                 }
+                
                 Util.showToast(appContext, R.string.report_successfully_added_online);
             }
 
