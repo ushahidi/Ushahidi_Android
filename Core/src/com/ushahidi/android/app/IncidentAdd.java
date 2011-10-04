@@ -583,7 +583,7 @@ public class IncidentAdd extends MapUserLocation {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                         intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                                new PhotoUtils().getPhotoUri("photo.jpg", IncidentAdd.this));
+                                PhotoUtils.getPhotoUri("photo.jpg", IncidentAdd.this));
                         startActivityForResult(intent, REQUEST_CODE_CAMERA);
                         dialog.dismiss();
                     }

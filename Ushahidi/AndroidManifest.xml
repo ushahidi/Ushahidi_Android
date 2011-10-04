@@ -192,10 +192,7 @@
 		<activity android:name=".DeploymentSearch"
 			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
 			android:label="@string/search_label">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />    
-            </intent-filter>
+            
 			<!-- Receives the search request. -->
 			<intent-filter>
 				<action android:name="android.intent.action.SEARCH" />
