@@ -23,6 +23,7 @@ import android.provider.BaseColumns;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -97,8 +98,9 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
 
         registerForContextMenu(mListView);
         mHandler = new Handler();
+        Log.i("DeploymentSearch",getString(R.string.provider_authorities));
         mTextView.addTextChangedListener(new TextWatcher() {
-
+            
             public void afterTextChanged(Editable arg0) {
                 // TODO Auto-generated method stub
 
@@ -110,7 +112,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                Log.i("DeploymentSearch","String:4  "+s.toString());
                 showResults(s.toString());
 
             }
@@ -276,11 +278,11 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
      */
     private void showResults(String query) {
         Cursor cursor = null;
-
+        Log.i("DeploymentSearch","String:3  "+query);
         if (TextUtils.isEmpty(query)) {
             cursor = MainApplication.mDb.fetchAllDeployments();
         } else {
-
+            Log.i("DeploymentSearch","String:2  "+query);
             cursor = managedQuery(DeploymentProvider.CONTENT_URI, null, null, new String[] {
                 query
             }, null);
@@ -293,7 +295,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
         }
         mDeployments.clear();
         if (cursor != null) {
-
+            Log.i("DeploymentSearch","String: "+query);
             if (cursor.moveToFirst()) {
                 int deploymentIdIndex = cursor.getColumnIndexOrThrow(BaseColumns._ID);
                 int deploymentNameIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_NAME);

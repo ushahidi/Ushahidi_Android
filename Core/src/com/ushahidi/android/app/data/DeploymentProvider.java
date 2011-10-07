@@ -20,6 +20,7 @@ import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
@@ -27,13 +28,14 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.ushahidi.android.app.MainApplication;
+import com.ushahidi.android.app.R;
 
 /**
  * Provides search suggestions for a list of deployments and their details.
  */
 public class DeploymentProvider extends ContentProvider {
-
-    public static String AUTHORITY = "com.ushahidi.android.app.data.deploymentprovider";
+   
+    public  static String AUTHORITY = "";
 
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/deployment");
 
@@ -59,6 +61,11 @@ public class DeploymentProvider extends ContentProvider {
      * Builds up a UriMatcher for search suggestion and shortcut refresh
      * queries.
      */
+    
+    private String getAuthority() {
+        return getContext().getString(R.string.provider_authorities);
+    }
+    
     private static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         // to get deployments...
@@ -131,7 +138,7 @@ public class DeploymentProvider extends ContentProvider {
                 Database.DEPLOYMENT_NAME, Database.DEPLOYMENT_DESC,
                 Database.DEPLOYMENT_URL,
                 SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
-
+             
         };
 
         return MainApplication.mDb.getDeploymentMatches(query, columns);

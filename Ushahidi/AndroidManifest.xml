@@ -205,7 +205,7 @@
 
 		<!-- Provides search suggestions for deployments. -->
 		<provider android:name=".data.DeploymentProvider"
-			android:authorities=".data.deploymentprovider" android:syncable="false" />
+			android:authorities="@string/provider_authorities" android:syncable="false" />
 	</application>
 	
 </manifest>

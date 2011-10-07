@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="fill_parent" android:layout_width="fill_parent"
-	android:background="@color/background_color"
 	android:padding="5dp">
 
 	<TextView android:id="@+id/deploy_name" style="@android:style/TextAppearance.Medium"

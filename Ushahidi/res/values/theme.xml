@@ -7,6 +7,9 @@
     <string name="twitter_url">http://twitter.com/ushahidi</string>
     <string name="facebook_url">http://www.facebook.com/ushahidi</string>
     <string name="contact_url">http://ushahidi.com/contact-us</string>
+    
+    <!-- DEPLOYMENT PROVIDER AUTHORITIES. USUALLY PACKAGE NAME AND CLASS NAME Eg. com.ushahidi.android.app.data.deploymentprovider -->
+    <string name="provider_authorities">com.ushahidi.android.app.data.deploymentprovider</string>
 	
 	<!-- ICON IMAGES -->
     <drawable name="app_icon">@drawable/icon</drawable>
