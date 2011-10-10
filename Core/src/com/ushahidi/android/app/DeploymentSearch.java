@@ -82,6 +82,8 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
     private DeploymentAdapter deploymentAdapter;
 
     private List<DeploymentsData> mDeployments;
+    
+    private static final String TAG = DeploymentSearch.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -283,9 +285,13 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
             cursor = MainApplication.mDb.fetchAllDeployments();
         } else {
             Log.i("DeploymentSearch","String:2  "+query);
+            try {
             cursor = managedQuery(DeploymentProvider.CONTENT_URI, null, null, new String[] {
                 query
             }, null);
+            }catch( IllegalArgumentException e) {
+                Log.d(TAG, "Illegal URL: "+DeploymentProvider.CONTENT_URI.toString());
+            }
         }
 
         // clear everything in the list view

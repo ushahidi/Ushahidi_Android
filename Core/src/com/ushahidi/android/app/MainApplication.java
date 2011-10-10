@@ -30,22 +30,22 @@ import android.database.Cursor;
 
 public class MainApplication extends Application {
 
-    public static final String TAG = "UshahidiApplication";
+    public static final String TAG = MainApplication.class.getSimpleName();
 
     public static ImageManager mImageManager;
 
     public static Database mDb;
 
     public static MainHttpClient mApi;
-
+    
     @Override
     public void onCreate() {
         super.onCreate();
-
         mImageManager = new ImageManager();
         mDb = new Database(this);
         mDb.open();
         mApi = new MainHttpClient();
+        
 
     }
 

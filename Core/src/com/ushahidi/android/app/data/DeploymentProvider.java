@@ -20,7 +20,6 @@ import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
@@ -28,16 +27,15 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.ushahidi.android.app.MainApplication;
-import com.ushahidi.android.app.R;
 
 /**
  * Provides search suggestions for a list of deployments and their details.
  */
 public class DeploymentProvider extends ContentProvider {
-   
-    public  static String AUTHORITY = "";
 
-    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/deployment");
+    public  static String AUTHORITY =  "com.ushahidi.android.app.data.deploymentprovider";
+
+    public static Uri CONTENT_URI =  Uri.parse("content://" + AUTHORITY+ "/deployment");;
 
     // MIME types used for searching words or looking up a single definition
     public static final String DEPLOYMENT_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
@@ -55,18 +53,18 @@ public class DeploymentProvider extends ContentProvider {
 
     private static final int REFRESH_SHORTCUT = 3;
 
-    private static final UriMatcher sURIMatcher = buildUriMatcher();
-
+    private  final UriMatcher sURIMatcher = buildUriMatcher();
+    @Override
+    public boolean onCreate() {
+        return true;
+    }
+    
     /**
      * Builds up a UriMatcher for search suggestion and shortcut refresh
      * queries.
      */
-    
-    private String getAuthority() {
-        return getContext().getString(R.string.provider_authorities);
-    }
-    
-    private static UriMatcher buildUriMatcher() {
+
+    private  UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         // to get deployments...
         matcher.addURI(AUTHORITY, "deployment", SEARCH_DEPLOYMENTS);
@@ -86,14 +84,7 @@ public class DeploymentProvider extends ContentProvider {
         matcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_SHORTCUT, REFRESH_SHORTCUT);
         matcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_SHORTCUT + "/*", REFRESH_SHORTCUT);
         return matcher;
-        
 
-    }
-
-    @Override
-    public boolean onCreate() {
-
-        return true;
     }
 
     /**
@@ -111,7 +102,7 @@ public class DeploymentProvider extends ContentProvider {
         // db query accordingly
         switch (sURIMatcher.match(uri)) {
             case SEARCH_SUGGEST:
-               if (selectionArgs == null) {
+                if (selectionArgs == null) {
                     throw new IllegalArgumentException(
                             "selectionArgs must be provided for the Uri: " + uri);
                 }
@@ -134,11 +125,9 @@ public class DeploymentProvider extends ContentProvider {
     private Cursor getSuggestions(String query) {
         query = query.toLowerCase();
         String[] columns = new String[] {
-                BaseColumns._ID,
-                Database.DEPLOYMENT_NAME, Database.DEPLOYMENT_DESC,
-                Database.DEPLOYMENT_URL,
-                SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
-             
+                BaseColumns._ID, Database.DEPLOYMENT_NAME, Database.DEPLOYMENT_DESC,
+                Database.DEPLOYMENT_URL, SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
+
         };
 
         return MainApplication.mDb.getDeploymentMatches(query, columns);
@@ -147,11 +136,10 @@ public class DeploymentProvider extends ContentProvider {
     private Cursor search(String query) {
         query = query.toLowerCase();
         String[] columns = new String[] {
-                BaseColumns._ID,
-                Database.DEPLOYMENT_NAME, Database.DEPLOYMENT_DESC,
+                BaseColumns._ID, Database.DEPLOYMENT_NAME, Database.DEPLOYMENT_DESC,
                 Database.DEPLOYMENT_URL
         };
-        Log.d("Search Query","Query: "+query);
+        Log.d("Search Query", "Query: " + query);
         return MainApplication.mDb.getDeploymentMatches(query, columns);
     }
 
@@ -159,8 +147,7 @@ public class DeploymentProvider extends ContentProvider {
         String rowId = uri.getLastPathSegment();
 
         String[] columns = new String[] {
-                Database.DEPLOYMENT_NAME, Database.DEPLOYMENT_DESC,
-                Database.DEPLOYMENT_URL
+                Database.DEPLOYMENT_NAME, Database.DEPLOYMENT_DESC, Database.DEPLOYMENT_URL
         };
 
         return MainApplication.mDb.getDeployment(rowId, columns);
@@ -178,8 +165,7 @@ public class DeploymentProvider extends ContentProvider {
          */
         String rowId = uri.getLastPathSegment();
         String[] columns = new String[] {
-                Database.DEPLOYMENT_NAME, Database.DEPLOYMENT_DESC,
-                Database.DEPLOYMENT_URL,
+                Database.DEPLOYMENT_NAME, Database.DEPLOYMENT_DESC, Database.DEPLOYMENT_URL,
                 SearchManager.SUGGEST_COLUMN_SHORTCUT_ID,
                 SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
         };
