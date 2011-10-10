@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LinearLayout">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="LinearLayout.Vertical">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="LinearLayout.Vertical.Full">
+        <item name="android:layout_height">fill_parent</item>
+    </style>
+    <style name="LinearLayout.Vertical.Wrap">
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="LinearLayout.Horizontal">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="LinearLayout.Horizontal.Full">
+        <item name="android:layout_height">fill_parent</item>
+    </style>
+    <style name="LinearLayout.Horizontal.Wrap">
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ListView" parent="@android:style/Widget.ListView">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+    </style>
+
+    <style name="TextView" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">1dp</item>
+        <item name="android:paddingLeft">1dp</item>
+        <item name="android:paddingRight">1dp</item>
+    </style>
+    <style name="TextView.Label">
+        <item name="android:textSize">19sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextView.Title">
+        <item name="android:textSize">19sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextView.Description">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <style name="TextView.Value">
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="TextView.Empty">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+    </style>
+
+    <style name="EditText" parent="@android:style/Widget.EditText">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingLeft">4sp</item>
+        <item name="android:paddingRight">4sp</item>
+    </style>
+    <style name="EditText.Label" >
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+    <style name="EditText.Number">
+        <item name="android:inputType">number</item>
+    </style>
+    <style name="EditText.Number.Wrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+    <style name="EditText.Decimal">
+        <item name="android:inputType">numberDecimal</item>
+    </style>
+    <style name="EditText.Decimal.Wrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+    <style name="EditText.Phone">
+        <item name="android:inputType">phone</item>
+    </style>
+    <style name="EditText.Multiline">
+        <item name="android:inputType">textMultiLine|textCapSentences</item>
+        <item name="android:minLines">5</item>
+    </style>
+    <style name="EditText.URL">
+        <item name="android:inputType">textUri</item>
+    </style>
+    <style name="EditText.Password">
+        <item name="android:inputType">textPassword</item>
+    </style>
+    <style name="EditText.Email">
+        <item name="android:inputType">textEmailAddress</item>
+    </style>
+    <style name="EditText.Name">
+        <item name="android:inputType">textPersonName|textCapWords</item>
+    </style>
+    <style name="EditText.Search">
+        <item name="android:inputType">text</item>
+        <item name="android:maxLines">1</item>
+    </style>
+    <style name="EditText.CapWords">
+        <item name="android:inputType">textCapWords</item>
+    </style>
+    <style name="EditText.CapCharacters">
+        <item name="android:inputType">textCapCharacters</item>
+    </style>
+    <style name="EditText.CapSentences">
+        <item name="android:inputType">textCapSentences</item>
+    </style>
+    <style name="EditText.PostalAddress">
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+    <style name="EditText.ReadOnly">
+        <item name="android:inputType">none</item>
+    </style>
+</resources>

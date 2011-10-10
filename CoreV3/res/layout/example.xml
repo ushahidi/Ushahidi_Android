@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/LinearLayout.Vertical.Full">
+
+    <TextView android:id="@+id/example_label" style="@style/TextView.Title" android:text="@string/first_name"/>
+    <EditText android:id="@+id/example_value" style="@style/EditText.Name" />
+
+</LinearLayout>
