@@ -90,7 +90,7 @@ public class BalloonOverlayView extends FrameLayout {
     private void viewReports(final int index) {
         readmore.setOnClickListener(new OnClickListener() {
             public void onClick(View view) {
-
+                incidentsBundle.putInt("id", mNewIncidents.get(index).getIncidentId());
                 incidentsBundle.putString("title", mNewIncidents.get(index).getIncidentTitle());
                 incidentsBundle.putString("desc", mNewIncidents.get(index).getIncidentDesc());
                 incidentsBundle.putString("category", mNewIncidents.get(index)

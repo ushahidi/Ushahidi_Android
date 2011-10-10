@@ -64,7 +64,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.maps.MapView;
-import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.checkin.NetworkServices;
 import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.Database;
@@ -170,7 +169,7 @@ public class IncidentAdd extends MapUserLocation {
 
     private HashMap<String, String> mParams = new HashMap<String, String>();
 
-    private static final String CLASS_TAG = IncidentAdd.class.getCanonicalName();
+    private static final String CLASS_TAG = IncidentAdd.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
