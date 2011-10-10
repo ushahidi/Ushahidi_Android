@@ -64,6 +64,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.maps.MapView;
+import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.checkin.NetworkServices;
 import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.Database;
@@ -456,6 +457,15 @@ public class IncidentAdd extends MapUserLocation {
         editor.putString("date", "");
         editor.putString("photo", "");
         editor.commit();
+    }
+    
+    /**
+     * Go to checkins screen
+     */
+    public void goToCheckins() {
+        Intent intent = new Intent(IncidentAdd.this, IncidentTab.class);
+        startActivityForResult(intent, LIST_INCIDENTS);
+        setResult(RESULT_OK);
     }
 
     @Override
@@ -957,6 +967,7 @@ public class IncidentAdd extends MapUserLocation {
                 }
                 
                 Util.showToast(appContext, R.string.report_successfully_added_online);
+                goToCheckins();
             }
 
         }
