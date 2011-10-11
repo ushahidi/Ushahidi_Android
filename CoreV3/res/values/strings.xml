@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CoreV3</string>
+    <string name="load">Load</string>
+    <string name="loading_">Loading...</string>
+    <string name="loaded">Loaded</string>
+    <string name="not_loaded">Not Loaded</string>
+    <string name="save">Save</string>
+    <string name="saving_">Saving...</string>
+    <string name="saved">Saved</string>
+    <string name="not_saved">Not Saved</string>
+    <string name="unsaved_changes">Unsaved Changes</string>
+    <string name="no_items">No items</string>
+    <string name="discard">Discard</string>
+    <string name="cancel">Cancel</string>
+    <string name="example_label">Example Label</string>
+    <string name="would_you_like_to_save_your_changes_">Would you like to save your changes?</string>
+</resources>
