@@ -27,7 +27,7 @@ import android.content.Context;
  *
  * Base class for all Models
  */
-public abstract class BaseModel {
+public abstract class Model {
 
     public abstract boolean load(Context context);
     public abstract boolean save(Context context);

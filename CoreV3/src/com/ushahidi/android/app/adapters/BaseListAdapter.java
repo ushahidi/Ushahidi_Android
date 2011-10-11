@@ -24,7 +24,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
-import com.ushahidi.android.app.models.BaseModel;
+import com.ushahidi.android.app.models.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ import java.util.List;
  *
  * @param <M> Model class
  */
-public abstract class BaseListAdapter<M extends BaseModel> extends BaseAdapter {
+public abstract class BaseListAdapter<M extends Model> extends BaseAdapter {
 
     protected final Context context;
     protected final LayoutInflater inflater;

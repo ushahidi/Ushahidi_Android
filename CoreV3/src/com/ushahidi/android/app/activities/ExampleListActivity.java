@@ -9,21 +9,26 @@ import com.ushahidi.android.app.adapters.ExampleListAdapter;
 import com.ushahidi.android.app.models.ExampleModel;
 import com.ushahidi.android.app.tasks.ProgressQueue;
 import com.ushahidi.android.app.tasks.ProgressTask;
+import com.ushahidi.android.app.views.ExampleListView;
 
 /**
  * Example list activity for ExampleModels that inherits from BaseListActivity
  */
-public class ExampleListActivity extends BaseListActivity<ExampleModel, ExampleListAdapter> {
+public class ExampleListActivity extends BaseListActivity<ExampleListView, ExampleModel, ExampleListAdapter> {
 
     protected ExampleListActivity() {
-        super(R.layout.example_list, R.menu.example, R.id.example_list_table);
+        super(ExampleListView.class,
+              ExampleListAdapter.class,
+              R.layout.example_list,
+              R.menu.example,
+              R.id.example_list_table);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Example of progress queue for executing asynctasks
-        //which will execute TaskOne, then TaskTwo in order
+        //which will execute TaskOne, then TaskTwo
         new ProgressQueue(
             new TaskOne(this),
             new TaskTwo(this)

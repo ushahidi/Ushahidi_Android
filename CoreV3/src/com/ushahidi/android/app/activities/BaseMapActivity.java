@@ -30,32 +30,69 @@ import android.widget.Toast;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
+import com.ushahidi.android.app.views.View;
 
 /**
  * BaseMapActivity
  *
  * Add shared functionality that exists between all Map Activities
  */
-public abstract class BaseMapActivity extends MapActivity implements LocationListener {
+public abstract class BaseMapActivity<V extends View> extends MapActivity implements LocationListener {
 
-    protected final int layoutId;
-    protected final int menuId;
+    /**
+     * Layout resource id
+     */
+    protected final int layout;
+
+    /**
+     * Menu resource id
+     */
+    protected final int menu;
+
+    /**
+     *  MapView resource id
+     */
     protected final int mapViewId;
 
+    /**
+     * View class
+     */
+    protected final Class<V> viewClass;
+
+    /**
+     * View
+     */
+    protected V view;
+
+    /**
+     * MapView
+     */
     protected MapView mapView;
+
+    /**
+     *
+     */
     protected LocationManager locationManager;
 
-    protected BaseMapActivity(int layoutId, int menuId, int mapViewId) {
-        this.layoutId = layoutId;
-        this.menuId = menuId;
-        this.mapViewId = mapViewId;
+    /**
+     *  BaseMapActivity
+     * @param view View class type
+     * @param layout layout resource id
+     * @param menu menu resource id
+     * @param mapView Map view resource id
+     */
+    protected BaseMapActivity(Class<V> view, int layout, int menu, int mapView) {
+        this.viewClass = view;
+        this.layout = layout;
+        this.menu = menu;
+        this.mapViewId = mapView;
     }
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (layoutId != 0) {
-            setContentView(layoutId);
+        if (layout != 0) {
+            setContentView(layout);
         }
         if (mapViewId != 0) {
             mapView = (MapView)findViewById(mapViewId);
@@ -77,8 +114,8 @@ public abstract class BaseMapActivity extends MapActivity implements LocationLis
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		if (menuId != 0) {
-			getMenuInflater().inflate(menuId, menu);
+		if (this.menu != 0) {
+			getMenuInflater().inflate(this.menu, menu);
 			return true;
 		}
 		return false;

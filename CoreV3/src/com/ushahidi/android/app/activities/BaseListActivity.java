@@ -23,32 +23,54 @@ package com.ushahidi.android.app.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.BaseListAdapter;
-import com.ushahidi.android.app.models.BaseModel;
+import com.ushahidi.android.app.models.Model;
 import com.ushahidi.android.app.tasks.ProgressTask;
-import com.ushahidi.android.app.utils.Objects;
-
-import java.lang.reflect.Type;
+import com.ushahidi.android.app.views.View;
 
 /**
  * BaseListActivity
  *
  * Add shared functionality that exists between all List Activities
  */
-public abstract class BaseListActivity<M extends BaseModel, L extends BaseListAdapter<M>> extends BaseActivity
-        implements AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener{
+public abstract class BaseListActivity<V extends View, M extends Model, L extends BaseListAdapter<M>>
+        extends BaseActivity<V> implements AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
 
+    /**
+     *  ListView resource id
+     */
     private final int listViewId;
-    private L listAdapter;
+
+    /**
+     * ListAdpater class
+     */
+    private final Class<L> adapterClass;
+
+    /**
+     * ListAdapter
+     */
+    private L adapter;
+
+    /**
+     * ListView
+     */
     private ListView listView;
 
-    protected BaseListActivity(int layoutId, int menuId, int listViewId) {
-        super(layoutId, menuId);
-        this.listViewId = listViewId;
+    /**
+     * BaseListActivity
+     * @param view View clas type
+     * @param adapter List adapter class type
+     * @param layout layout resource id
+     * @param menu menu resource id
+     * @param listView list view resource id
+     */
+    protected BaseListActivity(Class<V> view, Class<L> adapter, int layout, int menu, int listView) {
+        super(view, layout, menu);
+        this.adapterClass = adapter;
+        this.listViewId = listView;
     }
 
     @Override
@@ -58,20 +80,22 @@ public abstract class BaseListActivity<M extends BaseModel, L extends BaseListAd
         if (listViewId != 0) {
             listView = findListViewById(listViewId);
             listView.setOnItemClickListener(this);
-            View emptyView = findViewById(android.R.id.empty);
+            android.view.View emptyView = findViewById(android.R.id.empty);
             if (emptyView != null) {
                 listView.setEmptyView(emptyView);
             }
-            //HACK to get the generic parameter type due to Java's reflection limitations
-            Type genericType = Objects.getGenericType(this, 1);
-            listAdapter = (L)Objects.createInstance(genericType, new Class []{Context.class}, new Object []{this});
-            listView.setAdapter(listAdapter);
+            adapter = createInstance(adapterClass,Context.class, this);
+            listView.setAdapter(adapter);
             listView.setFocusable(true);
             listView.setFocusableInTouchMode(true);
         }
     }
 
-    protected abstract void onLoaded();
+    /**
+     * Called after ListAdapter has been loaded
+     * @param success true is successfully loaded
+     */
+    protected abstract void onLoaded(boolean success);
 
     @Override
 	protected void onResume(){
@@ -89,7 +113,7 @@ public abstract class BaseListActivity<M extends BaseModel, L extends BaseListAd
 		return (M)listView.getSelectedItem();
 	}
 
-    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {}
+    public void onItemSelected(AdapterView<?> adapterView, android.view.View view, int position, long id) {}
 
     public void onNothingSelected(AdapterView<?> adapterView) {}
 
@@ -103,17 +127,14 @@ public abstract class BaseListActivity<M extends BaseModel, L extends BaseListAd
 
         @Override
         protected Boolean doInBackground(String...args) {
-            listAdapter.refresh(activity);
+            adapter.refresh(activity);
             return true;
         }
 
         @Override
         protected void onPostExecute(Boolean success) {
             super.onPostExecute(success);
-            if (success) {
-                //call the onLoaded method which all BaseListActivity sub-classes must implement
-                onLoaded();
-            }
+            onLoaded(success);
         }
     }
 

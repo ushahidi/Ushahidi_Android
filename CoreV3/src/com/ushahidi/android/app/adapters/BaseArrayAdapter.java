@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
-import com.ushahidi.android.app.models.BaseModel;
+import com.ushahidi.android.app.models.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @param <M> Model class
  */
-public abstract class BaseArrayAdapter<M extends BaseModel> extends ArrayAdapter<String> {
+public abstract class BaseArrayAdapter<M extends Model> extends ArrayAdapter<String> {
 
     protected final LayoutInflater inflater;
 	protected final List<M> tags;

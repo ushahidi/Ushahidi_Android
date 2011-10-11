@@ -29,7 +29,7 @@ import com.ushahidi.android.app.R;
  *
  * Parent class for all AsyncTasks that need to show ProgressDialog while executing
  */
-public abstract class ProgressTask extends BaseTask<String, String, Boolean> {
+public abstract class ProgressTask extends Task<String, String, Boolean> {
 
     protected final ProgressDialog dialog;
     protected ProgressCallback callback;

@@ -18,22 +18,21 @@
  **
  **/
 
-package com.ushahidi.android.app.widgets;
+package com.ushahidi.android.app.views;
 
 import android.app.Activity;
 import android.util.Log;
-import android.view.View;
 
 import java.lang.annotation.Annotation;
 
 /**
- * Base class for
+ * Base class for View
  */
-public abstract class BaseWidgets {
+public abstract class View {
 
-    public BaseWidgets(Activity activity) {
+    public View(Activity activity) {
         for(Class clazz : new Class[]{getClass(), getClass().getSuperclass()}) {
-            if (clazz != null && BaseWidgets.class.isAssignableFrom(clazz)) {
+            if (clazz != null && View.class.isAssignableFrom(clazz)) {
                 for (java.lang.reflect.Field field : clazz.getDeclaredFields()) {
                     try {
                         Annotation annotation = field.getAnnotation(Widget.class);
@@ -56,9 +55,9 @@ public abstract class BaseWidgets {
         }
     }
 
-    public BaseWidgets(View view) {
+    public View(android.view.View view) {
         for(Class clazz : new Class[]{getClass(), getClass().getSuperclass()}) {
-            if (clazz != null && BaseWidgets.class.isAssignableFrom(clazz)) {
+            if (clazz != null && View.class.isAssignableFrom(clazz)) {
                 for (java.lang.reflect.Field field : clazz.getDeclaredFields()) {
                     try {
                         Annotation annotation = field.getAnnotation(Widget.class);

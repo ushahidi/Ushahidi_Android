@@ -29,11 +29,11 @@ import android.util.Log;
  *
  * Parent class for all AsyncTasks
  */
-public abstract class BaseTask<A, P, R> extends AsyncTask<A, P, R> {
+public abstract class Task<A, P, R> extends AsyncTask<A, P, R> {
 
     protected final Activity activity;
 
-    protected BaseTask(Activity activity) {
+    protected Task(Activity activity) {
         this.activity = activity;
     }
 

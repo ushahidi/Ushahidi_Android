@@ -21,6 +21,7 @@
 package com.ushahidi.android.app.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,9 +35,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import com.ushahidi.android.app.utils.Objects;
-import com.ushahidi.android.app.widgets.BaseWidgets;
+import com.ushahidi.android.app.views.View;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 
 /**
@@ -44,15 +46,38 @@ import java.lang.reflect.Type;
  *
  * Add shared functionality that exists between all Activities
  */
-public abstract class BaseActivity<W extends BaseWidgets> extends Activity {
+public abstract class BaseActivity<V extends View> extends Activity {
 
-    protected final int layoutId;
-    protected final int menuId;
-    protected W widgets;
+    /**
+     * Layout resource id
+     */
+    protected final int layout;
 
-    protected BaseActivity(int layoutId, int menuId) {
-        this.layoutId = layoutId;
-        this.menuId = menuId;
+    /**
+     * Menu resource id
+     */
+    protected final int menu;
+
+    /**
+     *  View class
+     */
+    protected final Class<V> viewClass;
+
+    /**
+     * View
+     */
+    protected V view;
+
+    /**
+     *  BaseActivity
+     * @param view View class
+     * @param layout layout resource id
+     * @param menu menu resource id
+     */
+    protected BaseActivity(Class<V> view, int layout, int menu) {
+        this.viewClass = view;
+        this.layout = layout;
+        this.menu = menu;
     }
 
     @Override
@@ -60,12 +85,10 @@ public abstract class BaseActivity<W extends BaseWidgets> extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         log("onCreate");
-        if (layoutId != 0) {
-            setContentView(layoutId);
+        if (layout != 0) {
+            setContentView(layout);
         }
-        //HACK to get the generic parameter type due to Java's reflection limitations
-        Type genericType = Objects.getGenericType(this, 1);
-        widgets = (W)Objects.createInstance(genericType, new Class[]{Activity.class}, new Object[]{this});
+        view = createInstance(viewClass, Activity.class, this);
     }
 
     @Override
@@ -120,8 +143,8 @@ public abstract class BaseActivity<W extends BaseWidgets> extends Activity {
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		if (menuId != 0) {
-			getMenuInflater().inflate(menuId, menu);
+		if (this.menu != 0) {
+			getMenuInflater().inflate(this.menu, menu);
 			return true;
         }
 		return false;
@@ -199,5 +222,25 @@ public abstract class BaseActivity<W extends BaseWidgets> extends Activity {
 
     protected void toastShort(CharSequence message) {
         Toast.makeText(this, message.toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T createInstance(Class type, Class constructor, Object...params) {
+        try {
+            return (T)type.getConstructor(constructor).newInstance(params);
+        }
+        catch (InstantiationException e) {
+            log("InstantiationException", e);
+        }
+        catch (IllegalAccessException e) {
+            log("IllegalAccessException", e);
+        }
+        catch (InvocationTargetException e) {
+            log("InvocationTargetException", e);
+        }
+        catch (NoSuchMethodException e) {
+            log("NoSuchMethodException", e);
+        }
+        return null;
     }
 }

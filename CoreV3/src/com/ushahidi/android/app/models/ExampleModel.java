@@ -5,7 +5,7 @@ import android.content.Context;
 /**
  *
  */
-public class ExampleModel extends BaseModel {
+public class ExampleModel extends Model {
 
     public ExampleModel(String text) {
         this.text = text;

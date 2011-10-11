@@ -6,12 +6,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.models.ExampleModel;
-import com.ushahidi.android.app.widgets.BaseWidgets;
-import com.ushahidi.android.app.widgets.Widget;
+import com.ushahidi.android.app.views.Widget;
 
 public class ExampleListAdapter extends BaseListAdapter<ExampleModel> {
 
-    class Widgets extends BaseWidgets {
+    class Widgets extends com.ushahidi.android.app.views.View {
         public Widgets(View view) {
             super(view);
         }

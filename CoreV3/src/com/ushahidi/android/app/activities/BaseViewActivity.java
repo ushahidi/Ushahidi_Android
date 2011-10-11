@@ -20,14 +20,33 @@
 
 package com.ushahidi.android.app.activities;
 
+import com.ushahidi.android.app.models.Model;
+import com.ushahidi.android.app.views.View;
+
 /**
  * BaseViewActivity
  *
  * Add shared functionality that exists between all View Activities
  */
-public abstract class BaseViewActivity extends BaseActivity {
+public abstract class BaseViewActivity<V extends View, M extends Model> extends BaseActivity<V> {
 
-    protected BaseViewActivity(int layoutId, int menuId) {
-        super(layoutId, menuId);
+    protected BaseViewActivity(Class<V> view, int layout, int menu) {
+        super(view, layout, menu);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+	@Override
+	protected void onResume(){
+		super.onResume();
+	}
+
+    @Override
+	protected void onPause() {
+        super.onPause();
+    }
+
 }

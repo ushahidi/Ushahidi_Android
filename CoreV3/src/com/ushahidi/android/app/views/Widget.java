@@ -18,7 +18,7 @@
  **
  **/
 
-package com.ushahidi.android.app.widgets;
+package com.ushahidi.android.app.views;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
