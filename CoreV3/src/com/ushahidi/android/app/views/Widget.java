@@ -26,7 +26,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to tag widgets
+ * Widget Annotation
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

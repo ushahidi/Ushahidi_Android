@@ -116,10 +116,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BaseActivity.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="BaseActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/activities/BaseActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="72" column="29" selection-start="1871" selection-end="1871" vertical-scroll-proportion="0.7542694">
+            <state line="48" column="22" selection-start="1491" selection-end="1491" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -188,7 +188,7 @@
       <file leaf-file-name="ExampleView.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/views/ExampleView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="14" selection-start="329" selection-end="337" vertical-scroll-proportion="0.0">
+            <state line="0" column="8" selection-start="8" selection-end="38" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -217,7 +217,7 @@
       <file leaf-file-name="ExampleListView.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/views/ExampleListView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="28" selection-start="84" selection-end="99" vertical-scroll-proportion="0.0">
+            <state line="7" column="47" selection-start="144" selection-end="144" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -244,7 +244,7 @@
       <file leaf-file-name="BaseListAdapter.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/adapters/BaseListAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="54" column="27" selection-start="1603" selection-end="1603" vertical-scroll-proportion="0.0">
+            <state line="0" column="0" selection-start="0" selection-end="715" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -253,16 +253,16 @@
       <file leaf-file-name="BaseArrayAdapter.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/adapters/BaseArrayAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="25" selection-start="370" selection-end="370" vertical-scroll-proportion="0.0">
+            <state line="19" column="0" selection-start="716" selection-end="716" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Task.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Task.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/tasks/Task.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="11" selection-start="857" selection-end="857" vertical-scroll-proportion="0.0">
+            <state line="31" column="22" selection-start="922" selection-end="922" vertical-scroll-proportion="0.41271347">
               <folding />
             </state>
           </provider>
@@ -289,7 +289,7 @@
       <file leaf-file-name="ProgressCallback.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/tasks/ProgressCallback.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="3" selection-start="784" selection-end="784" vertical-scroll-proportion="0.0">
+            <state line="20" column="8" selection-start="725" selection-end="755" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -307,7 +307,7 @@
       <file leaf-file-name="ExampleModel.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/models/ExampleModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="25" selection-start="193" selection-end="193" vertical-scroll-proportion="0.0">
+            <state line="0" column="8" selection-start="8" selection-end="39" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -316,7 +316,7 @@
       <file leaf-file-name="Widget.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/views/Widget.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="28" selection-start="952" selection-end="952" vertical-scroll-proportion="0.0">
+            <state line="28" column="10" selection-start="934" selection-end="934" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -325,7 +325,7 @@
       <file leaf-file-name="View.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/views/View.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="22" selection-start="880" selection-end="880" vertical-scroll-proportion="0.0">
+            <state line="31" column="3" selection-start="920" selection-end="1006" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -334,7 +334,7 @@
       <file leaf-file-name="Strings.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/utils/Strings.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="0" selection-start="716" selection-end="716" vertical-scroll-proportion="0.0">
+            <state line="29" column="26" selection-start="870" selection-end="870" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -343,7 +343,7 @@
       <file leaf-file-name="Dates.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/utils/Dates.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="24" selection-start="849" selection-end="849" vertical-scroll-proportion="0.0">
+            <state line="30" column="13" selection-start="867" selection-end="867" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -352,7 +352,7 @@
       <file leaf-file-name="Doubles.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/utils/Doubles.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="26" selection-start="865" selection-end="865" vertical-scroll-proportion="0.0">
+            <state line="30" column="13" selection-start="883" selection-end="883" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -368,17 +368,17 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/activities/BaseViewActivity.java" />
-        <option value="$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/views/ExampleListView.java" />
-        <option value="$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/activities/ExampleListActivity.java" />
-        <option value="$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/activities/ExampleActivity.java" />
-        <option value="$PROJECT_DIR$/CoreV3/res/layout/example.xml" />
-        <option value="$PROJECT_DIR$/CoreV3/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/CoreV3/res/menu/example_edit.xml" />
         <option value="$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/activities/BaseEditActivity.java" />
         <option value="$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/activities/BaseMapActivity.java" />
         <option value="$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/activities/BaseActivity.java" />
         <option value="$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/activities/BaseListActivity.java" />
+        <option value="$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/views/View.java" />
+        <option value="$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/views/Widget.java" />
+        <option value="$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/views/ExampleListView.java" />
+        <option value="$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/views/ExampleView.java" />
+        <option value="$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/adapters/BaseArrayAdapter.java" />
+        <option value="$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/utils/Strings.java" />
       </list>
     </option>
   </component>
@@ -932,74 +932,17 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/views/ExampleView.java">
+    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/tasks/ProgressCallback.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="14" selection-start="329" selection-end="337" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/activities/ExampleActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="14" selection-start="396" selection-end="396" vertical-scroll-proportion="0.0">
+        <state line="20" column="8" selection-start="725" selection-end="755" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CoreV3/res/layout/example.xml">
+    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/models/ExampleModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="111" selection-start="267" selection-end="267" vertical-scroll-proportion="0.0">
+        <state line="0" column="8" selection-start="8" selection-end="39" vertical-scroll-proportion="0.0">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Developer/Android/android-sdk-mac_x86/platforms/android-7/android.jar!/java/lang/Class.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="44" selection-start="1246" selection-end="1246" vertical-scroll-proportion="0.33333334">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CoreV3/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="28" selection-start="123" selection-end="123" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/activities/BaseListActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="13" selection-start="1569" selection-end="1569" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/activities/BaseMapActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="27" selection-start="1537" selection-end="1537" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/activities/BaseEditActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="88" column="51" selection-start="3083" selection-end="3083" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/activities/BaseViewActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="26" selection-start="1148" selection-end="1148" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1010,9 +953,58 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/adapters/BaseListAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="715" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/adapters/BaseArrayAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="0" selection-start="716" selection-end="716" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/views/View.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="3" selection-start="920" selection-end="1006" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/activities/BaseActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="29" selection-start="1871" selection-end="1871" vertical-scroll-proportion="0.7542694">
+        <state line="48" column="22" selection-start="1491" selection-end="1491" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/utils/Doubles.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="13" selection-start="883" selection-end="883" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/utils/Strings.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="26" selection-start="870" selection-end="870" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/utils/Dates.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="13" selection-start="867" selection-end="867" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CoreV3/src/com/ushahidi/android/app/tasks/Task.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="22" selection-start="922" selection-end="922" vertical-scroll-proportion="0.41271347">
           <folding />
         </state>
       </provider>

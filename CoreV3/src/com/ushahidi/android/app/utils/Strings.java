@@ -24,6 +24,11 @@ import android.widget.EditText;
 
 import java.util.StringTokenizer;
 
+/**
+ * Strings
+ *
+ * Helper class for String
+ */
 public class Strings {
 
     public static boolean isNullOrEmpty(String string) {

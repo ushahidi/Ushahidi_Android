@@ -5,6 +5,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.ushahidi.android.app.R;
 
+/**
+ * ExampleView
+ *
+ *  All the widgets for /res/layout/example.xml
+ */
 public class ExampleView extends View {
     public ExampleView(Activity activity) {
         super(activity);
