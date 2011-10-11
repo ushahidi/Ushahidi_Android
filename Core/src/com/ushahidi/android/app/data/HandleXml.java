@@ -346,8 +346,10 @@ public class HandleXml {
 
                     NodeList title = titleElement.getChildNodes();
                     if (title.getLength() != 0) {
+
                         category.setCategoryTitle((title.item(0)).getNodeValue());
                         categories += (title.item(0)).getNodeValue() + ", ";
+
                     }
                 }
 

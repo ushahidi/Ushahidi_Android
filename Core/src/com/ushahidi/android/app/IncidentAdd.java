@@ -405,11 +405,19 @@ public class IncidentAdd extends MapUserLocation {
             int idIndex = cursor.getColumnIndexOrThrow(Database.CATEGORY_ID);
 
             do {
-                categories[i] = cursor.getString(titleIndex);
-                mCategoriesTitle.put(String.valueOf(cursor.getInt(idIndex)),
-                        cursor.getString(titleIndex));
-                mCategoriesId.add(String.valueOf(cursor.getInt(idIndex)));
-                i++;
+
+                // Because the API returns trusted reports and we don't
+                // want it, don't add it to the list of categories.
+                
+                    
+                    categories[i] = cursor.getString(titleIndex);
+                    mCategoriesTitle.put(String.valueOf(cursor.getInt(idIndex)),
+                            cursor.getString(titleIndex));
+                    mCategoriesId.add(String.valueOf(cursor.getInt(idIndex)));
+                    i++;
+                
+                
+                
             } while (cursor.moveToNext());
         }
 
@@ -457,7 +465,7 @@ public class IncidentAdd extends MapUserLocation {
         editor.putString("photo", "");
         editor.commit();
     }
-    
+
     /**
      * Go to checkins screen
      */
@@ -964,7 +972,7 @@ public class IncidentAdd extends MapUserLocation {
                         Log.i(getClass().getSimpleName(), "File deleted " + file.getName());
                     }
                 }
-                
+
                 Util.showToast(appContext, R.string.report_successfully_added_online);
                 goToCheckins();
             }

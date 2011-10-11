@@ -9,7 +9,7 @@
     <string name="contact_url">http://inherity.org/contact.asp</string>
     
     <!-- DEPLOYMENT PROVIDER AUTHORITIES. USUALLY PACKAGE NAME AND CLASS NAME Eg. com.ushahidi.android.app.data.deploymentprovider -->
-    <string name="provider_authorities"/>
+    <string name="provider_authorities">org.inherity.ushahidi.android.app.data.deploymentprovider</string>
 
 	<!-- ICON IMAGES -->
     <drawable name="app_icon">@drawable/icon</drawable>

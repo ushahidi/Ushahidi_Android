@@ -82,7 +82,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
     private DeploymentAdapter deploymentAdapter;
 
     private List<DeploymentsData> mDeployments;
-    
+
     private static final String TAG = DeploymentSearch.class.getSimpleName();
 
     @Override
@@ -100,9 +100,9 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
 
         registerForContextMenu(mListView);
         mHandler = new Handler();
-        Log.i("DeploymentSearch",getString(R.string.provider_authorities));
+        Log.i("DeploymentSearch", getString(R.string.provider_authorities));
         mTextView.addTextChangedListener(new TextWatcher() {
-            
+
             public void afterTextChanged(Editable arg0) {
                 // TODO Auto-generated method stub
 
@@ -114,7 +114,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.i("DeploymentSearch","String:4  "+s.toString());
+                Log.i("DeploymentSearch", "String:4  " + s.toString());
                 showResults(s.toString());
 
             }
@@ -280,17 +280,17 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
      */
     private void showResults(String query) {
         Cursor cursor = null;
-        Log.i("DeploymentSearch","String:3  "+query);
+        Log.i("DeploymentSearch", "String:3  " + query);
         if (TextUtils.isEmpty(query)) {
             cursor = MainApplication.mDb.fetchAllDeployments();
         } else {
-            Log.i("DeploymentSearch","String:2  "+query);
+            Log.i("DeploymentSearch", "String:2  " + query);
             try {
-            cursor = managedQuery(DeploymentProvider.CONTENT_URI, null, null, new String[] {
-                query
-            }, null);
-            }catch( IllegalArgumentException e) {
-                Log.d(TAG, "Illegal URL: "+DeploymentProvider.CONTENT_URI.toString());
+                cursor = managedQuery(DeploymentProvider.CONTENT_URI, null, null, new String[] {
+                    query
+                }, null);
+            } catch (IllegalArgumentException e) {
+                Log.d(TAG, "Illegal URL: " + DeploymentProvider.CONTENT_URI.toString());
             }
         }
 
@@ -301,7 +301,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
         }
         mDeployments.clear();
         if (cursor != null) {
-            Log.i("DeploymentSearch","String: "+query);
+            Log.i("DeploymentSearch", "String: " + query);
             if (cursor.moveToFirst()) {
                 int deploymentIdIndex = cursor.getColumnIndexOrThrow(BaseColumns._ID);
                 int deploymentNameIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_NAME);
@@ -635,6 +635,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
 
         @Override
         protected void onPostExecute(Integer result) {
+            this.dialog.cancel();
             if (result == 4) {
                 Util.showToast(appContext, R.string.internet_connection);
             } else if (result == 3) {
@@ -647,7 +648,6 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
                 clearCachedReports();
                 goToReports();
             }
-            this.dialog.cancel();
 
         }
 
