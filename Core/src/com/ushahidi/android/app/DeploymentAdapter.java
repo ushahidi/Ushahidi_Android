@@ -73,7 +73,7 @@ public class DeploymentAdapter extends BaseAdapter {
         holder.deploymentId.setText(iItems.get(position).getId());
 
         if (iItems.get(position).getId().equals(deploymentId)) {
-            holder.arrow.setImageResource(R.drawable.button_selected);
+            holder.arrow.setImageResource(R.drawable.deployment_selected);
         } else {
             holder.arrow.setImageResource(R.drawable.menu_arrow);
         }
