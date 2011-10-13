@@ -100,7 +100,6 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
 
         registerForContextMenu(mListView);
         mHandler = new Handler();
-        Log.i("DeploymentSearch", getString(R.string.provider_authorities));
         mTextView.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable arg0) {
@@ -635,18 +634,22 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
 
         @Override
         protected void onPostExecute(Integer result) {
-            this.dialog.cancel();
-            if (result == 4) {
-                Util.showToast(appContext, R.string.internet_connection);
-            } else if (result == 3) {
-                Util.showToast(appContext, R.string.invalid_ushahidi_instance);
-            } else if (result == 2) {
-                Util.showToast(appContext, R.string.ushahidi_sync);
-            } else if (result == 1) {
-                Util.showToast(appContext, R.string.could_not_fetch_reports);
-            } else if (result == 0) {
-                clearCachedReports();
-                goToReports();
+            try {
+                this.dialog.cancel();
+                if (result == 4) {
+                    Util.showToast(appContext, R.string.internet_connection);
+                } else if (result == 3) {
+                    Util.showToast(appContext, R.string.invalid_ushahidi_instance);
+                } else if (result == 2) {
+                    Util.showToast(appContext, R.string.ushahidi_sync);
+                } else if (result == 1) {
+                    Util.showToast(appContext, R.string.could_not_fetch_reports);
+                } else if (result == 0) {
+                    clearCachedReports();
+                    goToReports();
+                }
+            } catch (IllegalArgumentException e) {
+                Log.e(TAG, "IllegalArgumentException " + e.toString());
             }
 
         }

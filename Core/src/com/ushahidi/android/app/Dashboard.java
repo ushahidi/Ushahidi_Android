@@ -225,6 +225,8 @@ public class Dashboard extends Activity {
     }
 
     private void refreshReports() {
+        // load settings
+        Preferences.loadSettings(this);
         // make sure there is a deployment to fetch reports/checkins from
         if (Preferences.domain.length() == 0 || Preferences.domain.equals("http://")) {
             mHandler.post(mDisplayPrompt);
