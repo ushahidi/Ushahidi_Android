@@ -45,7 +45,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -158,8 +157,6 @@ public class IncidentAdd extends MapUserLocation {
     private static final int TIME_DIALOG_ID = 4;
 
     private static final int DATE_DIALOG_ID = 5;
-
-    private final static Handler mHandler = new Handler();
 
     private Vector<String> mVectorCategories = new Vector<String>();
 
@@ -467,9 +464,9 @@ public class IncidentAdd extends MapUserLocation {
     }
 
     /**
-     * Go to checkins screen
+     * Go to reports screen
      */
-    public void goToCheckins() {
+    public void goToReports() {
         Intent intent = new Intent(IncidentAdd.this, IncidentTab.class);
         startActivityForResult(intent, LIST_INCIDENTS);
         setResult(RESULT_OK);
@@ -498,54 +495,6 @@ public class IncidentAdd extends MapUserLocation {
             editor.commit();
         }
     }
-
-    final Runnable mSentIncidentOffline = new Runnable() {
-        public void run() {
-            if (addToDb() == -1) {
-                mHandler.post(mSentIncidentFail);
-            } else {
-                mHandler.post(mSentIncidentOfflineSuccess);
-                // clearFields();
-            }
-        }
-    };
-
-    final Runnable mSentIncidentFail = new Runnable() {
-        public void run() {
-            Util.showToast(IncidentAdd.this, R.string.failed_to_add_report_online);
-        }
-    };
-
-    final Runnable mSentIncidentOfflineFail = new Runnable() {
-        public void run() {
-            Util.showToast(IncidentAdd.this, R.string.failed_to_add_report_offline);
-        }
-    };
-
-    final Runnable mSentIncidentOfflineSuccess = new Runnable() {
-        public void run() {
-            Util.showToast(IncidentAdd.this, R.string.report_successfully_added_offline);
-        }
-    };
-
-    //
-    final Runnable mSendIncidentOnline = new Runnable() {
-        public void run() {
-            if (!postToOnline()) {
-                mHandler.post(mSentIncidentFail);
-            } else {
-                mHandler.post(mSentIncidentSuccess);
-            }
-        }
-    };
-
-    //
-    final Runnable mSentIncidentSuccess = new Runnable() {
-        public void run() {
-            Util.showToast(IncidentAdd.this, R.string.report_successfully_added_online);
-
-        }
-    };
 
     /**
      * Create various dialog
@@ -742,10 +691,10 @@ public class IncidentAdd extends MapUserLocation {
      * 
      * @author henryaddo
      */
-    public boolean postToOnline() {
+    public int postToOnline() {
         Log.d(CLASS_TAG, "postToOnline(): posting report to online");
         if (TextUtils.isEmpty(Preferences.domain) || Preferences.domain.equalsIgnoreCase("http://")) {
-            return false;
+            return 12;
         }
 
         String dates[] = mDateToSubmit.split(" ");
@@ -772,12 +721,14 @@ public class IncidentAdd extends MapUserLocation {
         mParams.put("filename", Preferences.fileName);
 
         try {
-            return MainHttpClient.PostFileUpload(urlBuilder.toString(), mParams);
+            final int status = MainHttpClient.PostFileUpload(urlBuilder.toString(), mParams);
+            Log.i(CLASS_TAG, "Statuses: "+status);
+            return status;
         } catch (IOException e) {
             Log.d(CLASS_TAG, "postToOnline(): IO exception failed to submit report "
                     + Preferences.domain);
             e.printStackTrace();
-            return false;
+            return 13;
         }
 
     }
@@ -941,15 +892,14 @@ public class IncidentAdd extends MapUserLocation {
         @Override
         protected Integer doInBackground(Void... mParams) {
             if (Util.isConnected(IncidentAdd.this)) {
-                if (!postToOnline()) {
+                status = postToOnline();
+                
+                if(status > 0 ) {
                     addToDb();
-                    status = 1; // fail
-                } else {
-                    status = 0; // success
                 }
             } else {
                 addToDb();
-                status = 2; // no internet connection
+                status = 14; // no internet connection
             }
             return status;
         }
@@ -957,12 +907,12 @@ public class IncidentAdd extends MapUserLocation {
         @Override
         protected void onPostExecute(Integer result) {
             progressDialog.cancel();
-            if (result == 2) {
+            if (result == 14) {
                 clearFields();
                 Util.showToast(appContext, R.string.report_successfully_added_offline);
-            } else if (result == 1) {
+            } else if (result == 1 || result == 3) {
 
-                Util.showToast(appContext, R.string.failed_to_add_report_online);
+                Util.showToast(appContext, R.string.failed_to_add_report_offline);
             } else if (result == 0) {
                 clearFields();
                 // after a successful upload, delete the file
@@ -974,7 +924,9 @@ public class IncidentAdd extends MapUserLocation {
                 }
 
                 Util.showToast(appContext, R.string.report_successfully_added_online);
-                goToCheckins();
+                goToReports();
+            } else {
+                Util.showToast(appContext, R.string.report_successfully_added_offline);
             }
 
         }

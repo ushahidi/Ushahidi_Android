@@ -215,7 +215,7 @@
 
         <!-- Provides search suggestions for deployments. -->
         <provider android:name="com.ushahidi.android.app.data.DeploymentProvider"
-                  android:authorities="@string/provider_authorities"
+                  android:authorities="com.ushahidi.android.beijigntransport.deploymentprovider"
                   android:syncable="false" />
     </application>
 </manifest>

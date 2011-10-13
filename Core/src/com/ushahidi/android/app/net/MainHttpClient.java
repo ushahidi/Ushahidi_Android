@@ -96,7 +96,7 @@ public class MainHttpClient {
 
     private static MultipartEntity entity;
 
-    private static final String CLASS_TAG = MainHttpClient.class.getCanonicalName();
+    private static final String CLASS_TAG = MainHttpClient.class.getSimpleName();
 
     private int timeoutConnection = 60000;
 
@@ -228,8 +228,12 @@ public class MainHttpClient {
         return "";
     }
 
-    public static boolean PostFileUpload(String URL, HashMap<String, String> params)
-            throws IOException {
+    /**
+     * Upload files to server 0 - success, 1 - missing parameter, 2 - invalid
+     * parameter, 3 - post failed, 5 - access denied, 6 - access limited, 7 - no
+     * data, 8 - api disabled, 9 - no task found, 10 - json is wrong
+     */
+    public static int PostFileUpload(String URL, HashMap<String, String> params) throws IOException {
         Log.d(CLASS_TAG, "PostFileUpload(): upload file to server.");
 
         entity = new MultipartEntity();
@@ -280,22 +284,26 @@ public class MainHttpClient {
                 HttpEntity respEntity = response.getEntity();
                 if (respEntity != null) {
                     InputStream serverInput = respEntity.getContent();
-                    if (Util.extractPayloadJSON(GetText(serverInput))) {
+                    return Util.extractPayloadJSON(GetText(serverInput));
 
-                        return true;
-                    }
                 }
             }
 
         } catch (MalformedURLException ex) {
             Log.d(CLASS_TAG, "PostFileUpload(): MalformedURLException");
             ex.printStackTrace();
-            return false;
+            return 11;
             // fall through and return false
-        } catch (Exception ex) {
-            return false;
+        } catch (IllegalArgumentException ex) {
+            Log.e(CLASS_TAG, ex.toString());
+            //invalid URI
+            return 12;
+        } catch(IOException e) {
+            Log.e(CLASS_TAG, e.toString());
+            //timeout
+            return 13;
         }
-        return false;
+        return 10;
     }
 
     public static byte[] fetchImage(String address) throws MalformedURLException, IOException {

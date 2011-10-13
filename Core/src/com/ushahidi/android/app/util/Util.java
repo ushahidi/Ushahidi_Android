@@ -252,19 +252,28 @@ public class Util {
     /**
      * Extract Ushahidi payload JSON data
      * 
-     * @apram json_data - the json data to be formatted.
-     * @return String
+     * @papram json_data - the json data to be formatted.
+     * @return int 
+     * 0 - success, 
+     * 1 - missing parameter,
+     * 2 - invalid parameter,
+     * 3 - post failed,
+     * 5 - access denied, 
+     * 6 - access limited,
+     * 7 - no data, 
+     * 8 - api disabled, 
+     * 9 - no task found, 
+     * 10 - json is wrong 
      */
-    public static boolean extractPayloadJSON(String json_data) {
+    public static int extractPayloadJSON(String json_data) {
         Log.d(CLASS_TAG, "extractPayloadJSON(): "+json_data);
-        
         try {
             jsonObject = new JSONObject(json_data);
-            return jsonObject.getJSONObject("payload").getBoolean("success");
-
+            final String errorCode =  jsonObject.getJSONObject("error").getString("code");
+            return Integer.parseInt(errorCode);
         } catch (JSONException e) {
-
-            return false;
+            Log.e(CLASS_TAG, e.toString());
+            return 10;
         }
 
     }
