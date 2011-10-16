@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 
 import android.app.AlertDialog;
@@ -405,16 +406,13 @@ public class IncidentAdd extends MapUserLocation {
 
                 // Because the API returns trusted reports and we don't
                 // want it, don't add it to the list of categories.
-                
-                    
-                    categories[i] = cursor.getString(titleIndex);
-                    mCategoriesTitle.put(String.valueOf(cursor.getInt(idIndex)),
-                            cursor.getString(titleIndex));
-                    mCategoriesId.add(String.valueOf(cursor.getInt(idIndex)));
-                    i++;
-                
-                
-                
+
+                categories[i] = cursor.getString(titleIndex);
+                mCategoriesTitle.put(String.valueOf(cursor.getInt(idIndex)),
+                        cursor.getString(titleIndex));
+                mCategoriesId.add(String.valueOf(cursor.getInt(idIndex)));
+                i++;
+
             } while (cursor.moveToNext());
         }
 
@@ -628,7 +626,9 @@ public class IncidentAdd extends MapUserLocation {
             SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
             mPickTime.setText(timeFormat.format(date));
 
-            SimpleDateFormat submitFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+            // Because the API doesn't support dates in diff Locale mode, force
+            // it to show time in US
+            SimpleDateFormat submitFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.US);
             mDateToSubmit = submitFormat.format(date);
         } else {
             mPickDate.setText(R.string.incident_date);
@@ -699,6 +699,7 @@ public class IncidentAdd extends MapUserLocation {
 
         String dates[] = mDateToSubmit.split(" ");
         String time[] = dates[1].split(":");
+        Log.d(CLASS_TAG, "AM: PM " + dates[2].toLowerCase());
         String categories = Util.implode(mVectorCategories);
 
         StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
@@ -722,7 +723,7 @@ public class IncidentAdd extends MapUserLocation {
 
         try {
             final int status = MainHttpClient.PostFileUpload(urlBuilder.toString(), mParams);
-            Log.i(CLASS_TAG, "Statuses: "+status);
+            Log.i(CLASS_TAG, "Statuses: " + status);
             return status;
         } catch (IOException e) {
             Log.d(CLASS_TAG, "postToOnline(): IO exception failed to submit report "
@@ -893,8 +894,8 @@ public class IncidentAdd extends MapUserLocation {
         protected Integer doInBackground(Void... mParams) {
             if (Util.isConnected(IncidentAdd.this)) {
                 status = postToOnline();
-                
-                if(status > 0 ) {
+
+                if (status > 0) {
                     addToDb();
                 }
             } else {

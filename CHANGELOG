@@ -2,6 +2,7 @@
 Bug:
   * Fixed photo rotation issue for nexus one phones
   * Fixed issue of ordering category by position
+  * Fixed issue of app complaining about slow connection even though the app is on a fast connection.
 
 
 Feature:
