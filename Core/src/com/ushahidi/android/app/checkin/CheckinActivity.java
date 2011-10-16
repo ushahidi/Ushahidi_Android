@@ -41,8 +41,8 @@ import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.MapUserLocation;
 import com.ushahidi.android.app.Dashboard;
 import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.util.PhotoUtils; 
-
+import com.ushahidi.android.app.util.PhotoUtils;
+import com.ushahidi.android.app.util.Util;
 
 public class CheckinActivity extends MapUserLocation {
 
@@ -296,18 +296,18 @@ public class CheckinActivity extends MapUserLocation {
             NetworkServices.fileName = photo;
             Bitmap bitmap = BitmapFactory.decodeFile(photo);
             if (bitmap != null) {
-                Log.i(CLASS_TAG, String.format("Photo %dx%d", bitmap.getWidth(), bitmap.getHeight()));
+                Log.i(CLASS_TAG,
+                        String.format("Photo %dx%d", bitmap.getWidth(), bitmap.getHeight()));
                 mCheckImgPrev.setImageBitmap(bitmap);
-                mCheckImgPrev.setMinimumHeight(mCheckImgPrev.getWidth() * bitmap.getHeight() / bitmap.getWidth());
+                mCheckImgPrev.setMinimumHeight(mCheckImgPrev.getWidth() * bitmap.getHeight()
+                        / bitmap.getWidth());
                 photoButton.setText(R.string.change_photo);
-            }
-            else {
+            } else {
                 mCheckImgPrev.setImageBitmap(null);
                 mCheckImgPrev.setMinimumHeight(0);
                 photoButton.setText(R.string.btn_add_photo);
             }
-        }
-        else {
+        } else {
             Preferences.fileName = null;
             NetworkServices.fileName = null;
         }
@@ -355,6 +355,7 @@ public class CheckinActivity extends MapUserLocation {
 
     /**
      * Implementation of MapUserLocation methods
+     * 
      * @param latitude Latitude
      * @param longitude Longitude
      */
@@ -412,7 +413,8 @@ public class CheckinActivity extends MapUserLocation {
     private boolean applyMenuChoice(MenuItem item) {
         switch (item.getItemId()) {
             case LIST_INCIDENT:
-                startActivityForResult(new Intent(CheckinActivity.this, IncidentTab.class), LIST_CHECKINS);
+                startActivityForResult(new Intent(CheckinActivity.this, IncidentTab.class),
+                        LIST_CHECKINS);
                 setResult(RESULT_OK);
                 return true;
 
@@ -429,12 +431,14 @@ public class CheckinActivity extends MapUserLocation {
                 return true;
 
             case ABOUT:
-                startActivityForResult(new Intent(CheckinActivity.this, About.class), REQUEST_CODE_ABOUT);
+                startActivityForResult(new Intent(CheckinActivity.this, About.class),
+                        REQUEST_CODE_ABOUT);
                 setResult(RESULT_OK);
                 return true;
 
             case SETTINGS:
-                startActivityForResult(new Intent(CheckinActivity.this, Settings.class), REQUEST_CODE_SETTINGS);
+                startActivityForResult(new Intent(CheckinActivity.this, Settings.class),
+                        REQUEST_CODE_SETTINGS);
                 return true;
 
         }
@@ -449,12 +453,15 @@ public class CheckinActivity extends MapUserLocation {
                 Uri uri = PhotoUtils.getPhotoUri("photo.jpg", this);
                 Bitmap bitmap = PhotoUtils.getCameraPhoto(this, uri);
                 PhotoUtils.savePhoto(this, bitmap);
-                Log.i(CLASS_TAG, String.format("REQUEST_CODE_CAMERA %dx%d", bitmap.getWidth(), bitmap.getHeight()));
-            }
-            else if (requestCode == REQUEST_CODE_IMAGE){
+                Log.i(CLASS_TAG,
+                        String.format("REQUEST_CODE_CAMERA %dx%d", bitmap.getWidth(),
+                                bitmap.getHeight()));
+            } else if (requestCode == REQUEST_CODE_IMAGE) {
                 Bitmap bitmap = PhotoUtils.getGalleryPhoto(this, data.getData());
                 PhotoUtils.savePhoto(this, bitmap);
-                Log.i(CLASS_TAG, String.format("REQUEST_CODE_IMAGE %dx%d", bitmap.getWidth(), bitmap.getHeight()));
+                Log.i(CLASS_TAG,
+                        String.format("REQUEST_CODE_IMAGE %dx%d", bitmap.getWidth(),
+                                bitmap.getHeight()));
             }
             SharedPreferences.Editor editor = getPreferences(0).edit();
             editor.putString("photo", PhotoUtils.getPhotoUri("photo.jpg", this).getPath());
@@ -495,7 +502,8 @@ public class CheckinActivity extends MapUserLocation {
                 dialog.setButton3(getString(R.string.camera_option), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, PhotoUtils.getPhotoUri("photo.jpg", CheckinActivity.this));
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                                PhotoUtils.getPhotoUri("photo.jpg", CheckinActivity.this));
                         startActivityForResult(intent, REQUEST_CODE_CAMERA);
                         dialog.dismiss();
                     }
@@ -596,28 +604,41 @@ public class CheckinActivity extends MapUserLocation {
                     if (file.exists() & file.delete()) {
                         Log.i(getClass().getSimpleName(), String.format("File deleted %s", file));
                     }
-                    com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this, R.string.checkin_success_toast);
+                    com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
+                            R.string.checkin_success_toast);
 
                     goToCheckins();
 
-                }
-                else {
-                    com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this, R.string.checkin_error_toast);
+                } else {
+                    com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
+                            R.string.checkin_error_toast);
                 }
 
             } else {
-                com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this, R.string.checkin_error_toast);
+                com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
+                        R.string.checkin_error_toast);
             }
             progressDialog.dismiss();
             setProgressBarIndeterminateVisibility(false);
         }
     };
 
-    public void postCheckin(final String imei, final String domain, final String firstname, final String lastname, final String email) {
+    public void postCheckin(final String imei, final String domain, final String firstname,
+            final String lastname, final String email) {
         setProgressBarIndeterminateVisibility(true);
-        this.progressDialog = ProgressDialog.show(CheckinActivity.this,
-                getString(R.string.checkin_progress_title),
-                getString(R.string.checkin_in_progress), true);
+        this.progressDialog = new ProgressDialog(CheckinActivity.this);
+        this.progressDialog.setTitle(getString(R.string.checkin_progress_title));
+        this.progressDialog.setMessage(getString(R.string.checkin_in_progress));
+        this.progressDialog.setCancelable(true);
+        this.progressDialog.setButton(getString(R.string.btn_cancel),
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+
+                });
+        this.progressDialog.show();
         Thread t = new Thread() {
             public void run() {
 

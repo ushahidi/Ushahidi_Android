@@ -35,8 +35,8 @@
 		<uses-library android:name="com.google.android.maps" />
 		<activity android:name=".SplashScreen">
 			<intent-filter>
-			 	<action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />	
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
 
@@ -109,6 +109,7 @@
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
+
 		</activity>
 
 		<!-- Add a new incidents -->
@@ -120,6 +121,28 @@
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
+		
+		<activity
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:name=".IncidentAdd" android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:name=".IncidentAdd" android:label="@string/app_name">
+            
+            <intent-filter>
+                <action android:name="android.intent.action.CHOOSER" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
 
 		<!-- Add location -->
 		<activity android:name=".MapLocation" android:label="@string/add_location">
@@ -134,7 +157,7 @@
 			android:label="@string/app_settings">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.ACTION_VIEW" />
+				<category android:name="android.intent.category.PREFERENCE" />
 			</intent-filter>
 		</activity>
 
@@ -173,6 +196,8 @@
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
+		
+		<!-- Add a check in -->
 		<activity android:name=".checkin.CheckinActivity"
 
 			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
@@ -192,7 +217,7 @@
 		<activity android:name=".DeploymentSearch"
 			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
 			android:label="@string/search_label">
-            
+
 			<!-- Receives the search request. -->
 			<intent-filter>
 				<action android:name="android.intent.action.SEARCH" />
@@ -205,7 +230,8 @@
 
 		<!-- Provides search suggestions for deployments. -->
 		<provider android:name=".data.DeploymentProvider"
-			android:authorities="com.ushahidi.android.app.deploymentprovider" android:syncable="false" />
+			android:authorities="com.ushahidi.android.app.deploymentprovider"
+			android:syncable="false" />
 	</application>
-	
+
 </manifest>

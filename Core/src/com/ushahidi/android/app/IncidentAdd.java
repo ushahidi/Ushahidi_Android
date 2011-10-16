@@ -470,6 +470,22 @@ public class IncidentAdd extends MapUserLocation {
         setResult(RESULT_OK);
     }
 
+    /**
+     * get shared text from other application
+     */
+    public void getSharedText() {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        if (action != null) {
+            if (action.equals(Intent.ACTION_SEND) || action.equals(Intent.ACTION_CHOOSER)) {
+                CharSequence text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT);
+                if (text != null) {
+                    mIncidentDesc.setText(text);
+                }
+            }
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -770,6 +786,7 @@ public class IncidentAdd extends MapUserLocation {
             Preferences.fileName = null;
             NetworkServices.fileName = null;
         }
+        getSharedText();
         super.onResume();
     }
 
@@ -885,9 +902,22 @@ public class IncidentAdd extends MapUserLocation {
 
         @Override
         protected void onPreExecute() {
-            this.progressDialog = ProgressDialog.show(IncidentAdd.this,
-                    getString(R.string.checkin_progress_title),
-                    getString(R.string.sending_report_in_progress), true);
+            this.progressDialog = new ProgressDialog(IncidentAdd.this);
+            this.progressDialog.setTitle(getString(R.string.checkin_progress_title));
+            this.progressDialog.setMessage(getString(R.string.sending_report_in_progress));
+            this.progressDialog.setCancelable(true);
+            this.progressDialog.setButton(getString(R.string.btn_cancel),
+                    new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int which) {
+                            // add to db
+                            addToDb();
+                            Util.showToast(appContext, R.string.report_successfully_added_offline);
+                            dialog.cancel();
+                        }
+
+                    });
+            this.progressDialog.show();
         }
 
         @Override
