@@ -281,36 +281,10 @@ public class IncidentAdd extends MapUserLocation {
         }
         mIncidentTitle = (EditText)findViewById(R.id.incident_title);
         mIncidentLocation = (EditText)findViewById(R.id.incident_location);
+        mIncidentDesc = (EditText)findViewById(R.id.incident_desc);
         mapView = (MapView)findViewById(R.id.location_map);
         mapController = mapView.getController();
-        mIncidentTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (TextUtils.isEmpty(mIncidentTitle.getText())) {
-                        mIncidentTitle.setError(getString(R.string.empty_report_title));
-                    }
-                }
-            }
-        });
-        mIncidentLocation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (TextUtils.isEmpty(mIncidentLocation.getText())) {
-                        mIncidentLocation.setError(getString(R.string.empty_report_location));
-                    }
-                }
-            }
-        });
-        mIncidentDesc = (EditText)findViewById(R.id.incident_desc);
-        mIncidentDesc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (TextUtils.isEmpty(mIncidentDesc.getText())) {
-                        mIncidentDesc.setError(getString(R.string.empty_report_description));
-                    }
-                }
-            }
-        });
+
         mBtnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Dipo Fix
