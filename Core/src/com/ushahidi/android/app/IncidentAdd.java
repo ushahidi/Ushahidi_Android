@@ -59,6 +59,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -82,21 +83,11 @@ public class IncidentAdd extends MapUserLocation {
 
     private static final String UNCATEGORIZED_CATEGORY_TITLE = "uncategorized";
 
-    private static final int HOME = Menu.FIRST + 1;
+    private static final int INCIDENT_CLEAR = Menu.FIRST + 1;
 
-    private static final int LIST_INCIDENT = Menu.FIRST + 2;
+    private static final int SETTINGS = Menu.FIRST + 2;
 
-    private static final int INCIDENT_MAP = Menu.FIRST + 3;
-
-    private static final int INCIDENT_REFRESH = Menu.FIRST + 4;
-
-    private static final int SETTINGS = Menu.FIRST + 5;
-
-    private static final int ABOUT = Menu.FIRST + 6;
-
-    private static final int GOTOHOME = 0;
-
-    private static final int MAP_INCIDENTS = 1;
+    private static final int ABOUT = Menu.FIRST + 3;
 
     private static final int LIST_INCIDENTS = 2;
 
@@ -169,6 +160,8 @@ public class IncidentAdd extends MapUserLocation {
 
     private static final String CLASS_TAG = IncidentAdd.class.getSimpleName();
 
+    private boolean draft = true;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -210,17 +203,8 @@ public class IncidentAdd extends MapUserLocation {
     private void populateMenu(Menu menu) {
         MenuItem i;
 
-        i = menu.add(Menu.NONE, HOME, Menu.NONE, R.string.menu_home);
-        i.setIcon(R.drawable.menu_home);
-
-        i = menu.add(Menu.NONE, LIST_INCIDENT, Menu.NONE, R.string.incident_list);
-        i.setIcon(R.drawable.menu_list);
-
-        i = menu.add(Menu.NONE, INCIDENT_MAP, Menu.NONE, R.string.incident_menu_map);
-        i.setIcon(R.drawable.menu_map);
-
-        i = menu.add(Menu.NONE, INCIDENT_REFRESH, Menu.NONE, R.string.incident_menu_refresh);
-        i.setIcon(R.drawable.menu_refresh);
+        i = menu.add(Menu.NONE, INCIDENT_CLEAR, Menu.NONE, R.string.clear_all);
+        i.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
 
         i = menu.add(Menu.NONE, SETTINGS, Menu.NONE, R.string.menu_settings);
         i.setIcon(R.drawable.menu_settings);
@@ -231,20 +215,9 @@ public class IncidentAdd extends MapUserLocation {
 
     private boolean applyMenuChoice(MenuItem item) {
         switch (item.getItemId()) {
-            case LIST_INCIDENT:
-                startActivityForResult(new Intent(IncidentAdd.this, IncidentList.class),
-                        LIST_INCIDENTS);
-                setResult(RESULT_OK);
-                return true;
 
-            case INCIDENT_MAP:
-                startActivityForResult(new Intent(IncidentAdd.this, IncidentView.class),
-                        MAP_INCIDENTS);
-                return true;
-
-            case HOME:
-                startActivityForResult(new Intent(IncidentAdd.this, Dashboard.class), GOTOHOME);
-                setResult(RESULT_OK);
+            case INCIDENT_CLEAR:
+                discardReports();
                 return true;
 
             case ABOUT:
@@ -385,6 +358,10 @@ public class IncidentAdd extends MapUserLocation {
                 mCategoriesTitle.put(String.valueOf(cursor.getInt(idIndex)),
                         cursor.getString(titleIndex));
                 mCategoriesId.add(String.valueOf(cursor.getInt(idIndex)));
+                Log.d(CLASS_TAG,
+                        "Title: "
+                                + String.valueOf(cursor.getString(titleIndex) + " Index: "
+                                        + String.valueOf(cursor.getInt(idIndex))));
                 i++;
 
             } while (cursor.moveToNext());
@@ -418,6 +395,8 @@ public class IncidentAdd extends MapUserLocation {
         mIncidentTitle.setText("");
         mIncidentLocation.setText("");
         mIncidentDesc.setText("");
+        mLatitude.setText("");
+        mLongitude.setText("");
         mVectorCategories.clear();
         mBtnAddCategory.setText(R.string.incident_add_category);
         mSelectedPhoto.setImageDrawable(null);
@@ -431,8 +410,33 @@ public class IncidentAdd extends MapUserLocation {
         editor.putString("title", "");
         editor.putString("description", "");
         editor.putString("date", "");
+        editor.putString("latitude", mLatitude.getText().toString());
+        editor.putString("longitude", mLongitude.getText().toString());
+        editor.putString("categories", "");
         editor.putString("photo", "");
         editor.commit();
+    }
+
+    // discard reports
+    private void discardReports() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.confirm_clear))
+                .setCancelable(false)
+                .setNegativeButton(getString(R.string.btn_cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        })
+                .setPositiveButton(getString(R.string.btn_ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // delete all messages
+                                clearFields();
+                            }
+                        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     /**
@@ -445,7 +449,7 @@ public class IncidentAdd extends MapUserLocation {
     }
 
     /**
-     * get shared text from other application
+     * Get shared text from other Android applications
      */
     public void getSharedText() {
         Intent intent = getIntent();
@@ -554,24 +558,16 @@ public class IncidentAdd extends MapUserLocation {
                                 new DialogInterface.OnMultiChoiceClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton,
                                             boolean isChecked) {
+                                        // see if categories have previously
+
                                         if (isChecked) {
                                             mVectorCategories.add(mCategoriesId.get(whichButton));
                                             mError = false;
                                         } else {
                                             mVectorCategories.remove(mCategoriesId.get(whichButton));
                                         }
-                                        if (mVectorCategories.size() > 0) {
-                                            StringBuilder categories = new StringBuilder();
-                                            for (String catetory : mVectorCategories) {
-                                                if (categories.length() > 0) {
-                                                    categories.append(", ");
-                                                }
-                                                categories.append(mCategoriesTitle.get(catetory));
-                                            }
-                                            mBtnAddCategory.setText(categories.toString());
-                                        } else {
-                                            mBtnAddCategory.setText(R.string.incident_add_category);
-                                        }
+
+                                        setSelectedCategories(mVectorCategories);
                                     }
                                 })
                         .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
@@ -603,6 +599,26 @@ public class IncidentAdd extends MapUserLocation {
             case DATE_DIALOG_ID:
                 ((DatePickerDialog)dialog).updateDate(mCalendar.get(Calendar.YEAR),
                         mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
+                break;
+
+            case DIALOG_MULTIPLE_CATEGORY:
+                final AlertDialog alert = (AlertDialog)dialog;
+                final ListView list = alert.getListView();
+                // been
+                // selected, then uncheck
+                // selected categories
+                if (mVectorCategories.size() > 0) {
+                    for (String s : mVectorCategories) {
+                        try {
+                            list.setItemChecked(Integer.parseInt(s) - 1, true);
+                        } catch (NumberFormatException e) {
+                            Log.e(CLASS_TAG, "numberFormatException " + e.toString());
+                        }
+                    }
+                } else {
+                    list.clearChoices();
+                }
+
                 break;
         }
     }
@@ -689,9 +705,9 @@ public class IncidentAdd extends MapUserLocation {
 
         String dates[] = mDateToSubmit.split(" ");
         String time[] = dates[1].split(":");
-        Log.d(CLASS_TAG, "AM: PM " + dates[2].toLowerCase());
-        String categories = Util.implode(mVectorCategories);
 
+        String categories = Util.implode(mVectorCategories);
+        Log.d(CLASS_TAG, "AM: PM " + categories);
         StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
         urlBuilder.append("/api");
 
@@ -730,36 +746,7 @@ public class IncidentAdd extends MapUserLocation {
      */
     @Override
     protected void onResume() {
-        SharedPreferences prefs = getPreferences(0);
-        String title = prefs.getString("title", null);
-        if (title != null) {
-            mIncidentTitle.setText(title, TextView.BufferType.EDITABLE);
-        }
-        String description = prefs.getString("description", null);
-        if (description != null) {
-            mIncidentDesc.setText(description, TextView.BufferType.EDITABLE);
-        }
-        String photo = prefs.getString("photo", null);
-        if (photo != null) {
-            Preferences.fileName = photo;
-            NetworkServices.fileName = photo;
-            Bitmap bitmap = BitmapFactory.decodeFile(photo);
-            if (bitmap != null) {
-                Log.i(CLASS_TAG,
-                        String.format("Photo %dx%d", bitmap.getWidth(), bitmap.getHeight()));
-                mSelectedPhoto.setImageBitmap(bitmap);
-                mSelectedPhoto.setMinimumHeight(mSelectedPhoto.getWidth() * bitmap.getHeight()
-                        / bitmap.getWidth());
-                mBtnPicture.setText(R.string.change_photo);
-            } else {
-                mSelectedPhoto.setImageBitmap(null);
-                mSelectedPhoto.setMinimumHeight(0);
-                mBtnPicture.setText(R.string.btn_add_photo);
-            }
-        } else {
-            Preferences.fileName = null;
-            NetworkServices.fileName = null;
-        }
+        this.setSavedReport();
         getSharedText();
         super.onResume();
     }
@@ -796,13 +783,93 @@ public class IncidentAdd extends MapUserLocation {
         if (reverseGeocoderTask != null) {
             reverseGeocoderTask.cancel(true);
         }
+
+        final String selectedCategories = getSelectedCategories();
+
         SharedPreferences.Editor editor = getPreferences(0).edit();
         editor.putString("title", mIncidentTitle.getText().toString());
         editor.putString("description", mIncidentDesc.getText().toString());
         editor.putString("location", mIncidentLocation.getText().toString());
+        editor.putString("latitude", mLatitude.getText().toString());
+        editor.putString("longitude", mLongitude.getText().toString());
+
+        if (selectedCategories != null) {
+            editor.putString("categories", selectedCategories);
+        }
         editor.putString("photo", Preferences.fileName);
         editor.commit();
+        // Notify user that report has been saved as draft.
+        if (draft) {
+            Util.showToast(this, R.string.message_saved_as_draft);
+        }
         super.onPause();
+    }
+
+    /**
+     * This saves unsent reports as draft
+     */
+    private void setSavedReport() {
+        // get the categories
+        showCategories();
+        SharedPreferences prefs = getPreferences(0);
+        String title = prefs.getString("title", null);
+        if (title != null) {
+            mIncidentTitle.setText(title, TextView.BufferType.EDITABLE);
+        }
+        String description = prefs.getString("description", null);
+        if (description != null) {
+            mIncidentDesc.setText(description, TextView.BufferType.EDITABLE);
+        }
+
+        String location = prefs.getString("location", null);
+        if (location != null) {
+            mIncidentLocation.setText(description, TextView.BufferType.EDITABLE);
+        }
+
+        String latitude = prefs.getString("latitude", null);
+        if (latitude != null) {
+            mLatitude.setText(latitude, TextView.BufferType.EDITABLE);
+        }
+
+        String longitude = prefs.getString("longitude", null);
+        if (longitude != null) {
+            mLongitude.setText(longitude, TextView.BufferType.EDITABLE);
+        }
+
+        String categories = prefs.getString("categories", null);
+        if (categories != null) {
+
+            String[] splitter = categories.split(",");
+
+            for (String s : splitter) {
+                mVectorCategories.add(s.trim());
+
+            }
+            this.setSelectedCategories(mVectorCategories);
+        }
+
+        String photo = prefs.getString("photo", null);
+        if (photo != null) {
+            Preferences.fileName = photo;
+            NetworkServices.fileName = photo;
+            Bitmap bitmap = BitmapFactory.decodeFile(photo);
+            if (bitmap != null) {
+                Log.i(CLASS_TAG,
+                        String.format("Photo %dx%d", bitmap.getWidth(), bitmap.getHeight()));
+                mSelectedPhoto.setImageBitmap(bitmap);
+                mSelectedPhoto.setMinimumHeight(mSelectedPhoto.getWidth() * bitmap.getHeight()
+                        / bitmap.getWidth());
+                mBtnPicture.setText(R.string.change_photo);
+            } else {
+                mSelectedPhoto.setImageBitmap(null);
+                mSelectedPhoto.setMinimumHeight(0);
+                mBtnPicture.setText(R.string.btn_add_photo);
+            }
+        } else {
+            Preferences.fileName = null;
+            NetworkServices.fileName = null;
+        }
+
     }
 
     /*
@@ -865,6 +932,55 @@ public class IncidentAdd extends MapUserLocation {
         mVectorCategories = aVectorCategories;
     }
 
+    /**
+     * Sets the selected categories for submission
+     * 
+     * @param aSelectedCategories
+     */
+    private void setSelectedCategories(Vector<String> aSelectedCategories) {
+        // clear
+        mBtnAddCategory.setText(R.string.incident_add_category);
+        if (aSelectedCategories.size() > 0) {
+            StringBuilder categories = new StringBuilder();
+            for (String category : aSelectedCategories) {
+                if (categories.length() > 0) {
+                    categories.append(", ");
+                }
+                if (!TextUtils.isEmpty(category)) {
+                    categories.append(mCategoriesTitle.get(category));
+                }
+            }
+            
+            if (!TextUtils.isEmpty(categories.toString())) {
+                mBtnAddCategory.setText(categories.toString());
+            } else {
+
+                mBtnAddCategory.setText(R.string.incident_add_category);
+            }
+        }
+    }
+
+    /**
+     * Get the selected categories as a csv
+     * 
+     * @param aSelectedCategories
+     */
+    private String getSelectedCategories() {
+        if (mVectorCategories != null) {
+            if (mVectorCategories.size() > 0) {
+                StringBuilder categories = new StringBuilder();
+                for (String catetory : mVectorCategories) {
+                    if (categories.length() > 0) {
+                        categories.append(", ");
+                    }
+                    categories.append(catetory);
+                }
+                return categories.toString();
+            }
+        }
+        return null;
+    }
+
     // thread class
     private class AddReportsTask extends AsyncTask<Void, Void, Integer> {
 
@@ -886,7 +1002,9 @@ public class IncidentAdd extends MapUserLocation {
                         public void onClick(DialogInterface dialog, int which) {
                             // add to db
                             addToDb();
+                            clearFields();
                             Util.showToast(appContext, R.string.report_successfully_added_offline);
+                            draft = false;
                             dialog.cancel();
                         }
 
@@ -901,9 +1019,11 @@ public class IncidentAdd extends MapUserLocation {
 
                 if (status > 0) {
                     addToDb();
+                    draft = false;
                 }
             } else {
                 addToDb();
+                draft = false;
                 status = 14; // no internet connection
             }
             return status;
@@ -916,9 +1036,11 @@ public class IncidentAdd extends MapUserLocation {
                 clearFields();
                 Util.showToast(appContext, R.string.report_successfully_added_offline);
             } else if (result == 1 || result == 3) {
-
+                clearFields();
+                draft = false;
                 Util.showToast(appContext, R.string.failed_to_add_report_offline);
             } else if (result == 0) {
+                draft = false;
                 clearFields();
                 // after a successful upload, delete the file
                 if (Preferences.fileName != null) {
@@ -931,6 +1053,8 @@ public class IncidentAdd extends MapUserLocation {
                 Util.showToast(appContext, R.string.report_successfully_added_online);
                 goToReports();
             } else {
+                clearFields();
+                draft = false;
                 Util.showToast(appContext, R.string.report_successfully_added_offline);
             }
 

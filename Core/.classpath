@@ -7,5 +7,5 @@
 	<classpathentry kind="lib" path="/home/eyedol/Devel/Workspace/Ushahidi_Android/Core/libs/httpclient-4.1.1.jar"/>
 	<classpathentry kind="lib" path="/home/eyedol/Devel/Workspace/Ushahidi_Android/Core/libs/httpcore-4.1.jar"/>
 	<classpathentry kind="lib" path="/home/eyedol/Devel/Workspace/Ushahidi_Android/Core/libs/httpmime-4.1.1.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

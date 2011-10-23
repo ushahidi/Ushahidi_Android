@@ -268,6 +268,7 @@
 	<string name="contact">Contact</string>
 	<string name="media">Media</string>
 	<string name="facebook">Facebook</string>
+	
 	<!-- Photo resize preferences -->
 	<string name="photo_resize_title">Photo Settings</string>
 	<string name="photo_resize_summary">Resize image width</string>
@@ -275,6 +276,10 @@
 	
 	<!-- Public deployment search / Add -->
 	<string name="deployment_search">Here you can search for public ushahidi deployments or manually add one.</string>
+	
+	<!-- Prompt user about saved draft -->
+    <string name="message_saved_as_draft">Message saved as draft.</string>
+	
 	<!-- DEFAULT USHAHIDI DEPLOYMENT TO USE. DON'T REMOVE THIS LINE. RATHER EDIT THE VALUE -->
 	<string name="default_deployment"/>
 </resources>
