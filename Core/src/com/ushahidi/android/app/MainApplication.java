@@ -38,13 +38,16 @@ public class MainApplication extends Application {
 
     public static MainHttpClient mApi;
     
+    public static Application app = null;
+    
     @Override
     public void onCreate() {
         super.onCreate();
+        app = this;
         mImageManager = new ImageManager();
         mDb = new Database(this);
         mDb.open();
-        mApi = new MainHttpClient();
+        mApi = new MainHttpClient(getApplicationContext());
         
 
     }

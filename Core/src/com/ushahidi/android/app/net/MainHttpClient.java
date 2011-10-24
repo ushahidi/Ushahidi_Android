@@ -34,24 +34,41 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnManagerPNames;
+import org.apache.http.conn.params.ConnPerRouteBean;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -104,17 +121,33 @@ public class MainHttpClient {
 
     private static final int IO_BUFFER_SIZE = 512;
 
-    public MainHttpClient() {
+    public MainHttpClient(Context context) {
 
         httpParameters = new BasicHttpParams();
+        httpParameters.setParameter(ConnManagerPNames.MAX_TOTAL_CONNECTIONS, 1);
+        httpParameters.setParameter(ConnManagerPNames.MAX_CONNECTIONS_PER_ROUTE,
+                new ConnPerRouteBean(1));
 
+        httpParameters.setParameter(HttpProtocolParams.USE_EXPECT_CONTINUE, false);
+        HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
+        HttpProtocolParams.setContentCharset(httpParameters, "utf8");
         // Set the timeout in milliseconds until a connection is established.
         HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
 
         // in milliseconds which is the timeout for waiting for data.
         HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
-        httpClient = new DefaultHttpClient(httpParameters);
+        SchemeRegistry schemeRegistry = new SchemeRegistry();
+
+        // http scheme
+        schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+        // https scheme
+        schemeRegistry.register(new Scheme("https", new EasySSLSocketFactory(), 443));
+
+        httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(httpParameters,
+                schemeRegistry), httpParameters);
+
+        // httpClient = new ClientHttpReq(httpParameters,context);
     }
 
     public static HttpResponse GetURL(String URL) throws IOException {
@@ -122,7 +155,7 @@ public class MainHttpClient {
 
         try {
             // wrap try around because this constructor can throw Error
-            final HttpGet httpget = new HttpGet(URL);
+            final HttpGet httpget = new HttpGet("https://eyedol.crdmp.com");
             httpget.addHeader("User-Agent", "Ushahidi-Android/1.0)");
 
             // Post, check and show the result (not really spectacular, but
@@ -296,11 +329,11 @@ public class MainHttpClient {
             // fall through and return false
         } catch (IllegalArgumentException ex) {
             Log.e(CLASS_TAG, ex.toString());
-            //invalid URI
+            // invalid URI
             return 12;
-        } catch(IOException e) {
+        } catch (IOException e) {
             Log.e(CLASS_TAG, e.toString());
-            //timeout
+            // timeout
             return 13;
         }
         return 10;
