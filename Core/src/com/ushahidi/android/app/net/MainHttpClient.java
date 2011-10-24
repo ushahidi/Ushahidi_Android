@@ -155,7 +155,7 @@ public class MainHttpClient {
 
         try {
             // wrap try around because this constructor can throw Error
-            final HttpGet httpget = new HttpGet("https://eyedol.crdmp.com");
+            final HttpGet httpget = new HttpGet(URL);
             httpget.addHeader("User-Agent", "Ushahidi-Android/1.0)");
 
             // Post, check and show the result (not really spectacular, but

@@ -33,6 +33,7 @@ import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.BackgroundService;
+import com.ushahidi.android.app.util.Util;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -76,7 +77,7 @@ public class HandleXml {
             return listIncidentsData;
 
         try {
-            // encode the xml to UTF -8
+            
             ByteArrayInputStream encXML = new ByteArrayInputStream(xml.getBytes("UTF8"));
             doc = builder.parse(encXML);
         } catch (SAXException e) {

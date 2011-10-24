@@ -1,3 +1,7 @@
+2.8:
+Bug:
+  * Fixed full HTTPS support
+
 2.7:
 Bug:
   * Fixed the wrong use of R in switch statements causing images to be displaced. 
