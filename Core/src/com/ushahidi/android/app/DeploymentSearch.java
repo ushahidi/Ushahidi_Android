@@ -216,12 +216,11 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.clear_deployments:
-                createDialog(DIALOG_CLEAR_DEPLOYMENT);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.clear_deployments) {
+            createDialog(DIALOG_CLEAR_DEPLOYMENT);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
 
     }

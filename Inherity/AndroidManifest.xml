@@ -9,8 +9,8 @@
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.inherity.android.app" android:versionCode="17"
-	android:versionName="v2.6">
+	package="org.inherity.android.app" android:versionCode="18"
+	android:versionName="v2.7">
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />

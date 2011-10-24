@@ -1,3 +1,7 @@
+2.7:
+Bug:
+  * Fixed the wrong use of R in switch statements causing images to be displaced. 
+
 2.6:
 Bug:
   * Fixed photo rotation issue for nexus one phones

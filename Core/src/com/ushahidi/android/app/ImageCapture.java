@@ -88,10 +88,8 @@ public class ImageCapture extends Activity implements SurfaceHolder.Callback {
         mShutterButton.setOnShutterButtonListener(new ShutterButton.OnShutterButtonListener() {
 
             public void onShutterButtonClick(ShutterButton b) {
-                switch (b.getId()) {
-                    case R.id.shutter_button:
-                        onSnap();
-                        break;
+                if (b.getId() == R.id.shutter_button) {
+                    onSnap();
                 }
             }
 
