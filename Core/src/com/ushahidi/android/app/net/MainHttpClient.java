@@ -147,7 +147,6 @@ public class MainHttpClient {
         httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(httpParameters,
                 schemeRegistry), httpParameters);
 
-        // httpClient = new ClientHttpReq(httpParameters,context);
     }
 
     public static HttpResponse GetURL(String URL) throws IOException {
