@@ -612,7 +612,7 @@ public class IncidentAdd extends MapUserLocation {
                         try {
                             list.setItemChecked(Integer.parseInt(s) - 1, true);
                         } catch (NumberFormatException e) {
-                            Log.e(CLASS_TAG, "numberFormatException " + e.toString());
+                            Log.e(CLASS_TAG, "numberFormatException "+s+" " + e.toString());
                         }
                     }
                 } else {
