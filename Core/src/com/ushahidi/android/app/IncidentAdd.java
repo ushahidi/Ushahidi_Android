@@ -339,6 +339,8 @@ public class IncidentAdd extends MapUserLocation {
         if (categoryCount > 0) {
             categoryAmount = categoryCount;
         } else {
+            mCategoriesId.clear();
+            mCategoriesTitle.clear();
             categoryAmount = 1;
         }
 
@@ -552,6 +554,8 @@ public class IncidentAdd extends MapUserLocation {
             }
 
             case DIALOG_MULTIPLE_CATEGORY: {
+                String category [] = showCategories();
+               Log.i(CLASS_TAG, "Hello world "+category[0]);
                 return new AlertDialog.Builder(this)
                         .setTitle(R.string.add_categories)
                         .setMultiChoiceItems(showCategories(), null,
