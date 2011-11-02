@@ -104,17 +104,14 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
         mTextView.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable arg0) {
-                // TODO Auto-generated method stub
 
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // TODO Auto-generated method stub
 
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.i("DeploymentSearch", "String:4  " + s.toString());
                 showResults(s.toString());
 
             }
@@ -465,8 +462,10 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
 
         // delete unset photo
         File f = new File(Preferences.fileName);
-        if (f.exists()) {
-            f.delete();
+        if (f != null) {
+            if (f.exists()) {
+                f.delete();
+            }
         }
         // clear persistent data
         SharedPreferences.Editor editor = getPreferences(0).edit();

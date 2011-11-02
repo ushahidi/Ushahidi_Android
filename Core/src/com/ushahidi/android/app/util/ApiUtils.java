@@ -47,7 +47,7 @@ import com.ushahidi.android.app.net.Incidents;
 import com.ushahidi.android.app.net.MainHttpClient;
 
 /**
- * This is a util class for an Ushahidi deployment API
+ * This is a Util class for an Ushahidi deployment API
  * 
  * @author eyedol
  */
@@ -71,9 +71,12 @@ public class ApiUtils {
 
     private static JSONObject jsonObject;
 
+    private static HttpResponse response;
+
+    private static String jsonString;
+
     public static boolean isCheckinEnabled(Context context) {
-        HttpResponse response;
-        String jsonString = "";
+
         Preferences.loadSettings(context);
 
         StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
@@ -128,8 +131,6 @@ public class ApiUtils {
      * @return boolean
      */
     public static boolean validateUshahidiInstance(String ushahidiUrl) {
-        // make an http get request to a dummy api call
-        // TODO improve on how to do this
 
         if (!TextUtils.isEmpty(ushahidiUrl)) {
             pattern = Pattern.compile(VALID_URL_PATTERN);
@@ -151,6 +152,9 @@ public class ApiUtils {
 
         if (Util.isConnected(context)) {
 
+            // check if the ushahidi deployment domain has been updated or
+            // not
+            ApiUtils.updateDomain(context);
             strCheckinsJSON = NetworkServices.getCheckins(Preferences.domain, null, null);
 
             if (!TextUtils.isEmpty(strCheckinsJSON) && strCheckinsJSON != null) {
@@ -184,10 +188,11 @@ public class ApiUtils {
      * @return int - status
      */
     public static int processReports(Context context) {
-
         try {
             if (Util.isConnected(context)) {
-
+                // check if the ushahidi deployment domain has been updated or
+                // not
+                ApiUtils.updateDomain(context);
                 if (Categories.getAllCategoriesFromWeb()) {
 
                     mNewCategories = HandleXml.processCategoriesXml(Preferences.categoriesResponse);
@@ -257,7 +262,7 @@ public class ApiUtils {
             // means there was a problem getting it
         }
     }
-    
+
     /**
      * Extract Ushahidi payload JSON data
      * 
@@ -277,5 +282,49 @@ public class ApiUtils {
             return 10;
         }
 
+    }
+
+    /**
+     * Check if an ushahidi deployment has changed it's HTTP protocol to HTTPS
+     * or not. Then update if it has.
+     * 
+     * @param context - the calling activity.
+     */
+    public static void updateDomain(Context context) {
+
+        Preferences.loadSettings(context);
+
+        StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
+        uriBuilder.append("/api?task=version");
+        uriBuilder.append("&resp=json");
+
+        try {
+            response = MainHttpClient.GetURL(uriBuilder.toString());
+            if (response != null) {
+
+                final int statusCode = response.getStatusLine().getStatusCode();
+
+                if (statusCode == 200) {
+
+                    jsonString = MainHttpClient.GetText(response);
+                    JSONObject jsonObject = new JSONObject(jsonString);
+                    String changedDomain = jsonObject.getJSONObject("payload").getString("domain");
+
+                    if (ApiUtils.validateUshahidiInstance(changedDomain)) {
+                        // changed
+                        if (!changedDomain.equals(Preferences.domain)) {
+                            Preferences.domain = changedDomain;
+                            // save changes
+                            Preferences.saveSettings(context);
+                        }
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            Log.e(CLASS_TAG, e.toString());
+        } catch (JSONException e) {
+            Log.e(CLASS_TAG, e.toString());
+        }
     }
 }
