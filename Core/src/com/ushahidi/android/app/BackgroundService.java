@@ -27,8 +27,6 @@ import java.util.Vector;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.ushahidi.android.app.util.Util;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -39,6 +37,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
+
+import com.ushahidi.android.app.util.ApiUtils;
 
 public class BackgroundService extends Service {
 
@@ -113,11 +113,11 @@ public class BackgroundService extends Service {
         this.startService();
 
     }
-    
+
     public static void clearCache() {
         MainApplication.mDb.clearData();
     }
-    
+
     /**
      * Starts the background service
      * 
@@ -137,7 +137,7 @@ public class BackgroundService extends Service {
                     public void run() {
 
                         // Perform a task
-                        Util.fetchReports(BackgroundService.this);
+                        ApiUtils.fetchReports(BackgroundService.this);
                         showNotification(Preferences.totalReportsFetched);
                     }
 
@@ -168,7 +168,7 @@ public class BackgroundService extends Service {
         super.onDestroy();
         this.stopService();
     }
-    
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -182,7 +182,8 @@ public class BackgroundService extends Service {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, baseIntent, 0);
 
         // choose the ticker text
-        newUshahidiReportNotification = new Notification(R.drawable.notification_icon, tickerText, System.currentTimeMillis());
+        newUshahidiReportNotification = new Notification(R.drawable.notification_icon, tickerText,
+                System.currentTimeMillis());
         newUshahidiReportNotification.contentIntent = contentIntent;
         newUshahidiReportNotification.flags = Notification.FLAG_AUTO_CANCEL;
         newUshahidiReportNotification.defaults = Notification.DEFAULT_ALL;

@@ -1,6 +1,8 @@
 bin/
 out/
+CoreV3/
 gen/
 *.swp
 .settings
 .DS_Store
+

@@ -31,6 +31,7 @@ import com.ushahidi.android.app.Dashboard;
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.data.Database;
+import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
 /**
@@ -366,7 +367,7 @@ public class CheckinMap extends MapUserLocation {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            status = Util.processCheckins(appContext);
+            status = ApiUtils.processCheckins(appContext);
             return status;
         }
 

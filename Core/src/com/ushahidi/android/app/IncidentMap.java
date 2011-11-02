@@ -48,6 +48,7 @@ import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.data.Database;
+import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
 public class IncidentMap extends MapActivity {
@@ -404,7 +405,7 @@ public class IncidentMap extends MapActivity {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            status = Util.processReports(appContext);
+            status = ApiUtils.processReports(appContext);
             return status;
         }
 

@@ -20,6 +20,18 @@
 
 package com.ushahidi.android.app.data;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -29,23 +41,10 @@ import org.xml.sax.SAXException;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.ushahidi.android.app.BackgroundService;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.BackgroundService;
-import com.ushahidi.android.app.util.Util;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class HandleXml {
 

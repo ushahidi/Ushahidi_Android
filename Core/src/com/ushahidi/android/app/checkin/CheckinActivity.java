@@ -33,16 +33,15 @@ import android.widget.Toast;
 
 import com.google.android.maps.MapView;
 import com.ushahidi.android.app.About;
+import com.ushahidi.android.app.Dashboard;
 import com.ushahidi.android.app.DeploymentSearch;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.IncidentTab;
+import com.ushahidi.android.app.MapUserLocation;
+import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
-import com.ushahidi.android.app.MapUserLocation;
-import com.ushahidi.android.app.Dashboard;
-import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.util.PhotoUtils;
-import com.ushahidi.android.app.util.Util;
 
 public class CheckinActivity extends MapUserLocation {
 
@@ -122,8 +121,6 @@ public class CheckinActivity extends MapUserLocation {
 
     private String jsonResponse = "";
 
-    private String errorMessage = "";
-
     private ProgressDialog progressDialog;
 
     private boolean mError = false;
@@ -131,8 +128,6 @@ public class CheckinActivity extends MapUserLocation {
     private String mErrorMessage = "";
 
     private static final String CLASS_TAG = CheckinActivity.class.getCanonicalName();
-
-    private PhotoUtils captureImage;
 
     private static final int CHECKIN_PREF = 1;
 
@@ -144,12 +139,9 @@ public class CheckinActivity extends MapUserLocation {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.checkin);
-        captureImage = new PhotoUtils();
 
         Preferences.loadSettings(CheckinActivity.this);
 
-        // manager =
-        // (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         checkinButton = (Button)findViewById(R.id.perform_checkin_button);
         photoButton = (Button)findViewById(R.id.checkin_photo_button);
         checkinMessageText = (EditText)findViewById(R.id.checkin_message_text);
@@ -542,17 +534,9 @@ public class CheckinActivity extends MapUserLocation {
         Preferences.loadSettings(CheckinActivity.this);
 
         if (!LocationServices.locationSet) {
-            // if (pd != null) {
-            // pd.dismiss();
+
             com.ushahidi.android.app.util.Util.showToast(CheckinActivity.this,
                     R.string.checkin_no_location);
-            // }
-
-            // pd = null;
-        } else {
-            // if (pd != null) {
-            // pd.dismiss();
-            // }
 
         }
     }
@@ -588,7 +572,7 @@ public class CheckinActivity extends MapUserLocation {
                 if (jsonServices.isProcessingResult()) {
 
                     postCheckinJsonErrorCode = jsonServices.getErrorCode();
-                    errorMessage = jsonServices.getErrorMessage();
+                    // errorMessage = jsonServices.getErrorMessage();
                     Log.i(CLASS_TAG, "error code " + postCheckinJsonErrorCode);
                 }
 

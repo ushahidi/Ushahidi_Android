@@ -53,6 +53,7 @@ import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.data.Database;
 import com.ushahidi.android.app.ui.PullToRefreshListView;
 import com.ushahidi.android.app.ui.PullToRefreshListView.OnRefreshListener;
+import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
 public class CheckinList extends Activity {
@@ -307,7 +308,7 @@ public class CheckinList extends Activity {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            status = Util.processCheckins(appContext);
+            status = ApiUtils.processCheckins(appContext);
             return status;
         }
 

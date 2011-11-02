@@ -34,12 +34,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -53,14 +49,10 @@ import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -73,7 +65,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.util.Util;
+import com.ushahidi.android.app.util.ApiUtils;
 
 public class MainHttpClient {
 
@@ -316,7 +308,7 @@ public class MainHttpClient {
                 HttpEntity respEntity = response.getEntity();
                 if (respEntity != null) {
                     InputStream serverInput = respEntity.getContent();
-                    return Util.extractPayloadJSON(GetText(serverInput));
+                    return ApiUtils.extractPayloadJSON(GetText(serverInput));
 
                 }
             }

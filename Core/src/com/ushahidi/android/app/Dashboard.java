@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.checkin.CheckinActivity;
+import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
 public class Dashboard extends Activity {
@@ -200,7 +201,7 @@ public class Dashboard extends Activity {
                 Log.i("Dashboard", "Determing if default deployment has been set " + deployment);
 
                 // validate URL
-                if (Util.validateUshahidiInstance(deployment)) {
+                if (ApiUtils.validateUshahidiInstance(deployment)) {
                     Log.i("Dashboard", "Validate Domain " + deployment);
                     middleGrid = (LinearLayout)findViewById(R.id.middle_grid);
                     middleGrid.setVisibility(View.GONE);
@@ -547,11 +548,11 @@ public class Dashboard extends Activity {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            Util.checkForCheckin(appContext);
+            ApiUtils.checkForCheckin(appContext);
             if (Preferences.isCheckinEnabled == 0) {
-                status = Util.processReports(appContext);
+                status = ApiUtils.processReports(appContext);
             } else {
-                status = Util.processCheckins(appContext);
+                status = ApiUtils.processCheckins(appContext);
             }
             return status;
         }

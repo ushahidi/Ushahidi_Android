@@ -40,6 +40,7 @@ import android.text.InputType;
 import android.util.Log;
 
 import com.ushahidi.android.app.ui.SeekBarPreference;
+import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
@@ -439,7 +440,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         protected Integer doInBackground(Void... params) {
             // clear previous data
             MainApplication.mDb.clearData();
-            status = Util.processReports(appContext);
+            status = ApiUtils.processReports(appContext);
             isCheckinsEnabled();
             return status;
         }
@@ -493,7 +494,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         Thread t = new Thread() {
             public void run() {
 
-                validUrl = Util.validateUshahidiInstance(Url);
+                validUrl = ApiUtils.validateUshahidiInstance(Url);
 
                 mHandler.post(mValidateUrl);
             }
@@ -519,7 +520,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
      * Checks if checkins is enabled on the configured Ushahidi deployment.
      */
     public void isCheckinsEnabled() {
-        if (Util.isCheckinEnabled(Settings.this)) {
+        if (ApiUtils.isCheckinEnabled(Settings.this)) {
             Preferences.isCheckinEnabled = 1;
         } else {
             Preferences.isCheckinEnabled = 0;

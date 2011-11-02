@@ -28,13 +28,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,56 +43,32 @@ import android.location.Criteria;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.ushahidi.android.app.MainApplication;
-import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.checkin.Checkin;
-import com.ushahidi.android.app.checkin.NetworkServices;
-import com.ushahidi.android.app.checkin.RetrieveCheckinsJSONServices;
-import com.ushahidi.android.app.data.CategoriesData;
-import com.ushahidi.android.app.data.HandleXml;
-import com.ushahidi.android.app.data.IncidentsData;
-import com.ushahidi.android.app.data.UsersData;
-import com.ushahidi.android.app.net.Categories;
-import com.ushahidi.android.app.net.Incidents;
 import com.ushahidi.android.app.net.MainGeocoder;
-import com.ushahidi.android.app.net.MainHttpClient;
 
 /**
  * This is a utility class that has common methods to be used by most clsses.
- *  
+ * 
  * @author eyedol
- *
  */
 public class Util {
 
-    private static NetworkInfo networkInfo;
-
-    private static List<IncidentsData> mNewIncidents;
-
-    private static List<CategoriesData> mNewCategories;
-
-    private static List<Checkin> mCheckins;
-
-    private static List<UsersData> mUsers;
-
     private static JSONObject jsonObject;
 
-    private static Pattern pattern;
-
-    private static Matcher matcher;
+    private static NetworkInfo networkInfo;
 
     private static Random random = new Random();
 
     private static final String VALID_EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-    private static final String VALID_URL_PATTERN = "^(https?|ftp)://[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].+)?$";
-    
-    private static final String CLASS_TAG = Util.class.getSimpleName();
+    private static Pattern pattern;
+
+    private static Matcher matcher;
+
+
     /**
      * joins two strings together
      * 
@@ -193,38 +167,6 @@ public class Util {
     }
 
     /**
-     * Fetch reports details from the internet
-     * 
-     * @param context - the activity calling this method.
-     */
-    public static void fetchReports(final Context context) {
-        try {
-            if (Util.isConnected(context)) {
-
-                if (Categories.getAllCategoriesFromWeb()) {
-                    mNewCategories = HandleXml
-                            .processCategoriesXml(Preferences.categoriesResponse);
-                }
-
-                if (Incidents.getAllIncidentsFromWeb()) {
-                    mNewIncidents = HandleXml.processIncidentsXml(Preferences.incidentsResponse);
-                }
-
-                Preferences.totalReportsFetched = mNewCategories.size() + " Categories \n"
-                        + mNewIncidents.size() + " Reports";
-
-                MainApplication.mDb.addCategories(mNewCategories, false);
-                MainApplication.mDb.addIncidents(mNewIncidents, false);
-
-            } else {
-                return;
-            }
-        } catch (IOException e) {
-            // means there was a problem getting it
-        }
-    }
-
-    /**
      * Format date into more readable format.
      * 
      * @param date - the date to be formatted.
@@ -250,67 +192,30 @@ public class Util {
     }
 
     /**
-     * Extract Ushahidi payload JSON data
-     * 
-     * @papram json_data - the json data to be formatted.
-     * @return int 
-     * 0 - success, 
-     * 1 - missing parameter,
-     * 2 - invalid parameter,
-     * 3 - post failed,
-     * 5 - access denied, 
-     * 6 - access limited,
-     * 7 - no data, 
-     * 8 - api disabled, 
-     * 9 - no task found, 
-     * 10 - json is wrong 
-     */
-    public static int extractPayloadJSON(String json_data) {
-        Log.d(CLASS_TAG, "extractPayloadJSON(): "+json_data);
-        try {
-            jsonObject = new JSONObject(json_data);
-            final String errorCode =  jsonObject.getJSONObject("error").getString("code");
-            return Integer.parseInt(errorCode);
-        } catch (JSONException e) {
-            Log.e(CLASS_TAG, e.toString());
-            return 10;
-        }
-
-    }
-    
-    /**
      * For debugging purposes. Append content of a string to a file
      * 
      * @param text
      */
-    public static void appendLog(String text)
-    {       
-       File logFile = new File(Environment.getExternalStorageDirectory(),"ush_log.txt");
-       if (!logFile.exists())
-       {
-          try
-          {
-             logFile.createNewFile();
-          } 
-          catch (IOException e)
-          {
-             // TODO Auto-generated catch block
-             e.printStackTrace();
-          }
-       }
-       try
-       {
-          //BufferedWriter for performance, true to set append to file flag
-          BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true)); 
-          buf.append(text);
-          buf.newLine();
-          buf.close();
-       }
-       catch (IOException e)
-       {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-       }
+    public static void appendLog(String text) {
+        File logFile = new File(Environment.getExternalStorageDirectory(), "ush_log.txt");
+        if (!logFile.exists()) {
+            try {
+                logFile.createNewFile();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        try {
+            // BufferedWriter for performance, true to set append to file flag
+            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+            buf.append(text);
+            buf.newLine();
+            buf.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -356,56 +261,6 @@ public class Util {
     }
 
     /**
-     * process reports 0 - successful 1 - failed fetching categories 2 - failed
-     * fetching reports 3 - non ushahidi instance 4 - No internet connection
-     * 
-     * @return int - status
-     */
-    public static int processReports(Context context) {
-
-        try {
-            if (Util.isConnected(context)) {
-
-                if (Categories.getAllCategoriesFromWeb()) {
-
-                    mNewCategories = HandleXml
-                            .processCategoriesXml(Preferences.categoriesResponse);
-                } else {
-                    
-                    return 1;
-                }
-
-                if (Incidents.getAllIncidentsFromWeb()) {
-                    mNewIncidents = HandleXml.processIncidentsXml(Preferences.incidentsResponse);
-
-                } else {
-                    
-                    return 2;
-                }
-
-                if (mNewCategories != null && mNewIncidents != null) {
-                    Log.d(CLASS_TAG,"processReport(): categories total: "+mNewCategories.size()+ " incidents total:"+mNewIncidents.size());
-                    // delete all categories
-                    MainApplication.mDb.deleteAllCategories();
-                    MainApplication.mDb.deleteAllIncidents();
-                    MainApplication.mDb.addCategories(mNewCategories, false);
-                    MainApplication.mDb.addIncidents(mNewIncidents, false);
-                    return 0;
-
-                } else {
-                    return 3;
-                }
-
-            } else {
-                return 4;
-            }
-        } catch (IOException e) {
-            // means there was a problem getting it
-        }
-        return 0;
-    }
-
-    /**
      * Show toast
      * 
      * @param Context - the application's context
@@ -432,75 +287,6 @@ public class Util {
             return matcher.matches();
         }
         return true;
-    }
-
-    /**
-     * Validate an Ushahidi instance
-     * 
-     * @param String - URL to be validated.
-     * @return boolean
-     */
-    public static boolean validateUshahidiInstance(String ushahidiUrl) {
-        // make an http get request to a dummy api call
-        // TODO improve on how to do this
-
-        if (!TextUtils.isEmpty(ushahidiUrl)) {
-            pattern = Pattern.compile(VALID_URL_PATTERN);
-            matcher = pattern.matcher(ushahidiUrl);
-            return matcher.matches();
-        }
-
-        return false;
-    }
-
-    public static boolean isCheckinEnabled(Context context) {
-        HttpResponse response;
-        String jsonString = "";
-        Preferences.loadSettings(context);
-
-        StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
-        uriBuilder.append("/api?task=version");
-        uriBuilder.append("&resp=json");
-
-        try {
-            response = MainHttpClient.GetURL(uriBuilder.toString());
-            if (response == null) {
-                return false;
-            }
-
-            final int statusCode = response.getStatusLine().getStatusCode();
-
-            if (statusCode == 200) {
-
-                jsonString = MainHttpClient.GetText(response);
-                JSONObject jsonObject = new JSONObject(jsonString);
-                int checkinStatus = jsonObject.getJSONObject("payload").getInt("checkins");
-
-                if (checkinStatus == 1) {
-                    return true;
-                } else {
-                    return false;
-                }
-
-            } else {
-                return false;
-            }
-        } catch (IOException e) {
-
-            return false;
-        } catch (JSONException e) {
-
-            return false;
-        }
-    }
-
-    public static void checkForCheckin(Context context) {
-        if (Util.isCheckinEnabled(context)) {
-            Preferences.isCheckinEnabled = 1;
-        } else {
-            Preferences.isCheckinEnabled = 0;
-        }
-        Preferences.saveSettings(context);
     }
 
     /**
@@ -577,43 +363,6 @@ public class Util {
 
     }
 
-    /**
-     * process checkins 0 - successful 1 - failed fetching categories 2 - failed
-     * fetching checkins 3 - non ushahidi instance 4 - No internet connection
-     * 
-     * @return int - status
-     */
-    public static int processCheckins(Context context) {
-        String strCheckinsJSON = "";
-
-        if (Util.isConnected(context)) {
-
-            strCheckinsJSON = NetworkServices.getCheckins(Preferences.domain, null, null);
-
-            if (!TextUtils.isEmpty(strCheckinsJSON) && strCheckinsJSON != null) {
-                RetrieveCheckinsJSONServices checkinsRetrieveCheckinsJSON = new RetrieveCheckinsJSONServices(
-                        strCheckinsJSON);
-                mUsers = checkinsRetrieveCheckinsJSON.getCheckinsUsersList();
-                mCheckins = checkinsRetrieveCheckinsJSON.getCheckinsList();
-            }
-
-            if (mCheckins != null && mUsers != null) {
-                //clear existin data
-                MainApplication.mDb.deleteAllCheckins();
-                MainApplication.mDb.deleteUsers();
-                MainApplication.mDb.addUsers(mUsers);
-                MainApplication.mDb.addCheckins(mCheckins);
-                return 0;
-
-            } else {
-                return 1;
-            }
-
-        } else {
-            return 2;
-        }
-    }
-
     public static String generateFilename(boolean thumbnail) {
         if (thumbnail) {
             return randomString() + "_t.jpg";
@@ -659,5 +408,5 @@ public class Util {
             return false;
         }
     }
-    
+
 }

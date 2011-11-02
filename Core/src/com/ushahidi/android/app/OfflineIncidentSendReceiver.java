@@ -17,7 +17,7 @@ import android.util.Log;
 
 import com.ushahidi.android.app.data.Database;
 import com.ushahidi.android.app.net.MainHttpClient;
-import com.ushahidi.android.app.util.Util;
+import com.ushahidi.android.app.util.ApiUtils;
 
 /**
  * Class is responsible for receiving connectivity change events and sending any
@@ -91,7 +91,7 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
         // only send offline reports if there are items in the database.
         if (cursor.getCount() > 0) {
             // double check to make sure there internet
-            if (Util.isCheckinEnabled(context)) {
+            if (ApiUtils.isCheckinEnabled(context)) {
                 cursor.moveToFirst();
                 while (cursor.isAfterLast() == false) {
                     Log.d(CLASS_TAG,

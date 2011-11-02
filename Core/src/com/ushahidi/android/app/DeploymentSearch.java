@@ -42,6 +42,7 @@ import com.ushahidi.android.app.data.DeploymentProvider;
 import com.ushahidi.android.app.data.DeploymentsData;
 import com.ushahidi.android.app.data.Database;
 import com.ushahidi.android.app.net.Deployments;
+import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
 public class DeploymentSearch extends Dashboard implements LocationListener {
@@ -408,7 +409,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
                         .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 // validate URL
-                                if ((Util.validateUshahidiInstance(deploymentUrl.getText()
+                                if ((ApiUtils.validateUshahidiInstance(deploymentUrl.getText()
                                         .toString()))
                                         && !(TextUtils.isEmpty(deploymentName.getText().toString()))) {
                                     MainApplication.mDb.addDeployment(deploymentName.getText()
@@ -535,7 +536,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
      */
     public void isCheckinsEnabled() {
 
-        if (Util.isCheckinEnabled(this)) {
+        if (ApiUtils.isCheckinEnabled(this)) {
             Preferences.isCheckinEnabled = 1;
         } else {
             Preferences.isCheckinEnabled = 0;
@@ -623,9 +624,9 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
             activateDeployment(id);
             isCheckinsEnabled();
             if (Preferences.isCheckinEnabled == 0) {
-                status = Util.processReports(appContext);
+                status = ApiUtils.processReports(appContext);
             } else {
-                status = Util.processCheckins(appContext);
+                status = ApiUtils.processCheckins(appContext);
             }
 
             return status;

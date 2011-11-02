@@ -47,6 +47,7 @@ import com.ushahidi.android.app.data.Database;
 import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.ui.PullToRefreshListView;
 import com.ushahidi.android.app.ui.PullToRefreshListView.OnRefreshListener;
+import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
 public class IncidentList extends Activity {
@@ -314,7 +315,7 @@ public class IncidentList extends Activity {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            status = Util.processReports(appContext);
+            status = ApiUtils.processReports(appContext);
             return status;
         }
 
