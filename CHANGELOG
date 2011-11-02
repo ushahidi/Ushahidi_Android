@@ -1,3 +1,9 @@
+2.9:
+Bug:
+  * Fixed FC when there is no category in the system.
+  * Fixed HTTPS/HTTP switch.
+  * Fixed FC when the app is clearing cache.
+
 2.8:
 Bug:
   * Fixed full HTTPS support
