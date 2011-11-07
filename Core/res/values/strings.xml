@@ -282,4 +282,11 @@
 	
 	<!-- DEFAULT USHAHIDI DEPLOYMENT TO USE. DON'T REMOVE THIS LINE. RATHER EDIT THE VALUE -->
 	<string name="default_deployment"/>
+	
+	<!-- Open GeoSMS -->
+	<string name="incident_transmission">Transmission:</string>
+	<string name="send_way_title">Sending way</string>  
+	<string name="send_way_internet">Internet</string>
+	<string name="send_way_opengeosms">Open GeoSMS</string>
+	<string name="send_way_donotask">Do NOT ask me again next time!! (You can modify it through setting)</string>
 </resources>
