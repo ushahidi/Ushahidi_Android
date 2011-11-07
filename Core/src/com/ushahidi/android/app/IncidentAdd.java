@@ -52,14 +52,21 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -161,6 +168,11 @@ public class IncidentAdd extends MapUserLocation {
     private static final String CLASS_TAG = IncidentAdd.class.getSimpleName();
 
     private boolean draft = true;
+	
+    //@author inoran
+	private String mTransmission;
+
+	private LinearLayout mTransmissionLinearLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -587,6 +599,8 @@ public class IncidentAdd extends MapUserLocation {
             case DATE_DIALOG_ID:
                 return new DatePickerDialog(this, mDateSetListener, mCalendar.get(Calendar.YEAR),
                         mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
+               
+
         }
         return null;
     }
@@ -613,7 +627,7 @@ public class IncidentAdd extends MapUserLocation {
                     for (String s : mVectorCategories) {
                         try {
                             list.setItemChecked(Integer.parseInt(s) - 1, true);
-                        } catch (NumberFormatException e) {
+                        }catch (NumberFormatException e) {
                             Log.e(CLASS_TAG, "numberFormatException "+s+" " + e.toString());
                         }
                     }
