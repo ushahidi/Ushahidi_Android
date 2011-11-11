@@ -68,7 +68,6 @@ public class Util {
 
     private static Matcher matcher;
 
-
     /**
      * joins two strings together
      * 
@@ -408,5 +407,4 @@ public class Util {
             return false;
         }
     }
-
 }
