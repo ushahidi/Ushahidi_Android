@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <resources>
-  <string name="app_name">Ushahidi</string>
+  <string name="app_name">Ushahidi_OpenGeoSMS</string>
   <string name="add_incident">
     Ushahidi | 新增事件
   </string>
@@ -207,6 +207,11 @@
   	<string name="internet">網路</string>
 	<string name="opengeosms">Open GeoSMS</string>
   
+  <string name="less_report_title">標題字數必需界於3~200字</string>
+  <string name="less_report_location">地點名稱至少需3個字</string>
+  <string name="not_support_by_opengeosms">Open GeoSMS不支擾傳送照片, 是否改以網路傳送?</string>
+  <string name="report_way_internet">Internet</string>
+  <string name="report_way_opengeosms">Open GeoSMS</string>
   <string name="send_way_title">設定傳送方式</string>  
   <string name="send_way_internet">Internet</string>
   <string name="send_way_opengeosms">Open GeoSMS</string>

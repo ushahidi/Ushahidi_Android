@@ -9,7 +9,7 @@
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com. -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-	<string name="app_name">Ushahidi</string>
+	<string name="app_name">Ushahidi_OpenGeoSMS</string>
 	<string name="add_incident">Add Report</string>
 	<string name="view_incident">View Reports</string>
 	<string name="incident_details">Report Detail</string>
@@ -284,9 +284,12 @@
 	<string name="default_deployment"/>
 	
 	<!-- Open GeoSMS -->
+	<string name="less_report_title">The title field must be at least 3 and no more 200 characters long.</string>
+	<string name="less_report_location">The location name must be at least 3 characters.</string>
+	<string name="not_support_by_opengeosms">Open GeoSMS do NOT support sending a photo, do you want to send the report via Internet?</string>
+	 <string name="report_way_internet">Internet</string>
+  <string name="report_way_opengeosms">Open GeoSMS</string>
 	<string name="incident_transmission">Transmission:</string>
 	<string name="send_way_title">Sending way</string>  
-	<string name="send_way_internet">Internet</string>
-	<string name="send_way_opengeosms">Open GeoSMS</string>
 	<string name="send_way_donotask">Do NOT ask me again next time!! (You can modify it through setting)</string>
 </resources>

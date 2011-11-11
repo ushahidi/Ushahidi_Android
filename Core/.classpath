@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="D:/Git Code/Ushahidi_Android/Core/libs/httpclient-4.1.1.jar"/>
 	<classpathentry kind="lib" path="D:/Git Code/Ushahidi_Android/Core/libs/httpcore-4.1.jar"/>
 	<classpathentry kind="lib" path="D:/Git Code/Ushahidi_Android/Core/libs/httpmime-4.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/Eclipse workspace/workspace/Open GeoSMS_SDK-1.2.0.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

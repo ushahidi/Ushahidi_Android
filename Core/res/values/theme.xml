@@ -84,6 +84,6 @@
     <!-- string name="google_map_api_key_dev">02cv5Q8Rob0ChOFNh6Gf_ePmVHYlVgA_pgJIHRA</string>
 	<string name="google_map_api_key">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string-->
 	<!--inoran acer computer key -->
-	<string name="google_map_api_key">0VTyb20YRVicS29GU48ibGp57yVw-Olvn1v_Kmw</string><!--develope debug key -->
-	<!-- string name="google_map_api_key">0VTyb20YRViel4f7bslzHyBArOG6CfDg6llGJnQ</string--><!--release key -->
+	<!-- string name="google_map_api_key">0VTyb20YRVicS29GU48ibGp57yVw-Olvn1v_Kmw</string--><!--develope debug key -->
+	<string name="google_map_api_key">0VTyb20YRViel4f7bslzHyBArOG6CfDg6llGJnQ</string><!--release key -->
 </resources>
