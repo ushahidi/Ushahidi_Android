@@ -156,7 +156,7 @@ public class ApiUtils {
             // not
             ApiUtils.updateDomain(context);
             strCheckinsJSON = NetworkServices.getCheckins(Preferences.domain, null, null);
-
+            
             if (!TextUtils.isEmpty(strCheckinsJSON) && strCheckinsJSON != null) {
                 RetrieveCheckinsJSONServices checkinsRetrieveCheckinsJSON = new RetrieveCheckinsJSONServices(
                         strCheckinsJSON);

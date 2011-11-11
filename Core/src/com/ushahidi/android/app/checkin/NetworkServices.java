@@ -1,21 +1,25 @@
 
 package com.ushahidi.android.app.checkin;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.util.HashMap;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.net.ClientHttpRequest;
 import com.ushahidi.android.app.net.MainHttpClient;
-
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 
 /**
  * Created by IntelliJ IDEA. User: Ahmed Date: 2/10/11 Time: 4:34 PM To change
@@ -30,7 +34,6 @@ public class NetworkServices {
     public static String postToOnline(String IMEI, String domainName, String checkinDetails,
             String filename, String firstname, String lastname, String email, double latitude,
             double longitude) {
-
         HashMap<String, String> myParams = new HashMap<String, String>();
 
         // Build the HTTP response
@@ -64,7 +67,7 @@ public class NetworkServices {
         entity = new MultipartEntity();
 
         if (params != null) {
-            Log.i("NeworkServices", "UploadFile "+params.size());
+            Log.i("NeworkServices", "UploadFile " + params.size());
             entity.addPart("task", new StringBody(params.get("task")));
             entity.addPart("action", new StringBody(params.get("action")));
             entity.addPart("mobileid", new StringBody(params.get("mobileid")));
@@ -74,39 +77,42 @@ public class NetworkServices {
             entity.addPart("firstname", new StringBody(params.get("firstname")));
             entity.addPart("lastname", new StringBody(params.get("lastname")));
             entity.addPart("email", new StringBody(params.get("email")));
-            
+
             if (!TextUtils.isEmpty(params.get("filename")) || !(params.get("filename").equals(""))) {
                 Log.i("NeworkServices", "Posting file online");
                 entity.addPart("photo", new FileBody(new File(params.get("filename"))));
             }
-            
+
             return MainHttpClient.SendMultiPartData(URL, entity);
         }
         return null;
     }
 
     public static String getCheckins(String URL, String mobileId, String checkinId) {
+        final HttpResponse response;
         StringBuilder fullUrl = new StringBuilder(URL);
         fullUrl.append("/api");
+        fullUrl.append("?task=checkin");
+        fullUrl.append("&action=get_ci");
+        fullUrl.append("&sort=desc");
+        fullUrl.append("&sqllimit=" + Preferences.totalReports);
+        if (mobileId != null)
+            fullUrl.append("&mobileid=" + mobileId);
+        if (checkinId != null)
+            fullUrl.append("&id=" + checkinId);
 
         try {
-            URL url = new URL(fullUrl.toString());
-            ClientHttpRequest req = new ClientHttpRequest(url);
-            req.setParameter("task", "checkin");
-            req.setParameter("action", "get_ci");
-            req.setParameter("sort", "desc");
-            req.setParameter("sqllimit", Preferences.totalReports);
-            if (mobileId != null)
-                req.setParameter("mobileid", mobileId);
-            if (checkinId != null)
-                req.setParameter("id", checkinId);
+            response = MainHttpClient.GetURL(fullUrl.toString());
+            if (response == null) {
+                return null;
+            }
+            return MainHttpClient.GetText(response);
 
-            InputStream inputStream = req.post();
-
-            return GetText(inputStream);
         } catch (MalformedURLException e) {
+
             return null;
         } catch (IOException e) {
+
             return null;
         }
     }

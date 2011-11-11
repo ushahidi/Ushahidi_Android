@@ -384,6 +384,38 @@ public class MainHttpClient {
         return null;
 
     }
+    
+    public static byte[] fetchImage2(String address) throws MalformedURLException, IOException {
+        InputStream in = null;
+        OutputStream out = null;
+        HttpResponse response;
+
+        try {
+           response = GetURL(address);
+            in = new BufferedInputStream(response.getEntity().getContent(), IO_BUFFER_SIZE);
+
+            final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+            out = new BufferedOutputStream(dataStream, 4 * 1024);
+            copy(in, out);
+            out.flush();
+
+            // need to close stream before return statement
+            closeStream(in);
+            closeStream(out);
+
+            return dataStream.toByteArray();
+        } catch (IOException e) {
+            // android.util.Log.e("IO", "Could not load buddy icon: " + this,
+            // e);
+
+        } finally {
+            closeStream(in);
+            closeStream(out);
+
+        }
+        return null;
+
+    }
 
     /**
      * Copy the content of the input stream into the output stream, using a
