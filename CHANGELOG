@@ -1,3 +1,8 @@
+2.9.1:
+Bug:
+  * Fixed checkin photo upload failure.
+  * Fixed HTTPS not working on some devices. 
+
 2.9:
 Bug:
   * Fixed FC when there is no category in the system.
