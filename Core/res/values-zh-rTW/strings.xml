@@ -87,6 +87,8 @@
   </string>
   <string name="txt_email">電子信箱</string>
   <string name="hint_email">僅限聯絡使用</string>
+  <string name="txt_phonenumber">手機號碼</string>
+	<string name="hint_phonenumber">僅限傳送報告使用</string>
   <string name="total_reports">事件數量</string>
   <string name="hint_total_reports">
   </string>
@@ -207,6 +209,7 @@
   	<string name="internet">網路</string>
 	<string name="opengeosms">Open GeoSMS</string>
   
+  <string name="incident_transmission">手機號碼:</string>
   <string name="less_report_title">標題字數必需界於3~200字</string>
   <string name="less_report_location">地點名稱至少需3個字</string>
   <string name="not_support_by_opengeosms">Open GeoSMS不支擾傳送照片, 是否改以網路傳送?</string>

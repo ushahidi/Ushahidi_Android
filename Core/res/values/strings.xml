@@ -92,6 +92,8 @@
 		(optional).</string>
 	<string name="txt_email">E-mail address</string>
 	<string name="hint_email">For contact purposes only.</string>
+	<string name="txt_phonenumber">Mobile phone number</string>
+	<string name="hint_phonenumber">For send report only.</string>
 	<string name="total_reports">Number of reports</string>
 	<string name="hint_total_reports">The total number of reports to fetch from
 		the

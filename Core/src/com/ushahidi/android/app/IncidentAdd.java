@@ -185,7 +185,7 @@ public class IncidentAdd extends MapUserLocation {
 
 	private static final int DIALOG_REPORT_WAY_CHOOSE = 6;
 
-	private static final CharSequence mPhoneNumberText = "+886911511322";
+	private static final CharSequence mPhoneNumberText = "";//"+886911511322";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -266,7 +266,8 @@ public class IncidentAdd extends MapUserLocation {
         
     	//@inoran
     	mPhoneNumber = (EditText)findViewById(R.id.phoneNumber);
-    	mPhoneNumber.setText(mPhoneNumberText );
+    	mPhoneNumber.setText(Preferences.phonenumber);
+    	//mPhoneNumber.setText(mPhoneNumberText );
     	
     	mBtnPicture = (Button)findViewById(R.id.btnPicture);
         mBtnAddCategory = (Button)findViewById(R.id.add_category);
@@ -441,6 +442,7 @@ public class IncidentAdd extends MapUserLocation {
             }
         }
         mBtnPicture.setText(getString(R.string.btn_add_photo));
+        mPhoneNumber.setText("");
         mIncidentTitle.setText("");
         mIncidentLocation.setText("");
         mIncidentDesc.setText("");
@@ -951,6 +953,7 @@ public class IncidentAdd extends MapUserLocation {
         final String selectedCategories = getSelectedCategories();
 
         SharedPreferences.Editor editor = getPreferences(0).edit();
+        editor.putString("phonenumber", mPhoneNumber.getText().toString());
         editor.putString("title", mIncidentTitle.getText().toString());
         editor.putString("description", mIncidentDesc.getText().toString());
         editor.putString("location", mIncidentLocation.getText().toString());
@@ -976,6 +979,17 @@ public class IncidentAdd extends MapUserLocation {
         // get the categories
         showCategories();
         SharedPreferences prefs = getPreferences(0);
+        String phonenumber = prefs.getString("phonenumber", null);
+        //@author inoran
+        //phonenubmer exist in SharedPreference
+        if(phonenumber != null){
+        	if(phonenumber.length() != 0)
+        		mPhoneNumber.setText(phonenumber, TextView.BufferType.EDITABLE);
+        	//if phonenumber is empty, retrieving phone number from preference of setting
+        	else{
+            	mPhoneNumber.setText(Preferences.phonenumber);
+            }
+        }
         String title = prefs.getString("title", null);
         if (title != null) {
             mIncidentTitle.setText(title, TextView.BufferType.EDITABLE);
