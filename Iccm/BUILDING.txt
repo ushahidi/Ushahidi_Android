@@ -4,7 +4,7 @@ to compile this library app. Before building, you should ensure that:
 1) You've read the 'External Libraries' section below and have added the necessary
    JARs in 'Core/libs' directory to your build path.
 
-2) Your Eclipse/IDEA/ant/etc. project targets API level 7 or
+2) Your Eclipse/IDEA/ant/etc. project targets API level 7(Google's) or
    higher.
 
 Forgetting to do either of these will result in compile errors.
