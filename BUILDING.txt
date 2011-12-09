@@ -1,0 +1,2 @@
+To build any of the white-labled app, read the BUILDING.txt file. 
+It has all the information you need to successfully build any of them. 
