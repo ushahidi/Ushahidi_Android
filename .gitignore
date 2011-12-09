@@ -5,6 +5,6 @@ gen/
 *.swp
 .settings
 .DS_Store
-Beijing/local.properties
-Ushahidi/local.properties
-Ushahidi/libs
+Ushahidi/libs/
+*/.classpath
+*/local.properties
