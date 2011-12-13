@@ -280,6 +280,9 @@
 	<!-- Prompt user about saved draft -->
     <string name="message_saved_as_draft">Message saved as draft.</string>
 	
-	<!-- DEFAULT USHAHIDI DEPLOYMENT TO USE. DON'T REMOVE THIS LINE. RATHER EDIT THE VALUE -->
-	<string name="default_deployment"/>
+	<!--  empty latitude -->
+	<string name="empty_latitude">No value entered for latitude field</string>
+	<string name="empty_longitude">No value entered for longitude field</string>
+	<string name="invalid_latitude">Invalid value entered for latitude. Eg valid value 3.4958585</string>
+	<string name="invalid_longitude">Invalid value entered for longitude. Eg valid value -3.4958585</string>
 </resources>

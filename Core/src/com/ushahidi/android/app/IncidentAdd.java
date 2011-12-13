@@ -283,6 +283,32 @@ public class IncidentAdd extends MapUserLocation {
                     mError = true;
                 }
 
+                // validate lat long
+                if (TextUtils.isEmpty(mLatitude.getText().toString())) {
+                    mErrorMessage += getString(R.string.empty_latitude);
+                    mError = true;
+                }
+
+                // validate lat long
+                if (TextUtils.isEmpty(mLongitude.getText().toString())) {
+                    mErrorMessage += getString(R.string.empty_longitude);
+                    mError = true;
+                }
+
+                try {
+                    Double.parseDouble(mLatitude.getText().toString());
+                } catch (NumberFormatException ex) {
+                    mErrorMessage += getString(R.string.about_text);
+                    mError = true;
+                }
+
+                try {
+                    Double.parseDouble(mLongitude.getText().toString());
+                } catch (NumberFormatException ex) {
+                    mErrorMessage += getString(R.string.about_text);
+                    mError = true;
+                }
+
                 if (!mError) {
                     AddReportsTask addReportsTask = new AddReportsTask();
                     addReportsTask.appContext = IncidentAdd.this;
@@ -614,7 +640,7 @@ public class IncidentAdd extends MapUserLocation {
                         try {
                             list.setItemChecked(Integer.parseInt(s) - 1, true);
                         } catch (NumberFormatException e) {
-                            Log.e(CLASS_TAG, "numberFormatException "+s+" " + e.toString());
+                            Log.e(CLASS_TAG, "numberFormatException " + s + " " + e.toString());
                         }
                     }
                 } else {
@@ -952,7 +978,7 @@ public class IncidentAdd extends MapUserLocation {
                     categories.append(mCategoriesTitle.get(category));
                 }
             }
-            
+
             if (!TextUtils.isEmpty(categories.toString())) {
                 mBtnAddCategory.setText(categories.toString());
             } else {
