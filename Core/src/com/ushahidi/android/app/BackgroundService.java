@@ -175,7 +175,7 @@ public class BackgroundService extends Service {
     }
 
     private void showNotification(String tickerText) {
-
+        Preferences.loadSettings(mContext);
         // This is what should be launched if the user selects our notification.
         Intent baseIntent = new Intent(this, IncidentTab.class);
         baseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
