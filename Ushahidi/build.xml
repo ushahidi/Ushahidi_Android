@@ -82,5 +82,5 @@
 	
     <!-- version-tag: custom -->
     <import file="${sdk.dir}/tools/ant/build.xml" />
-    
+    <property file="secure.properties" /> 
 </project>
