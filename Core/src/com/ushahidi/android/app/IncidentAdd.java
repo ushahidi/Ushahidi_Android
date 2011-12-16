@@ -868,7 +868,8 @@ public class IncidentAdd extends MapUserLocation {
         if (categories != null) {
 
             String[] splitter = categories.split(",");
-
+            //clear any existing categories
+            mVectorCategories.clear();
             for (String s : splitter) {
                 mVectorCategories.add(s.trim());
 
