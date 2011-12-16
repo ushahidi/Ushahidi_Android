@@ -851,7 +851,7 @@ public class IncidentAdd extends MapUserLocation {
 
         String location = prefs.getString("location", null);
         if (location != null) {
-            mIncidentLocation.setText(description, TextView.BufferType.EDITABLE);
+            mIncidentLocation.setText(location, TextView.BufferType.EDITABLE);
         }
 
         String latitude = prefs.getString("latitude", null);
@@ -868,7 +868,7 @@ public class IncidentAdd extends MapUserLocation {
         if (categories != null) {
 
             String[] splitter = categories.split(",");
-            //clear any existing categories
+            // clear any existing categories
             mVectorCategories.clear();
             for (String s : splitter) {
                 mVectorCategories.add(s.trim());
@@ -928,7 +928,8 @@ public class IncidentAdd extends MapUserLocation {
         @Override
         protected void onPostExecute(String result) {
             Log.i(getClass().getSimpleName(), String.format("onPostExecute %s", result));
-            mIncidentLocation.setText(result);
+            if (TextUtils.isEmpty(mIncidentLocation.getText().toString()))
+                mIncidentLocation.setText(result);
             executing = false;
         }
     }
