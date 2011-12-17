@@ -8,3 +8,11 @@ to compile this library app. Before building, you should ensure that:
    higher.
 
 Forgetting to do either of these will result in compile errors.
+
+To use ant to build the project, 
+
+1. Create a local.properties file and insert the absolute path where you have 
+your sdk stored. Eg. sdk.dir=/home/username/android-sdk-linux_x86
+
+2. Type "ant debug"
+
