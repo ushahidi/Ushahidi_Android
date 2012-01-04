@@ -786,7 +786,8 @@ public class IncidentAdd extends MapUserLocation {
                 if (mVectorCategories.size() > 0) {
                     for (String s : mVectorCategories) {
                         try {
-                            list.setItemChecked(Integer.parseInt(s) - 1, true);
+                            //@inoran fix
+                            list.setItemChecked(mCategoryLength - Integer.parseInt(s), true);
                         } catch (NumberFormatException e) {
                             Log.e(CLASS_TAG, "numberFormatException " + s + " " + e.toString());
                         }
