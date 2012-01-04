@@ -91,7 +91,7 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
         // only send offline reports if there are items in the database.
         if (cursor.getCount() > 0) {
             // double check to make sure there internet
-            if (ApiUtils.isCheckinEnabled(context)) {
+            if (!ApiUtils.isCheckinEnabled(context)) {
                 cursor.moveToFirst();
                 while (cursor.isAfterLast() == false) {
                     Log.d(CLASS_TAG,

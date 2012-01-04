@@ -60,6 +60,9 @@ public class Preferences {
     private static SharedPreferences.Editor editor;
 
     public static String totalReportsFetched = "";
+    
+    public static String username = "";
+    public static String password = "";
 
 	public static String phonenumber;
 
@@ -85,8 +88,12 @@ public class Preferences {
         deploymentLongitude = settings.getString("DeploymentLongitude", "0.0");
         photoWidth = settings.getInt("PhotoWidth", 200);
         appRunsFirstTime = settings.getInt("AppRunsFirstTime", appRunsFirstTime);
-        //@author inoran
+        username = settings.getString("username", "");
+        password = settings.getString("password","");
+				
+				//@inoran
         phonenumber = settings.getString("Phonenumber", "");
+        
         // make sure folder exists
         final File dir = new File(Preferences.savePath);
         dir.mkdirs();

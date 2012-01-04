@@ -329,6 +329,32 @@ public class IncidentAdd extends MapUserLocation {
                     mError = true;
                 }
 
+                // validate lat long
+                if (TextUtils.isEmpty(mLatitude.getText().toString())) {
+                    mErrorMessage += getString(R.string.empty_latitude);
+                    mError = true;
+                }
+
+                // validate lat long
+                if (TextUtils.isEmpty(mLongitude.getText().toString())) {
+                    mErrorMessage += getString(R.string.empty_longitude);
+                    mError = true;
+                }
+
+                try {
+                    Double.parseDouble(mLatitude.getText().toString());
+                } catch (NumberFormatException ex) {
+                    mErrorMessage += getString(R.string.about_text);
+                    mError = true;
+                }
+
+                try {
+                    Double.parseDouble(mLongitude.getText().toString());
+                } catch (NumberFormatException ex) {
+                    mErrorMessage += getString(R.string.about_text);
+                    mError = true;
+                }
+
                 if (!mError) {
                 	showDialog(DIALOG_REPORT_WAY_CHOOSE);
 
@@ -760,10 +786,9 @@ public class IncidentAdd extends MapUserLocation {
                 if (mVectorCategories.size() > 0) {
                     for (String s : mVectorCategories) {
                         try {
-                        	//@inoran fix
-                            list.setItemChecked(mCategoryLength - Integer.parseInt(s), true);
-                        }catch (NumberFormatException e) {
-                            Log.e(CLASS_TAG, "numberFormatException "+s+" " + e.toString());
+                            list.setItemChecked(Integer.parseInt(s) - 1, true);
+                        } catch (NumberFormatException e) {
+                            Log.e(CLASS_TAG, "numberFormatException " + s + " " + e.toString());
                         }
                     }
                 } else {
@@ -1092,7 +1117,7 @@ public class IncidentAdd extends MapUserLocation {
 
         String location = prefs.getString("location", null);
         if (location != null) {
-            mIncidentLocation.setText(description, TextView.BufferType.EDITABLE);
+            mIncidentLocation.setText(location, TextView.BufferType.EDITABLE);
         }
 
         String latitude = prefs.getString("latitude", null);
@@ -1110,10 +1135,10 @@ public class IncidentAdd extends MapUserLocation {
         //if (categories != null) {        
         if(categories != "" && categories != null){
             String[] splitter = categories.split(",");
-           
-            //@inoran add to fix
+
+            // clear any existing categories
             mVectorCategories.clear();
-            
+
             for (String s : splitter) {
                 mVectorCategories.add(s.trim());
 
@@ -1176,7 +1201,8 @@ public class IncidentAdd extends MapUserLocation {
         @Override
         protected void onPostExecute(String result) {
             Log.i(getClass().getSimpleName(), String.format("onPostExecute %s", result));
-            mIncidentLocation.setText(result);
+            if (TextUtils.isEmpty(mIncidentLocation.getText().toString()))
+                mIncidentLocation.setText(result);
             executing = false;
         }
     }
@@ -1227,7 +1253,7 @@ public class IncidentAdd extends MapUserLocation {
                     categories.append(mCategoriesTitle.get(category));
                 }
             }
-            
+
             if (!TextUtils.isEmpty(categories.toString())) {
                 mBtnAddCategory.setText(categories.toString());
             } else {

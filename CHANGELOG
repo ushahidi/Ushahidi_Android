@@ -1,3 +1,16 @@
+2.9.2:
+Bug:
+  * Fixed auto sync sound/vibrate always on.
+  * Fixed Latitude/Longitude fields in "New Report" crashes system with invalid values	
+  * Fixed Reports not uploaded when unit regains connectivity
+  * Fix pictures upload failure
+  * Fix entered location from being reset when add a photo to a report
+
+2.9.1:
+Bug:
+  * Fixed checkin photo upload failure.
+  * Fixed HTTPS not working on some devices. 
+
 2.9:
 Bug:
   * Fixed FC when there is no category in the system.

@@ -9,7 +9,6 @@ import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.data.UsersData;
-
 import java.util.ArrayList;
 
 /**
@@ -22,6 +21,7 @@ public class RetrieveCheckinsJSONServices {
     private boolean processingResult;
 
     public RetrieveCheckinsJSONServices(String JSONString) {
+        
         processingResult = true;
 
         try {

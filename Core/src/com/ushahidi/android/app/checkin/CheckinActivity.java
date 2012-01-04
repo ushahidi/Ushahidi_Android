@@ -73,8 +73,6 @@ public class CheckinActivity extends MapUserLocation {
 
     private TextView activityTitle;
 
-    private String selectedPhoto = "";
-
     private String checkinDetails;
 
     private static final int HOME = Menu.FIRST + 1;
@@ -226,8 +224,8 @@ public class CheckinActivity extends MapUserLocation {
         });
         photoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (!TextUtils.isEmpty(selectedPhoto)) {
-                    ImageManager.deleteImage(selectedPhoto, "");
+                if (!TextUtils.isEmpty(NetworkServices.fileName)) {
+                    ImageManager.deleteImage(NetworkServices.fileName, "");
                 }
                 showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
             }
@@ -627,7 +625,7 @@ public class CheckinActivity extends MapUserLocation {
             public void run() {
 
                 jsonResponse = NetworkServices.postToOnline(imei, domain, checkinDetails,
-                        selectedPhoto, firstname, lastname, email, latitude, longitude);
+                        NetworkServices.fileName, firstname, lastname, email, latitude, longitude);
 
                 mHandler.post(mPostCheckin);
             }

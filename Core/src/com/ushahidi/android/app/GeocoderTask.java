@@ -90,6 +90,8 @@ public abstract class GeocoderTask extends AsyncTask<Double, Void, String> {
         }
         catch (IOException ioe) {
             Log.e(getClass().getSimpleName(), "IOException", ioe);
+        }catch (IllegalArgumentException ioe) {
+            Log.e(getClass().getSimpleName(), "IllegalArgumentException", ioe);
         }
         return null;
     }

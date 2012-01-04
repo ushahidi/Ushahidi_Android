@@ -143,9 +143,6 @@ class StringGenerator:
         
         f.close();
 
-<<<<<<< HEAD
-    def generate_pot_file(self,filename):
-=======
     def generate_pot_from_csv2(self):
         """ generate a pot file from csv """
         destfile = self.destination
@@ -175,9 +172,8 @@ class StringGenerator:
             #r +=1;
 
     def generate_pot_file(self):
->>>>>>> 102ee1e1ddce401e4bf190a6f49fa5a3403cf526
         xml_doc = xml.dom.minidom.parse(self.source)
-        destfile = self.destination + filename
+        destfile = self.destination
 
         if os.path.exists(destfile):
             os.remove(destfile)

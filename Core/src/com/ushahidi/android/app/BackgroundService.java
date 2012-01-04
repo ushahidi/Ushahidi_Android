@@ -175,7 +175,7 @@ public class BackgroundService extends Service {
     }
 
     private void showNotification(String tickerText) {
-
+        Preferences.loadSettings(mContext);
         // This is what should be launched if the user selects our notification.
         Intent baseIntent = new Intent(this, IncidentTab.class);
         baseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -186,31 +186,27 @@ public class BackgroundService extends Service {
                 System.currentTimeMillis());
         newUshahidiReportNotification.contentIntent = contentIntent;
         newUshahidiReportNotification.flags = Notification.FLAG_AUTO_CANCEL;
-        newUshahidiReportNotification.defaults = Notification.DEFAULT_ALL;
         newUshahidiReportNotification.setLatestEventInfo(this, TAG, tickerText, contentIntent);
 
         if (Preferences.ringtone) {
-            // set the ringer
-            Uri ringURI = Uri.fromFile(new File("/system/media/audio/ringtones/ringer.mp3"));
-            newUshahidiReportNotification.sound = ringURI;
+           
+            newUshahidiReportNotification.defaults = Notification.DEFAULT_SOUND;
         }
 
         if (Preferences.vibrate) {
             double vibrateLength = 100 * Math.exp(0.53 * 20);
-            long[] vibrate = new long[] {
-                    100, 100, (long)vibrateLength
-            };
-            newUshahidiReportNotification.vibrate = vibrate;
-
-            if (Preferences.flashLed) {
-                int color = Color.BLUE;
-                newUshahidiReportNotification.ledARGB = color;
-            }
-
+            
+            newUshahidiReportNotification.defaults = Notification.DEFAULT_VIBRATE;
+            
             newUshahidiReportNotification.ledOffMS = (int)vibrateLength;
             newUshahidiReportNotification.ledOnMS = (int)vibrateLength;
             newUshahidiReportNotification.flags = newUshahidiReportNotification.flags
                     | Notification.FLAG_SHOW_LIGHTS;
+        }
+        
+        if (Preferences.flashLed) {
+            int color = Color.BLUE;
+            newUshahidiReportNotification.ledARGB = Notification.DEFAULT_LIGHTS;
         }
 
         mNotificationManager.notify(Preferences.NOTIFICATION_ID, newUshahidiReportNotification);

@@ -16,6 +16,7 @@ public class PostCheckinsJSONServices {
     private boolean processingResult;
 
     public PostCheckinsJSONServices(String JSONString) {
+        
         processingResult = true;
 
         try {

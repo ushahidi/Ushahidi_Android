@@ -34,6 +34,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -63,6 +65,7 @@ import org.apache.http.protocol.HTTP;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+
 
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.util.ApiUtils;
@@ -123,6 +126,7 @@ public class MainHttpClient {
         httpParameters.setParameter(HttpProtocolParams.USE_EXPECT_CONTINUE, false);
         HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
         HttpProtocolParams.setContentCharset(httpParameters, "utf8");
+        
         // Set the timeout in milliseconds until a connection is established.
         HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
 
@@ -134,12 +138,25 @@ public class MainHttpClient {
         // http scheme
         schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
         // https scheme
-        schemeRegistry.register(new Scheme("https", new EasySSLSocketFactory(), 443));
+        try {
+            schemeRegistry.register(new Scheme("https", new TrustedSocketFactory(Preferences.domain, false), 443));
+        } catch (KeyManagementException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(httpParameters,
                 schemeRegistry), httpParameters);
 
     }
+    
+    /*private static String getCredentials(String userName, String password){     
+        return HttpBase64.encodeBytes((userName + ":" + password).getBytes());
+    }*/
+  
 
     public static HttpResponse GetURL(String URL) throws IOException {
         Preferences.httpRunning = true;
@@ -213,6 +230,13 @@ public class MainHttpClient {
     public static HttpResponse PostURL(String URL, List<NameValuePair> data) throws IOException {
         return PostURL(URL, data, "");
     }
+    
+    public static void setHttpHeader(Object header) {
+        
+        if( header != null ) {
+            
+        }
+    }
 
     public static String SendMultiPartData(String URL, MultipartEntity postData) throws IOException {
 
@@ -228,7 +252,8 @@ public class MainHttpClient {
                 // NEED THIS NOW TO FIX ERROR 417
                 httpost.getParams().setBooleanParameter("http.protocol.expect-continue", false);
                 httpost.setEntity(postData);
-
+                //Header
+                //httpost.addHeader("Authorization","Basic "+ getCredentials(userName, userPassword));
                 HttpResponse response = httpClient.execute(httpost);
                 Preferences.httpRunning = false;
 
@@ -336,6 +361,38 @@ public class MainHttpClient {
 
         try {
             in = new BufferedInputStream(new URL(address).openStream(), IO_BUFFER_SIZE);
+
+            final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+            out = new BufferedOutputStream(dataStream, 4 * 1024);
+            copy(in, out);
+            out.flush();
+
+            // need to close stream before return statement
+            closeStream(in);
+            closeStream(out);
+
+            return dataStream.toByteArray();
+        } catch (IOException e) {
+            // android.util.Log.e("IO", "Could not load buddy icon: " + this,
+            // e);
+
+        } finally {
+            closeStream(in);
+            closeStream(out);
+
+        }
+        return null;
+
+    }
+    
+    public static byte[] fetchImage2(String address) throws MalformedURLException, IOException {
+        InputStream in = null;
+        OutputStream out = null;
+        HttpResponse response;
+
+        try {
+           response = GetURL(address);
+            in = new BufferedInputStream(response.getEntity().getContent(), IO_BUFFER_SIZE);
 
             final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
             out = new BufferedOutputStream(dataStream, 4 * 1024);

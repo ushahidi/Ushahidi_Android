@@ -69,7 +69,6 @@ public class Util {
 
     private static Matcher matcher;
 
-
     /**
      * joins two strings together
      * 
@@ -335,14 +334,17 @@ public class Util {
      * @return String
      */
     public static String capitalize(String text) {
+        if (text != null) {
+            String[] words = text.split("\\s");
+            String capWord = "";
+            for (String word : words) {
 
-        String[] words = text.split("\\s");
-        String capWord = "";
-        for (String word : words) {
+                capWord += capitalizeString(word) + " ";
 
-            capWord += capitalizeString(word) + " ";
+                return capWord;
+            }
         }
-        return capWord;
+        return "";
     }
 
     /** this criteria will settle for less accuracy, high power, and cost */
@@ -418,5 +420,4 @@ public class Util {
             return false;
         }
     }
-
 }

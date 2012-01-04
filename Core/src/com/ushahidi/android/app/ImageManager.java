@@ -183,7 +183,7 @@ public class ImageManager {
             File f = new File(path, imageFilename.getName());
             if (!f.exists()) {
                 try {
-                    is = MainHttpClient.fetchImage(url);
+                    is = MainHttpClient.fetchImage2(url);
                     if (is != null) {
                         writeImage(is, imageFilename.getName(),path);
                     }
