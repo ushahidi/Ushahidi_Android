@@ -31,14 +31,19 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
+
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -47,19 +52,28 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+
+import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -69,6 +83,7 @@ import com.ushahidi.android.app.checkin.NetworkServices;
 import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.Database;
 import com.ushahidi.android.app.net.MainHttpClient;
+import com.ushahidi.android.app.opengeosms.OpenGeoSMSSender;
 import com.ushahidi.android.app.util.PhotoUtils;
 import com.ushahidi.android.app.util.Util;
 
@@ -161,6 +176,34 @@ public class IncidentAdd extends MapUserLocation {
     private static final String CLASS_TAG = IncidentAdd.class.getSimpleName();
 
     private boolean draft = true;
+	
+    
+    //@inoran
+	private String mTransmission;
+
+	private LinearLayout mTransmissionLinearLayout;
+	
+	private int mCategoryLength;
+
+	private EditText mPhoneNumber;
+
+	protected SMSSendingReceiver SMSSentReceiver;
+
+	private static final int DIALOG_REPORT_PIC_VIA_INTERNET = 7;
+
+	private static final int DIALOG_REPORT_WAY_CHOOSE = 6;
+
+	private static final CharSequence mPhoneNumberText = "";
+
+	private static final int DIALOG_REPORT_OPENGEOSMS_PROGRASS = 8;
+	
+	private static final int DEVICE_ERROR = 133404;
+	
+	private int smsNum;
+
+	public int mCurSMSReceivedNumber = 0;
+	
+	private ProgressDialog sendSMSProgressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -238,7 +281,12 @@ public class IncidentAdd extends MapUserLocation {
      * Initialize UI components
      */
     private void initComponents() {
-        mBtnPicture = (Button)findViewById(R.id.btnPicture);
+        
+    	//@inoran
+    	mPhoneNumber = (EditText)findViewById(R.id.phoneNumber);
+    	mPhoneNumber.setText(Preferences.phonenumber);
+    	
+    	mBtnPicture = (Button)findViewById(R.id.btnPicture);
         mBtnAddCategory = (Button)findViewById(R.id.add_category);
         mBtnSend = (Button)findViewById(R.id.incident_add_btn);
         mPickDate = (Button)findViewById(R.id.pick_date);
@@ -260,26 +308,24 @@ public class IncidentAdd extends MapUserLocation {
 
         mBtnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+            	  
                 // Dipo Fix
                 mError = false;
-                if (TextUtils.isEmpty(mIncidentTitle.getText())) {
-                    mErrorMessage = getString(R.string.empty_report_title);
-                    mError = true;
-                }
-
+                
+                //@inoran
+                if(mIncidentTitle.getText().length() < 3 || mIncidentTitle.getText().length() > 200 ){
+          		  	mErrorMessage = getString(R.string.less_report_title) + "\n";
+                    mError = true;            		  
+          	  	}
+                
                 if (TextUtils.isEmpty(mIncidentDesc.getText())) {
-                    mErrorMessage += getString(R.string.empty_report_description);
-                    mError = true;
-                }
-
-                if (TextUtils.isEmpty(mIncidentLocation.getText())) {
-                    mErrorMessage += getString(R.string.empty_report_location);
+                    mErrorMessage += getString(R.string.empty_report_description)  + "\n";
                     mError = true;
                 }
 
                 // Dipo Fix
                 if (mVectorCategories.size() == 0) {
-                    mErrorMessage += getString(R.string.empty_report_categories);
+                    mErrorMessage += getString(R.string.empty_report_categories) + "\n";
                     mError = true;
                 }
 
@@ -310,9 +356,7 @@ public class IncidentAdd extends MapUserLocation {
                 }
 
                 if (!mError) {
-                    AddReportsTask addReportsTask = new AddReportsTask();
-                    addReportsTask.appContext = IncidentAdd.this;
-                    addReportsTask.execute();
+                	showDialog(DIALOG_REPORT_WAY_CHOOSE);
 
                 } else {
                     Toast.makeText(IncidentAdd.this, "Error!\n\n" + mErrorMessage,
@@ -350,11 +394,22 @@ public class IncidentAdd extends MapUserLocation {
                 showDialog(TIME_DIALOG_ID);
             }
         });
+        
 
         mCalendar = Calendar.getInstance();
         updateDisplay();
     }
+    
 
+    
+    private void addReports(){
+		//if(!mError){
+			AddReportsTask addReportsTask = new AddReportsTask();
+            addReportsTask.appContext = IncidentAdd.this;
+            addReportsTask.execute();                	  					
+			//}
+    }
+    
     // fetch categories
     public String[] showCategories() {
         Cursor cursor = MainApplication.mDb.fetchAllCategories();
@@ -371,8 +426,10 @@ public class IncidentAdd extends MapUserLocation {
         }
 
         String categories[] = new String[categoryAmount];
-
+        mCategoryLength = categories.length;
+        
         int i = 0;
+   
         if (cursor.moveToFirst()) {
             int titleIndex = cursor.getColumnIndexOrThrow(Database.CATEGORY_TITLE);
             int idIndex = cursor.getColumnIndexOrThrow(Database.CATEGORY_ID);
@@ -382,7 +439,7 @@ public class IncidentAdd extends MapUserLocation {
                 // Because the API returns trusted reports and we don't
                 // want it, don't add it to the list of categories.
 
-                categories[i] = cursor.getString(titleIndex);
+                categories[i] = cursor.getString(titleIndex);            	
                 mCategoriesTitle.put(String.valueOf(cursor.getInt(idIndex)),
                         cursor.getString(titleIndex));
                 mCategoriesId.add(String.valueOf(cursor.getInt(idIndex)));
@@ -391,6 +448,7 @@ public class IncidentAdd extends MapUserLocation {
                                 + String.valueOf(cursor.getString(titleIndex) + " Index: "
                                         + String.valueOf(cursor.getInt(idIndex))));
                 i++;
+                
 
             } while (cursor.moveToNext());
         }
@@ -420,11 +478,12 @@ public class IncidentAdd extends MapUserLocation {
             }
         }
         mBtnPicture.setText(getString(R.string.btn_add_photo));
+        mPhoneNumber.setText("");
         mIncidentTitle.setText("");
         mIncidentLocation.setText("");
         mIncidentDesc.setText("");
-        mLatitude.setText("");
-        mLongitude.setText("");
+//        mLatitude.setText("");
+//        mLongitude.setText("");
         mVectorCategories.clear();
         mBtnAddCategory.setText(R.string.incident_add_category);
         mSelectedPhoto.setImageDrawable(null);
@@ -613,6 +672,95 @@ public class IncidentAdd extends MapUserLocation {
             case DATE_DIALOG_ID:
                 return new DatePickerDialog(this, mDateSetListener, mCalendar.get(Calendar.YEAR),
                         mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
+                
+            //@inoran
+            case DIALOG_REPORT_WAY_CHOOSE :{
+            	final CharSequence[] items = { getString(R.string.report_way_internet), getString(R.string.report_way_opengeosms)};
+
+            	return new AlertDialog.Builder(this)            	
+            			.setTitle("Reporting via")
+            	  		.setItems(items, new DialogInterface.OnClickListener() {    
+
+							public void onClick(DialogInterface dialog, int item) {        
+            	  				
+            	  				//reporting via Internet, location can Not be empty
+            	  				if(item == 0){
+            	  	                if (mIncidentLocation.getText().length() < 3) {
+            	  	                	Util.showToast(IncidentAdd.this, R.string.less_report_location);
+            	  	                }else{
+            	  	                	addReports();
+            	  	                }
+
+            	  				}
+            	  				
+            	  				//reporting via Open GeoSMS
+            	  				if(item == 1){   
+            	  					//send with picture
+            	  					if (Preferences.fileName != null){
+            	  	                    mErrorMessage = getString(R.string.not_support_by_opengeosms);
+            	  	                    showDialog(DIALOG_REPORT_PIC_VIA_INTERNET);
+            	  	                }else{
+            	  	                	
+            	  	                	if(!Util.isAirplaneModeOn(IncidentAdd.this))
+            	  	                		sendOpenGeoSMS();
+            	  	                	else            	  	                		
+            	  	                		Util.showToast(IncidentAdd.this, R.string.airplane_mode_on);
+            	  	                }
+            	  				}
+            	  				
+
+            	  			}
+            	  		}).create();
+            	
+            }
+            
+            //@inoran
+            case DIALOG_REPORT_OPENGEOSMS_PROGRASS:{
+	            sendSMSProgressDialog = new ProgressDialog(this);
+	            sendSMSProgressDialog.setTitle(getString(R.string.checkin_progress_title));
+	            sendSMSProgressDialog.setMessage(getString(R.string.sending_report_in_progress));
+	            sendSMSProgressDialog.setCancelable(true);	       
+	            
+	            sendSMSProgressDialog.setButton(getString(R.string.btn_cancel),
+	                    new DialogInterface.OnClickListener() {
+	
+	                        public void onClick(DialogInterface dialog, int which) {
+	                            Util.showToast(IncidentAdd.this, R.string.report_opengeosms_cancelled);
+	                            unregisterReceiver(SMSSentReceiver);
+	                            removeDialog(DIALOG_REPORT_OPENGEOSMS_PROGRASS);
+	                        }
+	
+	                    });
+	            return sendSMSProgressDialog;
+
+            }
+
+            //@inoran
+            case DIALOG_REPORT_PIC_VIA_INTERNET  :{
+                 return new AlertDialog.Builder(this)
+                	.setMessage(mErrorMessage)
+                	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+						
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+
+							//report via Internet with photo
+							addReports();
+						}
+					})
+					
+					.setNegativeButton("No", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							Util.showToast(IncidentAdd.this, R.string.report_opengeosms_without_picture);
+							
+							if(!Util.isAirplaneModeOn(IncidentAdd.this))
+	  	                		sendOpenGeoSMS();
+	  	                	else            	  	                		
+	  	                		Util.showToast(IncidentAdd.this, R.string.airplane_mode_on);
+						}
+					}).create();
+            }
         }
         return null;
     }
@@ -638,7 +786,8 @@ public class IncidentAdd extends MapUserLocation {
                 if (mVectorCategories.size() > 0) {
                     for (String s : mVectorCategories) {
                         try {
-                            list.setItemChecked(Integer.parseInt(s) - 1, true);
+                            //@inoran fix
+                            list.setItemChecked(mCategoryLength - Integer.parseInt(s), true);
                         } catch (NumberFormatException e) {
                             Log.e(CLASS_TAG, "numberFormatException " + s + " " + e.toString());
                         }
@@ -648,6 +797,7 @@ public class IncidentAdd extends MapUserLocation {
                 }
 
                 break;
+                
         }
     }
 
@@ -686,6 +836,7 @@ public class IncidentAdd extends MapUserLocation {
         }
     };
 
+
     /**
      * Insert incident data into db when app is offline.
      * 
@@ -719,6 +870,110 @@ public class IncidentAdd extends MapUserLocation {
         return MainApplication.mDb.addIncidents(addIncidentsData);
 
     }
+    
+    
+    /**
+     * @inoran
+     * Receiving broadcast about Open GeoSMS sending status
+     * 
+     */
+	public class SMSSendingReceiver extends BroadcastReceiver {
+				
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d(CLASS_TAG, "Received SMS SENT broadcast code: " + getResultCode());
+			
+			 switch (getResultCode())
+             {
+			 	 case DEVICE_ERROR:
+			 		 Log.d(CLASS_TAG, "device temporary failure");
+			 		 break;
+                 case Activity.RESULT_OK:
+                	 Log.d(CLASS_TAG, "number of sms received segment: " + mCurSMSReceivedNumber);
+                	 if(++mCurSMSReceivedNumber >= smsNum){
+                		 removeDialog(DIALOG_REPORT_OPENGEOSMS_PROGRASS);
+                		 unregisterReceiver(SMSSentReceiver);
+	                     Util.showToast(getBaseContext(), R.string.report_opengeosms_successfully_sent);
+	                     draft = false;
+	                     clearFields();
+	                     goToReports();
+                	 }
+                     break;                
+                 case SmsManager.RESULT_ERROR_NO_SERVICE:
+                	 removeDialog(DIALOG_REPORT_OPENGEOSMS_PROGRASS);
+                	 unregisterReceiver(SMSSentReceiver);
+                     Util.showToast(getBaseContext(), R.string.report_opengeosms_failure_sent_no_service);
+                     break;
+                 case SmsManager.RESULT_ERROR_RADIO_OFF:
+                	 removeDialog(DIALOG_REPORT_OPENGEOSMS_PROGRASS);
+                	 unregisterReceiver(SMSSentReceiver);
+                     Util.showToast(getBaseContext(), R.string.report_opengeosms_failure_sent_radio_off);
+                     break;
+                 case SmsManager.RESULT_ERROR_GENERIC_FAILURE:    
+                 case SmsManager.RESULT_ERROR_NULL_PDU:    
+                 default:
+                	 removeDialog(DIALOG_REPORT_OPENGEOSMS_PROGRASS);
+                	 unregisterReceiver(SMSSentReceiver);
+                	 Util.showToast(getBaseContext(), R.string.report_opengeosms_failure_sent);
+                	                      
+             }
+		}
+	}
+	
+    
+    /**
+     * @inoran
+     * Send report by Open GeoSMS.
+     * 
+     */
+    public void sendOpenGeoSMS() {
+    	
+        Log.d(CLASS_TAG, "sendOpenGeoSMS(): sending report to server");
+        if (TextUtils.isEmpty(Preferences.domain) || Preferences.domain.equalsIgnoreCase("http://")) {
+        	 Util.showToast(this, R.string.deployment_domain_error);
+        }
+        
+        String categories = Util.implode(mVectorCategories);
+        Log.d(CLASS_TAG, "AM: PM " + categories);
+        
+        StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
+
+        String phoneNumber = mPhoneNumber.getText().toString();
+        String latitude = mLatitude.getText().toString();
+        String longitude = mLongitude.getText().toString();
+        
+        mParams.put("task", "report");
+        mParams.put("incident_title", mIncidentTitle.getText().toString());
+        mParams.put("incident_description", mIncidentDesc.getText().toString());        
+        mParams.put("incident_datetime", mDateToSubmit);        
+        mParams.put("incident_category", categories);
+        mParams.put("location_name", mIncidentLocation.getText().toString());        
+        mParams.put("person_first", Preferences.firstname);
+        mParams.put("person_last", Preferences.lastname);
+        mParams.put("person_email", Preferences.email);
+        
+
+        try {
+        	smsNum = new OpenGeoSMSSender().SendOpenGeoSMS(phoneNumber, urlBuilder.toString(), latitude, longitude, mParams, this);
+          
+        	if(smsNum != 0){
+	            SMSSentReceiver = new SMSSendingReceiver();
+	         	registerReceiver(SMSSentReceiver, new IntentFilter("OPENGEOSMS_SENT"));
+	            //reset
+	         	mCurSMSReceivedNumber = 0;
+	            
+	            showDialog(DIALOG_REPORT_OPENGEOSMS_PROGRASS);            
+	            Log.d(CLASS_TAG, "Waiting for receving Open GeoSMS sending statuses");
+        	}else
+        		Util.showToast(IncidentAdd.this, R.string.report_opengeosms_failure_sent);
+        } catch (IOException e) {
+            Log.d(CLASS_TAG, "sendOpenGeoSMS(): IO exception failed to submit report "
+                    + Preferences.domain);
+            e.printStackTrace();
+        }
+
+    }
+    
 
     /**
      * Post directly to online.
@@ -815,6 +1070,7 @@ public class IncidentAdd extends MapUserLocation {
         final String selectedCategories = getSelectedCategories();
 
         SharedPreferences.Editor editor = getPreferences(0).edit();
+        editor.putString("phonenumber", mPhoneNumber.getText().toString());
         editor.putString("title", mIncidentTitle.getText().toString());
         editor.putString("description", mIncidentDesc.getText().toString());
         editor.putString("location", mIncidentLocation.getText().toString());
@@ -840,6 +1096,17 @@ public class IncidentAdd extends MapUserLocation {
         // get the categories
         showCategories();
         SharedPreferences prefs = getPreferences(0);
+        String phonenumber = prefs.getString("phonenumber", null);
+        //@inoran
+        //phonenubmer exist in SharedPreference
+        if(phonenumber != null){
+        	if(phonenumber.length() != 0)
+        		mPhoneNumber.setText(phonenumber, TextView.BufferType.EDITABLE);
+        	//if phonenumber is empty, retrieving phone number from preference of setting
+        	else{
+            	mPhoneNumber.setText(Preferences.phonenumber);
+            }
+        }
         String title = prefs.getString("title", null);
         if (title != null) {
             mIncidentTitle.setText(title, TextView.BufferType.EDITABLE);
@@ -865,18 +1132,21 @@ public class IncidentAdd extends MapUserLocation {
         }
 
         String categories = prefs.getString("categories", null);
-        if (categories != null) {
-
+        //@inoran fix
+        //if (categories != null) {        
+        if(categories != "" && categories != null){
             String[] splitter = categories.split(",");
+
             // clear any existing categories
             mVectorCategories.clear();
+
             for (String s : splitter) {
                 mVectorCategories.add(s.trim());
 
             }
             this.setSelectedCategories(mVectorCategories);
         }
-
+       
         String photo = prefs.getString("photo", null);
         if (photo != null) {
             Preferences.fileName = photo;
@@ -893,6 +1163,10 @@ public class IncidentAdd extends MapUserLocation {
                 mSelectedPhoto.setImageBitmap(null);
                 mSelectedPhoto.setMinimumHeight(0);
                 mBtnPicture.setText(R.string.btn_add_photo);
+                
+                //@inoran add to fix
+                Preferences.fileName = null;
+                NetworkServices.fileName = null;
             }
         } else {
             Preferences.fileName = null;
@@ -1041,24 +1315,30 @@ public class IncidentAdd extends MapUserLocation {
                     });
             this.progressDialog.show();
         }
-
+        
         @Override
         protected Integer doInBackground(Void... mParams) {
-            if (Util.isConnected(IncidentAdd.this)) {
-                status = postToOnline();
-
-                if (status > 0) {
-                    addToDb();
-                    draft = false;
-                }
-            } else {
-                addToDb();
-                draft = false;
-                status = 14; // no internet connection
-            }
-            return status;
+	        	if (Util.isConnected(IncidentAdd.this)) {
+	                status = postToOnline();
+	
+	                if (status > 0) {
+	                    addToDb();
+	                    draft = false;
+	                }
+	            } else {
+	                addToDb();
+	                draft = false;
+	                status = 14; // no internet connection
+	            }
+           
+           return status;
         }
 
+        /**
+         * Upload files to server 0 - success, 1 - missing parameter, 2 - invalid
+         * parameter, 3 - post failed, 5 - access denied, 6 - access limited, 7 - no
+         * data, 8 - api disabled, 9 - no task found, 10 - json is wrong
+         */
         @Override
         protected void onPostExecute(Integer result) {
             progressDialog.cancel();
