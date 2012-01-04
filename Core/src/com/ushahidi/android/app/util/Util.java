@@ -43,6 +43,7 @@ import android.location.Criteria;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -136,6 +137,15 @@ public class Util {
 
     }
 
+    /*** Gets the state of Airplane Mode.        
+     * * @param context      
+     * * @return true if enabled.      
+     * */     
+    public static boolean isAirplaneModeOn(Context context) {          
+    	return Settings.System.getInt(context.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) != 0;     
+    }
+    
+    
     /**
      * Truncates any given text.
      * 

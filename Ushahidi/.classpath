@@ -8,10 +8,10 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/HttpClient"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/HttpCore"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/HttpMime"/>
-	<classpathentry kind="lib" path="/home/eyedol/Devel/Workspace/Ushahidi_Android/Core/libs/apache-mime4j-core-0.7.jar"/>
-	<classpathentry kind="lib" path="/home/eyedol/Devel/Workspace/Ushahidi_Android/Core/libs/httpclient-4.1.1.jar"/>
-	<classpathentry kind="lib" path="/home/eyedol/Devel/Workspace/Ushahidi_Android/Core/libs/httpcore-4.1.jar"/>
-	<classpathentry kind="lib" path="/home/eyedol/Devel/Workspace/Ushahidi_Android/Core/libs/httpmime-4.1.1.jar"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="D:/Git Code/Ushahidi_Android/Core/libs/apache-mime4j-core-0.7.jar"/>
+	<classpathentry kind="lib" path="D:/Git Code/Ushahidi_Android/Core/libs/httpclient-4.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/Git Code/Ushahidi_Android/Core/libs/httpcore-4.1.jar"/>
+	<classpathentry kind="lib" path="D:/Git Code/Ushahidi_Android/Core/libs/httpmime-4.1.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

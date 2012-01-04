@@ -50,6 +50,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     private EditTextPreference lastNamePref;
 
     private EditTextPreference emailAddressPref;
+    
+	private EditTextPreference phoneNumberPref;
 
     private CheckBoxPreference autoFetchCheckBoxPref;
 
@@ -90,6 +92,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     public static final String USHAHIDI_DEPLOYMENT_PREFERENCE = "ushahidi_instance_preference";
 
     public static final String EMAIL_ADDRESS_PREFERENCE = "email_address_preference";
+    
+    public static final String PHONE_NUMBER_PREFERENCE = "phone_number_preference";
 
     public static final String CHECKIN_PREFERENCE = "checkin_preference";
 
@@ -104,6 +108,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     private String onSdCard = "";
 
     private String minutes = "";
+
+
     
     private static final String CLASS_TAG = Settings.class.getCanonicalName();
 
@@ -118,6 +124,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         lastNamePref = new EditTextPreference(this);
 
         emailAddressPref = new EditTextPreference(this);
+        
+        phoneNumberPref = new EditTextPreference(this);
 
         autoFetchCheckBoxPref = new CheckBoxPreference(this);
         vibrateCheckBoxPref = new CheckBoxPreference(this);
@@ -201,6 +209,14 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         emailAddressPref.setSummary(R.string.hint_email);
         emailAddressPref.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         basicPrefCat.addPreference(emailAddressPref);
+        
+        // phone number entry field
+        phoneNumberPref.setDialogTitle(R.string.txt_phonenumber);
+        phoneNumberPref.setKey("phone_number_preference");
+        phoneNumberPref.setTitle(R.string.txt_phonenumber);
+        phoneNumberPref.setSummary(R.string.hint_phonenumber);
+        phoneNumberPref.getEditText().setInputType(InputType.TYPE_CLASS_PHONE);
+        basicPrefCat.addPreference(phoneNumberPref);
 
         // Photo resize seekbar
         basicPrefCat.addPreference(photoSizePref);
@@ -324,6 +340,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         editor.putString("Firstname", firstNamePref.getText());
         editor.putString("Lastname", lastNamePref.getText());
         editor.putString("Email", emailAddressPref.getText());
+        editor.putString("Phonenumber", phoneNumberPref.getText());
         editor.putString("savePath", newSavePath);
         editor.putInt("AutoUpdateDelay", autoUdateDelay);
         editor.putBoolean("AutoFetch", autoFetchCheckBoxPref.isChecked());
@@ -412,7 +429,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
                 Util.showToast(this, R.string.invalid_email_address);
             }
         }
-
+        
+    
         // save changes
         this.saveSettings();
 

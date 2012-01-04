@@ -64,6 +64,8 @@ public class Preferences {
     public static String username = "";
     public static String password = "";
 
+	public static String phonenumber;
+
     public static void loadSettings(Context context) {
         final SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
 
@@ -88,6 +90,10 @@ public class Preferences {
         appRunsFirstTime = settings.getInt("AppRunsFirstTime", appRunsFirstTime);
         username = settings.getString("username", "");
         password = settings.getString("password","");
+				
+				//@inoran
+        phonenumber = settings.getString("Phonenumber", "");
+        
         // make sure folder exists
         final File dir = new File(Preferences.savePath);
         dir.mkdirs();
