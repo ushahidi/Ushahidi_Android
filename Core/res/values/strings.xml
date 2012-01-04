@@ -289,9 +289,20 @@
 	<string name="less_report_title">The title field must be at least 3 and no more 200 characters long.</string>
 	<string name="less_report_location">The location name must be at least 3 characters.</string>
 	<string name="not_support_by_opengeosms">Open GeoSMS do NOT support sending a photo, do you want to send the report via Internet?</string>
-	 <string name="report_way_internet">Internet</string>
-  <string name="report_way_opengeosms">Open GeoSMS</string>
+	<string name="report_way_internet">Internet</string>
+  	<string name="report_way_opengeosms">Open GeoSMS</string>
 	<string name="incident_transmission">Transmission:</string>
 	<string name="send_way_title">Sending way</string>  
-	<string name="send_way_donotask">Do NOT ask me again next time!! (You can modify it through setting)</string>
+	<!--string name="send_way_donotask">Do NOT ask me again next time!! (You can modify it through setting)</string-->
+	<string name="deployment_domain_error">Please choose deployment first or the domain of deployment is empty</string>
+	<string name="report_opengeosms_successfully_sent">Report successfully sent and entered into a moderation queue</string>
+	<string name="report_opengeosms_cancelled">Cancelled to send report</string>
+	<string name="report_opengeosms_failure_sent">Failed to send report via Open GeoSMS</string>
+	<string name="report_opengeosms_failure_sent_no_service">No service!! Failed to send report via Open GeoSMS</string>
+	<string name="report_opengeosms_failure_sent_radio_off">Radio OFF!! Failed to send report via Open GeoSMS</string>
+	<string name="report_opengeosms_without_picture">This Report would be send without picture</string>
+	<string name="airplane_mode_on">Airplane mode is on!! Please turn it off to send report</string>
+	
+	
+	
 </resources>

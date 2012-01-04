@@ -218,6 +218,13 @@
   <string name="send_way_title">設定傳送方式</string>  
   <string name="send_way_internet">Internet</string>
   <string name="send_way_opengeosms">Open GeoSMS</string>
-  <string name="send_way_donotask">下次不要再問我!!(您可經由設定更改傳送方式)</string>
+  <string name="report_opengeosms_successfully_sent">傳送報告成功, 進入審核階段</string>
+  <string name="report_opengeosms_cancelled">取消傳送報告</string>
+  <string name="report_opengeosms_failure_sent">傳送報告失敗</string>
+  <string name="report_opengeosms_failure_sent_no_service">無服務!!傳送報告失敗</string>
+  <string name="report_opengeosms_failure_sent_radio_off">Radio OFF!!傳送報告失敗</string>
+  <string name="report_opengeosms_without_picture">此份報告傳送將不包含照片</string>
+  <string name="airplane_mode_on">飛航模式開啓!!請關閉以傳送報告</string>
+  
   
 </resources>
