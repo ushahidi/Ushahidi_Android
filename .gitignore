@@ -6,7 +6,6 @@ gen/
 .settings
 .DS_Store
 Ushahidi/libs/
-*/.classpath
 */local.properties
 */secure.properties
 */ushahidi-key.keystore
