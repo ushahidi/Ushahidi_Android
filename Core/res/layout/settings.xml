@@ -93,6 +93,22 @@
         <TextView
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
+          android:text="@string/txt_phonenumber"
+          android:textColor="@color/date_color" />
+        <EditText
+          android:id="@+id/phonenumber"
+          android:hint="@string/hint_phonenumber"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_weight="1" />
+      </LinearLayout>
+      <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
           android:text="@string/txt_countries"
           android:textColor="@color/date_color" />
 
