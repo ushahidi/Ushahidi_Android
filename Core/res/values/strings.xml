@@ -9,7 +9,7 @@
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com. -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-	<string name="app_name">Ushahidi_OpenGeoSMS</string>
+	<string name="app_name">Ushahidi</string>
 	<string name="add_incident">Add Report</string>
 	<string name="view_incident">View Reports</string>
 	<string name="incident_details">Report Detail</string>

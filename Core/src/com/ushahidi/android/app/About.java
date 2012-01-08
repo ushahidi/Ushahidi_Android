@@ -52,7 +52,7 @@ public class About extends Dashboard {
         setTitleFromActivityLabel(R.id.title_text);
         //SEARCH
         ImageButton searchButton = (ImageButton) findViewById(R.id.search_report_btn);
-        if (!TextUtils.isEmpty(getString(R.string.default_deployment))) {
+        if (!TextUtils.isEmpty(getString(R.string.deployment_url))) {
             searchButton.setVisibility(View.GONE);
         }
         else {
