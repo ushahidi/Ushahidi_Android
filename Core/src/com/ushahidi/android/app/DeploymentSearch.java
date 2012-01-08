@@ -461,10 +461,12 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
     public void clearCachedReports() {
 
         // delete unset photo
-        File f = new File(Preferences.fileName);
-        if (f != null) {
-            if (f.exists()) {
-                f.delete();
+        if (Preferences.fileName != null) {
+            File f = new File(Preferences.fileName);
+            if (f != null) {
+                if (f.exists()) {
+                    f.delete();
+                }
             }
         }
         // clear persistent data

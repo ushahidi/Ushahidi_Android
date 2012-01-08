@@ -331,27 +331,27 @@ public class IncidentAdd extends MapUserLocation {
 
                 // validate lat long
                 if (TextUtils.isEmpty(mLatitude.getText().toString())) {
-                    mErrorMessage += getString(R.string.empty_latitude);
+                    mErrorMessage += getString(R.string.empty_latitude) + "\n";
                     mError = true;
                 }
 
                 // validate lat long
                 if (TextUtils.isEmpty(mLongitude.getText().toString())) {
-                    mErrorMessage += getString(R.string.empty_longitude);
+                    mErrorMessage += getString(R.string.empty_longitude) + "\n";
                     mError = true;
                 }
 
                 try {
                     Double.parseDouble(mLatitude.getText().toString());
                 } catch (NumberFormatException ex) {
-                    mErrorMessage += getString(R.string.about_text);
+                    mErrorMessage += getString(R.string.invalid_latitude) + "\n";
                     mError = true;
                 }
 
                 try {
                     Double.parseDouble(mLongitude.getText().toString());
                 } catch (NumberFormatException ex) {
-                    mErrorMessage += getString(R.string.about_text);
+                    mErrorMessage += getString(R.string.invalid_longitude) + "\n";
                     mError = true;
                 }
 
@@ -678,7 +678,7 @@ public class IncidentAdd extends MapUserLocation {
             	final CharSequence[] items = { getString(R.string.report_way_internet), getString(R.string.report_way_opengeosms)};
 
             	return new AlertDialog.Builder(this)            	
-            			.setTitle("Reporting via")
+            			.setTitle(getString(R.string.reporting_via))
             	  		.setItems(items, new DialogInterface.OnClickListener() {    
 
 							public void onClick(DialogInterface dialog, int item) {        

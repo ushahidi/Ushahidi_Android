@@ -308,5 +308,5 @@
 	<string name="report_opengeosms_failure_sent_radio_off">Radio OFF!! Failed to send report via Open GeoSMS</string>
 	<string name="report_opengeosms_without_picture">This Report would be send without picture</string>
 	<string name="airplane_mode_on">Airplane mode is on!! Please turn it off to send report</string>
-
+    <string name="reporting_via">Reporting via</string>
 </resources>
