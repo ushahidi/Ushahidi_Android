@@ -78,9 +78,12 @@ public class NetworkServices {
             entity.addPart("lastname", new StringBody(params.get("lastname")));
             entity.addPart("email", new StringBody(params.get("email")));
 
-            if (!TextUtils.isEmpty(params.get("filename")) || !(params.get("filename").equals(""))) {
-                Log.i("NeworkServices", "Posting file online");
-                entity.addPart("photo", new FileBody(new File(params.get("filename"))));
+            if (params.get("filename") != null) {
+                if (!TextUtils.isEmpty(params.get("filename"))
+                        || !(params.get("filename").equals(""))) {
+                    Log.i("NeworkServices", "Posting file online");
+                    entity.addPart("photo", new FileBody(new File(params.get("filename"))));
+                }
             }
 
             return MainHttpClient.SendMultiPartData(URL, entity);

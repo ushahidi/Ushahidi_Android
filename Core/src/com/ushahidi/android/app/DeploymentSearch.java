@@ -469,6 +469,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
                 }
             }
         }
+        
         // clear persistent data
         SharedPreferences.Editor editor = getPreferences(0).edit();
         editor.putString("title", "");
