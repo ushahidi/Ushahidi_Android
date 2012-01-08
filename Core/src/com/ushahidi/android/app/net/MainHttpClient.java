@@ -66,7 +66,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.util.ApiUtils;
 
@@ -126,7 +125,7 @@ public class MainHttpClient {
         httpParameters.setParameter(HttpProtocolParams.USE_EXPECT_CONTINUE, false);
         HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
         HttpProtocolParams.setContentCharset(httpParameters, "utf8");
-        
+
         // Set the timeout in milliseconds until a connection is established.
         HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
 
@@ -139,7 +138,8 @@ public class MainHttpClient {
         schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
         // https scheme
         try {
-            schemeRegistry.register(new Scheme("https", new TrustedSocketFactory(Preferences.domain, false), 443));
+            schemeRegistry.register(new Scheme("https", new TrustedSocketFactory(
+                    Preferences.domain, false), 443));
         } catch (KeyManagementException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -152,11 +152,11 @@ public class MainHttpClient {
                 schemeRegistry), httpParameters);
 
     }
-    
-    /*private static String getCredentials(String userName, String password){     
-        return HttpBase64.encodeBytes((userName + ":" + password).getBytes());
-    }*/
-  
+
+    /*
+     * private static String getCredentials(String userName, String password){
+     * return HttpBase64.encodeBytes((userName + ":" + password).getBytes()); }
+     */
 
     public static HttpResponse GetURL(String URL) throws IOException {
         Preferences.httpRunning = true;
@@ -230,11 +230,11 @@ public class MainHttpClient {
     public static HttpResponse PostURL(String URL, List<NameValuePair> data) throws IOException {
         return PostURL(URL, data, "");
     }
-    
+
     public static void setHttpHeader(Object header) {
-        
-        if( header != null ) {
-            
+
+        if (header != null) {
+
         }
     }
 
@@ -252,8 +252,9 @@ public class MainHttpClient {
                 // NEED THIS NOW TO FIX ERROR 417
                 httpost.getParams().setBooleanParameter("http.protocol.expect-continue", false);
                 httpost.setEntity(postData);
-                //Header
-                //httpost.addHeader("Authorization","Basic "+ getCredentials(userName, userPassword));
+                // Header
+                // httpost.addHeader("Authorization","Basic "+
+                // getCredentials(userName, userPassword));
                 HttpResponse response = httpClient.execute(httpost);
                 Preferences.httpRunning = false;
 
@@ -314,12 +315,13 @@ public class MainHttpClient {
                         new StringBody(params.get("person_last"), Charset.forName("UTF-8")));
                 entity.addPart("person_email",
                         new StringBody(params.get("person_email"), Charset.forName("UTF-8")));
-
-                if (!TextUtils.isEmpty(params.get("filename"))) {
-                    File file = new File(params.get("filename"));
-                    if (file.exists()) {
-                        entity.addPart("incident_photo[]",
-                                new FileBody(new File(params.get("filename"))));
+                if (params.get("filename") != null) {
+                    if (!TextUtils.isEmpty(params.get("filename"))) {
+                        File file = new File(params.get("filename"));
+                        if (file.exists()) {
+                            entity.addPart("incident_photo[]",
+                                    new FileBody(new File(params.get("filename"))));
+                        }
                     }
                 }
 
@@ -384,14 +386,14 @@ public class MainHttpClient {
         return null;
 
     }
-    
+
     public static byte[] fetchImage2(String address) throws MalformedURLException, IOException {
         InputStream in = null;
         OutputStream out = null;
         HttpResponse response;
 
         try {
-           response = GetURL(address);
+            response = GetURL(address);
             in = new BufferedInputStream(response.getEntity().getContent(), IO_BUFFER_SIZE);
 
             final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();

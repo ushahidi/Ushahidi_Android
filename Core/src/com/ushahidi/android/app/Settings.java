@@ -216,8 +216,14 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         phoneNumberPref.setTitle(R.string.txt_phonenumber);
         phoneNumberPref.setSummary(R.string.hint_phonenumber);
         phoneNumberPref.getEditText().setInputType(InputType.TYPE_CLASS_PHONE);
-        basicPrefCat.addPreference(phoneNumberPref);
-
+        
+        /** 
+         * Commenting out this code so it doesn't prompt users for opengeoSMS
+         * basicPrefCat.addPreference(phoneNumberPref);
+         * TODO:// re-enable this when I'm happy with opengeoSMS integration with 
+         * the Ushahidi platform.
+         */
+       
         // Photo resize seekbar
         basicPrefCat.addPreference(photoSizePref);
 
