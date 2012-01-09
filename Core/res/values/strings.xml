@@ -121,6 +121,7 @@
 		all required fields.</string>
 	<string name="failed_to_add_report_online">Connection failure, cannot submit your report.
         Probably you are on a very slow connection or the server is down or very slow at the moment.</string>
+    <string name="failed_to_add_report_online_db_error">Check your Ushahidi deployment. The API might be down due to a database error.</string>    
 	<string name="empty_report_title">Enter a title for the report.</string>
 	<string name="empty_report_description">Enter a description for the report.</string>
 	<string name="empty_report_location">The location name field is required.</string>

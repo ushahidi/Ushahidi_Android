@@ -975,7 +975,6 @@ public class IncidentAdd extends MapUserLocation {
         String time[] = dates[1].split(":");
 
         String categories = Util.implode(mVectorCategories);
-        Log.d(CLASS_TAG, "AM: PM " + categories);
         StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
         urlBuilder.append("/api");
 
@@ -1349,10 +1348,14 @@ public class IncidentAdd extends MapUserLocation {
 
                 Util.showToast(appContext, R.string.report_successfully_added_online);
                 goToReports();
+            } else if(result == 13){
+                clearFields();
+                draft = false;
+                Util.showToast(appContext, R.string.failed_to_add_report_online);
             } else {
                 clearFields();
                 draft = false;
-                Util.showToast(appContext, R.string.report_successfully_added_offline);
+                Util.showToast(appContext, R.string.failed_to_add_report_online_db_error);
             }
 
         }
