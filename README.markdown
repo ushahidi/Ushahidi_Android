@@ -9,7 +9,7 @@ The app supports loading of multiple deployments at one time, quick filtering th
 For more information visit:
 
 * [About Ushahidi](http://www.ushahidi.com)
-* [Issue Tracker](http://dev.ushahidi.com/projects/roadmap/Ushahidi_Android)
+* [Issue Tracker](https://github.com/ushahidi/Ushahidi_Android/issues)
 * [API Documentation For Ushahidi](http://wiki.ushahidi.com/doku.php?id=ushahidi_api)
 * [Code Repository](http://github.com/ushahidi/Ushahidi_Android)
 * [Release Status](http://dev.ushahidi.com/projects/Ushahidi_Android/news) 
