@@ -319,7 +319,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         String saveItems = saveItemsPref.getValue();
         String totalReports = totalReportsPref.getValue();
         String newSavePath;
-        Log.i(CLASS_TAG, "SeekBar current value: "+ Preferences.photoWidth+" New value: "+photoSizePref.getProgress());
         int autoUdateDelay = 0;
 
         // "5 Minutes", "10 Minutes", "15 Minutes", "c", "60 Minutes"

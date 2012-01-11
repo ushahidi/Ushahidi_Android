@@ -156,7 +156,7 @@ public class ApiUtils {
             // not
             ApiUtils.updateDomain(context);
             strCheckinsJSON = NetworkServices.getCheckins(Preferences.domain, null, null);
-            
+
             if (!TextUtils.isEmpty(strCheckinsJSON) && strCheckinsJSON != null) {
                 RetrieveCheckinsJSONServices checkinsRetrieveCheckinsJSON = new RetrieveCheckinsJSONServices(
                         strCheckinsJSON);
@@ -310,14 +310,11 @@ public class ApiUtils {
                     JSONObject jsonObject = new JSONObject(jsonString);
                     String changedDomain = jsonObject.getJSONObject("payload").getString("domain");
 
-                    if (ApiUtils.validateUshahidiInstance(changedDomain)) {
-                        // changed
-                        if (!changedDomain.equals(Preferences.domain)) {
-                            Preferences.domain = changedDomain;
-                            // save changes
-                            Preferences.saveSettings(context);
-                        }
-                    }
+                    Preferences.domain = changedDomain;
+
+                    // save changes
+                    Preferences.saveSettings(context);
+
                 }
             }
 

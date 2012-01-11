@@ -74,6 +74,7 @@ import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.Database;
 import com.ushahidi.android.app.net.MainHttpClient;
 import com.ushahidi.android.app.opengeosms.OpenGeoSMSSender;
+import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.PhotoUtils;
 import com.ushahidi.android.app.util.Util;
 
@@ -836,7 +837,7 @@ public class IncidentAdd extends MapUserLocation {
 
         String dates[] = mDateToSubmit.split(" ");
         String time[] = dates[1].split(":");
-
+       
         List<AddIncidentData> addIncidentsData = new ArrayList<AddIncidentData>();
         AddIncidentData addIncidentData = new AddIncidentData();
         addIncidentsData.add(addIncidentData);
@@ -967,6 +968,9 @@ public class IncidentAdd extends MapUserLocation {
      */
     public int postToOnline() {
         Log.d(CLASS_TAG, "postToOnline(): posting report to online");
+        //check if domain has changed
+        ApiUtils.updateDomain(this);
+        
         if (TextUtils.isEmpty(Preferences.domain) || Preferences.domain.equalsIgnoreCase("http://")) {
             return 12;
         }

@@ -20,7 +20,6 @@
 
 package com.ushahidi.android.app;
 
-import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -33,8 +32,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 
@@ -205,7 +202,6 @@ public class BackgroundService extends Service {
         }
         
         if (Preferences.flashLed) {
-            int color = Color.BLUE;
             newUshahidiReportNotification.ledARGB = Notification.DEFAULT_LIGHTS;
         }
 
