@@ -41,6 +41,7 @@ import com.ushahidi.android.app.MapUserLocation;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
+import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.PhotoUtils;
 
 public class CheckinActivity extends MapUserLocation {
@@ -545,6 +546,7 @@ public class CheckinActivity extends MapUserLocation {
          * Check if there is internet connection on the device.
          */
         if (com.ushahidi.android.app.util.Util.isConnected(CheckinActivity.this)) {
+            ApiUtils.updateDomain(this);
             String domain = Preferences.domain;
             String firstname = firstName.getText().toString();
             String lastname = lastName.getText().toString();
@@ -560,9 +562,9 @@ public class CheckinActivity extends MapUserLocation {
 
     final Runnable mPostCheckin = new Runnable() {
         public void run() {
-            Log.i(CLASS_TAG, "mPostCheckin: posting checking");
+
             if (jsonResponse != null) {
-                Log.i(CLASS_TAG, "mPostCheckin: jsonResponse is not null");
+
                 jsonServices = new PostCheckinsJSONServices(jsonResponse);
 
                 // JSON Post
