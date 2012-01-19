@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <resources>
-  <string name="app_name">Ushahidi_OpenGeoSMS</string>
+  <string name="app_name">Ushahidi</string>
   <string name="add_incident">
     Ushahidi | 新增事件
   </string>
