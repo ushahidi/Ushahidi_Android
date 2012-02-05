@@ -9,8 +9,8 @@
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.ushahidi.iccm.android.app" android:versionCode="23"
-	android:versionName="v2.9.3">
+	package="com.ushahidi.iccm.android.app" android:versionCode="24"
+	android:versionName="v2.9.4">
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
