@@ -24,6 +24,7 @@ import java.util.HashSet;
 
 import com.ushahidi.android.app.data.Database;
 import com.ushahidi.android.app.net.MainHttpClient;
+import android.util.Log;
 
 import android.app.Application;
 import android.database.Cursor;
@@ -39,6 +40,8 @@ public class MainApplication extends Application {
     public static MainHttpClient mApi;
     
     public static Application app = null;
+    
+    public static boolean LOGGING_MODE = true;
     
     @Override
     public void onCreate() {
@@ -86,5 +89,20 @@ public class MainApplication extends Application {
         cursor.close();
 
         // mImageManager.cleanup(keepers);
+    }
+    
+    protected void log(String message) {
+        if (LOGGING_MODE)
+            Log.i(getClass().getName(), message);
+    }
+
+    protected void log(String format, Object... args) {
+        if (LOGGING_MODE)
+            Log.i(getClass().getName(), String.format(format, args));
+    }
+
+    protected void log(String message, Exception ex) {
+        if (LOGGING_MODE)
+            Log.e(getClass().getName(), message, ex);
     }
 }

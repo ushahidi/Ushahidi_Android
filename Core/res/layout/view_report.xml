@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:id="@+id/view_report"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <!-- Title starts -->
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/report_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:text="@string/report_title"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_even_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:textColor="@color/black_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <!-- Title ends -->
+
+
+            <!-- Status starts -->
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/report_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:text="@string/report_verified"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_even_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:textColor="@color/black_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Status ends -->
+
+
+            <!-- Description starts -->
+
+            <LinearLayout
+                android:id="@+id/report_status_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/report_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:text="@string/report_desc"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_even_row_color"
+                android:orientation="vertical" >
+
+                <!-- Main content area. -->
+
+                <ScrollView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fadingEdge="none"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="5px" >
+
+                    <TextView
+                        android:id="@+id/webview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autoLink="all"
+                        android:fadingEdge="none"
+                        android:singleLine="false"
+                        android:textColor="@color/black_color"
+                        android:textStyle="bold" />
+                </ScrollView>
+            </LinearLayout>
+            <!-- Description ends -->
+
+
+            <!-- Category starts -->
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/report_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:text="@string/report_category"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_even_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:textColor="@color/black_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <!-- Category ends -->
+
+
+            <!-- Date starts -->
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/report_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:text="@string/report_date"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/date_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_even_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <!-- Date ends -->
+
+
+            <!-- Location starts -->
+
+            <LinearLayout
+                android:id="@+id/location_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/report_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:text="@string/report_location"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/location_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_even_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <!-- Location ends -->
+            <!-- Map starts -->
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_even_row_color"
+                android:orientation="vertical"
+                android:paddingBottom="15px"
+                android:paddingLeft="10px"
+                android:paddingRight="10px"
+                android:paddingTop="15px" >
+
+                <com.google.android.maps.MapView
+                    android:id="@+id/loc_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dip"
+                    android:layout_below="@+id/location"
+                    android:apiKey="@string/google_map_api_key"
+                    android:clickable="true"
+                    android:enabled="true" />
+            </LinearLayout>
+            <!-- Map ends -->
+
+
+            <!-- Photo starts -->
+
+            <LinearLayout
+                android:id="@+id/photo_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/report_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:text="@string/report_photo"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingBottom="5px"
+                android:paddingLeft="7px"
+                android:paddingRight="9px" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <Gallery
+                        android:id="@+id/gallery"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@id/description"
+                        android:spacing="0dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <ImageSwitcher
+                        android:id="@+id/switcher"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:paddingBottom="0dp"
+                        android:paddingTop="0dp" />
+                </LinearLayout>
+            </LinearLayout>
+            <!-- Photo ends -->
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

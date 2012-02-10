@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_color"
+    android:padding="5dp"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/search_deployment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/search_hint"
+        android:singleLine="true" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingTop="6dip" >
+
+        <!-- Holds the found deployments -->
+
+        <ListView
+            android:id="@+id/list_map_table"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fadingEdge="none"
+            android:fastScrollEnabled="true"
+            android:scrollbars="vertical"
+            android:scrollingCache="true"
+            android:smoothScrollbar="true" />
+    </LinearLayout>
+    <!-- Here is the view to show if the list is emtpy -->
+
+    <TextView
+        android:id="@+id/empty_list_for_deployments"
+        android:text="@string/no_items" style="@style/TextView.Empty" />
+
+</LinearLayout>

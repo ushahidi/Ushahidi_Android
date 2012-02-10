@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ushahidi.android.app.activities.ListMapActivity;
 import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
@@ -307,7 +308,7 @@ public class Dashboard extends Activity {
 
         searchBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(Dashboard.this, DeploymentSearch.class);
+                Intent intent = new Intent(Dashboard.this, ListMapActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_DEPLOYMENT_SEARCH);
                 setResult(RESULT_OK);
             }

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+    Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
+    This file may be used under the terms of the GNU Lesser General Public License 
+    version 3 as published by the Free Software Foundation and appearing in the 
+    file LICENSE.LGPL included in the packaging of this file. Please review the 
+    following information to ensure the GNU Lesser General Public License version 
+    3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
+    have questions regarding the use of this file, please contact Ushahidi developers 
+    at team@ushahidi.com.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <!-- Parent layout starts -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:padding="10dip" >
+
+            <!-- Title layout begins -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10px" >
+
+                <TextView
+                    android:id="@+id/lbl_title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/incident_title"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/incident_title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoText="true"
+                    android:capitalize="words" />
+            </LinearLayout>
+            <!-- Title layout ends. -->
+
+
+            
+            <!-- Description layout starts -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:paddingBottom="10px" >
+
+                <TextView
+                    android:id="@+id/lbl_incidents_dec"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/incident_description"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/incident_desc"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoText="true"
+                    android:gravity="top"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:lines="5"
+                    android:scrollbars="vertical"
+                    android:singleLine="false" />
+            </LinearLayout>
+            <!-- Description layout ends. -->
+
+            <!-- Categories layout starts -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10px" >
+
+                <TextView
+                    android:id="@+id/lbl_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/incident_category"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/add_category"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/incident_add_category"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <!-- Categories layout ends. -->
+
+            <!-- Date layout starts. -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10px" >
+
+                <TextView
+                    android:id="@+id/lbl_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/incident_datetime"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <Button
+                        android:id="@+id/pick_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/incident_date"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/pick_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/incident_time"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+            <!-- Date layout ends. -->
+
+
+            <!-- Location layout starts. -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10px" >
+
+                <TextView
+                    android:id="@+id/incident_loc"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/incident_location"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+
+                <!-- location name -->
+
+                <EditText
+                    android:id="@+id/incident_location"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoText="true"
+                    android:capitalize="words"
+                    android:hint="@string/hint_location"
+                    android:inputType="textCapWords" />
+
+                <com.google.android.maps.MapView
+                    android:id="@+id/location_map"
+                    android:layout_width="fill_parent"
+                    android:layout_height="250dip"
+                    android:apiKey="@string/google_map_api_key"
+                    android:clickable="true"
+                    android:enabled="true" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="5px" >
+
+                    <EditText
+                        android:id="@+id/incident_latitude"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/incident_latitude"
+                        android:inputType="numberDecimal|numberSigned" />
+
+                    <EditText
+                        android:id="@+id/incident_longitude"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/incident_longitude"
+                        android:inputType="numberDecimal|numberSigned" />
+                </LinearLayout>
+            </LinearLayout>
+            <!-- Location layout ends. -->
+
+
+            <!-- Photo layout starts. -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10px" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/incident_photos"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnPicture"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_add_photo"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/sel_photo_prev"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitCenter" />
+            </LinearLayout>
+            <!-- Photo layout ends. -->
+
+        </LinearLayout>
+        <!-- Parent layout ends. -->
+    </ScrollView>
+
+</LinearLayout>

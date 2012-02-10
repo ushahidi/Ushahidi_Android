@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+    Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
+    This file may be used under the terms of the GNU Lesser General Public License 
+    version 3 as published by the Free Software Foundation and appearing in the 
+    file LICENSE.LGPL included in the packaging of this file. Please review the 
+    following information to ensure the GNU Lesser General Public License version 
+    3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
+    have questions regarding the use of this file, please contact Ushahidi developers 
+    at team@ushahidi.com.
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:id="@+id/view_checking"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <!-- Title starts -->
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/chek_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:text="@string/report_title"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_even_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/checkin_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false" />
+            </LinearLayout>
+            <!-- Title ends -->
+
+
+            <!-- Description starts -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/checkin_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:text="@string/report_desc"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_even_row_color"
+                android:orientation="vertical" >
+
+                <!-- Main content area. -->
+
+                <ScrollView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fadingEdge="none"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="5px" >
+
+                    <TextView
+                        android:id="@+id/checkin_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autoLink="all"
+                        android:fadingEdge="none"
+                        android:paddingBottom="15px"
+                        android:paddingTop="15px"
+                        android:singleLine="false"
+                        android:textColor="@color/black_color" />
+                </ScrollView>
+            </LinearLayout>
+            <!-- Description ends -->
+
+
+            <!-- Date starts -->
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/checkin_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:text="@string/report_date"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/date_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_even_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false" />
+            </LinearLayout>
+            <!-- Date ends -->
+
+
+            <!-- Location starts -->
+
+            <LinearLayout
+                android:id="@+id/location_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/checking_loc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:text="@string/report_location"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Location ends -->
+            <!-- Map starts -->
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_even_row_color"
+                android:orientation="vertical"
+                android:paddingBottom="15px"
+                android:paddingLeft="10px"
+                android:paddingRight="10px"
+                android:paddingTop="15px" >
+
+                <com.google.android.maps.MapView
+                    android:id="@+id/loc_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dip"
+                    android:layout_below="@+id/location"
+                    android:apiKey="@string/google_map_api_key"
+                    android:clickable="true"
+                    android:enabled="true" />
+            </LinearLayout>
+            <!-- Map ends -->
+
+
+            <!-- Photo starts -->
+
+            <LinearLayout
+                android:id="@+id/photo_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/checkin_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="15px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
+                    android:paddingTop="15px"
+                    android:singleLine="false"
+                    android:text="@string/report_photo"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/img_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/table_even_row_color"
+                android:orientation="vertical"
+                android:padding="10px" >
+
+                <ImageView
+                    android:id="@+id/checkin_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:onClick="onImageClick"
+                    android:scaleType="centerCrop" />
+            </LinearLayout>
+            <!-- Photo ends -->
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

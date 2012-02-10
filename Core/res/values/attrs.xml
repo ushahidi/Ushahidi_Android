@@ -21,4 +21,15 @@
 	<declare-styleable name="PhotoGallery">
 		<attr name="android:galleryItemBackground" />
 	</declare-styleable>
+	<declare-styleable name="AppTheme">
+        <attr name="actionbarTitleStyle" format="reference" />
+        <attr name="actionbarItemStyle" format="reference" />
+        <attr name="actionbarItemHomeStyle" format="reference" />
+        <attr name="actionbarProgressIndicatorStyle" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="BezelImageView">
+        <attr name="maskDrawable" format="reference" />
+        <attr name="borderDrawable" format="reference" />
+    </declare-styleable>
 </resources>

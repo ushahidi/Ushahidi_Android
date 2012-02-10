@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+    Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
+    This file may be used under the terms of the GNU Lesser General Public License 
+    version 3 as published by the Free Software Foundation and appearing in the 
+    file LICENSE.LGPL included in the packaging of this file. Please review the 
+    following information to ensure the GNU Lesser General Public License version 
+    3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
+    have questions regarding the use of this file, please contact Ushahidi developers 
+    at team@ushahidi.com.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10px" >
+
+            <!-- checkin message -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10px" >
+
+                <TextView
+                    android:id="@+id/checkin_message_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkin_message"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/checkin_message_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoText="true"
+                    android:gravity="top"
+                    android:hint="@string/checkin_enter_msg_hint"
+                    android:lines="2"
+                    android:singleLine="false" />
+            </LinearLayout>
+
+            <!-- location -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10px" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/report_location"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+
+                <com.google.android.maps.MapView
+                    android:id="@+id/checkin_location_map"
+                    android:layout_width="fill_parent"
+                    android:layout_height="250dip"
+                    android:layout_below="@+id/checkin_location"
+                    android:apiKey="@string/google_map_api_key"
+                    android:clickable="true"
+                    android:enabled="true" />
+
+                <TextView
+                    android:id="@+id/latlon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="20px"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- selected photo -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10px" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkin_photo"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/checkin_photo_button"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_add_photo"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/checkin_photo_preview"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:paddingBottom="5px"
+                    android:scaleType="centerCrop" />
+            </LinearLayout>
+
+            <!-- contact -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10px" >
+
+                <TextView
+                    android:id="@+id/checkin_contact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkin_contact"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/checkin_lbl_firstname"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/txt_first_name"
+                    android:textColor="@color/date_color" />
+
+                <EditText
+                    android:id="@+id/checkin_firstname"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/checkin_enter_firstname_hint"
+                    android:inputType="textPersonName|textCapWords" />
+
+                <TextView
+                    android:id="@+id/checkin_lbl_lastname"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/txt_last_name"
+                    android:textColor="@color/date_color" />
+
+                <EditText
+                    android:id="@+id/checkin_lastname"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/checkin_enter_lastname_hint"
+                    android:inputType="textPersonName|textCapWords" />
+
+                <TextView
+                    android:id="@+id/txt_lbl_email"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/txt_email"
+                    android:textColor="@color/date_color" />
+
+                <EditText
+                    android:id="@+id/checkin_email"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/checkin_enter_email_hint"
+                    android:inputType="textEmailAddress" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

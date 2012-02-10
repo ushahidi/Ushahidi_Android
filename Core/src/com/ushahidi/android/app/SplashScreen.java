@@ -20,6 +20,8 @@
 
 package com.ushahidi.android.app;
 
+import com.ushahidi.android.app.activities.ListMapActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -55,7 +57,7 @@ public class SplashScreen extends Activity {
                 } catch (InterruptedException e) {
                     // do nothing
                 } finally {
-                    startActivity(new Intent(SplashScreen.this, Dashboard.class));
+                    startActivity(new Intent(SplashScreen.this, ListMapActivity.class));
                     finish();
                 }
             }
