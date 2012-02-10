@@ -20,7 +20,7 @@
         android:title="@string/menu_refresh"/>
     <item
         android:id="@+id/menu_add"
-        android:icon="@drawable/menu_add"
+        android:icon="@drawable/button_add"
         android:orderInCategory="1"
         android:showAsAction="always"
         android:title="@string/add_report"/>

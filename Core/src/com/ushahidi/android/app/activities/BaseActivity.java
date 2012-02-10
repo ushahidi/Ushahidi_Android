@@ -24,6 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActionBar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
@@ -65,14 +66,16 @@ public abstract class BaseActivity<V extends View> extends FragmentActivity {
      * View
      */
     protected V view;
-
+    
+    protected ActionBar actionBar;
+    
     /**
      * BaseActivity
      * 
      * @param view View class
      * @param layout layout resource id
      * @param menu menu resource id
-     */
+     */ 
     protected BaseActivity(Class<V> view, int layout, int menu) {
         this.viewClass = view;
         this.layout = layout;
@@ -83,10 +86,13 @@ public abstract class BaseActivity<V extends View> extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         log("onCreate");
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         
         if (layout != 0) {
             setContentView(layout);
         }
+        
         view = createInstance(viewClass, FragmentActivity.class, this);
     }
    
@@ -148,8 +154,7 @@ public abstract class BaseActivity<V extends View> extends FragmentActivity {
             return true;
         }
         return false;
-    }
-     
+    } 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

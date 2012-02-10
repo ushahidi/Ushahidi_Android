@@ -35,7 +35,6 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
-import android.support.v4.view.Window;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -55,7 +54,6 @@ import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.net.Deployments;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.util.ApiUtils;
-import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ListMapView;
 
 /**
@@ -74,9 +72,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
     private static final int DIALOG_ADD_DEPLOYMENT = 2;
 
-    private boolean refreshState = false;
-
-    private boolean checkin = false;
+    private MenuItem refresh;
 
     // Context menu items
     private static final int DELETE = Menu.FIRST + 1;
@@ -88,8 +84,6 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     private static Location location;
 
     private String distance = "";
-
-    // private static final String TAG = DeploymentSearch.class.getSimpleName();
 
     private Handler mHandler;
 
@@ -109,9 +103,8 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        promptForDeployment();
 
+        promptForDeployment();
         listMapView = new ListMapView(this);
         mListMap = new ArrayList<ListMapModel>();
         listMapView.mTextView.addTextChangedListener(new TextWatcher() {
@@ -198,14 +191,15 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
         if (item.getItemId() == R.id.clear_map) {
             createDialog(DIALOG_CLEAR_DEPLOYMENT);
             return true;
-        } else if( item.getItemId() == R.id.menu_refresh) {
+        } else if (item.getItemId() == R.id.menu_refresh) {
+            refresh = item;
             createDialog(DIALOG_DISTANCE);
             return true;
-        } else if( item.getItemId() == R.id.menu_add) {
+        } else if (item.getItemId() == R.id.menu_add) {
             createDialog(DIALOG_ADD_DEPLOYMENT);
             return true;
-        }else {
-            
+        } else {
+
             return super.onOptionsItemSelected(item);
         }
 
@@ -274,7 +268,9 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
                 builder.setTitle(R.string.select_distance);
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
+
                         distance = items[item];
+
                         setDeviceLocation();
                     }
                 });
@@ -364,17 +360,6 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     }
 
     /**
-     * Do something when the refresh icon is pressed
-     */
-    public void onRefreshReports() {
-        createDialog(DIALOG_DISTANCE);
-    }
-
-    public void onAddDeployment(View v) {
-        createDialog(DIALOG_ADD_DEPLOYMENT);
-    }
-
-    /**
      * Load Map details from the local database
      */
     class LoadMapTask extends ProgressTask {
@@ -391,15 +376,22 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
         public LoadMapTask(FragmentActivity activity) {
             super(activity, R.string.loading_);
-            refreshState = true;
+            // switch to a progress animation
+            refresh.setActionView(R.layout.indeterminate_progress_action);
             deployments = new Deployments(appContext);
+        }
+        
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.cancel();
         }
 
         @Override
         protected Boolean doInBackground(String... strings) {
             try {
                 status = deployments.fetchDeployments(distance, location);
-               
+
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
 
@@ -408,18 +400,18 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
             return status;
         }
 
-       /* @Override
+        @Override
         protected void onPostExecute(Boolean result) {
             if (!status) {
                 toastShort(R.string.could_not_fetch_data);
             } else {
-                toastShort(R.string.deployment_fetched_successful);
 
-            }
-            //TODO refresh list
-            // showResults("");
-            refreshState = false;
-        }*/
+                toastShort(R.string.deployment_fetched_successful);
+            } // TODO refresh
+            refresh.setActionView(null);
+          
+        }
+
     }
 
     /**
@@ -445,16 +437,6 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
     @Override
     protected void onLoaded(boolean success) {
-        
-        if (!success) {
-            toastShort(R.string.could_not_fetch_data);
-        } else {
-            toastShort(R.string.deployment_fetched_successful);
-
-        }
-        //TODO refresh list
-        // showResults("");
-        refreshState = false;
 
     }
 
