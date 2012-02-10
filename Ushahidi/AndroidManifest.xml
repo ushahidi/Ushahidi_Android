@@ -200,6 +200,14 @@
 		
 		<!-- New Fragment Activities -->
 		
+		<!-- About -->
+        <activity android:name=".activities.AboutActivity" android:label="@string/ushahidi_about">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+		
 		<!-- Add a new report -->
         <activity
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"

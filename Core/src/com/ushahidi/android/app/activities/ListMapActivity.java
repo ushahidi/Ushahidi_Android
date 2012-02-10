@@ -27,6 +27,7 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -49,6 +50,7 @@ import android.widget.EditText;
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.net.Deployments;
@@ -104,7 +106,6 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        promptForDeployment();
         listMapView = new ListMapView(this);
         mListMap = new ArrayList<ListMapModel>();
         listMapView.mTextView.addTextChangedListener(new TextWatcher() {
@@ -198,6 +199,14 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
         } else if (item.getItemId() == R.id.menu_add) {
             createDialog(DIALOG_ADD_DEPLOYMENT);
             return true;
+        }else if(item.getItemId() == R.id.app_settings) {
+            startActivity(new Intent(this,Settings.class));
+            setResult(RESULT_OK);
+            return true;
+        } else if (item.getItemId() == R.id.app_about) {
+            startActivity(new Intent(this,AboutActivity.class));
+            setResult(RESULT_OK);
+            return true;
         } else {
 
             return super.onOptionsItemSelected(item);
@@ -216,16 +225,6 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
             reportsTask.execute();
         }
 
-    }
-
-    /**
-     * Show a toast that the user has to search for a deployment
-     */
-    public void promptForDeployment() {
-
-        if (Preferences.domain.length() == 0 || Preferences.domain.equals("http://")) {
-            toastLong(getString(R.string.deployment_search));
-        }
     }
 
     /**
@@ -380,7 +379,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
             refresh.setActionView(R.layout.indeterminate_progress_action);
             deployments = new Deployments(appContext);
         }
-        
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -409,7 +408,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
                 toastShort(R.string.deployment_fetched_successful);
             } // TODO refresh
             refresh.setActionView(null);
-          
+
         }
 
     }
