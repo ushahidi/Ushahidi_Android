@@ -39,7 +39,6 @@ import android.support.v4.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -363,7 +362,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     }
 
     /**
-     * Load Map details from the local database
+     * Load Map details from the web
      */
     class LoadMapTask extends ProgressTask {
 
@@ -418,7 +417,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     }
 
     /**
-     * Load map details from the web
+     * Load map details from the database
      */
     class FetchMapTask extends ProgressTask {
 
@@ -456,6 +455,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
     @Override
     protected void onLoaded(boolean success) {
+        
         listMapView.mListView.setAdapter(listMapAdapter);
         listMapView.mProgressBar.setVisibility(View.GONE);
         listMapView.displayEmptyListText();
