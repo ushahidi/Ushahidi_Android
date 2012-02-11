@@ -146,18 +146,18 @@ public class ListMapModel extends Model {
                 int deploymentUrlIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_URL);
 
                 do {
+
                     ListMapModel listMapModel = new ListMapModel();
-                    
+
                     listMapModel.setId(cursor.getString(deploymentIdIndex));
                     listMapModel.setName(cursor.getString(deploymentNameIndex));
                     listMapModel.setDesc(cursor.getString(deploymentDescIndex));
                     listMapModel.setUrl(cursor.getString(deploymentUrlIndex));
-                    mMaps.add(listMapModel);    
-                    //mListMapAdapter.setItems(mMaps);
-                    
+                    mMaps.add(listMapModel);
+
                 } while (cursor.moveToNext());
             }
-            
+
             cursor.close();
             return true;
         }
@@ -209,16 +209,15 @@ public class ListMapModel extends Model {
         // TODO Auto-generated method stub
         return false;
     }
-    
+
     /**
      * Delete a map by it's id
      * 
      * @param id - The ID of the map to be deleted
-     * 
      * @return boolean
      */
     public boolean deleteMapById(int id) {
-       
+
         return MainApplication.mDb.deleteDeploymentById(String.valueOf(id));
     }
 

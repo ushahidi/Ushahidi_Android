@@ -59,7 +59,6 @@ public class ListMapView extends  com.ushahidi.android.app.views.View {
         } else {
             mEmptyList.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
-            Log.i("ListMapModel", "Total " + mListView.getCount());
         }
         
     }

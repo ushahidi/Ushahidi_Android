@@ -456,7 +456,6 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
     @Override
     protected void onLoaded(boolean success) {
-        Log.i("ListMapModel", "Total List size map activity: "+listMapAdapter.getCount());
         listMapView.mListView.setAdapter(listMapAdapter);
         listMapView.mProgressBar.setVisibility(View.GONE);
         listMapView.displayEmptyListText();
