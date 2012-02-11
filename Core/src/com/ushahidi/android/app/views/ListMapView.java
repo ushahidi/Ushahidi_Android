@@ -21,7 +21,10 @@
 package com.ushahidi.android.app.views;
 
 import android.support.v4.app.FragmentActivity;
-import android.widget.ImageView;
+import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
@@ -29,29 +32,40 @@ import com.ushahidi.android.app.R;
 /**
  * ExampleListView All the widgets for /res/layout/example_list.xml
  */
-public class ListMapView extends View {
-    public TextView mapName;
-
-    public TextView mapDesc;
-
-    public TextView mapUrl;
-
-    public TextView mapId;
-
-    public ImageView arrow;
-
+public class ListMapView extends  com.ushahidi.android.app.views.View {
+    
     public TextView mTextView;
+
+    public TextView mEmptyList;
+    
+    public ListView mListView;
+    
+    public ProgressBar mProgressBar;
 
     public ListMapView(FragmentActivity activity) {
         super(activity);
         
-        mapName = (TextView)activity.findViewById(R.id.deployment_list_name);
-        mapDesc = (TextView)activity.findViewById(R.id.deployment_list_desc);
-        mapUrl = (TextView)activity.findViewById(R.id.deployment_list_url);
-        mapId = (TextView)activity.findViewById(R.id.deployment_list_id);
-        arrow = (ImageView)activity.findViewById(R.id.deployment_arrow);
-        mTextView = (TextView)activity.findViewById(R.id.search_deployment);
+        mTextView = (TextView)activity.findViewById(R.id.search_map);
+        mEmptyList = (TextView)activity.findViewById(R.id.empty_list_for_maps);
+        mListView = (ListView)activity.findViewById(R.id.list_map_table);
+        mProgressBar = (ProgressBar)activity.findViewById(R.id.map_refresh_progress);
+    }
+    
+    public void displayEmptyListText() {
 
+        if (mListView.getCount() == 0) {
+            mEmptyList.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.GONE);
+        } else {
+            mEmptyList.setVisibility(View.GONE);
+            mListView.setVisibility(View.VISIBLE);
+            Log.i("ListMapModel", "Total " + mListView.getCount());
+        }
+        
+    }
+    
+    public void displayProgressBar() {
+        
     }
 
 }

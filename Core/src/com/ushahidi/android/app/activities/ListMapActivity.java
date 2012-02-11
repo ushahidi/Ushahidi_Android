@@ -39,6 +39,7 @@ import android.support.v4.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -95,6 +96,8 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
     private List<ListMapModel> mListMap;
 
+    private ListMapAdapter listMapAdapter;
+
     public ListMapActivity() {
         super(ListMapView.class, ListMapAdapter.class, R.layout.list_map, R.menu.list_map,
                 R.id.list_map_table);
@@ -108,6 +111,8 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
         listMapView = new ListMapView(this);
         mListMap = new ArrayList<ListMapModel>();
+        listMapAdapter = new ListMapAdapter(this);
+        new FetchMapTask(this).execute((String)null);
         listMapView.mTextView.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable arg0) {
@@ -149,7 +154,6 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     final Runnable mDeleteMapById = new Runnable() {
         public void run() {
             boolean result = false;
-
             result = new ListMapModel().deleteMapById(mMapId);
 
             try {
@@ -199,12 +203,12 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
         } else if (item.getItemId() == R.id.menu_add) {
             createDialog(DIALOG_ADD_DEPLOYMENT);
             return true;
-        }else if(item.getItemId() == R.id.app_settings) {
-            startActivity(new Intent(this,Settings.class));
+        } else if (item.getItemId() == R.id.app_settings) {
+            startActivity(new Intent(this, Settings.class));
             setResult(RESULT_OK);
             return true;
         } else if (item.getItemId() == R.id.app_about) {
-            startActivity(new Intent(this,AboutActivity.class));
+            startActivity(new Intent(this, AboutActivity.class));
             setResult(RESULT_OK);
             return true;
         } else {
@@ -408,7 +412,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
                 toastShort(R.string.deployment_fetched_successful);
             } // TODO refresh
             refresh.setActionView(null);
-
+            listMapView.displayEmptyListText();
         }
 
     }
@@ -424,19 +428,38 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            listMapView.mProgressBar.setVisibility(View.VISIBLE);
+            listMapView.mEmptyList.setVisibility(View.GONE);
+            dialog.cancel();
+        }
+
+        @Override
         protected Boolean doInBackground(String... strings) {
             try {
+                listMapAdapter.refresh(ListMapActivity.this);
+
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             return true;
         }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+            onLoaded(success);
+        }
     }
 
     @Override
     protected void onLoaded(boolean success) {
-
+        Log.i("ListMapModel", "Total List size map activity: "+listMapAdapter.getCount());
+        listMapView.mListView.setAdapter(listMapAdapter);
+        listMapView.mProgressBar.setVisibility(View.GONE);
+        listMapView.displayEmptyListText();
     }
 
     /** Location stuff **/

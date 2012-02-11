@@ -26,7 +26,6 @@ import java.util.List;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
@@ -39,9 +38,9 @@ import com.ushahidi.android.app.util.Util;
  */
 public class ListMapModel extends Model {
 
-    private ListMapAdapter mListMapAdapter;
+    public ListMapAdapter mListMapAdapter;
 
-    private List<ListMapModel> mMaps = new ArrayList<ListMapModel>();
+    public List<ListMapModel> mMaps = new ArrayList<ListMapModel>();
 
     private String id;
 
@@ -147,19 +146,19 @@ public class ListMapModel extends Model {
                 int deploymentUrlIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_URL);
 
                 do {
-                    mMaps.add(this);
-                    this.setId(cursor.getString(deploymentIdIndex));
-                    this.setName(cursor.getString(deploymentNameIndex));
-                    this.setDesc(cursor.getString(deploymentDescIndex));
-                    this.setUrl(cursor.getString(deploymentUrlIndex));
-
-                    mListMapAdapter.setItems(mMaps);
-
+                    ListMapModel listMapModel = new ListMapModel();
+                    
+                    listMapModel.setId(cursor.getString(deploymentIdIndex));
+                    listMapModel.setName(cursor.getString(deploymentNameIndex));
+                    listMapModel.setDesc(cursor.getString(deploymentDescIndex));
+                    listMapModel.setUrl(cursor.getString(deploymentUrlIndex));
+                    mMaps.add(listMapModel);    
+                    //mListMapAdapter.setItems(mMaps);
+                    
                 } while (cursor.moveToNext());
             }
             
             cursor.close();
-
             return true;
         }
         return false;

@@ -3,11 +3,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/background_color"
-    android:padding="5dp"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="5dp" >
 
     <EditText
-        android:id="@+id/search_deployment"
+        android:id="@+id/search_map"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/search_hint"
@@ -35,7 +35,14 @@
     <!-- Here is the view to show if the list is emtpy -->
 
     <TextView
-        android:id="@+id/empty_list_for_deployments"
-        android:text="@string/no_items" style="@style/TextView.Empty" />
+        android:id="@+id/empty_list_for_maps"
+        style="@style/TextView.Empty"
+        android:text="@string/no_items" />
+    <!-- progress bar -->
+
+    <ProgressBar
+        android:id="@+id/map_refresh_progress"
+        style="@style/ListBarProgressIndicator"
+        android:visibility="gone" />
 
 </LinearLayout>

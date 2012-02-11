@@ -105,7 +105,7 @@ public abstract class BaseListActivity<V extends View, M extends Model, L extend
     @Override
     protected void onResume() {
         super.onResume();
-        new LoadingTask(this).execute((String)null);
+        //new LoadingTask(this).execute((String)null);
     }
 
     @SuppressWarnings("unchecked")
