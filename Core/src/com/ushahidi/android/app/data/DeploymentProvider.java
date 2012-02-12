@@ -26,8 +26,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-import com.ushahidi.android.app.MainApplication;
-
 /**
  * Provides search suggestions for a list of deployments and their details.
  */
@@ -125,32 +123,32 @@ public class DeploymentProvider extends ContentProvider {
     private Cursor getSuggestions(String query) {
         query = query.toLowerCase();
         String[] columns = new String[] {
-                BaseColumns._ID, Database.DEPLOYMENT_NAME, Database.DEPLOYMENT_DESC,
-                Database.DEPLOYMENT_URL, SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
+                BaseColumns._ID, MapDb.DEPLOYMENT_NAME, MapDb.DEPLOYMENT_DESC,
+                MapDb.DEPLOYMENT_URL, SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
 
         };
 
-        return MainApplication.mDb.getDeploymentMatches(query, columns);
+        return Database.map.getDeploymentMatches(query, columns);
     }
 
     private Cursor search(String query) {
         query = query.toLowerCase();
         String[] columns = new String[] {
-                BaseColumns._ID, Database.DEPLOYMENT_NAME, Database.DEPLOYMENT_DESC,
-                Database.DEPLOYMENT_URL
+                BaseColumns._ID, MapDb.DEPLOYMENT_NAME, MapDb.DEPLOYMENT_DESC,
+                MapDb.DEPLOYMENT_URL
         };
         Log.d("Search Query", "Query: " + query);
-        return MainApplication.mDb.getDeploymentMatches(query, columns);
+        return Database.map.getDeploymentMatches(query, columns);
     }
 
     private Cursor getDeployment(Uri uri) {
         String rowId = uri.getLastPathSegment();
 
         String[] columns = new String[] {
-                Database.DEPLOYMENT_NAME, Database.DEPLOYMENT_DESC, Database.DEPLOYMENT_URL
+                MapDb.DEPLOYMENT_NAME, MapDb.DEPLOYMENT_DESC, MapDb.DEPLOYMENT_URL
         };
 
-        return MainApplication.mDb.getDeployment(rowId, columns);
+        return Database.map.getDeployment(rowId, columns);
     }
 
     private Cursor refreshShortcut(Uri uri) {
@@ -165,12 +163,12 @@ public class DeploymentProvider extends ContentProvider {
          */
         String rowId = uri.getLastPathSegment();
         String[] columns = new String[] {
-                Database.DEPLOYMENT_NAME, Database.DEPLOYMENT_DESC, Database.DEPLOYMENT_URL,
+                MapDb.DEPLOYMENT_NAME, MapDb.DEPLOYMENT_DESC, MapDb.DEPLOYMENT_URL,
                 SearchManager.SUGGEST_COLUMN_SHORTCUT_ID,
                 SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
         };
 
-        return MainApplication.mDb.getDeployment(rowId, columns);
+        return Database.map.getDeployment(rowId, columns);
     }
 
     /**

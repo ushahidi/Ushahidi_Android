@@ -283,6 +283,15 @@
                 <action android:name="org.addhen.ushahidi.NEW" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            
+            <!-- Receives the search request. -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <!-- Points to searchable meta data. -->
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
         
         <!-- report tab -->
@@ -342,7 +351,7 @@
 
 		<!-- Provides search suggestions for deployments. -->
 		<provider android:name=".data.DeploymentProvider"
-			android:authorities="com.ushahidi.android.app.deploymentprovider"
+			android:authorities="com.ushahidi.android.app.data.deploymentprovider"
 			android:syncable="false" />
 	</application>
 

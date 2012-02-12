@@ -21,7 +21,6 @@
 package com.ushahidi.android.app.views;
 
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -60,10 +59,6 @@ public class ListMapView extends  com.ushahidi.android.app.views.View {
             mEmptyList.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
         }
-        
-    }
-    
-    public void displayProgressBar() {
         
     }
 

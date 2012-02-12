@@ -2,7 +2,7 @@
 package com.ushahidi.android.app.adapters;
 
 import android.content.Context;
-import android.util.Log;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,7 +15,8 @@ import com.ushahidi.android.app.models.ListMapModel;
 public class ListMapAdapter extends BaseListAdapter<ListMapModel> {
 
     private int[] colors;
-
+    
+    private ListMapModel listMapModel;
     public ListMapAdapter(Context context) {
         super(context);
 
@@ -26,10 +27,15 @@ public class ListMapAdapter extends BaseListAdapter<ListMapModel> {
 
     @Override
     public void refresh(Context context) {
-        final ListMapModel listMapModel = new ListMapModel();
+        listMapModel = new ListMapModel();
         listMapModel.load(context);
         this.setItems(listMapModel.mMaps);
-
+    }
+    
+    public void refresh(FragmentActivity activity, String query) {
+        listMapModel = new ListMapModel();
+        listMapModel.filter(activity, query);
+        this.setItems(listMapModel.mMaps);
     }
 
     public View getView(int position, View view, ViewGroup viewGroup) {
@@ -47,7 +53,6 @@ public class ListMapAdapter extends BaseListAdapter<ListMapModel> {
         }
 
         // initialize view with content
-        Log.i("ListMapModel", "Total name " + getItem(position).getName());
         widgets.mapName.setText(getItem(position).getName());
         widgets.mapDesc.setText(getItem(position).getDesc());
         widgets.mapUrl.setText(getItem(position).getUrl());

@@ -38,9 +38,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ushahidi.android.app.data.Database;
 import com.ushahidi.android.app.data.DeploymentProvider;
 import com.ushahidi.android.app.data.DeploymentsData;
-import com.ushahidi.android.app.data.Database;
+import com.ushahidi.android.app.data.MapDb;
 import com.ushahidi.android.app.net.Deployments;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
@@ -169,7 +170,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
         public void run() {
             boolean result = false;
 
-            result = MainApplication.mDb.deleteDeploymentById(String.valueOf(deploymentId));
+            result = Database.map.deleteDeploymentById(String.valueOf(deploymentId));
 
             try {
                 if (result) {
@@ -252,7 +253,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
         if (mListView.getCount() == 0) {
             Util.showToast(this, R.string.no_items_cleared);
         } else {
-            MainApplication.mDb.deleteAllDeployment();
+            Database.map.deleteAllDeployment();
             MainApplication.mDb.clearData();
             deploymentAdapter.removeItems();
             deploymentAdapter.notifyDataSetChanged();
@@ -278,7 +279,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
         Cursor cursor = null;
         Log.i("DeploymentSearch", "String:3  " + query);
         if (TextUtils.isEmpty(query)) {
-            cursor = MainApplication.mDb.fetchAllDeployments();
+            cursor = Database.map.fetchAllDeployments();
         } else {
             Log.i("DeploymentSearch", "String:2  " + query);
             try {
@@ -299,10 +300,12 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
         if (cursor != null) {
             Log.i("DeploymentSearch", "String: " + query);
             if (cursor.moveToFirst()) {
+                
                 int deploymentIdIndex = cursor.getColumnIndexOrThrow(BaseColumns._ID);
-                int deploymentNameIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_NAME);
-                int deploymentDescIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_DESC);
-                int deploymentUrlIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_URL);
+                int deploymentNameIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_NAME);
+                int deploymentDescIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_DESC);
+                int deploymentUrlIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_URL);
+                
                 if (deploymentAdapter != null) {
                     deploymentAdapter.removeItems();
                     deploymentAdapter.notifyDataSetChanged();
@@ -409,9 +412,10 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
                                 if ((ApiUtils.validateUshahidiInstance(deploymentUrl.getText()
                                         .toString()))
                                         && !(TextUtils.isEmpty(deploymentName.getText().toString()))) {
-                                    MainApplication.mDb.addDeployment(deploymentName.getText()
+                                    Database.map.addMap(deploymentName.getText()
+                                            .toString(),deploymentName.getText()
                                             .toString(), deploymentUrl.getText().toString());
-                                    showResults("");
+                                    
                                 } else {
                                     Util.showToast(DeploymentSearch.this, R.string.fix_error);
                                 }
@@ -491,15 +495,15 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
     public void activateDeployment(String id) {
 
         final Cursor cursor;
-        cursor = MainApplication.mDb.fetchDeploymentById(id);
+        cursor = Database.map.fetchDeploymentById(id);
         String url = "";
         String latitude;
         String longitude;
         if (cursor != null) {
             if (cursor.moveToFirst()) {
-                int urlIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_URL);
-                int latitudeIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_LATITUDE);
-                int longitudeIndex = cursor.getColumnIndexOrThrow(Database.DEPLOYMENT_LONGITUDE);
+                int urlIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_URL);
+                int latitudeIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_LATITUDE);
+                int longitudeIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_LONGITUDE);
 
                 do {
                     url = cursor.getString(urlIndex);
@@ -564,6 +568,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
             refreshState = true;
             updateRefreshStatus();
             deployments = new Deployments(appContext);
+           
         }
 
         @Override

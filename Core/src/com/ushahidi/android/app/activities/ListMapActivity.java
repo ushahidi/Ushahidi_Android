@@ -20,7 +20,6 @@
 
 package com.ushahidi.android.app.activities;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,23 +38,22 @@ import android.support.v4.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
-import android.widget.EditText;
 
-import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
 import com.ushahidi.android.app.models.ListMapModel;
-import com.ushahidi.android.app.net.Deployments;
+import com.ushahidi.android.app.net.Maps;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.util.ApiUtils;
+import com.ushahidi.android.app.views.AddMapView;
 import com.ushahidi.android.app.views.ListMapView;
 
 /**
@@ -77,9 +75,9 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     private MenuItem refresh;
 
     // Context menu items
-    private static final int DELETE = Menu.FIRST + 1;
+    private static final int EDIT = Menu.FIRST + 1;
 
-    // private static final int EDIT = Menu.FIRST + 2;
+    private static final int DELETE = Menu.FIRST + 2;
 
     private LocationManager mLocationMgr = null;
 
@@ -93,9 +91,13 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
     private int mMapId = 0;
 
-    private List<ListMapModel> mListMap;
-
     private ListMapAdapter listMapAdapter;
+
+    private ListMapModel listMapModel;
+
+    private boolean edit = true;
+    
+    private String filter;
 
     public ListMapActivity() {
         super(ListMapView.class, ListMapAdapter.class, R.layout.list_map, R.menu.list_map,
@@ -109,9 +111,9 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
         super.onCreate(savedInstanceState);
 
         listMapView = new ListMapView(this);
-        mListMap = new ArrayList<ListMapModel>();
         listMapAdapter = new ListMapAdapter(this);
-        new FetchMapTask(this).execute((String)null);
+        listMapModel = new ListMapModel();
+
         listMapView.mTextView.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable arg0) {
@@ -124,7 +126,14 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // showResults(s.toString());
-                toastShort(s.toString());
+                //oastShort(s.toString());
+                if(!(TextUtils.isEmpty(s.toString()))) {
+                    filter = s.toString();
+                    mHandler.post(filterMapList);
+                }else {
+                    mHandler.post(fetchMapList);
+                }
+                
             }
 
         });
@@ -133,6 +142,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     @Override
     public void onResume() {
         super.onResume();
+        mHandler.post(fetchMapList);
     }
 
     @Override
@@ -152,15 +162,15 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
      */
     final Runnable mDeleteMapById = new Runnable() {
         public void run() {
-            boolean result = false;
-            result = new ListMapModel().deleteMapById(mMapId);
+            boolean status = false;
+            status = listMapModel.deleteMapById(mMapId);
 
             try {
-                if (result) {
-                    toastShort(R.string.deployment_deleted);
-
+                if (status) {
+                    toastShort(R.string.map_deleted);
+                    listMapAdapter.refresh(ListMapActivity.this);
                 } else {
-                    toastShort(R.string.deployment_deleted_failed);
+                    toastShort(R.string.map_deleted_failed);
                 }
             } catch (Exception e) {
                 return;
@@ -168,26 +178,108 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
         }
     };
 
+    /**
+     * Refresh the list view with new items
+     */
+    final Runnable fetchMapList = new Runnable() {
+        public void run() {
+            try {
+                listMapAdapter.refresh(ListMapActivity.this);
+                listMapView.mListView.setAdapter(listMapAdapter);
+                listMapView.displayEmptyListText();
+                
+            } catch (Exception e) {
+                return;
+            }
+        }
+    };
+    
+    /**
+     * Filter the list view with new items
+     */
+    final Runnable filterMapList = new Runnable() {
+        public void run() {
+            try {
+                listMapAdapter.refresh(ListMapActivity.this,filter);
+                listMapView.mListView.setAdapter(listMapAdapter);
+                listMapView.displayEmptyListText();
+                
+            } catch (Exception e) {
+                return;
+            }
+        }
+    };
+
+    /**
+     * Delete all fetched maps
+     */
+    final Runnable deleteAllMaps = new Runnable() {
+        public void run() {
+            boolean status = false;
+            status = listMapModel.deleteAllMap(ListMapActivity.this);
+
+            try {
+                if (status) {
+                    toastShort(R.string.map_deleted);
+                    refreshMapLists();
+                } else {
+                    toastShort(R.string.map_deleted_failed);
+                }
+            } catch (Exception e) {
+                return;
+            }
+        }
+    };
+
+    final Runnable refreshMapList = new Runnable() {
+        public void run() {
+            try {
+                listMapAdapter.refresh(ListMapActivity.this);
+                listMapView.displayEmptyListText();
+                
+            } catch (Exception e) {
+                return;
+            }
+        }
+    };
+    
+    
+    public void refreshMapLists() {
+        listMapAdapter.refresh(ListMapActivity.this);
+        listMapView.displayEmptyListText();
+    }
+
     // Context Menu Stuff
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        menu.add(Menu.NONE, EDIT, Menu.NONE, R.string.edit);
         menu.add(Menu.NONE, DELETE, Menu.NONE, R.string.delete);
     }
 
-    public boolean onContextItemSelected(MenuItem item) {
+    @Override
+    public boolean onContextItemSelected(android.view.MenuItem item) {
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item
                 .getMenuInfo();
-        mMapId = Integer.parseInt(mListMap.get(info.position).getId());
+        mMapId = Integer.parseInt(listMapAdapter.getItem(info.position).getId());
 
+        Log.i("ListMapActivity", "mMapId " + mMapId);
         switch (item.getItemId()) {
             // context menu selected
             case DELETE:
                 // Delete by ID
+                edit = false;
                 mHandler.post(mDeleteMapById);
-                return (true);
+                return true;
+
+            case EDIT:
+                // edit existing map
+                edit = true;
+                createDialog(DIALOG_ADD_DEPLOYMENT);
+                return true;
+
         }
-        return true;
+        return super.onContextItemSelected(item);
     }
 
     @Override
@@ -200,6 +292,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
             createDialog(DIALOG_DISTANCE);
             return true;
         } else if (item.getItemId() == R.id.menu_add) {
+            edit = false;
             createDialog(DIALOG_ADD_DEPLOYMENT);
             return true;
         } else if (item.getItemId() == R.id.app_settings) {
@@ -218,14 +311,19 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     }
 
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        final String deploymentId = mListMap.get(position).getId();
+
+        final String deploymentId = listMapAdapter.getItem(position).getId();
+
         if (isMapActive(Integer.parseInt(deploymentId))) {
             // goToReports();
             // TODO :// do something here
-        } else {
-            FetchMapTask reportsTask = new FetchMapTask(this);
 
-            reportsTask.execute();
+        } else {
+            toastShort("Item id " + deploymentId);
+            /*
+             * FetchMapTask reportsTask = new FetchMapTask(this);
+             * reportsTask.execute();
+             */
         }
 
     }
@@ -289,8 +387,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
                         .setPositiveButton(getString(R.string.status_yes),
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        // clearAll();
-                                        // showResults("");
+                                        mHandler.post(deleteAllMaps);
                                     }
                                 })
                         .setNegativeButton(getString(R.string.status_no),
@@ -306,54 +403,51 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
             case DIALOG_ADD_DEPLOYMENT:
                 LayoutInflater factory = LayoutInflater.from(this);
-                final View textEntryView = factory.inflate(R.layout.deployment_add, null);
-                final EditText deploymentUrl = (EditText)textEntryView
-                        .findViewById(R.id.deployment_description_edit);
+                final View textEntryView = factory.inflate(R.layout.add_map, null);
+                final AddMapView addMapView = new AddMapView(textEntryView);
 
-                final EditText deploymentName = (EditText)textEntryView
-                        .findViewById(R.id.deployment_url_edit);
-
-                // Validate fields
-                deploymentUrl.setOnTouchListener(new OnTouchListener() {
-
-                    public boolean onTouch(View v, MotionEvent event) {
-
-                        if (TextUtils.isEmpty(deploymentUrl.getText().toString())) {
-                            deploymentUrl.setText("http://");
-                        }
-
-                        return false;
-                    }
-
-                });
+                // if edit was selected at the context menu, populate fields
+                // with existing map details
+                if (edit) {
+                    final List<ListMapModel> listMap = listMapModel.loadMapById(String
+                            .valueOf(mMapId));
+                    addMapView.setMapName(listMap.get(0).getName());
+                    addMapView.setMapDescription(listMap.get(0).getDesc());
+                    addMapView.setMapUrl(listMap.get(0).getUrl());
+                    addMapView.setMapId(listMap.get(0).getId());
+                }
 
                 final AlertDialog.Builder addBuilder = new AlertDialog.Builder(this);
 
                 addBuilder
-                        .setTitle(R.string.add_deployment)
+                        .setTitle(R.string.add_map)
                         .setView(textEntryView)
-                        .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // validate URL
-                                if ((ApiUtils.validateUshahidiInstance(deploymentUrl.getText()
-                                        .toString()))
-                                        && !(TextUtils.isEmpty(deploymentName.getText().toString()))) {
-                                    MainApplication.mDb.addDeployment(deploymentName.getText()
-                                            .toString(), deploymentUrl.getText().toString());
-                                    // showResults("");
-                                } else {
-                                    toastLong(R.string.fix_error);
-                                }
-
-                            }
-                        })
                         .setNegativeButton(R.string.btn_cancel,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-
                                         dialog.cancel();
                                     }
-                                });
+                                })
+                        .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // edit was selected
+                                if (edit) {
+
+                                    if (!addMapView.updateMapDetails())
+                                        toastLong(R.string.fix_error);
+                                    else 
+                                        mHandler.post(refreshMapList);
+                                } else {
+
+                                    if (!addMapView.addMapDetails())
+                                        toastLong(R.string.fix_error);
+                                    else
+                                        mHandler.post(refreshMapList);
+                                }
+
+                            }
+                        });
+
                 AlertDialog deploymentDialog = addBuilder.create();
                 deploymentDialog.show();
                 break;
@@ -370,7 +464,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
         protected Context appContext;
 
-        private Deployments deployments;
+        private Maps maps;
 
         protected String distance;
 
@@ -380,7 +474,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
             super(activity, R.string.loading_);
             // switch to a progress animation
             refresh.setActionView(R.layout.indeterminate_progress_action);
-            deployments = new Deployments(appContext);
+            maps = new Maps(appContext);
         }
 
         @Override
@@ -392,7 +486,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
         @Override
         protected Boolean doInBackground(String... strings) {
             try {
-                status = deployments.fetchDeployments(distance, location);
+                status = maps.fetchMaps(distance, location);
 
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -409,8 +503,10 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
             } else {
 
                 toastShort(R.string.deployment_fetched_successful);
-            } // TODO refresh
+            }
             refresh.setActionView(null);
+            listMapAdapter.refresh(ListMapActivity.this);
+            listMapView.mProgressBar.setVisibility(View.GONE);
             listMapView.displayEmptyListText();
         }
 
@@ -438,7 +534,6 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
         protected Boolean doInBackground(String... strings) {
             try {
                 listMapAdapter.refresh(ListMapActivity.this);
-
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -455,10 +550,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
     @Override
     protected void onLoaded(boolean success) {
-        
-        listMapView.mListView.setAdapter(listMapAdapter);
-        listMapView.mProgressBar.setVisibility(View.GONE);
-        listMapView.displayEmptyListText();
+        refreshMapLists();
     }
 
     /** Location stuff **/

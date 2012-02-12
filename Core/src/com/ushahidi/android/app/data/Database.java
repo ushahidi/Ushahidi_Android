@@ -20,28 +20,22 @@
 
 package com.ushahidi.android.app.data;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.checkin.Checkin;
-import com.ushahidi.android.app.checkin.CheckinMedia;
-import com.ushahidi.android.app.util.Util;
-
-import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQueryBuilder;
-import android.provider.BaseColumns;
 import android.util.Log;
+
+import com.ushahidi.android.app.Preferences;
+import com.ushahidi.android.app.checkin.Checkin;
+import com.ushahidi.android.app.checkin.CheckinMedia;
+import com.ushahidi.android.app.util.Util;
 
 public class Database {
 
@@ -191,29 +185,6 @@ public class Database {
 
     public static final String MEDIA_MEDIUM_LINK = "media_medium_link";
 
-    // Deployments
-    public static final String DEPLOYMENT_ID = "_id";
-
-    public static final String DEPLOYMENT_NAME = "name";
-
-    public static final String DEPLOYMENT_URL = "url";
-
-    public static final String DEPLOYMENT_DESC = "desc";
-
-    public static final String DEPLOYMENT_CAT_ID = "cat_id";
-
-    public static final String DEPLOYMENT_LATITUDE = "latitude";
-
-    public static final String DEPLOYMENT_LONGITUDE = "longitude";
-
-    public static final String DEPLOYMENT_DATE = "discovery_date";
-
-    public static final String DEPLOYMENT_ACTIVE = "deployment_active"; // 1 4
-                                                                        // active,
-                                                                        // 0 4
-                                                                        // inactive
-    
-
     public static final String[] INCIDENTS_COLUMNS = new String[] {
             INCIDENT_ID, INCIDENT_TITLE, INCIDENT_DESC, INCIDENT_DATE, INCIDENT_MODE,
             INCIDENT_VERIFIED, INCIDENT_LOC_NAME, INCIDENT_LOC_LATITUDE, INCIDENT_LOC_LONGITUDE,
@@ -221,7 +192,8 @@ public class Database {
     };
 
     public static final String[] CATEGORIES_COLUMNS = new String[] {
-            CATEGORY_ID, CATEGORY_TITLE, CATEGORY_DESC, CATEGORY_COLOR, CATEGORY_IS_UNREAD, CATEGORY_POS
+            CATEGORY_ID, CATEGORY_TITLE, CATEGORY_DESC, CATEGORY_COLOR, CATEGORY_IS_UNREAD,
+            CATEGORY_POS
     };
 
     /**
@@ -251,12 +223,6 @@ public class Database {
             MEDIA_ID, MEDIA_CHECKIN_ID, MEDIA_THUMBNAIL_LINK, MEDIA_MEDIUM_LINK
     };
 
-    // Deployments
-    public static final String[] DEPLOYMENT_COLUMNS = new String[] {
-            DEPLOYMENT_ID, DEPLOYMENT_NAME, DEPLOYMENT_URL, DEPLOYMENT_DESC, DEPLOYMENT_CAT_ID,
-            DEPLOYMENT_ACTIVE, DEPLOYMENT_LATITUDE, DEPLOYMENT_LONGITUDE, DEPLOYMENT_DATE
-    };
-
     private DatabaseHelper mDbHelper;
 
     private SQLiteDatabase mDb;
@@ -274,8 +240,6 @@ public class Database {
     private static final String USERS_TABLE = "users";
 
     private static final String CHECKINS_MEDIA_TABLE = "checkin_media";
-
-    private static final String DEPLOYMENT_TABLE = "deployment";
 
     private static final int DATABASE_VERSION = 14;
 
@@ -306,7 +270,8 @@ public class Database {
     private static final String CATEGORIES_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
             + CATEGORIES_TABLE + " (" + CATEGORY_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
             + CATEGORY_TITLE + " TEXT NOT NULL, " + CATEGORY_DESC + " TEXT, " + CATEGORY_COLOR
-            + " TEXT, " + CATEGORY_IS_UNREAD + " BOOLEAN NOT NULL, " + CATEGORY_POS + " INTEGER " + ")";
+            + " TEXT, " + CATEGORY_IS_UNREAD + " BOOLEAN NOT NULL, " + CATEGORY_POS + " INTEGER "
+            + ")";
 
     private static final String CHECKINS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
             + CHECKINS_TABLE + " (" + CHECKIN_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
@@ -323,16 +288,9 @@ public class Database {
             + MEDIA_CHECKIN_ID + " INTEGER, " + MEDIA_THUMBNAIL_LINK + " TEXT, "
             + MEDIA_MEDIUM_LINK + " TEXT" + ")";
 
-    private static final String DEPLOYMENT_TABLE_CREATE = "CREATE VIRTUAL TABLE "
-            + DEPLOYMENT_TABLE + " USING fts3 (" + DEPLOYMENT_ID
-            + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + DEPLOYMENT_CAT_ID + " INTEGER, "
-            + DEPLOYMENT_ACTIVE + " INTEGER, " + DEPLOYMENT_NAME + " TEXT NOT NULL, "
-            + DEPLOYMENT_DATE + " DATE NOT NULL, " + DEPLOYMENT_DESC + " TEXT NOT NULL, "
-            + DEPLOYMENT_URL + " TEXT NOT NULL, " + DEPLOYMENT_LATITUDE + " TEXT NOT NULL, "
-            + DEPLOYMENT_LONGITUDE + " TEXT NOT NULL" + ")";
-
     private final Context mContext;
 
+    public static MapDb map;
     private static class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -346,7 +304,10 @@ public class Database {
             db.execSQL(CHECKINS_TABLE_CREATE);
             db.execSQL(CHECKINS_MEDIA_TABLE_CREATE);
             db.execSQL(USERS_TABLE_CREATE);
-            db.execSQL(DEPLOYMENT_TABLE_CREATE);
+            
+            //create map table
+            map.createTable(db);
+            //db.execSQL(DEPLOYMENT_TABLE_CREATE);
 
         }
 
@@ -360,7 +321,7 @@ public class Database {
             List<String> checkinsColums;
             List<String> checkinsMediaColums;
             List<String> usersColumns;
-            //List<String> deploymentColumns;
+            // List<String> deploymentColumns;
 
             // upgrade incident table
             db.execSQL(INCIDENTS_TABLE_CREATE);
@@ -432,7 +393,7 @@ public class Database {
             db.execSQL("DROP TABLE IF EXISTS temp_" + USERS_TABLE);
 
             // upgrade deployment table
-            db.execSQL("DROP TABLE IF EXISTS " + DEPLOYMENT_TABLE);
+            map.upgradeTable(db);
             onCreate(db);
         }
 
@@ -484,7 +445,7 @@ public class Database {
     public Database open() throws SQLException {
         mDbHelper = new DatabaseHelper(mContext);
         mDb = mDbHelper.getWritableDatabase();
-
+        map = new MapDb(mDb);
         return this;
     }
 
@@ -549,7 +510,7 @@ public class Database {
 
     /**
      * Create table for checkins
-     *
+     * 
      * @return
      */
     public long createCheckins(Checkin checkins) {
@@ -582,34 +543,7 @@ public class Database {
         return mDb.insert(CHECKINS_MEDIA_TABLE, null, initialValues);
     }
 
-    public long createDeployment(DeploymentsData deployment) {
-        ContentValues initialValues = new ContentValues();
-
-        initialValues.put(DEPLOYMENT_ID, deployment.getId());
-        initialValues.put(DEPLOYMENT_CAT_ID, deployment.getCatId());
-        initialValues.put(DEPLOYMENT_DESC, deployment.getDesc());
-        initialValues.put(DEPLOYMENT_DATE, deployment.getDate());
-        initialValues.put(DEPLOYMENT_NAME, deployment.getName());
-        initialValues.put(DEPLOYMENT_ACTIVE, deployment.getActive());
-        initialValues.put(DEPLOYMENT_URL, deployment.getUrl());
-        initialValues.put(DEPLOYMENT_LATITUDE, deployment.getLat());
-        initialValues.put(DEPLOYMENT_LONGITUDE, deployment.getLon());
-        return mDb.insert(DEPLOYMENT_TABLE, null, initialValues);
-    }
-
-    public long createAddDeployment(String name, String url) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(DEPLOYMENT_ID, "0");
-        initialValues.put(DEPLOYMENT_CAT_ID, 0);
-        initialValues.put(DEPLOYMENT_NAME, name);
-        initialValues.put(DEPLOYMENT_DESC, name);
-        initialValues.put(DEPLOYMENT_URL, url);
-        initialValues.put(DEPLOYMENT_DATE,
-            (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
-        initialValues.put(DEPLOYMENT_LATITUDE, "0.0");
-        initialValues.put(DEPLOYMENT_LONGITUDE, "0.0");
-        return mDb.insert(DEPLOYMENT_TABLE, null, initialValues);
-    }
+   
 
     public int addNewIncidentsAndCountUnread(ArrayList<IncidentsData> newIncidents) {
         addIncidents(newIncidents, true);
@@ -617,15 +551,18 @@ public class Database {
     }
 
     public Cursor fetchAllIncidents() {
-        return mDb.query(INCIDENTS_TABLE, INCIDENTS_COLUMNS, null, null, null, null, INCIDENT_DATE + " DESC");
+        return mDb.query(INCIDENTS_TABLE, INCIDENTS_COLUMNS, null, null, null, null, INCIDENT_DATE
+                + " DESC");
     }
 
     public Cursor fetchAllOfflineIncidents() {
-        return mDb.query(ADD_INCIDENTS_TABLE, ADD_INCIDENTS_COLUMNS, null, null, null, null, ADD_INCIDENT_ID + " DESC");
+        return mDb.query(ADD_INCIDENTS_TABLE, ADD_INCIDENTS_COLUMNS, null, null, null, null,
+                ADD_INCIDENT_ID + " DESC");
     }
 
     public Cursor fetchAllCategories() {
-        return mDb.query(CATEGORIES_TABLE, CATEGORIES_COLUMNS, null, null, null, null, CATEGORY_POS + " DESC");
+        return mDb.query(CATEGORIES_TABLE, CATEGORIES_COLUMNS, null, null, null, null, CATEGORY_POS
+                + " DESC");
     }
 
     public Cursor fetchIncidentsByCategories(String filter) {
@@ -651,121 +588,9 @@ public class Database {
                 + " DESC");
     }
 
-    public Cursor fetchAllDeployments() {
+    
 
-        return query(null, null, null);
-    }
-
-    public Cursor getDeploymentMatches(String query, String[] columns) {
-        String selection = DEPLOYMENT_NAME + " MATCH ?";
-        String[] selectionArgs = new String[] {
-            query + "*"
-        };
-
-        return query(selection, selectionArgs, columns);
-
-        /*
-         * This builds a query that looks like: SELECT <columns> FROM <table>
-         * WHERE deployment_name = <deployment_name>
-         */
-    }
-
-    /**
-     * Returns a Cursor positioned at the word specified by rowId
-     * 
-     * @param rowId id of deployment to retrieve
-     * @param columns The columns to include, if null then all are included
-     * @return Cursor positioned to matching deployment, or null if not found.
-     */
-    public Cursor getDeployment(String rowId, String[] columns) {
-        String selection = "rowid = ?";
-        String[] selectionArgs = new String[] {
-            rowId
-        };
-
-        return query(selection, selectionArgs, columns);
-
-        /*
-         * This builds a query that looks like: SELECT <columns> FROM <table>
-         * WHERE id = <rowId>
-         */
-    }
-
-    /**
-     * Performs a database query.
-     * 
-     * @param selection The selection clause
-     * @param selectionArgs Selection arguments for "?" components in the
-     *            selection
-     * @param columns The columns to return
-     * @return A Cursor over all rows matching the query
-     */
-    private Cursor query(String selection, String[] selectionArgs, String[] columns) {
-        HashMap<String, String> mColumnMap = new HashMap<String, String>();
-        mColumnMap.put(DEPLOYMENT_ID, DEPLOYMENT_ID);
-        mColumnMap.put(DEPLOYMENT_CAT_ID, DEPLOYMENT_CAT_ID);
-        mColumnMap.put(DEPLOYMENT_DESC, DEPLOYMENT_DESC);
-        mColumnMap.put(DEPLOYMENT_DATE, DEPLOYMENT_DATE);
-        mColumnMap.put(DEPLOYMENT_NAME, DEPLOYMENT_NAME);
-        mColumnMap.put(DEPLOYMENT_URL, DEPLOYMENT_URL);
-        mColumnMap.put(DEPLOYMENT_LATITUDE, DEPLOYMENT_LATITUDE);
-        mColumnMap.put(DEPLOYMENT_LONGITUDE, DEPLOYMENT_LONGITUDE);
-        mColumnMap.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
-        mColumnMap.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, "rowid AS "
-                + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID);
-        mColumnMap.put(SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, "rowid AS "
-                + SearchManager.SUGGEST_COLUMN_SHORTCUT_ID);
-        /*
-         * The SQLiteBuilder provides a map for all possible columns requested
-         * to actual columns in the database, creating a simple column alias
-         * mechanism by which the ContentProvider does not need to know the real
-         * column names
-         */
-        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(DEPLOYMENT_TABLE);
-        builder.setProjectionMap(mColumnMap);
-        String orderBy = DEPLOYMENT_DATE+ " DESC";
-        Cursor cursor = builder.query(mDbHelper.getReadableDatabase(), columns, selection,
-                selectionArgs, null, null, orderBy);
-
-        if (cursor == null) {
-            return null;
-        } else if (!cursor.moveToFirst()) {
-            cursor.close();
-            return null;
-        }
-        return cursor;
-    }
-
-    public Cursor fetchDeploymentById(String id) {
-       
-        String selection = "rowid = ?";
-        String[] selectionArgs = new String[] {
-                id
-            };
-        String[] columns = new String[] {
-                BaseColumns._ID, DEPLOYMENT_NAME, DEPLOYMENT_LATITUDE, DEPLOYMENT_LONGITUDE,
-                DEPLOYMENT_URL
-        };
-
-        return query(selection, selectionArgs, columns);
-    }
-
-    public Cursor fetchDeploymentByIdAndUrl(String id, String url) {
-        String sql = "SELECT * FROM " + DEPLOYMENT_TABLE + " WHERE " + DEPLOYMENT_ID + " = ? AND "
-                + DEPLOYMENT_URL + " =? ORDER BY " + DEPLOYMENT_NAME + " COLLATE NOCASE";
-        return mDb.rawQuery(sql, new String[] {
-                id, url
-        });
-    }
-
-    public Cursor fetchDeploymentUrlById(String id) {
-        String sql = "SELECT " + DEPLOYMENT_URL + " FROM " + DEPLOYMENT_TABLE + " WHERE "
-                + DEPLOYMENT_ID + " = ? ";
-        return mDb.rawQuery(sql, new String[] {
-            id
-        });
-    }
+    
 
     public Cursor fetchCheckinsByUserdId(String id) {
         String sql = "SELECT * FROM " + CHECKINS_TABLE + " WHERE " + CHECKIN_USER_ID
@@ -802,7 +627,7 @@ public class Database {
         deleteUsers();
         deleteAllCheckins();
         deleteCheckinMedia();
-        deleteAllDeployment();
+        map.deleteAllDeployment();
         // delete all files
         Util.rmDir(Preferences.savePath);
         return true;
@@ -833,7 +658,7 @@ public class Database {
     }
 
     public boolean deleteCategory(int id) {
-        Log.i(TAG, "Deleteing all Category by id "+id);
+        Log.i(TAG, "Deleteing all Category by id " + id);
         return mDb.delete(CATEGORIES_TABLE, CATEGORY_ID + "=" + id, null) > 0;
     }
 
@@ -852,35 +677,7 @@ public class Database {
         return mDb.delete(CHECKINS_MEDIA_TABLE, null, null) > 0;
     }
 
-    public boolean deleteAllDeployment() {
-        Log.i(TAG, "Deleting all Deployment");
-        return mDb.delete(DEPLOYMENT_TABLE, null, null) > 0;
-    }
     
-    /**
-     * Delete all deployments that were fetched from the internet
-     */
-    public boolean deleteAllAutoDeployment() {
-        String whereClause = DEPLOYMENT_ID + " <> ?";
-        String whereArgs[] = {
-                "0"
-        };
-        return mDb.delete(DEPLOYMENT_TABLE, whereClause, whereArgs) > 0;
-    }
-
-    public boolean deleteDeploymentByIdAndUrl(String id, String url) {
-        String whereClause = "WHERE " + DEPLOYMENT_ID + " =? AND " + DEPLOYMENT_URL + " =? ";
-        String whereArgs[] = {
-                id, url
-        };
-        return mDb.delete(DEPLOYMENT_TABLE, whereClause, whereArgs) > 0;
-    }
-
-    public boolean deleteDeploymentById(String id) {
-        String whereClause = "rowid = ? ";
-        String whereArgs[] = {id};
-        return mDb.delete(DEPLOYMENT_TABLE, whereClause, whereArgs) > 0;
-    }
 
     /**
      * Allows for the deletion of individual off line incidents given an id
@@ -1004,7 +801,6 @@ public class Database {
 
     /**
      * Adds new incidents to be posted online to the db.
-     *
      */
     public long addIncidents(List<AddIncidentData> addIncidents) {
         long rowId = 0;
@@ -1080,48 +876,7 @@ public class Database {
         }
     }
 
-    /**
-     * Add new deployments to table
-     * 
-     * @param deployments
-     */
-    public void addDeployment(List<DeploymentsData> deployments) {
-        try {
-            mDb.beginTransaction();
-
-            for (DeploymentsData deployment : deployments) {
-                createDeployment(deployment);
-            }
-
-            mDb.setTransactionSuccessful();
-        } finally {
-            mDb.endTransaction();
-        }
-    }
-
-    /**
-     * Add new deployments to table
-     *
-     */
-    public void addDeployment(String name, String url) {
-        try {
-            mDb.beginTransaction();
-            createAddDeployment(name, url);
-
-            mDb.setTransactionSuccessful();
-        } finally {
-            mDb.endTransaction();
-        }
-    }
-
-    public void updateDeployment(String id) {
-        String sql = "UPDATE " + DEPLOYMENT_TABLE + " SET " + DEPLOYMENT_ACTIVE + "= ? WHERE "
-                + DEPLOYMENT_ID + "= ?";
-
-        mDb.rawQuery(sql, new String[] {
-                "1", id
-        });
-    }
+    
 
     /**
      * Limit number of records to retrieve.
@@ -1143,7 +898,7 @@ public class Database {
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 int limitId = cursor.getInt(0);
-	            deleted = mDb.delete(tablename, KEY_ID + "<" + limitId, null);
+                deleted = mDb.delete(tablename, KEY_ID + "<" + limitId, null);
             }
             cursor.close();
         }

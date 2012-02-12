@@ -161,6 +161,11 @@ public abstract class BaseActivity<V extends View> extends FragmentActivity {
         log("onOptionsItemSelected");
         return super.onOptionsItemSelected(item);
     }
+    
+    @Override
+    public boolean onContextItemSelected(android.view.MenuItem item) {
+        return super.onContextItemSelected(item);
+    }
 
     protected EditText findEditTextById(int id) {
         return (EditText)findViewById(id);

@@ -256,7 +256,7 @@
 	<string name="delete">Delete</string>
 	<string name="deployment_deleted">Deployment deleted</string>
 	<string name="deployment_deleted_failed">Failed to delete</string>
-	<string name="fix_error">Please make sure a name and a valid URL are
+	<string name="fix_error">Please make sure a name and a valid URL have been
 		entered.</string>
 	<string name="sending_report_in_progress">Sending report...</string>
 	<string name="ushahidi_setup_title">Ushahidi Setup</string>
@@ -311,7 +311,7 @@
 	<string name="airplane_mode_on">Airplane mode is on!! Please turn it off to send report</string>
     <string name="reporting_via">Reporting via</string>
     
-    <!-- Custom Strings for V3 -->
+    <!-- New Strings for V3 -->
     <string name="load">Load</string>
     <string name="loading_">Loading...</string>
     <string name="loaded">Loaded</string>
@@ -336,7 +336,7 @@
     <string name="default_location">Default location</string>
     <string name="add_a_photo">Add a Photo</string>
     <string name="choose_categories">Choose Categories</string>
-    <string name="add_map">Add Map</string>
+    <string name="add_map">Enter Map Details</string>
     <string name="checkin">Check In</string>
     <string name="checkins">Check Ins</string>
     <string name="report">Report</string>
@@ -344,4 +344,10 @@
     <string name="add_report">Add Report</string>
     <string name="splash_screen">Splash Screen</string>
     <string name="would_you_like_to_save_your_changes_">Would you like to save your changes?</string>
+    <string name="edit">Edit</string>
+    <string name="enter_description">Enter Description</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="enter_url">Enter URL</string>
+    <string name="map_deleted">Map deleted</string>
+    <string name="map_deleted_failed">Failed to map</string>
 </resources>

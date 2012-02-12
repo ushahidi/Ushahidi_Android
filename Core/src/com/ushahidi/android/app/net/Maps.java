@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.json.JSONArray;
@@ -17,15 +18,15 @@ import android.content.Context;
 import android.location.Location;
 
 import com.ushahidi.android.app.data.Database;
-import com.ushahidi.android.app.data.DeploymentsData;
+import com.ushahidi.android.app.models.ListMapModel;
 
 /**
  * Contains logic to load the details of a deployment and find a list of
  * matching deployments given a query. Everything is held in SQLite database;
  */
-public class Deployments {
+public class Maps {
 
-    private static final String DEPLOYMENT_SEARCH_URL = "http://tracker.ushahidi.com/list/";
+    private static final String MAP_SEARCH_URL = "http://tracker.ushahidi.com/list/";
 
     private String mDistance;
 
@@ -37,21 +38,20 @@ public class Deployments {
 
     private boolean processingResult;
 
-    private String deploymentJson;
+    private String mapJson;
 
-    private ArrayList<DeploymentsData> deploymentsData;
+    private List<ListMapModel> mListMapModel;
 
-    public Deployments(Context context) {
-        deploymentJson = "";
-
+    public Maps(Context context) {
+        mapJson = "";
     }
 
     /**
-     * Fetches deployments from the internet.
+     * Fetches maps from the internet.
      * 
      * @param String distance
      */
-    public boolean fetchDeployments(String distance, Location location) {
+    public boolean fetchMaps(String distance, Location location) {
         this.mDistance = distance;
 
         // check if current location was retrieved.
@@ -60,15 +60,15 @@ public class Deployments {
             lat = location.getLatitude();
             lon = location.getLongitude();
 
-            deploymentJson = getDeploymentsFromOnline();
-            if (deploymentJson != null) {
+            mapJson = getMapsFromOnline();
+            if (mapJson != null) {
                 try {
-                    jsonObject = new JSONObject(deploymentJson);
-                    deploymentsData = retrieveDeploymentJson();
+                    jsonObject = new JSONObject(mapJson);
+                    mListMapModel =  retrieveMapJson();
 
-                    if (deploymentsData != null) {
+                    if (mListMapModel != null) {
                         Database.map.deleteAllAutoDeployment();
-                        //Database.map.addMap(deploymentsData);
+                        Database.map.addMap(mListMapModel);
                         return true;
                     }
                 } catch (JSONException e) {
@@ -80,8 +80,8 @@ public class Deployments {
         return false;
     }
 
-    public String getDeploymentsFromOnline() {
-        StringBuilder fullUrl = new StringBuilder(DEPLOYMENT_SEARCH_URL);
+    public String getMapsFromOnline() {
+        StringBuilder fullUrl = new StringBuilder(MAP_SEARCH_URL);
         fullUrl.append("?return_vars=name,latitude,longitude,description,url,category_id,discovery_date,id");
         fullUrl.append("&units=km");
         fullUrl.append("&distance=" + mDistance);
@@ -130,47 +130,44 @@ public class Deployments {
         return text;
     }
 
-    public ArrayList<DeploymentsData> retrieveDeploymentJson() {
+    public List<ListMapModel> retrieveMapJson() {
         JSONArray names = jsonObject.names();
-        ArrayList<DeploymentsData> deploymentsList = new ArrayList<DeploymentsData>();
+        List<ListMapModel> mapsList = new ArrayList<ListMapModel>();
         if (processingResult) {
             for (int i = 0; i < names.length(); i++) {
-                DeploymentsData deploymentData = new DeploymentsData();
+                ListMapModel mapModel = new ListMapModel();
                 try {
 
-                    deploymentData.setId(jsonObject.getJSONObject(names.getString(i)).getString(
-                            "id"));
-                    deploymentData.setDate(jsonObject.getJSONObject(names.getString(i)).getString(
+                    mapModel.setId(jsonObject.getJSONObject(names.getString(i)).getString("id"));
+                    mapModel.setDate(jsonObject.getJSONObject(names.getString(i)).getString(
                             "discovery_date"));
-                    deploymentData.setActive("0");
-                    deploymentData.setLat(jsonObject.getJSONObject(names.getString(i)).getString(
+                    mapModel.setActive("0");
+                    mapModel.setLat(jsonObject.getJSONObject(names.getString(i)).getString(
                             "latitude"));
-                    deploymentData.setLon(jsonObject.getJSONObject(names.getString(i)).getString(
+                    mapModel.setLon(jsonObject.getJSONObject(names.getString(i)).getString(
                             "longitude"));
-                    deploymentData.setName(jsonObject.getJSONObject(names.getString(i)).getString(
-                            "name"));
-                    deploymentData.setUrl(jsonObject.getJSONObject(names.getString(i)).getString(
-                            "url"));
+                    mapModel.setName(jsonObject.getJSONObject(names.getString(i)).getString("name"));
+                    mapModel.setUrl(jsonObject.getJSONObject(names.getString(i)).getString("url"));
 
                     // use deployment name if there is no deployment description
                     if (jsonObject.getJSONObject(names.getString(i)).getString("description")
                             .equals("")) {
-                        deploymentData.setDesc(jsonObject.getJSONObject(names.getString(i))
-                                .getString("name"));
+                        mapModel.setDesc(jsonObject.getJSONObject(names.getString(i)).getString(
+                                "name"));
                     } else {
-                        deploymentData.setDesc(jsonObject.getJSONObject(names.getString(i))
-                                .getString("description"));
+                        mapModel.setDesc(jsonObject.getJSONObject(names.getString(i)).getString(
+                                "description"));
                     }
-                    deploymentData.setCatId(jsonObject.getJSONObject(names.getString(i)).getString(
+                    mapModel.setCatId(jsonObject.getJSONObject(names.getString(i)).getString(
                             "category_id"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                     processingResult = false;
                     return null;
                 }
-                deploymentsList.add(deploymentData);
+                mapsList.add(mapModel);
             }
-            return deploymentsList;
+            return mapsList;
         }
         return null;
     }
