@@ -47,12 +47,7 @@ public class ListReportListFragment extends BaseListFragment<ListReportView, Lis
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Example of progress queue for executing asynctasks
-        //which will execute TaskOne, then TaskTwo
-        /*new ProgressQueue(
-            new TaskOne(this),
-            new TaskTwo(this)
-        ).execute();*/
+        
     }
 
 
