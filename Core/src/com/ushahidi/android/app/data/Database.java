@@ -306,8 +306,8 @@ public class Database {
             db.execSQL(USERS_TABLE_CREATE);
             
             //create map table
-            map.createTable(db);
-            //db.execSQL(DEPLOYMENT_TABLE_CREATE);
+            //map.createTable(db);
+            db.execSQL(MapDb.DEPLOYMENT_TABLE_CREATE);
 
         }
 
@@ -393,7 +393,8 @@ public class Database {
             db.execSQL("DROP TABLE IF EXISTS temp_" + USERS_TABLE);
 
             // upgrade deployment table
-            map.upgradeTable(db);
+            //map.upgradeTable(db);
+            db.execSQL("DROP TABLE IF EXISTS " + MapDb.DEPLOYMENT_TABLE);
             onCreate(db);
         }
 

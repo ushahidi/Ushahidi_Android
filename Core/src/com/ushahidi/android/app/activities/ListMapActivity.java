@@ -38,7 +38,6 @@ import android.support.v4.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -96,7 +95,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     private ListMapModel listMapModel;
 
     private boolean edit = true;
-    
+
     private String filter;
 
     public ListMapActivity() {
@@ -125,15 +124,14 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // showResults(s.toString());
-                //oastShort(s.toString());
-                if(!(TextUtils.isEmpty(s.toString()))) {
+
+                if (!(TextUtils.isEmpty(s.toString()))) {
                     filter = s.toString();
                     mHandler.post(filterMapList);
-                }else {
+                } else {
                     mHandler.post(fetchMapList);
                 }
-                
+
             }
 
         });
@@ -187,23 +185,23 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
                 listMapAdapter.refresh(ListMapActivity.this);
                 listMapView.mListView.setAdapter(listMapAdapter);
                 listMapView.displayEmptyListText();
-                
+
             } catch (Exception e) {
                 return;
             }
         }
     };
-    
+
     /**
      * Filter the list view with new items
      */
     final Runnable filterMapList = new Runnable() {
         public void run() {
             try {
-                listMapAdapter.refresh(ListMapActivity.this,filter);
+                listMapAdapter.refresh(ListMapActivity.this, filter);
                 listMapView.mListView.setAdapter(listMapAdapter);
                 listMapView.displayEmptyListText();
-                
+
             } catch (Exception e) {
                 return;
             }
@@ -217,7 +215,6 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
         public void run() {
             boolean status = false;
             status = listMapModel.deleteAllMap(ListMapActivity.this);
-
             try {
                 if (status) {
                     toastShort(R.string.map_deleted);
@@ -234,16 +231,13 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     final Runnable refreshMapList = new Runnable() {
         public void run() {
             try {
-                listMapAdapter.refresh(ListMapActivity.this);
-                listMapView.displayEmptyListText();
-                
+                refreshMapLists();
             } catch (Exception e) {
                 return;
             }
         }
     };
-    
-    
+
     public void refreshMapLists() {
         listMapAdapter.refresh(ListMapActivity.this);
         listMapView.displayEmptyListText();
@@ -263,7 +257,6 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
                 .getMenuInfo();
         mMapId = Integer.parseInt(listMapAdapter.getItem(info.position).getId());
 
-        Log.i("ListMapActivity", "mMapId " + mMapId);
         switch (item.getItemId()) {
             // context menu selected
             case DELETE:
@@ -303,10 +296,9 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
             startActivity(new Intent(this, AboutActivity.class));
             setResult(RESULT_OK);
             return true;
-        } else {
-
-            return super.onOptionsItemSelected(item);
         }
+
+        return super.onOptionsItemSelected(item);
 
     }
 
@@ -320,10 +312,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
         } else {
             toastShort("Item id " + deploymentId);
-            /*
-             * FetchMapTask reportsTask = new FetchMapTask(this);
-             * reportsTask.execute();
-             */
+
         }
 
     }
@@ -435,7 +424,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
                                     if (!addMapView.updateMapDetails())
                                         toastLong(R.string.fix_error);
-                                    else 
+                                    else
                                         mHandler.post(refreshMapList);
                                 } else {
 
@@ -498,7 +487,8 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if (!status) {
+            if (!result) {
+
                 toastShort(R.string.could_not_fetch_data);
             } else {
 
@@ -513,8 +503,9 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     }
 
     /**
-     * Load map details from the database
+     * Load map details from the database TODO:// See if this is actually needed
      */
+
     class FetchMapTask extends ProgressTask {
 
         public FetchMapTask(FragmentActivity activity) {
@@ -605,18 +596,12 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     }
 
     public void onProviderDisabled(String provider) {
-        // TODO Auto-generated method stub
-
     }
 
     public void onProviderEnabled(String provider) {
-        // TODO Auto-generated method stub
-
     }
 
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-
     }
 
 }

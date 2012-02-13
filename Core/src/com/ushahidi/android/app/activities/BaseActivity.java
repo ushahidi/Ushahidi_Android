@@ -158,7 +158,6 @@ public abstract class BaseActivity<V extends View> extends FragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        log("onOptionsItemSelected");
         return super.onOptionsItemSelected(item);
     }
     

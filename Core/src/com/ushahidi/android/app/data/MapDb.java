@@ -51,9 +51,9 @@ public class MapDb {
             DEPLOYMENT_ACTIVE, DEPLOYMENT_LATITUDE, DEPLOYMENT_LONGITUDE, DEPLOYMENT_DATE
     };
 
-    private static final String DEPLOYMENT_TABLE = "deployment";
+    public static final String DEPLOYMENT_TABLE = "deployment";
 
-    private static final String DEPLOYMENT_TABLE_CREATE = "CREATE VIRTUAL TABLE "
+    public static final String DEPLOYMENT_TABLE_CREATE = "CREATE VIRTUAL TABLE "
             + DEPLOYMENT_TABLE + " USING fts3 (" + DEPLOYMENT_ID
             + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + DEPLOYMENT_CAT_ID + " INTEGER, "
             + DEPLOYMENT_ACTIVE + " INTEGER, " + DEPLOYMENT_NAME + " TEXT NOT NULL, "
@@ -271,18 +271,17 @@ public class MapDb {
         });
     }
 
-    public boolean updateMap(String id, String name, String url, String desc) {
-        Log.i(TAG, "Stmt: " + name + "  =  " + id + " = " + url + " = " + desc);
+    public boolean updateMap(String id, String name, String desc, String url) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(DEPLOYMENT_DESC, desc);
         initialValues.put(DEPLOYMENT_NAME, name);
         initialValues.put(DEPLOYMENT_URL, url);
 
-        String whereClause = DEPLOYMENT_ID + "= ?";
+        String whereClause = "rowid= ?";
         String whereArgs[] = {
             id
         };
-
+        
         return mDb.update(DEPLOYMENT_TABLE, initialValues, whereClause, whereArgs) > 0;
 
     }
@@ -304,13 +303,12 @@ public class MapDb {
         String[] selectionArgs = new String[] {
             rowId
         };
-
-        return query(selection, selectionArgs, columns);
-
+        
         /*
          * This builds a query that looks like: SELECT <columns> FROM <table>
          * WHERE id = <rowId>
          */
+        return query(selection, selectionArgs, columns);
     }
 
 }
