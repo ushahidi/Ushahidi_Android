@@ -18,7 +18,7 @@
  ** 
  **/
 
-package com.ushahidi.android.app.data;
+package com.ushahidi.android.app.database;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +35,11 @@ import android.util.Log;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.checkin.Checkin;
 import com.ushahidi.android.app.checkin.CheckinMedia;
+import com.ushahidi.android.app.data.AddIncidentData;
+import com.ushahidi.android.app.data.CategoriesData;
+import com.ushahidi.android.app.data.IncidentsData;
+import com.ushahidi.android.app.data.MapDb;
+import com.ushahidi.android.app.data.UsersData;
 import com.ushahidi.android.app.util.Util;
 
 public class Database {
@@ -108,18 +113,6 @@ public class Database {
 
     public static final String INCIDENT_IS_UNREAD = "is_unread";
 
-    public static final String CATEGORY_ID = "_id";
-
-    public static final String CATEGORY_TITLE = "category_title";
-
-    public static final String CATEGORY_DESC = "category_desc";
-
-    public static final String CATEGORY_COLOR = "category_color";
-
-    public static final String CATEGORY_IS_UNREAD = "is_unread";
-
-    public static final String CATEGORY_POS = "position";
-
     public static final String ADD_INCIDENT_ID = "_id";
 
     public static final String ADD_INCIDENT_TITLE = "incident_title";
@@ -191,11 +184,6 @@ public class Database {
             INCIDENT_CATEGORIES, INCIDENT_MEDIA, INCIDENT_IMAGE, INCIDENT_IS_UNREAD
     };
 
-    public static final String[] CATEGORIES_COLUMNS = new String[] {
-            CATEGORY_ID, CATEGORY_TITLE, CATEGORY_DESC, CATEGORY_COLOR, CATEGORY_IS_UNREAD,
-            CATEGORY_POS
-    };
-
     /**
      * Columns of the table that stores off line incidents
      */
@@ -233,8 +221,6 @@ public class Database {
 
     private static final String ADD_INCIDENTS_TABLE = "add_incidents";
 
-    private static final String CATEGORIES_TABLE = "categories";
-
     private static final String CHECKINS_TABLE = "checkins";
 
     private static final String USERS_TABLE = "users";
@@ -267,12 +253,6 @@ public class Database {
             + ADD_INCIDENT_VIDEO + " TEXT, " + ADD_INCIDENT_NEWS + " TEXT, " + ADD_PERSON_FIRST
             + " TEXT, " + ADD_PERSON_LAST + " TEXT, " + ADD_PERSON_EMAIL + " TEXT " + ")";
 
-    private static final String CATEGORIES_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
-            + CATEGORIES_TABLE + " (" + CATEGORY_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
-            + CATEGORY_TITLE + " TEXT NOT NULL, " + CATEGORY_DESC + " TEXT, " + CATEGORY_COLOR
-            + " TEXT, " + CATEGORY_IS_UNREAD + " BOOLEAN NOT NULL, " + CATEGORY_POS + " INTEGER "
-            + ")";
-
     private static final String CHECKINS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
             + CHECKINS_TABLE + " (" + CHECKIN_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
             + CHECKIN_USER_ID + " INTEGER, " + CHECKIN_MESG + " TEXT NOT NULL, " + CHECKIN_DATE
@@ -291,6 +271,11 @@ public class Database {
     private final Context mContext;
 
     public static MapDb map;
+
+    public static ReportDao mReportDao;
+
+    public static CategoryDao mCategoryDao;
+    
     private static class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -298,15 +283,14 @@ public class Database {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL(INCIDENTS_TABLE_CREATE);
-            db.execSQL(CATEGORIES_TABLE_CREATE);
+            db.execSQL(IReportSchema.INCIDENTS_TABLE_CREATE);
+            db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
             db.execSQL(ADD_INCIDENTS_TABLE_CREATE);
             db.execSQL(CHECKINS_TABLE_CREATE);
             db.execSQL(CHECKINS_MEDIA_TABLE_CREATE);
             db.execSQL(USERS_TABLE_CREATE);
-            
-            //create map table
-            //map.createTable(db);
+
+            // create map table
             db.execSQL(MapDb.DEPLOYMENT_TABLE_CREATE);
 
         }
@@ -335,15 +319,17 @@ public class Database {
             db.execSQL("DROP TABLE IF EXISTS temp_" + INCIDENTS_TABLE);
 
             // upgrade category table
-            db.execSQL(CATEGORIES_TABLE_CREATE);
-            categoriesColumns = Database.getColumns(db, CATEGORIES_TABLE);
-            db.execSQL("ALTER TABLE " + CATEGORIES_TABLE + " RENAME TO temp_" + CATEGORIES_TABLE);
-            db.execSQL(CATEGORIES_TABLE_CREATE);
-            categoriesColumns.retainAll(Database.getColumns(db, CATEGORIES_TABLE));
+            db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
+            categoriesColumns = Database.getColumns(db, ICategorySchema.CATEGORIES_TABLE);
+            db.execSQL("ALTER TABLE " + ICategorySchema.CATEGORIES_TABLE + " RENAME TO temp_"
+                    + ICategorySchema.CATEGORIES_TABLE);
+            db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
+            categoriesColumns.retainAll(Database.getColumns(db, ICategorySchema.CATEGORIES_TABLE));
             String catsCols = Database.join(categoriesColumns, ",");
             db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-                    CATEGORIES_TABLE, catsCols, catsCols, CATEGORIES_TABLE));
-            db.execSQL("DROP TABLE IF EXISTS temp_" + CATEGORIES_TABLE);
+                    ICategorySchema.CATEGORIES_TABLE, catsCols, catsCols,
+                    ICategorySchema.CATEGORIES_TABLE));
+            db.execSQL("DROP TABLE IF EXISTS temp_" + ICategorySchema.CATEGORIES_TABLE);
 
             // upgrade add incident table
             db.execSQL(ADD_INCIDENTS_TABLE_CREATE);
@@ -393,7 +379,6 @@ public class Database {
             db.execSQL("DROP TABLE IF EXISTS temp_" + USERS_TABLE);
 
             // upgrade deployment table
-            //map.upgradeTable(db);
             db.execSQL("DROP TABLE IF EXISTS " + MapDb.DEPLOYMENT_TABLE);
             onCreate(db);
         }
@@ -447,6 +432,9 @@ public class Database {
         mDbHelper = new DatabaseHelper(mContext);
         mDb = mDbHelper.getWritableDatabase();
         map = new MapDb(mDb);
+        mReportDao = new ReportDao(mDb);
+        mCategoryDao = new CategoryDao(mDb);
+        
         return this;
     }
 
@@ -498,17 +486,6 @@ public class Database {
         return mDb.insert(ADD_INCIDENTS_TABLE, null, initialValues);
     }
 
-    public long createCategories(CategoriesData categories, boolean isUnread) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(CATEGORY_ID, categories.getCategoryId());
-        initialValues.put(CATEGORY_TITLE, categories.getCategoryTitle());
-        initialValues.put(CATEGORY_DESC, categories.getCategoryDescription());
-        initialValues.put(CATEGORY_COLOR, categories.getCategoryColor());
-        initialValues.put(CATEGORY_POS, categories.getCategoryPosition());
-        initialValues.put(CATEGORY_IS_UNREAD, isUnread);
-        return mDb.insert(CATEGORIES_TABLE, null, initialValues);
-    }
-
     /**
      * Create table for checkins
      * 
@@ -544,8 +521,6 @@ public class Database {
         return mDb.insert(CHECKINS_MEDIA_TABLE, null, initialValues);
     }
 
-   
-
     public int addNewIncidentsAndCountUnread(ArrayList<IncidentsData> newIncidents) {
         addIncidents(newIncidents, true);
         return fetchUnreadCount();
@@ -562,8 +537,11 @@ public class Database {
     }
 
     public Cursor fetchAllCategories() {
-        return mDb.query(CATEGORIES_TABLE, CATEGORIES_COLUMNS, null, null, null, null, CATEGORY_POS
-                + " DESC");
+        /*
+         * return mDb.query(CATEGORIES_TABLE, CATEGORIES_COLUMNS, null, null,
+         * null, null, CATEGORY_POS + " DESC");
+         */
+        return null;
     }
 
     public Cursor fetchIncidentsByCategories(String filter) {
@@ -588,10 +566,6 @@ public class Database {
         return mDb.query(CHECKINS_TABLE, CHECKINS_COLUMNS, null, null, null, null, CHECKIN_DATE
                 + " DESC");
     }
-
-    
-
-    
 
     public Cursor fetchCheckinsByUserdId(String id) {
         String sql = "SELECT * FROM " + CHECKINS_TABLE + " WHERE " + CHECKIN_USER_ID
@@ -655,12 +629,15 @@ public class Database {
 
     public boolean deleteAllCategories() {
         Log.i(TAG, "Deleting all categories");
-        return mDb.delete(CATEGORIES_TABLE, null, null) > 0;
+        // return mDb.delete(CATEGORIES_TABLE, null, null) > 0;
+        return true;
     }
 
     public boolean deleteCategory(int id) {
         Log.i(TAG, "Deleteing all Category by id " + id);
-        return mDb.delete(CATEGORIES_TABLE, CATEGORY_ID + "=" + id, null) > 0;
+        // return mDb.delete(CATEGORIES_TABLE, CATEGORY_ID + "=" + id, null) >
+        // 0;
+        return true;
     }
 
     public boolean deleteAllCheckins() {
@@ -678,8 +655,6 @@ public class Database {
         return mDb.delete(CHECKINS_MEDIA_TABLE, null, null) > 0;
     }
 
-    
-
     /**
      * Allows for the deletion of individual off line incidents given an id
      * 
@@ -687,7 +662,9 @@ public class Database {
      * @return
      */
     public boolean deleteAddIncident(int addIncidentId) {
-        return mDb.delete(ADD_INCIDENTS_TABLE, CATEGORY_ID + "=" + addIncidentId, null) > 0;
+        return true;
+        // return mDb.delete(ADD_INCIDENTS_TABLE, CATEGORY_ID + "=" +
+        // addIncidentId, null) > 0;
     }
 
     /**
@@ -706,9 +683,11 @@ public class Database {
     }
 
     public void markAllCategoriesRead() {
-        ContentValues values = new ContentValues();
-        values.put(CATEGORY_IS_UNREAD, 0);
-        mDb.update(CATEGORIES_TABLE, values, null, null);
+        /*
+         * ContentValues values = new ContentValues();
+         * values.put(CATEGORY_IS_UNREAD, 0); mDb.update(CATEGORIES_TABLE,
+         * values, null, null);
+         */
     }
 
     public int fetchMaxId() {
@@ -752,37 +731,24 @@ public class Database {
     }
 
     public int fetchCategoriesCount() {
-        Cursor mCursor = mDb.rawQuery("SELECT COUNT(" + CATEGORY_ID + ") FROM " + CATEGORIES_TABLE,
-                null);
-
-        int result = 0;
-
-        if (mCursor == null) {
-            return result;
-        }
-
-        mCursor.moveToFirst();
-        result = mCursor.getInt(0);
-        mCursor.close();
-
-        return result;
+        /*
+         * Cursor mCursor = mDb.rawQuery("SELECT COUNT(" + CATEGORY_ID +
+         * ") FROM " + CATEGORIES_TABLE, null);* int result = 0; if (mCursor ==
+         * null) { return result; } mCursor.moveToFirst(); result =
+         * mCursor.getInt(0); mCursor.close(); return result;
+         */
+        return 0;
     }
 
     private int fetchUnreadCategoriesCount() {
-        Cursor mCursor = mDb.rawQuery("SELECT COUNT(" + CATEGORY_ID + ") FROM " + CATEGORIES_TABLE
-                + " WHERE " + CATEGORY_IS_UNREAD + " = 1", null);
-
-        int result = 0;
-
-        if (mCursor == null) {
-            return result;
-        }
-
-        mCursor.moveToFirst();
-        result = mCursor.getInt(0);
-        mCursor.close();
-
-        return result;
+        /*
+         * Cursor mCursor = mDb.rawQuery("SELECT COUNT(" + CATEGORY_ID +
+         * ") FROM " + CATEGORIES_TABLE + " WHERE " + CATEGORY_IS_UNREAD +
+         * " = 1", null); int result = 0; if (mCursor == null) { return result;
+         * } mCursor.moveToFirst(); result = mCursor.getInt(0); mCursor.close();
+         * return result;
+         */
+        return 0;
     }
 
     public void addIncidents(List<IncidentsData> incidents, boolean isUnread) {
@@ -824,7 +790,7 @@ public class Database {
             mDb.beginTransaction();
 
             for (CategoriesData category : categories) {
-                createCategories(category, isUnread);
+                // createCategories(category, isUnread);
             }
 
             mDb.setTransactionSuccessful();
@@ -876,8 +842,6 @@ public class Database {
             mDb.endTransaction();
         }
     }
-
-    
 
     /**
      * Limit number of records to retrieve.

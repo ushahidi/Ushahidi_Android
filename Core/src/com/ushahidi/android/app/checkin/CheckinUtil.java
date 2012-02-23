@@ -2,7 +2,7 @@
 package com.ushahidi.android.app.checkin;
 
 import com.ushahidi.android.app.MainApplication;
-import com.ushahidi.android.app.data.Database;
+import com.ushahidi.android.app.database.Database;
 
 import android.content.Context;
 import android.database.Cursor;

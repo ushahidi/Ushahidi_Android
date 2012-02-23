@@ -50,7 +50,7 @@ import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
-import com.ushahidi.android.app.data.Database;
+import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.ui.PullToRefreshListView;
 import com.ushahidi.android.app.ui.PullToRefreshListView.OnRefreshListener;
 import com.ushahidi.android.app.util.ApiUtils;

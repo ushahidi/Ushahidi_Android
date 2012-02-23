@@ -22,7 +22,8 @@ package com.ushahidi.android.app;
 
 import java.util.HashSet;
 
-import com.ushahidi.android.app.data.Database;
+import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.database.DbContentProvider;
 import com.ushahidi.android.app.net.MainHttpClient;
 import android.util.Log;
 
@@ -59,7 +60,6 @@ public class MainApplication extends Application {
     public void onTerminate() {
         cleanupImages();
         mDb.close();
-
         super.onTerminate();
     }
 

@@ -38,10 +38,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ushahidi.android.app.data.Database;
 import com.ushahidi.android.app.data.DeploymentProvider;
 import com.ushahidi.android.app.data.DeploymentsData;
 import com.ushahidi.android.app.data.MapDb;
+import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.net.Deployments;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;

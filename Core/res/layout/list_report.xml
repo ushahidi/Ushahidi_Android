@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+<!--
+     Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
     Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
     This file may be used under the terms of the GNU Lesser General Public License 
     version 3 as published by the Free Software Foundation and appearing in the 
@@ -7,29 +8,49 @@
     following information to ensure the GNU Lesser General Public License version 
     3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
     have questions regarding the use of this file, please contact Ushahidi developers 
-    at team@ushahidi.com. -->
+    at team@ushahidi.com.
+-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="fill_parent"
-    android:background="@color/background_color">
-    
-    <!-- List incidents  -->
-    <com.ushahidi.android.app.ui.PullToRefreshListView
-        android:id="@+id/list_reports_table" style="@style/ListView"/>
-    
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_color" >
+
+    <!-- List incidents -->
+
+    <ListView
+        android:id="@android:id/list"
+        style="@style/ListView" />
+
     <!-- Here is the view to show if the list is emtpy -->
-    <TextView android:id="@id/android:empty" android:text="@string/no_items" style="@style/TextView.Empty" />
+
+    <TextView
+        android:id="@android:id/empty"
+        style="@style/TextView.Empty"
+        android:text="@string/no_items" />
 
     <!-- Categories Area. -->
-    <LinearLayout android:orientation="vertical"
-        android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" android:paddingBottom="5px"
-        android:paddingLeft="7px" android:paddingRight="9px">
-        <LinearLayout android:orientation="horizontal"
-            android:layout_width="fill_parent" android:layout_height="wrap_content">
 
-            <Spinner android:id="@+id/incident_cat" android:prompt="@string/prompt_mesg"
-                android:drawSelectorOnTop="true" android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:paddingBottom="5px"
+        android:paddingLeft="7px"
+        android:paddingRight="9px" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Spinner
+                android:id="@+id/incident_cat"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:drawSelectorOnTop="true"
+                android:prompt="@string/prompt_mesg" />
         </LinearLayout>
     </LinearLayout>
+
 </RelativeLayout>

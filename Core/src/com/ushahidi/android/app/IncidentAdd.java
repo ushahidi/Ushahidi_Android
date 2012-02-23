@@ -71,7 +71,8 @@ import android.widget.Toast;
 import com.google.android.maps.MapView;
 import com.ushahidi.android.app.checkin.NetworkServices;
 import com.ushahidi.android.app.data.AddIncidentData;
-import com.ushahidi.android.app.data.Database;
+import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.database.ICategorySchema;
 import com.ushahidi.android.app.net.MainHttpClient;
 import com.ushahidi.android.app.opengeosms.OpenGeoSMSSender;
 import com.ushahidi.android.app.util.ApiUtils;
@@ -420,8 +421,8 @@ public class IncidentAdd extends MapUserLocation {
         int i = 0;
 
         if (cursor.moveToFirst()) {
-            int titleIndex = cursor.getColumnIndexOrThrow(Database.CATEGORY_TITLE);
-            int idIndex = cursor.getColumnIndexOrThrow(Database.CATEGORY_ID);
+            int titleIndex = cursor.getColumnIndexOrThrow(ICategorySchema.CATEGORY_TITLE);
+            int idIndex = cursor.getColumnIndexOrThrow(ICategorySchema.CATEGORY_ID);
 
             do {
 

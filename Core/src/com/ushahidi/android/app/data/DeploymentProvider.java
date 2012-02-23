@@ -16,6 +16,8 @@
 
 package com.ushahidi.android.app.data;
 
+import com.ushahidi.android.app.database.Database;
+
 import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentResolver;

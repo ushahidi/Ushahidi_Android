@@ -78,6 +78,7 @@ public abstract class BaseListActivity<V extends View, M extends Model, L extend
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         if (listViewId != 0) {
             listView = findListViewById(listViewId);
             listView.setOnItemClickListener(this);

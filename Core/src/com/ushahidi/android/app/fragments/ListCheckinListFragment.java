@@ -39,12 +39,13 @@ public class ListCheckinListFragment extends
 
     public ListCheckinListFragment() {
         super(ListCheckinView.class, ListCheckinAdapter.class, R.layout.list_checkin,
-                R.menu.list_checkin, R.id.list_checkin_table);
+                R.menu.list_checkin, android.R.id.list);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         // Example of progress queue for executing asynctasks
         // which will execute TaskOne, then TaskTwo
         // new ProgressQueue(new TaskOne(this), new TaskTwo(this)).execute();

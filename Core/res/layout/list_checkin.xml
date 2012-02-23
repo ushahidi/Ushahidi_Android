@@ -12,18 +12,19 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@color/background_color" >
 
     <!-- List incidents -->
 
-    <com.ushahidi.android.app.ui.PullToRefreshListView
-        android:id="@+id/list_checkin_table"
+    <ListView
+        android:id="@android:id/list"
         style="@style/ListView" />
 
     <!-- Here is the view to show if the list is emtpy -->
 
     <TextView
-        android:id="@id/android:empty"
+        android:id="@android:id/empty"
         style="@style/TextView.Empty"
         android:text="@string/no_items" />
     

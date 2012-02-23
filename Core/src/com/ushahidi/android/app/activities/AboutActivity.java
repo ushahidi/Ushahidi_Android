@@ -11,7 +11,6 @@ public class AboutActivity extends BaseActivity<AboutView> {
 
     public AboutActivity() {
         super(AboutView.class, R.layout.about_view, 0);
-        // TODO Auto-generated constructor stub
     }
 
     @Override

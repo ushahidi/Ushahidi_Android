@@ -47,7 +47,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.data.IncidentsData;
-import com.ushahidi.android.app.data.Database;
+import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 

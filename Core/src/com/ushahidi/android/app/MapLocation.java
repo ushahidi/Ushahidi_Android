@@ -51,7 +51,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.google.android.maps.Projection;
 import com.ushahidi.android.app.data.IncidentsData;
-import com.ushahidi.android.app.data.Database;
+import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.util.Util;
 
 public class MapLocation extends MapActivity {

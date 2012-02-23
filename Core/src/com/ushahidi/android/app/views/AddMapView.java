@@ -8,7 +8,7 @@ import android.view.View.OnTouchListener;
 import android.widget.EditText;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.data.Database;
+import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.util.ApiUtils;
 
 public class AddMapView {

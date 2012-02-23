@@ -20,6 +20,7 @@
 
 package com.ushahidi.android.app.activities;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -38,6 +40,7 @@ import android.support.v4.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -97,6 +100,8 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     private boolean edit = true;
 
     private String filter;
+
+    private String TAG = ListMapActivity.class.getSimpleName();
 
     public ListMapActivity() {
         super(ListMapView.class, ListMapAdapter.class, R.layout.list_map, R.menu.list_map,
@@ -307,12 +312,11 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
         final String deploymentId = listMapAdapter.getItem(position).getId();
 
         if (isMapActive(Integer.parseInt(deploymentId))) {
-            // goToReports();
-            // TODO :// do something here
-
+            goToReports();
         } else {
-            toastShort("Item id " + deploymentId);
-
+            FetchMapReportTask fetchMapReportTask = new FetchMapReportTask(this);
+            fetchMapReportTask.id = deploymentId;
+            fetchMapReportTask.execute((String)null);
         }
 
     }
@@ -344,6 +348,42 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
             Preferences.isCheckinEnabled = 0;
         }
         Preferences.saveSettings(this);
+    }
+
+    public void goToReports() {
+        Intent launchIntent;
+        Bundle bundle = new Bundle();
+        bundle.putInt("tab_index", 0);
+        launchIntent = new Intent(this, ReportTabActivity.class);
+        launchIntent.putExtra("tab", bundle);
+        startActivityForResult(launchIntent, 0);
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    /**
+     * Clear saved reports
+     */
+    public void clearCachedReports() {
+
+        // delete unset photo
+        if (Preferences.fileName != null) {
+            File f = new File(Preferences.fileName);
+            if (f != null) {
+                if (f.exists()) {
+                    f.delete();
+                }
+            }
+        }
+
+        // clear persistent data
+        SharedPreferences.Editor editor = getPreferences(0).edit();
+        editor.putString("title", "");
+        editor.putString("desc", "");
+        editor.putString("date", "");
+        editor.putString("selectedphoto", "");
+        editor.putInt("requestedcode", 0);
+        editor.commit();
     }
 
     /**
@@ -503,33 +543,39 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     }
 
     /**
-     * Load map details from the database TODO:// See if this is actually needed
+     * Load the map's report
      */
 
-    class FetchMapTask extends ProgressTask {
+    class FetchMapReportTask extends ProgressTask {
 
-        public FetchMapTask(FragmentActivity activity) {
-            super(activity, R.string.loading_);
+        protected String id;
+
+        protected Integer status;
+
+        public FetchMapReportTask(FragmentActivity activity) {
+            super(activity, R.string.please_wait);
             // pass custom loading message to super call
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            listMapView.mProgressBar.setVisibility(View.VISIBLE);
-            listMapView.mEmptyList.setVisibility(View.GONE);
-            dialog.cancel();
         }
 
         @Override
         protected Boolean doInBackground(String... strings) {
             try {
-                listMapAdapter.refresh(ListMapActivity.this);
+                if (id != null)
+                    listMapModel.activateDeployment(ListMapActivity.this, id);
+                isCheckinsEnabled();
+                if (Preferences.isCheckinEnabled == 0) {
+                    status = ApiUtils.processReports(ListMapActivity.this);
+                } else {
+                    status = ApiUtils.processCheckins(ListMapActivity.this);
+                }
+
                 Thread.sleep(1000);
+                return true;
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                return false;
             }
-            return true;
+
         }
 
         @Override
@@ -541,7 +587,19 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
     @Override
     protected void onLoaded(boolean success) {
-        refreshMapLists();
+        try {
+
+            if (success) {
+
+                clearCachedReports();
+                goToReports();
+
+            } else {
+                toastLong(R.string.could_not_fetch_reports);
+            }
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "IllegalArgumentException " + e.toString());
+        }
     }
 
     /** Location stuff **/

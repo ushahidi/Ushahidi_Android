@@ -23,7 +23,9 @@ package com.ushahidi.android.app.views;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
+import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentMapActivity;
 import android.util.Log;
 
 /**
@@ -61,7 +63,66 @@ public abstract class View {
             }
         }
     }
+    
+    /**
+     * View Map View
+     * @param activity Activity
+     */
+    public View(FragmentMapActivity activity) {
+        for(Class<?> clazz : new Class[]{getClass(), getClass().getSuperclass()}) {
+            if (clazz != null && View.class.isAssignableFrom(clazz)) {
+                for (Field field : clazz.getDeclaredFields()) {
+                    try {
+                        Annotation annotation = field.getAnnotation(Widget.class);
+                        if (annotation instanceof Widget) {
+                            Widget widgetAnnotation = (Widget)annotation;
+                            if (!field.isAccessible()) {
+                                field.setAccessible(true);
+                            }
+                            field.set(this, activity.findViewById(widgetAnnotation.value()));
+                        }
+                    }
+                    catch (IllegalArgumentException e) {
+                        Log.e(getClass().getSimpleName(), "IllegalArgumentException", e);
+                    }
+                    catch (IllegalAccessException e) {
+                        Log.e(getClass().getSimpleName(), "IllegalAccessException", e);
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     * View Map View
+     * @param activity Activity
+     */
+    public View(Activity activity) {
+        for(Class<?> clazz : new Class[]{getClass(), getClass().getSuperclass()}) {
+            if (clazz != null && View.class.isAssignableFrom(clazz)) {
+                for (Field field : clazz.getDeclaredFields()) {
+                    try {
+                        Annotation annotation = field.getAnnotation(Widget.class);
+                        if (annotation instanceof Widget) {
+                            Widget widgetAnnotation = (Widget)annotation;
+                            if (!field.isAccessible()) {
+                                field.setAccessible(true);
+                            }
+                            field.set(this, activity.findViewById(widgetAnnotation.value()));
+                        }
+                    }
+                    catch (IllegalArgumentException e) {
+                        Log.e(getClass().getSimpleName(), "IllegalArgumentException", e);
+                    }
+                    catch (IllegalAccessException e) {
+                        Log.e(getClass().getSimpleName(), "IllegalAccessException", e);
+                    }
+                }
+            }
+        }
+    }
 
+    
     /**
      * View
      * @param view View

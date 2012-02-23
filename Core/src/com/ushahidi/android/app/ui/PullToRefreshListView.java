@@ -1,8 +1,5 @@
 package com.ushahidi.android.app.ui;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import com.ushahidi.android.app.R;
 
 import android.content.Context;
@@ -16,35 +13,32 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 
-/**
- * This class implements the pull to refresh list just like it happens with the official 
- * android twitter app.
- * 
- * Credits: To https://github.com/johannilsson/android-pulltorefresh/
- * 
- * Saved me from so much trouble and time
- * 
- *
- */
+
 public class PullToRefreshListView extends ListView implements OnScrollListener {
-    
+
     private static final int TAP_TO_REFRESH = 1;
     private static final int PULL_TO_REFRESH = 2;
     private static final int RELEASE_TO_REFRESH = 3;
     private static final int REFRESHING = 4;
-    
+
     private static final String TAG = "PullToRefreshListView";
+
     private OnRefreshListener mOnRefreshListener;
+
+    /**
+     * Listener that will receive notifications every time the list scrolls.
+     */
+    private OnScrollListener mOnScrollListener;
     private LayoutInflater mInflater;
 
-    private LinearLayout mRefreshView;
+    private RelativeLayout mRefreshView;
     private TextView mRefreshViewText;
     private ImageView mRefreshViewImage;
     private ProgressBar mRefreshViewProgress;
@@ -59,7 +53,9 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     private int mRefreshViewHeight;
     private int mRefreshOriginalTopPadding;
     private int mLastMotionY;
-    
+
+    private boolean mBounceHack;
+
     public PullToRefreshListView(Context context) {
         super(context);
         init(context);
@@ -93,9 +89,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         mInflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
 
-        mRefreshView = (LinearLayout) mInflater.inflate(
-                R.layout.list_header, null);
-
+        mRefreshView = (RelativeLayout) mInflater.inflate(
+                R.layout.list_header, this, false);
         mRefreshViewText =
             (TextView) mRefreshView.findViewById(R.id.pull_to_refresh_text);
         mRefreshViewImage =
@@ -113,7 +108,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 
         addHeaderView(mRefreshView);
 
-        setOnScrollListener(this);
+        super.setOnScrollListener(this);
 
         measureView(mRefreshView);
         mRefreshViewHeight = mRefreshView.getMeasuredHeight();
@@ -129,6 +124,17 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         super.setAdapter(adapter);
 
         setSelection(1);
+    }
+
+    /**
+     * Set the listener that will receive notifications every time the list
+     * scrolls.
+     * 
+     * @param l The scroll listener. 
+     */
+    @Override
+    public void setOnScrollListener(AbsListView.OnScrollListener l) {
+        mOnScrollListener = l;
     }
 
     /**
@@ -153,51 +159,26 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         }
     }
 
-    /**
-     * Smoothly scroll by distance pixels over duration milliseconds.
-     * 
-     * <p>Using reflection internally to call smoothScrollBy for API Level 8
-     * otherwise scrollBy is called.
-     * 
-     * @param distance Distance to scroll in pixels.
-     * @param duration Duration of the scroll animation in milliseconds.
-     */
-    private void scrollListBy(int distance, int duration) {
-        try {
-            Method method = ListView.class.getMethod("smoothScrollBy",
-                    Integer.TYPE, Integer.TYPE);
-            method.invoke(this, distance + 1, duration);
-        } catch (NoSuchMethodException e) {
-            // If smoothScrollBy is not available (< 2.2)
-            setSelection(1);
-        } catch (IllegalArgumentException e) {
-            throw e;
-        } catch (IllegalAccessException e) {
-            System.err.println("unexpected " + e);
-        } catch (InvocationTargetException e) {
-            System.err.println("unexpected " + e);
-        }
-    }
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         final int y = (int) event.getY();
+        mBounceHack = false;
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
                 if (!isVerticalScrollBarEnabled()) {
                     setVerticalScrollBarEnabled(true);
                 }
-
                 if (getFirstVisiblePosition() == 0 && mRefreshState != REFRESHING) {
-                    if (mRefreshView.getBottom() > mRefreshViewHeight
-                            || mRefreshView.getTop() >= 0
+                    if ((mRefreshView.getBottom() >= mRefreshViewHeight
+                            || mRefreshView.getTop() >= 0)
                             && mRefreshState == RELEASE_TO_REFRESH) {
                         // Initiate the refresh
                         mRefreshState = REFRESHING;
                         prepareForRefresh();
                         onRefresh();
-                    } else if (mRefreshView.getBottom() < mRefreshViewHeight) {
+                    } else if (mRefreshView.getBottom() < mRefreshViewHeight
+                            || mRefreshView.getTop() <= 0) {
                         // Abort refresh and scroll down below the refresh view
                         resetHeader();
                         setSelection(1);
@@ -215,59 +196,27 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     }
 
     private void applyHeaderPadding(MotionEvent ev) {
-        final int historySize = ev.getHistorySize();
+        // getHistorySize has been available since API 1
+        int pointerCount = ev.getHistorySize();
 
-        // Workaround for getPointerCount() which is unavailable in 1.5
-        // (it's always 1 in 1.5)
-        int pointerCount = 1;
-        try {
-            Method method = MotionEvent.class.getMethod("getPointerCount");
-            pointerCount = (Integer)method.invoke(ev);
-        } catch (NoSuchMethodException e) {
-            pointerCount = 1;
-        } catch (IllegalArgumentException e) {
-            throw e;
-        } catch (IllegalAccessException e) {
-            System.err.println("unexpected " + e);
-        } catch (InvocationTargetException e) {
-            System.err.println("unexpected " + e);
-        }
-
-        for (int h = 0; h < historySize; h++) {
-            for (int p = 0; p < pointerCount; p++) {
-                if (mRefreshState == RELEASE_TO_REFRESH) {
-                    if (isVerticalFadingEdgeEnabled()) {
-                        setVerticalScrollBarEnabled(false);
-                    }
-
-                    int historicalY = 0;
-                    try {
-                        // For Android > 2.0
-                        Method method = MotionEvent.class.getMethod(
-                                "getHistoricalY", Integer.TYPE, Integer.TYPE);
-                        historicalY = ((Float) method.invoke(ev, p, h)).intValue();
-                    } catch (NoSuchMethodException e) {
-                        // For Android < 2.0
-                        historicalY = (int) (ev.getHistoricalY(h));
-                    } catch (IllegalArgumentException e) {
-                        throw e;
-                    } catch (IllegalAccessException e) {
-                        System.err.println("unexpected " + e);
-                    } catch (InvocationTargetException e) {
-                        System.err.println("unexpected " + e);
-                    }
-
-                    // Calculate the padding to apply, we divide by 1.7 to
-                    // simulate a more resistant effect during pull.
-                    int topPadding = (int) (((historicalY - mLastMotionY)
-                            - mRefreshViewHeight) / 1.7);
-
-                    mRefreshView.setPadding(
-                            mRefreshView.getPaddingLeft(),
-                            topPadding,
-                            mRefreshView.getPaddingRight(),
-                            mRefreshView.getPaddingBottom());
+        for (int p = 0; p < pointerCount; p++) {
+            if (mRefreshState == RELEASE_TO_REFRESH) {
+                if (isVerticalFadingEdgeEnabled()) {
+                    setVerticalScrollBarEnabled(false);
                 }
+
+                int historicalY = (int) ev.getHistoricalY(p);
+
+                // Calculate the padding to apply, we divide by 1.7 to
+                // simulate a more resistant effect during pull.
+                int topPadding = (int) (((historicalY - mLastMotionY)
+                        - mRefreshViewHeight) / 1.7);
+
+                mRefreshView.setPadding(
+                        mRefreshView.getPaddingLeft(),
+                        topPadding,
+                        mRefreshView.getPaddingRight(),
+                        mRefreshView.getPaddingBottom());
             }
         }
     }
@@ -295,7 +244,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
             // Set refresh view text to the pull label
             mRefreshViewText.setText(R.string.pull_to_refresh_tap_label);
             // Replace refresh drawable with arrow drawable
-            mRefreshViewImage.setImageResource(R.drawable.button_pull);
+            mRefreshViewImage.setImageResource(R.drawable.button_pull_normal);
             // Clear the full rotation animation
             mRefreshViewImage.clearAnimation();
             // Hide progress bar and arrow.
@@ -324,6 +273,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         child.measure(childWidthSpec, childHeightSpec);
     }
 
+    @Override
     public void onScroll(AbsListView view, int firstVisibleItem,
             int visibleItemCount, int totalItemCount) {
         // When the refresh view is completely visible, change the text to say
@@ -332,7 +282,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
                 && mRefreshState != REFRESHING) {
             if (firstVisibleItem == 0) {
                 mRefreshViewImage.setVisibility(View.VISIBLE);
-                if ((mRefreshView.getBottom() > mRefreshViewHeight + 20
+                if ((mRefreshView.getBottom() >= mRefreshViewHeight + 20
                         || mRefreshView.getTop() >= 0)
                         && mRefreshState != RELEASE_TO_REFRESH) {
                     mRefreshViewText.setText(R.string.pull_to_refresh_release_label);
@@ -356,11 +306,28 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
                 && firstVisibleItem == 0
                 && mRefreshState != REFRESHING) {
             setSelection(1);
+            mBounceHack = true;
+        } else if (mBounceHack && mCurrentScrollState == SCROLL_STATE_FLING) {
+            setSelection(1);
+        }
+
+        if (mOnScrollListener != null) {
+            mOnScrollListener.onScroll(view, firstVisibleItem,
+                    visibleItemCount, totalItemCount);
         }
     }
 
+    @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         mCurrentScrollState = scrollState;
+
+        if (mCurrentScrollState == SCROLL_STATE_IDLE) {
+            mBounceHack = false;
+        }
+
+        if (mOnScrollListener != null) {
+            mOnScrollListener.onScrollStateChanged(view, scrollState);
+        }
     }
 
     public void prepareForRefresh() {
@@ -417,6 +384,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
      */
     private class OnClickRefreshListener implements OnClickListener {
 
+        @Override
         public void onClick(View v) {
             if (mRefreshState != REFRESHING) {
                 prepareForRefresh();
@@ -439,5 +407,4 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
          */
         public void onRefresh();
     }
-    
 }

@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.location.Location;
 
-import com.ushahidi.android.app.data.Database;
+import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.models.ListMapModel;
 
 /**

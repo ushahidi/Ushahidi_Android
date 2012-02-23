@@ -43,8 +43,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.ushahidi.android.app.data.Database;
 import com.ushahidi.android.app.data.IncidentsData;
+import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.database.ICategorySchema;
 import com.ushahidi.android.app.ui.PullToRefreshListView;
 import com.ushahidi.android.app.ui.PullToRefreshListView.OnRefreshListener;
 import com.ushahidi.android.app.util.ApiUtils;
@@ -94,6 +95,7 @@ public class IncidentList extends Activity {
     private List<IncidentsData> mOldIncidents;
 
     private Vector<String> vectorCategories = new Vector<String>();
+    
     private TextView emptyListText;
 
     @Override
@@ -468,7 +470,7 @@ public class IncidentList extends Activity {
         vectorCategories.clear();
         vectorCategories.add(getString(R.string.all_categories));
         if (cursor.moveToFirst()) {
-            int titleIndex = cursor.getColumnIndexOrThrow(Database.CATEGORY_TITLE);
+            int titleIndex = cursor.getColumnIndexOrThrow(ICategorySchema.CATEGORY_TITLE);
             do {
                 vectorCategories.add(cursor.getString(titleIndex));
             } while (cursor.moveToNext());

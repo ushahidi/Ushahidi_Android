@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import com.ushahidi.android.app.models.ListMapModel;
-
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -15,6 +13,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 import android.util.Log;
+
+import com.ushahidi.android.app.models.ListMapModel;
 
 /**
  * This calls handles all database stuff related to Maps aka deployments

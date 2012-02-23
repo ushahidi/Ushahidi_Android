@@ -28,7 +28,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.Menu;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -70,6 +72,11 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
      * Menu resource id
      */
     protected final int menu;
+    
+    /**
+     * Layout resource id
+     */
+    protected final int layout;
 
     /**
      * BaseListActivity
@@ -84,28 +91,25 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
         this.adapterClass = adapter;
         this.listViewId = listView;
         this.menu = menu;
+        this.layout = layout;
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        setHasOptionsMenu(true);
+       
         if (listViewId != 0) {
+
             listView = getListView();
             listView.setOnItemClickListener(this);
             android.view.View emptyView = getActivity().findViewById(android.R.id.empty);
             if (emptyView != null) {
                 listView.setEmptyView(emptyView);
             }
-            if (listView.getCount() == 0) {
-                // Start out with a progress indicator.
-                setListShown(true);
-                setEmptyText(getString(R.string.no_items));
-            }
-            adapter = createInstance(adapterClass, Context.class, this);
-            listView.setAdapter(adapter);
+            adapter = createInstance(adapterClass, Context.class, getActivity());
+            listView.setAdapter(adapter);           
             listView.setFocusable(true);
             listView.setFocusableInTouchMode(true);
-
         }
     }
 
@@ -116,6 +120,16 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
             inflater.inflate(this.menu, menu);
         }
 
+    }
+
+    @Override 
+    public android.view.View  onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        android.view.View root = null;
+        if(layout != 0) {
+           root = inflater.inflate(layout, null);
+        }
+        return root;
     }
 
     /**

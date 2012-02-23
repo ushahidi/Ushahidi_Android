@@ -20,6 +20,7 @@
 
 package com.ushahidi.android.app.tasks;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentMapActivity;
@@ -41,6 +42,18 @@ public abstract class ProgressTask extends Task<String, String, Boolean> {
     }
 
     protected ProgressTask(FragmentActivity activity, int message) {
+        super(activity);
+        this.dialog = new ProgressDialog(activity);
+        this.dialog.setCancelable(false);
+        this.dialog.setIndeterminate(true);
+        this.dialog.setMessage(activity.getString(message));
+    }
+    
+    protected ProgressTask(Activity activity) {
+        this(activity, R.string.loading_);
+    }
+
+    protected ProgressTask(Activity activity, int message) {
         super(activity);
         this.dialog = new ProgressDialog(activity);
         this.dialog.setCancelable(false);

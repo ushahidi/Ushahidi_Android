@@ -36,7 +36,7 @@
 
     <TextView android:id="@+id/report_status"
         android:layout_height="wrap_content" android:layout_width="wrap_content"
-        android:textColor="@color/gray_color" android:layout_below="@+id/report_location"
+        android:layout_below="@+id/report_location"
         android:layout_toLeftOf="@+id/report_arrow" android:layout_toRightOf="@+id/report_thumbnail"
         android:paddingLeft="3dip" />
 

@@ -41,12 +41,13 @@ public class ListAdminReportListFragment extends BaseListFragment<ListReportView
               ListReportAdapter.class,
               R.layout.list_report,
               R.menu.list_report,
-              R.id.list_reports_table);
+              android.R.id.list);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         //Example of progress queue for executing asynctasks
         //which will execute TaskOne, then TaskTwo
         /*new ProgressQueue(
