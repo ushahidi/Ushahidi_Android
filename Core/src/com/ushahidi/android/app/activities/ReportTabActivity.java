@@ -3,7 +3,9 @@ package com.ushahidi.android.app.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.ActionBar;
+import android.support.v4.app.ActionBar.Tab;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 
 import com.ushahidi.android.app.R;
@@ -12,7 +14,7 @@ import com.ushahidi.android.app.fragments.ListCheckinListFragment;
 import com.ushahidi.android.app.fragments.ListReportListFragment;
 import com.ushahidi.android.app.helpers.TabsAdapter;
 
-public class ReportTabActivity extends FragmentActivity {
+public class ReportTabActivity extends FragmentActivity implements ActionBar.TabListener {
 
     private ViewPager mViewPager;
 
@@ -23,11 +25,10 @@ public class ReportTabActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.report_tab);
-        getSupportActionBar().setNavigationMode(
-                ActionBar.NAVIGATION_MODE_TABS);
+
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setSubtitle(R.string.about);
         mViewPager = (ViewPager)findViewById(R.id.pager);
 
         ActionBar.Tab reportsTab = getSupportActionBar().newTab().setText(
@@ -50,6 +51,24 @@ public class ReportTabActivity extends FragmentActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("index", getSupportActionBar().getSelectedNavigationIndex());
+    }
+
+    @Override
+    public void onTabReselected(Tab tab, FragmentTransaction ft) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+        // TODO Auto-generated method stub
+
     }
 
 }

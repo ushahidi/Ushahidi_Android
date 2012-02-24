@@ -28,7 +28,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
@@ -272,25 +271,24 @@ public class ListReportModel extends Model {
                 reportModel.add(listReportModel);
             }
 
-            return reportModel;
-            
         }
-        return null;
+        return reportModel;
     }
 
     public Vector<String> getCategories(Context context) {
         final List<Category> categories = Database.mCategoryDao.fetchAllCategoryTitles();
-        Log.i("ListReportModel ", "new ");
         final Vector<String> vectorCategories = new Vector<String>();
-        vectorCategories.clear();
-        vectorCategories.add(context.getString(R.string.all_categories));
-        
-        for (Category category : categories) {
-            if (category != null) {
-                vectorCategories.add(category.getCategoryTitle());
+
+        if ((categories != null) && (categories.size() > 0)) {
+            vectorCategories.clear();
+            vectorCategories.add(context.getString(R.string.all_categories));
+
+            for (Category category : categories) {
+                if (category != null) {
+                    vectorCategories.add(category.getCategoryTitle());
+                }
             }
         }
-        Log.i("ListReportModel ", "new "+vectorCategories.size());
         return vectorCategories;
     }
 }

@@ -33,6 +33,7 @@ import android.view.MenuInflater;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.R;
@@ -72,7 +73,7 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
      * Menu resource id
      */
     protected final int menu;
-    
+
     /**
      * Layout resource id
      */
@@ -97,7 +98,7 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-       
+
         if (listViewId != 0) {
 
             listView = getListView();
@@ -107,7 +108,7 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
                 listView.setEmptyView(emptyView);
             }
             adapter = createInstance(adapterClass, Context.class, getActivity());
-            listView.setAdapter(adapter);           
+            listView.setAdapter(adapter);
             listView.setFocusable(true);
             listView.setFocusableInTouchMode(true);
         }
@@ -122,12 +123,12 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
 
     }
 
-    @Override 
-    public android.view.View  onCreateView(LayoutInflater inflater, ViewGroup container,
+    @Override
+    public android.view.View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         android.view.View root = null;
-        if(layout != 0) {
-           root = inflater.inflate(layout, null);
+        if (layout != 0) {
+            root = inflater.inflate(layout, null);
         }
         return root;
     }
@@ -196,6 +197,14 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
     protected void log(String message, Exception ex) {
         if (MainApplication.LOGGING_MODE)
             Log.e(getClass().getName(), message, ex);
+    }
+
+    protected void toastLong(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+    }
+
+    protected void toastLong(int message) {
+        Toast.makeText(getActivity(), getText(message), Toast.LENGTH_LONG).show();
     }
 
     @SuppressWarnings("unchecked")

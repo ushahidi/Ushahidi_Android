@@ -26,6 +26,7 @@ public class ListMapAdapter extends BaseListAdapter<ListMapModel> {
     }
 
     @Override
+    //Use Context instead of FragmentActivity
     public void refresh(Context context) {
         listMapModel = new ListMapModel();
         listMapModel.load(context);

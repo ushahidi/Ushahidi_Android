@@ -41,7 +41,6 @@ public class ListReportView extends com.ushahidi.android.app.views.View {
 
     public ListReportView(Activity activity) {
         super(activity);
-        spinner = (Spinner)activity.findViewById(R.id.incident_cat);
         listReport = (ListView)activity.findViewById(android.R.id.list);
         emptyListText = (TextView)activity.findViewById(android.R.id.empty);
     }
@@ -53,10 +52,6 @@ public class ListReportView extends com.ushahidi.android.app.views.View {
             emptyListText.setVisibility(View.GONE);
         }
 
-    }
-    
-    public Spinner getSpinner() {
-        return spinner;
     }
     
     public ArrayAdapter<String> getArrayAdapter() {

@@ -1,6 +1,7 @@
 
 package com.ushahidi.android.app.database;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -25,6 +26,7 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao, ICat
     public List<Category> fetchAllCategories() {
         final String sortOrder = CATEGORY_POS + " DESC";
         cursor = super.query(CATEGORIES_TABLE, CATEGORIES_COLUMNS, null, null, sortOrder);
+        listCategory = new ArrayList<Category>();
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -43,12 +45,15 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao, ICat
         final String columns[] = {
                 CATEGORY_TITLE, CATEGORY_POS
         };
+        listCategory = new ArrayList<Category>();
         cursor = super.query(CATEGORIES_TABLE, columns, null, null, sortOrder);
+        
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
 
                 Category category = cursorToEntity(cursor);
+                
                 listCategory.add(category);
                 cursor.moveToNext();
             }

@@ -7,6 +7,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.ushahidi.android.app.entities.Report;
 
@@ -46,8 +47,8 @@ public class ReportDao extends DbContentProvider implements IReportDao, IReportS
 
     @Override
     public List<Report> fetchReportByCategory(String category) {
-        final String sortOrder = INCIDENT_TITLE;
-
+        final String sortOrder = INCIDENT_TITLE+ " DESC";
+        Log.i("ReportDao ", "cats: "+category );
         final String selectionArgs[] = {
             category
         };

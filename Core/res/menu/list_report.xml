@@ -13,15 +13,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/menu_refresh"
-        android:icon="@drawable/button_refresh"
+        android:id="@+id/filter_by"
         android:orderInCategory="0"
         android:showAsAction="always"
+        android:title="@string/categories"
+        android:icon="@android:drawable/arrow_down_float"/>
+    
+    <item
+        android:id="@+id/menu_refresh"
+        android:icon="@drawable/button_refresh"
+        android:orderInCategory="1"
+        android:showAsAction="always"
+        
         android:title="@string/menu_refresh"/>
     <item
         android:id="@+id/menu_add"
         android:icon="@drawable/button_add"
-        android:orderInCategory="1"
+        android:orderInCategory="2"
         android:showAsAction="always"
         android:title="@string/add_report"/>
 

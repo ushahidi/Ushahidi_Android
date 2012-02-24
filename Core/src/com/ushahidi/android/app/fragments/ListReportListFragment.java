@@ -23,17 +23,18 @@ package com.ushahidi.android.app.fragments;
 import java.util.Vector;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItem;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.ViewReportActivity;
@@ -63,19 +64,24 @@ public class ListReportListFragment extends
     private Handler mHandler;
 
     private MenuItem refresh;
-    
+
     private ArrayAdapter<String> spinnerArrayAdapter;
+
+    private Vector<String> categories;
+
+    private String filterCategory;
 
     public ListReportListFragment() {
         super(ListReportView.class, ListReportAdapter.class, R.layout.list_report,
                 R.menu.list_report, android.R.id.list);
+        categories = new Vector<String>();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        
+
         mListReportView = new ListReportView(getActivity());
         mListReportAdapter = new ListReportAdapter(getActivity());
         mListReportModel = new ListReportModel();
@@ -132,10 +138,15 @@ public class ListReportListFragment extends
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_refresh) {
             refresh = item;
-            new TaskTwo(getActivity()).execute((String)null);
+            new RefreshReports(getActivity()).execute((String)null);
             return true;
         } else if (item.getItemId() == R.id.menu_add) {
             // TODO start activity to add a report
+            return true;
+        } else if (item.getItemId() == R.id.filter_by) {
+
+            showDropDownNav();
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -172,7 +183,6 @@ public class ListReportListFragment extends
                 mListReportAdapter.refresh(getActivity());
                 mListReportView.getPullToRefreshListView().setAdapter(mListReportAdapter);
                 mListReportView.displayEmptyListText();
-                //load categories
                 showCategories();
             } catch (Exception e) {
                 return;
@@ -184,33 +194,51 @@ public class ListReportListFragment extends
         mListReportAdapter.refresh(getActivity());
         mListReportView.displayEmptyListText();
     }
-    
-    public void showCategories() {
-        final Vector<String> categories = mListReportModel.getCategories(getActivity());
-        Log.i("ListReportModel ", "game "+categories.size());
-        spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item,
-                 categories);
 
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mListReportView.getSpinner().setAdapter(spinnerArrayAdapter);
+    private void showDropDownNav() {
 
-        mListReportView.getSpinner().setOnItemSelectedListener(spinnerListener);
+        if (categories != null && categories.size() > 0) {
+
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(getActivity().getString(R.string.prompt_mesg))
+                    .setAdapter(spinnerArrayAdapter, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            filterCategory = categories.get(which);
+                            // FIXME implement a proper way of filtering by
+                            // category
+                            if ((filterCategory != null)
+                                    && (!TextUtils.isEmpty(filterCategory))
+                                    && (filterCategory != getActivity().getString(
+                                            R.string.all_categories))) {
+                                mListReportAdapter.refresh(getActivity(), filterCategory);
+                                mListReportView.getPullToRefreshListView().setAdapter(
+                                        mListReportAdapter);
+                                mListReportView.displayEmptyListText();
+                                filterCategory = null;
+
+                            } else {
+                                mListReportAdapter.refresh(getActivity());
+                                mListReportView.getPullToRefreshListView().setAdapter(
+                                        mListReportAdapter);
+                                mListReportView.displayEmptyListText();
+                            }
+                            dialog.dismiss();
+                        }
+                    }).create().show();
+        }
+
     }
 
-    // spinner listener
-    Spinner.OnItemSelectedListener spinnerListener = new Spinner.OnItemSelectedListener() {
+    public void showCategories() {
+        categories = mListReportModel.getCategories(getActivity());
+        spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, categories);
 
-        
-        public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-            // clear data in the list
-           //TODO:// implement filtering reports by category
-        }
-
-       
-        public void onNothingSelected(AdapterView<?> parent) {
-        }
-    };
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -218,11 +246,11 @@ public class ListReportListFragment extends
     }
 
     /**
-     * Another example of a ProgressTask
+     * Refresh for new reports
      */
-    class TaskTwo extends ProgressTask {
+    class RefreshReports extends ProgressTask {
 
-        public TaskTwo(Activity activity) {
+        public RefreshReports(Activity activity) {
             super(activity, R.string.loading_);
             // pass custom loading message to super call
             refresh.setActionView(R.layout.indeterminate_progress_action);
@@ -256,7 +284,6 @@ public class ListReportListFragment extends
 
     @Override
     protected void onLoaded(boolean success) {
-        // TODO Auto-generated method stub
 
     }
 

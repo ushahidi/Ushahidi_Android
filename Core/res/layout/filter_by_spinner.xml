@@ -10,22 +10,11 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/filter_spinner"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/background_color" >
-
-    <!-- List incidents -->
-
-    <ListView
-        android:id="@android:id/list"
-        style="@style/ListView" />
-
-    <!-- Here is the view to show if the list is emtpy -->
-
-    <TextView
-        android:id="@android:id/empty"
-        style="@style/TextView.Empty"
-        android:text="@string/no_items" />
-
-</RelativeLayout>
+    android:layout_gravity="center_horizontal"
+    android:padding="5dip"
+    android:drawSelectorOnTop="true"
+    android:prompt="@string/prompt_mesg" />

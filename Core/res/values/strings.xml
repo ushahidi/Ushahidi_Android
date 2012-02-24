@@ -351,4 +351,5 @@
     <string name="map_deleted">Map deleted</string>
     <string name="map_deleted_failed">Failed to map</string>
     <string name="admin">Admin</string>
+    <string name="categories">Categories</string>
 </resources>

@@ -2,7 +2,6 @@
 package com.ushahidi.android.app.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -38,13 +37,13 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel> {
         ImageView thumbnail;
 
         ImageView arrow;
-        
+
     }
 
     private int[] colors;
 
     private ListReportModel mListReportModel;
-    
+
     private Context mContext;
 
     public ListReportAdapter(Context context) {
@@ -59,41 +58,49 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel> {
     public void refresh(Context context) {
         mListReportModel = new ListReportModel();
         final boolean loaded = mListReportModel.load(context);
-        if( loaded) {
+        if (loaded) {
             this.setItems(mListReportModel.getReports(context));
         }
-        
+
+    }
+
+    public void refresh(Context context, String category) {
+        mListReportModel = new ListReportModel();
+        final boolean loaded = mListReportModel.loadReportByCategory(context, category);
+        if(loaded) {
+            this.setItems(mListReportModel.getReports(context));
+        }
     }
 
     public View getView(int position, View view, ViewGroup viewGroup) {
-        
+
         int colorPosition = position % colors.length;
         View row = inflater.inflate(R.layout.list_report_item, viewGroup, false);
         row.setBackgroundResource(colors[colorPosition]);
-        
+
         Widgets widgets = (Widgets)row.getTag();
-        
+
         if (widgets == null) {
             widgets = new Widgets(row);
             row.setTag(widgets);
         }
-        
+
         widgets.thumbnail.setImageDrawable(getItem(position).getThumbnail());
         widgets.title.setText(getItem(position).getTitle());
         widgets.date.setText(getItem(position).getDate());
         widgets.iLocation.setText(getItem(position).getLocation());
         widgets.status.setText(getItem(position).getStatus());
         // change the status color
-        
-        if (getItem(position).getStatus().equalsIgnoreCase(mContext.getString(R.string.report_verified))) {
+
+        if (getItem(position).getStatus().equalsIgnoreCase(
+                mContext.getString(R.string.report_verified))) {
             widgets.status.setTextColor(R.color.verified_text_color); // green
-        }
-        else {
+        } else {
             widgets.status.setTextColor(R.color.unverified_text_color); // red
         }
-        
+
         widgets.arrow.setImageDrawable(getItem(position).getArrow());
-        
+
         return row;
     }
 }
