@@ -3,9 +3,7 @@ package com.ushahidi.android.app.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.ActionBar;
-import android.support.v4.app.ActionBar.Tab;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 
 import com.ushahidi.android.app.R;
@@ -14,7 +12,7 @@ import com.ushahidi.android.app.fragments.ListCheckinListFragment;
 import com.ushahidi.android.app.fragments.ListReportListFragment;
 import com.ushahidi.android.app.helpers.TabsAdapter;
 
-public class ReportTabActivity extends FragmentActivity implements ActionBar.TabListener {
+public class ReportTabActivity extends FragmentActivity {
 
     private ViewPager mViewPager;
 
@@ -28,13 +26,13 @@ public class ReportTabActivity extends FragmentActivity implements ActionBar.Tab
 
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        mViewPager = (ViewPager)findViewById(R.id.pager);
-
+        
         ActionBar.Tab reportsTab = getSupportActionBar().newTab().setText(
                 getString(R.string.reports));
         ActionBar.Tab mapTab = getSupportActionBar().newTab().setText(getString(R.string.map));
         ActionBar.Tab adminTab = getSupportActionBar().newTab().setText(getString(R.string.admin));
+
+        mViewPager = (ViewPager)findViewById(R.id.pager);
 
         mTabsAdapter = new TabsAdapter(this, getSupportActionBar(), mViewPager);
 
@@ -53,22 +51,5 @@ public class ReportTabActivity extends FragmentActivity implements ActionBar.Tab
         outState.putInt("index", getSupportActionBar().getSelectedNavigationIndex());
     }
 
-    @Override
-    public void onTabReselected(Tab tab, FragmentTransaction ft) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onTabSelected(Tab tab, FragmentTransaction ft) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-        // TODO Auto-generated method stub
-
-    }
 
 }

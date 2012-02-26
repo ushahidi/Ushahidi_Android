@@ -21,6 +21,7 @@
 package com.ushahidi.android.app.activities;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -31,6 +32,8 @@ import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
+import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.MapMarker;
 import com.ushahidi.android.app.views.View;
 
 /**
@@ -102,7 +105,10 @@ public abstract class BaseMapActivity<V extends View> extends FragmentMapActivit
         if (locationManager == null) {
             locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       
     }
+    
 
     @Override
     protected void onResume() {
@@ -122,12 +128,31 @@ public abstract class BaseMapActivity<V extends View> extends FragmentMapActivit
         }
         return false;
     }
+    
+    protected void setActionBarTitle(String title) {
+        getSupportActionBar().setTitle(title);
+    }
 
-    public void centerAtLocation(double latitude, double longitude) {
+    protected void placeMarker(int markerLatitude, int markerLongitude) {
+
+        Drawable marker = getResources().getDrawable(R.drawable.map_marker_red);
+
+        marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
+        mapView.getController().setZoom(14);
+
+        mapView.setBuiltInZoomControls(true);
+        mapView.getOverlays().add(new MapMarker(marker, markerLatitude, markerLongitude));
+    }
+    
+    protected void centerLocationWithMarker(GeoPoint centerGeoPoint) {
+        mapView.getController().animateTo(centerGeoPoint);
+        placeMarker(centerGeoPoint.getLatitudeE6(), centerGeoPoint.getLongitudeE6());
+    }
+    protected void centerAtLocation(double latitude, double longitude) {
         mapView.getController().setCenter(getPoint(latitude, longitude));
     }
 
-    public void centerAtLocation(double latitude, double longitude, int zoom) {
+    protected void centerAtLocation(double latitude, double longitude, int zoom) {
         mapView.getController().setCenter(getPoint(latitude, longitude));
         mapView.getController().setZoom(zoom);
     }

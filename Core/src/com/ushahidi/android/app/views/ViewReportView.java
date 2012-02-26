@@ -27,7 +27,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentMapActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -42,7 +41,6 @@ import com.google.android.maps.MapView;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.util.Util;
 
 /**
  * @author eyedol
@@ -77,6 +75,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
     private String images;
 
+    private String thumbnails[];
+
     public ViewReportView(FragmentMapActivity activity) {
         super(activity);
         this.activity = activity;
@@ -89,6 +89,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
         status = (TextView)activity.findViewById(R.id.status);
         photos = (TextView)activity.findViewById(R.id.report_photo);
         mSwitcher = (ImageSwitcher)activity.findViewById(R.id.switcher);
+        g = (Gallery)activity.findViewById(R.id.gallery);
         imageAdapter = new ImageAdapter(activity);
         thumbnailAdapter = new ImageAdapter(activity);
 
@@ -98,7 +99,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
         if (TextUtils.isEmpty(media)) {
             photos.setText("");
         } else {
-            final String thumbnails[] = media.split(",");
+            thumbnails = media.split(",");
             for (int i = 0; i < thumbnails.length; i++) {
                 thumbnailAdapter.mImageIds.add(ImageManager.getImages(Preferences.savePath,
                         thumbnails[i]));
@@ -170,9 +171,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
     }
 
     public void setStatus(String status) {
-        final String iStatus = Util.toInt(status) == 0 ? activity.getString(R.string.status_no)
-                : activity.getString(R.string.status_yes);
-        this.status.setText(iStatus);
+
+        this.status.setText(status);
     }
 
     public String getStatus() {
@@ -198,6 +198,10 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
         a.recycle();
 
         return mGalleryItemBackground;
+    }
+
+    public String[] getThumbnails() {
+        return this.thumbnails;
     }
 
     public class ImageAdapter extends BaseAdapter {

@@ -24,14 +24,9 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.ushahidi.android.app.R;
-
 public class ListReportView extends com.ushahidi.android.app.views.View {
-
-    private Spinner spinner = null;
 
     private ArrayAdapter<String> spinnerArrayAdapter;
 

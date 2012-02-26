@@ -11,17 +11,29 @@
     at team@ushahidi.com.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    
+
+   
     <item
-        android:id="@+id/menu_refresh"
-        android:icon="@drawable/button_share"
+        android:id="@+id/menu_backward"
+        android:icon="@drawable/go_backward"
         android:orderInCategory="0"
-        android:showAsAction="always"
-        android:title="@string/menu_refresh"/>
-    <item
-        android:id="@+id/menu_add"
-        android:icon="@drawable/button_add"
+        android:showAsAction="always"/>
+     <item
+        android:id="@+id/menu_forward"
+        android:icon="@drawable/go_forward"
         android:orderInCategory="1"
-        android:showAsAction="always"
-        android:title="@string/add_report"/>
+        android:showAsAction="always"/>
+     
+    <item
+        android:id="@+id/menu_comment"
+        android:icon="@drawable/comment"
+        android:orderInCategory="2"
+        android:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_share"
+        android:icon="@drawable/button_share"
+        android:orderInCategory="3"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_refresh"/>
+
 </menu>

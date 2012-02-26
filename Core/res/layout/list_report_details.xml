@@ -10,15 +10,16 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com.
 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical" >
 
     <fragment
         android:id="@+id/fragment_reports_list"
-        android:layout_width="0px"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="2"
         class="com.ushahidi.android.app.fragments.ListReportListFragment" />
 
-</FrameLayout>
+</LinearLayout>

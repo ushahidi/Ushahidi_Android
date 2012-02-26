@@ -28,7 +28,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItem;
 import android.text.TextUtils;
 import android.view.View;
@@ -37,7 +36,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.activities.ViewReportActivity;
+import com.ushahidi.android.app.activities.ViewReportActivity2;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.ProgressTask;
@@ -48,8 +47,6 @@ import com.ushahidi.android.app.views.ListReportView;
  */
 public class ListReportListFragment extends
         BaseListFragment<ListReportView, ListReportModel, ListReportAdapter> {
-
-    private boolean mHasReportDetailFrame;
 
     private int mPositionChecked = 0;
 
@@ -71,10 +68,17 @@ public class ListReportListFragment extends
 
     private String filterCategory;
 
+    private ListReportListFragmentListener listener = null;
+
     public ListReportListFragment() {
         super(ListReportView.class, ListReportAdapter.class, R.layout.list_report,
                 R.menu.list_report, android.R.id.list);
         categories = new Vector<String>();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -92,16 +96,16 @@ public class ListReportListFragment extends
             mPositionShown = savedInstanceState.getInt("shownChoice", -1);
         }
 
-        View detailsFrame = getActivity().findViewById(R.id.frame_details);
-        mHasReportDetailFrame = (detailsFrame != null)
-                && (detailsFrame.getVisibility() == View.VISIBLE);
-
-        if (mHasReportDetailFrame) {
-            // In dual-pane mode, the list view highlights the selected item.
-            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            // Make sure our UI is in the correct state.
-            showReportDetails(mPositionChecked);
-        }
+        /*
+         * View detailsFrame = getActivity().findViewById(R.id.frame_details);
+         * mHasReportDetailFrame = (detailsFrame != null) &&
+         * (detailsFrame.getVisibility() == View.VISIBLE); if
+         * (mHasReportDetailFrame) { // In dual-pane mode, the list view
+         * highlights the selected item.
+         * getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE); // Make
+         * sure our UI is in the correct state.
+         * showReportDetails(mPositionChecked); }
+         */
 
     }
 
@@ -131,7 +135,28 @@ public class ListReportListFragment extends
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        showReportDetails(position);
+        if (listener != null) {
+            listener.onReportSelected(mListReportModel.reportModel.get(position));
+        }
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        l.setItemChecked(position, true);
+
+        if (listener != null) {
+            listener.onReportSelected(mListReportModel.reportModel.get(position));
+        }
+
+        launchViewReport(position);
+    }
+
+    public void setListReportListListener(ListReportListFragmentListener listener) {
+        this.listener = listener;
+    }
+
+    public void enablePersistentSelection() {
+        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     }
 
     @Override
@@ -150,28 +175,6 @@ public class ListReportListFragment extends
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void showReportDetails(int index) {
-        mPositionChecked = index;
-
-        if (mHasReportDetailFrame) {
-            getListView().setItemChecked(index, true);
-
-            if (mPositionShown != mPositionChecked) {
-                ViewReportFragment reportFragment = ViewReportFragment.newInstance(index);
-                getFragmentManager().beginTransaction().replace(R.id.frame_details, reportFragment)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-
-                mPositionShown = index;
-            }
-
-        } else {
-            Intent intent = new Intent();
-            intent.setClass(getActivity(), ViewReportActivity.class);
-            intent.putExtra("index", index);
-            startActivity(intent);
-        }
     }
 
     /**
@@ -216,7 +219,7 @@ public class ListReportListFragment extends
                                 mListReportView.getPullToRefreshListView().setAdapter(
                                         mListReportAdapter);
                                 mListReportView.displayEmptyListText();
-                                filterCategory = null;
+                                // filterCategory = null;
 
                             } else {
                                 mListReportAdapter.refresh(getActivity());
@@ -284,6 +287,19 @@ public class ListReportListFragment extends
 
     @Override
     protected void onLoaded(boolean success) {
+
+    }
+
+    public void launchViewReport(int id) {
+        Intent i = new Intent(getActivity(), ViewReportActivity2.class);
+        i.putExtra("id", id);
+        if (filterCategory != null
+                && !filterCategory.equalsIgnoreCase(getString(R.string.all_categories))) {
+            i.putExtra("category", filterCategory);
+        } else {
+            i.putExtra("category", "");
+        }
+        startActivityForResult(i, 0);
 
     }
 

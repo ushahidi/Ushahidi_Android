@@ -18,24 +18,27 @@ public abstract class DbContentProvider {
         return mDb.insert(tableName, null, values);
 
     }
-    
-    
+
     protected abstract <T extends DbEntity> T cursorToEntity(Cursor cursor);
 
     public DbContentProvider(SQLiteDatabase db) {
+
         this.mDb = db;
+
     }
 
     public Cursor query(String tableName, String[] columns, String selection,
             String[] selectionArgs, String sortOrder) {
-        
-        final Cursor cursor = mDb.query(tableName, columns, selection, selectionArgs, null, null, sortOrder);
-        
+
+        final Cursor cursor = mDb.query(tableName, columns, selection, selectionArgs, null, null,
+                sortOrder);
+
         return cursor;
     }
 
     public Cursor query(String tableName, String[] columns, String selection,
             String[] selectionArgs, String sortOrder, String limit) {
+
         return mDb.query(tableName, columns, selection, selectionArgs, null, null, null, sortOrder);
     }
 

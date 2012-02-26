@@ -312,6 +312,14 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+        
+        <!-- Launch View Reports -->
+        <activity android:name=".activities.ViewReportActivity2" android:label="@string/reports">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>     
             
        <!-- View Checkins -->

@@ -39,11 +39,11 @@ public class MainApplication extends Application {
     public static Database mDb;
 
     public static MainHttpClient mApi;
-    
+
     public static Application app = null;
-    
+
     public static boolean LOGGING_MODE = true;
-    
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -52,7 +52,6 @@ public class MainApplication extends Application {
         mDb = new Database(this);
         mDb.open();
         mApi = new MainHttpClient(getApplicationContext());
-        
 
     }
 
@@ -90,7 +89,7 @@ public class MainApplication extends Application {
 
         // mImageManager.cleanup(keepers);
     }
-    
+
     protected void log(String message) {
         if (LOGGING_MODE)
             Log.i(getClass().getName(), message);

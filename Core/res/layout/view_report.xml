@@ -314,7 +314,7 @@
                     android:clickable="true"
                     android:enabled="true" />
             </LinearLayout>
-            <!-- Map ends -->
+             <!--  Map ends -->
 
 
             <!-- Photo starts -->

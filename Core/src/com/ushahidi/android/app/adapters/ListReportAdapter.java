@@ -89,7 +89,6 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel> {
         widgets.title.setText(getItem(position).getTitle());
         widgets.date.setText(getItem(position).getDate());
         widgets.iLocation.setText(getItem(position).getLocation());
-        widgets.status.setText(getItem(position).getStatus());
         // change the status color
 
         if (getItem(position).getStatus().equalsIgnoreCase(
@@ -99,6 +98,7 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel> {
             widgets.status.setTextColor(R.color.unverified_text_color); // red
         }
 
+        widgets.status.setText(getItem(position).getStatus());
         widgets.arrow.setImageDrawable(getItem(position).getArrow());
 
         return row;

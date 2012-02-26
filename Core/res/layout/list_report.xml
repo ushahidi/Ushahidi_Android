@@ -22,7 +22,6 @@
         style="@style/ListView" />
 
     <!-- Here is the view to show if the list is emtpy -->
-
     <TextView
         android:id="@android:id/empty"
         style="@style/TextView.Empty"

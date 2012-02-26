@@ -68,6 +68,10 @@ public class ListReportModel extends Model {
 
     private String categories;
 
+    private String latitude;
+
+    private String longitude;
+
     public ListReportModel() {
         this.thumbnail = null;
         this.title = "";
@@ -201,6 +205,22 @@ public class ListReportModel extends Model {
         return this.id;
     }
 
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLatitude() {
+        return this.latitude;
+    }
+    
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLongitude() {
+        return this.longitude;
+    }
+
     @Override
     public boolean load(Context context) {
         mReports = Database.mReportDao.fetchAllReports();
@@ -250,6 +270,8 @@ public class ListReportModel extends Model {
                         .getString(R.string.report_verified);
                 listReportModel.setStatus(status);
                 listReportModel.setLocation(item.getLocationName());
+                listReportModel.setLatitude(item.getLatitude());
+                listReportModel.setLongitude(item.getLongitude());
                 listReportModel.setArrow(context.getResources().getDrawable(R.drawable.menu_arrow));
                 listReportModel.setCategories(Util.capitalize(item.getCategories()));
                 listReportModel.setMedia(item.getMedia());

@@ -132,6 +132,8 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
         }
         return root;
     }
+    
+   
 
     /**
      * Called after ListAdapter has been loaded
