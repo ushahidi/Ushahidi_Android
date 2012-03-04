@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+    Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
+    This file may be used under the terms of the GNU Lesser General Public License 
+    version 3 as published by the Free Software Foundation and appearing in the 
+    file LICENSE.LGPL included in the packaging of this file. Please review the 
+    following information to ensure the GNU Lesser General Public License version 
+    3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
+    have questions regarding the use of this file, please contact Ushahidi developers 
+    at team@ushahidi.com.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical" >
+
+    <!-- toolbar -->
+
+    <LinearLayout style="@style/ActionBarTitleContainer" >
+
+        
+        <TextView android:id="@+id/list_report_title" 
+            android:gravity="center"
+            style="@style/ActionBarTitleText" />
+        <ImageView style="@style/ActionBarTitleSeparator" />
+        
+        <ImageButton
+            android:id="@+id/add_report_btn"
+            style="@style/ActionBarTitle"
+            android:src="@drawable/button_add" />
+        
+        <ImageView style="@style/ActionBarTitleSeparator" />
+
+        <ImageButton
+            android:id="@+id/refresh_report_btn"
+            style="@style/ActionBarTitle"
+            android:src="@drawable/button_refresh" />
+
+        <ProgressBar
+            android:id="@+id/title_refresh_progress"
+            style="@style/TitleBarProgressIndicator"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <ImageView style="@style/ActionBarSeparator" />
+
+    <!-- List incidents -->
+
+    <ListView
+        android:id="@android:id/list"
+        style="@style/ListView" />
+
+    <!-- Here is the view to show if the list is emtpy -->
+
+    <TextView
+        android:id="@android:id/empty"
+        style="@style/TextView.Empty"
+        android:text="@string/no_items" />
+
+</LinearLayout>

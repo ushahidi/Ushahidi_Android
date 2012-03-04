@@ -1,0 +1,6 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/colorstrip"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/colorstrip_height"
+    android:foreground="@drawable/colorstrip_shadow"
+    android:background="@drawable/colorstrip" />

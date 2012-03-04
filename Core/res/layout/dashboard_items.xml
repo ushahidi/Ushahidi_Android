@@ -14,20 +14,12 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/background_color"
-    android:orientation="horizontal" >
+    android:orientation="vertical" >
 
     <fragment
-        android:id="@+id/fragment_reports_list"
-        android:layout_width="0px"
-        android:layout_weight="30"
-        android:layout_height="fill_parent"
-        class="com.ushahidi.android.app.fragments.ListReportListFragment" />
-
-    <fragment
-        android:id="@+id/view_reports_details_fragment"
-        android:layout_width="0px"
-        android:layout_height="fill_parent"
-        android:layout_weight="70"
-        class="com.ushahidi.android.app.fragments.ViewReportFragment" />
+        android:id="@+id/list_map_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        class="com.ushahidi.android.app.fragments.ListMapFragment" />
 
 </LinearLayout>

@@ -27,34 +27,33 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.fragments.ListReportListFragment;
-import com.ushahidi.android.app.fragments.ListReportListFragmentListener;
-import com.ushahidi.android.app.models.ListReportModel;
+import com.ushahidi.android.app.fragments.ListMapFragmentListener;
+import com.ushahidi.android.app.fragments.ListReportFragment;
 import com.ushahidi.android.app.views.ViewReportView;
 
 /**
  * @author eyedol
  */
 public class ViewReportActivity extends BaseActivity<ViewReportView> implements
-        ListReportListFragmentListener {
+        ListMapFragmentListener {
 
     private boolean detailsInline = false;
 
     protected ViewReportActivity() {
-        super(ViewReportView.class, R.layout.list_report_details, R.menu.view_report);
+        super(ViewReportView.class, R.layout.dashboard_items, R.menu.view_report);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ListReportListFragment reports = (ListReportListFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_reports_list);
+        ListReportFragment reports = (ListReportFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.list_report_fragment);
 
-        reports.setListReportListListener(this);
+        reports.setListMapListener(this);
 
         Fragment f = getSupportFragmentManager().findFragmentById(
-                R.id.view_reports_details_fragment);
+                R.id.list_map_fragment);
 
         detailsInline = (f != null && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE));
 
@@ -66,8 +65,8 @@ public class ViewReportActivity extends BaseActivity<ViewReportView> implements
     }
 
     @Override
-    public void onReportSelected(ListReportModel report) {
-        Intent i = new Intent(this, ReportActivity.class);
+    public void onMapSelected(int mapId) {
+        Intent i = new Intent(this, ListReportActivity.class);
 
         // i.putExtra(DetailsActivity.EXTRA_URL, url);
         startActivity(i);

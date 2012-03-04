@@ -9,6 +9,6 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:maxLevel="0" android:drawable="@drawable/button_refresh_light"/>
+	<item android:maxLevel="0" android:drawable="@drawable/button_refresh_default"/>
     <item android:maxLevel="1" android:drawable="@drawable/button_refresh_alt"/>
 </selector>

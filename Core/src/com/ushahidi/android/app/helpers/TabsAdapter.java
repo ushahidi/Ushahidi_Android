@@ -7,7 +7,7 @@ import android.content.Context;
 import android.support.v4.app.ActionBar;
 import android.support.v4.app.ActionBar.Tab;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentMapActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -19,17 +19,18 @@ public class TabsAdapter extends FragmentPagerAdapter implements ViewPager.OnPag
 
     private final ActionBar mActionBar;
 
-    private final ViewPager mViewPager;
+    private final ReportViewPager mViewPager;
 
     private final ArrayList<String> mTabs = new ArrayList<String>();
 
-    public TabsAdapter(FragmentActivity activity, ActionBar actionBar, ViewPager pager) {
+    public TabsAdapter(FragmentMapActivity activity, ActionBar actionBar, ReportViewPager pager) {
         super(activity.getSupportFragmentManager());
         mContext = activity;
         mActionBar = actionBar;
         mViewPager = pager;
         mViewPager.setAdapter(this);
         mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setPagingEnabled(false);
         mViewPager.setOnPageChangeListener(this);
     }
 

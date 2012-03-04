@@ -33,6 +33,7 @@ import android.view.MenuInflater;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ushahidi.android.app.MainApplication;
@@ -46,8 +47,7 @@ import com.ushahidi.android.app.views.View;
  * @author eyedol
  */
 public abstract class BaseListFragment<V extends View, M extends Model, L extends BaseListAdapter<M>>
-        extends ListFragment implements AdapterView.OnItemClickListener,
-        AdapterView.OnItemSelectedListener {
+        extends ListFragment {
 
     /**
      * ListView resource id
@@ -62,12 +62,12 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
     /**
      * ListAdapter
      */
-    private L adapter;
+    protected L adapter;
 
     /**
      * ListView
      */
-    private ListView listView;
+    protected ListView listView;
 
     /**
      * Menu resource id
@@ -78,6 +78,16 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
      * Layout resource id
      */
     protected final int layout;
+
+    /**
+     * View class
+     */
+    protected final Class<V> viewClass;
+
+    /**
+     * View
+     */
+    protected V view;
 
     /**
      * BaseListActivity
@@ -91,6 +101,7 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
     protected BaseListFragment(Class<V> view, Class<L> adapter, int layout, int menu, int listView) {
         this.adapterClass = adapter;
         this.listViewId = listView;
+        this.viewClass = view;
         this.menu = menu;
         this.layout = layout;
     }
@@ -102,12 +113,14 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
         if (listViewId != 0) {
 
             listView = getListView();
-            listView.setOnItemClickListener(this);
+            // listView.setOnItemClickListener(this);
             android.view.View emptyView = getActivity().findViewById(android.R.id.empty);
             if (emptyView != null) {
                 listView.setEmptyView(emptyView);
             }
+
             adapter = createInstance(adapterClass, Context.class, getActivity());
+
             listView.setAdapter(adapter);
             listView.setFocusable(true);
             listView.setFocusableInTouchMode(true);
@@ -128,12 +141,10 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
             Bundle savedInstanceState) {
         android.view.View root = null;
         if (layout != 0) {
-            root = inflater.inflate(layout, null);
+            root = inflater.inflate(layout, container, false);
         }
         return root;
     }
-    
-   
 
     /**
      * Called after ListAdapter has been loaded
@@ -141,16 +152,6 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
      * @param success true is successfully loaded
      */
     protected abstract void onLoaded(boolean success);
-
-    /*
-     * @Override protected void onResume(){ super.onResume(); //new
-     * LoadingTask(this).execute((String)null); }
-     */
-
-    @SuppressWarnings("unchecked")
-    protected M getItem(int position) {
-        return (M)listView.getItemAtPosition(position);
-    }
 
     @SuppressWarnings("unchecked")
     protected M getSelectedItem() {
@@ -169,20 +170,30 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
      * BaseListAdapter loads the data
      */
     protected class LoadingTask extends ProgressTask {
-        public LoadingTask(FragmentActivity activity) {
+        public LoadingTask(ListFragment activity) {
             super(activity, R.string.loading_);
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.cancel();
+        }
+
+        @Override
         protected Boolean doInBackground(String... args) {
+
             adapter.refresh(activity);
+
             return true;
         }
 
         @Override
         protected void onPostExecute(Boolean success) {
             super.onPostExecute(success);
+
             onLoaded(success);
+            listView.setAdapter(adapter);
         }
     }
 
@@ -207,6 +218,14 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
 
     protected void toastLong(int message) {
         Toast.makeText(getActivity(), getText(message), Toast.LENGTH_LONG).show();
+    }
+
+    protected void toastShort(int message) {
+        Toast.makeText(getActivity(), getText(message), Toast.LENGTH_SHORT).show();
+    }
+
+    protected void toastShort(CharSequence message) {
+        Toast.makeText(getActivity(), message.toString(), Toast.LENGTH_SHORT).show();
     }
 
     @SuppressWarnings("unchecked")

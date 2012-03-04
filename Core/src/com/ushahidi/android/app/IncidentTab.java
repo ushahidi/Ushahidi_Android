@@ -31,6 +31,8 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
+import com.ushahidi.android.app.activities.ListMapActivity;
+import com.ushahidi.android.app.activities.ReportMapActivity;
 import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.checkin.CheckinList;
 import com.ushahidi.android.app.checkin.CheckinMap;
@@ -115,14 +117,14 @@ public class IncidentTab extends TabActivity {
                     .newTabSpec("list_reports")
                     .setIndicator(getString(R.string.tab_item_report_list),
                             getResources().getDrawable(R.drawable.tab_reports_selected))
-                    .setContent(new Intent(IncidentTab.this, IncidentList.class)));
+                    .setContent(new Intent(IncidentTab.this, ListMapActivity.class)));
 
             // Reports map
             tabHost.addTab(tabHost
                     .newTabSpec("map")
                     .setIndicator(getString(R.string.tab_item_report_map),
                             getResources().getDrawable(R.drawable.tab_map_selected))
-                    .setContent(new Intent(IncidentTab.this, IncidentMap.class)));
+                    .setContent(new Intent(IncidentTab.this, ReportMapActivity.class)));
         }
 
     }

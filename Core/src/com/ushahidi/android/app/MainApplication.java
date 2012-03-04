@@ -22,13 +22,11 @@ package com.ushahidi.android.app;
 
 import java.util.HashSet;
 
-import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.database.DbContentProvider;
-import com.ushahidi.android.app.net.MainHttpClient;
-import android.util.Log;
-
 import android.app.Application;
 import android.database.Cursor;
+
+import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.net.MainHttpClient;
 
 public class MainApplication extends Application {
 
@@ -90,18 +88,4 @@ public class MainApplication extends Application {
         // mImageManager.cleanup(keepers);
     }
 
-    protected void log(String message) {
-        if (LOGGING_MODE)
-            Log.i(getClass().getName(), message);
-    }
-
-    protected void log(String format, Object... args) {
-        if (LOGGING_MODE)
-            Log.i(getClass().getName(), String.format(format, args));
-    }
-
-    protected void log(String message, Exception ex) {
-        if (LOGGING_MODE)
-            Log.e(getClass().getName(), message, ex);
-    }
 }

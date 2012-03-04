@@ -59,7 +59,9 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel> {
         mListReportModel = new ListReportModel();
         final boolean loaded = mListReportModel.load(context);
         if (loaded) {
+            
             this.setItems(mListReportModel.getReports(context));
+            log("hell yeah "+this.getCount());
         }
 
     }

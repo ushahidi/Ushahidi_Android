@@ -307,7 +307,7 @@
         </activity>
         
        <!-- View Reports -->
-        <activity android:name=".activities.ViewReportActivity" android:label="@string/reports">
+        <activity android:name=".activities.DashboardActivity" android:label="@string/reports">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -334,6 +334,13 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".activities.ReportMapActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 		

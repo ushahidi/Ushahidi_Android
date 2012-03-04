@@ -53,12 +53,12 @@ public abstract class BaseListActivity<V extends View, M extends Model, L extend
     /**
      * ListAdapter
      */
-    private L adapter;
+    protected L adapter;
 
     /**
      * ListView
      */
-    private ListView listView;
+    protected ListView listView;
 
     /**
      * BaseListActivity
@@ -91,7 +91,6 @@ public abstract class BaseListActivity<V extends View, M extends Model, L extend
             listView.setAdapter(adapter);
             listView.setFocusable(true);
             listView.setFocusableInTouchMode(true);
-            registerForContextMenu(listView);
          
         }
     }

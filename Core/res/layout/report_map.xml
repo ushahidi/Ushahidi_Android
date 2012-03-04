@@ -10,16 +10,9 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/map_fragment"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/background_color"
-    android:orientation="vertical" >
-
-    <fragment
-        android:id="@+id/fragment_reports_list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        class="com.ushahidi.android.app.fragments.ListReportListFragment" />
-
-</LinearLayout>
+    class="com.ushahidi.android.app.fragments.MapFragment" />

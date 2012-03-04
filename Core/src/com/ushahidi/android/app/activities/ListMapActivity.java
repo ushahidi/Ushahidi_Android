@@ -35,7 +35,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -44,17 +43,22 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 
+import com.ushahidi.android.app.IncidentTab;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
+import com.ushahidi.android.app.helpers.ActionModeHelper;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.net.Maps;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.util.ApiUtils;
+import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.AddMapView;
 import com.ushahidi.android.app.views.ListMapView;
 
@@ -76,11 +80,6 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
     private MenuItem refresh;
 
-    // Context menu items
-    private static final int EDIT = Menu.FIRST + 1;
-
-    private static final int DELETE = Menu.FIRST + 2;
-
     private LocationManager mLocationMgr = null;
 
     private static Location location;
@@ -99,13 +98,13 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
     private boolean edit = true;
 
-    private String filter;
+    private String filter =  null;
 
     private String TAG = ListMapActivity.class.getSimpleName();
 
     public ListMapActivity() {
         super(ListMapView.class, ListMapAdapter.class, R.layout.list_map, R.menu.list_map,
-                R.id.list_map_table);
+                android.R.id.list);
         mHandler = new Handler();
 
     }
@@ -114,9 +113,21 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+       
+
         listMapView = new ListMapView(this);
         listMapAdapter = new ListMapAdapter(this);
         listMapModel = new ListMapModel();
+        
+        
+        
+        if (Util.isTablet(this)) {
+            listMapView.mListView.setLongClickable(true);
+            listMapView.mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            listMapView.mListView.setOnItemLongClickListener(new ActionModeHelper(this, listMapView.mListView));
+        } else {
+            registerForContextMenu(listMapView.mListView);
+        }
 
         listMapView.mTextView.addTextChangedListener(new TextWatcher() {
 
@@ -203,7 +214,8 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     final Runnable filterMapList = new Runnable() {
         public void run() {
             try {
-                listMapAdapter.refresh(ListMapActivity.this, filter);
+                //TODO Implement refresh that supports Activity
+               // listMapAdapter.refresh(ListMapActivity.this.get, filter);
                 listMapView.mListView.setAdapter(listMapAdapter);
                 listMapView.displayEmptyListText();
 
@@ -251,8 +263,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     // Context Menu Stuff
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        menu.add(Menu.NONE, EDIT, Menu.NONE, R.string.edit);
-        menu.add(Menu.NONE, DELETE, Menu.NONE, R.string.delete);
+        new MenuInflater(this).inflate(R.menu.list_map_context, menu);
     }
 
     @Override
@@ -260,24 +271,32 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item
                 .getMenuInfo();
-        mMapId = Integer.parseInt(listMapAdapter.getItem(info.position).getId());
+        boolean result = performAction(item, info.position);
 
-        switch (item.getItemId()) {
-            // context menu selected
-            case DELETE:
-                // Delete by ID
-                edit = false;
-                mHandler.post(mDeleteMapById);
-                return true;
-
-            case EDIT:
-                // edit existing map
-                edit = true;
-                createDialog(DIALOG_ADD_DEPLOYMENT);
-                return true;
-
+        if (!result) {
+            result = super.onContextItemSelected(item);
         }
-        return super.onContextItemSelected(item);
+
+        return (result);
+    }
+
+    public boolean performAction(android.view.MenuItem item, int position) {
+
+        mMapId = Integer.parseInt(listMapAdapter.getItem(position).getId());
+
+        if (item.getItemId() == R.id.map_delete) {
+            // Delete by ID
+            edit = false;
+            mHandler.post(mDeleteMapById);
+            return (true);
+        } else if (item.getItemId() == R.id.map_edit) {
+            // edit existing map
+            edit = true;
+            createDialog(DIALOG_ADD_DEPLOYMENT);
+            return (true);
+        }
+
+        return (false);
     }
 
     @Override
@@ -354,7 +373,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
         Intent launchIntent;
         Bundle bundle = new Bundle();
         bundle.putInt("tab_index", 0);
-        launchIntent = new Intent(this, ReportTabActivity.class);
+        launchIntent = new Intent(this, IncidentTab.class);
         launchIntent.putExtra("tab", bundle);
         startActivityForResult(launchIntent, 0);
         setResult(RESULT_OK);

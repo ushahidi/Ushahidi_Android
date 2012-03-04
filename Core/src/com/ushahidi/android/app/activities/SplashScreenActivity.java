@@ -20,14 +20,14 @@
 
 package com.ushahidi.android.app.activities;
 
-import com.ushahidi.android.app.R;
-
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.MotionEvent;
 import android.view.Window;
+
+import com.ushahidi.android.app.R;
 
 public class SplashScreenActivity extends FragmentActivity {
     private boolean active = true;
@@ -57,7 +57,7 @@ public class SplashScreenActivity extends FragmentActivity {
                 } catch (InterruptedException e) {
                     // do nothing
                 } finally {
-                    startActivity(new Intent(SplashScreenActivity.this, ReportTabActivity.class));
+                    startActivity(new Intent(SplashScreenActivity.this, DashboardActivity.class));
                     finish();
                 }
             }

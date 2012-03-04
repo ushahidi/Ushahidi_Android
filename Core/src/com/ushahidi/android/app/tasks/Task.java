@@ -22,8 +22,10 @@ package com.ushahidi.android.app.tasks;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentMapActivity;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 
 /**
@@ -39,6 +41,10 @@ public abstract class Task<A, P, R> extends AsyncTask<A, P, R> {
     
     protected Activity activity2;
     
+    protected ListFragment listFragment;
+    
+    protected Fragment fragment;
+    
     protected Task(FragmentActivity activity) {
         this.activity = activity;
     }
@@ -49,6 +55,14 @@ public abstract class Task<A, P, R> extends AsyncTask<A, P, R> {
     
     protected Task(FragmentMapActivity mapActivity) {
         this.mapActivity = mapActivity;
+    }
+
+    protected Task(ListFragment listFragment) {
+        this.listFragment = listFragment;
+    }
+    
+    protected Task(Fragment fragment) {
+        this.fragment = fragment;
     }
     
     @Override

@@ -2,7 +2,8 @@
 package com.ushahidi.android.app.adapters;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -33,9 +34,9 @@ public class ListMapAdapter extends BaseListAdapter<ListMapModel> {
         this.setItems(listMapModel.mMaps);
     }
     
-    public void refresh(FragmentActivity activity, String query) {
+    public void refresh(Context context, String query) {
         listMapModel = new ListMapModel();
-        listMapModel.filter(activity, query);
+        listMapModel.filter(context, query);
         this.setItems(listMapModel.mMaps);
     }
 
@@ -43,17 +44,19 @@ public class ListMapAdapter extends BaseListAdapter<ListMapModel> {
 
         final String mapId = String.valueOf(Preferences.activeDeployment);
         int colorPosition = position % colors.length;
-        View row = inflater.inflate(R.layout.list_map_item, viewGroup, false);
-        row.setBackgroundResource(colors[colorPosition]);
-
-        Widgets widgets = (Widgets)row.getTag();
-
-        if (widgets == null) {
-            widgets = new Widgets(row);
-            row.setTag(widgets);
+        Widgets widgets = null;
+        
+        if( widgets == null ) {
+            view = inflater.inflate(R.layout.list_map_item, null);
+            widgets = new Widgets(view);
+            view.setTag(widgets);
+        } else {
+            widgets = (Widgets) view.getTag();
         }
-
+        view.setBackgroundResource(colors[colorPosition]);
+       
         // initialize view with content
+        log("EbonyCounts : "+getItem(position).getName());
         widgets.mapName.setText(getItem(position).getName());
         widgets.mapDesc.setText(getItem(position).getDesc());
         widgets.mapUrl.setText(getItem(position).getUrl());
@@ -65,7 +68,7 @@ public class ListMapAdapter extends BaseListAdapter<ListMapModel> {
             widgets.arrow.setImageResource(R.drawable.menu_arrow);
         }
 
-        return row;
+        return view;
     }
 
     public class Widgets extends com.ushahidi.android.app.views.View {

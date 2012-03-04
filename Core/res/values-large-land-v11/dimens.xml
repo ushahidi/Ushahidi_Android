@@ -1,0 +1,5 @@
+<resources>
+    <!-- UI elements -->
+    <dimen name="activity_side_padding">56dp</dimen>
+    <dimen name="thickbar_height">134dp</dimen>
+</resources>

@@ -20,7 +20,9 @@
 
 package com.ushahidi.android.app.views;
 
+import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -31,25 +33,35 @@ import com.ushahidi.android.app.R;
 /**
  * ExampleListView All the widgets for /res/layout/example_list.xml
  */
-public class ListMapView extends  com.ushahidi.android.app.views.View {
-    
+public class ListMapView extends com.ushahidi.android.app.views.View {
+
     public TextView mTextView;
 
     public TextView mEmptyList;
-    
+
     public ListView mListView;
-    
+
     public ProgressBar mProgressBar;
 
-    public ListMapView(FragmentActivity activity) {
+    public ListMapView(Activity activity) {
         super(activity);
-        
+
         mTextView = (TextView)activity.findViewById(R.id.search_map);
         mEmptyList = (TextView)activity.findViewById(R.id.empty_list_for_maps);
-        mListView = (ListView)activity.findViewById(R.id.list_map_table);
+        mListView = (ListView)activity.findViewById(android.R.id.list);
         mProgressBar = (ProgressBar)activity.findViewById(R.id.map_refresh_progress);
     }
     
+    //TODO remove this when necessary
+    public ListMapView(FragmentActivity activity) {
+        super(activity);
+
+        mTextView = (TextView)activity.findViewById(R.id.search_map);
+        mEmptyList = (TextView)activity.findViewById(R.id.empty_list_for_maps);
+        mListView = (ListView)activity.findViewById(android.R.id.list);
+        mProgressBar = (ProgressBar)activity.findViewById(R.id.map_refresh_progress);
+    }
+
     public void displayEmptyListText() {
 
         if (mListView.getCount() == 0) {
@@ -59,7 +71,7 @@ public class ListMapView extends  com.ushahidi.android.app.views.View {
             mEmptyList.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
         }
-        
+
     }
 
 }

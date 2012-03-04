@@ -22,7 +22,6 @@ public class MapMarker extends ItemizedOverlay<OverlayItem> {
 
     public MapMarker(Drawable defaultMarker, int LatitudeE6, int LongitudeE6) {
         super(defaultMarker);
-
         this.marker = defaultMarker;
 
         // create locations of interest

@@ -1,0 +1,3 @@
+<resources>
+    <integer name="fling_animation_duration">350</integer>
+</resources>

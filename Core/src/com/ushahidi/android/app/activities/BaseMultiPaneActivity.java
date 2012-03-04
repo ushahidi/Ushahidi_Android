@@ -3,8 +3,10 @@ package com.ushahidi.android.app.activities;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
@@ -15,14 +17,49 @@ import java.util.List;
  * fragments for activities when intents are fired using
  * {@link BaseActivity#openActivityOrFragment(android.content.Intent)}.
  */
-public abstract class BaseMultiPaneActivity extends BaseActivity {
-    protected BaseMultiPaneActivity(Class view, int layout, int menu) {
-        super(view, layout, menu);
-        // TODO Auto-generated constructor stub
+public abstract class BaseMultiPaneActivity extends FragmentActivity {
+
+    /**
+     * Converts an intent into a {@link Bundle} suitable for use as fragment arguments.
+     */
+    public static Bundle intentToFragmentArguments(Intent intent) {
+        Bundle arguments = new Bundle();
+        if (intent == null) {
+            return arguments;
+        }
+
+        final Uri data = intent.getData();
+        if (data != null) {
+            arguments.putParcelable("_uri", data);
+        }
+
+        final Bundle extras = intent.getExtras();
+        if (extras != null) {
+            arguments.putAll(intent.getExtras());
+        }
+
+        return arguments;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Converts a fragment arguments bundle into an intent.
+     */
+    public static Intent fragmentArgumentsToIntent(Bundle arguments) {
+        Intent intent = new Intent();
+        if (arguments == null) {
+            return intent;
+        }
+
+        final Uri data = arguments.getParcelable("_uri");
+        if (data != null) {
+            intent.setData(data);
+        }
+
+        intent.putExtras(arguments);
+        intent.removeExtra("_uri");
+        return intent;
+    }
+    
     public void openActivityOrFragment(final Intent intent) {
         final PackageManager pm = getPackageManager();
         List<ResolveInfo> resolveInfoList = pm
@@ -52,7 +89,7 @@ public abstract class BaseMultiPaneActivity extends BaseActivity {
                 return;
             }
         }
-        super.openActivityOrFragment(intent);
+        startActivity(intent);
     }
 
     /**

@@ -30,50 +30,51 @@ import com.ushahidi.android.app.views.AddReportView;
 /**
  * @author eyedol
  */
-public class AddReportActivity extends BaseEditMapActivity<AddReportView,AddReportModel> {
+public class AddReportActivity extends BaseEditMapActivity<AddReportView, AddReportModel> {
 
     public AddReportActivity() {
-        super(AddReportView.class, R.layout.add_report, R.menu.add_report,R.id.location_map);
-        // TODO Auto-generated constructor stub
+        super(AddReportView.class, R.layout.add_report, R.menu.add_report, 
+                R.id.location_map);
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-    
+
     @Override
     protected void onStart() {
         super.onStart();
-        //log("onStart label=%s", view.label.getText());
-        //log("onStart value=%s", view.value.getText());
+        // log("onStart label=%s", view.label.getText());
+        // log("onStart value=%s", view.value.getText());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //log("onPause label=%s", view.label.getText());
-        //log("onPause value=%s", view.value.getText());
+        // log("onPause label=%s", view.label.getText());
+        // log("onPause value=%s", view.value.getText());
     }
 
     public void onLocationChanged(Location arg0) {
         // TODO Auto-generated method stub
-        
+
     }
 
     public void onProviderDisabled(String provider) {
         // TODO Auto-generated method stub
-        
+
     }
 
     public void onProviderEnabled(String provider) {
         // TODO Auto-generated method stub
-        
+
     }
 
     public void onStatusChanged(String provider, int status, Bundle extras) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override

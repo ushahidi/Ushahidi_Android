@@ -26,7 +26,6 @@ import java.util.List;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.BaseColumns;
-import android.support.v4.app.FragmentActivity;
 
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
@@ -134,11 +133,15 @@ public class ListMapModel extends Model {
     public String getCatId() {
         return this.catId;
     }
+    
+    public ListMapModel() {
+        mMaps = new ArrayList<ListMapModel>();
+    }
 
     @Override
     public boolean load(Context context) {
         cursor = Database.map.fetchAllDeployments();
-        mMaps = new ArrayList<ListMapModel>();
+        //mMaps = new ArrayList<ListMapModel>();
         if (cursor != null) {
             if (cursor.moveToFirst()) {
 
@@ -169,11 +172,11 @@ public class ListMapModel extends Model {
     /**
      * 
      */
-    public boolean filter(FragmentActivity activity, String query) {
-        cursor = activity.managedQuery(DeploymentProvider.CONTENT_URI, null, null, new String[] {
+    public boolean filter(Context context, String query) {
+        cursor = context.getContentResolver().query(DeploymentProvider.CONTENT_URI, null, null, new String[] {
             query
         }, null);
-        mMaps = new ArrayList<ListMapModel>();
+        //mMaps = new ArrayList<ListMapModel>();
         if (cursor != null) {
             if (cursor.moveToFirst()) {
 

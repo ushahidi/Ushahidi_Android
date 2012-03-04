@@ -59,6 +59,7 @@ public class DeploymentProvider extends ContentProvider {
         return true;
     }
     
+    
     /**
      * Builds up a UriMatcher for search suggestion and shortcut refresh
      * queries.

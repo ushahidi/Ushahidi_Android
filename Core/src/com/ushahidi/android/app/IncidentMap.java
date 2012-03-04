@@ -473,7 +473,7 @@ public class IncidentMap extends MapActivity {
         private ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
 
         public SitesOverlay(Drawable marker, MapView mapView) {
-            super(boundCenterBottom(marker), mapView, IncidentMap.this, mNewIncidents, extras);
+            super(boundCenterBottom(marker), mapView);
             mapView.getContext();
 
             if (id > 0) {
@@ -506,10 +506,10 @@ public class IncidentMap extends MapActivity {
             return items.get(i);
         }
 
-        @Override
+        /*@Override
         protected boolean onBalloonTap(int i) {
             return true;
-        }
+        }*/
 
         @Override
         public int size() {
