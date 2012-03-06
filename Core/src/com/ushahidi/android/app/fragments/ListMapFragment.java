@@ -1,4 +1,3 @@
-
 package com.ushahidi.android.app.fragments;
 
 import java.io.File;

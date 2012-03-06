@@ -24,7 +24,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.Menu;
 import android.util.Log;
@@ -33,7 +32,6 @@ import android.view.MenuInflater;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ushahidi.android.app.MainApplication;

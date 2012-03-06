@@ -369,7 +369,7 @@ public class ListReportFragment extends
         startActivityForResult(i, 0);
 
     }
-    
+
     public void launchAddReport() {
         Intent i = new Intent(getActivity(), AddReportActivity.class);
         startActivityForResult(i, 1);

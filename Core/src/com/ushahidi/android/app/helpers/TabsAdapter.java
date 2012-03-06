@@ -65,7 +65,7 @@ public class TabsAdapter extends FragmentPagerAdapter implements ViewPager.OnPag
 
     @Override
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
-        
+
         mViewPager.setCurrentItem(tab.getPosition());
     }
 

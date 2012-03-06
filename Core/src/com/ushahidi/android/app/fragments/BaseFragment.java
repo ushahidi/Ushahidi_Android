@@ -10,7 +10,6 @@ import android.view.MenuInflater;
 import android.widget.Toast;
 
 import com.ushahidi.android.app.MainApplication;
-import com.ushahidi.android.app.helpers.MapFragment;
 
 public class BaseFragment extends Fragment {
 

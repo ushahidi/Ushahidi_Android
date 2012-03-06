@@ -1,4 +1,3 @@
-
 package com.ushahidi.android.app.activities;
 
 import android.os.Bundle;
