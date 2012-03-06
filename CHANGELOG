@@ -1,3 +1,10 @@
+2.9.4:
+Bug:
+  * Fixed a new Google maps API key
+
+Features:
+  * Added Spanish_es translation
+
 2.9.3:
 Bug:
   * Fixed report uploading problem
