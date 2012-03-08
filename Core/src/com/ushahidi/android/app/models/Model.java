@@ -21,7 +21,7 @@
 package com.ushahidi.android.app.models;
 
 import android.content.Context;
-
+import com.ushahidi.android.app.database.DbEntity;
 /**
  * BaseModel
  *

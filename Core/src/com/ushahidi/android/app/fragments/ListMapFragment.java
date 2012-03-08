@@ -1,3 +1,4 @@
+
 package com.ushahidi.android.app.fragments;
 
 import java.io.File;
@@ -38,6 +39,7 @@ import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.AboutActivity;
 import com.ushahidi.android.app.activities.ReportTabActivity;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
+import com.ushahidi.android.app.entities.Map;
 import com.ushahidi.android.app.helpers.ActionModeHelper;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.net.Maps;
@@ -68,7 +70,9 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
 
     private Handler mHandler;
 
-    private int mMapId = 0;
+    private long mMapId = 0;
+    
+    private String url = "";
 
     private ListMapModel mListMapModel;
 
@@ -79,6 +83,12 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
     private boolean edit = true;
 
     private boolean refreshState = false;
+
+    private MenuItem refresh;
+
+    private ImageButton addMap = null;
+
+    private ImageButton refreshMap = null;
 
     private String filter;
 
@@ -198,7 +208,7 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
             try {
                 if (status) {
                     toastShort(R.string.map_deleted);
-                    mListMapAdapter.refresh(getActivity());
+                    refreshMapLists();
                 } else {
                     toastShort(R.string.map_deleted_failed);
                 }
@@ -217,7 +227,6 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
                 mListMapAdapter.refresh(getActivity());
                 mListMapView.mListView.setAdapter(mListMapAdapter);
                 mListMapView.displayEmptyListText();
-                log("list view: " + mListMapView.mListView.getCount());
             } catch (Exception e) {
                 return;
             }
@@ -293,13 +302,13 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
             result = super.onContextItemSelected(item);
         }
 
-        return (result);
+        return result;
     }
 
     public boolean performAction(android.view.MenuItem item, int position) {
-
-        mMapId = Integer.parseInt(mListMapAdapter.getItem(position).getId());
-
+        
+        mMapId = Long.valueOf(mListMapAdapter.getItem(position).getId());
+        url = mListMapAdapter.getItem(position).getUrl();
         if (item.getItemId() == R.id.map_delete) {
             // Delete by ID
             edit = false;
@@ -321,6 +330,7 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
             createDialog(DIALOG_CLEAR_DEPLOYMENT);
             return true;
         } else if (item.getItemId() == R.id.menu_refresh) {
+            refresh = item;
             createDialog(DIALOG_DISTANCE);
             return true;
         } else if (item.getItemId() == R.id.menu_add) {
@@ -404,9 +414,8 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = (ViewGroup)inflater.inflate(R.layout.list_map, null);
-        final ImageButton addMap = (ImageButton)mRootView.findViewById(R.id.list_map_toolbar_add);
-        final ImageButton refreshMap = (ImageButton)mRootView
-                .findViewById(R.id.list_map_refresh_btn);
+        addMap = (ImageButton)mRootView.findViewById(R.id.list_map_toolbar_add);
+        refreshMap = (ImageButton)mRootView.findViewById(R.id.list_map_refresh_btn);
 
         if (addMap != null) {
             addMap.setOnClickListener(new OnClickListener() {
@@ -435,10 +444,21 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
     }
 
     private void updateRefreshStatus() {
-        mRootView.findViewById(R.id.list_map_refresh_btn).setVisibility(
-                refreshState ? View.GONE : View.VISIBLE);
-        mRootView.findViewById(R.id.list_map_refresh_progress).setVisibility(
-                refreshState ? View.VISIBLE : View.GONE);
+        if (mRootView != null) {
+            if (addMap != null) {
+                mRootView.findViewById(R.id.list_map_refresh_btn).setVisibility(
+                        refreshState ? View.GONE : View.VISIBLE);
+                mRootView.findViewById(R.id.list_map_refresh_progress).setVisibility(
+                        refreshState ? View.VISIBLE : View.GONE);
+            }
+        }
+
+        if (refresh != null) {
+            if (refreshState)
+                refresh.setActionView(R.layout.indeterminate_progress_action);
+            else
+                refresh.setActionView(null);
+        }
     }
 
     /**
@@ -543,11 +563,11 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
                 // with existing map details
                 if (edit) {
                     final List<ListMapModel> listMap = mListMapModel.loadMapById(String
-                            .valueOf(mMapId));
+                            .valueOf(mMapId), url);
                     addMapView.setMapName(listMap.get(0).getName());
                     addMapView.setMapDescription(listMap.get(0).getDesc());
                     addMapView.setMapUrl(listMap.get(0).getUrl());
-                    addMapView.setMapId(listMap.get(0).getId());
+                    addMapView.setMapId(String.valueOf(listMap.get(0).getId()));
                 }
 
                 final AlertDialog.Builder addBuilder = new AlertDialog.Builder(getActivity());

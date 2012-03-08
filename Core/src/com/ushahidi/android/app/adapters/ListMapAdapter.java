@@ -2,8 +2,6 @@
 package com.ushahidi.android.app.adapters;
 
 import android.content.Context;
-import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,28 +14,32 @@ import com.ushahidi.android.app.models.ListMapModel;
 public class ListMapAdapter extends BaseListAdapter<ListMapModel> {
 
     private int[] colors;
-    
+
     private ListMapModel listMapModel;
+
     public ListMapAdapter(Context context) {
         super(context);
-
+        listMapModel = new ListMapModel();
         colors = new int[] {
                 R.color.table_odd_row_color, R.color.table_even_row_color
         };
     }
 
     @Override
-    //Use Context instead of FragmentActivity
+    // Use Context instead of FragmentActivity
     public void refresh(Context context) {
-        listMapModel = new ListMapModel();
-        listMapModel.load(context);
-        this.setItems(listMapModel.mMaps);
+        final boolean loaded = listMapModel.load(context);
+        if (loaded) {
+            this.setItems(listMapModel.getMaps(context));
+            log("Total: "+this.getCount());
+        }
     }
-    
+
     public void refresh(Context context, String query) {
-        listMapModel = new ListMapModel();
-        listMapModel.filter(context, query);
-        this.setItems(listMapModel.mMaps);
+        final boolean loaded = listMapModel.filter(context, query);
+        if (loaded) {
+            this.setItems(listMapModel.getMaps(context));
+        }
     }
 
     public View getView(int position, View view, ViewGroup viewGroup) {
@@ -46,17 +48,17 @@ public class ListMapAdapter extends BaseListAdapter<ListMapModel> {
         int colorPosition = position % colors.length;
         Widgets widgets = null;
         
-        if( widgets == null ) {
+
+        if (widgets == null) {
             view = inflater.inflate(R.layout.list_map_item, null);
             widgets = new Widgets(view);
             view.setTag(widgets);
         } else {
-            widgets = (Widgets) view.getTag();
+            widgets = (Widgets)view.getTag();
         }
         view.setBackgroundResource(colors[colorPosition]);
-       
+
         // initialize view with content
-        log("EbonyCounts : "+getItem(position).getName());
         widgets.mapName.setText(getItem(position).getName());
         widgets.mapDesc.setText(getItem(position).getDesc());
         widgets.mapUrl.setText(getItem(position).getUrl());

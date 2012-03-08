@@ -275,7 +275,9 @@ public class Database {
     public static ReportDao mReportDao;
 
     public static CategoryDao mCategoryDao;
-    
+
+    public static MapDao mMapDao;
+
     private static class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -291,7 +293,7 @@ public class Database {
             db.execSQL(USERS_TABLE_CREATE);
 
             // create map table
-            db.execSQL(MapDb.DEPLOYMENT_TABLE_CREATE);
+            db.execSQL(IMapSchema.MAP_TABLE_CREATE);
 
         }
 
@@ -379,7 +381,7 @@ public class Database {
             db.execSQL("DROP TABLE IF EXISTS temp_" + USERS_TABLE);
 
             // upgrade deployment table
-            db.execSQL("DROP TABLE IF EXISTS " + MapDb.DEPLOYMENT_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + IMapSchema.MAP_TABLE);
             onCreate(db);
         }
 
@@ -434,7 +436,7 @@ public class Database {
         map = new MapDb(mDb);
         mReportDao = new ReportDao(mDb);
         mCategoryDao = new CategoryDao(mDb);
-        
+        mMapDao = new MapDao(mDb);
         return this;
     }
 

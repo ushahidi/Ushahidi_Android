@@ -22,7 +22,6 @@ package com.ushahidi.android.app.views;
 
 import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;

@@ -25,13 +25,13 @@ import java.util.List;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.data.DeploymentProvider;
-import com.ushahidi.android.app.data.MapDb;
 import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.entities.Map;
 import com.ushahidi.android.app.util.Util;
 
 /**
@@ -39,7 +39,9 @@ import com.ushahidi.android.app.util.Util;
  */
 public class ListMapModel extends Model {
 
-    public List<ListMapModel> mMaps;
+    public List<Map> mMaps;
+
+    public List<ListMapModel> mMapModel;
 
     private Cursor cursor;
 
@@ -133,72 +135,67 @@ public class ListMapModel extends Model {
     public String getCatId() {
         return this.catId;
     }
-    
+
     public ListMapModel() {
-        mMaps = new ArrayList<ListMapModel>();
+        mMaps = new ArrayList<Map>();
     }
 
     @Override
     public boolean load(Context context) {
-        cursor = Database.map.fetchAllDeployments();
-        //mMaps = new ArrayList<ListMapModel>();
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-
-                int deploymentIdIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_ID);
-                int deploymentNameIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_NAME);
-                int deploymentDescIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_DESC);
-                int deploymentUrlIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_URL);
-
-                do {
-
-                    ListMapModel listMapModel = new ListMapModel();
-
-                    listMapModel.setId(cursor.getString(deploymentIdIndex));
-                    listMapModel.setName(cursor.getString(deploymentNameIndex));
-                    listMapModel.setDesc(cursor.getString(deploymentDescIndex));
-                    listMapModel.setUrl(cursor.getString(deploymentUrlIndex));
-                    mMaps.add(listMapModel);
-
-                } while (cursor.moveToNext());
-            }
-
-            cursor.close();
+        mMaps = Database.mMapDao.fetchAllMaps();
+        if (mMaps != null ) {
             return true;
         }
         return false;
+        /*
+         * if (cursor != null) { if (cursor.moveToFirst()) { int
+         * deploymentIdIndex =
+         * cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_ID); int
+         * deploymentNameIndex =
+         * cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_NAME); int
+         * deploymentDescIndex =
+         * cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_DESC); int
+         * deploymentUrlIndex =
+         * cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_URL); do { ListMapModel
+         * listMapModel = new ListMapModel();
+         * listMapModel.setId(cursor.getString(deploymentIdIndex));
+         * listMapModel.setName(cursor.getString(deploymentNameIndex));
+         * listMapModel.setDesc(cursor.getString(deploymentDescIndex));
+         * listMapModel.setUrl(cursor.getString(deploymentUrlIndex));
+         * mMaps.add(listMapModel); } while (cursor.moveToNext()); }
+         * cursor.close(); return true; }
+         */
+
     }
 
     /**
      * 
      */
     public boolean filter(Context context, String query) {
-        cursor = context.getContentResolver().query(DeploymentProvider.CONTENT_URI, null, null, new String[] {
-            query
-        }, null);
-        //mMaps = new ArrayList<ListMapModel>();
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-
-                int deploymentIdIndex = cursor.getColumnIndexOrThrow(BaseColumns._ID);
-                int deploymentNameIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_NAME);
-                int deploymentDescIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_DESC);
-                int deploymentUrlIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_URL);
-
-                do {
-
-                    ListMapModel listMapModel = new ListMapModel();
-
-                    listMapModel.setId(cursor.getString(deploymentIdIndex));
-                    listMapModel.setName(cursor.getString(deploymentNameIndex));
-                    listMapModel.setDesc(cursor.getString(deploymentDescIndex));
-                    listMapModel.setUrl(cursor.getString(deploymentUrlIndex));
-                    mMaps.add(listMapModel);
-
-                } while (cursor.moveToNext());
-            }
-
-            cursor.close();
+        cursor = context.getContentResolver().query(DeploymentProvider.CONTENT_URI, null, null,
+                new String[] {
+                    query
+                }, null);
+        mMaps = Database.mMapDao.fetchMap(cursor);
+        /**
+         * mMaps = new ArrayList<ListMapModel>(); if (cursor != null) { if
+         * (cursor.moveToFirst()) { int deploymentIdIndex =
+         * cursor.getColumnIndexOrThrow(BaseColumns._ID); int
+         * deploymentNameIndex =
+         * cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_NAME); int
+         * deploymentDescIndex =
+         * cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_DESC); int
+         * deploymentUrlIndex =
+         * cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_URL); do { ListMapModel
+         * listMapModel = new ListMapModel();
+         * listMapModel.setId(cursor.getString(deploymentIdIndex));
+         * listMapModel.setName(cursor.getString(deploymentNameIndex));
+         * listMapModel.setDesc(cursor.getString(deploymentDescIndex));
+         * listMapModel.setUrl(cursor.getString(deploymentUrlIndex));
+         * mMaps.add(listMapModel); } while (cursor.moveToNext()); }
+         * cursor.close(); return true; }
+         */
+        if (mMaps != null && mMaps.size() > 0) {
             return true;
         }
         return false;
@@ -213,30 +210,13 @@ public class ListMapModel extends Model {
      * @return 2 -- No internet connection
      */
     public void activateDeployment(Context context, String id) {
+        List<Map> listMap = Database.mMapDao.fetchMapById(Long.valueOf(id));
 
-        final Cursor cursor;
-        cursor = Database.map.fetchDeploymentById(id);
-        String url = "";
-        String latitude;
-        String longitude;
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                int urlIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_URL);
-                int latitudeIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_LATITUDE);
-                int longitudeIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_LONGITUDE);
-
-                do {
-                    url = cursor.getString(urlIndex);
-                    latitude = cursor.getString(latitudeIndex);
-                    longitude = cursor.getString(longitudeIndex);
-                    Preferences.activeDeployment = Util.toInt(id);
-                    Preferences.domain = url;
-                    Preferences.deploymentLatitude = latitude;
-                    Preferences.deploymentLongitude = longitude;
-                } while (cursor.moveToNext());
-
-            }
-            cursor.close();
+        if (listMap != null) {
+            Preferences.activeDeployment = Util.toInt(id);
+            Preferences.domain = listMap.get(0).getUrl();
+            Preferences.deploymentLatitude = listMap.get(0).getLat();
+            Preferences.deploymentLongitude = listMap.get(0).getLon();
             Preferences.saveSettings(context);
             Preferences.loadSettings(context);
         }
@@ -256,12 +236,12 @@ public class ListMapModel extends Model {
      * @param id - The ID of the map to be deleted
      * @return boolean
      */
-    public boolean deleteMapById(int id) {
-        return Database.map.deleteDeploymentById(String.valueOf(id));
+    public boolean deleteMapById(long id) {
+        return Database.mMapDao.deleteMapById(Long.valueOf(id));
     }
 
     public boolean deleteAllMap(Context context) {
-        Database.map.deleteAllDeployment();
+        Database.mMapDao.deleteAllMap();
         MainApplication.mDb.clearData();
         // clear the stuff that has been initialized in the
         // sharedpreferences.
@@ -281,12 +261,17 @@ public class ListMapModel extends Model {
      * @param url The map's URL
      * @param desc The map's description
      */
-    public void updateMap(String id, String name, String desc, String url) {
-        Database.map.updateMap(id, name, url, desc);
+    public boolean updateMap(String id, String name, String desc, String url) {
+        Map map = new Map();
+        map.setDbId(Long.valueOf(id));
+        map.setName(name);
+        map.setDesc(desc);
+        map.setUrl(url);
+        return Database.mMapDao.updateMap(map);
     }
 
     public void setActivness(String id) {
-        Database.map.setActivenessDeployment(id);
+        Database.mMapDao.setActiveDeployment(Long.valueOf(id));
     }
 
     /**
@@ -294,30 +279,49 @@ public class ListMapModel extends Model {
      * 
      * @param id
      */
-    public List<ListMapModel> loadMapById(String id) {
-        cursor = Database.map.fetchDeploymentById(id);
-        mMaps = new ArrayList<ListMapModel>();
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-
-                int deploymentIdIndex = cursor.getColumnIndexOrThrow(BaseColumns._ID);
-                int deploymentNameIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_NAME);
-                int deploymentDescIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_DESC);
-                int deploymentUrlIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_URL);
-
-                ListMapModel listMapModel = new ListMapModel();
-                listMapModel.setId(cursor.getString(deploymentIdIndex));
-                listMapModel.setName(cursor.getString(deploymentNameIndex));
-                listMapModel.setDesc(cursor.getString(deploymentDescIndex));
-                listMapModel.setUrl(cursor.getString(deploymentUrlIndex));
-
-                mMaps.add(listMapModel);
-
-                return mMaps;
+    public List<ListMapModel> loadMapById(String id, String url) {
+        mMapModel = new ArrayList<ListMapModel>();
+        mMaps = Database.mMapDao.fetchMapByIdAndUrl(Long.valueOf(id),url);
+        
+        if (mMaps != null && mMaps.size() > 0) {
+            for (Map map : mMaps) {
+                ListMapModel mapModel = new ListMapModel();
+                mapModel.setId(String.valueOf(map.getDbId()));
+                mapModel.setActive(map.getActive());
+                mapModel.setCatId(map.getCatId());
+                mapModel.setDate(map.getDate());
+                mapModel.setDesc(map.getDesc());
+                mapModel.setLat(map.getLat());
+                mapModel.setLon(map.getLon());
+                mapModel.setName(map.getName());
+                mapModel.setUrl(map.getUrl());
+                mMapModel.add(mapModel);
             }
         }
-
-        return null;
+        return mMapModel;
     }
+
+    public List<ListMapModel> getMaps(Context context) {
+
+        mMapModel = new ArrayList<ListMapModel>();
+
+        if (mMaps != null && mMaps.size() > 0) {
+            for (Map map : mMaps) {
+                ListMapModel mapModel = new ListMapModel();
+                
+                mapModel.setId(String.valueOf(map.getDbId()));
+                mapModel.setActive(map.getActive());
+                mapModel.setCatId(map.getCatId());
+                mapModel.setDate(map.getDate());
+                mapModel.setDesc(map.getDesc());
+                mapModel.setLat(map.getLat());
+                mapModel.setLon(map.getLon());
+                mapModel.setName(map.getName());
+                mapModel.setUrl(map.getUrl());
+                mMapModel.add(mapModel);
+            }
+        }
+        return mMapModel;
+    }
+
 }

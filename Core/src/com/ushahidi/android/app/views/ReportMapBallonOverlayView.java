@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.ReportMapOverlayItem;
-import com.ushahidi.android.app.activities.ViewReportActivity2;
+import com.ushahidi.android.app.activities.ViewReportActivity;
 
 public class ReportMapBallonOverlayView<Item extends OverlayItem> extends
         BalloonOverlayView<ReportMapOverlayItem> {
@@ -49,7 +49,7 @@ public class ReportMapBallonOverlayView<Item extends OverlayItem> extends
     public static void viewReports(final long id, final String filterCategory ) {
         readMore.setOnClickListener(new OnClickListener() {
             public void onClick(android.view.View view) {
-                Intent i = new Intent(mActivity, ViewReportActivity2.class);
+                Intent i = new Intent(mActivity, ViewReportActivity.class);
                 i.putExtra("id", id);
                 if (filterCategory != null
                         && !filterCategory.equalsIgnoreCase(mActivity.getString(R.string.all_categories))) {

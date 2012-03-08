@@ -40,7 +40,7 @@ import android.widget.ListView;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.AddReportActivity;
-import com.ushahidi.android.app.activities.ViewReportActivity2;
+import com.ushahidi.android.app.activities.ViewReportActivity;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.ProgressTask;
@@ -103,17 +103,6 @@ public class ListReportFragment extends
             mPositionShown = savedInstanceState.getInt("shownChoice", -1);
         }
 
-        /*
-         * View detailsFrame = getActivity().findViewById(R.id.frame_details);
-         * mHasReportDetailFrame = (detailsFrame != null) &&
-         * (detailsFrame.getVisibility() == View.VISIBLE); if
-         * (mHasReportDetailFrame) { // In dual-pane mode, the list view
-         * highlights the selected item.
-         * getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE); // Make
-         * sure our UI is in the correct state.
-         * showReportDetails(mPositionChecked); }
-         */
-
     }
 
     @Override
@@ -139,11 +128,6 @@ public class ListReportFragment extends
     public void onDestroy() {
         super.onDestroy();
     }
-
-    /*
-     * @Override public void onItemClick(AdapterView<?> adapterView, View view,
-     * int position, long id) { }
-     */
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -358,7 +342,7 @@ public class ListReportFragment extends
     }
 
     public void launchViewReport(int id) {
-        Intent i = new Intent(getActivity(), ViewReportActivity2.class);
+        Intent i = new Intent(getActivity(), ViewReportActivity.class);
         i.putExtra("id", id);
         if (filterCategory != null
                 && !filterCategory.equalsIgnoreCase(getString(R.string.all_categories))) {

@@ -53,13 +53,12 @@ public class MapDb {
 
     public static final String DEPLOYMENT_TABLE = "deployment";
 
-    public static final String DEPLOYMENT_TABLE_CREATE = "CREATE VIRTUAL TABLE "
-            + DEPLOYMENT_TABLE + " USING fts3 (" + DEPLOYMENT_ID
-            + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + DEPLOYMENT_CAT_ID + " INTEGER, "
-            + DEPLOYMENT_ACTIVE + " INTEGER, " + DEPLOYMENT_NAME + " TEXT NOT NULL, "
-            + DEPLOYMENT_DATE + " DATE NOT NULL, " + DEPLOYMENT_DESC + " TEXT NOT NULL, "
-            + DEPLOYMENT_URL + " TEXT NOT NULL, " + DEPLOYMENT_LATITUDE + " TEXT NOT NULL, "
-            + DEPLOYMENT_LONGITUDE + " TEXT NOT NULL" + ")";
+    public static final String DEPLOYMENT_TABLE_CREATE = "CREATE VIRTUAL TABLE " + DEPLOYMENT_TABLE
+            + " USING fts3 (" + DEPLOYMENT_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
+            + DEPLOYMENT_CAT_ID + " INTEGER, " + DEPLOYMENT_ACTIVE + " INTEGER, " + DEPLOYMENT_NAME
+            + " TEXT NOT NULL, " + DEPLOYMENT_DATE + " DATE NOT NULL, " + DEPLOYMENT_DESC
+            + " TEXT NOT NULL, " + DEPLOYMENT_URL + " TEXT NOT NULL, " + DEPLOYMENT_LATITUDE
+            + " TEXT NOT NULL, " + DEPLOYMENT_LONGITUDE + " TEXT NOT NULL" + ")";
 
     private SQLiteDatabase mDb;
 
@@ -190,8 +189,10 @@ public class MapDb {
     }
 
     public Cursor fetchDeploymentUrlById(String id) {
+
         String sql = "SELECT " + DEPLOYMENT_URL + " FROM " + DEPLOYMENT_TABLE + " WHERE "
                 + DEPLOYMENT_ID + " = ? ";
+
         return mDb.rawQuery(sql, new String[] {
             id
         });
@@ -278,12 +279,12 @@ public class MapDb {
         initialValues.put(DEPLOYMENT_URL, url);
 
         String whereClause = "rowid= ?";
+
         String whereArgs[] = {
             id
         };
-        
-        return mDb.update(DEPLOYMENT_TABLE, initialValues, whereClause, whereArgs) > 0;
 
+        return mDb.update(DEPLOYMENT_TABLE, initialValues, whereClause, whereArgs) > 0;
     }
 
     public Cursor fetchAllDeployments() {
@@ -303,7 +304,7 @@ public class MapDb {
         String[] selectionArgs = new String[] {
             rowId
         };
-        
+
         /*
          * This builds a query that looks like: SELECT <columns> FROM <table>
          * WHERE id = <rowId>

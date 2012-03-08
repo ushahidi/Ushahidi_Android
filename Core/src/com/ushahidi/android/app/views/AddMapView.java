@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.util.ApiUtils;
 
 public class AddMapView {
@@ -20,6 +21,8 @@ public class AddMapView {
     private EditText mMapUrl;
 
     private String mMapId;
+    
+    private ListMapModel mapModel;
 
     /**
      * Handles views for the add dialog box
@@ -27,6 +30,7 @@ public class AddMapView {
      * @param dialogViews
      */
     public AddMapView(android.view.View dialogViews) {
+        mapModel = new ListMapModel();
         mMapName = (EditText)dialogViews.findViewById(R.id.map_name);
         mMapDescription = (EditText)dialogViews.findViewById(R.id.map_description);
         mMapUrl = (EditText)dialogViews.findViewById(R.id.map_url);
@@ -109,12 +113,12 @@ public class AddMapView {
         if (!(TextUtils.isEmpty(getMapName()))) {
 
             if (!TextUtils.isEmpty(getMapDescription()))
-                return Database.map.updateMap(getMapId(), getMapName(), getMapDescription(),
+                return mapModel.updateMap(getMapId(), getMapName(), getMapDescription(),
                         getMapUrl());
             else
                 // because map description wasn't set, use the map name as the
                 // description
-                return Database.map.updateMap(getMapId(), getMapName(), getMapName(), getMapUrl());
+                return mapModel.updateMap(getMapId(), getMapName(), getMapName(), getMapUrl());
         }
         return false;
     }

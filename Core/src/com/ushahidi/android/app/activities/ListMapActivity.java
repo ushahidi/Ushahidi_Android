@@ -53,6 +53,7 @@ import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
+import com.ushahidi.android.app.entities.Map;
 import com.ushahidi.android.app.helpers.ActionModeHelper;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.net.Maps;
@@ -91,6 +92,8 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     private ListMapView listMapView;
 
     private int mMapId = 0;
+    
+    private String url = "";
 
     private ListMapAdapter listMapAdapter;
 
@@ -283,7 +286,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     public boolean performAction(android.view.MenuItem item, int position) {
 
         mMapId = Integer.parseInt(listMapAdapter.getItem(position).getId());
-
+        url = listMapAdapter.getItem(position).getUrl();
         if (item.getItemId() == R.id.map_delete) {
             // Delete by ID
             edit = false;
@@ -458,11 +461,11 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
                 // with existing map details
                 if (edit) {
                     final List<ListMapModel> listMap = listMapModel.loadMapById(String
-                            .valueOf(mMapId));
+                            .valueOf(mMapId), url);
                     addMapView.setMapName(listMap.get(0).getName());
                     addMapView.setMapDescription(listMap.get(0).getDesc());
                     addMapView.setMapUrl(listMap.get(0).getUrl());
-                    addMapView.setMapId(listMap.get(0).getId());
+                    addMapView.setMapId(String.valueOf(listMap.get(0).getId()));
                 }
 
                 final AlertDialog.Builder addBuilder = new AlertDialog.Builder(this);
