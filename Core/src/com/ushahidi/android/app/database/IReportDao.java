@@ -18,7 +18,6 @@
  ** 
  **/
 
-
 package com.ushahidi.android.app.database;
 
 import java.util.List;
@@ -32,17 +31,14 @@ public interface IReportDao {
 
     // fetch reports by categories
     public List<Report> fetchReportByCategory(String category);
-    
-    //fetech reports by title
-    public List<Report> fetchReportByTitle(String title);
 
     // fetch reports by ID
     public List<Report> fetchReportById(long id);
 
     // delete all report
     public boolean deleteAllReport();
-    
-    //delete report by id
+
+    // delete report by id
     public boolean deleteReportById(long id);
 
     // add reports

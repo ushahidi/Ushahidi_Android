@@ -212,7 +212,7 @@ public class ListReportModel extends Model {
     public String getLatitude() {
         return this.latitude;
     }
-    
+
     public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
@@ -247,15 +247,6 @@ public class ListReportModel extends Model {
 
     public boolean loadReportByCategory(Context context, String category) {
         mReports = Database.mReportDao.fetchReportByCategory(category);
-
-        if (mReports != null) {
-            return true;
-        }
-        return false;
-    }
-    
-    public boolean loadReportByTitle(Context context, String title) {
-        mReports = Database.mReportDao.fetchReportByTitle(title);
 
         if (mReports != null) {
             return true;

@@ -1,14 +1,23 @@
 
 package com.ushahidi.android.app.database;
 
-import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public abstract class DbContentProvider extends ContentProvider{
+public abstract class DbContentProvider {
 
     public SQLiteDatabase mDb;
+
+    public int delete(String tableName, String selection, String[] selectionArgs) {
+        return mDb.delete(tableName, selection, selectionArgs);
+
+    }
+
+    public long insert(String tableName, ContentValues values) {
+        return mDb.insert(tableName, null, values);
+
+    }
 
     protected abstract <T extends DbEntity> T cursorToEntity(Cursor cursor);
 
@@ -40,18 +49,6 @@ public abstract class DbContentProvider extends ContentProvider{
 
     public Cursor rawQuery(String sql, String[] selectionArgs) {
         return mDb.rawQuery(sql, selectionArgs);
-    }
-    
-    
-    public int delete(String tableName, String selection, String[] selectionArgs) {
-        return mDb.delete(tableName, selection, selectionArgs);
-
-    }
-
-   
-    public long insert(String tableName, ContentValues values) {
-        return mDb.insert(tableName, null, values);
-
     }
 
 }
