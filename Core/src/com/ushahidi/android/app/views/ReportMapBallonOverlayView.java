@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.ReportMapOverlayItem;
-import com.ushahidi.android.app.activities.ViewReportActivity;
+import com.ushahidi.android.app.ui.phone.ViewReportActivity;
 
 public class ReportMapBallonOverlayView<Item extends OverlayItem> extends
         BalloonOverlayView<ReportMapOverlayItem> {

@@ -22,8 +22,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.ushahidi.android.app.activities.ListMapActivity;
 import com.ushahidi.android.app.checkin.CheckinActivity;
+import com.ushahidi.android.app.ui.phone.ListMapActivity;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 

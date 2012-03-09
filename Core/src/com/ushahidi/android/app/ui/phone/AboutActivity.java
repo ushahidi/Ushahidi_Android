@@ -1,10 +1,11 @@
 
-package com.ushahidi.android.app.activities;
+package com.ushahidi.android.app.ui.phone;
 
 import android.content.Intent;
 import android.support.v4.view.MenuItem;
 
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.views.AboutView;
 
 public class AboutActivity extends BaseActivity<AboutView> {

@@ -18,7 +18,7 @@
  **
  **/
 
-package com.ushahidi.android.app.activities;
+package com.ushahidi.android.app.ui.phone;
 
 import java.util.List;
 
@@ -33,6 +33,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ViewSwitcher;
 
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.activities.BaseMapViewActivity;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.models.ViewReportModel;
 import com.ushahidi.android.app.ui.ImagePreviewer;

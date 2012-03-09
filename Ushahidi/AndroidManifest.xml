@@ -201,7 +201,7 @@
 		<!-- New Fragment Activities -->
 		
 		<!-- About -->
-        <activity android:name=".activities.AboutActivity" android:label="@string/ushahidi_about">
+        <activity android:name=".ui.phone.AboutActivity" android:label="@string/ushahidi_about">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -211,7 +211,7 @@
 		<!-- Add a new report -->
         <activity
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:name=".activities.AddReportActivity" android:label="@string/add_report">
+            android:name=".ui.phone.AddReportActivity" android:label="@string/add_report">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -231,7 +231,7 @@
             <!-- Add a new checkin -->
         <activity
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:name=".activities.AddCheckinActivity" android:label="@string/checkin_btn">
+            android:name=".ui.phone.AddCheckinActivity" android:label="@string/checkin_btn">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -249,7 +249,7 @@
         </activity>
         
         <!-- List Reports -->
-        <activity android:name=".activities.ListReportActivity"
+        <activity android:name=".ui.tablet.ListReportActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/view_incident">
             <intent-filter>
@@ -267,7 +267,7 @@
         </activity>
         
         <!-- List Maps-->
-        <activity android:name=".activities.ListMapActivity"
+        <activity android:name=".ui.phone.ListMapActivity"
             android:windowSoftInputMode="stateHidden"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/maps">
@@ -299,7 +299,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:name=".activities.ReportTabActivity" >
+            android:name=".ui.phone.ReportTabActivity" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -307,7 +307,7 @@
         </activity>
         
        <!-- View Reports -->
-        <activity android:name=".activities.DashboardActivity" android:label="@string/reports">
+        <activity android:name=".ui.tablet.DashboardActivity" android:label="@string/reports">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -315,7 +315,7 @@
         </activity>
         
         <!-- Launch View Reports -->
-        <activity android:name=".activities.ViewReportActivity2" android:label="@string/reports">
+        <activity android:name=".ui.phone.ViewReportActivity" android:label="@string/reports">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -323,7 +323,7 @@
         </activity>     
             
        <!-- View Checkins -->
-        <activity android:name=".activities.ViewCheckinActivity" android:label="@string/checkins">
+        <activity android:name=".ui.phone.ViewCheckinActivity" android:label="@string/checkins">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -337,7 +337,7 @@
             </intent-filter>
         </activity>
         
-        <activity android:name=".activities.ReportMapActivity">
+        <activity android:name=".ui.phone.ReportMapActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

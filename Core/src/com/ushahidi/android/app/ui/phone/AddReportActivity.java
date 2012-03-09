@@ -18,39 +18,47 @@
  **
  **/
 
-package com.ushahidi.android.app.activities;
+package com.ushahidi.android.app.ui.phone;
 
 import android.location.Location;
 import android.os.Bundle;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.models.AddCheckinModel;
-import com.ushahidi.android.app.views.AddCheckinView;
+import com.ushahidi.android.app.activities.BaseEditMapActivity;
+import com.ushahidi.android.app.models.AddReportModel;
+import com.ushahidi.android.app.views.AddReportView;
 
 /**
  * @author eyedol
  */
-public class AddCheckinActivity extends BaseEditMapActivity<AddCheckinView, AddCheckinModel> {
+public class AddReportActivity extends BaseEditMapActivity<AddReportView, AddReportModel> {
 
-    public AddCheckinActivity() {
-        super(AddCheckinView.class, R.layout.add_checkin, R.menu.add_checkin,
-                R.id.checkin_location_map);
-        // TODO Auto-generated constructor stub
+    public AddReportActivity() {
+        super(AddReportView.class, R.layout.add_report, R.menu.add_report, 
+                R.id.location_map);
+
     }
 
     @Override
-    protected boolean onSaveChanges() {
-        // TODO Auto-generated method stub
-        return false;
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
-    protected boolean isRouteDisplayed() {
-        // TODO Auto-generated method stub
-        return false;
+    protected void onStart() {
+        super.onStart();
+        // log("onStart label=%s", view.label.getText());
+        // log("onStart value=%s", view.value.getText());
     }
 
-    public void onLocationChanged(Location location) {
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // log("onPause label=%s", view.label.getText());
+        // log("onPause value=%s", view.value.getText());
+    }
+
+    public void onLocationChanged(Location arg0) {
         // TODO Auto-generated method stub
 
     }
@@ -68,6 +76,18 @@ public class AddCheckinActivity extends BaseEditMapActivity<AddCheckinView, AddC
     public void onStatusChanged(String provider, int status, Bundle extras) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    protected boolean onSaveChanges() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    protected boolean isRouteDisplayed() {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

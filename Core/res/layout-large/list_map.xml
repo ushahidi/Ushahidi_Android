@@ -30,17 +30,9 @@
             android:id="@+id/list_map_refresh_progress"
             style="@style/TitleBarProgressIndicator"
             android:visibility="gone" />
-        <ImageView style="@style/ActionBarTitleSeparator" />
     </LinearLayout>
 
     <ImageView style="@style/ActionBarSeparator" />
-
-    <EditText
-        android:id="@+id/search_map"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/search_hint"
-        android:singleLine="true" />
 
     <LinearLayout
         android:layout_width="fill_parent"

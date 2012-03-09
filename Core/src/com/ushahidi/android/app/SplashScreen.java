@@ -20,7 +20,7 @@
 
 package com.ushahidi.android.app;
 
-import com.ushahidi.android.app.activities.ListMapActivity;
+import com.ushahidi.android.app.ui.phone.ListMapActivity;
 
 import android.app.Activity;
 import android.content.Intent;

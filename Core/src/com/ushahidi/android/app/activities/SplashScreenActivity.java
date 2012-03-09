@@ -28,6 +28,9 @@ import android.view.MotionEvent;
 import android.view.Window;
 
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.ui.phone.ListMapActivity;
+import com.ushahidi.android.app.ui.tablet.DashboardActivity;
+import com.ushahidi.android.app.util.Util;
 
 public class SplashScreenActivity extends FragmentActivity {
     private boolean active = true;
@@ -57,8 +60,14 @@ public class SplashScreenActivity extends FragmentActivity {
                 } catch (InterruptedException e) {
                     // do nothing
                 } finally {
-                    startActivity(new Intent(SplashScreenActivity.this, DashboardActivity.class));
-                    finish();
+                    if (Util.isTablet(SplashScreenActivity.this)) {
+                        startActivity(new Intent(SplashScreenActivity.this, DashboardActivity.class));
+                        finish();
+                    } else {
+                        startActivity(new Intent(SplashScreenActivity.this, ListMapActivity.class));
+                        finish();
+                    }
+
                 }
             }
         };

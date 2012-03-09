@@ -1,5 +1,5 @@
 
-package com.ushahidi.android.app.fragments;
+package com.ushahidi.android.app.ui.tablet;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TabHost;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.activities.ListReportActivity;
-import com.ushahidi.android.app.activities.ReportMapActivity;
 import com.ushahidi.android.app.helpers.LocalActivityManagerFragment;
+import com.ushahidi.android.app.ui.phone.ReportMapActivity;
 
 public class ReportTabFragment extends LocalActivityManagerFragment {
 

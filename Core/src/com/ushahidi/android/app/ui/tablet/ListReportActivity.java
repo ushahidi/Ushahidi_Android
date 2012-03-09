@@ -1,4 +1,4 @@
-package com.ushahidi.android.app.activities;
+package com.ushahidi.android.app.ui.tablet;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;

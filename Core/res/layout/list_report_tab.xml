@@ -3,4 +3,4 @@
     android:id="@+id/map_fragment"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    class="com.ushahidi.android.app.fragments.ListReportFragment"/>
+    class="com.ushahidi.android.app.ui.tablet.ListReportFragment"/>

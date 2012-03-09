@@ -1,15 +1,15 @@
-package com.ushahidi.android.app.activities;
+package com.ushahidi.android.app.ui.phone;
 
 import android.os.Bundle;
 import android.support.v4.app.ActionBar;
 import android.support.v4.app.FragmentMapActivity;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.fragments.ListAdminReportListFragment;
-import com.ushahidi.android.app.fragments.ListReportFragment;
-import com.ushahidi.android.app.fragments.MapFragment;
 import com.ushahidi.android.app.helpers.ReportViewPager;
 import com.ushahidi.android.app.helpers.TabsAdapter;
+import com.ushahidi.android.app.ui.tablet.ListAdminReportListFragment;
+import com.ushahidi.android.app.ui.tablet.ListReportFragment;
+import com.ushahidi.android.app.ui.tablet.MapFragment;
 
 public class ReportTabActivity extends FragmentMapActivity {
 

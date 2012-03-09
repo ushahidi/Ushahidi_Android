@@ -1,4 +1,4 @@
-package com.ushahidi.android.app.activities;
+package com.ushahidi.android.app.ui.tablet;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -10,9 +10,7 @@ import android.view.View;
 
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.fragments.ListMapFragment;
-import com.ushahidi.android.app.fragments.ListMapFragmentListener;
-import com.ushahidi.android.app.fragments.ListReportFragment;
+import com.ushahidi.android.app.ui.phone.ReportTabActivity;
 
 public class DashboardActivity extends FragmentMapActivity implements ListMapFragmentListener {
 

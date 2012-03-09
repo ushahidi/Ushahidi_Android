@@ -13,24 +13,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/background_color"
     android:orientation="vertical" >
 
     <!-- toolbar -->
 
     <LinearLayout style="@style/ActionBarTitleContainer" >
 
-        
-        <TextView android:id="@+id/list_report_title" 
-            android:gravity="center"
-            style="@style/ActionBarTitleText" />
+        <TextView
+            android:id="@+id/list_report_title"
+            style="@style/ActionBarTitleText"
+            android:gravity="center" />
+
         <ImageView style="@style/ActionBarTitleSeparator" />
-        
+
         <ImageButton
             android:id="@+id/add_report_btn"
             style="@style/ActionBarTitle"
             android:src="@drawable/button_add" />
-        
+
         <ImageView style="@style/ActionBarTitleSeparator" />
 
         <ImageButton
@@ -45,6 +45,13 @@
     </LinearLayout>
 
     <ImageView style="@style/ActionBarSeparator" />
+
+    <EditText
+        android:id="@+id/search_map"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/search_hint"
+        android:singleLine="true" />
 
     <!-- List incidents -->
 

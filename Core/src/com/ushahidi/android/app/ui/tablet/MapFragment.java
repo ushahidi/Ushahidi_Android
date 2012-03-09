@@ -1,5 +1,5 @@
 
-package com.ushahidi.android.app.fragments;
+package com.ushahidi.android.app.ui.tablet;
 
 import java.util.List;
 
@@ -17,6 +17,7 @@ import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.ReportMapItemizedOverlay;
 import com.ushahidi.android.app.ReportMapOverlayItem;
+import com.ushahidi.android.app.fragments.BaseFragment;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.util.Util;
 

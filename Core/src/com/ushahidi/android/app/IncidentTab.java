@@ -31,11 +31,11 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
-import com.ushahidi.android.app.activities.ListMapActivity;
-import com.ushahidi.android.app.activities.ReportMapActivity;
 import com.ushahidi.android.app.checkin.CheckinActivity;
 import com.ushahidi.android.app.checkin.CheckinList;
 import com.ushahidi.android.app.checkin.CheckinMap;
+import com.ushahidi.android.app.ui.phone.ListMapActivity;
+import com.ushahidi.android.app.ui.phone.ReportMapActivity;
 
 public class IncidentTab extends TabActivity {
 

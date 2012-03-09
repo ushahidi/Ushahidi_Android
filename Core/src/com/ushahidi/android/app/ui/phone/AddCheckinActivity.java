@@ -17,44 +17,32 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
-package com.ushahidi.android.app.activities;
+
+package com.ushahidi.android.app.ui.phone;
 
 import android.location.Location;
 import android.os.Bundle;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.models.ViewCheckinModel;
-import com.ushahidi.android.app.views.ViewCheckinView;
+import com.ushahidi.android.app.activities.BaseEditMapActivity;
+import com.ushahidi.android.app.models.AddCheckinModel;
+import com.ushahidi.android.app.views.AddCheckinView;
 
 /**
  * @author eyedol
- *
  */
-public class ViewCheckinActivity extends BaseMapViewActivity<ViewCheckinView,ViewCheckinModel>{
+public class AddCheckinActivity extends BaseEditMapActivity<AddCheckinView, AddCheckinModel> {
 
-    public ViewCheckinActivity() {
-        super(ViewCheckinView.class, R.layout.view_checkin, R.menu.view_checkin, R.id.loc_map );
+    public AddCheckinActivity() {
+        super(AddCheckinView.class, R.layout.add_checkin, R.menu.add_checkin,
+                R.id.checkin_location_map);
         // TODO Auto-generated constructor stub
     }
 
-    public void onLocationChanged(Location location) {
+    @Override
+    protected boolean onSaveChanges() {
         // TODO Auto-generated method stub
-        
-    }
-
-    public void onProviderDisabled(String provider) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void onProviderEnabled(String provider) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-        
+        return false;
     }
 
     @Override
@@ -63,6 +51,24 @@ public class ViewCheckinActivity extends BaseMapViewActivity<ViewCheckinView,Vie
         return false;
     }
 
-    
+    public void onLocationChanged(Location location) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void onProviderDisabled(String provider) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void onProviderEnabled(String provider) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

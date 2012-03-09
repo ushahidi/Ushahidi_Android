@@ -2,8 +2,8 @@
 package com.ushahidi.android.app.helpers;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.activities.ListMapActivity;
-import com.ushahidi.android.app.fragments.ListMapFragment;
+import com.ushahidi.android.app.ui.phone.ListMapActivity;
+import com.ushahidi.android.app.ui.tablet.ListMapFragment;
 
 import android.view.ActionMode;
 import android.view.Menu;

@@ -18,7 +18,7 @@
  **
  **/
 
-package com.ushahidi.android.app.fragments;
+package com.ushahidi.android.app.ui.tablet;
 
 import java.util.Vector;
 
@@ -39,11 +39,12 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.activities.AddReportActivity;
-import com.ushahidi.android.app.activities.ViewReportActivity;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
+import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.ProgressTask;
+import com.ushahidi.android.app.ui.phone.AddReportActivity;
+import com.ushahidi.android.app.ui.phone.ViewReportActivity;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.views.ListReportView;
 

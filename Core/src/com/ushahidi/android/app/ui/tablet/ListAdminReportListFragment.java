@@ -18,7 +18,7 @@
  **
  **/
 
-package com.ushahidi.android.app.fragments;
+package com.ushahidi.android.app.ui.tablet;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -27,6 +27,7 @@ import android.widget.AdapterView;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
+import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.views.ListReportView;
