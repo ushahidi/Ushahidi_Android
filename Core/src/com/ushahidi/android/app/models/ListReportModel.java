@@ -253,6 +253,15 @@ public class ListReportModel extends Model {
         }
         return false;
     }
+    
+    public boolean loadReportByTitle(Context context, String title) {
+        mReports = Database.mReportDao.fetchReportByTitle(title);
+
+        if (mReports != null) {
+            return true;
+        }
+        return false;
+    }
 
     public List<ListReportModel> getReports(Context context) {
         reportModel = new ArrayList<ListReportModel>();

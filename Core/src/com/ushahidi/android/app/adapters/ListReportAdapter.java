@@ -1,16 +1,21 @@
 
 package com.ushahidi.android.app.adapters;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.models.ListReportModel;
 
-public class ListReportAdapter extends BaseListAdapter<ListReportModel> {
+public class ListReportAdapter extends BaseListAdapter<ListReportModel> implements Filterable {
 
     class Widgets extends com.ushahidi.android.app.views.View {
 
@@ -44,6 +49,8 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel> {
 
     private ListReportModel mListReportModel;
 
+    private List<ListReportModel> items;
+
     private Context mContext;
 
     public ListReportAdapter(Context context) {
@@ -59,8 +66,8 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel> {
         mListReportModel = new ListReportModel();
         final boolean loaded = mListReportModel.load(context);
         if (loaded) {
-            
-            this.setItems(mListReportModel.getReports(context));
+            items = mListReportModel.getReports(context);
+            this.setItems(items);
         }
 
     }
@@ -68,8 +75,18 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel> {
     public void refresh(Context context, String category) {
         mListReportModel = new ListReportModel();
         final boolean loaded = mListReportModel.loadReportByCategory(context, category);
-        if(loaded) {
-            this.setItems(mListReportModel.getReports(context));
+        if (loaded) {
+            items = mListReportModel.getReports(context);
+            this.setItems(items);
+        }
+    }
+
+    public void refreshByTitle(Context context, String title) {
+        mListReportModel = new ListReportModel();
+        final boolean loaded = mListReportModel.loadReportByTitle(context, title);
+        if (loaded) {
+            items = mListReportModel.getReports(context);
+            this.setItems(items);
         }
     }
 
@@ -103,5 +120,46 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel> {
         widgets.arrow.setImageDrawable(getItem(position).getArrow());
 
         return row;
+    }
+
+    //Implements fitering pattern for the list items.
+    @Override
+    public Filter getFilter() {
+        return new ReportFilter();
+    }
+
+    public class ReportFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            results.values = items;
+            results.count = items.size();
+
+            if (constraint != null && constraint.toString().length() > 0) {
+                constraint = constraint.toString().toLowerCase();
+                ArrayList<ListReportModel> filteredItems = new ArrayList<ListReportModel>();
+                ArrayList<ListReportModel> itemsHolder = new ArrayList<ListReportModel>();
+                itemsHolder.addAll(items);
+                for (ListReportModel report : itemsHolder) {
+                    if (report.getTitle().toLowerCase().contains(constraint)
+                            || report.getLocation().toLowerCase().contains(constraint)) {
+                        filteredItems.add(report);
+                    }
+                }
+                results.count = filteredItems.size();
+                results.values = filteredItems;
+            }
+            return results;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            List<ListReportModel> reports = (ArrayList<ListReportModel>)results.values;
+            setItems(reports);
+
+        }
+
     }
 }

@@ -19,10 +19,7 @@
  **/
 package com.ushahidi.android.app.entities;
 
-import android.content.Context;
-
 import com.ushahidi.android.app.database.DbEntity;
-import com.ushahidi.android.app.models.Model;
 
 /**
  * @author eyedol

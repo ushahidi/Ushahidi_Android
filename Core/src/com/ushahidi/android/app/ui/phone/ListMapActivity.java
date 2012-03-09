@@ -54,7 +54,6 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.BaseListActivity;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
-import com.ushahidi.android.app.entities.Map;
 import com.ushahidi.android.app.helpers.ActionModeHelper;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.net.Maps;

@@ -32,6 +32,9 @@ public interface IReportDao {
 
     // fetch reports by categories
     public List<Report> fetchReportByCategory(String category);
+    
+    //fetech reports by title
+    public List<Report> fetchReportByTitle(String title);
 
     // fetch reports by ID
     public List<Report> fetchReportById(long id);

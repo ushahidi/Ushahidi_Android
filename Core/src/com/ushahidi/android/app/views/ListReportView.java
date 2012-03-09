@@ -20,6 +20,7 @@
 
 package com.ushahidi.android.app.views;
 
+import android.R;
 import android.app.Activity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -33,11 +34,14 @@ public class ListReportView extends com.ushahidi.android.app.views.View {
     private ListView listReport;
 
     private TextView emptyListText;
+    
+    private TextView mTextView;
 
     public ListReportView(Activity activity) {
         super(activity);
         listReport = (ListView)activity.findViewById(android.R.id.list);
         emptyListText = (TextView)activity.findViewById(android.R.id.empty);
+        mTextView = (TextView) activity.findViewById(com.ushahidi.android.app.R.id.search_report);
     }
 
     public void displayEmptyListText() {
@@ -55,5 +59,9 @@ public class ListReportView extends com.ushahidi.android.app.views.View {
    
     public ListView getPullToRefreshListView() {
         return listReport;
+    }
+    
+    public TextView getFilterReportView() {
+       return mTextView;
     }
 }

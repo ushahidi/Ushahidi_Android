@@ -29,7 +29,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.MenuItem;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -74,6 +76,8 @@ public class ListReportFragment extends
 
     private String filterCategory;
 
+    private CharSequence filterTitle = null;
+
     private ViewGroup mRootView;
 
     private boolean refreshState = false;
@@ -96,8 +100,30 @@ public class ListReportFragment extends
 
         mListReportView = new ListReportView(getActivity());
         mListReportAdapter = new ListReportAdapter(getActivity());
+
         mListReportModel = new ListReportModel();
         mHandler = new Handler();
+        mListReportView.getFilterReportView().addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable arg0) {
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (!(TextUtils.isEmpty(s.toString()))) {
+                    filterTitle = s;
+                    mHandler.post(filterReportList);
+                }
+
+            }
+
+        });
+
         if (savedInstanceState != null) {
             // Restore last state for checked position.
             mPositionChecked = savedInstanceState.getInt("curChoice", 0);
@@ -175,7 +201,21 @@ public class ListReportFragment extends
                 mListReportAdapter.refresh(getActivity());
                 mListReportView.getPullToRefreshListView().setAdapter(mListReportAdapter);
                 mListReportView.displayEmptyListText();
+                getListView().setTextFilterEnabled(true);
                 showCategories();
+            } catch (Exception e) {
+                return;
+            }
+        }
+    };
+
+    /**
+     * Filter the list view with new items
+     */
+    final Runnable filterReportList = new Runnable() {
+        public void run() {
+            try {
+                mListReportAdapter.getFilter().filter(filterTitle);
             } catch (Exception e) {
                 return;
             }

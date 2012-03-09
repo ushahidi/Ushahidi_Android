@@ -13,6 +13,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/background_color"
     android:orientation="vertical" >
 
     <!-- toolbar -->
@@ -47,7 +48,7 @@
     <ImageView style="@style/ActionBarSeparator" />
 
     <EditText
-        android:id="@+id/search_map"
+        android:id="@+id/search_report"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/search_hint"

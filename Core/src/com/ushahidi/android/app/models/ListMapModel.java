@@ -25,7 +25,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
@@ -147,25 +146,6 @@ public class ListMapModel extends Model {
             return true;
         }
         return false;
-        /*
-         * if (cursor != null) { if (cursor.moveToFirst()) { int
-         * deploymentIdIndex =
-         * cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_ID); int
-         * deploymentNameIndex =
-         * cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_NAME); int
-         * deploymentDescIndex =
-         * cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_DESC); int
-         * deploymentUrlIndex =
-         * cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_URL); do { ListMapModel
-         * listMapModel = new ListMapModel();
-         * listMapModel.setId(cursor.getString(deploymentIdIndex));
-         * listMapModel.setName(cursor.getString(deploymentNameIndex));
-         * listMapModel.setDesc(cursor.getString(deploymentDescIndex));
-         * listMapModel.setUrl(cursor.getString(deploymentUrlIndex));
-         * mMaps.add(listMapModel); } while (cursor.moveToNext()); }
-         * cursor.close(); return true; }
-         */
-
     }
 
     /**
@@ -177,24 +157,7 @@ public class ListMapModel extends Model {
                     query
                 }, null);
         mMaps = Database.mMapDao.fetchMap(cursor);
-        /**
-         * mMaps = new ArrayList<ListMapModel>(); if (cursor != null) { if
-         * (cursor.moveToFirst()) { int deploymentIdIndex =
-         * cursor.getColumnIndexOrThrow(BaseColumns._ID); int
-         * deploymentNameIndex =
-         * cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_NAME); int
-         * deploymentDescIndex =
-         * cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_DESC); int
-         * deploymentUrlIndex =
-         * cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_URL); do { ListMapModel
-         * listMapModel = new ListMapModel();
-         * listMapModel.setId(cursor.getString(deploymentIdIndex));
-         * listMapModel.setName(cursor.getString(deploymentNameIndex));
-         * listMapModel.setDesc(cursor.getString(deploymentDescIndex));
-         * listMapModel.setUrl(cursor.getString(deploymentUrlIndex));
-         * mMaps.add(listMapModel); } while (cursor.moveToNext()); }
-         * cursor.close(); return true; }
-         */
+        
         if (mMaps != null && mMaps.size() > 0) {
             return true;
         }
