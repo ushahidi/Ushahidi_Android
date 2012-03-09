@@ -81,15 +81,6 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel> implemen
         }
     }
 
-    public void refreshByTitle(Context context, String title) {
-        mListReportModel = new ListReportModel();
-        final boolean loaded = mListReportModel.loadReportByTitle(context, title);
-        if (loaded) {
-            items = mListReportModel.getReports(context);
-            this.setItems(items);
-        }
-    }
-
     public View getView(int position, View view, ViewGroup viewGroup) {
 
         int colorPosition = position % colors.length;
