@@ -43,12 +43,9 @@ public class DeploymentProvider extends ContentProvider {
 
     public static final String DEPLOYMENT_DESC_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
             + "/vnd.ushahidi.searchabledeployment";
-
     // UriMatcher stuff
     private static final int SEARCH_DEPLOYMENTS = 0;
-
     private static final int GET_DEPLOYMENT = 1;
-
     private static final int SEARCH_SUGGEST = 2;
 
     private static final int REFRESH_SHORTCUT = 3;
