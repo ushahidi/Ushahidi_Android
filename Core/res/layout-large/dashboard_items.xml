@@ -11,26 +11,29 @@
     at team@ushahidi.com.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="horizontal" >
 
-    <LinearLayout android:layout_width="0px"
-        android:layout_height="fill_parent"
+    <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="match_parent"
         android:layout_weight="30"
         android:background="@drawable/layout_background" >
-    <fragment
-        android:id="@+id/list_map_fragment"
-        android:layout_width="0px"
-        android:layout_height="fill_parent"
-        android:layout_weight="30"
-        android:background="@drawable/layout_background"
-        class="com.ushahidi.android.app.ui.tablet.ListMapFragment" />
-</LinearLayout>
+
+        <fragment
+            android:id="@+id/list_map_fragment"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:background="@drawable/layout_background"
+            class="com.ushahidi.android.app.ui.tablet.ListMapFragment" />
+    </LinearLayout>
+
     <fragment
         android:id="@+id/list_report_fragment"
         android:layout_width="0px"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:layout_weight="60"
         android:background="@drawable/layout_background"
         class="com.ushahidi.android.app.ui.tablet.ReportTabFragment" />

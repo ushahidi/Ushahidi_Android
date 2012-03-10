@@ -22,11 +22,13 @@ package com.ushahidi.android.app.views;
 
 import java.util.Vector;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentMapActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -61,11 +63,13 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
     private TextView photos;
 
-    private MapView mapView;
+    public MapView mapView;
 
     private Gallery g;
 
     private FragmentMapActivity activity;
+    
+    private Activity fragmentActivity;
 
     private ImageSwitcher mSwitcher;
 
@@ -80,6 +84,24 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
     public ViewReportView(FragmentMapActivity activity) {
         super(activity);
         this.activity = activity;
+        mapView = (MapView)activity.findViewById(R.id.loc_map);
+        title = (TextView)activity.findViewById(R.id.title);
+        category = (TextView)activity.findViewById(R.id.category);
+        date = (TextView)activity.findViewById(R.id.date);
+        location = (TextView)activity.findViewById(R.id.location);
+        body = (TextView)activity.findViewById(R.id.webview);
+        status = (TextView)activity.findViewById(R.id.status);
+        photos = (TextView)activity.findViewById(R.id.report_photo);
+        mSwitcher = (ImageSwitcher)activity.findViewById(R.id.switcher);
+        g = (Gallery)activity.findViewById(R.id.gallery);
+        imageAdapter = new ImageAdapter(activity);
+        thumbnailAdapter = new ImageAdapter(activity);
+
+    }
+    
+    public ViewReportView(Activity activity) {
+        super(activity);
+        this.fragmentActivity = activity;
         mapView = (MapView)activity.findViewById(R.id.loc_map);
         title = (TextView)activity.findViewById(R.id.title);
         category = (TextView)activity.findViewById(R.id.category);

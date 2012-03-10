@@ -29,7 +29,7 @@ public class DashboardActivity extends FragmentMapActivity implements ListMapFra
         Fragment f = getSupportFragmentManager().findFragmentById(R.id.list_report_fragment);
 
         detailsInline = (f != null && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE));
-
+        
         if (detailsInline) {
             log("enable persistent selection is on ");
             maps.enablePersistentSelection();
@@ -49,7 +49,8 @@ public class DashboardActivity extends FragmentMapActivity implements ListMapFra
                     .findFragmentById(R.id.list_report_fragment));
             f.mListReportAdapter.refresh(this);
             f.mListReportView.getPullToRefreshListView().setAdapter(f.mListReportAdapter);
-        } else {
+       
+        }else {
             Intent i = new Intent(this, ReportTabActivity.class);
             startActivity(i);
         }

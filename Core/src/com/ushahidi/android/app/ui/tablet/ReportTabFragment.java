@@ -31,13 +31,12 @@ public class ReportTabFragment extends LocalActivityManagerFragment {
 
         listListTab();
         listMapTab();
-        listAdminTab();
         return view;
     }
 
     private void listListTab() {
         if (mTabHost != null) {
-            addTab(TAG_LIST_REPORT, getString(R.string.reports), R.drawable.menu_list,
+            addTab(TAG_LIST_REPORT,R.drawable.menu_list,
                     ListReportActivity.class);
 
         }
@@ -45,7 +44,7 @@ public class ReportTabFragment extends LocalActivityManagerFragment {
 
     private void listMapTab() {
         if (mTabHost != null) {
-            addTab(TAG_MAP_REPORT, getString(R.string.map), R.drawable.menu_map,
+            addTab(TAG_MAP_REPORT,R.drawable.menu_map,
                     ReportMapActivity.class);
 
         }
@@ -53,20 +52,18 @@ public class ReportTabFragment extends LocalActivityManagerFragment {
     
     private void listAdminTab() {
         if (mTabHost != null) {
-            addTab(TAG_MAP_REPORT, getString(R.string.map), R.drawable.menu_map,
+            addTab(TAG_MAP_REPORT, R.drawable.menu_map,
                     ReportMapActivity.class);
 
         }
     }
 
-    private void addTab(String indicator, String labelId, int drawableId, Class<?> c) {
+    private void addTab(String indicator, int drawableId, Class<?> c) {
         TabHost tabHost = mTabHost;
         TabHost.TabSpec spec = tabHost.newTabSpec(indicator);
         Intent intent = new Intent(getActivity(), c);
         View tabIndicator = LayoutInflater.from(getActivity()).inflate(R.layout.tab_indicator,
                 tabHost.getTabWidget(), false);
-        TextView title = (TextView)tabIndicator.findViewById(R.id.title);
-        title.setText(labelId);
         ImageView icon = (ImageView)tabIndicator.findViewById(R.id.icon);
         icon.setImageResource(drawableId);
 
