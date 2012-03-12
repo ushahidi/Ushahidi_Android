@@ -1,3 +1,4 @@
+
 package com.ushahidi.android.app.ui.phone;
 
 import android.os.Bundle;
@@ -7,7 +8,6 @@ import android.support.v4.app.FragmentMapActivity;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.helpers.ReportViewPager;
 import com.ushahidi.android.app.helpers.TabsAdapter;
-import com.ushahidi.android.app.ui.tablet.ListAdminReportListFragment;
 import com.ushahidi.android.app.ui.tablet.ListReportFragment;
 import com.ushahidi.android.app.ui.tablet.MapFragment;
 
@@ -29,7 +29,6 @@ public class ReportTabActivity extends FragmentMapActivity {
         ActionBar.Tab reportsTab = getSupportActionBar().newTab().setText(
                 getString(R.string.reports));
         ActionBar.Tab mapTab = getSupportActionBar().newTab().setText(getString(R.string.map));
-        ActionBar.Tab adminTab = getSupportActionBar().newTab().setText(getString(R.string.admin));
 
         mViewPager = (ReportViewPager)findViewById(R.id.pager);
 
@@ -37,7 +36,6 @@ public class ReportTabActivity extends FragmentMapActivity {
 
         mTabsAdapter.addTab(reportsTab, ListReportFragment.class);
         mTabsAdapter.addTab(mapTab, MapFragment.class);
-        mTabsAdapter.addTab(adminTab, ListAdminReportListFragment.class);
 
         if (savedInstanceState != null) {
             getSupportActionBar().setSelectedNavigationItem(savedInstanceState.getInt("index"));

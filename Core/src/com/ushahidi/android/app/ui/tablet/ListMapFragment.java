@@ -113,6 +113,7 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+        
         mListMapView = new ListMapView(getActivity());
         mListMapAdapter = new ListMapTabletAdapter(getActivity());
         mListMapModel = new ListMapModel();

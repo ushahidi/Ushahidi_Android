@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.util.Util;
+import com.ushahidi.android.app.views.AboutView;
 
 public class AboutFragment extends DialogFragment {
 
@@ -18,10 +20,12 @@ public class AboutFragment extends DialogFragment {
     @Override
     public android.view.View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-
-        getDialog().setTitle(getString(R.string.about));
-        android.view.View v = inflater.inflate(R.layout.about_view, container, false);
-
+        if (Util.isTablet(getActivity()))
+            getDialog().setTitle(getString(R.string.about));
+        ViewGroup v = (ViewGroup)inflater.inflate(R.layout.about_view, container, false);
+        if (v != null) {
+            new AboutView(v, getActivity());
+        }
         return v;
     }
 

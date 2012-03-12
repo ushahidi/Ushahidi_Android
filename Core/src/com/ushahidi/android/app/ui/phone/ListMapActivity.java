@@ -92,7 +92,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     private ListMapView listMapView;
 
     private int mMapId = 0;
-    
+
     private String url = "";
 
     private ListMapAdapter listMapAdapter;
@@ -101,7 +101,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
     private boolean edit = true;
 
-    private String filter =  null;
+    private String filter = null;
 
     private String TAG = ListMapActivity.class.getSimpleName();
 
@@ -115,19 +115,16 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-       
-
+        actionBar.setDisplayHomeAsUpEnabled(false);
         listMapView = new ListMapView(this);
         listMapAdapter = new ListMapAdapter(this);
         listMapModel = new ListMapModel();
-        
-        
-        
+
         if (Util.isTablet(this)) {
             listMapView.mListView.setLongClickable(true);
             listMapView.mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            listMapView.mListView.setOnItemLongClickListener(new ActionModeHelper(this, listMapView.mListView));
+            listMapView.mListView.setOnItemLongClickListener(new ActionModeHelper(this,
+                    listMapView.mListView));
         } else {
             registerForContextMenu(listMapView.mListView);
         }
@@ -217,8 +214,8 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
     final Runnable filterMapList = new Runnable() {
         public void run() {
             try {
-                //TODO Implement refresh that supports Activity
-               // listMapAdapter.refresh(ListMapActivity.this.get, filter);
+                // TODO Implement refresh that supports Activity
+                // listMapAdapter.refresh(ListMapActivity.this.get, filter);
                 listMapView.mListView.setAdapter(listMapAdapter);
                 listMapView.displayEmptyListText();
 
@@ -374,13 +371,10 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
     public void goToReports() {
         Intent launchIntent;
-        Bundle bundle = new Bundle();
-        bundle.putInt("tab_index", 0);
-        launchIntent = new Intent(this, IncidentTab.class);
-        launchIntent.putExtra("tab", bundle);
+        launchIntent = new Intent(this, ReportTabActivity.class);
         startActivityForResult(launchIntent, 0);
+        overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
         setResult(RESULT_OK);
-        finish();
     }
 
     /**
@@ -460,8 +454,8 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
                 // if edit was selected at the context menu, populate fields
                 // with existing map details
                 if (edit) {
-                    final List<ListMapModel> listMap = listMapModel.loadMapById(String
-                            .valueOf(mMapId), url);
+                    final List<ListMapModel> listMap = listMapModel.loadMapById(
+                            String.valueOf(mMapId), url);
                     addMapView.setMapName(listMap.get(0).getName());
                     addMapView.setMapDescription(listMap.get(0).getDesc());
                     addMapView.setMapUrl(listMap.get(0).getUrl());
