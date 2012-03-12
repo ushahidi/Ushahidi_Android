@@ -201,7 +201,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
                 listMapAdapter.refresh(ListMapActivity.this);
                 listMapView.mListView.setAdapter(listMapAdapter);
                 listMapView.displayEmptyListText();
-
+                listMapView.mListView.requestFocus();
             } catch (Exception e) {
                 return;
             }
