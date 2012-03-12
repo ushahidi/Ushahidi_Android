@@ -65,6 +65,7 @@ public class SplashScreenActivity extends FragmentActivity {
                         finish();
                     } else {
                         startActivity(new Intent(SplashScreenActivity.this, ListMapActivity.class));
+                        overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
                         finish();
                     }
 

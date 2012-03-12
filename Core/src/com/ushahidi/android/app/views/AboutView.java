@@ -23,43 +23,44 @@ public class AboutView extends com.ushahidi.android.app.views.View {
     public AboutView(FragmentActivity activity) {
         super(activity);
         // TODO Auto-generated constructor stub
-        searchButton = (ImageButton) activity.findViewById(R.id.search_report_btn);
-        
+        searchButton = (ImageButton)activity.findViewById(R.id.search_report_btn);
+
         if (!TextUtils.isEmpty(activity.getString(R.string.deployment_url))) {
             searchButton.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             searchButton.setVisibility(View.VISIBLE);
         }
-        //VERSION
-        version = (TextView) activity.findViewById(R.id.version);
+        // VERSION
+        version = (TextView)activity.findViewById(R.id.version);
         try {
-            version.setText(activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName);
-        }
-        catch (NameNotFoundException e) {
+            version.setText(activity.getPackageManager().getPackageInfo(activity.getPackageName(),
+                    0).versionName);
+        } catch (NameNotFoundException e) {
             Log.e("About", "NameNotFoundException", e);
             version.setText("");
         }
-        
+
         // BUTTONS
         setButtonVisibility((Button)activity.findViewById(R.id.media_link),
-                activity.getString(R.string.media_url),activity);
+                activity.getString(R.string.media_url), activity);
         setButtonVisibility((Button)activity.findViewById(R.id.team_link),
-                activity.getString(R.string.team_url),activity);
+                activity.getString(R.string.team_url), activity);
         setButtonVisibility((Button)activity.findViewById(R.id.twitter_link),
-                activity.getString(R.string.twitter_url),activity);
+                activity.getString(R.string.twitter_url), activity);
         setButtonVisibility((Button)activity.findViewById(R.id.facebook_link),
-                activity.getString(R.string.facebook_url),activity);
+                activity.getString(R.string.facebook_url), activity);
         setButtonVisibility((Button)activity.findViewById(R.id.contact_link),
-                activity.getString(R.string.contact_url),activity);
+                activity.getString(R.string.contact_url), activity);
     }
 
-    private void setButtonVisibility(final Button button, final String url, final FragmentActivity activity) {
+    private void setButtonVisibility(final Button button, final String url,
+            final FragmentActivity activity) {
         if (!TextUtils.isEmpty(url)) {
             button.setVisibility(View.VISIBLE);
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    activity.startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url)));
+                    activity.startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri
+                            .parse(url)));
                 }
             });
         } else {

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TabHost;
-import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.helpers.LocalActivityManagerFragment;
@@ -36,24 +35,21 @@ public class ReportTabFragment extends LocalActivityManagerFragment {
 
     private void listListTab() {
         if (mTabHost != null) {
-            addTab(TAG_LIST_REPORT,R.drawable.menu_list,
-                    ListReportActivity.class);
+            addTab(TAG_LIST_REPORT, R.drawable.menu_list, ListReportActivity.class);
 
         }
     }
 
     private void listMapTab() {
         if (mTabHost != null) {
-            addTab(TAG_MAP_REPORT,R.drawable.menu_map,
-                    ReportMapActivity.class);
+            addTab(TAG_MAP_REPORT, R.drawable.menu_map, ReportMapActivity.class);
 
         }
     }
-    
+
     private void listAdminTab() {
         if (mTabHost != null) {
-            addTab(TAG_MAP_REPORT, R.drawable.menu_map,
-                    ReportMapActivity.class);
+            addTab(TAG_MAP_REPORT, R.drawable.menu_map, ReportMapActivity.class);
 
         }
     }
@@ -70,6 +66,13 @@ public class ReportTabFragment extends LocalActivityManagerFragment {
         spec.setIndicator(tabIndicator);
         spec.setContent(intent);
         tabHost.addTab(spec);
+    }
+
+  
+    static ReportTabFragment newInstance() {
+        ReportTabFragment f = new ReportTabFragment();
+
+        return f;
     }
 
 }

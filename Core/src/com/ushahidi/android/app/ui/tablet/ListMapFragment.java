@@ -99,7 +99,7 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
     static private final String STATE_CHECKED = "com.ushahidi.android.app.activity.STATE_CHECKED";
 
     public ListMapFragment() {
-        super(ListMapView.class, ListMapAdapter.class, R.layout.list_map, R.menu.list_map,
+        super(ListMapView.class, ListMapAdapter.class, R.layout.list_map, 0,
                 android.R.id.list);
         mHandler = new Handler();
     }

@@ -392,7 +392,7 @@ public class ListReportFragment extends
             i.putExtra("category", "");
         }
         startActivityForResult(i, 0);
-
+        getActivity().overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
     }
 
     public void launchAddReport() {

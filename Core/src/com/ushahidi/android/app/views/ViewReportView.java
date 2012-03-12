@@ -70,6 +70,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
     private FragmentMapActivity activity;
     
     private Activity fragmentActivity;
+    
+    private Context context;
 
     private ImageSwitcher mSwitcher;
 
@@ -83,7 +85,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
     public ViewReportView(FragmentMapActivity activity) {
         super(activity);
-        this.activity = activity;
+        this.context = activity;
         mapView = (MapView)activity.findViewById(R.id.loc_map);
         title = (TextView)activity.findViewById(R.id.title);
         category = (TextView)activity.findViewById(R.id.category);
@@ -99,9 +101,9 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
     }
     
-    public ViewReportView(Activity activity) {
+    public ViewReportView(ViewGroup activity, Context context) {
         super(activity);
-        this.fragmentActivity = activity;
+        this.context = context;
         mapView = (MapView)activity.findViewById(R.id.loc_map);
         title = (TextView)activity.findViewById(R.id.title);
         category = (TextView)activity.findViewById(R.id.category);
@@ -112,8 +114,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
         photos = (TextView)activity.findViewById(R.id.report_photo);
         mSwitcher = (ImageSwitcher)activity.findViewById(R.id.switcher);
         g = (Gallery)activity.findViewById(R.id.gallery);
-        imageAdapter = new ImageAdapter(activity);
-        thumbnailAdapter = new ImageAdapter(activity);
+        imageAdapter = new ImageAdapter(context);
+        thumbnailAdapter = new ImageAdapter(context);
 
     }
 
@@ -214,7 +216,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
     }
 
     public int imageBackgroundColor() {
-        TypedArray a = activity.obtainStyledAttributes(R.styleable.PhotoGallery);
+        TypedArray a =  context.obtainStyledAttributes(R.styleable.PhotoGallery);
         int mGalleryItemBackground = a.getResourceId(
                 R.styleable.PhotoGallery_android_galleryItemBackground, 0);
         a.recycle();

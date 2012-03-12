@@ -9,9 +9,9 @@
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com. -->
 <RelativeLayout android:id="@+id/relativeLayout1"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:layout_width="match_parent" android:layout_height="match_parent"
 	xmlns:android="http://schemas.android.com/apk/res/android">
-	<LinearLayout android:layout_width="fill_parent"
+	<LinearLayout android:layout_width="match_parent"
 		android:layout_height="wrap_content" android:orientation="vertical"
 		android:layout_alignParentTop="true" android:background="@drawable/about_background">
 		<LinearLayout style="@style/ActionBarTitleContainer">
@@ -29,11 +29,11 @@
 		<ImageView style="@style/ActionBarSeparator"
 			android:layout_below="@+id/search_report_btn" android:id="@+id/menu_bar_separator" />
 		<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_width="match_parent" android:layout_height="wrap_content"
 			android:gravity="center" android:padding="25px"
 			android:layout_alignBottom="@+id/relativeLayout1" android:scrollbars="vertical"
 			android:fadeScrollbars="true">
-			<LinearLayout android:layout_width="fill_parent"
+			<LinearLayout android:layout_width="match_parent"
 				android:layout_height="wrap_content" android:orientation="vertical"
 				android:gravity="center" android:paddingRight="15px"
 				android:layout_alignBottom="@+id/relativeLayout1">
@@ -43,24 +43,25 @@
 				<TextView android:id="@+id/version" android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:textColor="@color/date_color"
 					android:textStyle="bold" />
-				<TextView android:id="@+id/spacer" android:layout_width="fill_parent"
+				<TextView android:id="@+id/spacer" android:layout_width="match_parent"
 					android:layout_height="wrap_content" />
 				<TextView android:layout_marginLeft="0px"
 					android:textColor="@color/date_color" android:id="@+id/about_text"
 					android:layout_height="wrap_content" android:text="@string/about_text"
-					android:textStyle="bold" android:layout_width="fill_parent"></TextView>
-				<TextView android:id="@+id/spacer" android:layout_width="fill_parent"
+					android:textStyle="bold" android:layout_width="match_parent"></TextView>
+				<TextView android:id="@+id/spacer" android:layout_width="match_parent"
 					android:layout_height="wrap_content" />
 			</LinearLayout>
 		</ScrollView>
-	</LinearLayout>
-	<TextView
-		android:id="@+id/sky_bg" android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:layout_above="@+id/bottom_menu_bar_separator" />
+	</LinearLayout>	
 	<LinearLayout style="@style/BottomActionBarContainer"
 		android:layout_alignParentBottom="true" android:id="@+id/bottom_menu_bar_separator">
+		<TextView
+        android:id="@+id/sky_bg" android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"  />
 		<LinearLayout android:orientation="horizontal"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_width="match_parent" android:layout_height="wrap_content"
 			android:layout_weight="15">
 			<Button android:id="@+id/team_link" style="@style/BottomActionbarButton"
 				android:text="@string/team" android:drawableTop="@drawable/button_team" />

@@ -1,7 +1,6 @@
 
 package com.ushahidi.android.app.ui.phone;
 
-import android.content.Intent;
 import android.support.v4.view.MenuItem;
 
 import com.ushahidi.android.app.R;
@@ -17,18 +16,11 @@ public class AboutActivity extends BaseActivity<AboutView> {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            goHome();
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
 
-    }
-
-    public void goHome() {
-        // app icon in action bar clicked; go home
-        Intent intent = new Intent(this, ListMapActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
     }
 
 }

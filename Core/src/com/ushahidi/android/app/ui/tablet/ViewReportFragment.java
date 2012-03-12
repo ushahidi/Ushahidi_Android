@@ -9,7 +9,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.MenuItem;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ViewSwitcher;
 import android.widget.AdapterView.OnItemClickListener;
@@ -21,7 +23,7 @@ import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.ui.ImagePreviewer;
 import com.ushahidi.android.app.views.ViewReportView;
 
-public class ViewReportFragment<ReportMapItemOverlay> extends BaseFragment implements AdapterView.OnItemSelectedListener,
+public class ViewReportFragment extends BaseFragment implements AdapterView.OnItemSelectedListener,
         ViewSwitcher.ViewFactory {
 
     private ListReportModel reports;
@@ -36,7 +38,9 @@ public class ViewReportFragment<ReportMapItemOverlay> extends BaseFragment imple
 
     private ViewReportView view;
 
-    protected ViewReportFragment(int menu) {
+    private ViewGroup mRootView;
+
+    protected ViewReportFragment() {
         super(R.menu.view_report);
         // TODO Auto-generated constructor stub
     }
@@ -46,13 +50,14 @@ public class ViewReportFragment<ReportMapItemOverlay> extends BaseFragment imple
         super.onCreate(savedInstanceState);
 
         reports = new ListReportModel();
-        view = new ViewReportView(getActivity());
+
         photosBundle = new Bundle();
         // load all reports
-        // Bundle items = getIntent().getExtras();
-        // items.getBundle("items").get
-        //this.category = getIntent().getExtras().getString("category");
-        //this.position = getIntent().getExtras().getInt("id", 0);
+        Bundle items = getArguments();
+        if (items != null) {
+            this.category = items.getString("category", "");
+            this.position = items.getInt("id", 0);
+        }
 
         if ((category != null) && (!TextUtils.isEmpty(category)))
             reports.loadReportByCategory(getActivity(), category);
@@ -60,15 +65,7 @@ public class ViewReportFragment<ReportMapItemOverlay> extends BaseFragment imple
             reports.load(getActivity());
 
         initReport(this.position);
-        view.getGallery().setOnItemSelectedListener(this);
-        view.getGallery().setOnItemClickListener(new OnItemClickListener() {
-
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                previewImage(position);
-            }
-
-        });
-
+        
     }
 
     private void previewImage(int position) {
@@ -122,20 +119,31 @@ public class ViewReportFragment<ReportMapItemOverlay> extends BaseFragment imple
         report = reports.getReports(getActivity());
 
         if (report != null) {
-            view.setBody(report.get(position).getDesc());
-            view.setCategory(report.get(position).getCategories());
-            view.setDate(report.get(position).getDate());
-            view.setTitle(report.get(position).getTitle());
-            view.setStatus(report.get(position).getStatus());
-            view.setMedia(report.get(position).getMedia());
-            view.mapView.setClickable(true);
-            view.mapView.getController().setCenter(getPoint(
-                    Double.parseDouble(report.get(position).getLatitude()),
-                    Double.parseDouble(report.get(position).getLongitude())));
-            
-            view.mapView.setBuiltInZoomControls(true);
-            int page = position;
-            this.setTitle(page + 1);
+            if (mRootView != null) {
+                view = new ViewReportView(mRootView, getActivity());
+                view.setBody(report.get(position).getDesc());
+                view.setCategory(report.get(position).getCategories());
+                view.setDate(report.get(position).getDate());
+                view.setTitle(report.get(position).getTitle());
+                view.setStatus(report.get(position).getStatus());
+                view.setMedia(report.get(position).getMedia());
+                view.mapView.setClickable(true);
+                view.mapView.getController().setCenter(
+                        getPoint(Double.parseDouble(report.get(position).getLatitude()),
+                                Double.parseDouble(report.get(position).getLongitude())));
+
+                view.mapView.setBuiltInZoomControls(true);
+                view.getGallery().setOnItemSelectedListener(this);
+                view.getGallery().setOnItemClickListener(new OnItemClickListener() {
+
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                        previewImage(position);
+                    }
+
+                });
+                int page = position;
+                this.setTitle(page + 1);
+            }
         }
 
     }
@@ -143,14 +151,16 @@ public class ViewReportFragment<ReportMapItemOverlay> extends BaseFragment imple
     public void setTitle(int page) {
         final StringBuilder title = new StringBuilder(String.valueOf(page));
         title.append(" / ");
-        /*if (report != null)
-            title.append(report.size());
-        setActionBarTitle(title.toString());*/
+        /*
+         * if (report != null) title.append(report.size());
+         * setActionBarTitle(title.toString());
+         */
     }
-    
-    /*protected void setActionBarTitle(String title) {
-        getSupportActionBar().setTitle(title);
-    }*/
+
+    /*
+     * protected void setActionBarTitle(String title) {
+     * getSupportActionBar().setTitle(title); }
+     */
 
     public void onLocationChanged(Location location) {
         // TODO Auto-generated method stub
@@ -190,4 +200,10 @@ public class ViewReportFragment<ReportMapItemOverlay> extends BaseFragment imple
 
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mRootView = (ViewGroup)inflater.inflate(R.layout.view_report, container, false);
+        
+        return mRootView;
+    }
 }

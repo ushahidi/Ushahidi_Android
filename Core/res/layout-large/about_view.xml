@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
      Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
-    Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
-    This file may be used under the terms of the GNU Lesser General Public License 
-    version 3 as published by the Free Software Foundation and appearing in the 
-    file LICENSE.LGPL included in the packaging of this file. Please review the 
-    following information to ensure the GNU Lesser General Public License version 
-    3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
-    have questions regarding the use of this file, please contact Ushahidi developers 
-    at team@ushahidi.com.
+	Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
+	This file may be used under the terms of the GNU Lesser General Public License 
+	version 3 as published by the Free Software Foundation and appearing in the 
+	file LICENSE.LGPL included in the packaging of this file. Please review the 
+	following information to ensure the GNU Lesser General Public License version 
+	3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
+	have questions regarding the use of this file, please contact Ushahidi developers 
+	at team@ushahidi.com.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relativeLayout1"
@@ -19,6 +19,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        
         android:layout_alignParentTop="true"
         android:orientation="vertical" >
 
@@ -62,6 +63,7 @@
                     android:id="@+id/about_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="0px"
                     android:text="@string/about_text"
                     android:textColor="@color/date_color"
