@@ -38,7 +38,7 @@ import com.ushahidi.android.app.adapters.ListMapTabletAdapter;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.helpers.ActionModeHelper;
 import com.ushahidi.android.app.models.ListMapModel;
-import com.ushahidi.android.app.net.Maps;
+import com.ushahidi.android.app.net.MapsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.ui.phone.ReportTabActivity;
@@ -218,7 +218,7 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
                 mListMapAdapter.refresh(getActivity(), filter);
                 mListMapView.mListView.setAdapter(mListMapAdapter);
                 mListMapView.displayEmptyListText();
-
+                mListMapView.mListView.requestFocus();
             } catch (Exception e) {
                 return;
             }
@@ -593,7 +593,7 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
 
         protected Context appContext;
 
-        private Maps maps;
+        private MapsHttpClient maps;
 
         protected String distance;
 
@@ -603,7 +603,7 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
             super(activity, R.string.loading_);
             // switch to a progress animation
             refreshState = true;
-            maps = new Maps(appContext);
+            maps = new MapsHttpClient(appContext);
         }
 
         @Override
@@ -618,7 +618,6 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
         protected Boolean doInBackground(String... strings) {
             try {
                 status = maps.fetchMaps(distance, location);
-
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
 

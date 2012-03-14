@@ -20,11 +20,10 @@
 
 package com.ushahidi.android.app.entities;
 
-import com.ushahidi.android.app.database.DbEntity;
 
-public class Report implements DbEntity {
+public class Report implements IDbEntity {
 
-    private Long id;
+    private int id;
 
     private String title;
 
@@ -70,7 +69,7 @@ public class Report implements DbEntity {
     }
 
     @Override
-    public Long getDbId() {
+    public int getDbId() {
         return id;
     }
 
@@ -163,7 +162,7 @@ public class Report implements DbEntity {
     }
 
     @Override
-    public void setDbId(Long id) {
+    public void setDbId(int id) {
         this.id = id;
     }
 }

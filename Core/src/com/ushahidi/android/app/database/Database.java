@@ -34,12 +34,8 @@ import android.util.Log;
 
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.checkin.Checkin;
-import com.ushahidi.android.app.checkin.CheckinMedia;
 import com.ushahidi.android.app.data.AddIncidentData;
-import com.ushahidi.android.app.data.CategoriesData;
-import com.ushahidi.android.app.data.IncidentsData;
 import com.ushahidi.android.app.data.MapDb;
-import com.ushahidi.android.app.data.UsersData;
 import com.ushahidi.android.app.util.Util;
 
 public class Database {
@@ -86,32 +82,6 @@ public class Database {
      */
 
     private static final String TAG = "UshahidiDatabase";
-
-    public static final String INCIDENT_ID = "_id";
-
-    public static final String INCIDENT_TITLE = "incident_title";
-
-    public static final String INCIDENT_DESC = "incident_desc";
-
-    public static final String INCIDENT_DATE = "incident_date";
-
-    public static final String INCIDENT_MODE = "incident_mode";
-
-    public static final String INCIDENT_VERIFIED = "incident_verified";
-
-    public static final String INCIDENT_LOC_NAME = "incident_loc_name";
-
-    public static final String INCIDENT_LOC_LATITUDE = "incident_loc_latitude";
-
-    public static final String INCIDENT_LOC_LONGITUDE = "incident_loc_longitude";
-
-    public static final String INCIDENT_CATEGORIES = "incident_categories";
-
-    public static final String INCIDENT_MEDIA = "incident_media";
-
-    public static final String INCIDENT_IMAGE = "incident_image";
-
-    public static final String INCIDENT_IS_UNREAD = "is_unread";
 
     public static final String ADD_INCIDENT_ID = "_id";
 
@@ -162,37 +132,15 @@ public class Database {
 
     public static final String CHECKIN_LOC_LONGITUDE = "checkin_loc_longitude";
 
-    // Checkins users
-    public static final String USER_ID = "_id";
-
-    public static final String USER_NAME = "user_name";
-
-    public static final String USER_COLOR = "user_color";
-
-    // Checkins media
-    public static final String MEDIA_ID = "_id";
-
-    public static final String MEDIA_CHECKIN_ID = "media_checkin_id";
-
-    public static final String MEDIA_THUMBNAIL_LINK = "media_thumbnail_link";
-
-    public static final String MEDIA_MEDIUM_LINK = "media_medium_link";
-
-    public static final String[] INCIDENTS_COLUMNS = new String[] {
-            INCIDENT_ID, INCIDENT_TITLE, INCIDENT_DESC, INCIDENT_DATE, INCIDENT_MODE,
-            INCIDENT_VERIFIED, INCIDENT_LOC_NAME, INCIDENT_LOC_LATITUDE, INCIDENT_LOC_LONGITUDE,
-            INCIDENT_CATEGORIES, INCIDENT_MEDIA, INCIDENT_IMAGE, INCIDENT_IS_UNREAD
-    };
-
     /**
      * Columns of the table that stores off line incidents
      */
     public static final String[] ADD_INCIDENTS_COLUMNS = new String[] {
             ADD_INCIDENT_ID, ADD_INCIDENT_TITLE, ADD_INCIDENT_DESC, ADD_INCIDENT_DATE,
             ADD_INCIDENT_HOUR, ADD_INCIDENT_MINUTE, ADD_INCIDENT_AMPM, ADD_INCIDENT_CATEGORIES,
-            INCIDENT_LOC_NAME, INCIDENT_LOC_LATITUDE, INCIDENT_LOC_LONGITUDE, ADD_INCIDENT_PHOTO,
-            ADD_INCIDENT_VIDEO, ADD_INCIDENT_NEWS, ADD_PERSON_FIRST, ADD_PERSON_LAST,
-            ADD_PERSON_EMAIL
+            IReportSchema.INCIDENT_LOC_NAME, IReportSchema.INCIDENT_LOC_LATITUDE,
+            IReportSchema.INCIDENT_LOC_LONGITUDE, ADD_INCIDENT_PHOTO, ADD_INCIDENT_VIDEO,
+            ADD_INCIDENT_NEWS, ADD_PERSON_FIRST, ADD_PERSON_LAST, ADD_PERSON_EMAIL
     };
 
     // Checkins messages
@@ -201,51 +149,26 @@ public class Database {
             CHECKIN_LOC_LATITUDE, CHECKIN_LOC_LONGITUDE
     };
 
-    // checkins users
-    public static final String[] USERS_COLUMNS = new String[] {
-            USER_ID, USER_NAME, USER_COLOR
-    };
-
-    // Checkin Media
-    public static final String[] CHECKIN_MEDIA_COLUMNS = new String[] {
-            MEDIA_ID, MEDIA_CHECKIN_ID, MEDIA_THUMBNAIL_LINK, MEDIA_MEDIUM_LINK
-    };
-
     private DatabaseHelper mDbHelper;
 
     private SQLiteDatabase mDb;
 
     private static final String DATABASE_NAME = "ushahidi_db";
 
-    private static final String INCIDENTS_TABLE = "incidents";
-
     private static final String ADD_INCIDENTS_TABLE = "add_incidents";
 
     private static final String CHECKINS_TABLE = "checkins";
 
-    private static final String USERS_TABLE = "users";
-
-    private static final String CHECKINS_MEDIA_TABLE = "checkin_media";
-
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
 
     // NOTE: the incident ID is used as the row ID.
     // Furthermore, if a row already exists, an insert will replace
     // the old row upon conflict.
 
-    private static final String INCIDENTS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
-            + INCIDENTS_TABLE + " (" + INCIDENT_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
-            + INCIDENT_TITLE + " TEXT NOT NULL, " + INCIDENT_DESC + " TEXT, " + INCIDENT_DATE
-            + " DATE NOT NULL, " + INCIDENT_MODE + " INTEGER, " + INCIDENT_VERIFIED + " INTEGER, "
-            + INCIDENT_LOC_NAME + " TEXT NOT NULL, " + INCIDENT_LOC_LATITUDE + " TEXT NOT NULL, "
-            + INCIDENT_LOC_LONGITUDE + " TEXT NOT NULL, " + INCIDENT_CATEGORIES
-            + " TEXT NOT NULL, " + INCIDENT_MEDIA + " TEXT, " + INCIDENT_IMAGE + " TEXT, "
-            + INCIDENT_IS_UNREAD + " BOOLEAN NOT NULL " + ")";
-
     private static final String ADD_INCIDENTS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
             + ADD_INCIDENTS_TABLE + " (" + ADD_INCIDENT_ID + " INTEGER PRIMARY KEY , "
             + ADD_INCIDENT_TITLE + " TEXT NOT NULL, " + ADD_INCIDENT_DESC + " TEXT, "
-            + INCIDENT_DATE + " DATE NOT NULL, " + ADD_INCIDENT_HOUR + " INTEGER, "
+            + IReportSchema.INCIDENT_DATE + " DATE NOT NULL, " + ADD_INCIDENT_HOUR + " INTEGER, "
             + ADD_INCIDENT_MINUTE + " INTEGER, " + ADD_INCIDENT_AMPM + " TEXT NOT NULL, "
             + ADD_INCIDENT_CATEGORIES + " TEXT NOT NULL, " + ADD_INCIDENT_LOC_NAME
             + " TEXT NOT NULL, " + ADD_INCIDENT_LOC_LATITUDE + " TEXT NOT NULL, "
@@ -259,24 +182,19 @@ public class Database {
             + " DATE NOT NULL, " + CHECKIN_LOC_NAME + " TEXT NOT NULL, " + CHECKIN_LOC_LATITUDE
             + " TEXT NOT NULL, " + CHECKIN_LOC_LONGITUDE + " TEXT NOT NULL" + ")";
 
-    private static final String USERS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + USERS_TABLE
-            + " (" + USER_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + USER_NAME
-            + " TEXT NOT NULL, " + USER_COLOR + " TEXT" + ")";
-
-    private static final String CHECKINS_MEDIA_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
-            + CHECKINS_MEDIA_TABLE + " (" + MEDIA_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
-            + MEDIA_CHECKIN_ID + " INTEGER, " + MEDIA_THUMBNAIL_LINK + " TEXT, "
-            + MEDIA_MEDIUM_LINK + " TEXT" + ")";
-
     private final Context mContext;
 
-    public static MapDb map;
+    public static MapDb map; // Map aka deployments table
 
-    public static ReportDao mReportDao;
+    public static ReportDao mReportDao; // Report table
 
-    public static CategoryDao mCategoryDao;
+    public static CategoryDao mCategoryDao; // Category table
 
-    public static MapDao mMapDao;
+    public static MapDao mMapDao; // Map aka deployment table
+
+    public static ReportCategoryDao mReportCategoryDao; // ReportCategory table
+
+    public static MediaDao mMediaDao; // Media table
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper(Context context) {
@@ -287,13 +205,13 @@ public class Database {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(IReportSchema.INCIDENTS_TABLE_CREATE);
             db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
+            // create map aka deployment table
+            db.execSQL(IMapSchema.MAP_TABLE_CREATE);
+            db.execSQL(IReportCategorySchema.REPORT_CATEGORY_TABLE_CREATE);
+            db.execSQL(IMediaSchema.MEDIA_TABLE_CREATE);
+            db.execSQL(IUserSchema.USER_TABLE_CREATE);
             db.execSQL(ADD_INCIDENTS_TABLE_CREATE);
             db.execSQL(CHECKINS_TABLE_CREATE);
-            db.execSQL(CHECKINS_MEDIA_TABLE_CREATE);
-            db.execSQL(USERS_TABLE_CREATE);
-
-            // create map table
-            db.execSQL(IMapSchema.MAP_TABLE_CREATE);
 
         }
 
@@ -310,15 +228,16 @@ public class Database {
             // List<String> deploymentColumns;
 
             // upgrade incident table
-            db.execSQL(INCIDENTS_TABLE_CREATE);
-            incidentsColumns = Database.getColumns(db, INCIDENTS_TABLE);
-            db.execSQL("ALTER TABLE " + INCIDENTS_TABLE + " RENAME TO temp_" + INCIDENTS_TABLE);
-            db.execSQL(INCIDENTS_TABLE_CREATE);
-            incidentsColumns.retainAll(Database.getColumns(db, INCIDENTS_TABLE));
+            db.execSQL(IReportSchema.INCIDENTS_TABLE_CREATE);
+            incidentsColumns = Database.getColumns(db, IReportSchema.INCIDENTS_TABLE);
+            db.execSQL("ALTER TABLE " + IReportSchema.INCIDENTS_TABLE + " RENAME TO temp_"
+                    + IReportSchema.INCIDENTS_TABLE);
+            db.execSQL(IReportSchema.INCIDENTS_TABLE_CREATE);
+            incidentsColumns.retainAll(Database.getColumns(db, IReportSchema.INCIDENTS_TABLE));
             String cols = Database.join(incidentsColumns, ",");
-            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s", INCIDENTS_TABLE,
-                    cols, cols, INCIDENTS_TABLE));
-            db.execSQL("DROP TABLE IF EXISTS temp_" + INCIDENTS_TABLE);
+            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s",
+                    IReportSchema.INCIDENTS_TABLE, cols, cols, IReportSchema.INCIDENTS_TABLE));
+            db.execSQL("DROP TABLE IF EXISTS temp_" + IReportSchema.INCIDENTS_TABLE);
 
             // upgrade category table
             db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
@@ -357,28 +276,29 @@ public class Database {
             db.execSQL("DROP TABLE IF EXISTS temp_" + CHECKINS_TABLE);
 
             // upgrade checkin media table
-            db.execSQL(CHECKINS_MEDIA_TABLE_CREATE);
-            checkinsMediaColums = Database.getColumns(db, CHECKINS_MEDIA_TABLE);
-            db.execSQL("ALTER TABLE " + CHECKINS_MEDIA_TABLE + " RENAME TO temp_"
-                    + CHECKINS_MEDIA_TABLE);
-            db.execSQL(CHECKINS_MEDIA_TABLE_CREATE);
-            checkinsMediaColums.retainAll(Database.getColumns(db, CHECKINS_MEDIA_TABLE));
+            db.execSQL(IMediaSchema.MEDIA_TABLE_CREATE);
+            checkinsMediaColums = Database.getColumns(db, IMediaSchema.MEDIA_TABLE);
+            db.execSQL("ALTER TABLE " + IMediaSchema.MEDIA_TABLE + " RENAME TO temp_"
+                    + IMediaSchema.MEDIA_TABLE);
+            db.execSQL(IMediaSchema.MEDIA_TABLE_CREATE);
+            checkinsMediaColums.retainAll(Database.getColumns(db, IMediaSchema.MEDIA_TABLE));
             String checkinsMediaCols = Database.join(checkinsMediaColums, ",");
             db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-                    CHECKINS_MEDIA_TABLE, checkinsMediaCols, checkinsMediaCols,
-                    CHECKINS_MEDIA_TABLE));
-            db.execSQL("DROP TABLE IF EXISTS temp_" + CHECKINS_MEDIA_TABLE);
+                    IMediaSchema.MEDIA_TABLE, checkinsMediaCols, checkinsMediaCols,
+                    IMediaSchema.MEDIA_TABLE));
+            db.execSQL("DROP TABLE IF EXISTS temp_" + IMediaSchema.MEDIA_TABLE);
 
             // upgrade checkin users table
-            db.execSQL(USERS_TABLE_CREATE);
-            usersColumns = Database.getColumns(db, USERS_TABLE);
-            db.execSQL("ALTER TABLE " + USERS_TABLE + " RENAME TO temp_" + USERS_TABLE);
-            db.execSQL(USERS_TABLE_CREATE);
-            usersColumns.retainAll(Database.getColumns(db, USERS_TABLE));
+            db.execSQL(IUserSchema.USER_TABLE_CREATE);
+            usersColumns = Database.getColumns(db, IUserSchema.USER_TABLE);
+            db.execSQL("ALTER TABLE " + IUserSchema.USER_TABLE + " RENAME TO temp_"
+                    + IUserSchema.USER_TABLE);
+            db.execSQL(IUserSchema.USER_TABLE_CREATE);
+            usersColumns.retainAll(Database.getColumns(db, IUserSchema.USER_TABLE));
             String usersCols = Database.join(usersColumns, ",");
-            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s", USERS_TABLE,
-                    usersCols, usersCols, USERS_TABLE));
-            db.execSQL("DROP TABLE IF EXISTS temp_" + USERS_TABLE);
+            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s",
+                    IUserSchema.USER_TABLE, usersCols, usersCols, IUserSchema.USER_TABLE));
+            db.execSQL("DROP TABLE IF EXISTS temp_" + IUserSchema.USER_TABLE);
 
             // upgrade deployment table
             db.execSQL("DROP TABLE IF EXISTS " + IMapSchema.MAP_TABLE);
@@ -437,32 +357,13 @@ public class Database {
         mReportDao = new ReportDao(mDb);
         mCategoryDao = new CategoryDao(mDb);
         mMapDao = new MapDao(mDb);
+        mMediaDao = new MediaDao(mDb);
+        mReportCategoryDao = new ReportCategoryDao(mDb);
         return this;
     }
 
     public void close() {
         mDbHelper.close();
-    }
-
-    public long createIncidents(IncidentsData incidents, boolean isUnread) {
-        ContentValues initialValues = new ContentValues();
-
-        initialValues.put(INCIDENT_ID, incidents.getIncidentId());
-        initialValues.put(INCIDENT_TITLE, incidents.getIncidentTitle());
-        initialValues.put(INCIDENT_DESC, incidents.getIncidentDesc());
-        initialValues.put(INCIDENT_DATE, incidents.getIncidentDate());
-        initialValues.put(INCIDENT_MODE, incidents.getIncidentMode());
-        initialValues.put(INCIDENT_VERIFIED, incidents.getIncidentVerified());
-        initialValues.put(INCIDENT_LOC_NAME, incidents.getIncidentLocation());
-        initialValues.put(INCIDENT_LOC_LATITUDE, incidents.getIncidentLocLatitude());
-        initialValues.put(INCIDENT_LOC_LONGITUDE, incidents.getIncidentLocLongitude());
-        initialValues.put(INCIDENT_CATEGORIES, incidents.getIncidentCategories());
-        initialValues.put(INCIDENT_MEDIA, incidents.getIncidentThumbnail());
-
-        initialValues.put(INCIDENT_IMAGE, incidents.getIncidentImage());
-        initialValues.put(INCIDENT_IS_UNREAD, isUnread);
-
-        return mDb.insert(INCIDENTS_TABLE, null, initialValues);
     }
 
     public long createAddIncident(AddIncidentData addIncident) {
@@ -475,9 +376,11 @@ public class Database {
         initialValues.put(ADD_INCIDENT_MINUTE, addIncident.getIncidentMinute());
         initialValues.put(ADD_INCIDENT_AMPM, addIncident.getIncidentAmPm());
         initialValues.put(ADD_INCIDENT_CATEGORIES, addIncident.getIncidentCategories());
-        initialValues.put(INCIDENT_LOC_NAME, addIncident.getIncidentLocName());
-        initialValues.put(INCIDENT_LOC_LATITUDE, addIncident.getIncidentLocLatitude());
-        initialValues.put(INCIDENT_LOC_LONGITUDE, addIncident.getIncidentLocLongitude());
+        initialValues.put(IReportSchema.INCIDENT_LOC_NAME, addIncident.getIncidentLocName());
+        initialValues
+                .put(IReportSchema.INCIDENT_LOC_LATITUDE, addIncident.getIncidentLocLatitude());
+        initialValues.put(IReportSchema.INCIDENT_LOC_LONGITUDE,
+                addIncident.getIncidentLocLongitude());
         initialValues.put(ADD_INCIDENT_PHOTO, addIncident.getIncidentPhoto());
         initialValues.put(ADD_INCIDENT_VIDEO, addIncident.getIncidentVideo());
         initialValues.put(ADD_INCIDENT_NEWS, addIncident.getIncidentNews());
@@ -505,33 +408,6 @@ public class Database {
         return mDb.insert(CHECKINS_TABLE, null, initialValues);
     }
 
-    public long createUsers(UsersData users) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(USER_ID, users.getId());
-        initialValues.put(USER_NAME, users.getUserName());
-        initialValues.put(USER_COLOR, users.getColor());
-        return mDb.insert(USERS_TABLE, null, initialValues);
-    }
-
-    public long createCheckinMedia(CheckinMedia checkinMedia) {
-        ContentValues initialValues = new ContentValues();
-
-        initialValues.put(MEDIA_ID, checkinMedia.getMediaId());
-        initialValues.put(MEDIA_CHECKIN_ID, checkinMedia.getCheckinId());
-        initialValues.put(MEDIA_THUMBNAIL_LINK, checkinMedia.getThumbnailLink());
-        initialValues.put(MEDIA_MEDIUM_LINK, checkinMedia.getMediumLink());
-        return mDb.insert(CHECKINS_MEDIA_TABLE, null, initialValues);
-    }
-
-    public int addNewIncidentsAndCountUnread(ArrayList<IncidentsData> newIncidents) {
-        addIncidents(newIncidents, true);
-        return fetchUnreadCount();
-    }
-
-    public Cursor fetchAllIncidents() {
-        return mDb.query(INCIDENTS_TABLE, INCIDENTS_COLUMNS, null, null, null, null, INCIDENT_DATE
-                + " DESC");
-    }
 
     public Cursor fetchAllOfflineIncidents() {
         return mDb.query(ADD_INCIDENTS_TABLE, ADD_INCIDENTS_COLUMNS, null, null, null, null,
@@ -544,24 +420,6 @@ public class Database {
          * null, null, CATEGORY_POS + " DESC");
          */
         return null;
-    }
-
-    public Cursor fetchIncidentsByCategories(String filter) {
-
-        String likeFilter = '%' + filter + '%';
-        String sql = "SELECT * FROM " + INCIDENTS_TABLE + " WHERE " + INCIDENT_CATEGORIES
-                + " LIKE ? ORDER BY " + INCIDENT_TITLE + " COLLATE NOCASE";
-        return mDb.rawQuery(sql, new String[] {
-            likeFilter
-        });
-    }
-
-    public Cursor fetchIncidentsById(String id) {
-        String sql = "SELECT * FROM " + INCIDENTS_TABLE + " WHERE " + INCIDENT_ID
-                + " = ? ORDER BY " + INCIDENT_TITLE + " COLLATE NOCASE";
-        return mDb.rawQuery(sql, new String[] {
-            id
-        });
     }
 
     public Cursor fetchAllCheckins() {
@@ -578,30 +436,11 @@ public class Database {
 
     }
 
-    public Cursor fetchUsersById(String id) {
-        String sql = "SELECT * FROM " + USERS_TABLE + " WHERE " + USER_ID + " = ? ORDER BY "
-                + USER_NAME + " COLLATE NOCASE";
-        return mDb.rawQuery(sql, new String[] {
-            id
-        });
-
-    }
-
-    public Cursor fetchCheckinsMediaByCheckinId(String id) {
-
-        String sql = "SELECT * FROM " + CHECKINS_MEDIA_TABLE + " WHERE " + MEDIA_CHECKIN_ID
-                + " = ? ORDER BY " + MEDIA_CHECKIN_ID + " COLLATE NOCASE";
-        return mDb.rawQuery(sql, new String[] {
-            id
-        });
-
-    }
-
     public boolean clearData() {
 
-        deleteAllIncidents();
+        //deleteAllIncidents();
         deleteAllCategories();
-        deleteUsers();
+        //deleteUsers();
         deleteAllCheckins();
         deleteCheckinMedia();
         map.deleteAllDeployment();
@@ -613,20 +452,15 @@ public class Database {
 
     public boolean clearReports() {
 
-        deleteAllIncidents();
+        //deleteAllIncidents();
         deleteAllCategories();
-        deleteUsers();
+        //deleteUsers();
         deleteAllCheckins();
         deleteCheckinMedia();
         // delete all files
         Util.rmDir(Preferences.savePath);
         return true;
 
-    }
-
-    public boolean deleteAllIncidents() {
-        Log.i(TAG, "Deleting all incidents");
-        return mDb.delete(INCIDENTS_TABLE, null, null) > 0;
     }
 
     public boolean deleteAllCategories() {
@@ -647,14 +481,9 @@ public class Database {
         return mDb.delete(CHECKINS_TABLE, null, null) > 0;
     }
 
-    public boolean deleteUsers() {
-        Log.i(TAG, "Deleting all Users");
-        return mDb.delete(USERS_TABLE, null, null) > 0;
-    }
-
     public boolean deleteCheckinMedia() {
         Log.i(TAG, "Deleting all Media Checkins");
-        return mDb.delete(CHECKINS_MEDIA_TABLE, null, null) > 0;
+        return mDb.delete(IMediaSchema.MEDIA_TABLE, null, null) > 0;
     }
 
     /**
@@ -678,94 +507,12 @@ public class Database {
         return mDb.delete(ADD_INCIDENTS_TABLE, null, null) > 0;
     }
 
-    public void markAllIncidentssRead() {
-        ContentValues values = new ContentValues();
-        values.put(INCIDENT_IS_UNREAD, 0);
-        mDb.update(INCIDENTS_TABLE, values, null, null);
-    }
-
     public void markAllCategoriesRead() {
         /*
          * ContentValues values = new ContentValues();
          * values.put(CATEGORY_IS_UNREAD, 0); mDb.update(CATEGORIES_TABLE,
          * values, null, null);
          */
-    }
-
-    public int fetchMaxId() {
-        Cursor mCursor = mDb.rawQuery("SELECT MAX(" + INCIDENT_ID + ") FROM " + INCIDENTS_TABLE,
-                null);
-
-        int result = 0;
-
-        if (mCursor == null) {
-            return result;
-        }
-
-        mCursor.moveToFirst();
-        result = mCursor.getInt(0);
-        mCursor.close();
-
-        return result;
-    }
-
-    public int fetchUnreadCount() {
-        Cursor mCursor = mDb.rawQuery("SELECT COUNT(" + INCIDENT_ID + ") FROM " + INCIDENTS_TABLE
-                + " WHERE " + INCIDENT_IS_UNREAD + " = 1", null);
-
-        int result = 0;
-
-        if (mCursor == null) {
-            return result;
-        }
-
-        mCursor.moveToFirst();
-        result = mCursor.getInt(0);
-        mCursor.close();
-
-        return result;
-    }
-
-    public int addNewCategoryAndCountUnread(List<CategoriesData> categories) {
-        addCategories(categories, true);
-
-        return fetchUnreadCategoriesCount();
-    }
-
-    public int fetchCategoriesCount() {
-        /*
-         * Cursor mCursor = mDb.rawQuery("SELECT COUNT(" + CATEGORY_ID +
-         * ") FROM " + CATEGORIES_TABLE, null);* int result = 0; if (mCursor ==
-         * null) { return result; } mCursor.moveToFirst(); result =
-         * mCursor.getInt(0); mCursor.close(); return result;
-         */
-        return 0;
-    }
-
-    private int fetchUnreadCategoriesCount() {
-        /*
-         * Cursor mCursor = mDb.rawQuery("SELECT COUNT(" + CATEGORY_ID +
-         * ") FROM " + CATEGORIES_TABLE + " WHERE " + CATEGORY_IS_UNREAD +
-         * " = 1", null); int result = 0; if (mCursor == null) { return result;
-         * } mCursor.moveToFirst(); result = mCursor.getInt(0); mCursor.close();
-         * return result;
-         */
-        return 0;
-    }
-
-    public void addIncidents(List<IncidentsData> incidents, boolean isUnread) {
-        try {
-            mDb.beginTransaction();
-
-            for (IncidentsData incident : incidents) {
-                createIncidents(incident, isUnread);
-            }
-
-            limitRows(INCIDENTS_TABLE, Integer.parseInt(Preferences.totalReports), INCIDENT_ID);
-            mDb.setTransactionSuccessful();
-        } finally {
-            mDb.endTransaction();
-        }
     }
 
     /**
@@ -787,20 +534,6 @@ public class Database {
         return rowId;
     }
 
-    public void addCategories(List<CategoriesData> categories, boolean isUnread) {
-        try {
-            mDb.beginTransaction();
-
-            for (CategoriesData category : categories) {
-                // createCategories(category, isUnread);
-            }
-
-            mDb.setTransactionSuccessful();
-        } finally {
-            mDb.endTransaction();
-        }
-    }
-
     public void addCheckins(List<Checkin> checkins) {
         try {
             mDb.beginTransaction();
@@ -811,34 +544,6 @@ public class Database {
 
             // limitRows(CHECKINS_TABLE,
             // Integer.parseInt(UshahidiPref.totalReports), CHECKIN_ID);
-            mDb.setTransactionSuccessful();
-        } finally {
-            mDb.endTransaction();
-        }
-    }
-
-    public void addUsers(List<UsersData> users) {
-        try {
-            mDb.beginTransaction();
-
-            for (UsersData user : users) {
-                createUsers(user);
-            }
-
-            mDb.setTransactionSuccessful();
-        } finally {
-            mDb.endTransaction();
-        }
-    }
-
-    public void addCheckinMedia(List<CheckinMedia> checkinsMedia) {
-        try {
-            mDb.beginTransaction();
-
-            for (CheckinMedia checkinMedia : checkinsMedia) {
-                createCheckinMedia(checkinMedia);
-            }
-
             mDb.setTransactionSuccessful();
         } finally {
             mDb.endTransaction();

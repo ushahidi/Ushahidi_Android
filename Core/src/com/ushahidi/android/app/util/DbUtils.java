@@ -15,7 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
-import com.ushahidi.android.app.database.DbEntity;
+import com.ushahidi.android.app.entities.IDbEntity;
 
 public class DbUtils {
 
@@ -44,7 +44,7 @@ public class DbUtils {
         return false;
     }
 
-    public static String getCreateStatement(Class<? extends DbEntity> entityClass) {
+    public static String getCreateStatement(Class<? extends IDbEntity> entityClass) {
         if (entityClass.isPrimitive() || entityClass.isEnum()) {
             throw new IllegalArgumentException(
                     "Cannot store primitive type or enum in separate table: " + entityClass);
@@ -98,7 +98,7 @@ public class DbUtils {
      * @return all fields of the supplied class which are not
      *         <code>transient</code>
      */
-    public static List<Field> getFields(Class<? extends DbEntity> entityClass) {
+    public static List<Field> getFields(Class<? extends IDbEntity> entityClass) {
         List<Field> fields = new LinkedList<Field>();
 
         for (Field declared : entityClass.getDeclaredFields()) {
@@ -111,7 +111,7 @@ public class DbUtils {
         return fields;
     }
 
-    public static String getTableName(Class<? extends DbEntity> entityClass) {
+    public static String getTableName(Class<? extends IDbEntity> entityClass) {
 
         return entityClass.getSimpleName();
     }
@@ -126,7 +126,7 @@ public class DbUtils {
     // }
     // }
 
-    public static Object getContentValue(DbEntity entity, Field field) {
+    public static Object getContentValue(IDbEntity entity, Field field) {
         try {
             return field.get(entity);
         } catch (IllegalAccessException ex) {
@@ -134,7 +134,7 @@ public class DbUtils {
         }
     }
 
-    static void addContentValue(ContentValues values, DbEntity entity, Field field,
+    static void addContentValue(ContentValues values, IDbEntity entity, Field field,
             boolean insertNulls) {
         try {
             Class<?> type = field.getType();
@@ -165,10 +165,10 @@ public class DbUtils {
                 } else if (insertNulls) {
                     values.put(key, (Integer)null);
                 }
-            } else if (type.equals(DbEntity.class)) {
+            } else if (type.equals(IDbEntity.class)) {
                 Object value = field.get(entity);
                 if (value != null) {
-                    values.put(key, ((DbEntity)value).getDbId());
+                    values.put(key, ((IDbEntity)value).getDbId());
                 } else if (insertNulls) {
                     values.put(key, (Integer)null);
                 }
@@ -186,7 +186,7 @@ public class DbUtils {
      * @param cursor
      * @return
      */
-    public static <T extends DbEntity> List<T> asList(Class<T> entityClass, Cursor cursor) {
+    public static <T extends IDbEntity> List<T> asList(Class<T> entityClass, Cursor cursor) {
         if (cursor == null) {
             return Collections.emptyList();
         } else {
@@ -216,7 +216,7 @@ public class DbUtils {
         }
     }
 
-    static <T extends DbEntity> void setFieldValue(T instance, Field field, Cursor cursor) {
+    static <T extends IDbEntity> void setFieldValue(T instance, Field field, Cursor cursor) {
         Class<?> type = field.getType();
         Object value;
         if (type.equals(int.class) || type.equals(Integer.class)) {
@@ -252,19 +252,19 @@ public class DbUtils {
         return uri.getPathSegments().get(0);
     }
 
-    public static String getUri(String baseUri, Class<? extends DbEntity> entityClass) {
+    public static String getUri(String baseUri, Class<? extends IDbEntity> entityClass) {
         return baseUri + '/' + DbUtils.getTableName(entityClass);
     }
 
-    public static ContentValues getValues(DbEntity entity) {
+    public static ContentValues getValues(IDbEntity entity) {
         return getValues(entity, true);
     }
 
-    public static ContentValues getNonNullValues(DbEntity entity) {
+    public static ContentValues getNonNullValues(IDbEntity entity) {
         return getValues(entity, false);
     }
 
-    static ContentValues getValues(DbEntity entity, boolean insertNulls) {
+    static ContentValues getValues(IDbEntity entity, boolean insertNulls) {
         List<Field> fields = DbUtils.getFields(entity.getClass());
         ContentValues values = new ContentValues(fields.size());
         for (Field field : fields) {

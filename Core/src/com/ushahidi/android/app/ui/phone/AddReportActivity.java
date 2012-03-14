@@ -22,6 +22,7 @@ package com.ushahidi.android.app.ui.phone;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.view.MenuItem;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseEditMapActivity;
@@ -34,8 +35,7 @@ import com.ushahidi.android.app.views.AddReportView;
 public class AddReportActivity extends BaseEditMapActivity<AddReportView, AddReportModel> {
 
     public AddReportActivity() {
-        super(AddReportView.class, R.layout.add_report, R.menu.add_report, 
-                R.id.location_map);
+        super(AddReportView.class, R.layout.add_report, R.menu.add_report, R.id.location_map);
 
     }
 
@@ -47,15 +47,23 @@ public class AddReportActivity extends BaseEditMapActivity<AddReportView, AddRep
     @Override
     protected void onStart() {
         super.onStart();
-        // log("onStart label=%s", view.label.getText());
-        // log("onStart value=%s", view.value.getText());
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        // log("onPause label=%s", view.label.getText());
-        // log("onPause value=%s", view.value.getText());
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 
     public void onLocationChanged(Location arg0) {

@@ -18,18 +18,25 @@
  **
  **/
 
-package com.ushahidi.android.app.models;
+package com.ushahidi.android.app.database;
 
-import android.content.Context;
+import java.util.List;
 
-import com.ushahidi.android.app.entities.IDbEntity;
+import com.ushahidi.android.app.entities.Media;
+
 /**
- * BaseModel
- *
- * Base class for all Models
+ * @author eyedol
  */
-public abstract class Model {
+public interface IMediaDao {
 
-    public abstract boolean load(Context context);
-    public abstract boolean save(Context context);
+    public boolean deleteAllMedia();
+
+    public boolean addMedia(List<Media> media);
+
+    public boolean addMedia(Media media);
+
+    public List<Media> fetchMediaByCheckinId(int checkinId);
+
+    public List<Media> fetchMediaByReportId(int reportId);
+
 }

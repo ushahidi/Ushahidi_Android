@@ -1,10 +1,7 @@
 
 package com.ushahidi.android.app.net;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +15,13 @@ import android.content.Context;
 import android.location.Location;
 
 import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.models.ListMapModel;
+import com.ushahidi.android.app.entities.Map;
 
 /**
  * Contains logic to load the details of a deployment and find a list of
  * matching deployments given a query. Everything is held in SQLite database;
  */
-public class Maps {
+public class MapsHttpClient extends MainHttpClient {
 
     private static final String MAP_SEARCH_URL = "http://tracker.ushahidi.com/list/";
 
@@ -40,9 +37,10 @@ public class Maps {
 
     private String mapJson;
 
-    private List<ListMapModel> mListMapModel;
+    private List<Map> mMap;
 
-    public Maps(Context context) {
+    public MapsHttpClient(Context context) {
+        super(context);
         mapJson = "";
     }
 
@@ -64,11 +62,11 @@ public class Maps {
             if (mapJson != null) {
                 try {
                     jsonObject = new JSONObject(mapJson);
-                    mListMapModel =  retrieveMapJson();
+                    mMap = retrieveMapJson();
 
-                    if (mListMapModel != null) {
-                        Database.map.deleteAllAutoDeployment();
-                        Database.map.addMap(mListMapModel);
+                    if (mMap != null) {
+                        Database.mMapDao.deleteAllAutoMap();
+                        Database.mMapDao.addMaps(mMap);
                         return true;
                     }
                 } catch (JSONException e) {
@@ -91,7 +89,7 @@ public class Maps {
 
         try {
 
-            response = MainHttpClient.GetURL(fullUrl.toString());
+            response = GetURL(fullUrl.toString());
             if (response == null) {
                 return null;
             }
@@ -99,7 +97,7 @@ public class Maps {
 
             if (statusCode == 200) {
 
-                return MainHttpClient.GetText(response);
+                return GetText(response);
             }
             // UshahidiPref.incidentsResponse = incidents;
         } catch (MalformedURLException e) {
@@ -110,35 +108,16 @@ public class Maps {
         return null;
     }
 
-    public static String GetText(InputStream in) {
-        String text = "";
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(in), 1024);
-        final StringBuilder sb = new StringBuilder();
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            text = sb.toString();
-        } catch (final Exception ex) {
-        } finally {
-            try {
-                in.close();
-            } catch (final Exception ex) {
-            }
-        }
-        return text;
-    }
-
-    public List<ListMapModel> retrieveMapJson() {
+    public List<Map> retrieveMapJson() {
         JSONArray names = jsonObject.names();
-        List<ListMapModel> mapsList = new ArrayList<ListMapModel>();
+        List<Map> mapsList = new ArrayList<Map>();
         if (processingResult) {
             for (int i = 0; i < names.length(); i++) {
-                ListMapModel mapModel = new ListMapModel();
+                Map mapModel = new Map();
                 try {
 
-                    mapModel.setId(jsonObject.getJSONObject(names.getString(i)).getString("id"));
+                    mapModel.setDbId(Long.valueOf(jsonObject.getJSONObject(names.getString(i))
+                            .getString("id")));
                     mapModel.setDate(jsonObject.getJSONObject(names.getString(i)).getString(
                             "discovery_date"));
                     mapModel.setActive("0");

@@ -1,6 +1,8 @@
 
 package com.ushahidi.android.app.database;
 
+import com.ushahidi.android.app.entities.IDbEntity;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,7 +21,7 @@ public abstract class DbContentProvider {
 
     }
 
-    protected abstract <T extends DbEntity> T cursorToEntity(Cursor cursor);
+    protected abstract <T extends IDbEntity> T cursorToEntity(Cursor cursor);
 
     public DbContentProvider(SQLiteDatabase db) {
 

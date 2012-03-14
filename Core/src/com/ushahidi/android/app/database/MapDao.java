@@ -47,8 +47,8 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
 
     @Override
     public List<Map> fetchMapById(long id) {
-        
-        String selection = MAP_ID+" = ?";
+
+        String selection = MAP_ID + " = ?";
         String[] selectionArgs = new String[] {
             String.valueOf(id)
         };
@@ -56,7 +56,7 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
         String[] columns = new String[] {
                 MAP_ID, MAP_NAME, MAP_DESC, MAP_LATITUDE, MAP_LONGITUDE, MAP_URL
         };
-        
+
         final String sortOrder = MAP_DATE + " DESC";
 
         listMap = new ArrayList<Map>();
@@ -90,10 +90,10 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
             String.valueOf(id)
         };
 
-        final String selection = MAP_ID+" = ? ";
+        final String selection = MAP_ID + " = ? ";
 
-        return super.delete(MAP_TABLE, selection, selectionArgs) > 0 ;
-        
+        return super.delete(MAP_TABLE, selection, selectionArgs) > 0;
+
     }
 
     @Override
@@ -101,13 +101,25 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
         return super.delete(MAP_TABLE, null, null) > 0;
     }
 
+    /**
+     * Delete all deployments that were fetched from the internet
+     */
+    @Override
+    public boolean deleteAllAutoMap() {
+        String whereClause = MAP_ID + " <> ?";
+        String whereArgs[] = {
+            "0"
+        };
+        return super.delete(MAP_TABLE, whereClause, whereArgs) > 0;
+    }
+
     @Override
     public boolean updateMap(Map map) {
-        ContentValues initialValues = new ContentValues();
+        initialValues = new ContentValues();
         initialValues.put(MAP_DESC, map.getDesc());
         initialValues.put(MAP_NAME, map.getName());
         initialValues.put(MAP_URL, map.getUrl());
-        String whereClause = MAP_ID+" = ?";
+        String whereClause = MAP_ID + " = ?";
         String whereArgs[] = {
             String.valueOf(map.getDbId())
         };
@@ -157,15 +169,15 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
 
     @Override
     public List<Map> fetchMapByIdAndUrl(long id, String url) {
-        String selection = MAP_ID+" = ? AND "+MAP_URL +"= ?";
+        String selection = MAP_ID + " = ? AND " + MAP_URL + "= ?";
         String[] selectionArgs = new String[] {
-            String.valueOf(id), url
+                String.valueOf(id), url
         };
 
         String[] columns = new String[] {
                 MAP_ID, MAP_NAME, MAP_DESC, MAP_LATITUDE, MAP_LONGITUDE, MAP_URL
         };
-        
+
         final String sortOrder = MAP_DATE + " DESC";
 
         listMap = new ArrayList<Map>();
@@ -200,7 +212,7 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
     }
 
     private void setContentValue(Map map) {
-        ContentValues initialValues = new ContentValues();
+        initialValues = new ContentValues();
 
         initialValues.put(MAP_ID, map.getDbId());
         initialValues.put(MAP_CAT_ID, map.getCatId());
@@ -235,8 +247,8 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
 
             if (cursor.getColumnIndex(MAP_ID) != -1) {
                 idIndex = cursor.getColumnIndexOrThrow(MAP_ID);
-                
-                map.setDbId(Long.valueOf(cursor.getString(idIndex)));
+
+                map.setDbId(cursor.getInt(idIndex));
             }
 
             if (cursor.getColumnIndex(MAP_NAME) != -1) {
@@ -327,5 +339,5 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
         }
         return cursor;
     }
-   
+
 }

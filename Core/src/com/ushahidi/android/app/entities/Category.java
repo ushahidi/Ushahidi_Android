@@ -20,13 +20,12 @@
 
 package com.ushahidi.android.app.entities;
 
-import com.ushahidi.android.app.database.DbEntity;
 
-public class Category implements DbEntity {
+public class Category implements IDbEntity {
 
     private int categoryId = 0;
 
-    private Long id;
+    private int id;
 
     private String categoryTitle = "";
 
@@ -77,12 +76,12 @@ public class Category implements DbEntity {
     }
 
     @Override
-    public void setDbId(Long id) {
+    public void setDbId(int id) {
         this.id = id;
     }
 
     @Override
-    public Long getDbId() {
+    public int getDbId() {
         return id;
     }
 }

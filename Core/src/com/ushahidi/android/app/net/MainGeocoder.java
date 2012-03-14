@@ -24,9 +24,18 @@ import java.io.IOException;
 
 import org.apache.http.HttpResponse;
 
+import android.content.Context;
+
 import com.ushahidi.android.app.R;
 
-public class MainGeocoder {
+public class MainGeocoder extends MainHttpClient{
+
+    /**
+     * @param context
+     */
+    public MainGeocoder(Context context) {
+        super(context);
+    }
 
     private static final String GOOGLE_MAPS_GEO_URL = "http://maps.google.com/maps/geo?q=";
 
@@ -37,7 +46,7 @@ public class MainGeocoder {
      * @param longitude
      * @return String
      */
-    public static String reverseGeocode(double latitude, double longitude) throws IOException {
+    public String reverseGeocode(double latitude, double longitude) throws IOException {
 
         HttpResponse response;
 
@@ -46,7 +55,7 @@ public class MainGeocoder {
         uriBuilder.append("&output=json&oe=utf8&sensor=true&key=");
         uriBuilder.append(R.string.google_map_api_key);
 
-        response = MainHttpClient.GetURL(uriBuilder.toString());
+        response = GetURL(uriBuilder.toString());
 
         if (response == null) {
             return null;
@@ -56,7 +65,7 @@ public class MainGeocoder {
 
         if (statusCode == 200) {
 
-            return MainHttpClient.GetText(response);
+            return GetText(response);
         } else {
             return null;
         }

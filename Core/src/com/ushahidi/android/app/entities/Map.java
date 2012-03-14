@@ -19,13 +19,12 @@
  **/
 package com.ushahidi.android.app.entities;
 
-import com.ushahidi.android.app.database.DbEntity;
 
 /**
  * @author eyedol
  *
  */
-public class Map implements DbEntity{
+public class Map implements IDbEntity{
 
     private String name;
 
@@ -43,16 +42,16 @@ public class Map implements DbEntity{
 
     private String active;
     
-    private Long id;
+    private int id;
     
     @Override
-    public Long getDbId() {
+    public int getDbId() {
         // TODO Auto-generated method stub
         return id;
     }
 
     @Override
-    public void setDbId(Long id) {
+    public void setDbId(int id) {
         this.id = id;
         
     }

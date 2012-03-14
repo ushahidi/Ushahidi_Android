@@ -1,8 +1,13 @@
 
 package com.ushahidi.android.app.database;
 
-
-public interface IReportSchema  {
+/**
+ * Defines schema for reports aka incidents table
+ * 
+ * @author eyedol
+ *
+ */
+public interface IReportSchema {
 
     public static final String INCIDENT_ID = "_id";
 
@@ -40,11 +45,11 @@ public interface IReportSchema  {
             + INCIDENT_LOC_LONGITUDE + " TEXT NOT NULL, " + INCIDENT_CATEGORIES
             + " TEXT NOT NULL, " + INCIDENT_MEDIA + " TEXT, " + INCIDENT_IMAGE + " TEXT, "
             + INCIDENT_IS_UNREAD + " BOOLEAN NOT NULL " + ")";
-    
+
     public static final String[] INCIDENTS_COLUMNS = new String[] {
-        INCIDENT_ID, INCIDENT_TITLE, INCIDENT_DESC, INCIDENT_DATE, INCIDENT_MODE,
-        INCIDENT_VERIFIED, INCIDENT_LOC_NAME, INCIDENT_LOC_LATITUDE, INCIDENT_LOC_LONGITUDE,
-        INCIDENT_CATEGORIES, INCIDENT_MEDIA, INCIDENT_IMAGE, INCIDENT_IS_UNREAD
-};
+            INCIDENT_ID, INCIDENT_TITLE, INCIDENT_DESC, INCIDENT_DATE, INCIDENT_MODE,
+            INCIDENT_VERIFIED, INCIDENT_LOC_NAME, INCIDENT_LOC_LATITUDE, INCIDENT_LOC_LONGITUDE,
+            INCIDENT_CATEGORIES, INCIDENT_MEDIA, INCIDENT_IMAGE, INCIDENT_IS_UNREAD
+    };
 
 }

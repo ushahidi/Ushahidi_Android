@@ -80,6 +80,10 @@ public class ListReportFragment extends
 
     private ViewGroup mRootView;
 
+    private ImageButton addReport = null;
+
+    private ImageButton refreshReport = null;
+
     private boolean refreshState = false;
 
     public ListReportFragment() {
@@ -275,11 +279,11 @@ public class ListReportFragment extends
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = (ViewGroup)inflater.inflate(R.layout.list_report, null);
-        final ImageButton addMap = (ImageButton)mRootView.findViewById(R.id.add_report_btn);
-        final ImageButton refreshMap = (ImageButton)mRootView.findViewById(R.id.refresh_report_btn);
+        addReport = (ImageButton)mRootView.findViewById(R.id.add_report_btn);
+        refreshReport = (ImageButton)mRootView.findViewById(R.id.refresh_report_btn);
 
-        if (addMap != null) {
-            addMap.setOnClickListener(new OnClickListener() {
+        if (addReport != null) {
+            addReport.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -289,8 +293,8 @@ public class ListReportFragment extends
             });
         }
 
-        if (refreshMap != null) {
-            refreshMap.setOnClickListener(new OnClickListener() {
+        if (refreshReport != null) {
+            refreshReport.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -305,11 +309,21 @@ public class ListReportFragment extends
 
     private void updateRefreshStatus() {
         if (mRootView != null) {
-            mRootView.findViewById(R.id.refresh_report_btn).setVisibility(
-                    refreshState ? View.GONE : View.VISIBLE);
-            mRootView.findViewById(R.id.title_refresh_progress).setVisibility(
-                    refreshState ? View.VISIBLE : View.GONE);
+            if (addReport != null) {
+                mRootView.findViewById(R.id.refresh_report_btn).setVisibility(
+                        refreshState ? View.GONE : View.VISIBLE);
+                mRootView.findViewById(R.id.title_refresh_progress).setVisibility(
+                        refreshState ? View.VISIBLE : View.GONE);
+            }
         }
+
+        if (refresh != null) {
+            if (refreshState)
+                refresh.setActionView(R.layout.indeterminate_progress_action);
+            else
+                refresh.setActionView(null);
+        }
+
     }
 
     @Override
@@ -327,8 +341,6 @@ public class ListReportFragment extends
         public RefreshReports(Activity activity) {
             super(activity, R.string.loading_);
             // pass custom loading message to super call
-            if (refresh != null)
-                refresh.setActionView(R.layout.indeterminate_progress_action);
             refreshState = true;
         }
 
@@ -364,8 +376,7 @@ public class ListReportFragment extends
                 } else if (status == 1) {
                     toastLong(R.string.could_not_fetch_reports);
                 } else if (status == 0) {
-                    if (refresh != null)
-                        refresh.setActionView(null);
+
                     mListReportAdapter.refresh(getActivity());
                     mListReportView.getPullToRefreshListView().setAdapter(mListReportAdapter);
                     mListReportView.displayEmptyListText();

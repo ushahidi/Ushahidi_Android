@@ -18,18 +18,29 @@
  **
  **/
 
-package com.ushahidi.android.app.models;
+package com.ushahidi.android.app.database;
 
-import android.content.Context;
+import java.util.List;
 
-import com.ushahidi.android.app.entities.IDbEntity;
+import com.ushahidi.android.app.entities.ReportCategory;
+
 /**
- * BaseModel
- *
- * Base class for all Models
+ * Define the methods for interacting with the report category table. These
+ * methods needs to be implemented by {@link ReportCategoryDao}
+ * 
+ * @author eyedol
  */
-public abstract class Model {
+public interface IReportCategoryDao {
 
-    public abstract boolean load(Context context);
-    public abstract boolean save(Context context);
+    // get reports by report id
+    public List<ReportCategory> fetchReportCategory(long reportId);
+
+    public boolean addReportCategory(ReportCategory reportCategory);
+
+    public boolean addReportCategories(List<ReportCategory> reportCategories);
+
+    // delete all report categories
+    public boolean deleteAllReportCategory();
+
+
 }

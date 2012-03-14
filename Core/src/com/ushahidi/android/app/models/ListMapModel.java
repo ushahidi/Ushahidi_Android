@@ -226,7 +226,7 @@ public class ListMapModel extends Model {
      */
     public boolean updateMap(String id, String name, String desc, String url) {
         Map map = new Map();
-        map.setDbId(Long.valueOf(id));
+        map.setDbId(Integer.valueOf(id));
         map.setName(name);
         map.setDesc(desc);
         map.setUrl(url);

@@ -18,18 +18,26 @@
  **
  **/
 
-package com.ushahidi.android.app.models;
+package com.ushahidi.android.app.database;
 
-import android.content.Context;
-
-import com.ushahidi.android.app.entities.IDbEntity;
 /**
- * BaseModel
- *
- * Base class for all Models
+ * @author eyedol
  */
-public abstract class Model {
+public interface IUserSchema {
 
-    public abstract boolean load(Context context);
-    public abstract boolean save(Context context);
+    public static final String USER_TABLE = "users";
+    
+    public static final String USER_ID = "_id";
+
+    public static final String USER_NAME = "user_name";
+
+    public static final String USER_COLOR = "user_color";
+    
+    public static final String USER_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + USER_TABLE
+    + " (" + USER_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + USER_NAME
+    + " TEXT NOT NULL, " + USER_COLOR + " TEXT" + ")";
+
+    public static final String[] USER_COLUMNS = new String[] {
+            USER_ID, USER_NAME, USER_COLOR
+    };
 }

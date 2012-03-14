@@ -118,7 +118,7 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao, ICat
         if (cursor != null) {
             if (cursor.getColumnIndex(CATEGORY_ID) != -1) {
                 idIndex = cursor.getColumnIndexOrThrow(CATEGORY_ID);
-                category.setDbId(Long.valueOf(cursor.getString(idIndex)));
+                category.setDbId(cursor.getInt(idIndex));
             }
 
             if (cursor.getColumnIndex(CATEGORY_TITLE) != -1) {

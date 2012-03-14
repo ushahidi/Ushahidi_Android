@@ -24,6 +24,12 @@ import java.util.List;
 
 import com.ushahidi.android.app.entities.Report;
 
+/**
+ * Define the methods for interacting with the report table. These methods needs to be 
+ * implemented by {@link ReportDao}
+ * @author eyedol
+ *
+ */
 public interface IReportDao {
 
     // fetch all reports

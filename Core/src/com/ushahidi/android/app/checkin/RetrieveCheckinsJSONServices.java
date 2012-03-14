@@ -21,7 +21,7 @@ public class RetrieveCheckinsJSONServices {
     private boolean processingResult;
 
     public RetrieveCheckinsJSONServices(String JSONString) {
-        
+
         processingResult = true;
 
         try {
@@ -87,7 +87,7 @@ public class RetrieveCheckinsJSONServices {
         if (processingResult) {
             ArrayList<Checkin> checkinsList = new ArrayList<Checkin>();
             JSONArray checkinsArray = getCheckinsArray();
-           
+
             if (checkinsArray != null) {
                 int arraySize = checkinsArray.length();
                 for (int checkinsLoop = 0; checkinsLoop < arraySize; checkinsLoop++) {

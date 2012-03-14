@@ -25,18 +25,14 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -52,8 +48,6 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
@@ -63,49 +57,16 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 
+import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.util.ApiUtils;
 
 public class MainHttpClient {
 
-    public static final String TASK = "task";
-
-    public static final String INCIDENT_TITLE = "incident_title";
-
-    public static final String INCIDENT_DESCRIPTION = "incident_description";
-
-    public static final String INCIDENT_DATE = "incident_date";
-
-    public static final String INCIDENT_HOUR = "incident_hour";
-
-    public static final String INCIDENT_MINUTE = "incident_minute";
-
-    public static final String INCIDENT_AMPM = "incident_ampm";
-
-    public static final String INCIDENT_CATEGORY = "incident_category";
-
-    public static final String LATITUDE = "latitude";
-
-    public static final String LONGITUDE = "longitude";
-
-    public static final String LOCATION_NAME = "location_name";
-
-    public static final String PERSON_FIRST = "person_first";
-
-    public static final String PERSON_LAST = "person_last";
-
-    public static final String PERSON_EMAIL = "person_email";
-
-    public static final String PHOTO = "filename";
-
-    private static DefaultHttpClient httpClient;
+    protected static DefaultHttpClient httpClient;
 
     private HttpParams httpParameters;
-
-    private static MultipartEntity entity;
 
     private static final String CLASS_TAG = MainHttpClient.class.getSimpleName();
 
@@ -158,7 +119,7 @@ public class MainHttpClient {
      * return HttpBase64.encodeBytes((userName + ":" + password).getBytes()); }
      */
 
-    public static HttpResponse GetURL(String URL) throws IOException {
+    public HttpResponse GetURL(String URL) throws IOException {
         Preferences.httpRunning = true;
 
         try {
@@ -182,7 +143,7 @@ public class MainHttpClient {
 
     }
 
-    public static HttpResponse PostURL(String URL, List<NameValuePair> data, String Referer)
+    public HttpResponse PostURL(String URL, List<NameValuePair> data, String Referer)
             throws IOException {
         Preferences.httpRunning = true;
         // Dipo Fix
@@ -227,7 +188,7 @@ public class MainHttpClient {
 
     }
 
-    public static HttpResponse PostURL(String URL, List<NameValuePair> data) throws IOException {
+    public HttpResponse PostURL(String URL, List<NameValuePair> data) throws IOException {
         return PostURL(URL, data, "");
     }
 
@@ -238,7 +199,7 @@ public class MainHttpClient {
         }
     }
 
-    public static String SendMultiPartData(String URL, MultipartEntity postData) throws IOException {
+    public String SendMultiPartData(String URL, MultipartEntity postData) throws IOException {
 
         Log.d(CLASS_TAG, "PostFileUpload(): upload file to server.");
 
@@ -268,7 +229,7 @@ public class MainHttpClient {
             }
 
         } catch (MalformedURLException ex) {
-            Log.d(CLASS_TAG, "PostFileUpload(): MalformedURLException");
+            log("MalformedURLException", ex.toString());
             ex.printStackTrace();
             return "";
             // fall through and return false
@@ -278,116 +239,9 @@ public class MainHttpClient {
         return "";
     }
 
-    /**
-     * Upload files to server 0 - success, 1 - missing parameter, 2 - invalid
-     * parameter, 3 - post failed, 5 - access denied, 6 - access limited, 7 - no
-     * data, 8 - api disabled, 9 - no task found, 10 - json is wrong
-     */
-    public static int PostFileUpload(String URL, HashMap<String, String> params) throws IOException {
-        Log.d(CLASS_TAG, "PostFileUpload(): upload file to server.");
+   
 
-        entity = new MultipartEntity();
-        // Dipo Fix
-        try {
-            // wrap try around because this constructor can throw Error
-            final HttpPost httpost = new HttpPost(URL);
-
-            if (params != null) {
-
-                entity.addPart("task", new StringBody(params.get("task")));
-                entity.addPart("incident_title", new StringBody(params.get("incident_title"),
-                        Charset.forName("UTF-8")));
-                entity.addPart(
-                        "incident_description",
-                        new StringBody(params.get("incident_description"), Charset.forName("UTF-8")));
-                entity.addPart("incident_date", new StringBody(params.get("incident_date")));
-                entity.addPart("incident_hour", new StringBody(params.get("incident_hour")));
-                entity.addPart("incident_minute", new StringBody(params.get("incident_minute")));
-                entity.addPart("incident_ampm", new StringBody(params.get("incident_ampm")));
-                entity.addPart("incident_category", new StringBody(params.get("incident_category")));
-                entity.addPart("latitude", new StringBody(params.get("latitude")));
-                entity.addPart("longitude", new StringBody(params.get("longitude")));
-                entity.addPart("location_name",
-                        new StringBody(params.get("location_name"), Charset.forName("UTF-8")));
-                entity.addPart("person_first",
-                        new StringBody(params.get("person_first"), Charset.forName("UTF-8")));
-                entity.addPart("person_last",
-                        new StringBody(params.get("person_last"), Charset.forName("UTF-8")));
-                entity.addPart("person_email",
-                        new StringBody(params.get("person_email"), Charset.forName("UTF-8")));
-                if (params.get("filename") != null) {
-                    if (!TextUtils.isEmpty(params.get("filename"))) {
-                        File file = new File(params.get("filename"));
-                        if (file.exists()) {
-                            entity.addPart("incident_photo[]",
-                                    new FileBody(new File(params.get("filename"))));
-                        }
-                    }
-                }
-
-                // NEED THIS NOW TO FIX ERROR 417
-                httpost.getParams().setBooleanParameter("http.protocol.expect-continue", false);
-                httpost.setEntity(entity);
-
-                HttpResponse response = httpClient.execute(httpost);
-                Preferences.httpRunning = false;
-
-                HttpEntity respEntity = response.getEntity();
-                if (respEntity != null) {
-                    InputStream serverInput = respEntity.getContent();
-                    return ApiUtils.extractPayloadJSON(GetText(serverInput));
-
-                }
-            }
-
-        } catch (MalformedURLException ex) {
-            Log.d(CLASS_TAG, "PostFileUpload(): MalformedURLException");
-            ex.printStackTrace();
-            return 11;
-            // fall through and return false
-        } catch (IllegalArgumentException ex) {
-            Log.e(CLASS_TAG, ex.toString());
-            // invalid URI
-            return 12;
-        } catch (IOException e) {
-            Log.e(CLASS_TAG, e.toString());
-            // timeout
-            return 13;
-        }
-        return 10;
-    }
-
-    public static byte[] fetchImage(String address) throws MalformedURLException, IOException {
-        InputStream in = null;
-        OutputStream out = null;
-
-        try {
-            in = new BufferedInputStream(new URL(address).openStream(), IO_BUFFER_SIZE);
-
-            final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
-            out = new BufferedOutputStream(dataStream, 4 * 1024);
-            copy(in, out);
-            out.flush();
-
-            // need to close stream before return statement
-            closeStream(in);
-            closeStream(out);
-
-            return dataStream.toByteArray();
-        } catch (IOException e) {
-            // android.util.Log.e("IO", "Could not load buddy icon: " + this,
-            // e);
-
-        } finally {
-            closeStream(in);
-            closeStream(out);
-
-        }
-        return null;
-
-    }
-
-    public static byte[] fetchImage2(String address) throws MalformedURLException, IOException {
+    public byte[] fetchImage2(String address) throws MalformedURLException, IOException {
         InputStream in = null;
         OutputStream out = null;
         HttpResponse response;
@@ -428,7 +282,7 @@ public class MainHttpClient {
      * @param out The output stream to copy to.
      * @throws IOException If any error occurs during the copy.
      */
-    private static void copy(InputStream in, OutputStream out) throws IOException {
+    private void copy(InputStream in, OutputStream out) throws IOException {
         byte[] b = new byte[4 * 1024];
         int read;
         while ((read = in.read(b)) != -1) {
@@ -441,7 +295,7 @@ public class MainHttpClient {
      * 
      * @param stream The stream to close.
      */
-    private static void closeStream(Closeable stream) {
+    private void closeStream(Closeable stream) {
         if (stream != null) {
             try {
                 stream.close();
@@ -451,7 +305,7 @@ public class MainHttpClient {
         }
     }
 
-    public static String GetText(HttpResponse response) {
+    public String GetText(HttpResponse response) {
         String text = "";
         try {
             text = GetText(response.getEntity().getContent());
@@ -460,7 +314,7 @@ public class MainHttpClient {
         return text;
     }
 
-    public static String GetText(InputStream in) {
+    public String GetText(InputStream in) {
         String text = "";
         BufferedReader reader = null;
         try {
@@ -487,4 +341,20 @@ public class MainHttpClient {
         }
         return text;
     }
+    
+    protected void log(String message) {
+        if (MainApplication.LOGGING_MODE)
+            Log.i(getClass().getName(), message);
+    }
+
+    protected void log(String format, Object... args) {
+        if (MainApplication.LOGGING_MODE)
+            Log.i(getClass().getName(), String.format(format, args));
+    }
+
+    protected void log(String message, Exception ex) {
+        if (MainApplication.LOGGING_MODE)
+            Log.e(getClass().getName(), message, ex);
+    }
+
 }

@@ -48,7 +48,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.ushahidi.android.app.IncidentTab;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
@@ -56,7 +55,7 @@ import com.ushahidi.android.app.activities.BaseListActivity;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
 import com.ushahidi.android.app.helpers.ActionModeHelper;
 import com.ushahidi.android.app.models.ListMapModel;
-import com.ushahidi.android.app.net.Maps;
+import com.ushahidi.android.app.net.MapsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
@@ -215,7 +214,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
         public void run() {
             try {
                 // TODO Implement refresh that supports Activity
-                // listMapAdapter.refresh(ListMapActivity.this.get, filter);
+                listMapAdapter.refresh(ListMapActivity.this, filter);
                 listMapView.mListView.setAdapter(listMapAdapter);
                 listMapView.displayEmptyListText();
 
@@ -509,7 +508,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
 
         protected Context appContext;
 
-        private Maps maps;
+        private MapsHttpClient maps;
 
         protected String distance;
 
@@ -519,7 +518,7 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
             super(activity, R.string.loading_);
             // switch to a progress animation
             refresh.setActionView(R.layout.indeterminate_progress_action);
-            maps = new Maps(appContext);
+            maps = new MapsHttpClient(appContext);
         }
 
         @Override

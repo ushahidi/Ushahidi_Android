@@ -35,6 +35,11 @@ public interface IMapDao {
     public boolean deleteMapById(long id);
 
     public boolean deleteAllMap();
+    
+    /**
+     * Delete all deployments that were fetched from the internet
+     */
+    public boolean deleteAllAutoMap();
 
     public boolean updateMap(Map map);
 
