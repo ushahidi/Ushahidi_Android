@@ -241,7 +241,8 @@ public class Util {
         JSONArray jsonArray;
         try {
             if (Util.isConnected(context)) {
-                json_data = MainGeocoder.reverseGeocode(latitude, longitude);
+                MainGeocoder geoCoder = new MainGeocoder(context);
+                json_data = geoCoder.reverseGeocode(latitude, longitude);
             } else {
                 return "";
             }

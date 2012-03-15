@@ -95,12 +95,12 @@ public class ReportsApiUtils {
         if (processingResult) {
             List<Report> listReport = new ArrayList<Report>();
             JSONArray reportsArr = getReportsArr();
-            long id = 0;
+            int id = 0;
             if (reportsArr != null) {
                 for (int i = 0; i < reportsArr.length(); i++) {
                     Report report = new Report();
                     try {
-                        id = Long.valueOf(reportsArr.getJSONObject(i).getString("incidentid"));
+                        id = reportsArr.getJSONObject(i).getInt("incidentid");
                         report.setDbId(id);
                         report.setTitle(reportsArr.getJSONObject(i).getString("incidenttitle"));
                         report.setDescription(reportsArr.getJSONObject(i).getString(
@@ -132,7 +132,7 @@ public class ReportsApiUtils {
                                 saveMedia(mediaArr.getJSONObject(w).getInt("id"), (int)id, mediaArr
                                         .getJSONObject(w).getInt("type"), mediaArr.getJSONObject(w)
                                         .getString("link"));
-                                
+
                                 if (mediaArr.getJSONObject(w).getInt("type") == 1) {
                                     saveImages(mediaArr.getJSONObject(w).getString("link_url"));
                                 }

@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -33,8 +32,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.checkin.Checkin;
-import com.ushahidi.android.app.data.AddIncidentData;
 import com.ushahidi.android.app.data.MapDb;
 import com.ushahidi.android.app.util.Util;
 
@@ -108,6 +105,10 @@ public class Database {
     public static ReportCategoryDao mReportCategoryDao; // ReportCategory table
 
     public static MediaDao mMediaDao; // Media table
+
+    public static OfflineReportDao mOfflineReport; // Offline reports
+
+    public static CheckinDao mCheckin; // checkins
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper(Context context) {
@@ -276,6 +277,8 @@ public class Database {
         mMapDao = new MapDao(mDb);
         mMediaDao = new MediaDao(mDb);
         mReportCategoryDao = new ReportCategoryDao(mDb);
+        mOfflineReport = new OfflineReportDao(mDb);
+        mCheckin = new CheckinDao(mDb);
         return this;
     }
 
@@ -283,65 +286,13 @@ public class Database {
         mDbHelper.close();
     }
 
-    public long createAddIncident(AddIncidentData addIncident) {
-        ContentValues initialValues = new ContentValues();
-
-        initialValues.put(ADD_INCIDENT_TITLE, addIncident.getIncidentTitle());
-        initialValues.put(ADD_INCIDENT_DESC, addIncident.getIncidentDesc());
-        initialValues.put(ADD_INCIDENT_DATE, addIncident.getIncidentDate());
-        initialValues.put(ADD_INCIDENT_HOUR, addIncident.getIncidentHour());
-        initialValues.put(ADD_INCIDENT_MINUTE, addIncident.getIncidentMinute());
-        initialValues.put(ADD_INCIDENT_AMPM, addIncident.getIncidentAmPm());
-        initialValues.put(ADD_INCIDENT_CATEGORIES, addIncident.getIncidentCategories());
-        initialValues.put(IReportSchema.INCIDENT_LOC_NAME, addIncident.getIncidentLocName());
-        initialValues
-                .put(IReportSchema.INCIDENT_LOC_LATITUDE, addIncident.getIncidentLocLatitude());
-        initialValues.put(IReportSchema.INCIDENT_LOC_LONGITUDE,
-                addIncident.getIncidentLocLongitude());
-        initialValues.put(ADD_INCIDENT_PHOTO, addIncident.getIncidentPhoto());
-        initialValues.put(ADD_INCIDENT_VIDEO, addIncident.getIncidentVideo());
-        initialValues.put(ADD_INCIDENT_NEWS, addIncident.getIncidentNews());
-        initialValues.put(ADD_PERSON_FIRST, addIncident.getPersonFirst());
-        initialValues.put(ADD_PERSON_LAST, addIncident.getPersonLast());
-        initialValues.put(ADD_PERSON_EMAIL, addIncident.getPersonEmail());
-
-        return mDb.insert(ADD_INCIDENTS_TABLE, null, initialValues);
-    }
-
-    public Cursor fetchAllOfflineIncidents() {
-        return mDb.query(ADD_INCIDENTS_TABLE, ADD_INCIDENTS_COLUMNS, null, null, null, null,
-                ADD_INCIDENT_ID + " DESC");
-    }
-
-    public Cursor fetchAllCategories() {
-        /*
-         * return mDb.query(CATEGORIES_TABLE, CATEGORIES_COLUMNS, null, null,
-         * null, null, CATEGORY_POS + " DESC");
-         */
-        return null;
-    }
-
-    public Cursor fetchAllCheckins() {
-        return mDb.query(CHECKINS_TABLE, CHECKINS_COLUMNS, null, null, null, null, CHECKIN_DATE
-                + " DESC");
-    }
-
-    public Cursor fetchCheckinsByUserdId(String id) {
-        String sql = "SELECT * FROM " + CHECKINS_TABLE + " WHERE " + CHECKIN_USER_ID
-                + " = ? ORDER BY " + CHECKIN_ID + " COLLATE NOCASE";
-        return mDb.rawQuery(sql, new String[] {
-            id
-        });
-
-    }
-
     public boolean clearData() {
 
         // deleteAllIncidents();
-        deleteAllCategories();
+        // deleteAllCategories();
         // deleteUsers();
-        deleteAllCheckins();
-        deleteCheckinMedia();
+        // deleteAllCheckins();
+        // deleteCheckinMedia();
         map.deleteAllDeployment();
         // delete all files
         Util.rmDir(Preferences.savePath);
@@ -354,7 +305,7 @@ public class Database {
         // deleteAllIncidents();
         deleteAllCategories();
         // deleteUsers();
-        deleteAllCheckins();
+        // deleteAllCheckins();
         deleteCheckinMedia();
         // delete all files
         Util.rmDir(Preferences.savePath);
@@ -375,106 +326,9 @@ public class Database {
         return true;
     }
 
-    public boolean deleteAllCheckins() {
-        Log.i(TAG, "Deleting all Checkins");
-        return mDb.delete(CHECKINS_TABLE, null, null) > 0;
-    }
-
     public boolean deleteCheckinMedia() {
         Log.i(TAG, "Deleting all Media Checkins");
         return mDb.delete(IMediaSchema.MEDIA_TABLE, null, null) > 0;
-    }
-
-    /**
-     * Allows for the deletion of individual off line incidents given an id
-     * 
-     * @param addIncidentId
-     * @return
-     */
-    public boolean deleteAddIncident(int addIncidentId) {
-        return true;
-        // return mDb.delete(ADD_INCIDENTS_TABLE, CATEGORY_ID + "=" +
-        // addIncidentId, null) > 0;
-    }
-
-    /**
-     * Clear the offline table for adding incidents
-     * 
-     * @return boolean
-     */
-    public boolean deleteAddIncidents() {
-        return mDb.delete(ADD_INCIDENTS_TABLE, null, null) > 0;
-    }
-
-    public void markAllCategoriesRead() {
-        /*
-         * ContentValues values = new ContentValues();
-         * values.put(CATEGORY_IS_UNREAD, 0); mDb.update(CATEGORIES_TABLE,
-         * values, null, null);
-         */
-    }
-
-    /**
-     * Adds new incidents to be posted online to the db.
-     */
-    public long addIncidents(List<AddIncidentData> addIncidents) {
-        long rowId = 0;
-        try {
-            mDb.beginTransaction();
-            for (AddIncidentData addIncident : addIncidents) {
-                rowId = createAddIncident(addIncident);
-            }
-            mDb.setTransactionSuccessful();
-
-        } finally {
-            mDb.endTransaction();
-        }
-
-        return rowId;
-    }
-
-    public void addCheckins(List<Checkin> checkins) {
-        try {
-            mDb.beginTransaction();
-
-            for (Checkin checkin : checkins) {
-                createCheckins(checkin);
-            }
-
-            // limitRows(CHECKINS_TABLE,
-            // Integer.parseInt(UshahidiPref.totalReports), CHECKIN_ID);
-            mDb.setTransactionSuccessful();
-        } finally {
-            mDb.endTransaction();
-        }
-    }
-
-    /**
-     * Limit number of records to retrieve.
-     * 
-     * @param tablename
-     * @param limit
-     * @param KEY_ID
-     * @return
-     */
-
-    public int limitRows(String tablename, int limit, String KEY_ID) {
-        Cursor cursor = mDb.rawQuery("SELECT " + KEY_ID + " FROM " + tablename + " ORDER BY "
-                + KEY_ID + " DESC LIMIT 1 OFFSET ?", new String[] {
-            limit - 1 + ""
-        });
-
-        int deleted = 0;
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                int limitId = cursor.getInt(0);
-                deleted = mDb.delete(tablename, KEY_ID + "<" + limitId, null);
-            }
-            cursor.close();
-        }
-
-        return deleted;
     }
 
 }

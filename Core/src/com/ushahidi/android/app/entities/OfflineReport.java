@@ -69,7 +69,7 @@ public class OfflineReport implements IDbEntity {
         return this.description;
     }
 
-    public void setIncidentDesc(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -121,11 +121,11 @@ public class OfflineReport implements IDbEntity {
         this.locationName = locationName;
     }
 
-    public String getLocationLatitude() {
+    public String getLatitude() {
         return this.latitude;
     }
 
-    public void setLocationLatitude(String latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
