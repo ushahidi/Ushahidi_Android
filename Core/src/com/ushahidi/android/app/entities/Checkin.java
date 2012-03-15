@@ -17,30 +17,91 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
+
 package com.ushahidi.android.app.entities;
 
 /**
  * @author eyedol
- *
  */
-public class Checkin implements IDbEntity{
+public class Checkin implements IDbEntity {
 
-    /* (non-Javadoc)
+    private int id;
+
+    private int userId;
+
+    private String message;
+
+    private String date;
+
+    private String locationName;
+
+    private String locationLatitude;
+
+    private String locationLongitude;
+
+    /*
+     * (non-Javadoc)
      * @see com.ushahidi.android.app.entities.IDbEntity#getDbId()
      */
     @Override
     public int getDbId() {
-        // TODO Auto-generated method stub
-        return 0;
+        return id;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see com.ushahidi.android.app.entities.IDbEntity#setDbId(int)
      */
     @Override
     public void setDbId(int id) {
-        // TODO Auto-generated method stub
-        
+        this.id = id;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
+    }
+
+    public String getLocationLatitude() {
+        return locationLatitude;
+    }
+
+    public void setLocationLatitude(String locationLatitude) {
+        this.locationLatitude = locationLatitude;
+    }
+
+    public String getLocationLongitude() {
+        return locationLongitude;
+    }
+
+    public void setLocationLongitude(String locationLongitude) {
+        this.locationLongitude = locationLongitude;
+    }
 }

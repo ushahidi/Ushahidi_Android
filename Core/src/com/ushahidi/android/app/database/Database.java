@@ -117,21 +117,6 @@ public class Database {
 
     public static final String ADD_PERSON_EMAIL = "person_email";
 
-    // Checkin messages
-    public static final String CHECKIN_ID = "_id";
-
-    public static final String CHECKIN_USER_ID = "user_id";
-
-    public static final String CHECKIN_MESG = "checkin_mesg";
-
-    public static final String CHECKIN_DATE = "checkin_date";
-
-    public static final String CHECKIN_LOC_NAME = "checki_loc_name";
-
-    public static final String CHECKIN_LOC_LATITUDE = "checkin_loc_latitude";
-
-    public static final String CHECKIN_LOC_LONGITUDE = "checkin_loc_longitude";
-
     /**
      * Columns of the table that stores off line incidents
      */
@@ -143,12 +128,6 @@ public class Database {
             ADD_INCIDENT_NEWS, ADD_PERSON_FIRST, ADD_PERSON_LAST, ADD_PERSON_EMAIL
     };
 
-    // Checkins messages
-    public static final String[] CHECKINS_COLUMNS = new String[] {
-            CHECKIN_ID, CHECKIN_USER_ID, CHECKIN_MESG, CHECKIN_DATE, CHECKIN_LOC_NAME,
-            CHECKIN_LOC_LATITUDE, CHECKIN_LOC_LONGITUDE
-    };
-
     private DatabaseHelper mDbHelper;
 
     private SQLiteDatabase mDb;
@@ -156,8 +135,6 @@ public class Database {
     private static final String DATABASE_NAME = "ushahidi_db";
 
     private static final String ADD_INCIDENTS_TABLE = "add_incidents";
-
-    private static final String CHECKINS_TABLE = "checkins";
 
     private static final int DATABASE_VERSION = 15;
 
@@ -175,12 +152,6 @@ public class Database {
             + ADD_INCIDENT_LOC_LONGITUDE + " TEXT NOT NULL, " + ADD_INCIDENT_PHOTO + " TEXT, "
             + ADD_INCIDENT_VIDEO + " TEXT, " + ADD_INCIDENT_NEWS + " TEXT, " + ADD_PERSON_FIRST
             + " TEXT, " + ADD_PERSON_LAST + " TEXT, " + ADD_PERSON_EMAIL + " TEXT " + ")";
-
-    private static final String CHECKINS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
-            + CHECKINS_TABLE + " (" + CHECKIN_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
-            + CHECKIN_USER_ID + " INTEGER, " + CHECKIN_MESG + " TEXT NOT NULL, " + CHECKIN_DATE
-            + " DATE NOT NULL, " + CHECKIN_LOC_NAME + " TEXT NOT NULL, " + CHECKIN_LOC_LATITUDE
-            + " TEXT NOT NULL, " + CHECKIN_LOC_LONGITUDE + " TEXT NOT NULL" + ")";
 
     private final Context mContext;
 
@@ -210,8 +181,8 @@ public class Database {
             db.execSQL(IReportCategorySchema.REPORT_CATEGORY_TABLE_CREATE);
             db.execSQL(IMediaSchema.MEDIA_TABLE_CREATE);
             db.execSQL(IUserSchema.USER_TABLE_CREATE);
+            db.execSQL(ICheckinSchema.CHECKINS_TABLE_CREATE);
             db.execSQL(ADD_INCIDENTS_TABLE_CREATE);
-            db.execSQL(CHECKINS_TABLE_CREATE);
 
         }
 
@@ -265,15 +236,17 @@ public class Database {
             db.execSQL("DROP TABLE IF EXISTS temp_" + ADD_INCIDENTS_TABLE);
 
             // upgrade checkin table
-            db.execSQL(CHECKINS_TABLE_CREATE);
-            checkinsColums = Database.getColumns(db, CHECKINS_TABLE);
-            db.execSQL("ALTER TABLE " + CHECKINS_TABLE + " RENAME TO temp_" + CHECKINS_TABLE);
-            db.execSQL(CHECKINS_TABLE_CREATE);
-            checkinsColums.retainAll(Database.getColumns(db, CHECKINS_TABLE));
+            db.execSQL(ICheckinSchema.CHECKINS_TABLE_CREATE);
+            checkinsColums = Database.getColumns(db, ICheckinSchema.CHECKINS_TABLE);
+            db.execSQL("ALTER TABLE " + ICheckinSchema.CHECKINS_TABLE + " RENAME TO temp_"
+                    + ICheckinSchema.CHECKINS_TABLE);
+            db.execSQL(ICheckinSchema.CHECKINS_TABLE_CREATE);
+            checkinsColums.retainAll(Database.getColumns(db, ICheckinSchema.CHECKINS_TABLE));
             String checkinsCols = Database.join(checkinsColums, ",");
-            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s", CHECKINS_TABLE,
-                    checkinsCols, checkinsCols, CHECKINS_TABLE));
-            db.execSQL("DROP TABLE IF EXISTS temp_" + CHECKINS_TABLE);
+            db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s",
+                    ICheckinSchema.CHECKINS_TABLE, checkinsCols, checkinsCols,
+                    ICheckinSchema.CHECKINS_TABLE));
+            db.execSQL("DROP TABLE IF EXISTS temp_" + ICheckinSchema.CHECKINS_TABLE);
 
             // upgrade checkin media table
             db.execSQL(IMediaSchema.MEDIA_TABLE_CREATE);
@@ -391,23 +364,7 @@ public class Database {
         return mDb.insert(ADD_INCIDENTS_TABLE, null, initialValues);
     }
 
-    /**
-     * Create table for checkins
-     * 
-     * @return
-     */
-    public long createCheckins(Checkin checkins) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(CHECKIN_ID, checkins.getId());
-        initialValues.put(CHECKIN_USER_ID, checkins.getUser());
-        initialValues.put(CHECKIN_MESG, checkins.getMsg());
-        initialValues.put(CHECKIN_DATE, checkins.getDate());
-        initialValues.put(CHECKIN_LOC_NAME, checkins.getLoc());
-        initialValues.put(CHECKIN_LOC_LATITUDE, checkins.getLat());
-        initialValues.put(CHECKIN_LOC_LONGITUDE, checkins.getLon());
-        return mDb.insert(CHECKINS_TABLE, null, initialValues);
-    }
-
+    
 
     public Cursor fetchAllOfflineIncidents() {
         return mDb.query(ADD_INCIDENTS_TABLE, ADD_INCIDENTS_COLUMNS, null, null, null, null,
@@ -438,9 +395,9 @@ public class Database {
 
     public boolean clearData() {
 
-        //deleteAllIncidents();
+        // deleteAllIncidents();
         deleteAllCategories();
-        //deleteUsers();
+        // deleteUsers();
         deleteAllCheckins();
         deleteCheckinMedia();
         map.deleteAllDeployment();
@@ -452,9 +409,9 @@ public class Database {
 
     public boolean clearReports() {
 
-        //deleteAllIncidents();
+        // deleteAllIncidents();
         deleteAllCategories();
-        //deleteUsers();
+        // deleteUsers();
         deleteAllCheckins();
         deleteCheckinMedia();
         // delete all files

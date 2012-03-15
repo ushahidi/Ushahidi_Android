@@ -29,7 +29,7 @@ public class Report implements IDbEntity {
 
     private String description;
 
-    private String reportdate;
+    private String date;
 
     private String mode;
 
@@ -56,7 +56,7 @@ public class Report implements IDbEntity {
             String categories, String media, String image) {
         this.title = title;
         this.description = description;
-        this.reportdate = reportdate;
+        this.date = reportdate;
         this.mode = mode;
         this.verified = verified;
         this.locationname = locationame;
@@ -90,11 +90,11 @@ public class Report implements IDbEntity {
     }
 
     public String getReportDate() {
-        return reportdate;
+        return date;
     }
 
     public void setReportDate(String reportdate) {
-        this.reportdate = reportdate;
+        this.date = reportdate;
     }
 
     public String getMode() {

@@ -99,7 +99,8 @@ public class ReportDao extends DbContentProvider implements IReportDao, IReportS
 
         listReport = new ArrayList<Report>();
 
-        cursor = super.query(INCIDENTS_TABLE, INCIDENTS_COLUMNS, selection, selectionArgs, sortOrder);
+        cursor = super.query(INCIDENTS_TABLE, INCIDENTS_COLUMNS, selection, selectionArgs,
+                sortOrder);
 
         if (cursor != null) {
             cursor.moveToFirst();
@@ -230,7 +231,7 @@ public class ReportDao extends DbContentProvider implements IReportDao, IReportS
     }
 
     private void setContentValue(Report report) {
-        ContentValues initialValues = new ContentValues();
+        initialValues = new ContentValues();
         initialValues.put(INCIDENT_ID, report.getDbId());
         initialValues.put(INCIDENT_TITLE, report.getTitle());
         initialValues.put(INCIDENT_DESC, report.getDescription());

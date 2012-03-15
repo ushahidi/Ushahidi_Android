@@ -47,13 +47,13 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao, ICat
         };
         listCategory = new ArrayList<Category>();
         cursor = super.query(CATEGORIES_TABLE, columns, null, null, sortOrder);
-        
+
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
 
                 Category category = cursorToEntity(cursor);
-                
+
                 listCategory.add(category);
                 cursor.moveToNext();
             }
@@ -145,7 +145,7 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao, ICat
         return category;
     }
 
-    protected void setContentValue(Category category) {
+    private void setContentValue(Category category) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(CATEGORY_ID, category.getCategoryId());
         initialValues.put(CATEGORY_TITLE, category.getCategoryTitle());
@@ -155,7 +155,7 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao, ICat
         initialValues.put(CATEGORY_IS_UNREAD, true);
     }
 
-    protected ContentValues getContentValue() {
+    private ContentValues getContentValue() {
         return initialValues;
     }
 
