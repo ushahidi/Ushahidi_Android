@@ -83,75 +83,17 @@ public class Database {
 
     private static final String TAG = "UshahidiDatabase";
 
-    public static final String ADD_INCIDENT_ID = "_id";
-
-    public static final String ADD_INCIDENT_TITLE = "incident_title";
-
-    public static final String ADD_INCIDENT_DESC = "incident_desc";
-
-    public static final String ADD_INCIDENT_DATE = "incident_date";
-
-    public static final String ADD_INCIDENT_HOUR = "incident_hour";
-
-    public static final String ADD_INCIDENT_MINUTE = "incident_minute";
-
-    public static final String ADD_INCIDENT_AMPM = "incident_ampm";
-
-    public static final String ADD_INCIDENT_CATEGORIES = "incident_categories";
-
-    public static final String ADD_INCIDENT_LOC_NAME = "incident_loc_name";
-
-    public static final String ADD_INCIDENT_LOC_LATITUDE = "incident_loc_latitude";
-
-    public static final String ADD_INCIDENT_LOC_LONGITUDE = "incident_loc_longitude";
-
-    public static final String ADD_INCIDENT_PHOTO = "incident_photo";
-
-    public static final String ADD_INCIDENT_VIDEO = "incident_video";
-
-    public static final String ADD_INCIDENT_NEWS = "incident_news";
-
-    public static final String ADD_PERSON_FIRST = "person_first";
-
-    public static final String ADD_PERSON_LAST = "person_last";
-
-    public static final String ADD_PERSON_EMAIL = "person_email";
-
-    /**
-     * Columns of the table that stores off line incidents
-     */
-    public static final String[] ADD_INCIDENTS_COLUMNS = new String[] {
-            ADD_INCIDENT_ID, ADD_INCIDENT_TITLE, ADD_INCIDENT_DESC, ADD_INCIDENT_DATE,
-            ADD_INCIDENT_HOUR, ADD_INCIDENT_MINUTE, ADD_INCIDENT_AMPM, ADD_INCIDENT_CATEGORIES,
-            IReportSchema.INCIDENT_LOC_NAME, IReportSchema.INCIDENT_LOC_LATITUDE,
-            IReportSchema.INCIDENT_LOC_LONGITUDE, ADD_INCIDENT_PHOTO, ADD_INCIDENT_VIDEO,
-            ADD_INCIDENT_NEWS, ADD_PERSON_FIRST, ADD_PERSON_LAST, ADD_PERSON_EMAIL
-    };
-
     private DatabaseHelper mDbHelper;
 
     private SQLiteDatabase mDb;
 
     private static final String DATABASE_NAME = "ushahidi_db";
 
-    private static final String ADD_INCIDENTS_TABLE = "add_incidents";
-
     private static final int DATABASE_VERSION = 15;
 
     // NOTE: the incident ID is used as the row ID.
     // Furthermore, if a row already exists, an insert will replace
     // the old row upon conflict.
-
-    private static final String ADD_INCIDENTS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
-            + ADD_INCIDENTS_TABLE + " (" + ADD_INCIDENT_ID + " INTEGER PRIMARY KEY , "
-            + ADD_INCIDENT_TITLE + " TEXT NOT NULL, " + ADD_INCIDENT_DESC + " TEXT, "
-            + IReportSchema.INCIDENT_DATE + " DATE NOT NULL, " + ADD_INCIDENT_HOUR + " INTEGER, "
-            + ADD_INCIDENT_MINUTE + " INTEGER, " + ADD_INCIDENT_AMPM + " TEXT NOT NULL, "
-            + ADD_INCIDENT_CATEGORIES + " TEXT NOT NULL, " + ADD_INCIDENT_LOC_NAME
-            + " TEXT NOT NULL, " + ADD_INCIDENT_LOC_LATITUDE + " TEXT NOT NULL, "
-            + ADD_INCIDENT_LOC_LONGITUDE + " TEXT NOT NULL, " + ADD_INCIDENT_PHOTO + " TEXT, "
-            + ADD_INCIDENT_VIDEO + " TEXT, " + ADD_INCIDENT_NEWS + " TEXT, " + ADD_PERSON_FIRST
-            + " TEXT, " + ADD_PERSON_LAST + " TEXT, " + ADD_PERSON_EMAIL + " TEXT " + ")";
 
     private final Context mContext;
 
@@ -182,7 +124,7 @@ public class Database {
             db.execSQL(IMediaSchema.MEDIA_TABLE_CREATE);
             db.execSQL(IUserSchema.USER_TABLE_CREATE);
             db.execSQL(ICheckinSchema.CHECKINS_TABLE_CREATE);
-            db.execSQL(ADD_INCIDENTS_TABLE_CREATE);
+            db.execSQL(IOfflineReportSchema.OFFLINE_REPORT_TABLE_CREATE);
 
         }
 
@@ -224,16 +166,18 @@ public class Database {
             db.execSQL("DROP TABLE IF EXISTS temp_" + ICategorySchema.CATEGORIES_TABLE);
 
             // upgrade add incident table
-            db.execSQL(ADD_INCIDENTS_TABLE_CREATE);
-            addIncidentColumns = Database.getColumns(db, ADD_INCIDENTS_TABLE);
-            db.execSQL("ALTER TABLE " + ADD_INCIDENTS_TABLE + " RENAME TO temp_"
-                    + ADD_INCIDENTS_TABLE);
-            db.execSQL(ADD_INCIDENTS_TABLE_CREATE);
-            addIncidentColumns.retainAll(Database.getColumns(db, ADD_INCIDENTS_TABLE));
+            db.execSQL(IOfflineReportSchema.OFFLINE_REPORT_TABLE_CREATE);
+            addIncidentColumns = Database.getColumns(db, IOfflineReportSchema.OFFLINE_REPORT_TABLE);
+            db.execSQL("ALTER TABLE " + IOfflineReportSchema.OFFLINE_REPORT_TABLE
+                    + " RENAME TO temp_" + IOfflineReportSchema.OFFLINE_REPORT_TABLE);
+            db.execSQL(IOfflineReportSchema.OFFLINE_REPORT_TABLE_CREATE);
+            addIncidentColumns.retainAll(Database.getColumns(db,
+                    IOfflineReportSchema.OFFLINE_REPORT_TABLE));
             String addIncidentCols = Database.join(addIncidentColumns, ",");
             db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-                    ADD_INCIDENTS_TABLE, addIncidentCols, addIncidentCols, ADD_INCIDENTS_TABLE));
-            db.execSQL("DROP TABLE IF EXISTS temp_" + ADD_INCIDENTS_TABLE);
+                    IOfflineReportSchema.OFFLINE_REPORT_TABLE, addIncidentCols, addIncidentCols,
+                    IOfflineReportSchema.OFFLINE_REPORT_TABLE));
+            db.execSQL("DROP TABLE IF EXISTS temp_" + IOfflineReportSchema.OFFLINE_REPORT_TABLE);
 
             // upgrade checkin table
             db.execSQL(ICheckinSchema.CHECKINS_TABLE_CREATE);
@@ -363,8 +307,6 @@ public class Database {
 
         return mDb.insert(ADD_INCIDENTS_TABLE, null, initialValues);
     }
-
-    
 
     public Cursor fetchAllOfflineIncidents() {
         return mDb.query(ADD_INCIDENTS_TABLE, ADD_INCIDENTS_COLUMNS, null, null, null, null,

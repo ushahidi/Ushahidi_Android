@@ -20,7 +20,10 @@
 
 package com.ushahidi.android.app.entities;
 
-public class OfflineReport {
+public class OfflineReport implements IDbEntity {
+
+    private int id;
+
     private String title;
 
     private String description;
@@ -180,5 +183,24 @@ public class OfflineReport {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.ushahidi.android.app.entities.IDbEntity#getDbId()
+     */
+    @Override
+    public int getDbId() {
+        return id;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.ushahidi.android.app.entities.IDbEntity#setDbId(int)
+     */
+    @Override
+    public void setDbId(int id) {
+        this.id = id;
+
     }
 }
