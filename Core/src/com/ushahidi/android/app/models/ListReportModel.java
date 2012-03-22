@@ -43,240 +43,243 @@ import com.ushahidi.android.app.util.Util;
  */
 public class ListReportModel extends Model {
 
-    public List<Report> mReports;
+	public List<Report> mReports;
 
-    public List<ListReportModel> reportModel;
+	public List<ListReportModel> reportModel;
 
-    private long id;
+	private long id;
 
-    private String title;
+	private String title;
 
-    private String date;
+	private String date;
 
-    private String status;
+	private String status;
 
-    private Drawable thumbnail;
+	private Drawable thumbnail;
 
-    private Drawable arrow;
+	private Drawable arrow;
 
-    private Uri thumbnailUri;
+	private Uri thumbnailUri;
 
-    private String description;
+	private String description;
 
-    private String location;
+	private String location;
 
-    private String media;
+	private String media;
 
-    private String categories;
+	private String categories;
 
-    private String latitude;
+	private String latitude;
 
-    private String longitude;
+	private String longitude;
 
-    public void setThumbnail(Drawable thumbnail) {
-        this.thumbnail = thumbnail;
-    }
+	public void setThumbnail(Drawable thumbnail) {
+		this.thumbnail = thumbnail;
+	}
 
-    public Drawable getThumbnail() {
-        return this.thumbnail;
-    }
+	public Drawable getThumbnail() {
+		return this.thumbnail;
+	}
 
-    public void setThumbnailUri(Uri uri) {
-        this.thumbnailUri = uri;
-    }
+	public void setThumbnailUri(Uri uri) {
+		this.thumbnailUri = uri;
+	}
 
-    public Uri getThumbnailUri() {
-        return this.thumbnailUri;
-    }
+	public Uri getThumbnailUri() {
+		return this.thumbnailUri;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public String getTitle() {
-        return this.title;
-    }
+	public String getTitle() {
+		return this.title;
+	}
 
-    public void setDate(String date) {
+	public void setDate(String date) {
 
-        this.date = date;
-    }
+		this.date = date;
+	}
 
-    public String getDate() {
-        return this.date;
-    }
+	public String getDate() {
+		return this.date;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public String getStatus() {
-        return this.status;
-    }
+	public String getStatus() {
+		return this.status;
+	}
 
-    public void setDesc(String description) {
-        this.description = description;
-    }
+	public void setDesc(String description) {
+		this.description = description;
+	}
 
-    public String getDesc() {
-        return this.description;
-    }
+	public String getDesc() {
+		return this.description;
+	}
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+	public void setLocation(String location) {
+		this.location = location;
+	}
 
-    public String getLocation() {
-        return this.location;
-    }
+	public String getLocation() {
+		return this.location;
+	}
 
-    public void setMedia(String media) {
-        this.media = media;
-    }
+	public void setMedia(String media) {
+		this.media = media;
+	}
 
-    public String getMedia() {
-        return this.media;
-    }
+	public String getMedia() {
+		return this.media;
+	}
 
-    public void setCategories(String categories) {
-        this.categories = categories;
-    }
+	public void setCategories(String categories) {
+		this.categories = categories;
+	}
 
-    public String getCategories() {
-        return this.categories;
-    }
+	public String getCategories() {
+		return this.categories;
+	}
 
-    public void setArrow(Drawable arrow) {
-        this.arrow = arrow;
-    }
+	public void setArrow(Drawable arrow) {
+		this.arrow = arrow;
+	}
 
-    public Drawable getArrow() {
-        return this.arrow;
-    }
+	public Drawable getArrow() {
+		return this.arrow;
+	}
 
-    public void setId(long id) {
-        this.id = id;
-    }
+	public void setId(long id) {
+		this.id = id;
+	}
 
-    public long getId() {
-        return this.id;
-    }
+	public long getId() {
+		return this.id;
+	}
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
 
-    public String getLatitude() {
-        return this.latitude;
-    }
+	public String getLatitude() {
+		return this.latitude;
+	}
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
 
-    public String getLongitude() {
-        return this.longitude;
-    }
+	public String getLongitude() {
+		return this.longitude;
+	}
 
-    @Override
-    public boolean load() {
-        mReports = Database.mReportDao.fetchAllReports();
+	@Override
+	public boolean load() {
+		mReports = Database.mReportDao.fetchAllReports();
 
-        if (mReports != null) {
-            return true;
-        }
-        return false;
-    }
+		if (mReports != null) {
+			return true;
+		}
+		return false;
+	}
 
-    @Override
-    public boolean save() {
-        return false;
-    }
+	@Override
+	public boolean save() {
+		return false;
+	}
 
-    public boolean loadReportById(long id) {
-        mReports = Database.mReportDao.fetchReportById(id);
+	public boolean loadReportById(long id) {
+		mReports = Database.mReportDao.fetchReportById(id);
 
-        if (mReports != null) {
-            return true;
-        }
-        return false;
-    }
+		if (mReports != null) {
+			return true;
+		}
+		return false;
+	}
 
-    public boolean loadReportByCategory(String category) {
-        mReports = Database.mReportDao.fetchReportByCategory(category);
+	public boolean loadReportByCategory(String category) {
+		mReports = Database.mReportDao.fetchReportByCategory(category);
 
-        if (mReports != null) {
-            return true;
-        }
-        return false;
-    }
+		if (mReports != null) {
+			return true;
+		}
+		return false;
+	}
 
-    public List<ListReportModel> getReports(Context context) {
-        reportModel = new ArrayList<ListReportModel>();
+	public List<ListReportModel> getReports(Context context) {
+		reportModel = new ArrayList<ListReportModel>();
 
-        if (mReports != null && mReports.size() > 0) {
-            for (Report item : mReports) {
-                ListReportModel listReportModel = new ListReportModel();
-                listReportModel.setId(item.getDbId());
-                listReportModel.setTitle(Util.capitalize(item.getTitle()));
-                listReportModel.setDesc(item.getDescription());
-                listReportModel.setDate(Util.formatDate("yyyy-MM-dd HH:mm:ss",
-                        item.getReportDate(), "MMMM dd, yyyy 'at' hh:mm:ss aaa"));
-                final String status = Util.toInt(item.getVerified()) == 0 ? context
-                        .getString(R.string.report_unverified) : context
-                        .getString(R.string.report_verified);
-                listReportModel.setStatus(status);
-                listReportModel.setLocation(item.getLocationName());
-                listReportModel.setLatitude(item.getLatitude());
-                listReportModel.setLongitude(item.getLongitude());
-                listReportModel.setArrow(context.getResources().getDrawable(R.drawable.menu_arrow));
-                listReportModel.setCategories(Util.capitalize(item.getCategories()));
-                listReportModel.setMedia(item.getMedia());
+		if (mReports != null && mReports.size() > 0) {
+			for (Report item : mReports) {
+				ListReportModel listReportModel = new ListReportModel();
+				listReportModel.setId(item.getDbId());
+				listReportModel.setTitle(Util.capitalize(item.getTitle()));
+				listReportModel.setDesc(item.getDescription());
+				listReportModel.setDate(Util
+						.formatDate("yyyy-MM-dd HH:mm:ss",
+								item.getReportDate(),
+								"MMMM dd, yyyy 'at' hh:mm:ss aaa"));
+				final String status = Util.toInt(item.getVerified()) == 0 ? context
+						.getString(R.string.report_unverified) : context
+						.getString(R.string.report_verified);
+				listReportModel.setStatus(status);
+				listReportModel.setLocation(item.getLocationName());
+				listReportModel.setLatitude(item.getLatitude());
+				listReportModel.setLongitude(item.getLongitude());
+				listReportModel.setArrow(context.getResources().getDrawable(
+						R.drawable.menu_arrow));
+				listReportModel.setCategories(Util.capitalize(item
+						.getCategories()));
+				listReportModel.setMedia(item.getMedia());
 
-                final Drawable d = getImage(context, item.getDbId());
+				final Drawable d = getImage(context, item.getDbId());
 
-                if (d != null) {
+				if (d != null) {
 
-                    listReportModel.setThumbnail(d);
-                } else {
-                    listReportModel.setThumbnail(context.getResources().getDrawable(
-                            R.drawable.report_icon));
-                }
-                reportModel.add(listReportModel);
-            }
+					listReportModel.setThumbnail(d);
+				} else {
+					listReportModel.setThumbnail(context.getResources()
+							.getDrawable(R.drawable.report_icon));
+				}
+				reportModel.add(listReportModel);
+			}
 
-        }
-        return reportModel;
-    }
+		}
+		return reportModel;
+	}
 
-    public Vector<String> getCategories(Context context) {
-        final List<Category> categories = Database.mCategoryDao.fetchAllCategoryTitles();
-        final Vector<String> vectorCategories = new Vector<String>();
+	public Vector<String> getCategories(Context context) {
+		final List<Category> categories = Database.mCategoryDao
+				.fetchAllCategoryTitles();
+		final Vector<String> vectorCategories = new Vector<String>();
 
-        if ((categories != null) && (categories.size() > 0)) {
-            vectorCategories.clear();
-            vectorCategories.add(context.getString(R.string.all_categories));
+		if ((categories != null) && (categories.size() > 0)) {
+			vectorCategories.clear();
+			vectorCategories.add(context.getString(R.string.all_categories));
 
-            for (Category category : categories) {
-                if (category != null) {
-                    vectorCategories.add(category.getCategoryTitle());
-                }
-            }
-        }
-        return vectorCategories;
-    }
+			for (Category category : categories) {
+				if (category != null) {
+					vectorCategories.add(category.getCategoryTitle());
+				}
+			}
+		}
+		return vectorCategories;
+	}
 
-    private Drawable getImage(Context context, int reportId) {
-        List<Media> sMedia = Database.mMediaDao.fetchMedia(IMediaSchema.REPORT_ID, reportId,
-                IMediaSchema.IMAGE, 1);
+	private Drawable getImage(Context context, int reportId) {
+		List<Media> sMedia = Database.mMediaDao.fetchMedia(
+				IMediaSchema.REPORT_ID, reportId, IMediaSchema.IMAGE, 1);
 
-        if (sMedia != null && sMedia.size() > 0) {
-            Log.i("Media ", "Dag " + sMedia.get(0).getLink());
-            return ImageManager.getDrawables(context, sMedia.get(0).getLink());
+		if (sMedia != null && sMedia.size() > 0) {
 
-            // return Drawable.createFromPath(ImageManager.getPhotoPath(context)
-            // + "/" + sMedia.get(0).getLink());
-        }
-        return context.getResources().getDrawable(R.drawable.report_icon);
-    }
+			return ImageManager.getDrawables(context, sMedia.get(0).getLink());
+
+		}
+		return context.getResources().getDrawable(R.drawable.report_icon);
+	}
 }

@@ -3,13 +3,13 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="src" path="/ShareLockLib"/>
+	<classpathentry kind="lib" path="libs/actionbarsherlock-plugin-maps-3.5.0.jar"/>
+	<classpathentry kind="lib" path="libs/actionbarsherlock-plugin-preference-3.5.0.jar"/>
 	<classpathentry kind="lib" path="libs/apache-mime4j-core-0.7.jar"/>
 	<classpathentry kind="lib" path="libs/httpclient-4.1.1.jar"/>
 	<classpathentry kind="lib" path="libs/httpcore-4.1.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.1.1.jar"/>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="src" path="/ShareLockLib"/>
-	<classpathentry kind="lib" path="/home/eyedol/Devel/Workspace/Ushahidi_Android/Core/libs/actionbarsherlock-plugin-maps-3.5.0.jar"/>
-	<classpathentry kind="lib" path="/home/eyedol/Devel/Workspace/Ushahidi_Android/Core/libs/actionbarsherlock-plugin-preference-3.5.0.jar"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
