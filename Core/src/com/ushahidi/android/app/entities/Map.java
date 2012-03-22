@@ -38,9 +38,11 @@ public class Map implements IDbEntity{
 
     private String lon;
 
-    private String catId;
+    private int catId;
 
     private String active;
+    
+    private int mapId;
     
     private int id;
     
@@ -112,13 +114,22 @@ public class Map implements IDbEntity{
         return this.url;
     }
 
-    public void setCatId(String catId) {
+    public void setCatId(int catId) {
 
         this.catId = catId;
     }
 
-    public String getCatId() {
+    public int getCatId() {
         return this.catId;
+    }
+    
+    public void setMapId(int mapId) {
+
+        this.mapId = mapId;
+    }
+
+    public int getMapId() {
+        return this.mapId;
     }
 
 }

@@ -20,6 +20,7 @@
 
 package com.ushahidi.android.app.util;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +28,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.MainApplication;
+import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.entities.Media;
 import com.ushahidi.android.app.entities.Report;
+import com.ushahidi.android.app.entities.ReportCategory;
 
 /**
  * Handle processing of the JSON string as returned from the HTTP request. Main
@@ -66,32 +74,15 @@ public class ReportsApiUtils {
 
     private JSONArray getReportsArr() {
         try {
-            return getReportPayloadObj().getJSONArray("incident");
+            return getReportPayloadObj().getJSONArray("incidents");
         } catch (JSONException e) {
             log("JSONException", e);
             return new JSONArray();
         }
     }
 
-    private JSONArray getCategoriesArr() {
-        try {
-            return getReportPayloadObj().getJSONArray("categories");
-        } catch (JSONException e) {
-            log("JSONException", e);
-            return new JSONArray();
-        }
-    }
-
-    private JSONArray getMediaArr() {
-        try {
-            return getReportPayloadObj().getJSONArray("media");
-        } catch (JSONException e) {
-            log("JSONException", e);
-            return new JSONArray();
-        }
-    }
-
-    public List<Report> getReportList() {
+    public List<Report> getReportList(Context context) {
+        log("Save report");
         if (processingResult) {
             List<Report> listReport = new ArrayList<Report>();
             JSONArray reportsArr = getReportsArr();
@@ -100,44 +91,58 @@ public class ReportsApiUtils {
                 for (int i = 0; i < reportsArr.length(); i++) {
                     Report report = new Report();
                     try {
-                        id = reportsArr.getJSONObject(i).getInt("incidentid");
+                        id = reportsArr.getJSONObject(i).getJSONObject("incident")
+                                .getInt("incidentid");
                         report.setDbId(id);
-                        report.setTitle(reportsArr.getJSONObject(i).getString("incidenttitle"));
-                        report.setDescription(reportsArr.getJSONObject(i).getString(
-                                "incidentdescription"));
-                        report.setReportDate(reportsArr.getJSONObject(i).getString("incidentdate"));
-                        report.setMode(reportsArr.getJSONObject(i).getString("incidentmode"));
-                        report.setVerified(reportsArr.getJSONObject(i)
+                        report.setTitle(reportsArr.getJSONObject(i).getJSONObject("incident")
+                                .getString("incidenttitle"));
+                        report.setDescription(reportsArr.getJSONObject(i).getJSONObject("incident")
+                                .getString("incidentdescription"));
+                        report.setReportDate(reportsArr.getJSONObject(i).getJSONObject("incident")
+                                .getString("incidentdate"));
+                        report.setMode(reportsArr.getJSONObject(i).getJSONObject("incident")
+                                .getString("incidentmode"));
+                        report.setVerified(reportsArr.getJSONObject(i).getJSONObject("incident")
                                 .getString("incidentverified"));
                         report.setLocationName(reportsArr.getJSONObject(i)
-                                .getString("locationname"));
-                        report.setLatitude(reportsArr.getJSONObject(i)
+                                .getJSONObject("incident").getString("locationname"));
+                        report.setLatitude(reportsArr.getJSONObject(i).getJSONObject("incident")
                                 .getString("locationlatitude"));
-                        report.setLongitude(reportsArr.getJSONObject(i).getString(
-                                "locationlongitude"));
+                        report.setLongitude(reportsArr.getJSONObject(i).getJSONObject("incident")
+                                .getString("locationlongitude"));
+
                         // retrieve categories
-                        JSONArray catsArr = getCategoriesArr();
+                        JSONArray catsArr = reportsArr.getJSONObject(i).getJSONArray("categories");
                         for (int j = 0; j < catsArr.length(); j++) {
                             try {
-                                saveCategories(catsArr.getJSONObject(i).getJSONObject("category")
+
+                                saveCategories(catsArr.getJSONObject(j).getJSONObject("category")
                                         .getInt("id"), (int)id);
                             } catch (JSONException ex) {
                                 log("JSONException", ex);
                             }
                         }
-                        // retrieve media.
-                        JSONArray mediaArr = getMediaArr();
-                        for (int w = 0; w < mediaArr.length(); w++) {
-                            try {
-                                saveMedia(mediaArr.getJSONObject(w).getInt("id"), (int)id, mediaArr
-                                        .getJSONObject(w).getInt("type"), mediaArr.getJSONObject(w)
-                                        .getString("link"));
 
-                                if (mediaArr.getJSONObject(w).getInt("type") == 1) {
-                                    saveImages(mediaArr.getJSONObject(w).getString("link_url"));
+                        // retrieve media.
+                        if (!reportsArr.getJSONObject(i).isNull("media")) {
+                            JSONArray mediaArr = reportsArr.getJSONObject(i).getJSONArray("media");
+                            for (int w = 0; w < mediaArr.length(); w++) {
+                                try {
+                                    if (!mediaArr.getJSONObject(0).isNull("id")) {
+                                        saveMedia(mediaArr.getJSONObject(0).getInt("id"), (int)id,
+                                                mediaArr.getJSONObject(0).getInt("type"), mediaArr
+                                                        .getJSONObject(0).getString("link"));
+
+                                        if (mediaArr.getJSONObject(0).getInt("type") == 1) {
+                                            saveImages(
+                                                    mediaArr.getJSONObject(1).getString("link_url"),
+                                                    mediaArr.getJSONObject(0).getString("link"),
+                                                    context);
+                                        }
+                                    }
+                                } catch (JSONException exc) {
+                                    log("JSONException", exc);
                                 }
-                            } catch (JSONException exc) {
-                                log("JSONException", exc);
                             }
                         }
                     } catch (JSONException e) {
@@ -154,26 +159,49 @@ public class ReportsApiUtils {
         return null;
     }
 
-    private void saveCategories(int catId, int reportId) {
-        // TODO save this into a database
+    // Save report into databaset
+    public boolean saveReports(Context context) {
+        List<Report> reports = getReportList(context);
+        if (reports != null) {
+            return Database.mReportDao.addReport(reports);
+        }
+
+        return false;
+    }
+
+    private void saveCategories(int categoryId, int reportId) {
+
+        ReportCategory reportCategory = new ReportCategory();
+        reportCategory.setCategoryId(categoryId);
+        reportCategory.setReportId(reportId);
+        List<ReportCategory> reportCategories = new ArrayList<ReportCategory>();
+        reportCategories.add(reportCategory);
+        Database.mReportCategoryDao.addReportCategories(reportCategories);
     }
 
     private void saveMedia(int mediaId, int reportId, int type, String link) {
-        // TODO save this into a database
+        //log("Saving Media " + mediaId + " ReportId " + " type" + type + " link " + link);
+        Media media = new Media();
+        media.setDbId(mediaId);
+        media.setReportId(reportId);
+        media.setType(type);
+        media.setLink(link);
+        List<Media> sMedia = new ArrayList<Media>();
+        sMedia.add(media);
+        Database.mMediaDao.addMedia(sMedia);
     }
 
-    private void saveImages(String linkUrl) {
+    private void saveImages(String linkUrl, String fileName, Context context) {
         // TODO save images to SD card
+        log("saveImag: " + linkUrl + "filename: "+fileName);
+        if (!TextUtils.isEmpty(linkUrl)) {
+            ImageManager.downloadImage(linkUrl, fileName, context);
+        }
     }
 
     private void log(String message) {
         if (MainApplication.LOGGING_MODE)
             Log.i(getClass().getName(), message);
-    }
-
-    private void log(String format, Object... args) {
-        if (MainApplication.LOGGING_MODE)
-            Log.i(getClass().getName(), String.format(format, args));
     }
 
     private void log(String message, Exception ex) {

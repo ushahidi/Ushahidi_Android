@@ -83,7 +83,7 @@ public class Checkin {
     }
 
     public void setName(String name) {
-        this.name = CheckinUtil.getCheckinUser(name);
+        //this.name = CheckinUtil.getCheckinUser(name);
     }
 
     public String getName() {
@@ -92,7 +92,7 @@ public class Checkin {
 
     public void setImage(String checkinId) {
         
-        this.image = CheckinUtil.getCheckinMedia(checkinId);
+        //this.image = CheckinUtil.getCheckinMedia(checkinId);
     }
 
     public String getImage() {
@@ -100,8 +100,8 @@ public class Checkin {
     }
     
     public void setThumbnail(String checkinId)  {
-        if(CheckinUtil.getCheckinThumbnail(checkinId) !=null)
-            this.thumbnail = CheckinUtil.getCheckinThumbnail(checkinId);
+        //if(CheckinUtil.getCheckinThumbnail(checkinId) !=null)
+           // this.thumbnail = CheckinUtil.getCheckinThumbnail(checkinId);
     }
     
     public String getThumbnail() {

@@ -23,8 +23,6 @@ package com.ushahidi.android.app.entities;
 
 public class Category implements IDbEntity {
 
-    private int categoryId = 0;
-
     private int id;
 
     private String categoryTitle = "";
@@ -49,14 +47,6 @@ public class Category implements IDbEntity {
 
     public void setCategoryDescription(String description) {
         this.categoryDescription = description;
-    }
-
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(int id) {
-        this.categoryId = id;
     }
 
     public String getCategoryColor() {

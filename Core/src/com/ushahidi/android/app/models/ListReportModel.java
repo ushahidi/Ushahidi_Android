@@ -27,13 +27,14 @@ import java.util.Vector;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.text.TextUtils;
+import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
-import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.database.IMediaSchema;
 import com.ushahidi.android.app.entities.Category;
+import com.ushahidi.android.app.entities.Media;
 import com.ushahidi.android.app.entities.Report;
 import com.ushahidi.android.app.util.Util;
 
@@ -71,50 +72,6 @@ public class ListReportModel extends Model {
     private String latitude;
 
     private String longitude;
-
-    public ListReportModel() {
-        this.thumbnail = null;
-        this.title = "";
-        this.date = "";
-        this.status = "";
-        this.description = "";
-        this.location = "";
-        this.media = "";
-        this.categories = "";
-        this.id = 0l;
-        this.arrow = null;
-    }
-
-    public ListReportModel(Drawable thumbnail, String title, String date, String status,
-            String description, String location, String media, String categories, long id,
-            Drawable arrow) {
-
-        this.thumbnail = thumbnail;
-        this.title = title;
-        this.date = date;
-        this.status = status;
-        this.description = description;
-        this.location = location;
-        this.media = media;
-        this.categories = categories;
-        this.id = id;
-        this.arrow = arrow;
-    }
-
-    public ListReportModel(Uri uri, String title, String date, String status, String description,
-            String location, String media, String categories, long id, Drawable arrow) {
-
-        this.thumbnailUri = uri;
-        this.title = title;
-        this.date = date;
-        this.status = status;
-        this.description = description;
-        this.location = location;
-        this.media = media;
-        this.categories = categories;
-        this.id = id;
-        this.arrow = arrow;
-    }
 
     public void setThumbnail(Drawable thumbnail) {
         this.thumbnail = thumbnail;
@@ -222,7 +179,7 @@ public class ListReportModel extends Model {
     }
 
     @Override
-    public boolean load(Context context) {
+    public boolean load() {
         mReports = Database.mReportDao.fetchAllReports();
 
         if (mReports != null) {
@@ -232,11 +189,11 @@ public class ListReportModel extends Model {
     }
 
     @Override
-    public boolean save(Context context) {
+    public boolean save() {
         return false;
     }
 
-    public boolean loadReportById(Context context, long id) {
+    public boolean loadReportById(long id) {
         mReports = Database.mReportDao.fetchReportById(id);
 
         if (mReports != null) {
@@ -245,7 +202,7 @@ public class ListReportModel extends Model {
         return false;
     }
 
-    public boolean loadReportByCategory(Context context, String category) {
+    public boolean loadReportByCategory(String category) {
         mReports = Database.mReportDao.fetchReportByCategory(category);
 
         if (mReports != null) {
@@ -275,16 +232,11 @@ public class ListReportModel extends Model {
                 listReportModel.setArrow(context.getResources().getDrawable(R.drawable.menu_arrow));
                 listReportModel.setCategories(Util.capitalize(item.getCategories()));
                 listReportModel.setMedia(item.getMedia());
-                final String thumbnails[] = item.getMedia().split(",");
-                // TODO do a proper check for thumbnails
-                Drawable d = null;
-                if (!TextUtils.isEmpty(thumbnails[0])) {
-                    d = ImageManager.getImages(Preferences.savePath, thumbnails[0]);
-                } else {
-                    d = null;
-                }
+
+                final Drawable d = getImage(context, item.getDbId());
 
                 if (d != null) {
+
                     listReportModel.setThumbnail(d);
                 } else {
                     listReportModel.setThumbnail(context.getResources().getDrawable(
@@ -312,5 +264,19 @@ public class ListReportModel extends Model {
             }
         }
         return vectorCategories;
+    }
+
+    private Drawable getImage(Context context, int reportId) {
+        List<Media> sMedia = Database.mMediaDao.fetchMedia(IMediaSchema.REPORT_ID, reportId,
+                IMediaSchema.IMAGE, 1);
+
+        if (sMedia != null && sMedia.size() > 0) {
+            Log.i("Media ", "Dag " + sMedia.get(0).getLink());
+            return ImageManager.getDrawables(context, sMedia.get(0).getLink());
+
+            // return Drawable.createFromPath(ImageManager.getPhotoPath(context)
+            // + "/" + sMedia.get(0).getLink());
+        }
+        return context.getResources().getDrawable(R.drawable.report_icon);
     }
 }

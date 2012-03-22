@@ -11,8 +11,8 @@
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/map_arrow"
         android:ellipsize="end"
-        android:focusable="false"
         android:singleLine="true"
+        android:focusable="false"
         android:textStyle="bold"
         android:capitalize="characters"
         android:textColor="@color/date_color" />
@@ -34,9 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:focusable="false"
         android:layout_below="@+id/map_list_desc"
         android:layout_toLeftOf="@+id/map_arrow"
-        android:focusable="false"
         android:textColor="@color/date_color" />
 
     <TextView
@@ -48,9 +48,9 @@
         android:layout_below="@+id/map_list_url"
         android:layout_toLeftOf="@+id/map_arrow"
         android:capitalize="sentences"
-        android:focusable="false"
         android:singleLine="true"
         android:textColor="@color/date_color"
+        android:focusable="false"
         android:visibility="gone" />
 
     <ImageView

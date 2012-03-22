@@ -29,7 +29,7 @@ import com.ushahidi.android.app.Preferences;
 public class Incidents {
 
     public static boolean getAllIncidentsFromWeb() throws IOException {
-        HttpResponse response;
+       /* HttpResponse response;
         String incidents = "";
 
         StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
@@ -38,7 +38,7 @@ public class Incidents {
         uriBuilder.append("&limit=" + Preferences.totalReports);
         uriBuilder.append("&resp=xml");
 
-        response = MainHttpClient.GetURL(uriBuilder.toString());
+        //response = MainHttpClient.GetURL(uriBuilder.toString());
 
         if (response == null) {
             return false;
@@ -48,12 +48,13 @@ public class Incidents {
 
         if (statusCode == 200) {
 
-            incidents = MainHttpClient.GetText(response);
+            //incidents = MainHttpClient.GetText(response);
             Preferences.incidentsResponse = incidents;
             return true;
         } else {
             return false;
-        }
+        }*/
+        return false;
 
     }
 

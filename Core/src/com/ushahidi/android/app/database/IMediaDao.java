@@ -35,8 +35,16 @@ public interface IMediaDao {
 
     public boolean addMedia(Media media);
 
-    public List<Media> fetchMediaByCheckinId(int checkinId);
+    public List<Media> fetchCheckinPhoto(int checkinId);
 
-    public List<Media> fetchMediaByReportId(int reportId);
+    public List<Media> fetchReportPhoto(int reportId);
+    
+    public List<Media> fetchReportAudio(int reportId);
+    
+    public List<Media> fetchReportNews(int reportId);
+    
+    public List<Media> fetchReportVideo(int reportId);
+    
+    public List<Media> fetchMedia(String itemType, int itemId, int mediaType, int limit);
 
 }

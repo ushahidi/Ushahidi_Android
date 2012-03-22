@@ -84,9 +84,9 @@ public class Database {
 
     private SQLiteDatabase mDb;
 
-    private static final String DATABASE_NAME = "ushahidi_db";
+    public static final String DATABASE_NAME = "ushahidi_db";
 
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 16;
 
     // NOTE: the incident ID is used as the row ID.
     // Furthermore, if a row already exists, an insert will replace
@@ -195,16 +195,16 @@ public class Database {
 
             // upgrade checkin media table
             db.execSQL(IMediaSchema.MEDIA_TABLE_CREATE);
-            checkinsMediaColums = Database.getColumns(db, IMediaSchema.MEDIA_TABLE);
-            db.execSQL("ALTER TABLE " + IMediaSchema.MEDIA_TABLE + " RENAME TO temp_"
-                    + IMediaSchema.MEDIA_TABLE);
+            checkinsMediaColums = Database.getColumns(db, IMediaSchema.TABLE);
+            db.execSQL("ALTER TABLE " + IMediaSchema.TABLE + " RENAME TO temp_"
+                    + IMediaSchema.TABLE);
             db.execSQL(IMediaSchema.MEDIA_TABLE_CREATE);
-            checkinsMediaColums.retainAll(Database.getColumns(db, IMediaSchema.MEDIA_TABLE));
+            checkinsMediaColums.retainAll(Database.getColumns(db, IMediaSchema.TABLE));
             String checkinsMediaCols = Database.join(checkinsMediaColums, ",");
             db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-                    IMediaSchema.MEDIA_TABLE, checkinsMediaCols, checkinsMediaCols,
-                    IMediaSchema.MEDIA_TABLE));
-            db.execSQL("DROP TABLE IF EXISTS temp_" + IMediaSchema.MEDIA_TABLE);
+                    IMediaSchema.TABLE, checkinsMediaCols, checkinsMediaCols,
+                    IMediaSchema.TABLE));
+            db.execSQL("DROP TABLE IF EXISTS temp_" + IMediaSchema.TABLE);
 
             // upgrade checkin users table
             db.execSQL(IUserSchema.USER_TABLE_CREATE);
@@ -219,7 +219,7 @@ public class Database {
             db.execSQL("DROP TABLE IF EXISTS temp_" + IUserSchema.USER_TABLE);
 
             // upgrade deployment table
-            db.execSQL("DROP TABLE IF EXISTS " + IMapSchema.MAP_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + IMapSchema.TABLE);
             onCreate(db);
         }
 
@@ -328,7 +328,7 @@ public class Database {
 
     public boolean deleteCheckinMedia() {
         Log.i(TAG, "Deleting all Media Checkins");
-        return mDb.delete(IMediaSchema.MEDIA_TABLE, null, null) > 0;
+        return mDb.delete(IMediaSchema.TABLE, null, null) > 0;
     }
 
 }

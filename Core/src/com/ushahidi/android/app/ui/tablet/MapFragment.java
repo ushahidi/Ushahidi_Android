@@ -56,7 +56,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mListReportModel = new ListReportModel();
-        mListReportModel.load(getActivity());
+        mListReportModel.load();
         mReportModel = mListReportModel.getReports(getActivity());
         mHandler = new Handler();
         map = new MapView(getActivity(), getActivity().getString(R.string.google_map_api_key));

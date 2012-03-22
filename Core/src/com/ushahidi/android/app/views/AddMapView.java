@@ -1,6 +1,11 @@
 
 package com.ushahidi.android.app.views;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -8,7 +13,7 @@ import android.view.View.OnTouchListener;
 import android.widget.EditText;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.entities.Map;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.util.ApiUtils;
 
@@ -20,8 +25,8 @@ public class AddMapView {
 
     private EditText mMapUrl;
 
-    private String mMapId;
-    
+    private int mMapId;
+
     private ListMapModel mapModel;
 
     /**
@@ -55,9 +60,9 @@ public class AddMapView {
             mMapName.setText(mapName);
     }
 
-    public void setMapId(String mapId) {
-        if (!TextUtils.isEmpty(mapId))
-            mMapId = mapId;
+    public void setMapId(int mapId) {
+
+        mMapId = mapId;
     }
 
     public void setMapDescription(String mapDescription) {
@@ -69,7 +74,7 @@ public class AddMapView {
             mMapUrl.setText(mapUrl);
     }
 
-    public String getMapId() {
+    public int getMapId() {
         return mMapId;
     }
 
@@ -93,13 +98,25 @@ public class AddMapView {
     public boolean addMapDetails() {
         if ((ApiUtils.validateUshahidiInstance(getMapUrl())) && !(TextUtils.isEmpty(getMapName()))) {
 
-            if (!TextUtils.isEmpty(getMapDescription()))
-                Database.map.addMap(getMapName(), getMapDescription(), getMapUrl());
-            else
-                // because map description wasn't set, use the map name as the
-                // description
-                Database.map.addMap(getMapName(), getMapName(), getMapUrl());
-            return true;
+            Map map = new Map();
+            map.setMapId(0);
+            map.setCatId(0);
+            map.setActive("0");
+            map.setLat("0.0");
+            map.setLon("0.0");
+            map.setName(getMapName());
+            map.setDesc(getMapDescription());
+            map.setUrl(getMapUrl());
+            map.setDate((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
+
+            if (TextUtils.isEmpty(getMapDescription())) {
+                map.setDesc(getMapName());
+            }
+
+            List<Map> maps = new ArrayList<Map>();
+            maps.add(map);
+            return mapModel.addMap(maps);
+
         }
         return false;
     }

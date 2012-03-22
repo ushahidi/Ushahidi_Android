@@ -156,7 +156,7 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
     }
 
     private void setContentValue(User user) {
-        ContentValues initialValues = new ContentValues();
+        initialValues = new ContentValues();
         initialValues.put(USER_ID, user.getDbId());
         initialValues.put(USER_NAME, user.getUsername());
         initialValues.put(USER_COLOR, user.getUserColor());

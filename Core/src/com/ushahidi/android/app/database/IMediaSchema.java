@@ -27,30 +27,34 @@ package com.ushahidi.android.app.database;
  */
 public interface IMediaSchema {
 
-    public static final String MEDIA_TABLE = "checkin_media";
+    public static final String TABLE = "checkin_media";
 
     // Checkins media
-    public static final String MEDIA_ID = "_id";
+    public static final String ID = "_id";
 
-    public static final String MEDIA_CHECKIN_ID = "media_checkin_id";
+    public static final String CHECKIN_ID = "media_checkin_id";
 
-    public static final String MEDIA_REPORT_ID = "media_report_id";
+    public static final String REPORT_ID = "media_report_id";
 
-    public static final String MEDIA_TYPE = "media_type";
+    public static final String TYPE = "media_type";
 
-    public static final String MEDIA_THUMBNAIL = "media_thumbnail_link";
-
-    public static final String MEDIA_MEDIUM_SIZE = "media_medium_link";
+    public static final String LINK = "media_link";
 
     // Checkin Media
     public static final String[] MEDIA_COLUMNS = new String[] {
-            MEDIA_ID, MEDIA_CHECKIN_ID, MEDIA_REPORT_ID, MEDIA_TYPE, MEDIA_THUMBNAIL,
-            MEDIA_MEDIUM_SIZE
+            ID, CHECKIN_ID, REPORT_ID, TYPE, LINK
     };
 
-    public static final String MEDIA_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + MEDIA_TABLE
-            + " (" + MEDIA_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + MEDIA_CHECKIN_ID
-            + " INTEGER, " + MEDIA_REPORT_ID + " INTEGER, " + MEDIA_TYPE + " INTEGER, "
-            + MEDIA_THUMBNAIL + " TEXT, " + MEDIA_MEDIUM_SIZE + " TEXT" + ")";
+    public static final String MEDIA_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE + " ("
+            + ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + CHECKIN_ID + " INTEGER, "
+            + REPORT_ID + " INTEGER, " + TYPE + " INTEGER, " + LINK + " TEXT " + ")";
+    
+    public static final int IMAGE = 1;
+
+    public static final int VIDEO = 2;
+
+    public static final int AUDIO = 3;
+
+    public static final int NEWS = 4;
 
 }

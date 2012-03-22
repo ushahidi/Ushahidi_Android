@@ -44,10 +44,10 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.models.ListReportModel;
+import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
 import com.ushahidi.android.app.ui.phone.ViewReportActivity;
-import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.views.ListReportView;
 
 /**
@@ -104,7 +104,6 @@ public class ListReportFragment extends
 
         mListReportView = new ListReportView(getActivity());
         mListReportAdapter = new ListReportAdapter(getActivity());
-
         mListReportModel = new ListReportModel();
         mHandler = new Handler();
         mListReportView.getFilterReportView().addTextChangedListener(new TextWatcher() {
@@ -202,7 +201,7 @@ public class ListReportFragment extends
     final Runnable fetchReportList = new Runnable() {
         public void run() {
             try {
-                mListReportAdapter.refresh(getActivity());
+                mListReportAdapter.refresh();
                 mListReportView.getPullToRefreshListView().setAdapter(mListReportAdapter);
                 mListReportView.displayEmptyListText();
                 getListView().setTextFilterEnabled(true);
@@ -227,7 +226,7 @@ public class ListReportFragment extends
     };
 
     public void refreshMapLists() {
-        mListReportAdapter.refresh(getActivity());
+        mListReportAdapter.refresh();
         mListReportView.displayEmptyListText();
     }
 
@@ -248,14 +247,14 @@ public class ListReportFragment extends
                                     && (!TextUtils.isEmpty(filterCategory))
                                     && (filterCategory != getActivity().getString(
                                             R.string.all_categories))) {
-                                mListReportAdapter.refresh(getActivity(), filterCategory);
+                                mListReportAdapter.refresh(filterCategory);
                                 mListReportView.getPullToRefreshListView().setAdapter(
                                         mListReportAdapter);
                                 mListReportView.displayEmptyListText();
                                 // filterCategory = null;
 
                             } else {
-                                mListReportAdapter.refresh(getActivity());
+                                mListReportAdapter.refresh();
                                 mListReportView.getPullToRefreshListView().setAdapter(
                                         mListReportAdapter);
                                 mListReportView.displayEmptyListText();
@@ -355,7 +354,8 @@ public class ListReportFragment extends
         @Override
         protected Boolean doInBackground(String... strings) {
             try {
-                status = ApiUtils.processReports(getActivity());
+                status = new ReportsHttpClient(getActivity()).getAllReportFromWeb();
+                
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -377,7 +377,7 @@ public class ListReportFragment extends
                     toastLong(R.string.could_not_fetch_reports);
                 } else if (status == 0) {
 
-                    mListReportAdapter.refresh(getActivity());
+                    mListReportAdapter.refresh();
                     mListReportView.getPullToRefreshListView().setAdapter(mListReportAdapter);
                     mListReportView.displayEmptyListText();
                     showCategories();

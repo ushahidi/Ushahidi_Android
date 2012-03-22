@@ -56,7 +56,7 @@ public class DashboardActivity extends FragmentMapActivity implements ListMapFra
         log("message id" + mapId);
         if (detailsInline) {
             ListReportFragment listReportFragment = new ListReportFragment();
-            listReportFragment.mListReportAdapter.refresh(this);
+            listReportFragment.mListReportAdapter.refresh();
             listReportFragment.mListReportView.getPullToRefreshListView().setAdapter(
                     listReportFragment.mListReportAdapter);
 

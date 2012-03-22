@@ -44,7 +44,6 @@ import android.util.Log;
 import com.ushahidi.android.app.BackgroundService;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.MainApplication;
-import com.ushahidi.android.app.Preferences;
 
 public class HandleXml {
 
@@ -100,8 +99,8 @@ public class HandleXml {
             listIncidentsData.add(parseIncident((Element)firstNode));
         }
         // save images
-        ImageManager.saveThumbnail(Preferences.savePath);
-        ImageManager.saveImage(Preferences.savePath);
+        //ImageManager.saveThumbnail(Preferences.savePath);
+        //ImageManager.saveImage(Preferences.savePath);
         return listIncidentsData;
     }
 

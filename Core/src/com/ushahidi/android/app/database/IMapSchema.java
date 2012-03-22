@@ -23,40 +23,40 @@ package com.ushahidi.android.app.database;
 public interface IMapSchema {
 
     // Deployments
-    public static final String MAP_ID = "_id";
+    public static final String ID = "_id ";
 
-    public static final String MAP_NAME = "name";
+    public static final String MAP_ID = "map_id";
 
-    public static final String MAP_URL = "url";
+    public static final String NAME = "name";
 
-    public static final String MAP_DESC = "desc";
+    public static final String URL = "url";
 
-    public static final String MAP_CAT_ID = "cat_id";
+    public static final String DESC = "desc";
 
-    public static final String MAP_LATITUDE = "latitude";
+    public static final String CAT_ID = "cat_id";
 
-    public static final String MAP_LONGITUDE = "longitude";
+    public static final String LATITUDE = "latitude";
 
-    public static final String MAP_DATE = "discovery_date";
+    public static final String LONGITUDE = "longitude";
 
-    public static final String MAP_ACTIVE = "deployment_active"; // 1 4
-                                                                        // active,
-                                                                        // 0 4
-                                                                        // inactive
+    public static final String DATE = "discovery_date";
+
+    public static final String ACTIVE = "deployment_active"; // 1 4
+                                                             // active,
+                                                             // 0 4
+                                                             // inactive
 
     // Deployments
     public static final String[] MAP_COLUMNS = new String[] {
-            MAP_ID, MAP_NAME, MAP_URL, MAP_DESC, MAP_CAT_ID,
-            MAP_ACTIVE, MAP_LATITUDE, MAP_LONGITUDE, MAP_DATE
+            ID, MAP_ID, NAME, URL, DESC, CAT_ID, ACTIVE, LATITUDE, LONGITUDE, DATE
     };
 
-    public static final String MAP_TABLE = "deployment";
+    public static final String TABLE = "deployment";
 
-    public static final String MAP_TABLE_CREATE = "CREATE VIRTUAL TABLE " + MAP_TABLE
-            + " USING fts3 (" + MAP_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
-            + MAP_CAT_ID + " INTEGER, " + MAP_ACTIVE + " INTEGER, " + MAP_NAME
-            + " TEXT NOT NULL, " + MAP_DATE + " DATE NOT NULL, " + MAP_DESC
-            + " TEXT NOT NULL, " + MAP_URL + " TEXT NOT NULL, " + MAP_LATITUDE
-            + " TEXT NOT NULL, " + MAP_LONGITUDE + " TEXT NOT NULL" + ")";
+    public static final String MAP_TABLE_CREATE = "CREATE VIRTUAL TABLE " + TABLE + " USING fts3 ("
+            + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + MAP_ID + " INTEGER, " + CAT_ID
+            + " INTEGER, " + ACTIVE + " INTEGER, " + NAME + " TEXT NOT NULL, " + DATE
+            + " DATE NOT NULL, " + DESC + " TEXT NOT NULL, " + URL + " TEXT NOT NULL, " + LATITUDE
+            + " TEXT NOT NULL, " + LONGITUDE + " TEXT NOT NULL" + ")";
 
 }

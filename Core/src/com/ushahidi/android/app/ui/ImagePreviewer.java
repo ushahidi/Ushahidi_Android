@@ -80,7 +80,7 @@ public class ImagePreviewer extends Dashboard implements
         if (images.length > 0) {
             for (int i = 0; i < images.length; i++) {
                 
-                imageAdapter.mImageIds.add(ImageManager.getImages(Preferences.savePath,images[i]));
+                //imageAdapter.mImageIds.add(ImageManager.getImages(Preferences.savePath,images[i]));
                 
             }
         }
@@ -129,7 +129,7 @@ public class ImagePreviewer extends Dashboard implements
             Bitmap b = null;
             if (Environment.MEDIA_MOUNTED.equals(state)) {
                 File sdCard = Environment.getExternalStorageDirectory();
-                b = ImageManager.getBitmap(filename, Preferences.savePath);
+               // b = ImageManager.getBitmap(filename, Preferences.savePath);
                 b.compress(CompressFormat.JPEG, 75, byteArrayos);
                 byteArrayos.flush();
 

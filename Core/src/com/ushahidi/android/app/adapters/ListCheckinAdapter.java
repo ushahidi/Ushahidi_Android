@@ -26,8 +26,8 @@ public class ListCheckinAdapter extends BaseListAdapter<ListCheckinModel> {
     }
 
     @Override
-    public void refresh(Context context) {
-        // TODO implement loading of Example model classes
+    public void refresh() {
+      
     }
 
     public View getView(int position, View view, ViewGroup viewGroup) {

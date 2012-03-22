@@ -39,41 +39,33 @@ import android.text.TextUtils;
 
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.util.ApiUtils;
-import com.ushahidi.android.app.util.ReportsApiUtils;
+import com.ushahidi.android.app.util.CategoriesApiUtils;
 
 /**
  * @author eyedol
  */
-public class ReportsHttpClient extends MainHttpClient {
+public class CategoriesHttpClient extends MainHttpClient {
 
     private static MultipartEntity entity;
 
+    private ApiUtils apiUtils;
     /**
      * @param context
      */
-    private Context context;
-    
-    private ApiUtils apiUtils;
-
-    public ReportsHttpClient(Context context) {
+    public CategoriesHttpClient(Context context) {
         super(context);
-        this.context = context;
-        apiUtils = new ApiUtils(this.context);
+        apiUtils = new ApiUtils(context);
     }
 
-    public int getAllReportFromWeb() {
+    public int getCategoriesFromWeb() {
         HttpResponse response;
-        String incidents = "";
+        String categoriesResponse = "";
         
-        //get the right domain to work with
+      //get the right domain to work with
         apiUtils.updateDomain();
-        
         StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
-        uriBuilder.append("/api?task=incidents");
-        uriBuilder.append("&by=all");
-        uriBuilder.append("&limit=" + Preferences.totalReports);
+        uriBuilder.append("/api?task=categories");
         uriBuilder.append("&resp=json");
-        
         try {
             response = GetURL(uriBuilder.toString());
 
@@ -86,11 +78,12 @@ public class ReportsHttpClient extends MainHttpClient {
 
             if (statusCode == 200) {
 
-                incidents = GetText(response);
+                categoriesResponse = GetText(response);
 
-                ReportsApiUtils reportsApiUtils = new ReportsApiUtils(incidents);
-                if (reportsApiUtils.saveReports(context)) {
-                    Preferences.incidentsResponse = incidents;
+                CategoriesApiUtils categoriesApiUtils = new CategoriesApiUtils(categoriesResponse);
+                if (categoriesApiUtils.getCategoriesList()) {
+                    Preferences.categoriesResponse = categoriesResponse;
+
                     return 0;
                 }
 

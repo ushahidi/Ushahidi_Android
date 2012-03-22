@@ -96,13 +96,15 @@ public class CheckinList extends Activity {
     private List<Checkin> checkins;
 
     private TextView emptyListText;
+    
+    private ApiUtils apiUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.checkin_list);
-
+        apiUtils = new ApiUtils(this);
         listCheckins = (PullToRefreshListView)findViewById(R.id.list_checkins);
         emptyListText = (TextView)findViewById(R.id.empty);
         listCheckins.setOnRefreshListener(new OnRefreshListener() {
@@ -308,7 +310,7 @@ public class CheckinList extends Activity {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            status = ApiUtils.processCheckins(appContext);
+            status = apiUtils.processCheckins();
             return status;
         }
 
@@ -333,7 +335,7 @@ public class CheckinList extends Activity {
     // get checkins from the db
     public void showCheckins() {
 
-        Cursor cursor;
+        /*Cursor cursor;
 
         cursor = MainApplication.mDb.fetchAllCheckins();
         String name;
@@ -417,7 +419,7 @@ public class CheckinList extends Activity {
         cursor.close();
         ila.notifyDataSetChanged();
         listCheckins.setAdapter(ila);
-        displayEmptyListText();
+        displayEmptyListText();*/
     }
 
     @Override

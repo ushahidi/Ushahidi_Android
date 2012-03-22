@@ -18,7 +18,6 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.MenuItem;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -38,7 +37,9 @@ import com.ushahidi.android.app.adapters.ListMapTabletAdapter;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.helpers.ActionModeHelper;
 import com.ushahidi.android.app.models.ListMapModel;
+import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.MapsHttpClient;
+import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.ui.phone.ReportTabActivity;
@@ -60,6 +61,8 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
 
     private static final int DIALOG_ADD_DEPLOYMENT = 2;
 
+    private static final int DIALOG_SHOW_MESSAGE = 3;
+
     private LocationManager mLocationMgr = null;
 
     private static Location location;
@@ -68,9 +71,9 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
 
     private Handler mHandler;
 
-    private long mMapId = 0;
-    
-    private String url = "";
+    private int mId = 0;
+
+    private int mapId = 0;
 
     private ListMapModel mListMapModel;
 
@@ -92,15 +95,16 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
 
     private ListMapFragmentListener listener = null;
 
-    private String TAG = ListMapFragment.class.getSimpleName();
-
     private ViewGroup mRootView;
+
+    private ApiUtils apiUtils;
+
+    private String errorMessage = "";
 
     static private final String STATE_CHECKED = "com.ushahidi.android.app.activity.STATE_CHECKED";
 
     public ListMapFragment() {
-        super(ListMapView.class, ListMapAdapter.class, R.layout.list_map, 0,
-                android.R.id.list);
+        super(ListMapView.class, ListMapAdapter.class, R.layout.list_map, 0, android.R.id.list);
         mHandler = new Handler();
     }
 
@@ -113,11 +117,11 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        
+
         mListMapView = new ListMapView(getActivity());
         mListMapAdapter = new ListMapTabletAdapter(getActivity());
         mListMapModel = new ListMapModel();
-
+        apiUtils = new ApiUtils(getActivity());
         if (Util.isHoneycomb()) {
             mListMapView.mListView.setLongClickable(true);
             mListMapView.mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -179,7 +183,7 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
     final Runnable mDeleteMapById = new Runnable() {
         public void run() {
             boolean status = false;
-            status = mListMapModel.deleteMapById(mMapId);
+            status = mListMapModel.deleteMapById(mId);
 
             try {
                 if (status) {
@@ -200,7 +204,7 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
     final Runnable fetchMapList = new Runnable() {
         public void run() {
             try {
-                mListMapAdapter.refresh(getActivity());
+                mListMapAdapter.refresh();
                 mListMapView.mListView.setAdapter(mListMapAdapter);
                 mListMapView.displayEmptyListText();
             } catch (Exception e) {
@@ -215,7 +219,7 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
     final Runnable filterMapList = new Runnable() {
         public void run() {
             try {
-                mListMapAdapter.refresh(getActivity(), filter);
+                mListMapAdapter.refresh(filter);
                 mListMapView.mListView.setAdapter(mListMapAdapter);
                 mListMapView.displayEmptyListText();
                 mListMapView.mListView.requestFocus();
@@ -256,7 +260,7 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
     };
 
     public void refreshMapLists() {
-        mListMapAdapter.refresh(getActivity());
+        mListMapAdapter.refresh();
         mListMapView.mListView.setAdapter(mListMapAdapter);
         mListMapView.displayEmptyListText();
     }
@@ -282,9 +286,9 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
     }
 
     public boolean performAction(android.view.MenuItem item, int position) {
-        
-        mMapId = Long.valueOf(mListMapAdapter.getItem(position).getId());
-        url = mListMapAdapter.getItem(position).getUrl();
+
+        mId = mListMapAdapter.getItem(position).getId();
+        mapId = mListMapAdapter.getItem(position).getMapId();
         if (item.getItemId() == R.id.map_delete) {
             // Delete by ID
             edit = false;
@@ -329,19 +333,20 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
 
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         log("on map itemClicked");
-        final String deploymentId = mListMapAdapter.getItem(position).getId();
+        final int sId = mListMapAdapter.getItem(position).getId();
+        ;
 
-        if (isMapActive(Integer.parseInt(deploymentId))) {
+        if (isMapActive(sId)) {
             if (listener != null) {
-                listener.onMapSelected(Integer.parseInt(deploymentId));
+                listener.onMapSelected(sId);
             }
         } else {
             FetchMapReportTask fetchMapReportTask = new FetchMapReportTask(this);
-            fetchMapReportTask.id = deploymentId;
+            fetchMapReportTask.id = sId;
             fetchMapReportTask.execute((String)null);
             if (fetchMapReportTask.getStatus() == android.os.AsyncTask.Status.FINISHED) {
                 if (listener != null) {
-                    listener.onMapSelected(Integer.parseInt(deploymentId));
+                    listener.onMapSelected(sId);
                 }
             }
         }
@@ -352,19 +357,19 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
     public void onListItemClick(ListView l, View v, int position, long id) {
         l.setItemChecked(position, true);
 
-        final String deploymentId = mListMapAdapter.getItem(position).getId();
+        final int sId = mListMapAdapter.getItem(position).getId();
 
-        if (isMapActive(Integer.parseInt(deploymentId))) {
+        if (isMapActive(sId)) {
             if (listener != null) {
-                listener.onMapSelected(Integer.parseInt(deploymentId));
+                listener.onMapSelected(sId);
             }
         } else {
             FetchMapReportTask fetchMapReportTask = new FetchMapReportTask(this);
-            fetchMapReportTask.id = deploymentId;
+            fetchMapReportTask.id = sId;
             fetchMapReportTask.execute((String)null);
             if (fetchMapReportTask.getStatus() == android.os.AsyncTask.Status.FINISHED) {
                 if (listener != null) {
-                    listener.onMapSelected(Integer.parseInt(deploymentId));
+                    listener.onMapSelected(sId);
                 }
             }
         }
@@ -378,7 +383,7 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
      * @return boolean
      */
 
-    public boolean isMapActive(long id) {
+    public boolean isMapActive(int id) {
         Preferences.loadSettings(getActivity());
         if (Preferences.activeDeployment == id) {
             return true;
@@ -437,19 +442,6 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
         }
     }
 
-    /**
-     * Checks if checkins is enabled on the configured Ushahidi deployment.
-     */
-    public void isCheckinsEnabled() {
-
-        if (ApiUtils.isCheckinEnabled(getActivity())) {
-            Preferences.isCheckinEnabled = 1;
-        } else {
-            Preferences.isCheckinEnabled = 0;
-        }
-        Preferences.saveSettings(getActivity());
-    }
-
     public void goToReports() {
         Intent launchIntent;
         Bundle bundle = new Bundle();
@@ -492,6 +484,20 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
 
     protected void createDialog(int d) {
         switch (d) {
+
+            case DIALOG_SHOW_MESSAGE:
+                AlertDialog.Builder messageBuilder = new AlertDialog.Builder(getActivity());
+                messageBuilder.setMessage(errorMessage).setPositiveButton(getString(R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog showDialog = messageBuilder.create();
+                showDialog.show();
+                break;
+
             case DIALOG_DISTANCE:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(R.string.select_distance);
@@ -538,12 +544,11 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
                 // if edit was selected at the context menu, populate fields
                 // with existing map details
                 if (edit) {
-                    final List<ListMapModel> listMap = mListMapModel.loadMapById(String
-                            .valueOf(mMapId), url);
+                    final List<ListMapModel> listMap = mListMapModel.loadMapById(mId, mapId);
                     addMapView.setMapName(listMap.get(0).getName());
                     addMapView.setMapDescription(listMap.get(0).getDesc());
                     addMapView.setMapUrl(listMap.get(0).getUrl());
-                    addMapView.setMapId(String.valueOf(listMap.get(0).getId()));
+                    addMapView.setMapId(listMap.get(0).getId());
                 }
 
                 final AlertDialog.Builder addBuilder = new AlertDialog.Builder(getActivity());
@@ -635,7 +640,7 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
 
                 toastShort(R.string.deployment_fetched_successful);
             }
-            mListMapAdapter.refresh(getActivity());
+            mListMapAdapter.refresh();
             mListMapView.mListView.setAdapter(mListMapAdapter);
             mListMapView.displayEmptyListText();
             refreshState = false;
@@ -650,7 +655,7 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
 
     class FetchMapReportTask extends ProgressTask {
 
-        protected String id;
+        protected int id;
 
         protected Integer status;
 
@@ -662,13 +667,20 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
         @Override
         protected Boolean doInBackground(String... strings) {
             try {
-                if (id != null)
+                if (id != 0) {
                     mListMapModel.activateDeployment(getActivity(), id);
-                isCheckinsEnabled();
-                if (Preferences.isCheckinEnabled == 0) {
-                    status = ApiUtils.processReports(getActivity());
+
+                    if (apiUtils.isCheckinEnabled()) {
+                        status = apiUtils.processCheckins();
+                    } else {
+                        // fetch categories
+                        new CategoriesHttpClient(getActivity()).getCategoriesFromWeb();
+
+                        // fetch reports
+                        status = new ReportsHttpClient(getActivity()).getAllReportFromWeb();
+                    }
                 } else {
-                    status = ApiUtils.processCheckins(getActivity());
+                    status = 113;
                 }
 
                 Thread.sleep(1000);
@@ -684,22 +696,27 @@ public class ListMapFragment extends BaseListFragment<ListMapView, ListMapModel,
         protected void onPostExecute(Boolean success) {
             super.onPostExecute(success);
             this.dialog.cancel();
-            try {
-                if (success) {
-                    if (status == 4) {
-                        toastLong(R.string.internet_connection);
-                    } else if (status == 3) {
-                        toastLong(R.string.invalid_ushahidi_instance);
-                    } else if (status == 2) {
-                        toastLong(R.string.ushahidi_sync);
-                    } else if (status == 1) {
-                        toastLong(R.string.could_not_fetch_reports);
-                    } else if (status == 0) {
+            if (success) {
+                if (status == 0) {
+                    onLoaded(success);
+                } else if (status == 100) {
+                    errorMessage = getString(R.string.internet_connection);
+                    createDialog(DIALOG_SHOW_MESSAGE);
+                } else if (status == 99) {
+                    errorMessage = getString(R.string.failed_to_add_report_online_db_error);
+                    createDialog(DIALOG_SHOW_MESSAGE);
+                } else if (status == 112) {
+                    errorMessage = getString(R.string.network_error);
+                    createDialog(DIALOG_SHOW_MESSAGE);
+                } else {
+                    errorMessage = getString(R.string.error_occured) + " "
+                            + getString(R.string.reports).toLowerCase();
+                    createDialog(DIALOG_SHOW_MESSAGE);
 
-                    }
                 }
-            } catch (IllegalArgumentException e) {
-                Log.e(TAG, "IllegalArgumentException " + e.toString());
+
+            } else {
+                toastLong(R.string.could_not_fetch_reports);
             }
         }
     }

@@ -33,9 +33,7 @@ public class Media implements IDbEntity {
 
     private int type;
 
-    private String imageThumbnail;
-
-    private String imageMediumSize;
+    private String link;
 
     /*
      * (non-Javadoc)
@@ -80,19 +78,12 @@ public class Media implements IDbEntity {
         this.type = type;
     }
 
-    public String getImageThumbnail() {
-        return this.imageThumbnail;
+    public String getLink() {
+        return this.link;
     }
 
-    public void setImageThumbnail(String imageThumbnail) {
-        this.imageThumbnail = imageThumbnail;
+    public void setLink(String link) {
+        this.link = link;
     }
 
-    public String getImageMediumSize() {
-        return this.imageMediumSize;
-    }
-
-    public void setImageMediumSize(String imageMediumSize) {
-        this.imageMediumSize = imageMediumSize;
-    }
 }

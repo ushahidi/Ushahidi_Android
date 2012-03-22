@@ -89,24 +89,24 @@ public class Deployments {
         fullUrl.append("&lon=" + String.valueOf(lon));
         HttpResponse response;
 
-        try {
-
-            response = MainHttpClient.GetURL(fullUrl.toString());
+        //try {
+            response = null;
+            //response = MainHttpClient.GetURL(fullUrl.toString());
             if (response == null) {
                 return null;
             }
             final int statusCode = response.getStatusLine().getStatusCode();
 
             if (statusCode == 200) {
-
-                return MainHttpClient.GetText(response);
+                 return null;
+               // return MainHttpClient.GetText(response);
             }
             // UshahidiPref.incidentsResponse = incidents;
-        } catch (MalformedURLException e) {
-            return null;
-        } catch (IOException e) {
-            return null;
-        }
+        //} catch (MalformedURLException e) {
+           // return null;
+        //} catch (IOException e) {
+           // return null;
+       // }
         return null;
     }
 

@@ -28,11 +28,11 @@ import com.ushahidi.android.app.entities.Map;
 
 public interface IMapDao {
 
-    public List<Map> fetchMapById(long id);
+    public List<Map> fetchMapById(int id);
 
-    public void setActiveDeployment(long id);
+    public void setActiveDeployment(int id);
 
-    public boolean deleteMapById(long id);
+    public boolean deleteMapById(int id);
 
     public boolean deleteAllMap();
     
@@ -51,6 +51,6 @@ public interface IMapDao {
     
     public List<Map> fetchMap(Cursor cursor);
 
-    public List<Map> fetchMapByIdAndUrl(long id, String Url);
+    public List<Map> fetchMapByIdAndUrl(int id, int mapId);
 
 }

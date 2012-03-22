@@ -136,7 +136,7 @@ public abstract class BaseListActivity<V extends View, M extends Model, L extend
 
         @Override
         protected Boolean doInBackground(String... args) {
-            adapter.refresh(activity);
+            adapter.refresh();
             return true;
         }
 

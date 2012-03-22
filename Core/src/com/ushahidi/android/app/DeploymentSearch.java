@@ -87,12 +87,15 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
 
     private static final String TAG = DeploymentSearch.class.getSimpleName();
 
+    private ApiUtils apiUtils;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.deployment_search);
         setTitleFromActivityLabel(R.id.title_text);
         promptForDeployment();
+        apiUtils = new ApiUtils(this);
         mTextView = (TextView)findViewById(R.id.search_deployment);
         mListView = (ListView)findViewById(R.id.deployment_list);
         mEmptyList = (TextView)findViewById(R.id.empty_list_for_deployments);
@@ -300,12 +303,12 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
         if (cursor != null) {
             Log.i("DeploymentSearch", "String: " + query);
             if (cursor.moveToFirst()) {
-                
+
                 int deploymentIdIndex = cursor.getColumnIndexOrThrow(BaseColumns._ID);
                 int deploymentNameIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_NAME);
                 int deploymentDescIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_DESC);
                 int deploymentUrlIndex = cursor.getColumnIndexOrThrow(MapDb.DEPLOYMENT_URL);
-                
+
                 if (deploymentAdapter != null) {
                     deploymentAdapter.removeItems();
                     deploymentAdapter.notifyDataSetChanged();
@@ -412,10 +415,10 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
                                 if ((ApiUtils.validateUshahidiInstance(deploymentUrl.getText()
                                         .toString()))
                                         && !(TextUtils.isEmpty(deploymentName.getText().toString()))) {
-                                    Database.map.addMap(deploymentName.getText()
-                                            .toString(),deploymentName.getText()
-                                            .toString(), deploymentUrl.getText().toString());
-                                    
+                                    Database.map.addMap(deploymentName.getText().toString(),
+                                            deploymentName.getText().toString(), deploymentUrl
+                                                    .getText().toString());
+
                                 } else {
                                     Util.showToast(DeploymentSearch.this, R.string.fix_error);
                                 }
@@ -473,7 +476,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
                 }
             }
         }
-        
+
         // clear persistent data
         SharedPreferences.Editor editor = getPreferences(0).edit();
         editor.putString("title", "");
@@ -537,19 +540,6 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
         }
     };
 
-    /**
-     * Checks if checkins is enabled on the configured Ushahidi deployment.
-     */
-    public void isCheckinsEnabled() {
-
-        if (ApiUtils.isCheckinEnabled(this)) {
-            Preferences.isCheckinEnabled = 1;
-        } else {
-            Preferences.isCheckinEnabled = 0;
-        }
-        Preferences.saveSettings(this);
-    }
-
     // thread class
     private class RefreshDeploymentTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -568,7 +558,7 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
             refreshState = true;
             updateRefreshStatus();
             deployments = new Deployments(appContext);
-           
+
         }
 
         @Override
@@ -629,11 +619,11 @@ public class DeploymentSearch extends Dashboard implements LocationListener {
         @Override
         protected Integer doInBackground(Void... params) {
             activateDeployment(id);
-            isCheckinsEnabled();
-            if (Preferences.isCheckinEnabled == 0) {
-                status = ApiUtils.processReports(appContext);
+
+            if (apiUtils.isCheckinEnabled()) {
+                status = apiUtils.processReports();
             } else {
-                status = ApiUtils.processCheckins(appContext);
+                status = apiUtils.processCheckins();
             }
 
             return status;

@@ -90,7 +90,7 @@ public abstract class BaseListAdapter<M extends Model> extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public abstract void refresh(Context context);
+    public abstract void refresh();
 
     protected void log(String message) {
         Log.i(getClass().getName(), message);

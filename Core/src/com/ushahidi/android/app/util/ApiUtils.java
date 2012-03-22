@@ -30,6 +30,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -51,7 +53,17 @@ import com.ushahidi.android.app.net.MainHttpClient;
  * 
  * @author eyedol
  */
-public class ApiUtils {
+public class ApiUtils extends MainHttpClient {
+
+    Context context;
+
+    /**
+     * @param context
+     */
+    public ApiUtils(Context context) {
+        super(context);
+        this.context = context;
+    }
 
     private static final String CLASS_TAG = Util.class.getSimpleName();
 
@@ -75,16 +87,18 @@ public class ApiUtils {
 
     private static String jsonString;
 
-    public static boolean isCheckinEnabled(Context context) {
+    public boolean checkForCheckin() {
 
         Preferences.loadSettings(context);
-
+        
+        updateDomain();
+        
         StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
         uriBuilder.append("/api?task=version");
         uriBuilder.append("&resp=json");
 
         try {
-            response = MainHttpClient.GetURL(uriBuilder.toString());
+            response = GetURL(uriBuilder.toString());
             if (response == null) {
                 return false;
             }
@@ -93,17 +107,13 @@ public class ApiUtils {
 
             if (statusCode == 200) {
 
-                jsonString = MainHttpClient.GetText(response);
+                jsonString = GetText(response);
                 JSONObject jsonObject = new JSONObject(jsonString);
                 int checkinStatus = jsonObject.getJSONObject("payload").getInt("checkins");
-
+                log("CheckinStatus "+checkinStatus+ " URL "+uriBuilder.toString());
                 if (checkinStatus == 1) {
                     return true;
-                } else {
-                    return false;
                 }
-
-            } else {
                 return false;
             }
         } catch (IOException e) {
@@ -113,15 +123,20 @@ public class ApiUtils {
 
             return false;
         }
+        return false;
     }
 
-    public static void checkForCheckin(Context context) {
-        if (isCheckinEnabled(context)) {
+    public boolean isCheckinEnabled() {
+        final boolean checkinEnabled;
+        if (checkForCheckin()) {
             Preferences.isCheckinEnabled = 1;
+            checkinEnabled = true;
         } else {
             Preferences.isCheckinEnabled = 0;
+            checkinEnabled = false;
         }
         Preferences.saveSettings(context);
+        return checkinEnabled;
     }
 
     /**
@@ -147,14 +162,14 @@ public class ApiUtils {
      * 
      * @return int - status
      */
-    public static int processCheckins(Context context) {
+    public int processCheckins() {
         String strCheckinsJSON = "";
 
         if (Util.isConnected(context)) {
 
             // check if the ushahidi deployment domain has been updated or
             // not
-            ApiUtils.updateDomain(context);
+            updateDomain();
             strCheckinsJSON = NetworkServices.getCheckins(Preferences.domain, null, null);
 
             if (!TextUtils.isEmpty(strCheckinsJSON) && strCheckinsJSON != null) {
@@ -166,10 +181,12 @@ public class ApiUtils {
 
             if (mCheckins != null && mUsers != null) {
                 // clear existin data
-                MainApplication.mDb.deleteAllCheckins();
-                MainApplication.mDb.deleteUsers();
-                MainApplication.mDb.addUsers(mUsers);
-                MainApplication.mDb.addCheckins(mCheckins);
+                /*
+                 * MainApplication.mDb.deleteAllCheckins();
+                 * MainApplication.mDb.deleteUsers();
+                 * MainApplication.mDb.addUsers(mUsers);
+                 * MainApplication.mDb.addCheckins(mCheckins);
+                 */
                 return 0;
 
             } else {
@@ -187,12 +204,12 @@ public class ApiUtils {
      * 
      * @return int - status
      */
-    public static int processReports(Context context) {
+    public int processReports() {
         try {
             if (Util.isConnected(context)) {
                 // check if the ushahidi deployment domain has been updated or
                 // not
-                ApiUtils.updateDomain(context);
+                updateDomain();
                 if (Categories.getAllCategoriesFromWeb()) {
 
                     mNewCategories = HandleXml.processCategoriesXml(Preferences.categoriesResponse);
@@ -214,9 +231,11 @@ public class ApiUtils {
                             + " incidents total:" + mNewIncidents.size());
                     // delete all categories
                     MainApplication.mDb.deleteAllCategories();
-                    MainApplication.mDb.deleteAllIncidents();
-                    MainApplication.mDb.addCategories(mNewCategories, false);
-                    MainApplication.mDb.addIncidents(mNewIncidents, false);
+                    /*
+                     * MainApplication.mDb.deleteAllIncidents();
+                     * MainApplication.mDb.addCategories(mNewCategories, false);
+                     * MainApplication.mDb.addIncidents(mNewIncidents, false);
+                     */
                     return 0;
 
                 } else {
@@ -237,7 +256,7 @@ public class ApiUtils {
      * 
      * @param context - the activity calling this method.
      */
-    public static void fetchReports(final Context context) {
+    public void fetchReports() {
         try {
             if (Util.isConnected(context)) {
 
@@ -252,8 +271,10 @@ public class ApiUtils {
                 Preferences.totalReportsFetched = mNewCategories.size() + " Categories \n"
                         + mNewIncidents.size() + " Reports";
 
-                MainApplication.mDb.addCategories(mNewCategories, false);
-                MainApplication.mDb.addIncidents(mNewIncidents, false);
+                /*
+                 * MainApplication.mDb.addCategories(mNewCategories, false);
+                 * MainApplication.mDb.addIncidents(mNewIncidents, false);
+                 */
 
             } else {
                 return;
@@ -290,7 +311,7 @@ public class ApiUtils {
      * 
      * @param context - the calling activity.
      */
-    public static void updateDomain(Context context) {
+    public void updateDomain() {
 
         Preferences.loadSettings(context);
 
@@ -299,14 +320,14 @@ public class ApiUtils {
         uriBuilder.append("&resp=json");
 
         try {
-            response = MainHttpClient.GetURL(uriBuilder.toString());
+            response = GetURL(uriBuilder.toString());
             if (response != null) {
 
                 final int statusCode = response.getStatusLine().getStatusCode();
 
                 if (statusCode == 200) {
 
-                    jsonString = MainHttpClient.GetText(response);
+                    jsonString = GetText(response);
                     JSONObject jsonObject = new JSONObject(jsonString);
                     String changedDomain = jsonObject.getJSONObject("payload").getString("domain");
 
@@ -324,4 +345,5 @@ public class ApiUtils {
             Log.e(CLASS_TAG, e.toString());
         }
     }
+
 }

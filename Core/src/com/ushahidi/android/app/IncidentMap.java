@@ -51,7 +51,7 @@ import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
-public class IncidentMap extends MapActivity {
+public class IncidentMap {
     private MapView mapView = null;
 
     private static final int HOME = Menu.FIRST + 1;
@@ -102,7 +102,8 @@ public class IncidentMap extends MapActivity {
 
     private String reportDescription;
 
-    @Override
+    /*
+     * @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -171,7 +172,7 @@ public class IncidentMap extends MapActivity {
     /**
      * add marker to the map
      */
-    private void populateMap() {
+  /*  private void populateMap() {
         Drawable marker = getResources().getDrawable(R.drawable.map_marker_red);
         marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
         mapView.getOverlays().add(new SitesOverlay(marker, mapView));
@@ -310,7 +311,7 @@ public class IncidentMap extends MapActivity {
 
     /**
      * Restart the receiving, when we are back on line.
-     */
+     *
     @Override
     public void onResume() {
         super.onResume();
@@ -504,16 +505,16 @@ public class IncidentMap extends MapActivity {
         @Override
         protected OverlayItem createItem(int i) {
             return items.get(i);
-        }
+        }*/
 
         /*@Override
         protected boolean onBalloonTap(int i) {
             return true;
-        }*/
+        }*
 
         @Override
         public int size() {
             return (items.size());
-        }
-    }
+        }*
+    }*/
 }

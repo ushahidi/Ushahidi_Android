@@ -160,14 +160,14 @@ public class IncidentView extends MapActivity implements AdapterView.OnItemSelec
 
             thumbnails = media.split(",");
             for (int i = 0; i < thumbnails.length; i++) {
-                thumbnailAdapter.mImageIds.add(ImageManager.getImages(Preferences.savePath,thumbnails[i]));
+                //thumbnailAdapter.mImageIds.add(ImageManager.getImages(Preferences.savePath,thumbnails[i]));
             }
 
             images = image.split(",");
 
             for (int i = 0; i < images.length; i++) {
 
-                imageAdapter.mImageIds.add(ImageManager.getImages(Preferences.savePath,images[i]));
+                //imageAdapter.mImageIds.add(ImageManager.getImages(Preferences.savePath,images[i]));
             }
 
         } else {

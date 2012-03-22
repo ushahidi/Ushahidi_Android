@@ -62,9 +62,9 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel> implemen
     }
 
     @Override
-    public void refresh(Context context) {
+    public void refresh() {
         mListReportModel = new ListReportModel();
-        final boolean loaded = mListReportModel.load(context);
+        final boolean loaded = mListReportModel.load();
         if (loaded) {
             items = mListReportModel.getReports(context);
             this.setItems(items);
@@ -72,9 +72,9 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel> implemen
 
     }
 
-    public void refresh(Context context, String category) {
+    public void refresh(String category) {
         mListReportModel = new ListReportModel();
-        final boolean loaded = mListReportModel.loadReportByCategory(context, category);
+        final boolean loaded = mListReportModel.loadReportByCategory(category);
         if (loaded) {
             items = mListReportModel.getReports(context);
             this.setItems(items);

@@ -134,11 +134,12 @@ public class CheckinActivity extends MapUserLocation {
 
     private double longitude;
 
+    ApiUtils apiUtils;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.checkin);
-
+        apiUtils = new ApiUtils(this);
         Preferences.loadSettings(CheckinActivity.this);
 
         checkinButton = (Button)findViewById(R.id.perform_checkin_button);
@@ -546,12 +547,14 @@ public class CheckinActivity extends MapUserLocation {
          * Check if there is internet connection on the device.
          */
         if (com.ushahidi.android.app.util.Util.isConnected(CheckinActivity.this)) {
-            ApiUtils.updateDomain(this);
+            apiUtils.updateDomain();
             String domain = Preferences.domain;
             String firstname = firstName.getText().toString();
             String lastname = lastName.getText().toString();
             String email = emailAddress.getText().toString();
-            String imei = com.ushahidi.android.app.checkin.CheckinUtil.IMEI(CheckinActivity.this);
+            String imei = "";
+            //FIXME uncomment the line below when you have IMEI check enabled
+            //String imei = com.ushahidi.android.app.checkin.CheckinUtil.IMEI(CheckinActivity.this);
             this.checkinDetails = checkinMessageText.getText().toString();
             postCheckin(imei, domain, firstname, lastname, email);
         } else {

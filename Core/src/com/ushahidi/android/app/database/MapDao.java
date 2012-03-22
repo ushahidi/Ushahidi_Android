@@ -27,6 +27,7 @@ import java.util.List;
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
@@ -46,21 +47,22 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
     }
 
     @Override
-    public List<Map> fetchMapById(long id) {
+    public List<Map> fetchMapById(int id) {
 
-        String selection = MAP_ID + " = ?";
-        String[] selectionArgs = new String[] {
-            String.valueOf(id)
-        };
+        // For some reason, selectionArgs doesn't map the values to ID
+        // during query execution
+        String selection = "rowid =" + id;
 
         String[] columns = new String[] {
-                MAP_ID, MAP_NAME, MAP_DESC, MAP_LATITUDE, MAP_LONGITUDE, MAP_URL
+                "rowid", MAP_ID, NAME, DESC, LATITUDE, LONGITUDE, URL
         };
 
-        final String sortOrder = MAP_DATE + " DESC";
+        final String sortOrder = DATE + " DESC";
 
         listMap = new ArrayList<Map>();
-        cursor = super.query(MAP_TABLE, columns, selection, selectionArgs, sortOrder);
+
+        cursor = super.query(TABLE, columns, selection, null, sortOrder);
+
         if (cursor != null) {
 
             cursor.moveToFirst();
@@ -75,30 +77,27 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
     }
 
     @Override
-    public void setActiveDeployment(long id) {
+    public void setActiveDeployment(int id) {
 
-        String sql = "UPDATE " + MAP_TABLE + " SET " + MAP_ACTIVE + "= ? WHERE " + MAP_ID + "= ?";
+        String sql = "UPDATE " + TABLE + " SET " + ACTIVE + "= ? WHERE " + "rowid= ?";
 
-        mDb.rawQuery(sql, new String[] {
+        super.rawQuery(sql, new String[] {
                 "1", String.valueOf(id)
         });
     }
 
     @Override
-    public boolean deleteMapById(long id) {
-        final String selectionArgs[] = {
-            String.valueOf(id)
-        };
+    public boolean deleteMapById(int id) {
 
-        final String selection = MAP_ID + " = ? ";
+        final String selection = " rowid =" + id;
 
-        return super.delete(MAP_TABLE, selection, selectionArgs) > 0;
+        return super.delete(TABLE, selection, null) > 0;
 
     }
 
     @Override
     public boolean deleteAllMap() {
-        return super.delete(MAP_TABLE, null, null) > 0;
+        return super.delete(TABLE, null, null) > 0;
     }
 
     /**
@@ -106,31 +105,26 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
      */
     @Override
     public boolean deleteAllAutoMap() {
-        String whereClause = MAP_ID + " <> ?";
-        String whereArgs[] = {
-            "0"
-        };
-        return super.delete(MAP_TABLE, whereClause, whereArgs) > 0;
+        String whereClause = ID + " <> 0";
+
+        return super.delete(TABLE, whereClause, null) > 0;
     }
 
     @Override
     public boolean updateMap(Map map) {
         initialValues = new ContentValues();
-        initialValues.put(MAP_DESC, map.getDesc());
-        initialValues.put(MAP_NAME, map.getName());
-        initialValues.put(MAP_URL, map.getUrl());
-        String whereClause = MAP_ID + " = ?";
-        String whereArgs[] = {
-            String.valueOf(map.getDbId())
-        };
+        initialValues.put(DESC, map.getDesc());
+        initialValues.put(NAME, map.getName());
+        initialValues.put(URL, map.getUrl());
+        String whereClause = "rowid = "+map.getDbId();
 
-        return super.update(MAP_TABLE, initialValues, whereClause, whereArgs) > 0;
+        return super.update(TABLE, initialValues, whereClause, null) > 0;
     }
 
     @Override
     public boolean addMap(Map map) {
         setContentValue(map);
-        return super.insert(MAP_TABLE, getContentValue()) > 0;
+        return super.insert(TABLE, getContentValue()) > 0;
     }
 
     @Override
@@ -150,10 +144,12 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
 
     @Override
     public List<Map> fetchAllMaps() {
-        final String sortOrder = MAP_DATE + " DESC";
-
+        final String sortOrder = DATE + " DESC";
+        String[] columns = new String[] {
+                "rowid", MAP_ID, NAME, URL, DESC, CAT_ID, ACTIVE, LATITUDE, LONGITUDE, DATE
+        };
         listMap = new ArrayList<Map>();
-        cursor = super.query(MAP_TABLE, null, null, null, sortOrder);
+        cursor = super.query(TABLE, columns, null, null, sortOrder);
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -168,20 +164,19 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
     }
 
     @Override
-    public List<Map> fetchMapByIdAndUrl(long id, String url) {
-        String selection = MAP_ID + " = ? AND " + MAP_URL + "= ?";
-        String[] selectionArgs = new String[] {
-                String.valueOf(id), url
-        };
+    public List<Map> fetchMapByIdAndUrl(int id, int mapId) {
 
+        String selection = " rowid =" + DatabaseUtils.sqlEscapeString(String.valueOf(id)) + " AND "
+                + MAP_ID + "="+mapId;
+        
         String[] columns = new String[] {
-                MAP_ID, MAP_NAME, MAP_DESC, MAP_LATITUDE, MAP_LONGITUDE, MAP_URL
+                "rowid", NAME, DESC, LATITUDE, LONGITUDE, URL
         };
 
-        final String sortOrder = MAP_DATE + " DESC";
+        final String sortOrder = DATE + " DESC";
 
         listMap = new ArrayList<Map>();
-        cursor = super.query(MAP_TABLE, columns, selection, selectionArgs, sortOrder);
+        cursor = super.query(TABLE, columns, selection, null, sortOrder);
         if (cursor != null) {
 
             cursor.moveToFirst();
@@ -213,16 +208,15 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
 
     private void setContentValue(Map map) {
         initialValues = new ContentValues();
-
-        initialValues.put(MAP_ID, map.getDbId());
-        initialValues.put(MAP_CAT_ID, map.getCatId());
-        initialValues.put(MAP_DESC, map.getDesc());
-        initialValues.put(MAP_DATE, map.getDate());
-        initialValues.put(MAP_NAME, map.getName());
-        initialValues.put(MAP_ACTIVE, map.getActive());
-        initialValues.put(MAP_URL, map.getUrl());
-        initialValues.put(MAP_LATITUDE, map.getLat());
-        initialValues.put(MAP_LONGITUDE, map.getLon());
+        initialValues.put(MAP_ID, map.getMapId());
+        initialValues.put(CAT_ID, map.getCatId());
+        initialValues.put(DESC, map.getDesc());
+        initialValues.put(DATE, map.getDate());
+        initialValues.put(NAME, map.getName());
+        initialValues.put(ACTIVE, map.getActive());
+        initialValues.put(URL, map.getUrl());
+        initialValues.put(LATITUDE, map.getLat());
+        initialValues.put(LONGITUDE, map.getLon());
     }
 
     private ContentValues getContentValue() {
@@ -234,6 +228,7 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
     protected Map cursorToEntity(Cursor cursor) {
         Map map = new Map();
         int idIndex;
+        int mapIdIndex;
         int nameIndex;
         int urlIndex;
         int descIndex;
@@ -245,49 +240,55 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
 
         if (cursor != null) {
 
-            if (cursor.getColumnIndex(MAP_ID) != -1) {
-                idIndex = cursor.getColumnIndexOrThrow(MAP_ID);
+            if (cursor.getColumnIndex("rowid") != -1) {
+                idIndex = cursor.getColumnIndexOrThrow("rowid");
 
                 map.setDbId(cursor.getInt(idIndex));
             }
 
-            if (cursor.getColumnIndex(MAP_NAME) != -1) {
-                nameIndex = cursor.getColumnIndexOrThrow(MAP_NAME);
+            if (cursor.getColumnIndex(MAP_ID) != -1) {
+                mapIdIndex = cursor.getColumnIndexOrThrow(MAP_ID);
+
+                map.setMapId(cursor.getInt(mapIdIndex));
+            }
+
+            if (cursor.getColumnIndex(NAME) != -1) {
+                nameIndex = cursor.getColumnIndexOrThrow(NAME);
                 map.setName(cursor.getString(nameIndex));
             }
 
-            if (cursor.getColumnIndex(MAP_URL) != -1) {
-                urlIndex = cursor.getColumnIndexOrThrow(MAP_URL);
+            if (cursor.getColumnIndex(URL) != -1) {
+                urlIndex = cursor.getColumnIndexOrThrow(URL);
                 map.setUrl(cursor.getString(urlIndex));
             }
 
-            if (cursor.getColumnIndex(MAP_DESC) != -1) {
-                descIndex = cursor.getColumnIndexOrThrow(MAP_DESC);
+            if (cursor.getColumnIndex(DESC) != -1) {
+                descIndex = cursor.getColumnIndexOrThrow(DESC);
                 map.setDesc(cursor.getString(descIndex));
             }
 
-            if (cursor.getColumnIndex(MAP_CAT_ID) != -1) {
-                catIdIndex = cursor.getColumnIndexOrThrow(MAP_CAT_ID);
-                map.setCatId(cursor.getString(catIdIndex));
+            if (cursor.getColumnIndex(CAT_ID) != -1) {
+                catIdIndex = cursor.getColumnIndexOrThrow(CAT_ID);
+                map.setCatId(cursor.getInt(catIdIndex));
             }
 
-            if (cursor.getColumnIndex(MAP_LATITUDE) != -1) {
-                latitudeIndex = cursor.getColumnIndexOrThrow(MAP_LATITUDE);
+            if (cursor.getColumnIndex(LATITUDE) != -1) {
+                latitudeIndex = cursor.getColumnIndexOrThrow(LATITUDE);
                 map.setLat(cursor.getString(latitudeIndex));
             }
 
-            if (cursor.getColumnIndex(MAP_LONGITUDE) != -1) {
-                longitudeIndex = cursor.getColumnIndexOrThrow(MAP_LONGITUDE);
+            if (cursor.getColumnIndex(LONGITUDE) != -1) {
+                longitudeIndex = cursor.getColumnIndexOrThrow(LONGITUDE);
                 map.setLon(cursor.getString(longitudeIndex));
             }
 
-            if (cursor.getColumnIndex(MAP_DATE) != -1) {
-                dateIndex = cursor.getColumnIndexOrThrow(MAP_DATE);
+            if (cursor.getColumnIndex(DATE) != -1) {
+                dateIndex = cursor.getColumnIndexOrThrow(DATE);
                 map.setDate(cursor.getString(dateIndex));
             }
 
-            if (cursor.getColumnIndex(MAP_ACTIVE) != -1) {
-                activeIndex = cursor.getColumnIndexOrThrow(MAP_ACTIVE);
+            if (cursor.getColumnIndex(ACTIVE) != -1) {
+                activeIndex = cursor.getColumnIndexOrThrow(ACTIVE);
                 map.setActive(cursor.getString(activeIndex));
             }
         }
@@ -306,14 +307,15 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
      */
     private Cursor query(String selection, String[] selectionArgs, String[] columns) {
         HashMap<String, String> mColumnMap = new HashMap<String, String>();
+        mColumnMap.put(ID, ID);
         mColumnMap.put(MAP_ID, MAP_ID);
-        mColumnMap.put(MAP_CAT_ID, MAP_CAT_ID);
-        mColumnMap.put(MAP_DESC, MAP_DESC);
-        mColumnMap.put(MAP_DATE, MAP_DATE);
-        mColumnMap.put(MAP_NAME, MAP_NAME);
-        mColumnMap.put(MAP_URL, MAP_URL);
-        mColumnMap.put(MAP_LATITUDE, MAP_LATITUDE);
-        mColumnMap.put(MAP_LONGITUDE, MAP_LONGITUDE);
+        mColumnMap.put(CAT_ID, CAT_ID);
+        mColumnMap.put(DESC, DESC);
+        mColumnMap.put(DATE, DATE);
+        mColumnMap.put(NAME, NAME);
+        mColumnMap.put(URL, URL);
+        mColumnMap.put(LATITUDE, LATITUDE);
+        mColumnMap.put(LONGITUDE, LONGITUDE);
         mColumnMap.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
         mColumnMap.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, "rowid AS "
                 + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID);
@@ -326,9 +328,9 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
          * column names
          */
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(MAP_TABLE);
+        builder.setTables(TABLE);
         builder.setProjectionMap(mColumnMap);
-        String orderBy = MAP_DATE + " DESC";
+        String orderBy = DATE + " DESC";
         Cursor cursor = builder.query(mDb, columns, selection, selectionArgs, null, null, orderBy);
 
         if (cursor == null) {
@@ -339,5 +341,4 @@ public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
         }
         return cursor;
     }
-
 }

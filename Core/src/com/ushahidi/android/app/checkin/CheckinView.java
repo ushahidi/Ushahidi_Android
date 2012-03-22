@@ -115,7 +115,7 @@ public class CheckinView extends MapActivity {
         if (!TextUtils.isEmpty(fileName)) {
             photoLayout.setVisibility(View.VISIBLE);
             photo.setVisibility(View.VISIBLE);
-            image.setImageDrawable(ImageManager.getImages(Preferences.savePath,fileName));
+            //image.setImageDrawable(ImageManager.getImages(Preferences.savePath,fileName));
         }
 
         mapController = mapView.getController();

@@ -125,8 +125,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
         } else {
             thumbnails = media.split(",");
             for (int i = 0; i < thumbnails.length; i++) {
-                thumbnailAdapter.mImageIds.add(ImageManager.getImages(Preferences.savePath,
-                        thumbnails[i]));
+               /* thumbnailAdapter.mImageIds.add(ImageManager.getImages(Preferences.savePath,
+                        thumbnails[i]));*/
             }
 
             if (!TextUtils.isEmpty(getImage())) {
@@ -134,8 +134,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
                 for (int i = 0; i < images.length; i++) {
 
-                    imageAdapter.mImageIds.add(ImageManager.getImages(Preferences.savePath,
-                            images[i]));
+                    /*imageAdapter.mImageIds.add(ImageManager.getImages(Preferences.savePath,
+                            images[i]));*/
                 }
             }
         }

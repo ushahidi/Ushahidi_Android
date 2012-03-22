@@ -20,103 +20,94 @@
 
 package com.ushahidi.android.app;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
-import com.ushahidi.android.app.net.MainHttpClient;
-
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
-import android.util.Log;
-
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Environment;
+import android.util.Log;
 
 public class ImageManager {
 
-    // Images
-    public static Drawable getImages(String path,String fileName) {
+    private static final String PHOTO = "/photo";
+
+    public static Drawable getDrawables(Context context, String fileName) {
 
         Drawable d = null;
-        BitmapDrawable bD = new BitmapDrawable((new File(path, fileName)).toString());
         
+        BitmapDrawable bD = new BitmapDrawable(
+                (new File(getPhotoPath(context), fileName)).toString());
+
         d = bD.mutate();
 
         return d;
     }
 
-    public static void saveImage(String path) {
-        byte[] is;
-        for (String image : BackgroundService.mNewIncidentsImages) {
-            if (!TextUtils.isEmpty(image)) {
-                File imageFilename = new File(image);
-                File f = new File(path, imageFilename.getName());
-                if (!f.exists()) {
-                    try {
-                        is = MainHttpClient.fetchImage(Preferences.domain + "/media/uploads/"
-                                + image);
-                        if (is != null) {
-                            writeImage(is, imageFilename.getName(),path);
-                        }
-                    } catch (MalformedURLException e) {
+    protected static byte[] retrieveImageData(String imageUrl) throws IOException {
+        URL url = new URL(imageUrl);
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
-                        e.printStackTrace();
-                    } catch (IOException e) {
+        // determine the image size and allocate a buffer
+        int fileSize = connection.getContentLength();
+        if (fileSize < 0) {
+            return null;
+        }
+        byte[] imageData = new byte[fileSize];
 
-                        e.printStackTrace();
-                    }
+        // download the file
 
-                }
-            }
+        BufferedInputStream istream = new BufferedInputStream(connection.getInputStream());
+        int bytesRead = 0;
+        int offset = 0;
+        while (bytesRead != -1 && offset < fileSize) {
+            bytesRead = istream.read(imageData, offset, fileSize - offset);
+            offset += bytesRead;
         }
 
-        // clear images
-        BackgroundService.mNewIncidentsImages.clear();
+        // clean up
+        istream.close();
+        connection.disconnect();
 
+        return imageData;
     }
 
-    public static void saveThumbnail(String path) {
-        byte[] is;
-        for (String image : BackgroundService.mNewIncidentsThumbnails) {
+    // TODO: we could probably improve performance by re-using connections
+    // instead of closing them
+    // after each and every download
+    public static void downloadImage(String imageUrl, String filename, Context context) {
+        Log.i("Making directory ", "Dir " + getPhotoPath(context));
+        try {
+            byte[] imageData = retrieveImageData(imageUrl);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+            ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 75, byteArray);
+            bitmap.recycle();
 
-            if (!TextUtils.isEmpty(image)) {
-                File thumbnailFilename = new File(image);
-                // Log.i("Save Images", "Image :" + UshahidiPref.savePath +
-                // thumbnailFilename.getName());
-                File f = new File(path, thumbnailFilename.getName());
-                if (!f.exists()) {
-                    try {
-                        is = MainHttpClient.fetchImage(Preferences.domain + "/media/uploads/"
-                                + image);
-                        if (is != null) {
-                            writeImage(is, thumbnailFilename.getName(),path);
-                        }
-                    } catch (MalformedURLException e) {
+            // create photos directory
+            writeImage(byteArray.toByteArray(), filename, getPhotoPath(context));
+            byteArray.flush();
 
-                        e.printStackTrace();
-                    } catch (IOException e) {
+        } catch (Throwable e) {
 
-                        e.printStackTrace();
-                    }
+            e.printStackTrace();
 
-                }
-            }
         }
-
-        // clear images
-        BackgroundService.mNewIncidentsThumbnails.clear();
-
     }
 
     public static void writeImage(byte[] data, String filename, String path) {
 
-        deleteImage(filename,path);
-        Log.d("Deleting Images: ",path+filename);
+        deleteImage(filename, path);
+        Log.d("Deleting Images: ", path + filename);
         if (data != null) {
             FileOutputStream fOut;
             try {
@@ -135,6 +126,20 @@ public class ImageManager {
 
     }
 
+    public static String getPhotoPath(Context context) {
+        // create photo directory if it doesn't exist
+        File path = new File(Environment.getExternalStorageDirectory(), context.getPackageName()
+                + PHOTO);
+        if (!path.exists()) {
+            // create path if it doesn't exist
+            if (createDirectory(context)) {
+                return path.getAbsolutePath()+"/";
+            }
+        }
+
+        return path.getAbsolutePath()+"/";
+    }
+
     public static void deleteImage(String filename, String path) {
         File f = new File(path, filename);
         if (f.exists()) {
@@ -142,61 +147,42 @@ public class ImageManager {
         }
     }
 
-    public static Bitmap getBitmap(String fileName,String path) {
-        try {
-            File imageFile = new File(path, fileName);
-            // Decode image size
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(new FileInputStream(imageFile),null, o);
+    // make sure external storage is available
+    private static boolean isExternalStoragePresent() {
 
-            // The new size we want to scale to
-            final int REQUIRED_SIZE = 400;
+        boolean mExternalStorageAvailable = false;
+        boolean mExternalStorageWriteable = false;
+        String state = Environment.getExternalStorageState();
 
-            // Find the correct scale value. It should be the power of 2.
-            int width_tmp = o.outWidth, height_tmp = o.outHeight;
-            int scale = 1;
-            while (true) {
-                if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE)
-                    break;
-                width_tmp /= 2;
-                height_tmp /= 2;
-                scale *= 2;
-            }
-
-            // Decode with inSampleSize
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = scale;
-            return BitmapFactory.decodeStream(
-                    new FileInputStream(imageFile), null, o2);
-        } catch (FileNotFoundException e) {
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            // We can read and write the media
+            mExternalStorageAvailable = mExternalStorageWriteable = true;
+        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            // We can only read the media
+            mExternalStorageAvailable = true;
+            mExternalStorageWriteable = false;
+        } else {
+            // Something else is wrong. It may be one of many other states, but
+            // all we need
+            // to know is we can neither read nor write
+            mExternalStorageAvailable = mExternalStorageWriteable = false;
         }
-        return null;
+
+        return (mExternalStorageAvailable) && (mExternalStorageWriteable);
     }
-    
 
-    public static void saveImageFromURL(String url, String fileName, String path) {
-        byte[] is;
-        
-        if (!TextUtils.isEmpty(url)) {
-            File imageFilename = new File(fileName);
-            File f = new File(path, imageFilename.getName());
-            if (!f.exists()) {
-                try {
-                    is = MainHttpClient.fetchImage2(url);
-                    if (is != null) {
-                        writeImage(is, imageFilename.getName(),path);
-                    }
-                } catch (MalformedURLException e) {
+    private static boolean createDirectory(Context context) {
+        if (isExternalStoragePresent()) {
+            File file = new File(Environment.getExternalStorageDirectory(),
+                    context.getPackageName() + PHOTO);
+            if (!file.exists()) {
+                if (!file.mkdirs()) {
 
-                    e.printStackTrace();
-                } catch (IOException e) {
-
-                    e.printStackTrace();
+                    return false;
                 }
-
             }
         }
+        return true;
     }
 
 }

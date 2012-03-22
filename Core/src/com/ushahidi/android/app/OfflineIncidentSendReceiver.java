@@ -78,45 +78,29 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
         // Need to create own db handle instance as it can't be guaranteed the
         // app handlr
         // will be about
-        Database db = new Database(context);
-        db.open();
-
-        boolean someOfflineIncidentsSent = false;
-
-        final SharedPreferences settings = context.getSharedPreferences(Preferences.PREFS_NAME, 0);
-        StringBuilder urlBuilder = new StringBuilder(settings.getString("Domain", ""));
-        urlBuilder.append("/api");
-
-        Cursor cursor = db.fetchAllOfflineIncidents();
-        // only send offline reports if there are items in the database.
-        if (cursor.getCount() > 0) {
-            // double check to make sure there internet
-            if (!ApiUtils.isCheckinEnabled(context)) {
-                cursor.moveToFirst();
-                while (cursor.isAfterLast() == false) {
-                    Log.d(CLASS_TAG,
-                            "Sending message with title : "
-                                    + cursor.getString(Database.ADD_INCIDENT_TITLE_INDEX));
-                    try {
-                        MainHttpClient.PostFileUpload(urlBuilder.toString(),
-                                preparePostParams(cursor));
-                        // if it fails without exception at this point there is
-                        // problem
-                        // with the message
-                        db.deleteAddIncident(cursor.getInt(Database.ADD_INCIDENT_ID_INDEX));
-                        someOfflineIncidentsSent = true;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    cursor.moveToNext();
-                }
-            }
-        }
-        cursor.close();
-
-        db.close();
-
-        return someOfflineIncidentsSent;
+        /*
+         * Database db = new Database(context); db.open(); boolean
+         * someOfflineIncidentsSent = false; final SharedPreferences settings =
+         * context.getSharedPreferences(Preferences.PREFS_NAME, 0);
+         * StringBuilder urlBuilder = new
+         * StringBuilder(settings.getString("Domain", ""));
+         * urlBuilder.append("/api"); Cursor cursor =
+         * db.fetchAllOfflineIncidents(); // only send offline reports if there
+         * are items in the database. if (cursor.getCount() > 0) { // double
+         * check to make sure there internet if
+         * (!ApiUtils.isCheckinEnabled(context)) { cursor.moveToFirst(); while
+         * (cursor.isAfterLast() == false) { Log.d(CLASS_TAG,
+         * "Sending message with title : " +
+         * cursor.getString(Database.ADD_INCIDENT_TITLE_INDEX)); try {
+         * MainHttpClient.PostFileUpload(urlBuilder.toString(),
+         * preparePostParams(cursor)); // if it fails without exception at this
+         * point there is // problem // with the message
+         * db.deleteAddIncident(cursor.getInt(Database.ADD_INCIDENT_ID_INDEX));
+         * someOfflineIncidentsSent = true; } catch (IOException e) {
+         * e.printStackTrace(); } cursor.moveToNext(); } } } cursor.close();
+         * db.close(); return someOfflineIncidentsSent;
+         */
+        return false;
     }
 
     /**
@@ -139,36 +123,39 @@ public class OfflineIncidentSendReceiver extends BroadcastReceiver {
      * @return HashMap<String, String>
      */
     private HashMap<String, String> preparePostParams(Cursor cursor) {
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put(MainHttpClient.TASK, "report");
-        params.put(MainHttpClient.INCIDENT_TITLE,
-                cursor.getString(Database.ADD_INCIDENT_TITLE_INDEX));
-        params.put(MainHttpClient.INCIDENT_DESCRIPTION,
-                cursor.getString(Database.ADD_INCIDENT_DESC_INDEX));
-        params.put(MainHttpClient.INCIDENT_DATE,
-                cursor.getString(Database.ADD_INCIDENT_DATE_INDEX));
-        params.put(MainHttpClient.INCIDENT_HOUR,
-                cursor.getString(Database.ADD_INCIDENT_HOUR_INDEX));
-        params.put(MainHttpClient.INCIDENT_MINUTE,
-                cursor.getString(Database.ADD_INCIDENT_MINUTE_INDEX));
-        params.put(MainHttpClient.INCIDENT_AMPM,
-                cursor.getString(Database.ADD_INCIDENT_AMPM_INDEX));
-        params.put(MainHttpClient.INCIDENT_CATEGORY,
-                cursor.getString(Database.ADD_INCIDENT_CATEGORIES_INDEX));
-        params.put(MainHttpClient.LATITUDE,
-                cursor.getString(Database.INCIDENT_LOC_LATITUDE_INDEX));
-        params.put(MainHttpClient.LONGITUDE,
-                cursor.getString(Database.INCIDENT_LOC_LONGITUDE_INDEX));
-        params.put(MainHttpClient.LOCATION_NAME,
-                cursor.getString(Database.INCIDENT_LOC_NAME_INDEX));
-        params.put(MainHttpClient.PERSON_FIRST,
-                cursor.getString(Database.ADD_PERSON_FIRST_INDEX));
-        params.put(MainHttpClient.PERSON_LAST,
-                cursor.getString(Database.ADD_PERSON_LAST_INDEX));
-        params.put(MainHttpClient.PERSON_EMAIL,
-                cursor.getString(Database.ADD_PERSON_EMAIL_INDEX));
-        params.put(MainHttpClient.PHOTO,
-                cursor.getString(Database.ADD_INCIDENT_PHOTO_INDEX));
-        return params;
+        // TODO redo this
+        /*
+         * HashMap<String, String> params = new HashMap<String, String>();
+         * params.put(MainHttpClient.TASK, "report");
+         * params.put(MainHttpClient.INCIDENT_TITLE,
+         * cursor.getString(Database.ADD_INCIDENT_TITLE_INDEX));
+         * params.put(MainHttpClient.INCIDENT_DESCRIPTION,
+         * cursor.getString(Database.ADD_INCIDENT_DESC_INDEX));
+         * params.put(MainHttpClient.INCIDENT_DATE,
+         * cursor.getString(Database.ADD_INCIDENT_DATE_INDEX));
+         * params.put(MainHttpClient.INCIDENT_HOUR,
+         * cursor.getString(Database.ADD_INCIDENT_HOUR_INDEX));
+         * params.put(MainHttpClient.INCIDENT_MINUTE,
+         * cursor.getString(Database.ADD_INCIDENT_MINUTE_INDEX));
+         * params.put(MainHttpClient.INCIDENT_AMPM,
+         * cursor.getString(Database.ADD_INCIDENT_AMPM_INDEX));
+         * params.put(MainHttpClient.INCIDENT_CATEGORY,
+         * cursor.getString(Database.ADD_INCIDENT_CATEGORIES_INDEX));
+         * params.put(MainHttpClient.LATITUDE,
+         * cursor.getString(Database.INCIDENT_LOC_LATITUDE_INDEX));
+         * params.put(MainHttpClient.LONGITUDE,
+         * cursor.getString(Database.INCIDENT_LOC_LONGITUDE_INDEX));
+         * params.put(MainHttpClient.LOCATION_NAME,
+         * cursor.getString(Database.INCIDENT_LOC_NAME_INDEX));
+         * params.put(MainHttpClient.PERSON_FIRST,
+         * cursor.getString(Database.ADD_PERSON_FIRST_INDEX));
+         * params.put(MainHttpClient.PERSON_LAST,
+         * cursor.getString(Database.ADD_PERSON_LAST_INDEX));
+         * params.put(MainHttpClient.PERSON_EMAIL,
+         * cursor.getString(Database.ADD_PERSON_EMAIL_INDEX));
+         * params.put(MainHttpClient.PHOTO,
+         * cursor.getString(Database.ADD_INCIDENT_PHOTO_INDEX)); return params;
+         */
+        return null;
     }
 }

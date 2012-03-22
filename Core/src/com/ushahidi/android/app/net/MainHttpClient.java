@@ -57,6 +57,8 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.ushahidi.android.app.MainApplication;
@@ -76,8 +78,9 @@ public class MainHttpClient {
 
     private static final int IO_BUFFER_SIZE = 512;
 
+    private Context context;
     public MainHttpClient(Context context) {
-
+        this.context = context;
         httpParameters = new BasicHttpParams();
         httpParameters.setParameter(ConnManagerPNames.MAX_TOTAL_CONNECTIONS, 1);
         httpParameters.setParameter(ConnManagerPNames.MAX_CONNECTIONS_PER_ROUTE,
@@ -122,68 +125,73 @@ public class MainHttpClient {
     public HttpResponse GetURL(String URL) throws IOException {
         Preferences.httpRunning = true;
 
-        try {
-            // wrap try around because this constructor can throw Error
-            final HttpGet httpget = new HttpGet(URL);
-            httpget.addHeader("User-Agent", "Ushahidi-Android/1.0)");
+        // only do the connection where there is internet.
+        if (isConnected()) {
 
-            // Post, check and show the result (not really spectacular, but
-            // works):
-            HttpResponse response = httpClient.execute(httpget);
-            Preferences.httpRunning = false;
+            try {
+                // wrap try around because this constructor can throw Error
+                final HttpGet httpget = new HttpGet(URL);
+                httpget.addHeader("User-Agent", "Ushahidi-Android/1.0)");
 
-            return response;
+                // Post, check and show the result (not really spectacular, but
+                // works):
+                HttpResponse response = httpClient.execute(httpget);
 
-        } catch (final Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+                return response;
+
+            } catch (final Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
         }
-        Preferences.httpRunning = false;
         return null;
 
     }
 
     public HttpResponse PostURL(String URL, List<NameValuePair> data, String Referer)
             throws IOException {
-        Preferences.httpRunning = true;
-        // Dipo Fix
-        try {
-            // wrap try around because this constructor can throw Error
-            final HttpPost httpost = new HttpPost(URL);
-            // org.apache.http.client.methods.
-            if (Referer.length() > 0) {
-                httpost.addHeader("Referer", Referer);
-            }
-            if (data != null) {
-                try {
-                    // NEED THIS NOW TO FIX ERROR 417
-                    httpost.getParams().setBooleanParameter("http.protocol.expect-continue", false);
 
-                    httpost.setEntity(new UrlEncodedFormEntity(data, HTTP.UTF_8));
-
-                } catch (final UnsupportedEncodingException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                    Preferences.httpRunning = false;
-                    return null;
-                }
-            }
-
-            // Post, check and show the result (not really spectacular, but
-            // works):
+        if (isConnected()) {
+            // Dipo Fix
             try {
-                HttpResponse response = httpClient.execute(httpost);
-                Preferences.httpRunning = false;
-                return response;
+                // wrap try around because this constructor can throw Error
+                final HttpPost httpost = new HttpPost(URL);
+                // org.apache.http.client.methods.
+                if (Referer.length() > 0) {
+                    httpost.addHeader("Referer", Referer);
+                }
+                if (data != null) {
+                    try {
+                        // NEED THIS NOW TO FIX ERROR 417
+                        httpost.getParams().setBooleanParameter("http.protocol.expect-continue",
+                                false);
 
+                        httpost.setEntity(new UrlEncodedFormEntity(data, HTTP.UTF_8));
+
+                    } catch (final UnsupportedEncodingException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+
+                        return null;
+                    }
+                }
+
+                // Post, check and show the result (not really spectacular, but
+                // works):
+                try {
+                    HttpResponse response = httpClient.execute(httpost);
+                    Preferences.httpRunning = false;
+                    return response;
+
+                } catch (final Exception e) {
+
+                }
             } catch (final Exception e) {
-
+                e.printStackTrace();
             }
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
 
-        Preferences.httpRunning = false;
+        }
         return null;
 
     }
@@ -238,8 +246,6 @@ public class MainHttpClient {
         }
         return "";
     }
-
-   
 
     public byte[] fetchImage2(String address) throws MalformedURLException, IOException {
         InputStream in = null;
@@ -342,6 +348,24 @@ public class MainHttpClient {
         return text;
     }
     
+    /**
+     * Is there internet connection
+     */
+    public boolean isConnected() {
+
+        ConnectivityManager connectivity = (ConnectivityManager)this.context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        final NetworkInfo networkInfo;networkInfo = connectivity.getActiveNetworkInfo();
+        // NetworkInfo info
+
+        if (networkInfo != null && networkInfo.isConnected() && networkInfo.isAvailable()) {
+            return true;
+        }
+        return false;
+
+    }
+
     protected void log(String message) {
         if (MainApplication.LOGGING_MODE)
             Log.i(getClass().getName(), message);

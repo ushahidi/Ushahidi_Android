@@ -98,7 +98,7 @@ public class IncidentList extends Activity {
     
     private TextView emptyListText;
 
-    @Override
+    /*@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.incident_list);
@@ -507,6 +507,6 @@ public class IncidentList extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-    }
+    }*/
 
 }

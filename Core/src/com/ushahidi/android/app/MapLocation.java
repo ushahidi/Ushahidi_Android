@@ -240,7 +240,7 @@ public class MapLocation extends MapActivity {
     public List<IncidentsData> showIncidents(String by) {
         Cursor cursor;
 
-        if (by.equals("All"))
+        /*if (by.equals("All"))
             cursor = MainApplication.mDb.fetchAllIncidents();
         else
             cursor = MainApplication.mDb.fetchIncidentsByCategories(by);
@@ -299,7 +299,7 @@ public class MapLocation extends MapActivity {
             } while (cursor.moveToNext());
         }
 
-        cursor.close();
+        cursor.close();*/
         return mOldIncidents;
 
     }

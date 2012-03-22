@@ -37,7 +37,6 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.text.InputType;
-import android.util.Log;
 
 import com.ushahidi.android.app.ui.SeekBarPreference;
 import com.ushahidi.android.app.util.ApiUtils;
@@ -99,8 +98,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
     public static final String PHOTO_SIZE_PREFERENCE = "photo_size_preference";
 
-    private boolean checkin = false;
-
     private String recentReports = "";
 
     private String onPhone = "";
@@ -109,14 +106,13 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
     private String minutes = "";
 
-
+    private ApiUtils apiUtils;
     
-    private static final String CLASS_TAG = Settings.class.getCanonicalName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        apiUtils = new ApiUtils(this);
         addPreferencesFromResource(R.xml.preferences);
 
         firstNamePref = new EditTextPreference(this);
@@ -463,8 +459,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         protected Integer doInBackground(Void... params) {
             // clear previous data
             MainApplication.mDb.clearData();
-            status = ApiUtils.processReports(appContext);
-            isCheckinsEnabled();
+            status = apiUtils.processReports();
+            apiUtils.checkForCheckin();
             return status;
         }
 
@@ -523,32 +519,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
             }
         };
         t.start();
-    }
-
-    Runnable mIsCheckinsEnabled = new Runnable() {
-        public void run() {
-
-            if (checkin) {
-                Preferences.isCheckinEnabled = 1;
-            } else {
-                Preferences.isCheckinEnabled = 0;
-            }
-
-            Preferences.saveSettings(Settings.this);
-
-        }
-    };
-
-    /**
-     * Checks if checkins is enabled on the configured Ushahidi deployment.
-     */
-    public void isCheckinsEnabled() {
-        if (ApiUtils.isCheckinEnabled(Settings.this)) {
-            Preferences.isCheckinEnabled = 1;
-        } else {
-            Preferences.isCheckinEnabled = 0;
-        }
-        Preferences.saveSettings(Settings.this);
     }
 
 }

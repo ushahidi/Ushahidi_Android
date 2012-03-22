@@ -49,14 +49,14 @@ public class MediaDao extends DbContentProvider implements IMediaDao, IMediaSche
     }
 
     @Override
-    public List<Media> fetchMediaByCheckinId(int checkinId) {
+    public List<Media> fetchCheckinPhoto(int checkinId) {
         listMedia = new ArrayList<Media>();
         final String selectionArgs[] = {
-            String.valueOf(checkinId)
+                String.valueOf(checkinId), String.valueOf(IMAGE)
         };
 
-        final String selection = MEDIA_CHECKIN_ID + " =?";
-        cursor = super.query(MEDIA_TABLE, MEDIA_COLUMNS, selection, selectionArgs, null);
+        final String selection = CHECKIN_ID + " =? AND " + TYPE + " =?";
+        cursor = super.query(TABLE, MEDIA_COLUMNS, selection, selectionArgs, null);
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -70,14 +70,99 @@ public class MediaDao extends DbContentProvider implements IMediaDao, IMediaSche
     }
 
     @Override
-    public List<Media> fetchMediaByReportId(int reportId) {
+    public List<Media> fetchReportPhoto(int reportId) {
         listMedia = new ArrayList<Media>();
         final String selectionArgs[] = {
-            String.valueOf(reportId)
+                String.valueOf(reportId), String.valueOf(IMAGE)
         };
 
-        final String selection = MEDIA_REPORT_ID + " =?";
-        cursor = super.query(MEDIA_TABLE, MEDIA_COLUMNS, selection, selectionArgs, null);
+        final String selection = REPORT_ID + " =? AND " + TYPE + " =?";
+        cursor = super.query(TABLE, MEDIA_COLUMNS, selection, selectionArgs, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Media media = cursorToEntity(cursor);
+                listMedia.add(media);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return listMedia;
+    }
+
+    @Override
+    public List<Media> fetchReportVideo(int reportId) {
+        listMedia = new ArrayList<Media>();
+        final String selectionArgs[] = {
+                String.valueOf(reportId), String.valueOf(VIDEO)
+        };
+
+        final String selection = REPORT_ID + " =? AND " + TYPE + " =?";
+        cursor = super.query(TABLE, MEDIA_COLUMNS, selection, selectionArgs, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Media media = cursorToEntity(cursor);
+                listMedia.add(media);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return listMedia;
+    }
+
+    @Override
+    public List<Media> fetchReportAudio(int reportId) {
+        listMedia = new ArrayList<Media>();
+        final String selectionArgs[] = {
+                String.valueOf(reportId), String.valueOf(AUDIO)
+        };
+
+        final String selection = REPORT_ID + " =? AND " + TYPE + " =?";
+        cursor = super.query(TABLE, MEDIA_COLUMNS, selection, selectionArgs, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Media media = cursorToEntity(cursor);
+                listMedia.add(media);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return listMedia;
+    }
+
+    @Override
+    public List<Media> fetchReportNews(int reportId) {
+        listMedia = new ArrayList<Media>();
+        final String selectionArgs[] = {
+                String.valueOf(reportId), String.valueOf(NEWS)
+        };
+
+        final String selection = REPORT_ID + " =? AND " + TYPE + " =?";
+        cursor = super.query(TABLE, MEDIA_COLUMNS, selection, selectionArgs, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Media media = cursorToEntity(cursor);
+                listMedia.add(media);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return listMedia;
+    }
+    
+    @Override
+    public List<Media> fetchMedia(String itemType, int itemId, int mediaType, int limit) {
+        listMedia = new ArrayList<Media>();
+        final String selectionArgs[] = {
+                String.valueOf(itemId), String.valueOf(mediaType)
+        };
+
+        final String selection = itemType + " ="+itemId+" AND " + TYPE + " ="+mediaType;
+        
+        cursor = super.query(TABLE, MEDIA_COLUMNS, selection, null, null, String.valueOf(limit));
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -96,7 +181,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao, IMediaSche
      */
     @Override
     public boolean deleteAllMedia() {
-        return super.delete(MEDIA_TABLE, null, null) > 0;
+        return super.delete(TABLE, null, null) > 0;
     }
 
     /*
@@ -130,7 +215,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao, IMediaSche
     public boolean addMedia(Media media) {
         // set values
         setContentValue(media);
-        return super.insert(MEDIA_TABLE, getContentValue()) > 0;
+        return super.insert(TABLE, getContentValue()) > 0;
     }
 
     /*
@@ -147,51 +232,45 @@ public class MediaDao extends DbContentProvider implements IMediaDao, IMediaSche
         int reportIdIndex;
         int checkinIdIndex;
         int typeIndex;
-        int mediumSizeIndex;
-        int thumbnailIndex;
+        int linkIndex;
 
         if (cursor != null) {
-            if (cursor.getColumnIndex(MEDIA_ID) != -1) {
-                idIndex = cursor.getColumnIndexOrThrow(MEDIA_ID);
+            if (cursor.getColumnIndex(ID) != -1) {
+                idIndex = cursor.getColumnIndexOrThrow(ID);
                 media.setDbId(cursor.getInt(idIndex));
             }
 
-            if (cursor.getColumnIndex(MEDIA_REPORT_ID) != -1) {
-                reportIdIndex = cursor.getColumnIndexOrThrow(MEDIA_REPORT_ID);
+            if (cursor.getColumnIndex(REPORT_ID) != -1) {
+                reportIdIndex = cursor.getColumnIndexOrThrow(REPORT_ID);
                 media.setReportId(cursor.getInt(reportIdIndex));
             }
 
-            if (cursor.getColumnIndex(MEDIA_CHECKIN_ID) != -1) {
-                checkinIdIndex = cursor.getColumnIndexOrThrow(MEDIA_CHECKIN_ID);
+            if (cursor.getColumnIndex(CHECKIN_ID) != -1) {
+                checkinIdIndex = cursor.getColumnIndexOrThrow(CHECKIN_ID);
                 media.setCheckinId(cursor.getInt(checkinIdIndex));
             }
 
-            if (cursor.getColumnIndex(MEDIA_TYPE) != -1) {
-                typeIndex = cursor.getColumnIndexOrThrow(MEDIA_TYPE);
+            if (cursor.getColumnIndex(TYPE) != -1) {
+                typeIndex = cursor.getColumnIndexOrThrow(TYPE);
                 media.setType(cursor.getInt(typeIndex));
             }
 
-            if (cursor.getColumnIndex(MEDIA_THUMBNAIL) != -1) {
-                thumbnailIndex = cursor.getColumnIndexOrThrow(MEDIA_THUMBNAIL);
-                media.setImageThumbnail(cursor.getString(thumbnailIndex));
+            if (cursor.getColumnIndex(LINK) != -1) {
+                linkIndex = cursor.getColumnIndexOrThrow(LINK);
+                media.setLink(cursor.getString(linkIndex));
             }
 
-            if (cursor.getColumnIndex(MEDIA_MEDIUM_SIZE) != -1) {
-                mediumSizeIndex = cursor.getColumnIndexOrThrow(MEDIA_MEDIUM_SIZE);
-                media.setImageMediumSize(cursor.getString(mediumSizeIndex));
-            }
         }
-        return null;
+        return media;
     }
 
     private void setContentValue(Media media) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(MEDIA_ID, media.getDbId());
-        initialValues.put(MEDIA_REPORT_ID, media.getReportId());
-        initialValues.put(MEDIA_CHECKIN_ID, media.getCheckinId());
-        initialValues.put(MEDIA_TYPE, media.getType());
-        initialValues.put(MEDIA_THUMBNAIL, media.getImageThumbnail());
-        initialValues.put(MEDIA_MEDIUM_SIZE, media.getImageMediumSize());
+        initialValues = new ContentValues();
+        initialValues.put(ID, media.getDbId());
+        initialValues.put(REPORT_ID, media.getReportId());
+        initialValues.put(CHECKIN_ID, media.getCheckinId());
+        initialValues.put(TYPE, media.getType());
+        initialValues.put(LINK, media.getLink());
     }
 
     private ContentValues getContentValue() {

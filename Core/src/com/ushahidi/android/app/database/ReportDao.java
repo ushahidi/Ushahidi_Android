@@ -164,7 +164,6 @@ public class ReportDao extends DbContentProvider implements IReportDao, IReportS
         int verifiedIndex;
         int locationIndex;
         int descIndex;
-        int categoryIndex;
         int mediaIndex;
         int imageIndex;
         int longitudeIndex;
@@ -199,11 +198,6 @@ public class ReportDao extends DbContentProvider implements IReportDao, IReportS
             if (cursor.getColumnIndex(INCIDENT_DESC) != -1) {
                 descIndex = cursor.getColumnIndexOrThrow(INCIDENT_DESC);
                 report.setDescription(cursor.getString(descIndex));
-            }
-
-            if (cursor.getColumnIndex(INCIDENT_CATEGORIES) != -1) {
-                categoryIndex = cursor.getColumnIndexOrThrow(INCIDENT_CATEGORIES);
-                report.setCategories(cursor.getString(categoryIndex));
             }
 
             if (cursor.getColumnIndex(INCIDENT_MEDIA) != -1) {
@@ -241,9 +235,7 @@ public class ReportDao extends DbContentProvider implements IReportDao, IReportS
         initialValues.put(INCIDENT_LOC_NAME, report.getLocationName());
         initialValues.put(INCIDENT_LOC_LATITUDE, report.getLatitude());
         initialValues.put(INCIDENT_LOC_LONGITUDE, report.getLongitude());
-        initialValues.put(INCIDENT_CATEGORIES, report.getCategories());
         initialValues.put(INCIDENT_MEDIA, report.getMedia());
-
         initialValues.put(INCIDENT_IMAGE, report.getImage());
         initialValues.put(INCIDENT_IS_UNREAD, true);
     }

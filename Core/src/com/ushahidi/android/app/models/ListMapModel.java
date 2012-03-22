@@ -31,7 +31,6 @@ import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.data.DeploymentProvider;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Map;
-import com.ushahidi.android.app.util.Util;
 
 /**
  * @author eyedol
@@ -44,7 +43,7 @@ public class ListMapModel extends Model {
 
     private Cursor cursor;
 
-    private String id;
+    private int id;
 
     private String name;
 
@@ -58,15 +57,17 @@ public class ListMapModel extends Model {
 
     private String lon;
 
-    private String catId;
+    private int catId;
 
     private String active;
 
-    public String getId() {
+    private int mapId;
+
+    public int getId() {
         return this.id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -126,13 +127,22 @@ public class ListMapModel extends Model {
         return this.url;
     }
 
-    public void setCatId(String catId) {
+    public void setCatId(int catId) {
 
         this.catId = catId;
     }
 
-    public String getCatId() {
+    public int getCatId() {
         return this.catId;
+    }
+
+    public void setMapId(int mapId) {
+
+        this.mapId = mapId;
+    }
+
+    public int getMapId() {
+        return this.mapId;
     }
 
     public ListMapModel() {
@@ -140,9 +150,9 @@ public class ListMapModel extends Model {
     }
 
     @Override
-    public boolean load(Context context) {
+    public boolean load() {
         mMaps = Database.mMapDao.fetchAllMaps();
-        if (mMaps != null ) {
+        if (mMaps != null) {
             return true;
         }
         return false;
@@ -157,7 +167,7 @@ public class ListMapModel extends Model {
                     query
                 }, null);
         mMaps = Database.mMapDao.fetchMap(cursor);
-        
+
         if (mMaps != null && mMaps.size() > 0) {
             return true;
         }
@@ -172,25 +182,30 @@ public class ListMapModel extends Model {
      * @return 1 -- Failed to fetch details of a deployment.
      * @return 2 -- No internet connection
      */
-    public void activateDeployment(Context context, String id) {
-        List<Map> listMap = Database.mMapDao.fetchMapById(Long.valueOf(id));
+    public void activateDeployment(Context context, int id) {
 
-        if (listMap != null) {
-            Preferences.activeDeployment = Util.toInt(id);
+        List<Map> listMap = Database.mMapDao.fetchMapById(id);
+
+        if (listMap != null & listMap.size() > 0) {
+            Preferences.loadSettings(context);
+            Preferences.activeDeployment = id;
             Preferences.domain = listMap.get(0).getUrl();
             Preferences.deploymentLatitude = listMap.get(0).getLat();
             Preferences.deploymentLongitude = listMap.get(0).getLon();
             Preferences.saveSettings(context);
-            Preferences.loadSettings(context);
         }
 
     }
 
     // Save stuff fetch from
     @Override
-    public boolean save(Context context) {
+    public boolean save() {
         // TODO Auto-generated method stub
         return false;
+    }
+    
+    public boolean addMap(List<Map> maps) {
+        return Database.mMapDao.addMaps(maps);
     }
 
     /**
@@ -199,8 +214,8 @@ public class ListMapModel extends Model {
      * @param id - The ID of the map to be deleted
      * @return boolean
      */
-    public boolean deleteMapById(long id) {
-        return Database.mMapDao.deleteMapById(Long.valueOf(id));
+    public boolean deleteMapById(int id) {
+        return Database.mMapDao.deleteMapById(id);
     }
 
     public boolean deleteAllMap(Context context) {
@@ -208,6 +223,7 @@ public class ListMapModel extends Model {
         MainApplication.mDb.clearData();
         // clear the stuff that has been initialized in the
         // sharedpreferences.
+        Preferences.loadSettings(context);
         Preferences.activeDeployment = 0;
         Preferences.domain = "";
         Preferences.deploymentLatitude = "0.0";
@@ -224,17 +240,17 @@ public class ListMapModel extends Model {
      * @param url The map's URL
      * @param desc The map's description
      */
-    public boolean updateMap(String id, String name, String desc, String url) {
+    public boolean updateMap(int id, String name, String desc, String url) {
         Map map = new Map();
-        map.setDbId(Integer.valueOf(id));
+        map.setDbId(id);
         map.setName(name);
         map.setDesc(desc);
         map.setUrl(url);
         return Database.mMapDao.updateMap(map);
     }
 
-    public void setActivness(String id) {
-        Database.mMapDao.setActiveDeployment(Long.valueOf(id));
+    public void setActivness( int id) {
+        Database.mMapDao.setActiveDeployment(id);
     }
 
     /**
@@ -242,14 +258,15 @@ public class ListMapModel extends Model {
      * 
      * @param id
      */
-    public List<ListMapModel> loadMapById(String id, String url) {
+    public List<ListMapModel> loadMapById(int id, int mapId) {
         mMapModel = new ArrayList<ListMapModel>();
-        mMaps = Database.mMapDao.fetchMapByIdAndUrl(Long.valueOf(id),url);
-        
+        mMaps = Database.mMapDao.fetchMapByIdAndUrl(id, mapId);
+
         if (mMaps != null && mMaps.size() > 0) {
             for (Map map : mMaps) {
                 ListMapModel mapModel = new ListMapModel();
-                mapModel.setId(String.valueOf(map.getDbId()));
+                mapModel.setId(map.getDbId());
+                mapModel.setMapId(map.getMapId());
                 mapModel.setActive(map.getActive());
                 mapModel.setCatId(map.getCatId());
                 mapModel.setDate(map.getDate());
@@ -264,15 +281,16 @@ public class ListMapModel extends Model {
         return mMapModel;
     }
 
-    public List<ListMapModel> getMaps(Context context) {
+    public List<ListMapModel> getMaps() {
 
         mMapModel = new ArrayList<ListMapModel>();
 
         if (mMaps != null && mMaps.size() > 0) {
             for (Map map : mMaps) {
                 ListMapModel mapModel = new ListMapModel();
-                
-                mapModel.setId(String.valueOf(map.getDbId()));
+
+                mapModel.setId(map.getDbId());
+                mapModel.setMapId(map.getMapId());
                 mapModel.setActive(map.getActive());
                 mapModel.setCatId(map.getCatId());
                 mapModel.setDate(map.getDate());

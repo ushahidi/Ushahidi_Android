@@ -86,13 +86,13 @@ public class NetworkServices {
                 }
             }
 
-            return MainHttpClient.SendMultiPartData(URL, entity);
+            //return MainHttpClient.SendMultiPartData(URL, entity);
         }
         return null;
     }
 
     public static String getCheckins(String URL, String mobileId, String checkinId) {
-        final HttpResponse response;
+        /*final HttpResponse response;
         StringBuilder fullUrl = new StringBuilder(URL);
         fullUrl.append("/api");
         fullUrl.append("?task=checkin");
@@ -117,7 +117,8 @@ public class NetworkServices {
         } catch (IOException e) {
 
             return null;
-        }
+        }*/
+        return null;
     }
 
     public static String GetText(InputStream in) {

@@ -30,7 +30,7 @@ public class Categories {
 	
 	public static boolean getAllCategoriesFromWeb() throws IOException {
 		
-		HttpResponse response;
+		/*HttpResponse response;
 		String categories = "";
 		
 		StringBuilder uriBuilder = new StringBuilder( Preferences.domain);
@@ -52,7 +52,8 @@ public class Categories {
 			
 		} else {
 			return false;
-		}
+		}*/
+	    return false;
 		
 	}
 

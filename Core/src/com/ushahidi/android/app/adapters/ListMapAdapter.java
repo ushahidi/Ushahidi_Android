@@ -27,50 +27,47 @@ public class ListMapAdapter extends BaseListAdapter<ListMapModel> {
 
     @Override
     // Use Context instead of FragmentActivity
-    public void refresh(Context context) {
-        final boolean loaded = listMapModel.load(context);
+    public void refresh() {
+        final boolean loaded = listMapModel.load();
         if (loaded) {
-            this.setItems(listMapModel.getMaps(context));
-            log("Total: "+this.getCount());
+            this.setItems(listMapModel.getMaps());
         }
     }
 
-    public void refresh(Context context, String query) {
+    public void refresh(String query) {
         final boolean loaded = listMapModel.filter(context, query);
         if (loaded) {
-            this.setItems(listMapModel.getMaps(context));
+            this.setItems(listMapModel.getMaps());
         }
     }
 
     public View getView(int position, View view, ViewGroup viewGroup) {
-
-        final String mapId = String.valueOf(Preferences.activeDeployment);
+        final int mapId = Preferences.activeDeployment;
+        View row = inflater.inflate(R.layout.list_map_item, viewGroup, false);
         int colorPosition = position % colors.length;
-        Widgets widgets = null;
-        
+        row.setBackgroundResource(colors[colorPosition]);
 
-        if (widgets == null) {
-            view = inflater.inflate(R.layout.list_map_item, null);
-            widgets = new Widgets(view);
-            view.setTag(widgets);
-        } else {
-            widgets = (Widgets)view.getTag();
+        Widgets widget = (Widgets)row.getTag();
+
+        if (widget == null) {
+            widget = new Widgets(row);
+            row.setTag(widget);
         }
-        view.setBackgroundResource(colors[colorPosition]);
 
         // initialize view with content
-        widgets.mapName.setText(getItem(position).getName());
-        widgets.mapDesc.setText(getItem(position).getDesc());
-        widgets.mapUrl.setText(getItem(position).getUrl());
-        widgets.mapId.setText(getItem(position).getId());
+        widget.mapName.setText(getItem(position).getName());
+        widget.mapDesc.setText(getItem(position).getDesc());
+        widget.mapUrl.setText(getItem(position).getUrl());
+        widget.mapId.setText(String.valueOf(getItem(position).getId()));
 
-        if (getItem(position).getId().equals(mapId)) {
-            widgets.arrow.setImageResource(R.drawable.deployment_selected);
+        if (getItem(position).getId() == mapId ) {
+            widget.arrow.setImageResource(R.drawable.deployment_selected);
         } else {
-            widgets.arrow.setImageResource(R.drawable.menu_arrow);
+            widget.arrow.setImageResource(R.drawable.menu_arrow);
         }
 
-        return view;
+        return row;
+
     }
 
     public class Widgets extends com.ushahidi.android.app.views.View {

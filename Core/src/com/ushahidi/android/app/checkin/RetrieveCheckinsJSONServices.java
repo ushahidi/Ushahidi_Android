@@ -151,8 +151,8 @@ public class RetrieveCheckinsJSONServices {
 
                     fileName = url.substring(url.lastIndexOf('/') + 1, url.length());
 
-                    ImageManager.saveImageFromURL(checkinsCheckinsMediaArray.getJSONObject(index)
-                            .getString("medium"), fileName, Preferences.savePath);
+                    /*ImageManager.saveImageFromURL(checkinsCheckinsMediaArray.getJSONObject(index)
+                            .getString("medium"), fileName, Preferences.savePath);*/
 
                     checkinMedia.setMediumLink(fileName);
 
@@ -162,15 +162,15 @@ public class RetrieveCheckinsJSONServices {
                     thumbNail = thumbnailUrl.substring(thumbnailUrl.lastIndexOf('/') + 1,
                             thumbnailUrl.length());
 
-                    ImageManager.saveImageFromURL(thumbnailUrl, thumbNail, Preferences.savePath);
-                    checkinMedia.setThumbnailLink(thumbNail);
+                    /*ImageManager.saveImageFromURL(thumbnailUrl, thumbNail, Preferences.savePath);
+                    checkinMedia.setThumbnailLink(thumbNail);*/
 
                 } catch (JSONException e) {
                 }
 
                 checkinsMediaList.add(checkinMedia);
             }
-            MainApplication.mDb.addCheckinMedia(checkinsMediaList);
+            //MainApplication.mDb.addCheckinMedia(checkinsMediaList);
         }
 
     }

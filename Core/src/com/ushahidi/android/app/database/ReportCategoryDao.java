@@ -61,8 +61,8 @@ public class ReportCategoryDao extends DbContentProvider implements IReportCateg
             String.valueOf(reportId)
         };
 
-        final String selection = REPORT_CATEGORY_ID + " =?";
-        cursor = super.query(REPORT_CATEGORY_TABLE, REPORT_CATEGORY_COLUMNS, selection,
+        final String selection = ID + " =?";
+        cursor = super.query(TABLE, COLUMNS, selection,
                 selectionArgs, null);
         if (cursor != null) {
             cursor.moveToFirst();
@@ -86,7 +86,7 @@ public class ReportCategoryDao extends DbContentProvider implements IReportCateg
     public boolean addReportCategory(ReportCategory reportCategory) {
         // set values
         setContentValue(reportCategory);
-        return super.insert(REPORT_CATEGORY_TABLE, getContentValue()) > 0;
+        return super.insert(TABLE, getContentValue()) > 0;
     }
 
     /*
@@ -120,7 +120,7 @@ public class ReportCategoryDao extends DbContentProvider implements IReportCateg
      */
     @Override
     public boolean deleteAllReportCategory() {
-        return super.delete(REPORT_CATEGORY_TABLE, null, null) > 0;
+        return super.delete(TABLE, null, null) > 0;
     }
 
     /*
@@ -138,18 +138,18 @@ public class ReportCategoryDao extends DbContentProvider implements IReportCateg
         int categoryIdIndex;
 
         if (cursor != null) {
-            if (cursor.getColumnIndex(REPORT_CATEGORY_ID) != -1) {
-                idIndex = cursor.getColumnIndexOrThrow(REPORT_CATEGORY_ID);
+            if (cursor.getColumnIndex(ID) != -1) {
+                idIndex = cursor.getColumnIndexOrThrow(ID);
                 reportCategory.setDbId(cursor.getInt(idIndex));
             }
 
-            if (cursor.getColumnIndex(REPORT_CATEGORY_REPORT_ID) != -1) {
-                reportIdIndex = cursor.getColumnIndexOrThrow(REPORT_CATEGORY_REPORT_ID);
+            if (cursor.getColumnIndex(REPORT_ID) != -1) {
+                reportIdIndex = cursor.getColumnIndexOrThrow(REPORT_ID);
                 reportCategory.setReportId(cursor.getInt(reportIdIndex));
             }
 
-            if (cursor.getColumnIndex(REPORT_CATEGORY_CATEGORY_ID) != -1) {
-                categoryIdIndex = cursor.getColumnIndexOrThrow(REPORT_CATEGORY_CATEGORY_ID);
+            if (cursor.getColumnIndex(CATEGORY_ID) != -1) {
+                categoryIdIndex = cursor.getColumnIndexOrThrow(CATEGORY_ID);
                 reportCategory.setCategoryId(cursor.getInt(categoryIdIndex));
             }
         }
@@ -157,9 +157,9 @@ public class ReportCategoryDao extends DbContentProvider implements IReportCateg
     }
 
     private void setContentValue(ReportCategory reportCategory) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(REPORT_CATEGORY_REPORT_ID, reportCategory.getReportId());
-        initialValues.put(REPORT_CATEGORY_CATEGORY_ID, reportCategory.getCategoryId());
+        initialValues = new ContentValues();
+        initialValues.put(REPORT_ID, reportCategory.getReportId());
+        initialValues.put(CATEGORY_ID, reportCategory.getCategoryId());
     }
 
     private ContentValues getContentValue() {

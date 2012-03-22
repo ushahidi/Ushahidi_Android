@@ -25,7 +25,7 @@ package com.ushahidi.android.app.database;
  */
 public interface IOfflineReportSchema {
 
-    public static final String OFFLINE_REPORT_TABLE = "OFFLINE_REPORT";
+    public static final String OFFLINE_REPORT_TABLE = "offline_report";
 
     public static final String ID = "_id";
 

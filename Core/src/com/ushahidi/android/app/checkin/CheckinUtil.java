@@ -13,7 +13,7 @@ import android.telephony.TelephonyManager;
  * this template use File | Settings | File Templates.
  */
 public class CheckinUtil {
-    public static String IMEI(Context appContext) {
+    /*public static String IMEI(Context appContext) {
         TelephonyManager TelephonyMgr = (TelephonyManager)appContext
                 .getSystemService(Context.TELEPHONY_SERVICE);
         return TelephonyMgr.getDeviceId(); // Requires READ_PHONE_STATE
@@ -51,5 +51,5 @@ public class CheckinUtil {
         }
         cursor.close();
         return thumbnail;
-    }
+    }*/
 }

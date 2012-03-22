@@ -116,8 +116,7 @@ public class MapsHttpClient extends MainHttpClient {
                 Map mapModel = new Map();
                 try {
 
-                    mapModel.setDbId(Long.valueOf(jsonObject.getJSONObject(names.getString(i))
-                            .getString("id")));
+                    mapModel.setMapId(jsonObject.getJSONObject(names.getString(i)).getInt("id"));
                     mapModel.setDate(jsonObject.getJSONObject(names.getString(i)).getString(
                             "discovery_date"));
                     mapModel.setActive("0");
@@ -137,7 +136,7 @@ public class MapsHttpClient extends MainHttpClient {
                         mapModel.setDesc(jsonObject.getJSONObject(names.getString(i)).getString(
                                 "description"));
                     }
-                    mapModel.setCatId(jsonObject.getJSONObject(names.getString(i)).getString(
+                    mapModel.setCatId(jsonObject.getJSONObject(names.getString(i)).getInt(
                             "category_id"));
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -146,8 +146,8 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao, ICat
     }
 
     private void setContentValue(Category category) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(CATEGORY_ID, category.getCategoryId());
+        initialValues = new ContentValues();
+        initialValues.put(CATEGORY_ID, category.getDbId());
         initialValues.put(CATEGORY_TITLE, category.getCategoryTitle());
         initialValues.put(CATEGORY_DESC, category.getCategoryDescription());
         initialValues.put(CATEGORY_COLOR, category.getCategoryColor());

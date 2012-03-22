@@ -27,22 +27,20 @@ package com.ushahidi.android.app.database;
  */
 public interface IReportCategorySchema {
 
-    public static String REPORT_CATEGORY_TABLE = "report_table";
+    public static String TABLE = "report_category";
 
-    public static String REPORT_CATEGORY_ID = "_id";
+    public static String ID = "_id";
 
-    public static String REPORT_CATEGORY_REPORT_ID = "report_id";
+    public static String REPORT_ID = "report_id";
 
-    public static String REPORT_CATEGORY_CATEGORY_ID = "category_id";
+    public static String CATEGORY_ID = "category_id";
 
-    public static final String REPORT_CATEGORY_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
-            + REPORT_CATEGORY_TABLE + " (" + REPORT_CATEGORY_ID
-            + " INTEGER PRIMARY KEY AUTO_INCREMENT, " + REPORT_CATEGORY_ID + "INTEGER NOT NULL, "
-            + REPORT_CATEGORY_REPORT_ID + "INTEGER NOT NULL )";
+    public static final String REPORT_CATEGORY_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE
+            + " (" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CATEGORY_ID
+            + " INTEGER NOT NULL, " + REPORT_ID + " INTEGER NOT NULL )";
 
-    public static final String[] REPORT_CATEGORY_COLUMNS = new String[] {
-            REPORT_CATEGORY_TABLE, REPORT_CATEGORY_ID, REPORT_CATEGORY_REPORT_ID,
-            REPORT_CATEGORY_CATEGORY_ID
+    public static final String[] COLUMNS = new String[] {
+            ID, REPORT_ID, CATEGORY_ID
     };
 
 }

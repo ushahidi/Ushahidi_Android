@@ -188,6 +188,8 @@ public class IncidentAdd extends MapUserLocation {
     public int mCurSMSReceivedNumber = 0;
 
     private ProgressDialog sendSMSProgressDialog;
+    
+    private ApiUtils apiUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -196,6 +198,7 @@ public class IncidentAdd extends MapUserLocation {
 
         // load settings
         Preferences.loadSettings(IncidentAdd.this);
+        apiUtils = new ApiUtils(this);
         initComponents();
     }
 
@@ -402,7 +405,7 @@ public class IncidentAdd extends MapUserLocation {
 
     // fetch categories
     public String[] showCategories() {
-        Cursor cursor = MainApplication.mDb.fetchAllCategories();
+        /*Cursor cursor = MainApplication.mDb.fetchAllCategories();
 
         // check if there are any existing categories in the database
         int categoryCount = cursor.getCount();
@@ -449,13 +452,14 @@ public class IncidentAdd extends MapUserLocation {
             mCategoriesTitle.put(UNCATEGORIZED_CATEGORY_ID, UNCATEGORIZED_CATEGORY_TITLE);
         }
 
-        cursor.close();
-        return categories;
+        cursor.close();*
+        return categories;*/
+        return null;
     }
 
     // reset records in the field
     private void clearFields() {
-        Log.d(CLASS_TAG, "clearFields(): clearing fields");
+        /*Log.d(CLASS_TAG, "clearFields(): clearing fields");
         mBtnPicture = (Button)findViewById(R.id.btnPicture);
         mBtnAddCategory = (Button)findViewById(R.id.add_category);
         // delete unset photo
@@ -489,7 +493,7 @@ public class IncidentAdd extends MapUserLocation {
         editor.putString("longitude", mLongitude.getText().toString());
         editor.putString("categories", "");
         editor.putString("photo", "");
-        editor.commit();
+        editor.commit();*/
     }
 
     // discard reports
@@ -507,7 +511,7 @@ public class IncidentAdd extends MapUserLocation {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // delete all messages
-                                clearFields();
+                                //clearFields();
                             }
                         });
         AlertDialog alert = builder.create();
@@ -859,8 +863,8 @@ public class IncidentAdd extends MapUserLocation {
         addIncidentData.setPersonEmail(Preferences.email);
 
         // add it to database.
-        return MainApplication.mDb.addIncidents(addIncidentsData);
-
+        //return MainApplication.mDb.addIncidents(addIncidentsData);
+        return 0;
     }
 
     /**
@@ -968,9 +972,9 @@ public class IncidentAdd extends MapUserLocation {
      * @author henryaddo
      */
     public int postToOnline() {
-        Log.d(CLASS_TAG, "postToOnline(): posting report to online");
+        /*Log.d(CLASS_TAG, "postToOnline(): posting report to online");
         //check if domain has changed
-        ApiUtils.updateDomain(this);
+        apiUtils.updateDomain();
         
         if (TextUtils.isEmpty(Preferences.domain) || Preferences.domain.equalsIgnoreCase("http://")) {
             return 12;
@@ -1008,7 +1012,8 @@ public class IncidentAdd extends MapUserLocation {
                     + Preferences.domain);
             e.printStackTrace();
             return 13;
-        }
+        }*/
+        return 0;
 
     }
 

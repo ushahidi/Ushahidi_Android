@@ -61,7 +61,7 @@ public class MainApplication extends Application {
     }
 
     private void cleanupImages() {
-        HashSet<String> keepers = new HashSet<String>();
+        /*HashSet<String> keepers = new HashSet<String>();
 
         Cursor cursor = mDb.fetchAllIncidents();
 
@@ -85,7 +85,7 @@ public class MainApplication extends Application {
 
         cursor.close();
 
-        // mImageManager.cleanup(keepers);
+        // mImageManager.cleanup(keepers);*/
     }
 
 }

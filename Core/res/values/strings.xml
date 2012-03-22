@@ -121,7 +121,7 @@
 		all required fields.</string>
 	<string name="failed_to_add_report_online">Connection failure, cannot submit your report.
         Probably you are on a very slow connection or the server is down or very slow at the moment.</string>
-    <string name="failed_to_add_report_online_db_error">Check your Ushahidi deployment. The API might be down due to a database error.</string>    
+    <string name="failed_to_add_report_online_db_error">Check your Ushahidi deployment. The API might be down due to a database error or something went wrong with the Api call.</string>    
 	<string name="empty_report_title">Enter a title for the report.</string>
 	<string name="empty_report_description">Enter a description for the report.</string>
 	<string name="empty_report_location">The location name field is required.</string>
@@ -352,4 +352,15 @@
     <string name="map_deleted_failed">Failed to map</string>
     <string name="admin">Admin</string>
     <string name="categories">Categories</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">Ok</string>
+    <string name="error_occured">Error occurred while fetching </string>
+    <string name="photos">Photos</string>
+    <string name="news">News</string>
+    <string name="video">Video</string>
+    <string name="audio">Audio</string>
+    <string name="no_news">No News</string>
+    <string name="no_video">No Video</string>
+    <string name="no_photos">No Photos</string>
 </resources>

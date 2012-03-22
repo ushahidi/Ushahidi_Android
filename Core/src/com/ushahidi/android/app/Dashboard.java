@@ -549,11 +549,11 @@ public class Dashboard extends Activity {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            ApiUtils.checkForCheckin(appContext);
+            ApiUtils apiUtils = new ApiUtils(appContext);
             if (Preferences.isCheckinEnabled == 0) {
-                status = ApiUtils.processReports(appContext);
+                status = apiUtils.processReports();
             } else {
-                status = ApiUtils.processCheckins(appContext);
+                status = apiUtils.processCheckins();
             }
             return status;
         }

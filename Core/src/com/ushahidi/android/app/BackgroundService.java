@@ -98,12 +98,13 @@ public class BackgroundService extends Service {
     private Notification newUshahidiReportNotification;
 
     private NotificationManager mNotificationManager;
-
+    
+    private ApiUtils apiUtils;
     @Override
     public void onCreate() {
 
         mContext = getApplicationContext();
-
+        apiUtils = new ApiUtils(this);
         Preferences.loadSettings(mContext);
 
         mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
@@ -134,7 +135,7 @@ public class BackgroundService extends Service {
                     public void run() {
 
                         // Perform a task
-                        ApiUtils.fetchReports(BackgroundService.this);
+                        apiUtils.fetchReports();
                         showNotification(Preferences.totalReportsFetched);
                     }
 

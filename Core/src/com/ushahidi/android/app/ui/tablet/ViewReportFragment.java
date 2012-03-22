@@ -60,9 +60,9 @@ public class ViewReportFragment extends BaseFragment implements AdapterView.OnIt
         }
 
         if ((category != null) && (!TextUtils.isEmpty(category)))
-            reports.loadReportByCategory(getActivity(), category);
+            reports.loadReportByCategory(category);
         else
-            reports.load(getActivity());
+            reports.load();
 
         initReport(this.position);
         

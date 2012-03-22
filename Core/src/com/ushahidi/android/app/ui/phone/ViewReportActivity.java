@@ -73,9 +73,9 @@ public class ViewReportActivity extends BaseMapViewActivity<ViewReportView, View
         this.position = getIntent().getExtras().getInt("id", 0);
 
         if ((category != null) && (!TextUtils.isEmpty(category)))
-            reports.loadReportByCategory(this, category);
+            reports.loadReportByCategory(category);
         else
-            reports.load(this);
+            reports.load();
 
         initReport(this.position);
         view.getGallery().setOnItemSelectedListener(this);

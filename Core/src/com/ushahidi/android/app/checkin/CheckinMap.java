@@ -75,13 +75,15 @@ public class CheckinMap extends MapUserLocation {
     private static final int REQUEST_CODE_SETTINGS = 4;
 
     private static final int REQUEST_CODE_ABOUT = 5;
+    
+    private ApiUtils apiUtils;
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         Preferences.loadSettings(CheckinMap.this);
         setContentView(R.layout.checkin_map);
-
+        apiUtils = new ApiUtils(this);
         mapView = (MapView)findViewById(R.id.checkin_mapview);
         mapView.setBuiltInZoomControls(true);
         mapController = mapView.getController();
@@ -300,7 +302,7 @@ public class CheckinMap extends MapUserLocation {
     // get checkins from the db
     public List<Checkin> showCheckins() {
 
-        cursor = MainApplication.mDb.fetchAllCheckins();
+        /*cursor = MainApplication.mDb.fetchAllCheckins();
         String name;
         String date;
         String mesg;
@@ -350,7 +352,8 @@ public class CheckinMap extends MapUserLocation {
 
         cursor.close();
         return checkins;
-
+    */
+        return null;
     }
 
     private class CheckinsTask extends AsyncTask<Void, Void, Integer> {
@@ -367,7 +370,7 @@ public class CheckinMap extends MapUserLocation {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            status = ApiUtils.processCheckins(appContext);
+            status = apiUtils.processCheckins();
             return status;
         }
 

@@ -20,9 +20,6 @@
 
 package com.ushahidi.android.app.models;
 
-import android.content.Context;
-
-import com.ushahidi.android.app.entities.IDbEntity;
 /**
  * BaseModel
  *
@@ -30,6 +27,6 @@ import com.ushahidi.android.app.entities.IDbEntity;
  */
 public abstract class Model {
 
-    public abstract boolean load(Context context);
-    public abstract boolean save(Context context);
+    public abstract boolean load();
+    public abstract boolean save();
 }
