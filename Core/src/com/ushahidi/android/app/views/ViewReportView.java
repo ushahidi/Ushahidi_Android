@@ -20,254 +20,263 @@
 
 package com.ushahidi.android.app.views;
 
-import java.util.Vector;
-
-import android.app.Activity;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentMapActivity;
-import android.text.TextUtils;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Gallery;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.view.ViewStub;
+import android.view.View;
 
 import com.google.android.maps.MapView;
-import com.ushahidi.android.app.ImageManager;
-import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.adapters.ListNewsAdapter;
+import com.ushahidi.android.app.adapters.ListPhotoAdapter;
+import com.ushahidi.android.app.adapters.ListVideoAdapter;
 
 /**
  * @author eyedol
  */
 public class ViewReportView extends com.ushahidi.android.app.views.View {
 
-    private TextView title;
+	private TextView title;
 
-    private TextView body;
+	private TextView body;
 
-    private TextView date;
+	private TextView date;
 
-    private TextView location;
+	private TextView location;
 
-    private TextView category;
+	private TextView category;
 
-    private TextView status;
+	private TextView status;
 
-    private TextView photos;
+	private TextView listNewsEmptyView;
 
-    public MapView mapView;
+	private TextView listPhotosEmptyView;
 
-    private Gallery g;
+	private TextView listVideoEmptyView;
 
-    private FragmentMapActivity activity;
-    
-    private Activity fragmentActivity;
-    
-    private Context context;
+	public MapView mapView;
 
-    private ImageSwitcher mSwitcher;
+	private ListView listNews;
 
-    private ImageAdapter imageAdapter;
+	private ListView listPhotos;
 
-    private ImageAdapter thumbnailAdapter;
+	private ListView listVideos;
 
-    private String images;
+	private Context context;
 
-    private String thumbnails[];
+	private LinearLayout viewReportRoot;
 
-    public ViewReportView(FragmentMapActivity activity) {
-        super(activity);
-        this.context = activity;
-        mapView = (MapView)activity.findViewById(R.id.loc_map);
-        title = (TextView)activity.findViewById(R.id.title);
-        category = (TextView)activity.findViewById(R.id.category);
-        date = (TextView)activity.findViewById(R.id.date);
-        location = (TextView)activity.findViewById(R.id.location);
-        body = (TextView)activity.findViewById(R.id.webview);
-        status = (TextView)activity.findViewById(R.id.status);
-        photos = (TextView)activity.findViewById(R.id.report_photo);
-        mSwitcher = (ImageSwitcher)activity.findViewById(R.id.switcher);
-        g = (Gallery)activity.findViewById(R.id.gallery);
-        imageAdapter = new ImageAdapter(activity);
-        thumbnailAdapter = new ImageAdapter(activity);
 
-    }
-    
-    public ViewReportView(ViewGroup activity, Context context) {
-        super(activity);
-        this.context = context;
-        mapView = (MapView)activity.findViewById(R.id.loc_map);
-        title = (TextView)activity.findViewById(R.id.title);
-        category = (TextView)activity.findViewById(R.id.category);
-        date = (TextView)activity.findViewById(R.id.date);
-        location = (TextView)activity.findViewById(R.id.location);
-        body = (TextView)activity.findViewById(R.id.webview);
-        status = (TextView)activity.findViewById(R.id.status);
-        photos = (TextView)activity.findViewById(R.id.report_photo);
-        mSwitcher = (ImageSwitcher)activity.findViewById(R.id.switcher);
-        g = (Gallery)activity.findViewById(R.id.gallery);
-        imageAdapter = new ImageAdapter(context);
-        thumbnailAdapter = new ImageAdapter(context);
+	public ViewReportView(FragmentMapActivity activity) {
+		super(activity);
+		this.context = activity;
 
-    }
+		viewReportRoot = (LinearLayout) activity
+				.findViewById(R.id.view_report_root);
 
-    public void setMedia(String media) {
-        if (TextUtils.isEmpty(media)) {
-            photos.setText("");
-        } else {
-            thumbnails = media.split(",");
-            for (int i = 0; i < thumbnails.length; i++) {
-               /* thumbnailAdapter.mImageIds.add(ImageManager.getImages(Preferences.savePath,
-                        thumbnails[i]));*/
-            }
+		mapView = (MapView) activity.findViewById(R.id.loc_map);
+		title = (TextView) activity.findViewById(R.id.title);
+		category = (TextView) activity.findViewById(R.id.category);
+		date = (TextView) activity.findViewById(R.id.date);
+		location = (TextView) activity.findViewById(R.id.location);
+		body = (TextView) activity.findViewById(R.id.desc);
+		status = (TextView) activity.findViewById(R.id.status);
+		listNews = (ListView) activity.findViewById(R.id.list_news);
+		listNewsEmptyView = (TextView) activity
+				.findViewById(R.id.empty_list_for_news);
+		if (listNewsEmptyView != null) {
+			listNews.setEmptyView(listNewsEmptyView);
+		}
 
-            if (!TextUtils.isEmpty(getImage())) {
-                final String images[] = getImage().split(",");
+		listPhotos = (ListView) activity.findViewById(R.id.list_photos);
+		listPhotosEmptyView = (TextView) activity
+				.findViewById(R.id.empty_list_for_photos);
 
-                for (int i = 0; i < images.length; i++) {
+		if (listPhotosEmptyView != null) {
+			listPhotos.setEmptyView(listPhotosEmptyView);
+		}
 
-                    /*imageAdapter.mImageIds.add(ImageManager.getImages(Preferences.savePath,
-                            images[i]));*/
-                }
-            }
-        }
-    }
+		listVideos = (ListView) activity.findViewById(R.id.list_video);
+		listVideoEmptyView = (TextView) activity
+				.findViewById(R.id.empty_list_for_video);
+		if (listVideoEmptyView != null) {
+			listVideos.setEmptyView(listVideoEmptyView);
+		}
 
-    public void setImage(String image) {
-        this.images = image;
-    }
+	}
 
-    public String getImage() {
-        return this.images;
-    }
+	public ViewReportView(ViewGroup activity, Context context) {
+		super(activity);
+		this.context = context;
 
-    public void setTitle(String title) {
-        this.title.setTypeface(Typeface.DEFAULT_BOLD);
-        this.title.setText(title);
-    }
+		/*
+		 * viewReportRoot = (LinearLayout) activity
+		 * .findViewById(R.id.view_report_root);
+		 */
+		/*
+		 * titleStub = ((ViewStub) activity.findViewById(R.id.stub_title))
+		 * .inflate(); descriptionStub = ((ViewStub) activity
+		 * .findViewById(R.id.stub_description)).inflate(); statusStub =
+		 * ((ViewStub) activity.findViewById(R.id.stub_status)) .inflate();
+		 * dateStub = ((ViewStub)
+		 * activity.findViewById(R.id.stub_date)).inflate(); locationStub =
+		 * ((ViewStub) activity.findViewById(R.id.stub_location)) .inflate();
+		 * categoriesStub = ((ViewStub)
+		 * activity.findViewById(R.id.stub_category)) .inflate(); // mapStub =
+		 * ((ViewStub) // activity.findViewById(R.id.stub_map)).inflate(); /*
+		 * photoStub = ((ViewStub) activity.findViewById(R.id.stub_photo))
+		 * .inflate(); newsStub = ((ViewStub)
+		 * activity.findViewById(R.id.stub_news)).inflate(); videoStub =
+		 * ((ViewStub) activity.findViewById(R.id.stub_video)) .inflate();
+		 */
+		mapView = (MapView) activity.findViewById(R.id.loc_map);
+		title = (TextView) activity.findViewById(R.id.title);
+		category = (TextView)activity.findViewById(R.id.category);
+		date = (TextView) activity.findViewById(R.id.date);
+		location = (TextView) activity.findViewById(R.id.location);
+		body = (TextView) activity.findViewById(R.id.desc);
+		status = (TextView) activity.findViewById(R.id.status);
+		listNews = (ListView) activity.findViewById(R.id.list_news);
+		listNewsEmptyView = (TextView) activity
+				.findViewById(R.id.empty_list_for_news);
+		if (listNewsEmptyView != null) {
+			listNews.setEmptyView(listNewsEmptyView);
+		}
 
-    public String getTitle() {
-        return this.getTitle().toString();
-    }
+		listPhotos = (ListView) activity.findViewById(R.id.list_photos);
+		listPhotosEmptyView = (TextView) activity
+				.findViewById(R.id.empty_list_for_photos);
 
-    public void setCategory(String category) {
-        this.category.setTextColor(Color.BLACK);
-        this.category.setText(category);
-    }
+		if (listPhotosEmptyView != null) {
+			listPhotos.setEmptyView(listPhotosEmptyView);
+		}
 
-    public String getCategory() {
-        return this.category.getText().toString();
-    }
+		listVideos = (ListView) activity.findViewById(R.id.list_video);
+		listVideoEmptyView = (TextView) activity
+				.findViewById(R.id.empty_list_for_video);
+		if (listVideoEmptyView != null) {
+			listVideos.setEmptyView(listVideoEmptyView);
+		}
+	}
 
-    public void setDate(String date) {
-        this.date.setTextColor(Color.BLACK);
-        this.date.setText(date);
-    }
+	public void setTitle(String title) {
+		this.title.setTypeface(Typeface.DEFAULT_BOLD);
+		this.title.setText(title);
+	}
 
-    public String getDate() {
-        return this.date.getText().toString();
-    }
+	public String getTitle() {
+		return this.getTitle().toString();
+	}
 
-    public void setLocation(String location) {
-        this.location.setTextColor(Color.BLACK);
-        this.location.setText(location);
-    }
+	public void setCategory(String category) {
+		this.category.setTextColor(Color.BLACK);
+		this.category.setText(category);
+	}
 
-    public String getLocation() {
-        return this.location.getText().toString();
-    }
+	public String getCategory() {
+		return this.category.getText().toString();
+	}
 
-    public void setBody(String body) {
-        this.body.setTextColor(Color.BLACK);
-        this.body.setText(body);
-    }
+	public void setDate(String date) {
+		this.date.setTextColor(Color.BLACK);
+		this.date.setText(date);
+	}
 
-    public String getBody() {
-        return this.body.getText().toString();
-    }
+	public String getDate() {
+		return this.date.getText().toString();
+	}
 
-    public void setStatus(String status) {
+	public void setLocation(String location) {
+		this.location.setTextColor(Color.BLACK);
+		this.location.setText(location);
+	}
 
-        this.status.setText(status);
-    }
+	public String getLocation() {
+		return this.location.getText().toString();
+	}
 
-    public String getStatus() {
-        return this.status.getText().toString();
-    }
+	public void setBody(String body) {
+		this.body.setTextColor(Color.BLACK);
+		this.body.setText(body);
+	}
 
-    public MapView getMapView() {
-        return this.mapView;
-    }
+	public String getBody() {
+		return this.body.getText().toString();
+	}
 
-    public Gallery getGallery() {
-        return this.g;
-    }
+	public void setStatus(String status) {
 
-    public ImageSwitcher getImageSwitcher() {
-        return this.mSwitcher;
-    }
+		this.status.setText(status);
+	}
 
-    public int imageBackgroundColor() {
-        TypedArray a =  context.obtainStyledAttributes(R.styleable.PhotoGallery);
-        int mGalleryItemBackground = a.getResourceId(
-                R.styleable.PhotoGallery_android_galleryItemBackground, 0);
-        a.recycle();
+	public String getStatus() {
+		return this.status.getText().toString();
+	}
 
-        return mGalleryItemBackground;
-    }
+	public MapView getMapView() {
+		return this.mapView;
+	}
 
-    public String[] getThumbnails() {
-        return this.thumbnails;
-    }
+	public void setListNews(int reportId) {
+		if (listNews != null) {
+			ListNewsAdapter adapter = new ListNewsAdapter(context);
+			adapter.refresh(reportId);
+			listNews.setAdapter(adapter);
+		}
+	}
 
-    public class ImageAdapter extends BaseAdapter {
+	public ListView getListNews() {
+		return this.listNews;
+	}
 
-        public Vector<Drawable> mImageIds;
+	public void setListPhotos(int reportId) {
+		if (listPhotos != null) {
+			ListPhotoAdapter adapter = new ListPhotoAdapter(context);
+			adapter.refresh(reportId);
+			listPhotos.setAdapter(adapter);
+		}
+	}
 
-        private Context mContext;
+	public ListView getListPhotos() {
+		return this.listPhotos;
+	}
 
-        public ImageAdapter(Context context) {
-            mContext = context;
-            mImageIds = new Vector<Drawable>();
+	public void setListVideos(int reportId) {
+		if (listVideos != null) {
+			ListVideoAdapter adapter = new ListVideoAdapter(context);
+			adapter.refresh(reportId);
+			listVideos.setAdapter(adapter);
+		}
+	}
 
-        }
+	public ListView getListVideos() {
+		return this.listVideos;
+	}
 
-        public int getCount() {
-            return mImageIds.size();
-        }
+	private void showPanel(android.view.View panel, boolean slideUp) {
+		panel.startAnimation(AnimationUtils.loadAnimation(context,
+				slideUp ? R.anim.slide_in : R.anim.slide_out_top));
+		panel.setVisibility(android.view.View.VISIBLE);
+	}
 
-        public Object getItem(int position) {
-            return position;
-        }
+	private void hidePanel(android.view.View panel, boolean slideDown) {
+		panel.startAnimation(AnimationUtils.loadAnimation(context,
+				slideDown ? R.anim.slide_out : R.anim.slide_in_top));
+		panel.setVisibility(android.view.View.GONE);
+	}
 
-        public long getItemId(int position) {
-            return position;
-        }
+	public void showViews() {
+		showPanel(viewReportRoot, true);
+	}
 
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView i = new ImageView(mContext);
-            i.setImageDrawable(mImageIds.get(position));
-
-            i.setScaleType(ImageView.ScaleType.FIT_XY);
-
-            i.setLayoutParams(new Gallery.LayoutParams(
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-
-            // The preferred Gallery item background
-            i.setBackgroundResource(imageBackgroundColor());
-
-            return i;
-        }
-
-    }
-
+	public void hideViews() {
+		hidePanel(viewReportRoot, true);
+	}
 }

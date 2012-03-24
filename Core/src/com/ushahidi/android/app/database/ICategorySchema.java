@@ -22,28 +22,23 @@ package com.ushahidi.android.app.database;
 
 public interface ICategorySchema {
 
-    public static final String CATEGORY_ID = "_id";
+	public static final String ID = "_id";
 
-    public static final String CATEGORY_TITLE = "category_title";
+	public static final String TITLE = "category_title";
 
-    public static final String CATEGORY_DESC = "category_desc";
+	public static final String DESCRIPTION = "category_desc";
 
-    public static final String CATEGORY_COLOR = "category_color";
+	public static final String COLOR = "category_color";
 
-    public static final String CATEGORY_IS_UNREAD = "is_unread";
+	public static final String POSITION = "position";
 
-    public static final String CATEGORY_POS = "position";
+	public static final String[] COLUMNS = new String[] { ID, TITLE,
+			DESCRIPTION, COLOR, POSITION };
 
-    public static final String[] CATEGORIES_COLUMNS = new String[] {
-            CATEGORY_ID, CATEGORY_TITLE, CATEGORY_DESC, CATEGORY_COLOR, CATEGORY_IS_UNREAD,
-            CATEGORY_POS
-    };
+	public static final String TABLE = "categories";
 
-    public static final String CATEGORIES_TABLE = "categories";
-
-    public static final String CATEGORIES_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
-            + CATEGORIES_TABLE + " (" + CATEGORY_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
-            + CATEGORY_TITLE + " TEXT NOT NULL, " + CATEGORY_DESC + " TEXT, " + CATEGORY_COLOR
-            + " TEXT, " + CATEGORY_IS_UNREAD + " BOOLEAN NOT NULL, " + CATEGORY_POS + " INTEGER "
-            + ")";
+	public static final String CATEGORIES_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
+			+ TABLE+ " ("+ ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
+			+ TITLE+ " TEXT NOT NULL, "+ DESCRIPTION+ " TEXT, "+ COLOR+ " TEXT, " 
+			+ POSITION + " INTEGER " + ")";
 }

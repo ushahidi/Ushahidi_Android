@@ -65,6 +65,7 @@
 
     <color name="tab_selected_color">#8A1F03</color>
     <color name="tab_unselected_color">#404041</color>
+    <color name="list_divider_color">#e0e0e0</color>
 
 	<!-- TEXT SIZE -->
     <dimen name="text_size_small">14sp</dimen>

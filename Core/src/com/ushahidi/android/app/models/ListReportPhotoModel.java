@@ -23,8 +23,6 @@ package com.ushahidi.android.app.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
-
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Media;
 
@@ -68,11 +66,13 @@ public class ListReportPhotoModel extends Model {
 
     public boolean load(int reportId) {
         mMedia = Database.mMediaDao.fetchReportPhoto(reportId);
-
+        if(mMedia != null) {
+        	return true;
+        }
         return false;
     }
 
-    public List<ListReportPhotoModel> getPhotos(Context context) {
+    public List<ListReportPhotoModel> getPhotos() {
         mPhotoModel = new ArrayList<ListReportPhotoModel>();
 
         if (mMedia != null && mMedia.size() > 0) {

@@ -592,14 +592,14 @@ public class ListMapActivity extends BaseListActivity<ListMapView, ListMapModel,
                     listMapModel.activateDeployment(ListMapActivity.this, id);
 
                     if (apiUtils.isCheckinEnabled()) {
-                        log("process checkins");
+                        
                         status = apiUtils.processCheckins();
                     } else {
-                        log("fetchCategories");
+                        
                         // fetch categories
                         new CategoriesHttpClient(ListMapActivity.this).getCategoriesFromWeb();
                         // fetch reports
-                        log("fetchReports");
+                        
                         status = new ReportsHttpClient(ListMapActivity.this).getAllReportFromWeb();
                     }
 

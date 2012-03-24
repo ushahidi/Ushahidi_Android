@@ -23,8 +23,6 @@ package com.ushahidi.android.app.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
-
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Media;
 
@@ -33,80 +31,84 @@ import com.ushahidi.android.app.entities.Media;
  */
 public class ListReportNewsModel extends Model {
 
-    private int id;
+	private int id;
 
-    private String title;
+	private String title;
 
-    private String url;
+	private String url;
 
-    private List<Media> mMedia;
+	private List<Media> mMedia;
 
-    private List<ListReportNewsModel> mNewsModel;
+	private List<ListReportNewsModel> mNewsModel;
 
-    public int getId() {
-        return this.id;
-    }
+	public int getId() {
+		return this.id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public String getTitle() {
-        return this.title;
-    }
+	public String getTitle() {
+		return this.title;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public String getUrl() {
-        return this.url;
-    }
+	public String getUrl() {
+		return this.url;
+	}
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.models.Model#load(android.content.Context)
-     */
-    @Override
-    public boolean load() {
-        return false;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.models.Model#load(android.content.Context)
+	 */
+	@Override
+	public boolean load() {
+		return false;
+	}
 
-    public boolean load(Context context, int reportId) {
-        mMedia = Database.mMediaDao.fetchReportNews(reportId);
+	public boolean load(int reportId) {
+		mMedia = Database.mMediaDao.fetchReportNews(reportId);
+		if (mMedia != null) {
+			return true;
+		}
+		return false;
+	}
 
-        return false;
-    }
+	public List<ListReportNewsModel> getNews() {
+		mNewsModel = new ArrayList<ListReportNewsModel>();
 
-    public List<ListReportNewsModel> getNews(Context context) {
-        mNewsModel = new ArrayList<ListReportNewsModel>();
+		if (mMedia != null && mMedia.size() > 0) {
+			for (Media item : mMedia) {
+				ListReportNewsModel newsModel = new ListReportNewsModel();
+				newsModel.setId(item.getDbId());
+				newsModel.setTitle(item.getLink());
+				newsModel.setUrl(item.getLink());
 
-        if (mMedia != null && mMedia.size() > 0) {
-            for (Media item : mMedia) {
-                ListReportNewsModel newsModel = new ListReportNewsModel();
-                newsModel.setId(item.getDbId());
-                newsModel.setTitle(item.getLink());
-                newsModel.setUrl(item.getLink());
+				mNewsModel.add(newsModel);
+			}
+		}
 
-                mNewsModel.add(newsModel);
-            }
-        }
+		return mNewsModel;
+	}
 
-        return mNewsModel;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.models.Model#save(android.content.Context)
-     */
-    @Override
-    public boolean save() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.models.Model#save(android.content.Context)
+	 */
+	@Override
+	public boolean save() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

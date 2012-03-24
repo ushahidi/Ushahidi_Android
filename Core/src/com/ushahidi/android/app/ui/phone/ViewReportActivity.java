@@ -22,186 +22,173 @@ package com.ushahidi.android.app.ui.phone;
 
 import java.util.List;
 
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.MenuItem;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ViewSwitcher;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseMapViewActivity;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.models.ViewReportModel;
-import com.ushahidi.android.app.ui.ImagePreviewer;
 import com.ushahidi.android.app.views.ViewReportView;
 
 /**
  * @author eyedol
  */
-public class ViewReportActivity extends BaseMapViewActivity<ViewReportView, ViewReportModel>
-        implements AdapterView.OnItemSelectedListener, ViewSwitcher.ViewFactory {
+public class ViewReportActivity extends
+		BaseMapViewActivity<ViewReportView, ViewReportModel> implements
+		AdapterView.OnItemSelectedListener, ViewSwitcher.ViewFactory {
 
-    private ListReportModel reports;
+	private ListReportModel reports;
 
-    private List<ListReportModel> report;
+	private List<ListReportModel> report;
 
-    private int position;
+	private int position;
 
-    private Bundle photosBundle;
+	private Bundle photosBundle;
 
-    private String category;
+	private String category;
 
-    public ViewReportActivity() {
-        super(ViewReportView.class, R.layout.view_report, R.menu.view_report, R.id.loc_map);
-    }
+	public ViewReportActivity() {
+		super(ViewReportView.class, R.layout.view_report, R.menu.view_report,
+				R.id.loc_map);
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        reports = new ListReportModel();
-        view = new ViewReportView(this);
-        photosBundle = new Bundle();
-        // load all reports
-        // Bundle items = getIntent().getExtras();
-        // items.getBundle("items").get
-        this.category = getIntent().getExtras().getString("category");
-        this.position = getIntent().getExtras().getInt("id", 0);
+		reports = new ListReportModel();
+		view = new ViewReportView(this);
+		photosBundle = new Bundle();
 
-        if ((category != null) && (!TextUtils.isEmpty(category)))
-            reports.loadReportByCategory(category);
-        else
-            reports.load();
+		this.category = getIntent().getExtras().getString("category");
+		this.position = getIntent().getExtras().getInt("id", 0);
 
-        initReport(this.position);
-        view.getGallery().setOnItemSelectedListener(this);
-        view.getGallery().setOnItemClickListener(new OnItemClickListener() {
+		if ((category != null) && (!TextUtils.isEmpty(category)))
+			reports.loadReportByCategory(category);
+		else
+			reports.load();
 
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                previewImage(position);
-            }
+		initReport(this.position);
 
-        });
+	}
 
-    }
+	private void previewImage(int position) {
+		// FIXME redo this
 
-    private void previewImage(int position) {
-        // FIXME redo this
+	}
 
-        photosBundle.putInt("position", position);
-        photosBundle.putStringArray("images", view.getThumbnails());
-        Intent intent = new Intent(this, ImagePreviewer.class);
-        intent.putExtra("photos", photosBundle);
-        startActivityForResult(intent, 0);
-        setResult(RESULT_OK, intent);
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+			finish();
+			return true;
+		} else if (item.getItemId() == R.id.menu_forward) {
 
-    }
+			if (report != null) {
+				position++;
+				if (!(position > (report.size() - 1))) {
+					initReport(position);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        } else if (item.getItemId() == R.id.menu_forward) {
+				} else {
+					position = report.size() - 1;
+				}
+			}
+			return true;
 
-            if (report != null) {
-                position++;
-                if (!(position > (report.size() - 1))) {
-                    initReport(position);
+		} else if (item.getItemId() == R.id.menu_backward) {
 
-                } else {
-                    position = report.size() - 1;
-                }
-            }
-            return true;
+			if (report != null) {
+				position--;
+				if ((position < (report.size() - 1)) && (position != -1)) {
+					initReport(position);
+				} else {
+					position = 0;
+				}
+			}
+			return true;
 
-        } else if (item.getItemId() == R.id.menu_backward) {
+		}
 
-            if (report != null) {
-                position--;
-                if ((position < (report.size() - 1)) && (position != -1)) {
-                    initReport(position);
-                } else {
-                    position = 0;
-                }
-            }
-            return true;
+		return super.onOptionsItemSelected(item);
+	}
 
-        }
+	private void initReport(int position) {
+		report = reports.getReports(this);
 
-        return super.onOptionsItemSelected(item);
-    }
+		if (report != null) {
+			view.setBody(report.get(position).getDesc());
+			view.setCategory(report.get(position).getCategories());
+			view.setLocation(report.get(position).getLocation());
+			view.setDate(report.get(position).getDate());
+			view.setTitle(report.get(position).getTitle());
+			view.setStatus(report.get(position).getStatus());
+			view.setListNews((int) report.get(position).getId());
+			view.setListPhotos((int) report.get(position).getId());
+			view.setListVideos((int) report.get(position).getId());
+			
+			centerLocationWithMarker(getPoint(
+					Double.parseDouble(report.get(position).getLatitude()),
+					Double.parseDouble(report.get(position).getLongitude())));
+			int page = position;
+			this.setTitle(page + 1);
+		}
+		//animate views
+		view.showViews();
+	}
 
-    private void initReport(int position) {
-        report = reports.getReports(this);
+	public void setTitle(int page) {
+		final StringBuilder title = new StringBuilder(String.valueOf(page));
+		title.append("/");
+		if (report != null)
+			title.append(report.size());
+		setActionBarTitle(title.toString());
+	}
 
-        if (report != null) {
-            view.setBody(report.get(position).getDesc());
-            view.setCategory(report.get(position).getCategories());
-            view.setDate(report.get(position).getDate());
-            view.setTitle(report.get(position).getTitle());
-            view.setStatus(report.get(position).getStatus());
-            view.setMedia(report.get(position).getMedia());
+	public void onLocationChanged(Location location) {
+		// TODO Auto-generated method stub
 
-            centerLocationWithMarker(getPoint(
-                    Double.parseDouble(report.get(position).getLatitude()),
-                    Double.parseDouble(report.get(position).getLongitude())));
-            int page = position;
-            this.setTitle(page + 1);
-        }
+	}
 
-    }
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
 
-    public void setTitle(int page) {
-        final StringBuilder title = new StringBuilder(String.valueOf(page));
-        title.append("/");
-        if (report != null)
-            title.append(report.size());
-        setActionBarTitle(title.toString());
-    }
+	}
 
-    public void onLocationChanged(Location location) {
-        // TODO Auto-generated method stub
+	public void onProviderEnabled(String provider) {
 
-    }
+	}
 
-    public void onProviderDisabled(String provider) {
-        // TODO Auto-generated method stub
+	public void onStatusChanged(String provider, int status, Bundle extras) {
 
-    }
+	}
 
-    public void onProviderEnabled(String provider) {
+	@Override
+	protected boolean isRouteDisplayed() {
 
-    }
+		return false;
+	}
 
-    public void onStatusChanged(String provider, int status, Bundle extras) {
+	@Override
+	public View makeView() {
 
-    }
+		return null;
+	}
 
-    @Override
-    protected boolean isRouteDisplayed() {
+	@Override
+	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
 
-        return false;
-    }
+	}
 
-    @Override
-    public View makeView() {
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
 
-        return null;
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> arg0) {
-
-    }
+	}
 
 }

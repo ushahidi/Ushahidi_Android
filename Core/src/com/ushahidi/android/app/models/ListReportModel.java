@@ -27,7 +27,6 @@ import java.util.Vector;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
@@ -277,7 +276,7 @@ public class ListReportModel extends Model {
 
 		if (sMedia != null && sMedia.size() > 0) {
 
-			return ImageManager.getDrawables(context, sMedia.get(0).getLink());
+			return ImageManager.getThumbnails(context, sMedia.get(0).getLink());
 
 		}
 		return context.getResources().getDrawable(R.drawable.report_icon);

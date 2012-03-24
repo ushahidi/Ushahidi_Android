@@ -35,73 +35,72 @@ import com.ushahidi.android.app.models.ListReportNewsModel;
  */
 public class ListNewsAdapter extends BaseListAdapter<ListReportNewsModel> {
 
-    private ListReportNewsModel mListNewsModel;
+	private ListReportNewsModel mListNewsModel;
 
-    private List<ListReportNewsModel> items;
-    
-    private Context mContext;
+	private List<ListReportNewsModel> items;
 
-    /**
-     * @param context
-     */
-    public ListNewsAdapter(Context context) {
-        super(context);
-        this.mContext = context;
-    }
+	/**
+	 * @param context
+	 */
+	public ListNewsAdapter(Context context) {
+		super(context);
+	}
 
-    class Widgets extends com.ushahidi.android.app.views.View {
+	class Widgets extends com.ushahidi.android.app.views.View {
 
-        public Widgets(View view) {
-            super(view);
-            this.newsTitle = (TextView)view.findViewById(R.id.news_title);
-            this.newsUrl = (TextView)view.findViewById(R.id.news_url);
+		public Widgets(View view) {
+			super(view);
+			this.newsTitle = (TextView) view.findViewById(R.id.news_title);
+			this.newsUrl = (TextView) view.findViewById(R.id.news_url);
 
-        }
+		}
 
-        TextView newsTitle;
+		TextView newsTitle;
 
-        TextView newsUrl;
+		TextView newsUrl;
 
-    }
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see android.widget.Adapter#getView(int, android.view.View,
-     * android.view.ViewGroup)
-     */
-    @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-        View row = inflater.inflate(R.layout.list_news_item, viewGroup, false);
-        Widgets widgets = (Widgets)row.getTag();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.widget.Adapter#getView(int, android.view.View,
+	 * android.view.ViewGroup)
+	 */
+	@Override
+	public View getView(int position, View view, ViewGroup viewGroup) {
+		View row = inflater.inflate(R.layout.list_news_item, viewGroup, false);
+		Widgets widgets = (Widgets) row.getTag();
 
-        if (widgets == null) {
-            widgets = new Widgets(row);
-            row.setTag(widgets);
-        }
+		if (widgets == null) {
+			widgets = new Widgets(row);
+			row.setTag(widgets);
+		}
 
-        widgets.newsTitle.setText(getItem(position).getTitle());
-        widgets.newsUrl.setText(getItem(position).getUrl());
+		widgets.newsTitle.setText(getItem(position).getTitle());
+		widgets.newsUrl.setText(getItem(position).getUrl());
 
-        return row;
-    }
+		return row;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.ushahidi.android.app.adapters.BaseListAdapter#refresh(android.content
-     * .Context)
-     */
-    @Override
-    public void refresh() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ushahidi.android.app.adapters.BaseListAdapter#refresh(android.content
+	 * .Context)
+	 */
+	@Override
+	public void refresh() {
 
-    }
-    
-    public void refresh(int reportId) {
-        mListNewsModel = new ListReportNewsModel();
-        final boolean loaded = mListNewsModel.load(mContext, reportId);
-        if (loaded) {
-            items = mListNewsModel.getNews(mContext);
-            this.setItems(items);
-        }
-    }
+	}
+
+	public void refresh(int reportId) {
+		mListNewsModel = new ListReportNewsModel();
+		final boolean loaded = mListNewsModel.load(reportId);
+		if (loaded) {
+			items = mListNewsModel.getNews();
+			this.setItems(items);
+		}
+	}
 }

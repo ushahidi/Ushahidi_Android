@@ -35,68 +35,67 @@ import com.ushahidi.android.app.models.ListReportVideoModel;
  */
 public class ListVideoAdapter extends BaseListAdapter<ListReportVideoModel> {
 
-    private ListReportVideoModel mListReportVideoModel;
+	private ListReportVideoModel mListReportVideoModel;
 
-    private List<ListReportVideoModel> items;
+	private List<ListReportVideoModel> items;
 
-    private Context mContext;
+	/**
+	 * @param context
+	 */
+	public ListVideoAdapter(Context context) {
+		super(context);
+	}
 
-    /**
-     * @param context
-     */
-    public ListVideoAdapter(Context context) {
-        super(context);
-        this.mContext = context;
-    }
+	class Widgets extends com.ushahidi.android.app.views.View {
 
-    class Widgets extends com.ushahidi.android.app.views.View {
+		public Widgets(View view) {
+			super(view);
+			this.video = (WebView) view.findViewById(R.id.report_video_webview);
 
-        public Widgets(View view) {
-            super(view);
-            this.video = (WebView)view.findViewById(R.id.report_video_webview);
+		}
 
-        }
+		WebView video;
 
-        WebView video;
+	}
 
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.widget.Adapter#getView(int, android.view.View,
+	 * android.view.ViewGroup)
+	 */
+	@Override
+	public View getView(int position, View view, ViewGroup viewGroup) {
+		View row = inflater.inflate(R.layout.list_video_item, viewGroup, false);
+		Widgets widgets = (Widgets) row.getTag();
 
-    /*
-     * (non-Javadoc)
-     * @see android.widget.Adapter#getView(int, android.view.View,
-     * android.view.ViewGroup)
-     */
-    @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-        View row = inflater.inflate(R.layout.list_video_item, viewGroup, false);
-        Widgets widgets = (Widgets)row.getTag();
+		if (widgets == null) {
+			widgets = new Widgets(row);
+			row.setTag(widgets);
+		}
 
-        if (widgets == null) {
-            widgets = new Widgets(row);
-            row.setTag(widgets);
-        }
+		widgets.video.loadUrl(getItem(position).getVideo());
+		return row;
+	}
 
-        widgets.video.loadUrl(getItem(position).getVideo());
-        return row;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ushahidi.android.app.adapters.BaseListAdapter#refresh(android.content
+	 * .Context)
+	 */
+	@Override
+	public void refresh() {
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.ushahidi.android.app.adapters.BaseListAdapter#refresh(android.content
-     * .Context)
-     */
-    @Override
-    public void refresh() {
+	}
 
-    }
-
-    public void refresh(int reportId) {
-        mListReportVideoModel = new ListReportVideoModel();
-        final boolean loaded = mListReportVideoModel.load(reportId);
-        if (loaded) {
-            items = mListReportVideoModel.getVideos(mContext);
-            this.setItems(items);
-        }
-    }
+	public void refresh(int reportId) {
+		mListReportVideoModel = new ListReportVideoModel();
+		final boolean loaded = mListReportVideoModel.load(reportId);
+		if (loaded) {
+			items = mListReportVideoModel.getVideos();
+			this.setItems(items);
+		}
+	}
 }

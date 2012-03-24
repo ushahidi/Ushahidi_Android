@@ -72,12 +72,9 @@ public class MediaDao extends DbContentProvider implements IMediaDao, IMediaSche
     @Override
     public List<Media> fetchReportPhoto(int reportId) {
         listMedia = new ArrayList<Media>();
-        final String selectionArgs[] = {
-                String.valueOf(reportId), String.valueOf(IMAGE)
-        };
-
-        final String selection = REPORT_ID + " =? AND " + TYPE + " =?";
-        cursor = super.query(TABLE, MEDIA_COLUMNS, selection, selectionArgs, null);
+       
+        final String selection = REPORT_ID + " = "+reportId +" AND "+ TYPE + " ="+IMAGE;
+        cursor = super.query(TABLE, MEDIA_COLUMNS, selection, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -93,12 +90,9 @@ public class MediaDao extends DbContentProvider implements IMediaDao, IMediaSche
     @Override
     public List<Media> fetchReportVideo(int reportId) {
         listMedia = new ArrayList<Media>();
-        final String selectionArgs[] = {
-                String.valueOf(reportId), String.valueOf(VIDEO)
-        };
-
-        final String selection = REPORT_ID + " =? AND " + TYPE + " =?";
-        cursor = super.query(TABLE, MEDIA_COLUMNS, selection, selectionArgs, null);
+        
+        final String selection = REPORT_ID + " = "+reportId +" AND "+ TYPE + " ="+VIDEO;
+        cursor = super.query(TABLE, MEDIA_COLUMNS, selection, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -114,12 +108,8 @@ public class MediaDao extends DbContentProvider implements IMediaDao, IMediaSche
     @Override
     public List<Media> fetchReportAudio(int reportId) {
         listMedia = new ArrayList<Media>();
-        final String selectionArgs[] = {
-                String.valueOf(reportId), String.valueOf(AUDIO)
-        };
-
-        final String selection = REPORT_ID + " =? AND " + TYPE + " =?";
-        cursor = super.query(TABLE, MEDIA_COLUMNS, selection, selectionArgs, null);
+        final String selection = REPORT_ID + " = "+reportId +" AND "+ TYPE + " ="+AUDIO;
+        cursor = super.query(TABLE, MEDIA_COLUMNS, selection, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -135,12 +125,9 @@ public class MediaDao extends DbContentProvider implements IMediaDao, IMediaSche
     @Override
     public List<Media> fetchReportNews(int reportId) {
         listMedia = new ArrayList<Media>();
-        final String selectionArgs[] = {
-                String.valueOf(reportId), String.valueOf(NEWS)
-        };
-
-        final String selection = REPORT_ID + " =? AND " + TYPE + " =?";
-        cursor = super.query(TABLE, MEDIA_COLUMNS, selection, selectionArgs, null);
+        
+        final String selection = REPORT_ID + " = "+reportId +" AND "+ TYPE + " ="+NEWS;
+        cursor = super.query(TABLE, MEDIA_COLUMNS, selection, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -156,10 +143,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao, IMediaSche
     @Override
     public List<Media> fetchMedia(String itemType, int itemId, int mediaType, int limit) {
         listMedia = new ArrayList<Media>();
-        final String selectionArgs[] = {
-                String.valueOf(itemId), String.valueOf(mediaType)
-        };
-
+       
         final String selection = itemType + " ="+itemId+" AND " + TYPE + " ="+mediaType;
         
         cursor = super.query(TABLE, MEDIA_COLUMNS, selection, null, null, String.valueOf(limit));

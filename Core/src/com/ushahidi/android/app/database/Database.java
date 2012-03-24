@@ -155,16 +155,16 @@ public class Database {
 
             // upgrade category table
             db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
-            categoriesColumns = Database.getColumns(db, ICategorySchema.CATEGORIES_TABLE);
-            db.execSQL("ALTER TABLE " + ICategorySchema.CATEGORIES_TABLE + " RENAME TO temp_"
-                    + ICategorySchema.CATEGORIES_TABLE);
+            categoriesColumns = Database.getColumns(db, ICategorySchema.TABLE);
+            db.execSQL("ALTER TABLE " + ICategorySchema.TABLE + " RENAME TO temp_"
+                    + ICategorySchema.TABLE);
             db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
-            categoriesColumns.retainAll(Database.getColumns(db, ICategorySchema.CATEGORIES_TABLE));
+            categoriesColumns.retainAll(Database.getColumns(db, ICategorySchema.TABLE));
             String catsCols = Database.join(categoriesColumns, ",");
             db.execSQL(String.format("INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-                    ICategorySchema.CATEGORIES_TABLE, catsCols, catsCols,
-                    ICategorySchema.CATEGORIES_TABLE));
-            db.execSQL("DROP TABLE IF EXISTS temp_" + ICategorySchema.CATEGORIES_TABLE);
+                    ICategorySchema.TABLE, catsCols, catsCols,
+                    ICategorySchema.TABLE));
+            db.execSQL("DROP TABLE IF EXISTS temp_" + ICategorySchema.TABLE);
 
             // upgrade add incident table
             db.execSQL(IOfflineReportSchema.OFFLINE_REPORT_TABLE_CREATE);

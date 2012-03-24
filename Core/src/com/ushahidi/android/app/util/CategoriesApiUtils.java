@@ -38,90 +38,112 @@ import com.ushahidi.android.app.entities.Category;
  */
 public class CategoriesApiUtils {
 
-    private JSONObject jsonObject;
+	private JSONObject jsonObject;
 
-    private boolean processingResult;
+	private boolean processingResult;
 
-    public CategoriesApiUtils(String jsonString) {
-        processingResult = true;
+	public CategoriesApiUtils(String jsonString) {
+		processingResult = true;
 
-        try {
-            jsonObject = new JSONObject(jsonString);
-        } catch (JSONException e) {
-            log("JSONException", e);
-            processingResult = false;
-        }
-    }
+		try {
+			jsonObject = new JSONObject(jsonString);
+		} catch (JSONException e) {
+			log("JSONException", e);
+			processingResult = false;
+		}
+	}
 
-    private JSONObject getCategoryPayloadObj() {
-        try {
-            return jsonObject.getJSONObject("payload");
-        } catch (JSONException e) {
-            log("JSONException", e);
-            return new JSONObject();
-        }
-    }
+	private JSONObject getCategoryPayloadObj() {
+		try {
+			return jsonObject.getJSONObject("payload");
+		} catch (JSONException e) {
+			log("JSONException", e);
+			return new JSONObject();
+		}
+	}
 
-    private JSONArray getCategoriesArr() {
-        try {
-            return getCategoryPayloadObj().getJSONArray("categories");
-        } catch (JSONException e) {
-            log("JSONException", e);
-            return new JSONArray();
-        }
-    }
+	private JSONArray getCategoriesArr() {
+		try {
+			return getCategoryPayloadObj().getJSONArray("categories");
+		} catch (JSONException e) {
+			log("JSONException", e);
+			return new JSONArray();
+		}
+	}
 
-    public boolean getCategoriesList() {
-        log("Save report");
-        if (processingResult) {
-            List<Category> listCategory = new ArrayList<Category>();
-            JSONArray categoriesArr = getCategoriesArr();
-            int id = 0;
-            if (categoriesArr != null) {
-                for (int i = 0; i < categoriesArr.length(); i++) {
-                    Category category = new Category();
-                    try {
-                        id = categoriesArr.getJSONObject(i).getJSONObject("category").getInt("id");
-                        category.setDbId(id);
-                        category.setCategoryColor(categoriesArr.getJSONObject(i)
-                                .getJSONObject("category").getString("color"));
-                        category.setCategoryDescription(categoriesArr.getJSONObject(i)
-                                .getJSONObject("category").getString("description"));
-                        category.setCategoryTitle(categoriesArr.getJSONObject(i)
-                                .getJSONObject("category").getString("title"));
-                        category.setCategoryPosition(categoriesArr.getJSONObject(i)
-                                .getJSONObject("category").getInt("position"));
+	public boolean getCategoriesList() {
+		log("Save report");
+		if (processingResult) {
+			List<Category> listCategory = new ArrayList<Category>();
+			JSONArray categoriesArr = getCategoriesArr();
+			int id = 0;
+			if (categoriesArr != null) {
+				for (int i = 0; i < categoriesArr.length(); i++) {
+					Category category = new Category();
+					try {
+						id = categoriesArr.getJSONObject(i)
+								.getJSONObject("category").getInt("id");
+						category.setDbId(id);
+						if (!categoriesArr.getJSONObject(i)
+								.getJSONObject("category").isNull("color")) {
+							category.setCategoryColor(categoriesArr
+									.getJSONObject(i).getJSONObject("category")
+									.getString("color"));
+						}
 
-                    } catch (JSONException e) {
-                        log("JSONException", e);
-                        processingResult = false;
-                        return false;
-                    }
-                    listCategory.add(category);
+						if (!categoriesArr.getJSONObject(i)
+								.getJSONObject("category")
+								.isNull("description")) {
+							category.setCategoryDescription(categoriesArr
+									.getJSONObject(i).getJSONObject("category")
+									.getString("description"));
+						}
 
-                }
-                
-                return saveCategories(listCategory);
-            }
-        }
-        return false;
-    }
+						if (!categoriesArr.getJSONObject(i)
+								.getJSONObject("category").isNull("title")) {
 
-    private boolean saveCategories(List<Category> categories) {
-        if (categories != null && categories.size() > 0) {
-            return Database.mCategoryDao.addCategories(categories);
-        }
-        return false;
-    }
+							category.setCategoryTitle(categoriesArr
+									.getJSONObject(i).getJSONObject("category")
+									.getString("title"));
+						}
 
-    private void log(String message) {
-        if (MainApplication.LOGGING_MODE)
-            Log.i(getClass().getName(), message);
-    }
+						if (!categoriesArr.getJSONObject(i)
+								.getJSONObject("category").isNull("position")) {
+							category.setCategoryPosition(categoriesArr
+									.getJSONObject(i).getJSONObject("category")
+									.getInt("position"));
+						}
 
-    private void log(String message, Exception ex) {
-        if (MainApplication.LOGGING_MODE)
-            Log.e(getClass().getName(), message, ex);
-    }
+					} catch (JSONException e) {
+						log("JSONException", e);
+						processingResult = false;
+						return false;
+					}
+					listCategory.add(category);
+
+				}
+
+				return saveCategories(listCategory);
+			}
+		}
+		return false;
+	}
+
+	private boolean saveCategories(List<Category> categories) {
+		if (categories != null && categories.size() > 0) {
+			return Database.mCategoryDao.addCategories(categories);
+		}
+		return false;
+	}
+
+	private void log(String message) {
+		if (MainApplication.LOGGING_MODE)
+			Log.i(getClass().getName(), message);
+	}
+
+	private void log(String message, Exception ex) {
+		if (MainApplication.LOGGING_MODE)
+			Log.e(getClass().getName(), message, ex);
+	}
 
 }

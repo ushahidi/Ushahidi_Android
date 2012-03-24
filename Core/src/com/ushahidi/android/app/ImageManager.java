@@ -32,10 +32,11 @@ import java.net.URL;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.util.Log;
+
+import com.ushahidi.android.app.util.PhotoUtils;
 
 public class ImageManager {
 
@@ -43,8 +44,43 @@ public class ImageManager {
 
 	public static Drawable getDrawables(Context context, String fileName) {
 
-		return Drawable.createFromPath(getPhotoPath(context) + fileName);
+		Bitmap original = BitmapFactory.decodeFile(getPhotoPath(context)
+				+ fileName);
+		if (original != null) {
+			// scale image
+			Bitmap scaled = PhotoUtils.scaleBitmap(original);
+			return new FastBitmapDrawable(scaled);
 
+		}
+		return null;
+
+	}
+
+	public static Drawable getDrawables(Context context, String fileName,
+			int width) {
+		Bitmap original = BitmapFactory.decodeFile(getPhotoPath(context)
+				+ fileName);
+		if (original != null) {
+			// scale image
+			Bitmap scaled = PhotoUtils.scaleBitmapByWidth(original, width);
+			return new FastBitmapDrawable(scaled);
+
+		}
+		return null;
+	}
+
+	public static Drawable getThumbnails(Context context, String fileName) {
+		// get image
+
+		Bitmap original = BitmapFactory.decodeFile(getPhotoPath(context)
+				+ fileName);
+		if (original != null) {
+			// scale image
+			Bitmap scaled = PhotoUtils.scaleThumbnail(original);
+			return new FastBitmapDrawable(scaled);
+
+		}
+		return null;
 	}
 
 	protected static byte[] retrieveImageData(String imageUrl)

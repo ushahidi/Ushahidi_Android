@@ -44,6 +44,7 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.models.ListReportModel;
+import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
@@ -354,6 +355,10 @@ public class ListReportFragment extends
         @Override
         protected Boolean doInBackground(String... strings) {
             try {
+            	
+            	// fetch categories
+                new CategoriesHttpClient(getActivity()).getCategoriesFromWeb();
+                
                 status = new ReportsHttpClient(getActivity()).getAllReportFromWeb();
                 
                 Thread.sleep(1000);

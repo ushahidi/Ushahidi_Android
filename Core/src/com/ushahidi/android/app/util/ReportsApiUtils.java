@@ -20,7 +20,6 @@
 
 package com.ushahidi.android.app.util;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -128,15 +126,23 @@ public class ReportsApiUtils {
                             JSONArray mediaArr = reportsArr.getJSONObject(i).getJSONArray("media");
                             for (int w = 0; w < mediaArr.length(); w++) {
                                 try {
-                                    if (!mediaArr.getJSONObject(0).isNull("id")) {
-                                        saveMedia(mediaArr.getJSONObject(0).getInt("id"), (int)id,
-                                                mediaArr.getJSONObject(0).getInt("type"), mediaArr
-                                                        .getJSONObject(0).getString("link"));
-
-                                        if (mediaArr.getJSONObject(0).getInt("type") == 1) {
+                                    if (!mediaArr.getJSONObject(w).isNull("id")) {
+                                    	
+                                    	//save images
+                                        saveMedia(mediaArr.getJSONObject(w).getInt("id"), (int)id,
+                                                mediaArr.getJSONObject(w).getInt("type"), mediaArr
+                                                        .getJSONObject(w).getString("link"));
+                                        
+                                        //save news links
+                                        
+                                        saveMedia(mediaArr.getJSONObject(w).getInt("id"), (int)id,
+                                                mediaArr.getJSONObject(w).getInt("type"), mediaArr
+                                                        .getJSONObject(w).getString("link"));
+                                        //save videos
+                                        if (mediaArr.getJSONObject(w).getInt("type") == 1) {
                                             saveImages(
-                                                    mediaArr.getJSONObject(1).getString("link_url"),
-                                                    mediaArr.getJSONObject(0).getString("link"),
+                                                    mediaArr.getJSONObject(w).getString("link_url"),
+                                                    mediaArr.getJSONObject(w).getString("link"),
                                                     context);
                                         }
                                     }
