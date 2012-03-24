@@ -4,7 +4,9 @@ package com.ushahidi.android.app.ui.phone;
 import android.os.Bundle;
 import android.support.v4.app.ActionBar;
 import android.support.v4.app.FragmentMapActivity;
+import android.text.TextUtils;
 
+import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.helpers.ReportViewPager;
 import com.ushahidi.android.app.helpers.TabsAdapter;
@@ -25,7 +27,7 @@ public class ReportTabActivity extends FragmentMapActivity {
 
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        setTitle();
         ActionBar.Tab reportsTab = getSupportActionBar().newTab().setText(
                 getString(R.string.reports));
         ActionBar.Tab mapTab = getSupportActionBar().newTab().setText(getString(R.string.map));
@@ -47,6 +49,15 @@ public class ReportTabActivity extends FragmentMapActivity {
         super.onSaveInstanceState(outState);
         outState.putInt("index", getSupportActionBar().getSelectedNavigationIndex());
     }
+    
+    public void setTitle() {
+		Preferences.loadSettings(this);
+		if ((Preferences.activeMapName != null)
+				&& (!TextUtils.isEmpty(Preferences.activeMapName))) {
+
+			getSupportActionBar().setTitle(Preferences.activeMapName);
+		}
+	}
 
     @Override
     protected boolean isRouteDisplayed() {

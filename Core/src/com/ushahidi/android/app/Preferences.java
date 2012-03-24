@@ -48,6 +48,8 @@ public class Preferences {
     public static int appRunsFirstTime = 0;
 
     public static int activeDeployment = 0;
+    
+    public static String activeMapName = "";
 
     public static int photoWidth = 200;
 
@@ -84,6 +86,7 @@ public class Preferences {
         totalReports = settings.getString("TotalReports", "20");
         isCheckinEnabled = settings.getInt("CheckinEnabled", isCheckinEnabled);
         activeDeployment = settings.getInt("ActiveDeployment", 0);
+        activeMapName = settings.getString("ActiveMapName", "");
         deploymentLatitude = settings.getString("DeploymentLatitude", "0.0");
         deploymentLongitude = settings.getString("DeploymentLongitude", "0.0");
         photoWidth = settings.getInt("PhotoWidth", 200);
@@ -106,6 +109,7 @@ public class Preferences {
         editor.putString("Domain", domain);
         editor.putInt("CheckinEnabled", isCheckinEnabled);
         editor.putInt("ActiveDeployment", activeDeployment);
+        editor.putString("ActiveMapName", activeMapName);
         editor.putString("DeploymentLatitude", deploymentLatitude);
         editor.putString("DeploymentLongitude", deploymentLongitude);
         editor.putInt("AppRunsFirstTime", appRunsFirstTime);

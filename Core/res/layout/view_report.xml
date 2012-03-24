@@ -246,7 +246,7 @@
             android:padding="10dip"
             android:singleLine="false"
             android:text="@string/photos"
-            android:textColor="@color/black_color"
+            android:textColor="@color/title_color"
             android:textStyle="bold" />
 
         <LinearLayout

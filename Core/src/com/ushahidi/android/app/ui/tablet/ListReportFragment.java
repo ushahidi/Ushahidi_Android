@@ -40,6 +40,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
 import com.ushahidi.android.app.fragments.BaseListFragment;
@@ -55,365 +56,384 @@ import com.ushahidi.android.app.views.ListReportView;
  * @author eyedol
  */
 public class ListReportFragment extends
-        BaseListFragment<ListReportView, ListReportModel, ListReportAdapter> {
+		BaseListFragment<ListReportView, ListReportModel, ListReportAdapter> {
 
-    private int mPositionChecked = 0;
+	private int mPositionChecked = 0;
 
-    private int mPositionShown = 1;
+	private int mPositionShown = 1;
 
-    public ListReportView mListReportView;
+	public ListReportView mListReportView;
 
-    public ListReportAdapter mListReportAdapter;
+	public ListReportAdapter mListReportAdapter;
 
-    private ListReportModel mListReportModel;
+	private ListReportModel mListReportModel;
 
-    private Handler mHandler;
+	private Handler mHandler;
 
-    private MenuItem refresh;
+	private MenuItem refresh;
 
-    private ArrayAdapter<String> spinnerArrayAdapter;
+	private ArrayAdapter<String> spinnerArrayAdapter;
 
-    private Vector<String> categories;
+	private Vector<String> categories;
 
-    private String filterCategory;
+	private String filterCategory;
 
-    private CharSequence filterTitle = null;
+	private CharSequence filterTitle = null;
 
-    private ViewGroup mRootView;
+	private ViewGroup mRootView;
 
-    private ImageButton addReport = null;
+	private ImageButton addReport = null;
 
-    private ImageButton refreshReport = null;
+	private ImageButton refreshReport = null;
 
-    private boolean refreshState = false;
+	private boolean refreshState = false;
 
-    public ListReportFragment() {
-        super(ListReportView.class, ListReportAdapter.class, R.layout.list_report,
-                R.menu.list_report, android.R.id.list);
-        categories = new Vector<String>();
-    }
+	public ListReportFragment() {
+		super(ListReportView.class, ListReportAdapter.class,
+				R.layout.list_report, R.menu.list_report, android.R.id.list);
+		categories = new Vector<String>();
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		setHasOptionsMenu(true);
 
-        mListReportView = new ListReportView(getActivity());
-        mListReportAdapter = new ListReportAdapter(getActivity());
-        mListReportModel = new ListReportModel();
-        mHandler = new Handler();
-        mListReportView.getFilterReportView().addTextChangedListener(new TextWatcher() {
+		mListReportView = new ListReportView(getActivity());
+		mListReportAdapter = new ListReportAdapter(getActivity());
+		mListReportModel = new ListReportModel();
+		mHandler = new Handler();
+		mListReportView.getFilterReportView().addTextChangedListener(
+				new TextWatcher() {
 
-            public void afterTextChanged(Editable arg0) {
+					public void afterTextChanged(Editable arg0) {
 
-            }
+					}
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+					public void beforeTextChanged(CharSequence s, int start,
+							int count, int after) {
 
-            }
+					}
 
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+					public void onTextChanged(CharSequence s, int start,
+							int before, int count) {
 
-                if (!(TextUtils.isEmpty(s.toString()))) {
-                    filterTitle = s;
-                    mHandler.post(filterReportList);
-                }
+						if (!(TextUtils.isEmpty(s.toString()))) {
+							filterTitle = s;
+							mHandler.post(filterReportList);
+						}
 
-            }
+					}
 
-        });
+				});
 
-        if (savedInstanceState != null) {
-            // Restore last state for checked position.
-            mPositionChecked = savedInstanceState.getInt("curChoice", 0);
-            mPositionShown = savedInstanceState.getInt("shownChoice", -1);
-        }
+		if (savedInstanceState != null) {
+			// Restore last state for checked position.
+			mPositionChecked = savedInstanceState.getInt("curChoice", 0);
+			mPositionShown = savedInstanceState.getInt("shownChoice", -1);
+		}
 
-    }
+	}
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 
-        outState.putInt("curChoice", mPositionChecked);
-        outState.putInt("shownChoice", mPositionShown);
-    }
+		outState.putInt("curChoice", mPositionChecked);
+		outState.putInt("shownChoice", mPositionShown);
+	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mHandler.post(fetchReportList);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        l.setItemChecked(position, true);
-
-        launchViewReport(position);
-    }
-
-    public void setListMapListener(ListMapFragmentListener listener) {
-
-    }
-
-    public void enablePersistentSelection() {
-        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_refresh) {
-            refresh = item;
-            new RefreshReports(getActivity()).execute((String)null);
-            return true;
-        } else if (item.getItemId() == R.id.menu_add) {
-            launchAddReport();
-            return true;
-        } else if (item.getItemId() == R.id.filter_by) {
-
-            showDropDownNav();
-
-            return true;
-        } else if (item.getItemId() == android.R.id.home) {
-            getActivity().finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Refresh the list view with new items
-     */
-    final Runnable fetchReportList = new Runnable() {
-        public void run() {
-            try {
-                mListReportAdapter.refresh();
-                mListReportView.getPullToRefreshListView().setAdapter(mListReportAdapter);
-                mListReportView.displayEmptyListText();
-                getListView().setTextFilterEnabled(true);
-                showCategories();
-            } catch (Exception e) {
-                return;
-            }
-        }
-    };
-
-    /**
-     * Filter the list view with new items
-     */
-    final Runnable filterReportList = new Runnable() {
-        public void run() {
-            try {
-                mListReportAdapter.getFilter().filter(filterTitle);
-            } catch (Exception e) {
-                return;
-            }
-        }
-    };
-
-    public void refreshMapLists() {
-        mListReportAdapter.refresh();
-        mListReportView.displayEmptyListText();
-    }
-
-    private void showDropDownNav() {
-
-        if (categories != null && categories.size() > 0) {
-
-            new AlertDialog.Builder(getActivity())
-                    .setTitle(getActivity().getString(R.string.prompt_mesg))
-                    .setAdapter(spinnerArrayAdapter, new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            filterCategory = categories.get(which);
-                            // FIXME implement a proper way of filtering by
-                            // category
-                            if ((filterCategory != null)
-                                    && (!TextUtils.isEmpty(filterCategory))
-                                    && (filterCategory != getActivity().getString(
-                                            R.string.all_categories))) {
-                                mListReportAdapter.refresh(filterCategory);
-                                mListReportView.getPullToRefreshListView().setAdapter(
-                                        mListReportAdapter);
-                                mListReportView.displayEmptyListText();
-                                // filterCategory = null;
-
-                            } else {
-                                mListReportAdapter.refresh();
-                                mListReportView.getPullToRefreshListView().setAdapter(
-                                        mListReportAdapter);
-                                mListReportView.displayEmptyListText();
-                            }
-                            dialog.dismiss();
-                        }
-                    }).create().show();
-        }
-
-    }
-
-    public void showCategories() {
-        categories = mListReportModel.getCategories(getActivity());
-        spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_dropdown_item_1line, categories);
-
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mRootView = (ViewGroup)inflater.inflate(R.layout.list_report, null);
-        addReport = (ImageButton)mRootView.findViewById(R.id.add_report_btn);
-        refreshReport = (ImageButton)mRootView.findViewById(R.id.refresh_report_btn);
-
-        if (addReport != null) {
-            addReport.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    launchAddReport();
-                }
-
-            });
-        }
-
-        if (refreshReport != null) {
-            refreshReport.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    new RefreshReports(getActivity()).execute((String)null);
-                }
-
-            });
-        }
-
-        return mRootView;
-    }
-
-    private void updateRefreshStatus() {
-        if (mRootView != null) {
-            if (addReport != null) {
-                mRootView.findViewById(R.id.refresh_report_btn).setVisibility(
-                        refreshState ? View.GONE : View.VISIBLE);
-                mRootView.findViewById(R.id.title_refresh_progress).setVisibility(
-                        refreshState ? View.VISIBLE : View.GONE);
-            }
-        }
-
-        if (refresh != null) {
-            if (refreshState)
-                refresh.setActionView(R.layout.indeterminate_progress_action);
-            else
-                refresh.setActionView(null);
-        }
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-    }
-
-    /**
-     * Refresh for new reports
-     */
-    class RefreshReports extends ProgressTask {
-
-        protected Integer status;
-
-        public RefreshReports(Activity activity) {
-            super(activity, R.string.loading_);
-            // pass custom loading message to super call
-            refreshState = true;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            dialog.cancel();
-            refreshState = true;
-            updateRefreshStatus();
-        }
-
-        @Override
-        protected Boolean doInBackground(String... strings) {
-            try {
-            	
-            	// fetch categories
-                new CategoriesHttpClient(getActivity()).getCategoriesFromWeb();
-                
-                status = new ReportsHttpClient(getActivity()).getAllReportFromWeb();
-                
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                if (status == 4) {
-                    toastLong(R.string.internet_connection);
-                } else if (status == 3) {
-                    toastLong(R.string.invalid_ushahidi_instance);
-                } else if (status == 2) {
-                    toastLong(R.string.could_not_fetch_reports);
-                } else if (status == 1) {
-                    toastLong(R.string.could_not_fetch_reports);
-                } else if (status == 0) {
-
-                    mListReportAdapter.refresh();
-                    mListReportView.getPullToRefreshListView().setAdapter(mListReportAdapter);
-                    mListReportView.displayEmptyListText();
-                    showCategories();
-                    refreshState = false;
-                    updateRefreshStatus();
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void onLoaded(boolean success) {
-
-    }
-
-    public void launchViewReport(int id) {
-        Intent i = new Intent(getActivity(), ViewReportActivity.class);
-        i.putExtra("id", id);
-        if (filterCategory != null
-                && !filterCategory.equalsIgnoreCase(getString(R.string.all_categories))) {
-            i.putExtra("category", filterCategory);
-        } else {
-            i.putExtra("category", "");
-        }
-        startActivityForResult(i, 0);
-        getActivity().overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
-    }
-
-    public void launchAddReport() {
-        Intent i = new Intent(getActivity(), AddReportActivity.class);
-        startActivityForResult(i, 1);
-    }
+	@Override
+	public void onResume() {
+		super.onResume();
+		mHandler.post(fetchReportList);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+	}
+
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		l.setItemChecked(position, true);
+
+		launchViewReport(position);
+	}
+
+	public void setListMapListener(ListMapFragmentListener listener) {
+
+	}
+
+	public void enablePersistentSelection() {
+		getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_refresh) {
+			refresh = item;
+			new RefreshReports(getActivity()).execute((String) null);
+			return true;
+		} else if (item.getItemId() == R.id.menu_add) {
+			launchAddReport();
+			return true;
+		} else if (item.getItemId() == R.id.filter_by) {
+
+			showDropDownNav();
+
+			return true;
+		} else if (item.getItemId() == android.R.id.home) {
+			getActivity().finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	/**
+	 * Refresh the list view with new items
+	 */
+	final Runnable fetchReportList = new Runnable() {
+		public void run() {
+			try {
+				mListReportAdapter.refresh();
+				mListReportView.getPullToRefreshListView().setAdapter(
+						mListReportAdapter);
+				mListReportView.displayEmptyListText();
+				getListView().setTextFilterEnabled(true);
+				showCategories();
+			} catch (Exception e) {
+				return;
+			}
+		}
+	};
+
+	/**
+	 * Filter the list view with new items
+	 */
+	final Runnable filterReportList = new Runnable() {
+		public void run() {
+			try {
+				mListReportAdapter.getFilter().filter(filterTitle);
+			} catch (Exception e) {
+				return;
+			}
+		}
+	};
+
+	public void refreshMapLists() {
+		mListReportAdapter.refresh();
+		mListReportView.displayEmptyListText();
+	}
+
+	private void showDropDownNav() {
+
+		if (categories != null && categories.size() > 0) {
+
+			new AlertDialog.Builder(getActivity())
+					.setTitle(getActivity().getString(R.string.prompt_mesg))
+					.setAdapter(spinnerArrayAdapter,
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									filterCategory = categories.get(which);
+									// FIXME implement a proper way of filtering
+									// by
+									// category
+									if ((filterCategory != null)
+											&& (!TextUtils
+													.isEmpty(filterCategory))
+											&& (filterCategory != getActivity()
+													.getString(
+															R.string.all_categories))) {
+										mListReportAdapter
+												.refresh(filterCategory);
+										mListReportView
+												.getPullToRefreshListView()
+												.setAdapter(mListReportAdapter);
+										mListReportView.displayEmptyListText();
+										// filterCategory = null;
+
+									} else {
+										mListReportAdapter.refresh();
+										mListReportView
+												.getPullToRefreshListView()
+												.setAdapter(mListReportAdapter);
+										mListReportView.displayEmptyListText();
+									}
+									dialog.dismiss();
+								}
+							}).create().show();
+		}
+
+	}
+
+	public void showCategories() {
+		categories = mListReportModel.getCategories(getActivity());
+		spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(),
+				android.R.layout.simple_dropdown_item_1line, categories);
+
+		spinnerArrayAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		mRootView = (ViewGroup) inflater.inflate(R.layout.list_report, null);
+		addReport = (ImageButton) mRootView.findViewById(R.id.add_report_btn);
+		refreshReport = (ImageButton) mRootView
+				.findViewById(R.id.refresh_report_btn);
+
+		if (addReport != null) {
+			addReport.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					launchAddReport();
+				}
+
+			});
+		}
+
+		if (refreshReport != null) {
+			refreshReport.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					new RefreshReports(getActivity()).execute((String) null);
+				}
+
+			});
+		}
+
+		return mRootView;
+	}
+
+	private void updateRefreshStatus() {
+		if (mRootView != null) {
+			if (addReport != null) {
+				mRootView.findViewById(R.id.refresh_report_btn).setVisibility(
+						refreshState ? View.GONE : View.VISIBLE);
+				mRootView.findViewById(R.id.title_refresh_progress)
+						.setVisibility(refreshState ? View.VISIBLE : View.GONE);
+			}
+		}
+
+		if (refresh != null) {
+			if (refreshState)
+				refresh.setActionView(R.layout.indeterminate_progress_action);
+			else
+				refresh.setActionView(null);
+		}
+
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+	}
+
+	/**
+	 * Refresh for new reports
+	 */
+	class RefreshReports extends ProgressTask {
+
+		protected Integer status;
+
+		public RefreshReports(Activity activity) {
+			super(activity, R.string.loading_);
+			// pass custom loading message to super call
+			refreshState = true;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			dialog.cancel();
+			refreshState = true;
+			updateRefreshStatus();
+		}
+
+		@Override
+		protected Boolean doInBackground(String... strings) {
+			try {
+
+				// fetch categories
+				new CategoriesHttpClient(getActivity()).getCategoriesFromWeb();
+
+				status = new ReportsHttpClient(getActivity())
+						.getAllReportFromWeb();
+
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				return false;
+			}
+			return true;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			if (result) {
+				if (status == 4) {
+					toastLong(R.string.internet_connection);
+				} else if (status == 3) {
+					toastLong(R.string.invalid_ushahidi_instance);
+				} else if (status == 2) {
+					toastLong(R.string.could_not_fetch_reports);
+				} else if (status == 1) {
+					toastLong(R.string.could_not_fetch_reports);
+				} else if (status == 0) {
+
+					mListReportAdapter.refresh();
+					mListReportView.getPullToRefreshListView().setAdapter(
+							mListReportAdapter);
+					mListReportView.displayEmptyListText();
+					showCategories();
+					refreshState = false;
+					updateRefreshStatus();
+				}
+			}
+		}
+	}
+
+	@Override
+	protected void onLoaded(boolean success) {
+
+	}
+
+	public void launchViewReport(int id) {
+		Intent i = new Intent(getActivity(), ViewReportActivity.class);
+		i.putExtra("id", id);
+		if (filterCategory != null
+				&& !filterCategory
+						.equalsIgnoreCase(getString(R.string.all_categories))) {
+			i.putExtra("category", filterCategory);
+		} else {
+			i.putExtra("category", "");
+		}
+		startActivityForResult(i, 0);
+		getActivity().overridePendingTransition(R.anim.home_enter,
+				R.anim.home_exit);
+	}
+
+	public void launchAddReport() {
+		Intent i = new Intent(getActivity(), AddReportActivity.class);
+		startActivityForResult(i, 1);
+	}
 
 }
