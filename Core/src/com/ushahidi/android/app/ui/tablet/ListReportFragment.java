@@ -40,9 +40,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.adapters.BaseArrayAdapter;
+import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
+import com.ushahidi.android.app.entities.Category;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
@@ -66,17 +68,13 @@ public class ListReportFragment extends
 
 	public ListReportAdapter mListReportAdapter;
 
-	private ListReportModel mListReportModel;
-
 	private Handler mHandler;
 
 	private MenuItem refresh;
 
-	private ArrayAdapter<String> spinnerArrayAdapter;
+	private CategorySpinnerAdater spinnerArrayAdapter;
 
-	private Vector<String> categories;
-
-	private String filterCategory;
+	private int filterCategory = 0;
 
 	private CharSequence filterTitle = null;
 
@@ -91,7 +89,6 @@ public class ListReportFragment extends
 	public ListReportFragment() {
 		super(ListReportView.class, ListReportAdapter.class,
 				R.layout.list_report, R.menu.list_report, android.R.id.list);
-		categories = new Vector<String>();
 	}
 
 	@Override
@@ -106,7 +103,6 @@ public class ListReportFragment extends
 
 		mListReportView = new ListReportView(getActivity());
 		mListReportAdapter = new ListReportAdapter(getActivity());
-		mListReportModel = new ListReportModel();
 		mHandler = new Handler();
 		mListReportView.getFilterReportView().addTextChangedListener(
 				new TextWatcher() {
@@ -238,33 +234,31 @@ public class ListReportFragment extends
 
 	private void showDropDownNav() {
 
-		if (categories != null && categories.size() > 0) {
+		// if (categories != null && categories.size() > 0) {
 
-			new AlertDialog.Builder(getActivity())
-					.setTitle(getActivity().getString(R.string.prompt_mesg))
-					.setAdapter(spinnerArrayAdapter,
-							new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(getActivity())
+				.setTitle(getActivity().getString(R.string.prompt_mesg))
+				.setAdapter(spinnerArrayAdapter,
+						new DialogInterface.OnClickListener() {
 
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									filterCategory = categories.get(which);
-									// FIXME implement a proper way of filtering
-									// by
-									// category
-									if ((filterCategory != null)
-											&& (!TextUtils
-													.isEmpty(filterCategory))
-											&& (filterCategory != getActivity()
-													.getString(
-															R.string.all_categories))) {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								if (spinnerArrayAdapter.listCategories != null) {
+									filterCategory = spinnerArrayAdapter.listCategories
+											.get(which).getDbId();
+									final String all = spinnerArrayAdapter.listCategories
+											.get(which).getCategoryTitle();
+									if ((all != null)
+											&& (!TextUtils.isEmpty(all))
+											&& (all != getActivity().getString(
+													R.string.all_categories))) {
 										mListReportAdapter
 												.refresh(filterCategory);
 										mListReportView
 												.getPullToRefreshListView()
 												.setAdapter(mListReportAdapter);
 										mListReportView.displayEmptyListText();
-										// filterCategory = null;
 
 									} else {
 										mListReportAdapter.refresh();
@@ -273,21 +267,17 @@ public class ListReportFragment extends
 												.setAdapter(mListReportAdapter);
 										mListReportView.displayEmptyListText();
 									}
-									dialog.dismiss();
 								}
-							}).create().show();
-		}
+								dialog.dismiss();
+							}
+						}).create().show();
+		// }
 
 	}
 
 	public void showCategories() {
-		categories = mListReportModel.getCategories(getActivity());
-		spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(),
-				android.R.layout.simple_dropdown_item_1line, categories);
-
-		spinnerArrayAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
+		spinnerArrayAdapter = new CategorySpinnerAdater(getActivity());
+		spinnerArrayAdapter.refresh();
 	}
 
 	@Override
@@ -419,9 +409,7 @@ public class ListReportFragment extends
 	public void launchViewReport(int id) {
 		Intent i = new Intent(getActivity(), ViewReportActivity.class);
 		i.putExtra("id", id);
-		if (filterCategory != null
-				&& !filterCategory
-						.equalsIgnoreCase(getString(R.string.all_categories))) {
+		if (filterCategory == 0) {
 			i.putExtra("category", filterCategory);
 		} else {
 			i.putExtra("category", "");

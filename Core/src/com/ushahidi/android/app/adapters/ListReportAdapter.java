@@ -72,9 +72,9 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel> implemen
 
     }
 
-    public void refresh(String category) {
+    public void refresh(int categoryId) {
         mListReportModel = new ListReportModel();
-        final boolean loaded = mListReportModel.loadReportByCategory(category);
+        final boolean loaded = mListReportModel.loadReportByCategory(categoryId);
         if (loaded) {
             items = mListReportModel.getReports(context);
             this.setItems(items);

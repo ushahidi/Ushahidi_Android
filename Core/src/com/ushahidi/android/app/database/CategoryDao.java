@@ -42,9 +42,40 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 	@Override
 	public List<Category> fetchAllCategoryTitles() {
 		final String sortOrder = POSITION + " DESC";
-		final String columns[] = { TITLE, POSITION };
+		final String columns[] = { ID, TITLE, COLOR, POSITION };
 		listCategory = new ArrayList<Category>();
 		cursor = super.query(TABLE, columns, null, null, sortOrder);
+
+		if (cursor != null) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+
+				Category category = cursorToEntity(cursor);
+
+				listCategory.add(category);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+
+		return listCategory;
+
+	}
+
+	@Override
+	public List<Category> fetchCategoryByReportId(int reportId) {
+		final String sortOrder = POSITION + " DESC";
+
+		final String sql = "SELECT " + ID + ", " + TITLE + ", " + POSITION
+				+ " FROM " + TABLE + " category INNER JOIN "
+				+ IReportCategorySchema.TABLE
+				+ " categories categories ON category." + ID + " = categories."
+				+ IReportCategorySchema.CATEGORY_ID + " WHERE categories"
+				+ IReportCategorySchema.REPORT_ID + " =? ORDER BY  "
+				+ sortOrder;
+
+		listCategory = new ArrayList<Category>();
+		cursor = super.rawQuery(sql, new String[] { String.valueOf(reportId) });
 
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -69,7 +100,7 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 	}
 
 	@Override
-	public boolean deleteCategory(long id) {
+	public boolean deleteCategory(int id) {
 		final String selectionArgs[] = { String.valueOf(id) };
 		final String selection = ID + " = ?";
 

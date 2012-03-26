@@ -25,7 +25,6 @@ import java.util.List;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.MenuItem;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ViewSwitcher;
@@ -51,7 +50,7 @@ public class ViewReportActivity extends
 
 	private Bundle photosBundle;
 
-	private String category;
+	private int categoryId;
 
 	public ViewReportActivity() {
 		super(ViewReportView.class, R.layout.view_report, R.menu.view_report,
@@ -66,14 +65,14 @@ public class ViewReportActivity extends
 		view = new ViewReportView(this);
 		photosBundle = new Bundle();
 
-		this.category = getIntent().getExtras().getString("category");
+		this.categoryId = getIntent().getExtras().getInt("category",0);
 		this.position = getIntent().getExtras().getInt("id", 0);
 
-		if ((category != null) && (!TextUtils.isEmpty(category)))
-			reports.loadReportByCategory(category);
-		else
+		if (categoryId ==0) {
+			reports.loadReportByCategory(categoryId);
+		}else{
 			reports.load();
-
+		}
 		initReport(this.position);
 
 	}

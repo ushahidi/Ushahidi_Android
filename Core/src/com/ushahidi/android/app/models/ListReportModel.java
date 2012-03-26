@@ -201,8 +201,8 @@ public class ListReportModel extends Model {
 		return false;
 	}
 
-	public boolean loadReportByCategory(String category) {
-		mReports = Database.mReportDao.fetchReportByCategory(category);
+	public boolean loadReportByCategory(int categoryId) {
+		mReports = Database.mReportDao.fetchReportByCategoryId(categoryId);
 
 		if (mReports != null) {
 			return true;
@@ -252,7 +252,7 @@ public class ListReportModel extends Model {
 		return reportModel;
 	}
 
-	public Vector<String> getCategories(Context context) {
+	public List<Category> getCategories(Context context) {
 		final List<Category> categories = Database.mCategoryDao
 				.fetchAllCategoryTitles();
 		final Vector<String> vectorCategories = new Vector<String>();
@@ -260,14 +260,16 @@ public class ListReportModel extends Model {
 		if ((categories != null) && (categories.size() > 0)) {
 			vectorCategories.clear();
 			vectorCategories.add(context.getString(R.string.all_categories));
-
+			
 			for (Category category : categories) {
 				if (category != null) {
 					vectorCategories.add(category.getCategoryTitle());
 				}
 			}
 		}
-		return vectorCategories;
+		//return vectorCategories;
+		
+		return categories;
 	}
 
 	private Drawable getImage(Context context, int reportId) {

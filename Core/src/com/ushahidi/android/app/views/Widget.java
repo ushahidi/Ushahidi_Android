@@ -28,8 +28,8 @@ import java.lang.annotation.Target;
 /**
  * Widget Annotation
  */
-@Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD )
-public @ interface Widget {
-	public int value();
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Widget {
+    public int value();
 }

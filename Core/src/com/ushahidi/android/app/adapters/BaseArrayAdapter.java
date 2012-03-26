@@ -42,15 +42,17 @@ public abstract class BaseArrayAdapter<M extends Model> extends ArrayAdapter<Str
 	protected final List<M> tags;
     protected int notSpecified = -1;
     protected static final int NOT_SPECIFIED = -1;
-
+    protected Context context;
     public BaseArrayAdapter(Context context) {
         this(context, NOT_SPECIFIED);
+        this.context = context;
     }
 
 	public BaseArrayAdapter(Context context, Integer notSpecified) {
-		super(context, android.R.layout.simple_spinner_item);
+		super(context, notSpecified);
         setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.notSpecified = notSpecified;
+        this.context = context;
         inflater = LayoutInflater.from(context);
 		tags = new ArrayList<M>();
 	}
@@ -85,7 +87,7 @@ public abstract class BaseArrayAdapter<M extends Model> extends ArrayAdapter<Str
 		return tags.get(position);
 	}
 
-	public abstract void refresh(Context context);
+	public abstract void refresh();
 
     protected void log(String message) {
         Log.i(getClass().getName(), message);

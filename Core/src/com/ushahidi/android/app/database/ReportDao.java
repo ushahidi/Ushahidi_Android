@@ -29,216 +29,241 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.ushahidi.android.app.entities.Report;
 
-public class ReportDao extends DbContentProvider implements IReportDao, IReportSchema {
+public class ReportDao extends DbContentProvider implements IReportDao,
+		IReportSchema {
 
-    private Cursor cursor;
+	private Cursor cursor;
 
-    private List<Report> listReport;
+	private List<Report> listReport;
 
-    private ContentValues initialValues;
+	private ContentValues initialValues;
 
-    public ReportDao(SQLiteDatabase db) {
-        super(db);
-    }
+	public ReportDao(SQLiteDatabase db) {
+		super(db);
+	}
 
-    @Override
-    public List<Report> fetchAllReports() {
+	@Override
+	public List<Report> fetchAllReports() {
 
-        final String sortOrder = INCIDENT_DATE + " DESC";
+		final String sortOrder = INCIDENT_DATE + " DESC";
 
-        listReport = new ArrayList<Report>();
-        cursor = super.query(INCIDENTS_TABLE, null, null, null, sortOrder);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Report report = cursorToEntity(cursor);
-                listReport.add(report);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
+		listReport = new ArrayList<Report>();
+		cursor = super.query(INCIDENTS_TABLE, null, null, null, sortOrder);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				Report report = cursorToEntity(cursor);
+				listReport.add(report);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
 
-        return listReport;
-    }
+		return listReport;
+	}
 
-    @Override
-    public List<Report> fetchReportByCategory(String category) {
-        final String sortOrder = INCIDENT_TITLE + " DESC";
-        final String selectionArgs[] = {
-            category
-        };
+	@Override
+	public List<Report> fetchReportByCategory(String category) {
+		final String sortOrder = INCIDENT_TITLE + " DESC";
+		final String selectionArgs[] = { category };
 
-        final String selection = INCIDENT_CATEGORIES + " LIKE ?";
+		final String selection = INCIDENT_CATEGORIES + " LIKE ?";
 
-        listReport = new ArrayList<Report>();
+		listReport = new ArrayList<Report>();
 
-        cursor = super.query(INCIDENTS_TABLE, null, selection, selectionArgs, sortOrder);
-        if (cursor != null) {
+		cursor = super.query(INCIDENTS_TABLE, null, selection, selectionArgs,
+				sortOrder);
+		if (cursor != null) {
 
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Report report = cursorToEntity(cursor);
-                listReport.add(report);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				Report report = cursorToEntity(cursor);
+				listReport.add(report);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
 
-        return listReport;
-    }
+		return listReport;
+	}
 
-    @Override
-    public List<Report> fetchReportById(long id) {
-        final String sortOrder = INCIDENT_TITLE;
+	@Override
+	public List<Report> fetchReportByCategoryId(int categoryId) {
+		final String sortOrder = INCIDENT_TITLE + " DESC";
+		final String sql = "SELECT * FROM "+INCIDENTS_TABLE+" reports INNER JOIN "
+				+ IReportCategorySchema.TABLE + " cats ON reports."
+				+ INCIDENT_ID + " = cats." + IReportCategorySchema.REPORT_ID
+				+ " WHERE cats." + IReportCategorySchema.CATEGORY_ID + " =? ORDER BY  "
+				+ sortOrder;
+		final String selectionArgs[] = { String.valueOf(categoryId) };
 
-        final String selectionArgs[] = {
-            String.valueOf(id)
-        };
+		listReport = new ArrayList<Report>();
 
-        final String selection = INCIDENT_ID + " = ?";
+		cursor = super.rawQuery(sql, selectionArgs);
+		if (cursor != null) {
 
-        listReport = new ArrayList<Report>();
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				Report report = cursorToEntity(cursor);
+				listReport.add(report);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
 
-        cursor = super.query(INCIDENTS_TABLE, INCIDENTS_COLUMNS, selection, selectionArgs,
-                sortOrder);
+		return listReport;
+	}
 
-        if (cursor != null) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Report report = cursorToEntity(cursor);
-                listReport.add(report);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
+	@Override
+	public List<Report> fetchReportById(long id) {
+		final String sortOrder = INCIDENT_TITLE;
 
-        return listReport;
-    }
+		final String selectionArgs[] = { String.valueOf(id) };
 
-    @Override
-    public boolean deleteAllReport() {
-        return super.delete(INCIDENTS_TABLE, null, null) > 0;
-    }
+		final String selection = INCIDENT_ID + " = ?";
 
-    @Override
-    public boolean deleteReportById(long id) {
-        final String selectionArgs[] = {
-            String.valueOf(id)
-        };
-        final String selection = INCIDENT_ID + " = ?";
+		listReport = new ArrayList<Report>();
 
-        return super.delete(INCIDENTS_TABLE, selection, selectionArgs) > 0;
-    }
+		cursor = super.query(INCIDENTS_TABLE, INCIDENTS_COLUMNS, selection,
+				selectionArgs, sortOrder);
 
-    @Override
-    public boolean addReport(Report report) {
-        // set values
-        setContentValue(report);
-        return super.insert(INCIDENTS_TABLE, getContentValue()) > 0;
-    }
+		if (cursor != null) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				Report report = cursorToEntity(cursor);
+				listReport.add(report);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
 
-    @Override
-    public boolean addReport(List<Report> reports) {
-        try {
-            mDb.beginTransaction();
+		return listReport;
+	}
 
-            for (Report report : reports) {
+	@Override
+	public boolean deleteAllReport() {
+		return super.delete(INCIDENTS_TABLE, null, null) > 0;
+	}
 
-                addReport(report);
-            }
+	@Override
+	public boolean deleteReportById(long id) {
+		final String selectionArgs[] = { String.valueOf(id) };
+		final String selection = INCIDENT_ID + " = ?";
 
-            mDb.setTransactionSuccessful();
-        } finally {
-            mDb.endTransaction();
-        }
-        return true;
-    }
+		return super.delete(INCIDENTS_TABLE, selection, selectionArgs) > 0;
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    protected Report cursorToEntity(Cursor cursor) {
-        Report report = new Report();
-        int idIndex;
-        int titleIndex;
-        int dateIndex;
-        int verifiedIndex;
-        int locationIndex;
-        int descIndex;
-        int mediaIndex;
-        int imageIndex;
-        int longitudeIndex;
-        int latitudeIndex;
+	@Override
+	public boolean addReport(Report report) {
+		// set values
+		setContentValue(report);
+		return super.insert(INCIDENTS_TABLE, getContentValue()) > 0;
+	}
 
-        if (cursor != null) {
-            if (cursor.getColumnIndex(INCIDENT_ID) != -1) {
-                idIndex = cursor.getColumnIndexOrThrow(INCIDENT_ID);
-                report.setDbId(cursor.getInt(idIndex));
-            }
+	@Override
+	public boolean addReport(List<Report> reports) {
+		try {
+			mDb.beginTransaction();
 
-            if (cursor.getColumnIndex(INCIDENT_TITLE) != -1) {
-                titleIndex = cursor.getColumnIndexOrThrow(INCIDENT_TITLE);
-                report.setTitle(cursor.getString(titleIndex));
-            }
+			for (Report report : reports) {
 
-            if (cursor.getColumnIndex(INCIDENT_DATE) != -1) {
-                dateIndex = cursor.getColumnIndexOrThrow(INCIDENT_DATE);
-                report.setReportDate(cursor.getString(dateIndex));
-            }
+				addReport(report);
+			}
 
-            if (cursor.getColumnIndex(INCIDENT_VERIFIED) != -1) {
-                verifiedIndex = cursor.getColumnIndexOrThrow(INCIDENT_VERIFIED);
-                report.setVerified(cursor.getString(verifiedIndex));
-            }
+			mDb.setTransactionSuccessful();
+		} finally {
+			mDb.endTransaction();
+		}
+		return true;
+	}
 
-            if (cursor.getColumnIndex(INCIDENT_LOC_NAME) != -1) {
-                locationIndex = cursor.getColumnIndexOrThrow(INCIDENT_LOC_NAME);
-                report.setLocationName(cursor.getString(locationIndex));
-            }
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Report cursorToEntity(Cursor cursor) {
+		Report report = new Report();
+		int idIndex;
+		int titleIndex;
+		int dateIndex;
+		int verifiedIndex;
+		int locationIndex;
+		int descIndex;
+		int mediaIndex;
+		int imageIndex;
+		int longitudeIndex;
+		int latitudeIndex;
 
-            if (cursor.getColumnIndex(INCIDENT_DESC) != -1) {
-                descIndex = cursor.getColumnIndexOrThrow(INCIDENT_DESC);
-                report.setDescription(cursor.getString(descIndex));
-            }
+		if (cursor != null) {
+			if (cursor.getColumnIndex(INCIDENT_ID) != -1) {
+				idIndex = cursor.getColumnIndexOrThrow(INCIDENT_ID);
+				report.setDbId(cursor.getInt(idIndex));
+			}
 
-            if (cursor.getColumnIndex(INCIDENT_MEDIA) != -1) {
-                mediaIndex = cursor.getColumnIndexOrThrow(INCIDENT_MEDIA);
-                report.setMedia(cursor.getString(mediaIndex));
-            }
+			if (cursor.getColumnIndex(INCIDENT_TITLE) != -1) {
+				titleIndex = cursor.getColumnIndexOrThrow(INCIDENT_TITLE);
+				report.setTitle(cursor.getString(titleIndex));
+			}
 
-            if (cursor.getColumnIndex(INCIDENT_IMAGE) != -1) {
-                imageIndex = cursor.getColumnIndexOrThrow(INCIDENT_IMAGE);
-                report.setImage(cursor.getString(imageIndex));
-            }
+			if (cursor.getColumnIndex(INCIDENT_DATE) != -1) {
+				dateIndex = cursor.getColumnIndexOrThrow(INCIDENT_DATE);
+				report.setReportDate(cursor.getString(dateIndex));
+			}
 
-            if (cursor.getColumnIndex(INCIDENT_LOC_LATITUDE) != -1) {
-                latitudeIndex = cursor.getColumnIndexOrThrow(INCIDENT_LOC_LATITUDE);
-                report.setLatitude(cursor.getString(latitudeIndex));
-            }
+			if (cursor.getColumnIndex(INCIDENT_VERIFIED) != -1) {
+				verifiedIndex = cursor.getColumnIndexOrThrow(INCIDENT_VERIFIED);
+				report.setVerified(cursor.getString(verifiedIndex));
+			}
 
-            if (cursor.getColumnIndex(INCIDENT_LOC_LONGITUDE) != -1) {
-                longitudeIndex = cursor.getColumnIndexOrThrow(INCIDENT_LOC_LONGITUDE);
-                report.setLongitude(cursor.getString(longitudeIndex));
-            }
-        }
+			if (cursor.getColumnIndex(INCIDENT_LOC_NAME) != -1) {
+				locationIndex = cursor.getColumnIndexOrThrow(INCIDENT_LOC_NAME);
+				report.setLocationName(cursor.getString(locationIndex));
+			}
 
-        return report;
-    }
+			if (cursor.getColumnIndex(INCIDENT_DESC) != -1) {
+				descIndex = cursor.getColumnIndexOrThrow(INCIDENT_DESC);
+				report.setDescription(cursor.getString(descIndex));
+			}
 
-    private void setContentValue(Report report) {
-        initialValues = new ContentValues();
-        initialValues.put(INCIDENT_ID, report.getDbId());
-        initialValues.put(INCIDENT_TITLE, report.getTitle());
-        initialValues.put(INCIDENT_DESC, report.getDescription());
-        initialValues.put(INCIDENT_DATE, report.getReportDate());
-        initialValues.put(INCIDENT_MODE, report.getMode());
-        initialValues.put(INCIDENT_VERIFIED, report.getVerified());
-        initialValues.put(INCIDENT_LOC_NAME, report.getLocationName());
-        initialValues.put(INCIDENT_LOC_LATITUDE, report.getLatitude());
-        initialValues.put(INCIDENT_LOC_LONGITUDE, report.getLongitude());
-    }
+			if (cursor.getColumnIndex(INCIDENT_MEDIA) != -1) {
+				mediaIndex = cursor.getColumnIndexOrThrow(INCIDENT_MEDIA);
+				report.setMedia(cursor.getString(mediaIndex));
+			}
 
-    private ContentValues getContentValue() {
-        return initialValues;
-    }
+			if (cursor.getColumnIndex(INCIDENT_IMAGE) != -1) {
+				imageIndex = cursor.getColumnIndexOrThrow(INCIDENT_IMAGE);
+				report.setImage(cursor.getString(imageIndex));
+			}
+
+			if (cursor.getColumnIndex(INCIDENT_LOC_LATITUDE) != -1) {
+				latitudeIndex = cursor
+						.getColumnIndexOrThrow(INCIDENT_LOC_LATITUDE);
+				report.setLatitude(cursor.getString(latitudeIndex));
+			}
+
+			if (cursor.getColumnIndex(INCIDENT_LOC_LONGITUDE) != -1) {
+				longitudeIndex = cursor
+						.getColumnIndexOrThrow(INCIDENT_LOC_LONGITUDE);
+				report.setLongitude(cursor.getString(longitudeIndex));
+			}
+		}
+
+		return report;
+	}
+
+	private void setContentValue(Report report) {
+		initialValues = new ContentValues();
+		initialValues.put(INCIDENT_ID, report.getDbId());
+		initialValues.put(INCIDENT_TITLE, report.getTitle());
+		initialValues.put(INCIDENT_DESC, report.getDescription());
+		initialValues.put(INCIDENT_DATE, report.getReportDate());
+		initialValues.put(INCIDENT_MODE, report.getMode());
+		initialValues.put(INCIDENT_VERIFIED, report.getVerified());
+		initialValues.put(INCIDENT_LOC_NAME, report.getLocationName());
+		initialValues.put(INCIDENT_LOC_LATITUDE, report.getLatitude());
+		initialValues.put(INCIDENT_LOC_LONGITUDE, report.getLongitude());
+	}
+
+	private ContentValues getContentValue() {
+		return initialValues;
+	}
 
 }

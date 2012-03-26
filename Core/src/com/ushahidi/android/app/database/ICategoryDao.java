@@ -32,11 +32,13 @@ public interface ICategoryDao {
     
     public List<Category> fetchAllCategoryTitles();
     
+    public List<Category> fetchCategoryByReportId(int reportId);
+    
     //delete categories
     public boolean deleteAllCategories();
     
     //delete category by category's id
-    public boolean deleteCategory(long id);
+    public boolean deleteCategory(int id);
     
     //add category
     public boolean addCategory(Category category);
