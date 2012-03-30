@@ -99,7 +99,7 @@ public class ListReportFragment extends
 		mListReportView = new ListReportView(getActivity());
 		mListReportAdapter = new ListReportAdapter(getActivity());
 		mHandler = new Handler();
-		
+
 		mListReportView.getFilterReportView().addTextChangedListener(
 				new TextWatcher() {
 
@@ -143,9 +143,9 @@ public class ListReportFragment extends
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(filterCategory == 0 ) {
+		if (filterCategory == 0) {
 			mHandler.post(fetchReportList);
-		}else{	
+		} else {
 			mHandler.post(fetchReportListByCategory);
 		}
 	}
@@ -213,7 +213,7 @@ public class ListReportFragment extends
 			}
 		}
 	};
-	
+
 	/**
 	 * refresh by category id
 	 */
@@ -221,10 +221,10 @@ public class ListReportFragment extends
 		public void run() {
 			try {
 				mListReportAdapter.refresh(filterCategory);
-				mListReportView.getPullToRefreshListView()
-						.setAdapter(mListReportAdapter);
+				mListReportView.getPullToRefreshListView().setAdapter(
+						mListReportAdapter);
 				mListReportView.displayEmptyListText();
-			}catch(Exception e) {
+			} catch (Exception e) {
 				return;
 			}
 		}
@@ -265,11 +265,12 @@ public class ListReportFragment extends
 										which).getDbId();
 								final String all = spinnerArrayAdapter.getTag(
 										which).getCategoryTitle();
-
+								mListReportView.footerText.setText(all);
 								if ((all != null)
 										&& (!TextUtils.isEmpty(all))
 										&& (all != getActivity().getString(
 												R.string.all_categories))) {
+
 									mHandler.post(fetchReportListByCategory);
 
 								} else {
@@ -279,8 +280,6 @@ public class ListReportFragment extends
 								dialog.dismiss();
 							}
 						}).create().show();
-		// }
-
 	}
 
 	public void showCategories() {

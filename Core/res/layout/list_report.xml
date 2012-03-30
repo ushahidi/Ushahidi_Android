@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/search_hint"
         android:singleLine="true" />
-    
+
     <!-- List incidents -->
 
     <ListView
@@ -29,9 +29,27 @@
         style="@style/ListView" />
 
     <!-- Here is the view to show if the list is emtpy -->
+
     <TextView
         android:id="@android:id/empty"
         style="@style/TextView.Empty"
         android:text="@string/no_items" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@android:id/list"
+        android:layout_alignParentBottom="true"
+        android:padding="5dip"
+        android:background="@color/background_color" >
+
+        <TextView
+            android:id="@+id/footer_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dip"
+            android:textColor="@color/title_color" />
+
+    </LinearLayout>
 
 </RelativeLayout>
