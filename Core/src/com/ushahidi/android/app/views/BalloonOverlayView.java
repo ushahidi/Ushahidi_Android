@@ -13,8 +13,6 @@ import android.widget.TextView;
 
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.R.id;
-import com.ushahidi.android.app.R.layout;
 
 public class BalloonOverlayView<Item extends OverlayItem> extends FrameLayout {
 

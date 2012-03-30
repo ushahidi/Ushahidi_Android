@@ -24,11 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.database.Cursor;
 
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.data.DeploymentProvider;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Map;
 
@@ -40,8 +38,6 @@ public class ListMapModel extends Model {
 	public List<Map> mMaps;
 
 	public List<ListMapModel> mMapModel;
-
-	private Cursor cursor;
 
 	private int id;
 
@@ -153,21 +149,6 @@ public class ListMapModel extends Model {
 	public boolean load() {
 		mMaps = Database.mMapDao.fetchAllMaps();
 		if (mMaps != null) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-     * 
-     */
-	public boolean filter(Context context, String query) {
-		cursor = context.getContentResolver().query(
-				DeploymentProvider.CONTENT_URI, null, null,
-				new String[] { query }, null);
-		mMaps = Database.mMapDao.fetchMap(cursor);
-
-		if (mMaps != null && mMaps.size() > 0) {
 			return true;
 		}
 		return false;

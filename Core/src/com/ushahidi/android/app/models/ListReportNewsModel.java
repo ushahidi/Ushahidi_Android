@@ -99,6 +99,23 @@ public class ListReportNewsModel extends Model {
 
 		return mNewsModel;
 	}
+	
+	public List<ListReportNewsModel> getNewsByReportId(int reportId) {
+		mNewsModel = new ArrayList<ListReportNewsModel>();
+		mMedia = Database.mMediaDao.fetchReportNews(reportId);
+		if (mMedia != null && mMedia.size() > 0) {
+			for (Media item : mMedia) {
+				ListReportNewsModel newsModel = new ListReportNewsModel();
+				newsModel.setId(item.getDbId());
+				newsModel.setTitle(item.getLink());
+				newsModel.setUrl(item.getLink());
+
+				mNewsModel.add(newsModel);
+			}
+		}
+
+		return mNewsModel;
+	}
 
 	/*
 	 * (non-Javadoc)

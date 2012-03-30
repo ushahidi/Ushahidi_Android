@@ -22,7 +22,6 @@ package com.ushahidi.android.app.models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -253,23 +252,12 @@ public class ListReportModel extends Model {
 	}
 
 	public List<Category> getCategories(Context context) {
-		final List<Category> categories = Database.mCategoryDao
-				.fetchAllCategoryTitles();
-		final Vector<String> vectorCategories = new Vector<String>();
+		return Database.mCategoryDao.fetchAllCategoryTitles();
 
-		if ((categories != null) && (categories.size() > 0)) {
-			vectorCategories.clear();
-			vectorCategories.add(context.getString(R.string.all_categories));
-			
-			for (Category category : categories) {
-				if (category != null) {
-					vectorCategories.add(category.getCategoryTitle());
-				}
-			}
-		}
-		//return vectorCategories;
-		
-		return categories;
+	}
+	
+	public List<Category> getCategoriesByReportId(int reportId) {
+		return Database.mCategoryDao.fetchCategoryByReportId(reportId);
 	}
 
 	private Drawable getImage(Context context, int reportId) {

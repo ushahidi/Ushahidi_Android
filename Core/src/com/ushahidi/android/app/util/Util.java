@@ -47,6 +47,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.ushahidi.android.app.net.MainGeocoder;
@@ -439,4 +441,11 @@ public class Util {
     public static boolean isHoneycombTablet(Context context) {
         return isHoneycomb() && isTablet(context);
     }
+    
+    public static int getScreenWidth(Context context) {
+		WindowManager wm = (WindowManager) context
+				.getSystemService(Context.WINDOW_SERVICE);
+		Display display = wm.getDefaultDisplay();
+		return display.getWidth();
+	}
 }

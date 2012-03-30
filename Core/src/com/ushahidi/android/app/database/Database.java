@@ -32,7 +32,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.data.MapDb;
 import com.ushahidi.android.app.util.Util;
 
 public class Database {
@@ -93,8 +92,6 @@ public class Database {
     // the old row upon conflict.
 
     private final Context mContext;
-
-    public static MapDb map; // Map aka deployments table
 
     public static ReportDao mReportDao; // Report table
 
@@ -271,7 +268,6 @@ public class Database {
     public Database open() throws SQLException {
         mDbHelper = new DatabaseHelper(mContext);
         mDb = mDbHelper.getWritableDatabase();
-        map = new MapDb(mDb);
         mReportDao = new ReportDao(mDb);
         mCategoryDao = new CategoryDao(mDb);
         mMapDao = new MapDao(mDb);
@@ -293,7 +289,6 @@ public class Database {
         // deleteUsers();
         // deleteAllCheckins();
         // deleteCheckinMedia();
-        map.deleteAllDeployment();
         // delete all files
         Util.rmDir(Preferences.savePath);
         return true;

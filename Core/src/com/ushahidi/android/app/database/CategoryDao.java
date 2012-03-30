@@ -64,18 +64,19 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 
 	@Override
 	public List<Category> fetchCategoryByReportId(int reportId) {
+		
 		final String sortOrder = POSITION + " DESC";
 
-		final String sql = "SELECT " + ID + ", " + TITLE + ", " + POSITION
+		final String sql = "SELECT *"
 				+ " FROM " + TABLE + " category INNER JOIN "
 				+ IReportCategorySchema.TABLE
-				+ " categories categories ON category." + ID + " = categories."
-				+ IReportCategorySchema.CATEGORY_ID + " WHERE categories"
-				+ IReportCategorySchema.REPORT_ID + " =? ORDER BY  "
+				+ " categories ON category." + ID + " = categories."
+				+ IReportCategorySchema.CATEGORY_ID + " WHERE categories."
+				+ IReportCategorySchema.REPORT_ID + " =? "+" ORDER BY  "
 				+ sortOrder;
-
+	
 		listCategory = new ArrayList<Category>();
-		cursor = super.rawQuery(sql, new String[] { String.valueOf(reportId) });
+		cursor = super.rawQuery(sql, new String[]{String.valueOf(reportId)});
 
 		if (cursor != null) {
 			cursor.moveToFirst();

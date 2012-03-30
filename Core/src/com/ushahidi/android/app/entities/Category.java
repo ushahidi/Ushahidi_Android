@@ -22,62 +22,68 @@ package com.ushahidi.android.app.entities;
 
 import com.ushahidi.android.app.models.Model;
 
-
 public class Category extends Model implements IDbEntity {
 
-    private int id;
+	private int id;
 
-    private String categoryTitle = "";
+	private String categoryTitle = "";
 
-    private String categoryDescription = "";
+	private String categoryDescription = "";
 
-    private String categoryColor = "";
+	private String categoryColor = "";
 
-    private int categoryPosition = 0;
+	private int categoryPosition = 0;
 
-    public String getCategoryTitle() {
-        return categoryTitle;
-    }
+	public String getCategoryTitle() {
+		return categoryTitle;
+	}
 
-    public void setCategoryTitle(String title) {
-        this.categoryTitle = title;
-    }
+	public void setCategoryTitle(String title) {
+		this.categoryTitle = title;
+	}
 
-    public String getCategoryDescription() {
-        return categoryDescription;
-    }
+	public String getCategoryDescription() {
+		return categoryDescription;
+	}
 
-    public void setCategoryDescription(String description) {
-        this.categoryDescription = description;
-    }
+	public void setCategoryDescription(String description) {
+		this.categoryDescription = description;
+	}
 
-    public String getCategoryColor() {
-        return categoryColor;
-    }
+	public String getCategoryColor() {
+		return categoryColor;
+	}
 
-    public void setCategoryColor(String color) {
-        this.categoryColor = "#"+color;
-    }
+	public void setCategoryColor(String color) {
 
-    public int getCategoryPosition() {
-        return categoryPosition;
-    }
+		if (color.startsWith("#")) {
+			this.categoryColor = color;
+		} else {
+			this.categoryColor = "#" + color;
+		}
+	}
 
-    public void setCategoryPosition(int position) {
-        this.categoryPosition = position;
-    }
+	public int getCategoryPosition() {
+		return categoryPosition;
+	}
 
-    @Override
-    public void setDbId(int id) {
-        this.id = id;
-    }
+	public void setCategoryPosition(int position) {
+		this.categoryPosition = position;
+	}
 
-    @Override
-    public int getDbId() {
-        return id;
-    }
+	@Override
+	public void setDbId(int id) {
+		this.id = id;
+	}
 
-	/* (non-Javadoc)
+	@Override
+	public int getDbId() {
+		return id;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ushahidi.android.app.models.Model#load()
 	 */
 	@Override
@@ -86,7 +92,9 @@ public class Category extends Model implements IDbEntity {
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ushahidi.android.app.models.Model#save()
 	 */
 	@Override

@@ -21,324 +21,271 @@
 package com.ushahidi.android.app.database;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import android.app.SearchManager;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
-import android.provider.BaseColumns;
 
 import com.ushahidi.android.app.entities.Map;
 
 public class MapDao extends DbContentProvider implements IMapDao, IMapSchema {
 
-    private ContentValues initialValues;
+	private ContentValues initialValues;
 
-    private Cursor cursor;
+	private Cursor cursor;
 
-    private List<Map> listMap;
+	private List<Map> listMap;
 
-    public MapDao(SQLiteDatabase db) {
-        super(db);
-    }
+	public MapDao(SQLiteDatabase db) {
+		super(db);
+	}
 
-    @Override
-    public List<Map> fetchMapById(int id) {
+	@Override
+	public List<Map> fetchMapById(int id) {
 
-        // For some reason, selectionArgs doesn't map the values to ID
-        // during query execution
-        String selection = "rowid =" + id;
+		// For some reason, selectionArgs doesn't map the values to ID
+		// during query execution
+		String selection = "rowid =" + id;
 
-        String[] columns = new String[] {
-                "rowid", MAP_ID, NAME, DESC, LATITUDE, LONGITUDE, URL
-        };
+		String[] columns = new String[] { "rowid", MAP_ID, NAME, DESC,
+				LATITUDE, LONGITUDE, URL };
 
-        final String sortOrder = DATE + " DESC";
+		final String sortOrder = DATE + " DESC";
 
-        listMap = new ArrayList<Map>();
+		listMap = new ArrayList<Map>();
 
-        cursor = super.query(TABLE, columns, selection, null, sortOrder);
+		cursor = super.query(TABLE, columns, selection, null, sortOrder);
 
-        if (cursor != null) {
+		if (cursor != null) {
 
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Map map = cursorToEntity(cursor);
-                listMap.add(map);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
-        return listMap;
-    }
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				Map map = cursorToEntity(cursor);
+				listMap.add(map);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+		return listMap;
+	}
 
-    @Override
-    public void setActiveDeployment(int id) {
+	@Override
+	public void setActiveDeployment(int id) {
 
-        String sql = "UPDATE " + TABLE + " SET " + ACTIVE + "= ? WHERE " + "rowid= ?";
+		String sql = "UPDATE " + TABLE + " SET " + ACTIVE + "= ? WHERE "
+				+ "rowid= ?";
 
-        super.rawQuery(sql, new String[] {
-                "1", String.valueOf(id)
-        });
-    }
+		super.rawQuery(sql, new String[] { "1", String.valueOf(id) });
+	}
 
-    @Override
-    public boolean deleteMapById(int id) {
+	@Override
+	public boolean deleteMapById(int id) {
 
-        final String selection = " rowid =" + id;
+		final String selection = " rowid =" + id;
 
-        return super.delete(TABLE, selection, null) > 0;
+		return super.delete(TABLE, selection, null) > 0;
 
-    }
+	}
 
-    @Override
-    public boolean deleteAllMap() {
-        return super.delete(TABLE, null, null) > 0;
-    }
+	@Override
+	public boolean deleteAllMap() {
+		return super.delete(TABLE, null, null) > 0;
+	}
 
-    /**
-     * Delete all deployments that were fetched from the internet
-     */
-    @Override
-    public boolean deleteAllAutoMap() {
-        String whereClause = ID + " <> 0";
+	/**
+	 * Delete all deployments that were fetched from the internet
+	 */
+	@Override
+	public boolean deleteAllAutoMap() {
+		String whereClause = ID + " <> 0";
 
-        return super.delete(TABLE, whereClause, null) > 0;
-    }
+		return super.delete(TABLE, whereClause, null) > 0;
+	}
 
-    @Override
-    public boolean updateMap(Map map) {
-        initialValues = new ContentValues();
-        initialValues.put(DESC, map.getDesc());
-        initialValues.put(NAME, map.getName());
-        initialValues.put(URL, map.getUrl());
-        String whereClause = "rowid = "+map.getDbId();
+	@Override
+	public boolean updateMap(Map map) {
+		initialValues = new ContentValues();
+		initialValues.put(DESC, map.getDesc());
+		initialValues.put(NAME, map.getName());
+		initialValues.put(URL, map.getUrl());
+		String whereClause = "rowid = " + map.getDbId();
 
-        return super.update(TABLE, initialValues, whereClause, null) > 0;
-    }
+		return super.update(TABLE, initialValues, whereClause, null) > 0;
+	}
 
-    @Override
-    public boolean addMap(Map map) {
-        setContentValue(map);
-        return super.insert(TABLE, getContentValue()) > 0;
-    }
+	@Override
+	public boolean addMap(Map map) {
+		setContentValue(map);
+		return super.insert(TABLE, getContentValue()) > 0;
+	}
 
-    @Override
-    public boolean addMaps(List<Map> maps) {
-        try {
-            mDb.beginTransaction();
-            for (Map map : maps) {
-                addMap(map);
-            }
-            mDb.setTransactionSuccessful();
-            return true;
-        } finally {
-            mDb.endTransaction();
-        }
+	@Override
+	public boolean addMaps(List<Map> maps) {
+		try {
+			mDb.beginTransaction();
+			for (Map map : maps) {
+				addMap(map);
+			}
+			mDb.setTransactionSuccessful();
+			return true;
+		} finally {
+			mDb.endTransaction();
+		}
 
-    }
+	}
 
-    @Override
-    public List<Map> fetchAllMaps() {
-        final String sortOrder = DATE + " DESC";
-        String[] columns = new String[] {
-                "rowid", MAP_ID, NAME, URL, DESC, CAT_ID, ACTIVE, LATITUDE, LONGITUDE, DATE
-        };
-        listMap = new ArrayList<Map>();
-        cursor = super.query(TABLE, columns, null, null, sortOrder);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Map map = cursorToEntity(cursor);
-                listMap.add(map);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
+	@Override
+	public List<Map> fetchAllMaps() {
+		final String sortOrder = DATE + " DESC";
+		String[] columns = new String[] { "rowid", MAP_ID, NAME, URL, DESC,
+				CAT_ID, ACTIVE, LATITUDE, LONGITUDE, DATE };
+		listMap = new ArrayList<Map>();
+		cursor = super.query(TABLE, columns, null, null, sortOrder);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				Map map = cursorToEntity(cursor);
+				listMap.add(map);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
 
-        return listMap;
-    }
+		return listMap;
+	}
 
-    @Override
-    public List<Map> fetchMapByIdAndUrl(int id, int mapId) {
+	@Override
+	public List<Map> fetchMapByIdAndUrl(int id, int mapId) {
 
-        String selection = " rowid =" + DatabaseUtils.sqlEscapeString(String.valueOf(id)) + " AND "
-                + MAP_ID + "="+mapId;
-        
-        String[] columns = new String[] {
-                "rowid", NAME, DESC, LATITUDE, LONGITUDE, URL
-        };
+		String selection = " rowid ="
+				+ DatabaseUtils.sqlEscapeString(String.valueOf(id)) + " AND "
+				+ MAP_ID + "=" + mapId;
 
-        final String sortOrder = DATE + " DESC";
+		String[] columns = new String[] { "rowid", NAME, DESC, LATITUDE,
+				LONGITUDE, URL };
 
-        listMap = new ArrayList<Map>();
-        cursor = super.query(TABLE, columns, selection, null, sortOrder);
-        if (cursor != null) {
+		final String sortOrder = DATE + " DESC";
 
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Map map = cursorToEntity(cursor);
-                listMap.add(map);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
-        return listMap;
-    }
+		listMap = new ArrayList<Map>();
+		cursor = super.query(TABLE, columns, selection, null, sortOrder);
+		if (cursor != null) {
 
-    @Override
-    public List<Map> fetchMap(Cursor cursor) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				Map map = cursorToEntity(cursor);
+				listMap.add(map);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+		return listMap;
+	}
 
-        listMap = new ArrayList<Map>();
-        if (cursor != null) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Map map = cursorToEntity(cursor);
-                listMap.add(map);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
-        return listMap;
-    }
+	@Override
+	public List<Map> fetchMap(Cursor cursor) {
 
-    private void setContentValue(Map map) {
-        initialValues = new ContentValues();
-        initialValues.put(MAP_ID, map.getMapId());
-        initialValues.put(CAT_ID, map.getCatId());
-        initialValues.put(DESC, map.getDesc());
-        initialValues.put(DATE, map.getDate());
-        initialValues.put(NAME, map.getName());
-        initialValues.put(ACTIVE, map.getActive());
-        initialValues.put(URL, map.getUrl());
-        initialValues.put(LATITUDE, map.getLat());
-        initialValues.put(LONGITUDE, map.getLon());
-    }
+		listMap = new ArrayList<Map>();
+		if (cursor != null) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				Map map = cursorToEntity(cursor);
+				listMap.add(map);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+		return listMap;
+	}
 
-    private ContentValues getContentValue() {
-        return initialValues;
-    }
+	private void setContentValue(Map map) {
+		initialValues = new ContentValues();
+		initialValues.put(MAP_ID, map.getMapId());
+		initialValues.put(CAT_ID, map.getCatId());
+		initialValues.put(DESC, map.getDesc());
+		initialValues.put(DATE, map.getDate());
+		initialValues.put(NAME, map.getName());
+		initialValues.put(ACTIVE, map.getActive());
+		initialValues.put(URL, map.getUrl());
+		initialValues.put(LATITUDE, map.getLat());
+		initialValues.put(LONGITUDE, map.getLon());
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    protected Map cursorToEntity(Cursor cursor) {
-        Map map = new Map();
-        int idIndex;
-        int mapIdIndex;
-        int nameIndex;
-        int urlIndex;
-        int descIndex;
-        int catIdIndex;
-        int latitudeIndex;
-        int longitudeIndex;
-        int dateIndex;
-        int activeIndex;
+	private ContentValues getContentValue() {
+		return initialValues;
+	}
 
-        if (cursor != null) {
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Map cursorToEntity(Cursor cursor) {
+		Map map = new Map();
+		int idIndex;
+		int mapIdIndex;
+		int nameIndex;
+		int urlIndex;
+		int descIndex;
+		int catIdIndex;
+		int latitudeIndex;
+		int longitudeIndex;
+		int dateIndex;
+		int activeIndex;
 
-            if (cursor.getColumnIndex("rowid") != -1) {
-                idIndex = cursor.getColumnIndexOrThrow("rowid");
+		if (cursor != null) {
 
-                map.setDbId(cursor.getInt(idIndex));
-            }
+			if (cursor.getColumnIndex("rowid") != -1) {
+				idIndex = cursor.getColumnIndexOrThrow("rowid");
 
-            if (cursor.getColumnIndex(MAP_ID) != -1) {
-                mapIdIndex = cursor.getColumnIndexOrThrow(MAP_ID);
+				map.setDbId(cursor.getInt(idIndex));
+			}
 
-                map.setMapId(cursor.getInt(mapIdIndex));
-            }
+			if (cursor.getColumnIndex(MAP_ID) != -1) {
+				mapIdIndex = cursor.getColumnIndexOrThrow(MAP_ID);
 
-            if (cursor.getColumnIndex(NAME) != -1) {
-                nameIndex = cursor.getColumnIndexOrThrow(NAME);
-                map.setName(cursor.getString(nameIndex));
-            }
+				map.setMapId(cursor.getInt(mapIdIndex));
+			}
 
-            if (cursor.getColumnIndex(URL) != -1) {
-                urlIndex = cursor.getColumnIndexOrThrow(URL);
-                map.setUrl(cursor.getString(urlIndex));
-            }
+			if (cursor.getColumnIndex(NAME) != -1) {
+				nameIndex = cursor.getColumnIndexOrThrow(NAME);
+				map.setName(cursor.getString(nameIndex));
+			}
 
-            if (cursor.getColumnIndex(DESC) != -1) {
-                descIndex = cursor.getColumnIndexOrThrow(DESC);
-                map.setDesc(cursor.getString(descIndex));
-            }
+			if (cursor.getColumnIndex(URL) != -1) {
+				urlIndex = cursor.getColumnIndexOrThrow(URL);
+				map.setUrl(cursor.getString(urlIndex));
+			}
 
-            if (cursor.getColumnIndex(CAT_ID) != -1) {
-                catIdIndex = cursor.getColumnIndexOrThrow(CAT_ID);
-                map.setCatId(cursor.getInt(catIdIndex));
-            }
+			if (cursor.getColumnIndex(DESC) != -1) {
+				descIndex = cursor.getColumnIndexOrThrow(DESC);
+				map.setDesc(cursor.getString(descIndex));
+			}
 
-            if (cursor.getColumnIndex(LATITUDE) != -1) {
-                latitudeIndex = cursor.getColumnIndexOrThrow(LATITUDE);
-                map.setLat(cursor.getString(latitudeIndex));
-            }
+			if (cursor.getColumnIndex(CAT_ID) != -1) {
+				catIdIndex = cursor.getColumnIndexOrThrow(CAT_ID);
+				map.setCatId(cursor.getInt(catIdIndex));
+			}
 
-            if (cursor.getColumnIndex(LONGITUDE) != -1) {
-                longitudeIndex = cursor.getColumnIndexOrThrow(LONGITUDE);
-                map.setLon(cursor.getString(longitudeIndex));
-            }
+			if (cursor.getColumnIndex(LATITUDE) != -1) {
+				latitudeIndex = cursor.getColumnIndexOrThrow(LATITUDE);
+				map.setLat(cursor.getString(latitudeIndex));
+			}
 
-            if (cursor.getColumnIndex(DATE) != -1) {
-                dateIndex = cursor.getColumnIndexOrThrow(DATE);
-                map.setDate(cursor.getString(dateIndex));
-            }
+			if (cursor.getColumnIndex(LONGITUDE) != -1) {
+				longitudeIndex = cursor.getColumnIndexOrThrow(LONGITUDE);
+				map.setLon(cursor.getString(longitudeIndex));
+			}
 
-            if (cursor.getColumnIndex(ACTIVE) != -1) {
-                activeIndex = cursor.getColumnIndexOrThrow(ACTIVE);
-                map.setActive(cursor.getString(activeIndex));
-            }
-        }
+			if (cursor.getColumnIndex(DATE) != -1) {
+				dateIndex = cursor.getColumnIndexOrThrow(DATE);
+				map.setDate(cursor.getString(dateIndex));
+			}
 
-        return map;
-    }
+			if (cursor.getColumnIndex(ACTIVE) != -1) {
+				activeIndex = cursor.getColumnIndexOrThrow(ACTIVE);
+				map.setActive(cursor.getString(activeIndex));
+			}
+		}
 
-    /**
-     * Performs a database query.
-     * 
-     * @param selection The selection clause
-     * @param selectionArgs Selection arguments for "?" components in the
-     *            selection
-     * @param columns The columns to return
-     * @return A Cursor over all rows matching the query
-     */
-    private Cursor query(String selection, String[] selectionArgs, String[] columns) {
-        HashMap<String, String> mColumnMap = new HashMap<String, String>();
-        mColumnMap.put(ID, ID);
-        mColumnMap.put(MAP_ID, MAP_ID);
-        mColumnMap.put(CAT_ID, CAT_ID);
-        mColumnMap.put(DESC, DESC);
-        mColumnMap.put(DATE, DATE);
-        mColumnMap.put(NAME, NAME);
-        mColumnMap.put(URL, URL);
-        mColumnMap.put(LATITUDE, LATITUDE);
-        mColumnMap.put(LONGITUDE, LONGITUDE);
-        mColumnMap.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
-        mColumnMap.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, "rowid AS "
-                + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID);
-        mColumnMap.put(SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, "rowid AS "
-                + SearchManager.SUGGEST_COLUMN_SHORTCUT_ID);
-        /*
-         * The SQLiteBuilder provides a map for all possible columns requested
-         * to actual columns in the database, creating a simple column alias
-         * mechanism by which the ContentProvider does not need to know the real
-         * column names
-         */
-        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(TABLE);
-        builder.setProjectionMap(mColumnMap);
-        String orderBy = DATE + " DESC";
-        Cursor cursor = builder.query(mDb, columns, selection, selectionArgs, null, null, orderBy);
-
-        if (cursor == null) {
-            return null;
-        } else if (!cursor.moveToFirst()) {
-            cursor.close();
-            return null;
-        }
-        return cursor;
-    }
+		return map;
+	}
 }

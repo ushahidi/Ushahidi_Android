@@ -23,8 +23,13 @@ package com.ushahidi.android.app.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+
+import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Media;
+import com.ushahidi.android.app.util.Util;
 
 /**
  * @author eyedol
@@ -83,17 +88,32 @@ public class ListReportPhotoModel extends Model {
                 mPhotoModel.add(photoModel);
             }
         }
-
+   
+        return mPhotoModel;
+    }
+    
+    public List<ListReportPhotoModel> getPhotosByReportId(int reportId) {
+        mPhotoModel = new ArrayList<ListReportPhotoModel>();
+        mMedia = Database.mMediaDao.fetchReportPhoto(reportId);
+        if (mMedia != null && mMedia.size() > 0) {
+            for (Media item : mMedia) {
+                ListReportPhotoModel photoModel = new ListReportPhotoModel();
+                photoModel.setId(item.getDbId());
+                photoModel.setPhoto(item.getLink());
+                mPhotoModel.add(photoModel);
+            }
+        }
+   
         return mPhotoModel;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.models.Model#save(android.content.Context)
-     */
+    public Drawable getImage(Context context, String path) {
+    	return ImageManager.getDrawables(context, path, Util.getScreenWidth(context));
+    }
+    
+ 
     @Override
     public boolean save() {
-        // TODO Auto-generated method stub
         return false;
     }
 

@@ -20,8 +20,6 @@
 
 package com.ushahidi.android.app.ui.tablet;
 
-import java.util.Vector;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -36,15 +34,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.adapters.BaseArrayAdapter;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
-import com.ushahidi.android.app.entities.Category;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
@@ -104,6 +99,7 @@ public class ListReportFragment extends
 		mListReportView = new ListReportView(getActivity());
 		mListReportAdapter = new ListReportAdapter(getActivity());
 		mHandler = new Handler();
+		
 		mListReportView.getFilterReportView().addTextChangedListener(
 				new TextWatcher() {
 
@@ -147,7 +143,11 @@ public class ListReportFragment extends
 	@Override
 	public void onResume() {
 		super.onResume();
-		mHandler.post(fetchReportList);
+		if(filterCategory == 0 ) {
+			mHandler.post(fetchReportList);
+		}else{	
+			mHandler.post(fetchReportListByCategory);
+		}
 	}
 
 	@Override
@@ -213,6 +213,22 @@ public class ListReportFragment extends
 			}
 		}
 	};
+	
+	/**
+	 * refresh by category id
+	 */
+	final Runnable fetchReportListByCategory = new Runnable() {
+		public void run() {
+			try {
+				mListReportAdapter.refresh(filterCategory);
+				mListReportView.getPullToRefreshListView()
+						.setAdapter(mListReportAdapter);
+				mListReportView.displayEmptyListText();
+			}catch(Exception e) {
+				return;
+			}
+		}
+	};
 
 	/**
 	 * Filter the list view with new items
@@ -244,30 +260,22 @@ public class ListReportFragment extends
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								if (spinnerArrayAdapter.listCategories != null) {
-									filterCategory = spinnerArrayAdapter.listCategories
-											.get(which).getDbId();
-									final String all = spinnerArrayAdapter.listCategories
-											.get(which).getCategoryTitle();
-									if ((all != null)
-											&& (!TextUtils.isEmpty(all))
-											&& (all != getActivity().getString(
-													R.string.all_categories))) {
-										mListReportAdapter
-												.refresh(filterCategory);
-										mListReportView
-												.getPullToRefreshListView()
-												.setAdapter(mListReportAdapter);
-										mListReportView.displayEmptyListText();
 
-									} else {
-										mListReportAdapter.refresh();
-										mListReportView
-												.getPullToRefreshListView()
-												.setAdapter(mListReportAdapter);
-										mListReportView.displayEmptyListText();
-									}
+								filterCategory = spinnerArrayAdapter.getTag(
+										which).getDbId();
+								final String all = spinnerArrayAdapter.getTag(
+										which).getCategoryTitle();
+
+								if ((all != null)
+										&& (!TextUtils.isEmpty(all))
+										&& (all != getActivity().getString(
+												R.string.all_categories))) {
+									mHandler.post(fetchReportListByCategory);
+
+								} else {
+									mHandler.post(fetchReportList);
 								}
+
 								dialog.dismiss();
 							}
 						}).create().show();
@@ -409,10 +417,10 @@ public class ListReportFragment extends
 	public void launchViewReport(int id) {
 		Intent i = new Intent(getActivity(), ViewReportActivity.class);
 		i.putExtra("id", id);
-		if (filterCategory == 0) {
+		if (filterCategory > 0) {
 			i.putExtra("category", filterCategory);
 		} else {
-			i.putExtra("category", "");
+			i.putExtra("category", 0);
 		}
 		startActivityForResult(i, 0);
 		getActivity().overridePendingTransition(R.anim.home_enter,

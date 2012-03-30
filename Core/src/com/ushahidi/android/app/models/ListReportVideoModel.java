@@ -31,70 +31,87 @@ import com.ushahidi.android.app.entities.Media;
  */
 public class ListReportVideoModel extends Model {
 
-    private int id;
+	private int id;
 
-    private String video;
+	private String video;
 
-    private List<Media> mMedia;
+	private List<Media> mMedia;
 
-    private List<ListReportVideoModel> mVideoModel;
+	private List<ListReportVideoModel> mVideoModel;
 
-    public int getId() {
-        return this.id;
-    }
+	public int getId() {
+		return this.id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public String getVideo() {
-        return this.video;
-    }
+	public String getVideo() {
+		return this.video;
+	}
 
-    public void setVideo(String video) {
-        this.video = video;
-    }
+	public void setVideo(String video) {
+		this.video = video;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.models.Model#load(android.content.Context)
-     */
-    @Override
-    public boolean load() {
-        return false;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.models.Model#load(android.content.Context)
+	 */
+	@Override
+	public boolean load() {
+		return false;
+	}
 
-    public boolean load(int reportId) {
-        mMedia = Database.mMediaDao.fetchReportVideo(reportId);
-        if(mMedia !=null) {
-        	return true;
-        }
-        return false;
-    }
+	public boolean load(int reportId) {
+		mMedia = Database.mMediaDao.fetchReportVideo(reportId);
+		if (mMedia != null) {
+			return true;
+		}
+		return false;
+	}
 
-    public List<ListReportVideoModel> getVideos() {
-        mVideoModel = new ArrayList<ListReportVideoModel>();
+	public List<ListReportVideoModel> getVideos() {
+		mVideoModel = new ArrayList<ListReportVideoModel>();
 
-        if (mMedia != null && mMedia.size() > 0) {
-            for (Media item : mMedia) {
-                ListReportVideoModel videoModel = new ListReportVideoModel();
-                videoModel.setId(item.getDbId());
-                videoModel.setVideo(item.getLink());
-                mVideoModel.add(videoModel);
-            }
-        }
+		if (mMedia != null && mMedia.size() > 0) {
+			for (Media item : mMedia) {
+				ListReportVideoModel videoModel = new ListReportVideoModel();
+				videoModel.setId(item.getDbId());
+				videoModel.setVideo(item.getLink());
+				mVideoModel.add(videoModel);
+			}
+		}
 
-        return mVideoModel;
-    }
+		return mVideoModel;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.models.Model#save(android.content.Context)
-     */
-    @Override
-    public boolean save() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	public List<ListReportVideoModel> getVideosByReportId(int reportId) {
+		mVideoModel = new ArrayList<ListReportVideoModel>();
+		mMedia = Database.mMediaDao.fetchReportVideo(reportId);
+		if (mMedia != null && mMedia.size() > 0) {
+			for (Media item : mMedia) {
+				ListReportVideoModel videoModel = new ListReportVideoModel();
+				videoModel.setId(item.getDbId());
+				videoModel.setVideo(item.getLink());
+				mVideoModel.add(videoModel);
+			}
+		}
+
+		return mVideoModel;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.models.Model#save(android.content.Context)
+	 */
+	@Override
+	public boolean save() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

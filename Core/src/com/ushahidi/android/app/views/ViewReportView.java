@@ -26,11 +26,9 @@ import android.graphics.Typeface;
 import android.support.v4.app.FragmentMapActivity;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.view.ViewStub;
-import android.view.View;
+import android.widget.ViewAnimator;
 
 import com.google.android.maps.MapView;
 import com.ushahidi.android.app.R;
@@ -71,14 +69,17 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
 	private Context context;
 
-	private LinearLayout viewReportRoot;
+	private ViewAnimator viewReportRoot;
 
+	public ListPhotoAdapter photoAdapter;
+	public ListNewsAdapter newsAdapter;
+	public ListVideoAdapter videoAdapter;
 
 	public ViewReportView(FragmentMapActivity activity) {
 		super(activity);
 		this.context = activity;
 
-		viewReportRoot = (LinearLayout) activity
+		viewReportRoot = (ViewAnimator) activity
 				.findViewById(R.id.view_report_root);
 
 		mapView = (MapView) activity.findViewById(R.id.loc_map);
@@ -89,6 +90,11 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		body = (TextView) activity.findViewById(R.id.desc);
 		status = (TextView) activity.findViewById(R.id.status);
 		listNews = (ListView) activity.findViewById(R.id.list_news);
+		
+		photoAdapter = new ListPhotoAdapter(activity);
+		newsAdapter = new ListNewsAdapter(activity);
+		videoAdapter = new ListVideoAdapter(activity);
+		
 		listNewsEmptyView = (TextView) activity
 				.findViewById(R.id.empty_list_for_news);
 		if (listNewsEmptyView != null) {
@@ -138,7 +144,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		 */
 		mapView = (MapView) activity.findViewById(R.id.loc_map);
 		title = (TextView) activity.findViewById(R.id.title);
-		category = (TextView)activity.findViewById(R.id.category);
+		category = (TextView) activity.findViewById(R.id.category);
 		date = (TextView) activity.findViewById(R.id.date);
 		location = (TextView) activity.findViewById(R.id.location);
 		body = (TextView) activity.findViewById(R.id.desc);

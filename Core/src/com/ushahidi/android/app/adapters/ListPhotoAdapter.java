@@ -24,15 +24,14 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.models.ListReportPhotoModel;
+import com.ushahidi.android.app.util.Util;
 
 /**
  * @author eyedol
@@ -105,15 +104,10 @@ public class ListPhotoAdapter extends BaseListAdapter<ListReportPhotoModel> {
 	}
 
 	public Drawable getPhoto(String fileName) {
-		return ImageManager.getDrawables(context, fileName, getScreenWidth());
+		return ImageManager.getDrawables(context, fileName, Util.getScreenWidth(context));
 		//return Drawable.createFromPath(ImageManager.getPhotoPath(context)
 			//	+ fileName);
 	}
 
-	public int getScreenWidth() {
-		WindowManager wm = (WindowManager) context
-				.getSystemService(Context.WINDOW_SERVICE);
-		Display display = wm.getDefaultDisplay();
-		return display.getWidth();
-	}
+	
 }

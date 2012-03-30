@@ -22,15 +22,17 @@ package com.ushahidi.android.app.ui.phone;
 
 import java.util.List;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ViewSwitcher;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseMapViewActivity;
+import com.ushahidi.android.app.entities.Category;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.models.ViewReportModel;
 import com.ushahidi.android.app.views.ViewReportView;
@@ -39,8 +41,7 @@ import com.ushahidi.android.app.views.ViewReportView;
  * @author eyedol
  */
 public class ViewReportActivity extends
-		BaseMapViewActivity<ViewReportView, ViewReportModel> implements
-		AdapterView.OnItemSelectedListener, ViewSwitcher.ViewFactory {
+		BaseMapViewActivity<ViewReportView, ViewReportModel> {
 
 	private ListReportModel reports;
 
@@ -48,9 +49,9 @@ public class ViewReportActivity extends
 
 	private int position;
 
-	private Bundle photosBundle;
-
 	private int categoryId;
+
+	private int reportId;
 
 	public ViewReportActivity() {
 		super(ViewReportView.class, R.layout.view_report, R.menu.view_report,
@@ -63,22 +64,16 @@ public class ViewReportActivity extends
 
 		reports = new ListReportModel();
 		view = new ViewReportView(this);
-		photosBundle = new Bundle();
 
-		this.categoryId = getIntent().getExtras().getInt("category",0);
+		this.categoryId = getIntent().getExtras().getInt("category", 0);
 		this.position = getIntent().getExtras().getInt("id", 0);
 
-		if (categoryId ==0) {
+		if (categoryId > 0) {
 			reports.loadReportByCategory(categoryId);
-		}else{
+		} else {
 			reports.load();
 		}
 		initReport(this.position);
-
-	}
-
-	private void previewImage(int position) {
-		// FIXME redo this
 
 	}
 
@@ -117,27 +112,89 @@ public class ViewReportActivity extends
 		return super.onOptionsItemSelected(item);
 	}
 
+	private String fetchCategories(int reportId) {
+		StringBuilder categories = new StringBuilder();
+		for (Category category : reports.getCategoriesByReportId(reportId)) {
+			if (category.getCategoryTitle().length() > 0) {
+				categories.append(category.getCategoryTitle() + "|");
+			}
+
+		}
+
+		// delete the last |
+		if (categories.length() > 0) {
+			categories.deleteCharAt(categories.length() - 1);
+		}
+		return categories.toString();
+	}
+
 	private void initReport(int position) {
 		report = reports.getReports(this);
 
 		if (report != null) {
+			reportId = (int) report.get(position).getId();
+
+			// fetch categories
 			view.setBody(report.get(position).getDesc());
-			view.setCategory(report.get(position).getCategories());
+			view.setCategory(fetchCategories(reportId));
 			view.setLocation(report.get(position).getLocation());
 			view.setDate(report.get(position).getDate());
 			view.setTitle(report.get(position).getTitle());
 			view.setStatus(report.get(position).getStatus());
-			view.setListNews((int) report.get(position).getId());
-			view.setListPhotos((int) report.get(position).getId());
-			view.setListVideos((int) report.get(position).getId());
-			
+			view.setListNews((int) reportId);
+			view.setListPhotos((int) reportId);
+			view.setListVideos((int) reportId);
+			view.getListPhotos().setOnItemClickListener(
+					new OnItemClickListener() {
+
+						public void onItemClick(AdapterView<?> parent, View v,
+								int position, long id) {
+							Intent i = new Intent(ViewReportActivity.this,
+									ViewReportPhotoActivity.class);
+							i.putExtra("reportid", reportId);
+							i.putExtra("position", position);
+							startActivityForResult(i, 0);
+							overridePendingTransition(R.anim.home_enter,
+									R.anim.home_exit);
+						}
+					});
+			view.getListNews().setOnItemClickListener(
+					new OnItemClickListener() {
+
+						public void onItemClick(AdapterView<?> parent,
+								View view, int position, long id) {
+							Intent i = new Intent(ViewReportActivity.this,
+									ViewReportNewsActivity.class);
+							i.putExtra("reportid", reportId);
+							i.putExtra("position", position);
+							startActivityForResult(i, 0);
+							overridePendingTransition(R.anim.home_enter,
+									R.anim.home_exit);
+						}
+					});
+
+			view.getListVideos().setOnItemClickListener(
+					new OnItemClickListener() {
+
+						public void onItemClick(AdapterView<?> parent,
+								View view, int position, long id) {
+							Intent i = new Intent(ViewReportActivity.this,
+									ViewReportVideoActivity.class);
+							i.putExtra("reportid", reportId);
+							i.putExtra("position", position);
+							startActivityForResult(i, 0);
+							overridePendingTransition(R.anim.home_enter,
+									R.anim.home_exit);
+						}
+					});
+
 			centerLocationWithMarker(getPoint(
 					Double.parseDouble(report.get(position).getLatitude()),
 					Double.parseDouble(report.get(position).getLongitude())));
 			int page = position;
 			this.setTitle(page + 1);
 		}
-		//animate views
+		// animate views
 		view.showViews();
 	}
 
@@ -149,45 +206,33 @@ public class ViewReportActivity extends
 		setActionBarTitle(title.toString());
 	}
 
-	public void onLocationChanged(Location location) {
+	@Override
+	public void onLocationChanged(Location arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void onProviderDisabled(String provider) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	protected boolean isRouteDisplayed() {
-
 		return false;
-	}
-
-	@Override
-	public View makeView() {
-
-		return null;
-	}
-
-	@Override
-	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
-			long arg3) {
-
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> arg0) {
-
 	}
 
 }

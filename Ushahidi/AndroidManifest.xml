@@ -32,7 +32,6 @@
 		android:label="@string/app_name" android:name=".MainApplication"
 		android:theme="@style/Theme.Sherlock"
         android:hardwareAccelerated="true" android:debuggable="true">
-		<service android:name=".BackgroundService" />
 		<uses-library android:name="com.google.android.maps" />
 		<activity android:name=".SplashScreen">
 			<intent-filter>
@@ -40,111 +39,7 @@
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-
-		<activity android:name=".Dashboard" android:label="@string/app_name">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-
-		<!-- Incidents List -->
-		<activity android:name=".IncidentList"
-			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-			android:label="@string/view_incident">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="org.addhen.ushahidi.INCIDENTS" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="org.addhen.ushahidi.NEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-
-		<!-- Incidents Map -->
-		<activity android:name=".IncidentMap"
-			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-			android:label="@string/view_incident">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-
-		<!-- Checkins Map -->
-		<activity android:name=".checkin.CheckinMap"
-			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-			android:label="@string/view_checkins">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-
-		<!-- List Checkins -->
-		<activity android:name=".checkin.CheckinList"
-			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-			android:label="@string/view_checkins">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-
-		<!-- View Incidents -->
-		<activity android:name=".IncidentView" android:label="@string/view_incident">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-
-		<!-- reports tabs -->
-		<activity android:name=".IncidentTab" android:label="@string/reports">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-
-		</activity>
-
-		<!-- Add a new incidents -->
-		<activity
-			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-			android:name=".IncidentAdd" android:label="@string/add_incident">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-
-		<activity
-			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-			android:name=".IncidentAdd" android:label="@string/app_name">
-			<intent-filter>
-				<action android:name="android.intent.action.SEND" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<data android:mimeType="text/plain" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.CHOOSER" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<data android:mimeType="text/plain" />
-			</intent-filter>
-		</activity>
-
-		<!-- Add location -->
-		<activity android:name=".MapLocation" android:label="@string/add_location">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
+		
 		<!-- Settings -->
 		<activity android:name=".Settings"
 			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
@@ -164,39 +59,6 @@
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-
-		<!-- View Checkins -->
-		<activity android:name=".checkin.CheckinView" android:label="@string/view_checkins">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-
-		<!-- Preview Images -->
-		<activity android:name=".ui.ImagePreviewer" android:label="@string/preview_photo"
-
-			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-
-		<!-- About -->
-		<activity android:name=".About" android:label="@string/ushahidi_about">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-
-		<!-- Add a check in -->
-		<activity android:name=".checkin.CheckinActivity"
-
-			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-			android:label="@string/checkin_btn" />
-		
 		
 		<!-- New Fragment Activities -->
 		
@@ -320,7 +182,31 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>     
+        </activity>
+        
+        <!-- Launch View Photos -->
+        <activity android:name=".ui.phone.ViewReportPhotoActivity" android:label="@string/photos">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <!-- Launch View News -->
+        <activity android:name=".ui.phone.ViewReportNewsActivity" android:label="@string/news">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <!-- Launch View Video -->
+        <activity android:name=".ui.phone.ViewReportVideoActivity" android:label="@string/video">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
             
        <!-- View Checkins -->
         <activity android:name=".ui.phone.ViewCheckinActivity" android:label="@string/checkins">
@@ -355,26 +241,6 @@
 			</intent-filter>
 		</receiver>
 
-		<!-- Search dialog -->
-		<!-- The default activity of the app. Can also display search results. -->
-		<activity android:name=".DeploymentSearch"
-			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-			android:label="@string/search_label">
-
-			<!-- Receives the search request. -->
-			<intent-filter>
-				<action android:name="android.intent.action.SEARCH" />
-			</intent-filter>
-
-			<!-- Points to searchable meta data. -->
-			<meta-data android:name="android.app.searchable"
-				android:resource="@xml/searchable" />
-		</activity>
-        
-		<!-- Provides search suggestions for deployments. -->
-		<provider android:name=".data.DeploymentProvider"
-			android:authorities="com.ushahidi.android.app.data.deploymentprovider"
-			android:syncable="false" />
 	</application>
 
 </manifest>

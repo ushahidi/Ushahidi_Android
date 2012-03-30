@@ -5,350 +5,356 @@
     android:background="@color/table_even_row_color"
     android:fillViewport="true" >
 
-    <LinearLayout
+    <ViewAnimator
         android:id="@+id/view_report_root"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <!-- Title starts -->
-
-        <TextView
-            android:id="@+id/report_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dip"
-            android:singleLine="false"
-            android:text="@string/report_title"
-            android:textColor="@color/title_color"
-            android:textStyle="bold" />
-
         <LinearLayout
-            android:id="@+id/title_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/report_title"
-            android:background="@color/table_odd_row_color"
             android:orientation="vertical" >
 
+            <!-- Title starts -->
+
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/report_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="10dip"
+                android:singleLine="false"
+                android:text="@string/report_title"
+                android:textColor="@color/title_color"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/title_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/report_title"
                 android:background="@color/table_odd_row_color"
-                android:padding="10dip"
-                android:singleLine="false"
-                android:textColor="@color/black_color"
-                android:textStyle="bold" />
-        </LinearLayout>
-        <!-- Title ends -->
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/table_odd_row_color"
+                    android:padding="10dip"
+                    android:singleLine="false"
+                    android:textColor="@color/black_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <!-- Title ends -->
 
 
-        <!-- Status starts -->
-
-        <TextView
-            android:id="@+id/report_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/title_layout"
-            android:padding="10dip"
-            android:singleLine="false"
-            android:text="@string/report_verified"
-            android:textColor="@color/title_color"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/report_status"
-            android:background="@color/table_odd_row_color"
-            android:orientation="vertical" >
+            <!-- Status starts -->
 
             <TextView
-                android:id="@+id/status"
+                android:id="@+id/report_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/title_layout"
                 android:padding="10dip"
                 android:singleLine="false"
-                android:textColor="@color/black_color"
+                android:text="@string/report_verified"
+                android:textColor="@color/title_color"
                 android:textStyle="bold" />
-        </LinearLayout>
-        <!-- Status ends -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/report_status"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dip"
+                    android:singleLine="false"
+                    android:textColor="@color/black_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <!-- Status ends -->
 
 
-        <!-- Description starts -->
-
-        <TextView
-            android:id="@+id/report_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/status"
-            android:padding="10dip"
-            android:singleLine="false"
-            android:text="@string/report_desc"
-            android:textColor="@color/title_color"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/report_status"
-            android:background="@color/table_odd_row_color"
-            android:orientation="vertical" >
+            <!-- Description starts -->
 
             <TextView
-                android:id="@+id/desc"
+                android:id="@+id/report_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/report_description"
-                android:autoLink="all"
-                android:fadingEdge="none"
+                android:layout_below="@+id/status"
                 android:padding="10dip"
                 android:singleLine="false"
-                android:textColor="@color/black_color"
+                android:text="@string/report_desc"
+                android:textColor="@color/title_color"
                 android:textStyle="bold" />
-        </LinearLayout>
-        <!-- Description ends -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/report_status"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/report_description"
+                    android:autoLink="all"
+                    android:fadingEdge="none"
+                    android:padding="10dip"
+                    android:singleLine="false"
+                    android:textColor="@color/black_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <!-- Description ends -->
 
 
-        <!-- Category starts -->
-
-        <TextView
-            android:id="@+id/report_category"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/desc"
-            android:padding="10dip"
-            android:singleLine="false"
-            android:text="@string/report_category"
-            android:textColor="@color/title_color"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/report_status"
-            android:background="@color/table_odd_row_color"
-            android:orientation="vertical" >
+            <!-- Category starts -->
 
             <TextView
-                android:id="@+id/category"
+                android:id="@+id/report_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/report_category"
+                android:layout_below="@+id/desc"
                 android:padding="10dip"
                 android:singleLine="false"
-                android:textColor="@color/black_color"
+                android:text="@string/report_category"
+                android:textColor="@color/title_color"
                 android:textStyle="bold" />
-        </LinearLayout>
 
-        <!-- Category ends -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/report_status"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/report_category"
+                    android:padding="10dip"
+                    android:singleLine="false"
+                    android:textColor="@color/black_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Category ends -->
 
 
-        <!-- Date starts -->
-
-        <TextView
-            android:id="@+id/report_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/category"
-            android:padding="10dip"
-            android:singleLine="false"
-            android:text="@string/report_date"
-            android:textColor="@color/title_color"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/report_status"
-            android:background="@color/table_odd_row_color"
-            android:orientation="vertical" >
+            <!-- Date starts -->
 
             <TextView
-                android:id="@+id/date"
+                android:id="@+id/report_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/report_date"
+                android:layout_below="@+id/category"
                 android:padding="10dip"
                 android:singleLine="false"
+                android:text="@string/report_date"
+                android:textColor="@color/title_color"
                 android:textStyle="bold" />
-        </LinearLayout>
 
-        <!-- Date ends -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/report_status"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/report_date"
+                    android:padding="10dip"
+                    android:singleLine="false"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Date ends -->
 
 
-        <!-- Location starts -->
-
-        <TextView
-            android:id="@+id/report_loc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/date"
-            android:padding="10dip"
-            android:singleLine="false"
-            android:text="@string/report_location"
-            android:textColor="@color/title_color"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/report_status"
-            android:background="@color/table_odd_row_color"
-            android:orientation="vertical" >
+            <!-- Location starts -->
 
             <TextView
-                android:id="@+id/location"
+                android:id="@+id/report_loc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/report_loc"
+                android:layout_below="@+id/date"
                 android:padding="10dip"
                 android:singleLine="false"
+                android:text="@string/report_location"
+                android:textColor="@color/title_color"
                 android:textStyle="bold" />
-        </LinearLayout>
-        <!-- Location ends -->
 
-
-        <!-- Map starts -->
-
-        <LinearLayout
-            android:id="@+id/top_items_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/location"
-            android:background="@color/table_odd_row_color"
-            android:orientation="vertical"
-            android:padding="10dip" >
-
-            <com.google.android.maps.MapView
-                android:id="@+id/loc_map"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dip"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/report_status"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/report_loc"
+                    android:padding="10dip"
+                    android:singleLine="false"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <!-- Location ends -->
+
+
+            <!-- Map starts -->
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/location"
-                android:layout_gravity="center"
-                android:apiKey="@string/google_map_api_key"
-                android:clickable="true"
-                android:enabled="true"
-                android:gravity="center" />
-        </LinearLayout>
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical"
+                android:padding="10dip" >
 
-        <!-- Map ends -->
+                <com.google.android.maps.MapView
+                    android:id="@+id/loc_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dip"
+                    android:layout_below="@+id/location"
+                    android:layout_gravity="center"
+                    android:apiKey="@string/google_map_api_key"
+                    android:clickable="true"
+                    android:enabled="true"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <!-- Map ends -->
 
 
-        <!-- Photo starts -->
-
-        <TextView
-            android:id="@+id/report_photo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/top_items_layout"
-            android:padding="10dip"
-            android:singleLine="false"
-            android:text="@string/photos"
-            android:textColor="@color/title_color"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/list_photo_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/report_photo"
-            android:background="@color/table_odd_row_color"
-            android:orientation="vertical" >
-
-            <ListView
-                android:id="@+id/list_photos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <!-- Photo starts -->
 
             <TextView
-                android:id="@+id/empty_list_for_photos"
+                android:id="@+id/report_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/top_items_layout"
                 android:padding="10dip"
-                android:text="@string/no_photos"
-                android:textColor="@color/black_color"
+                android:singleLine="false"
+                android:text="@string/photos"
+                android:textColor="@color/title_color"
                 android:textStyle="bold" />
-        </LinearLayout>
 
-        <!-- Photo ends -->
-
-
-        <!-- News starts -->
-
-        <TextView
-            android:id="@+id/report_news"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/list_photo_item"
-            android:padding="10dip"
-            android:singleLine="false"
-            android:text="@string/news"
-            android:textColor="@color/title_color"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/list_news_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/report_news"
-            android:background="@color/table_odd_row_color"
-            android:orientation="vertical" >
-
-            <ListView
-                android:id="@+id/list_news"
+            <LinearLayout
+                android:id="@+id/list_photo_item"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/report_photo"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <ListView
+                    android:id="@+id/list_photos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/empty_list_for_photos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dip"
+                    android:text="@string/no_photos"
+                    android:textColor="@color/black_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Photo ends -->
+
+
+            <!-- News starts -->
 
             <TextView
-                android:id="@+id/empty_list_for_news"
+                android:id="@+id/report_news"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/list_photo_item"
                 android:padding="10dip"
-                android:text="@string/no_news"
-                android:textColor="@color/black_color"
+                android:singleLine="false"
+                android:text="@string/news"
+                android:textColor="@color/title_color"
                 android:textStyle="bold" />
-        </LinearLayout>
 
-        <!-- News ends -->
-
-
-        <!-- Video starts -->
-
-        <TextView
-            android:id="@+id/report_video"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/list_news_item"
-            android:padding="10dip"
-            android:singleLine="false"
-            android:text="@string/video"
-            android:textColor="@color/title_color"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/report_video"
-            android:background="@color/table_odd_row_color"
-            android:orientation="vertical" >
-
-            <ListView
-                android:id="@+id/list_video"
+            <LinearLayout
+                android:id="@+id/list_news_item"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/report_news"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <ListView
+                    android:id="@+id/list_news"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/empty_list_for_news"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dip"
+                    android:text="@string/no_news"
+                    android:textColor="@color/black_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- News ends -->
+
+
+            <!-- Video starts -->
 
             <TextView
-                android:id="@+id/empty_list_for_video"
-                android:layout_width="wrap_content"
+                android:id="@+id/report_video"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/list_news_item"
                 android:padding="10dip"
-                android:text="@string/no_video"
-                android:textColor="@color/black_color"
+                android:singleLine="false"
+                android:text="@string/video"
+                android:textColor="@color/title_color"
                 android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/report_video"
+                android:background="@color/table_odd_row_color"
+                android:orientation="vertical" >
+
+                <ListView
+                    android:id="@+id/list_video"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/empty_list_for_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dip"
+                    android:text="@string/no_video"
+                    android:textColor="@color/black_color"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <!-- Video ends -->
         </LinearLayout>
-        <!-- Video ends -->
-    </LinearLayout>
+    </ViewAnimator>
 
 </ScrollView>

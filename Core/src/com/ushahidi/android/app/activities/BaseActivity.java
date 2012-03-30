@@ -48,258 +48,269 @@ import com.ushahidi.android.app.views.View;
  */
 public abstract class BaseActivity<V extends View> extends FragmentActivity {
 
-    /**
-     * Layout resource id
-     */
-    protected final int layout;
+	/**
+	 * Layout resource id
+	 */
+	protected final int layout;
 
-    /**
-     * Menu resource id
-     */
-    protected final int menu;
+	/**
+	 * Menu resource id
+	 */
+	protected final int menu;
 
-    /**
-     * View class
-     */
-    protected final Class<V> viewClass;
+	/**
+	 * View class
+	 */
+	protected final Class<V> viewClass;
 
-    /**
-     * View
-     */
-    protected V view;
-    
-    protected ActionBar actionBar;
-    
-    /**
-     * BaseActivity
-     * 
-     * @param view View class
-     * @param layout layout resource id
-     * @param menu menu resource id
-     */ 
-    protected BaseActivity(Class<V> view, int layout, int menu) {
-        this.viewClass = view;
-        this.layout = layout;
-        this.menu = menu;
-    }
+	/**
+	 * View
+	 */
+	protected V view;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        log("onCreate");
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        
-        if (layout != 0) {
-            setContentView(layout);
-        }
-        
-        view = createInstance(viewClass, FragmentActivity.class, this);
-    }
-   
+	protected ActionBar actionBar;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        log("onStart");
-    }
+	/**
+	 * BaseActivity
+	 * 
+	 * @param view
+	 *            View class
+	 * @param layout
+	 *            layout resource id
+	 * @param menu
+	 *            menu resource id
+	 */
+	protected BaseActivity(Class<V> view, int layout, int menu) {
+		this.viewClass = view;
+		this.layout = layout;
+		this.menu = menu;
+	}
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        log("onRestart");
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		log("onCreate");
+		actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        log("onResume");
-    }
+		if (layout != 0) {
+			setContentView(layout);
+		}
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        log("onPause");
-    }
+		view = createInstance(viewClass, FragmentActivity.class, this);
+	}
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        log("onStop");
-    }
+	@Override
+	protected void onStart() {
+		super.onStart();
+		log("onStart");
+	}
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        log("onDestroy");
-    }
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		log("onRestart");
+	}
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            log("onKeyDown KEYCODE_BACK");
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+	@Override
+	protected void onResume() {
+		super.onResume();
+		log("onResume");
+	}
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        log("onActivityResult");
-    }
+	@Override
+	protected void onPause() {
+		super.onPause();
+		log("onPause");
+	}
 
-   @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (this.menu != 0) {
-            getMenuInflater().inflate(this.menu, menu);
-            return true;
-        }
-        return false;
-    } 
+	@Override
+	protected void onStop() {
+		super.onStop();
+		log("onStop");
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-    
-    @Override
-    public boolean onContextItemSelected(android.view.MenuItem item) {
-        return super.onContextItemSelected(item);
-    }
-    
-    public void openActivityOrFragment(Intent intent) {
-        // Default implementation simply calls startActivity
-        startActivity(intent);
-    }
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		log("onDestroy");
+	}
 
-    /**
-     * Converts an intent into a {@link Bundle} suitable for use as fragment arguments.
-     */
-    public static Bundle intentToFragmentArguments(Intent intent) {
-        Bundle arguments = new Bundle();
-        if (intent == null) {
-            return arguments;
-        }
+	protected void setActionBarTitle(String title) {
+		getSupportActionBar().setTitle(title);
+	}
 
-        final Uri data = intent.getData();
-        if (data != null) {
-            arguments.putParcelable("_uri", data);
-        }
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+			log("onKeyDown KEYCODE_BACK");
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 
-        final Bundle extras = intent.getExtras();
-        if (extras != null) {
-            arguments.putAll(intent.getExtras());
-        }
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		log("onActivityResult");
+	}
 
-        return arguments;
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if (this.menu != 0) {
+			getMenuInflater().inflate(this.menu, menu);
+			return true;
+		}
+		return false;
+	}
 
-    /**
-     * Converts a fragment arguments bundle into an intent.
-     */
-    public static Intent fragmentArgumentsToIntent(Bundle arguments) {
-        Intent intent = new Intent();
-        if (arguments == null) {
-            return intent;
-        }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return super.onOptionsItemSelected(item);
+	}
 
-        final Uri data = arguments.getParcelable("_uri");
-        if (data != null) {
-            intent.setData(data);
-        }
+	@Override
+	public boolean onContextItemSelected(android.view.MenuItem item) {
+		return super.onContextItemSelected(item);
+	}
 
-        intent.putExtras(arguments);
-        intent.removeExtra("_uri");
-        return intent;
-    }
+	public void openActivityOrFragment(Intent intent) {
+		// Default implementation simply calls startActivity
+		startActivity(intent);
+	}
 
-    protected EditText findEditTextById(int id) {
-        return (EditText)findViewById(id);
-    }
+	/**
+	 * Converts an intent into a {@link Bundle} suitable for use as fragment
+	 * arguments.
+	 */
+	public static Bundle intentToFragmentArguments(Intent intent) {
+		Bundle arguments = new Bundle();
+		if (intent == null) {
+			return arguments;
+		}
 
-    protected ListView findListViewById(int id) {
-        return (ListView)findViewById(id);
-    }
+		final Uri data = intent.getData();
+		if (data != null) {
+			arguments.putParcelable("_uri", data);
+		}
 
-    protected TextView findTextViewById(int id) {
-        return (TextView)findViewById(id);
-    }
+		final Bundle extras = intent.getExtras();
+		if (extras != null) {
+			arguments.putAll(intent.getExtras());
+		}
 
-    protected Spinner findSpinnerById(int id) {
-        return (Spinner)findViewById(id);
-    }
+		return arguments;
+	}
 
-    protected TimePicker findTimePickerById(int id) {
-        return (TimePicker)findViewById(id);
-    }
+	/**
+	 * Converts a fragment arguments bundle into an intent.
+	 */
+	public static Intent fragmentArgumentsToIntent(Bundle arguments) {
+		Intent intent = new Intent();
+		if (arguments == null) {
+			return intent;
+		}
 
-    protected Button findButtonById(int id) {
-        return (Button)findViewById(id);
-    }
+		final Uri data = arguments.getParcelable("_uri");
+		if (data != null) {
+			intent.setData(data);
+		}
 
-    protected ImageView findImageViewById(int id) {
-        return (ImageView)findViewById(id);
-    }
-    protected void log(String message) {
-        if (MainApplication.LOGGING_MODE)
-            Log.i(getClass().getName(), message);
-    }
+		intent.putExtras(arguments);
+		intent.removeExtra("_uri");
+		return intent;
+	}
 
-    protected void log(String format, Object... args) {
-        if (MainApplication.LOGGING_MODE)
-            Log.i(getClass().getName(), String.format(format, args));
-    }
+	protected EditText findEditTextById(int id) {
+		return (EditText) findViewById(id);
+	}
 
-    protected void log(String message, Exception ex) {
-        if (MainApplication.LOGGING_MODE)
-            Log.e(getClass().getName(), message, ex);
-    }
+	protected ListView findListViewById(int id) {
+		return (ListView) findViewById(id);
+	}
 
-    protected void toastLong(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
+	protected TextView findTextViewById(int id) {
+		return (TextView) findViewById(id);
+	}
 
-    protected void toastLong(int message) {
-        Toast.makeText(this, getText(message), Toast.LENGTH_LONG).show();
-    }
+	protected Spinner findSpinnerById(int id) {
+		return (Spinner) findViewById(id);
+	}
 
-    protected void toastLong(String format, Object... args) {
-        Toast.makeText(this, String.format(format, args), Toast.LENGTH_LONG).show();
-    }
+	protected TimePicker findTimePickerById(int id) {
+		return (TimePicker) findViewById(id);
+	}
 
-    protected void toastLong(CharSequence message) {
-        Toast.makeText(this, message.toString(), Toast.LENGTH_LONG).show();
-    }
+	protected Button findButtonById(int id) {
+		return (Button) findViewById(id);
+	}
 
-    protected void toastShort(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
+	protected ImageView findImageViewById(int id) {
+		return (ImageView) findViewById(id);
+	}
 
-    protected void toastShort(String format, Object... args) {
-        Toast.makeText(this, String.format(format, args), Toast.LENGTH_SHORT).show();
-    }
+	protected void log(String message) {
+		if (MainApplication.LOGGING_MODE)
+			Log.i(getClass().getName(), message);
+	}
 
-    protected void toastShort(int message) {
-        Toast.makeText(this, getText(message), Toast.LENGTH_SHORT).show();
-    }
+	protected void log(String format, Object... args) {
+		if (MainApplication.LOGGING_MODE)
+			Log.i(getClass().getName(), String.format(format, args));
+	}
 
-    protected void toastShort(CharSequence message) {
-        Toast.makeText(this, message.toString(), Toast.LENGTH_SHORT).show();
-    }
+	protected void log(String message, Exception ex) {
+		if (MainApplication.LOGGING_MODE)
+			Log.e(getClass().getName(), message, ex);
+	}
 
-    @SuppressWarnings("unchecked")
-    protected <T> T createInstance(Class<?> type, Class<?> constructor, Object... params) {
-        try {
-            return (T)type.getConstructor(constructor).newInstance(params);
-        } catch (InstantiationException e) {
-            log("InstantiationException", e);
-        } catch (IllegalAccessException e) {
-            log("IllegalAccessException", e);
-        } catch (InvocationTargetException e) {
-            log("InvocationTargetException", e);
-        } catch (NoSuchMethodException e) {
-            log("NoSuchMethodException", e);
-        }
-        return null;
-    }
+	protected void toastLong(String message) {
+		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+	}
+
+	protected void toastLong(int message) {
+		Toast.makeText(this, getText(message), Toast.LENGTH_LONG).show();
+	}
+
+	protected void toastLong(String format, Object... args) {
+		Toast.makeText(this, String.format(format, args), Toast.LENGTH_LONG)
+				.show();
+	}
+
+	protected void toastLong(CharSequence message) {
+		Toast.makeText(this, message.toString(), Toast.LENGTH_LONG).show();
+	}
+
+	protected void toastShort(String message) {
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+	}
+
+	protected void toastShort(String format, Object... args) {
+		Toast.makeText(this, String.format(format, args), Toast.LENGTH_SHORT)
+				.show();
+	}
+
+	protected void toastShort(int message) {
+		Toast.makeText(this, getText(message), Toast.LENGTH_SHORT).show();
+	}
+
+	protected void toastShort(CharSequence message) {
+		Toast.makeText(this, message.toString(), Toast.LENGTH_SHORT).show();
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <T> T createInstance(Class<?> type, Class<?> constructor,
+			Object... params) {
+		try {
+			return (T) type.getConstructor(constructor).newInstance(params);
+		} catch (InstantiationException e) {
+			log("InstantiationException", e);
+		} catch (IllegalAccessException e) {
+			log("IllegalAccessException", e);
+		} catch (InvocationTargetException e) {
+			log("InvocationTargetException", e);
+		} catch (NoSuchMethodException e) {
+			log("NoSuchMethodException", e);
+		}
+		return null;
+	}
 }

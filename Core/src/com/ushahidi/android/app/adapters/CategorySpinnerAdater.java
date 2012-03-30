@@ -39,8 +39,6 @@ import com.ushahidi.android.app.models.ListReportModel;
 public class CategorySpinnerAdater extends BaseArrayAdapter<Category> {
 
 	private static final String DEFAULT_COLOR = "#000000";
-	
-	public List<Category> listCategories;
 
 	public CategorySpinnerAdater(Context context) {
 		super(context);
@@ -78,11 +76,19 @@ public class CategorySpinnerAdater extends BaseArrayAdapter<Category> {
 		// check if color is set
 		if (getTag(position).getCategoryColor() != null) {
 			if (TextUtils.isEmpty(getTag(position).getCategoryColor().trim())) {
-				widget.color
-						.setBackgroundColor(Color.parseColor(DEFAULT_COLOR));
+				try {
+					widget.color.setBackgroundColor(Color
+							.parseColor(DEFAULT_COLOR));
+				} catch (IllegalArgumentException exception) {
+					log("Error parsing color hex", exception);
+				}
 			} else {
-				widget.color.setBackgroundColor(Color.parseColor(getTag(
-						position).getCategoryColor().trim()));
+				try {
+					widget.color.setBackgroundColor(Color.parseColor(getTag(
+							position).getCategoryColor().trim()));
+				} catch (IllegalArgumentException exception) {
+					log("Error parsing color", exception);
+				}
 			}
 		}
 
@@ -102,7 +108,8 @@ public class CategorySpinnerAdater extends BaseArrayAdapter<Category> {
 	@Override
 	public void refresh() {
 		ListReportModel mListReportModel = new ListReportModel();
-		listCategories = mListReportModel.getCategories(context);
+		List<Category> listCategories = mListReportModel.getCategories(context);
+
 		if (listCategories != null && listCategories.size() > 0) {
 			// This is to make room for all categories label
 			Category cat = new Category();

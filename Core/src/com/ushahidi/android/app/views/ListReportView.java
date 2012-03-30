@@ -20,7 +20,6 @@
 
 package com.ushahidi.android.app.views;
 
-import android.R;
 import android.app.Activity;
 import android.view.View;
 import android.widget.ArrayAdapter;

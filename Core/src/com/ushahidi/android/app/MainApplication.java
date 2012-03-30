@@ -20,10 +20,7 @@
 
 package com.ushahidi.android.app;
 
-import java.util.HashSet;
-
 import android.app.Application;
-import android.database.Cursor;
 
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.net.MainHttpClient;
@@ -61,31 +58,7 @@ public class MainApplication extends Application {
     }
 
     private void cleanupImages() {
-        /*HashSet<String> keepers = new HashSet<String>();
-
-        Cursor cursor = mDb.fetchAllIncidents();
-
-        if (cursor.moveToFirst()) {
-            int imageIndex = cursor.getColumnIndexOrThrow(Database.INCIDENT_MEDIA);
-            do {
-                keepers.add(cursor.getString(imageIndex));
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-
-        cursor = mDb.fetchAllCategories();
-
-        if (cursor.moveToFirst()) {
-            int imageIndex = cursor.getColumnIndexOrThrow(Database.INCIDENT_MEDIA);
-            do {
-                keepers.add(cursor.getString(imageIndex));
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-
-        // mImageManager.cleanup(keepers);*/
+       
     }
 
 }

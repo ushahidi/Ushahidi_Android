@@ -21,7 +21,6 @@
 package com.ushahidi.android.app.util;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,22 +29,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.checkin.Checkin;
-import com.ushahidi.android.app.checkin.NetworkServices;
-import com.ushahidi.android.app.checkin.RetrieveCheckinsJSONServices;
-import com.ushahidi.android.app.data.CategoriesData;
-import com.ushahidi.android.app.data.HandleXml;
-import com.ushahidi.android.app.data.IncidentsData;
-import com.ushahidi.android.app.data.UsersData;
-import com.ushahidi.android.app.net.Categories;
-import com.ushahidi.android.app.net.Incidents;
 import com.ushahidi.android.app.net.MainHttpClient;
 
 /**
@@ -55,295 +42,165 @@ import com.ushahidi.android.app.net.MainHttpClient;
  */
 public class ApiUtils extends MainHttpClient {
 
-    Context context;
+	Context context;
 
-    /**
-     * @param context
-     */
-    public ApiUtils(Context context) {
-        super(context);
-        this.context = context;
-    }
+	/**
+	 * @param context
+	 */
+	public ApiUtils(Context context) {
+		super(context);
+		this.context = context;
+	}
 
-    private static final String CLASS_TAG = Util.class.getSimpleName();
+	private static final String CLASS_TAG = Util.class.getSimpleName();
 
-    private static final String VALID_URL_PATTERN = "^(https?|ftp)://[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].+)?$";
+	private static final String VALID_URL_PATTERN = "^(https?|ftp)://[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].+)?$";
 
-    private static Pattern pattern;
+	private static Pattern pattern;
 
-    private static Matcher matcher;
+	private static Matcher matcher;
 
-    private static List<IncidentsData> mNewIncidents;
+	private static JSONObject jsonObject;
 
-    private static List<CategoriesData> mNewCategories;
+	private static HttpResponse response;
 
-    private static List<Checkin> mCheckins;
+	private static String jsonString;
 
-    private static List<UsersData> mUsers;
+	public boolean checkForCheckin() {
 
-    private static JSONObject jsonObject;
+		Preferences.loadSettings(context);
 
-    private static HttpResponse response;
+		updateDomain();
 
-    private static String jsonString;
+		StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
+		uriBuilder.append("/api?task=version");
+		uriBuilder.append("&resp=json");
 
-    public boolean checkForCheckin() {
+		try {
+			response = GetURL(uriBuilder.toString());
+			if (response == null) {
+				return false;
+			}
 
-        Preferences.loadSettings(context);
-        
-        updateDomain();
-        
-        StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
-        uriBuilder.append("/api?task=version");
-        uriBuilder.append("&resp=json");
+			final int statusCode = response.getStatusLine().getStatusCode();
 
-        try {
-            response = GetURL(uriBuilder.toString());
-            if (response == null) {
-                return false;
-            }
+			if (statusCode == 200) {
 
-            final int statusCode = response.getStatusLine().getStatusCode();
+				jsonString = GetText(response);
+				JSONObject jsonObject = new JSONObject(jsonString);
+				int checkinStatus = jsonObject.getJSONObject("payload").getInt(
+						"checkins");
+				log("CheckinStatus " + checkinStatus + " URL "
+						+ uriBuilder.toString());
+				if (checkinStatus == 1) {
+					return true;
+				}
+				return false;
+			}
+		} catch (IOException e) {
 
-            if (statusCode == 200) {
+			return false;
+		} catch (JSONException e) {
 
-                jsonString = GetText(response);
-                JSONObject jsonObject = new JSONObject(jsonString);
-                int checkinStatus = jsonObject.getJSONObject("payload").getInt("checkins");
-                log("CheckinStatus "+checkinStatus+ " URL "+uriBuilder.toString());
-                if (checkinStatus == 1) {
-                    return true;
-                }
-                return false;
-            }
-        } catch (IOException e) {
+			return false;
+		}
+		return false;
+	}
 
-            return false;
-        } catch (JSONException e) {
+	public boolean isCheckinEnabled() {
+		final boolean checkinEnabled;
+		if (checkForCheckin()) {
+			Preferences.isCheckinEnabled = 1;
+			checkinEnabled = true;
+		} else {
+			Preferences.isCheckinEnabled = 0;
+			checkinEnabled = false;
+		}
+		Preferences.saveSettings(context);
+		return checkinEnabled;
+	}
 
-            return false;
-        }
-        return false;
-    }
+	/**
+	 * Validate an Ushahidi instance
+	 * 
+	 * @param String
+	 *            - URL to be validated.
+	 * @return boolean
+	 */
+	public static boolean validateUshahidiInstance(String ushahidiUrl) {
 
-    public boolean isCheckinEnabled() {
-        final boolean checkinEnabled;
-        if (checkForCheckin()) {
-            Preferences.isCheckinEnabled = 1;
-            checkinEnabled = true;
-        } else {
-            Preferences.isCheckinEnabled = 0;
-            checkinEnabled = false;
-        }
-        Preferences.saveSettings(context);
-        return checkinEnabled;
-    }
+		if (!TextUtils.isEmpty(ushahidiUrl)) {
+			pattern = Pattern.compile(VALID_URL_PATTERN);
+			matcher = pattern.matcher(ushahidiUrl);
+			return matcher.matches();
+		}
 
-    /**
-     * Validate an Ushahidi instance
-     * 
-     * @param String - URL to be validated.
-     * @return boolean
-     */
-    public static boolean validateUshahidiInstance(String ushahidiUrl) {
+		return false;
+	}
 
-        if (!TextUtils.isEmpty(ushahidiUrl)) {
-            pattern = Pattern.compile(VALID_URL_PATTERN);
-            matcher = pattern.matcher(ushahidiUrl);
-            return matcher.matches();
-        }
+	/**
+	 * Extract Ushahidi payload JSON data
+	 * 
+	 * @papram json_data - the json data to be formatted.
+	 * @return int 0 - success, 1 - missing parameter, 2 - invalid parameter, 3
+	 *         - post failed, 5 - access denied, 6 - access limited, 7 - no
+	 *         data, 8 - api disabled, 9 - no task found, 10 - json is wrong
+	 */
+	public static int extractPayloadJSON(String json_data) {
+		Log.d(CLASS_TAG, "extractPayloadJSON(): " + json_data);
+		try {
+			jsonObject = new JSONObject(json_data);
+			final String errorCode = jsonObject.getJSONObject("error")
+					.getString("code");
+			return Integer.parseInt(errorCode);
+		} catch (JSONException e) {
+			Log.e(CLASS_TAG, e.toString());
+			return 10;
+		}
 
-        return false;
-    }
+	}
 
-    /**
-     * process checkins 0 - successful 1 - failed fetching categories 2 - failed
-     * fetching checkins 3 - non ushahidi instance 4 - No internet connection
-     * 
-     * @return int - status
-     */
-    public int processCheckins() {
-        String strCheckinsJSON = "";
+	/**
+	 * Check if an ushahidi deployment has changed it's HTTP protocol to HTTPS
+	 * or not. Then update if it has.
+	 * 
+	 * @param context
+	 *            - the calling activity.
+	 */
+	public void updateDomain() {
 
-        if (Util.isConnected(context)) {
+		Preferences.loadSettings(context);
 
-            // check if the ushahidi deployment domain has been updated or
-            // not
-            updateDomain();
-            strCheckinsJSON = NetworkServices.getCheckins(Preferences.domain, null, null);
+		StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
+		uriBuilder.append("/api?task=version");
+		uriBuilder.append("&resp=json");
 
-            if (!TextUtils.isEmpty(strCheckinsJSON) && strCheckinsJSON != null) {
-                RetrieveCheckinsJSONServices checkinsRetrieveCheckinsJSON = new RetrieveCheckinsJSONServices(
-                        strCheckinsJSON);
-                mUsers = checkinsRetrieveCheckinsJSON.getCheckinsUsersList();
-                mCheckins = checkinsRetrieveCheckinsJSON.getCheckinsList();
-            }
+		try {
+			response = GetURL(uriBuilder.toString());
+			if (response != null) {
 
-            if (mCheckins != null && mUsers != null) {
-                // clear existin data
-                /*
-                 * MainApplication.mDb.deleteAllCheckins();
-                 * MainApplication.mDb.deleteUsers();
-                 * MainApplication.mDb.addUsers(mUsers);
-                 * MainApplication.mDb.addCheckins(mCheckins);
-                 */
-                return 0;
+				final int statusCode = response.getStatusLine().getStatusCode();
 
-            } else {
-                return 1;
-            }
+				if (statusCode == 200) {
 
-        } else {
-            return 2;
-        }
-    }
+					jsonString = GetText(response);
+					JSONObject jsonObject = new JSONObject(jsonString);
+					String changedDomain = jsonObject.getJSONObject("payload")
+							.getString("domain");
 
-    /**
-     * process reports 0 - successful 1 - failed fetching categories 2 - failed
-     * fetching reports 3 - non ushahidi instance 4 - No internet connection
-     * 
-     * @return int - status
-     */
-    public int processReports() {
-        try {
-            if (Util.isConnected(context)) {
-                // check if the ushahidi deployment domain has been updated or
-                // not
-                updateDomain();
-                if (Categories.getAllCategoriesFromWeb()) {
+					Preferences.domain = changedDomain;
 
-                    mNewCategories = HandleXml.processCategoriesXml(Preferences.categoriesResponse);
-                } else {
+					// save changes
+					Preferences.saveSettings(context);
 
-                    return 1;
-                }
+				}
+			}
 
-                if (Incidents.getAllIncidentsFromWeb()) {
-                    mNewIncidents = HandleXml.processIncidentsXml(Preferences.incidentsResponse);
-
-                } else {
-
-                    return 2;
-                }
-
-                if (mNewCategories != null && mNewIncidents != null) {
-                    Log.d(CLASS_TAG, "processReport(): categories total: " + mNewCategories.size()
-                            + " incidents total:" + mNewIncidents.size());
-                    // delete all categories
-                    MainApplication.mDb.deleteAllCategories();
-                    /*
-                     * MainApplication.mDb.deleteAllIncidents();
-                     * MainApplication.mDb.addCategories(mNewCategories, false);
-                     * MainApplication.mDb.addIncidents(mNewIncidents, false);
-                     */
-                    return 0;
-
-                } else {
-                    return 3;
-                }
-
-            } else {
-                return 4;
-            }
-        } catch (IOException e) {
-            // means there was a problem getting it
-        }
-        return 0;
-    }
-
-    /**
-     * Fetch reports details from the internet
-     * 
-     * @param context - the activity calling this method.
-     */
-    public void fetchReports() {
-        try {
-            if (Util.isConnected(context)) {
-
-                if (Categories.getAllCategoriesFromWeb()) {
-                    mNewCategories = HandleXml.processCategoriesXml(Preferences.categoriesResponse);
-                }
-
-                if (Incidents.getAllIncidentsFromWeb()) {
-                    mNewIncidents = HandleXml.processIncidentsXml(Preferences.incidentsResponse);
-                }
-
-                Preferences.totalReportsFetched = mNewCategories.size() + " Categories \n"
-                        + mNewIncidents.size() + " Reports";
-
-                /*
-                 * MainApplication.mDb.addCategories(mNewCategories, false);
-                 * MainApplication.mDb.addIncidents(mNewIncidents, false);
-                 */
-
-            } else {
-                return;
-            }
-        } catch (IOException e) {
-            // means there was a problem getting it
-        }
-    }
-
-    /**
-     * Extract Ushahidi payload JSON data
-     * 
-     * @papram json_data - the json data to be formatted.
-     * @return int 0 - success, 1 - missing parameter, 2 - invalid parameter, 3
-     *         - post failed, 5 - access denied, 6 - access limited, 7 - no
-     *         data, 8 - api disabled, 9 - no task found, 10 - json is wrong
-     */
-    public static int extractPayloadJSON(String json_data) {
-        Log.d(CLASS_TAG, "extractPayloadJSON(): " + json_data);
-        try {
-            jsonObject = new JSONObject(json_data);
-            final String errorCode = jsonObject.getJSONObject("error").getString("code");
-            return Integer.parseInt(errorCode);
-        } catch (JSONException e) {
-            Log.e(CLASS_TAG, e.toString());
-            return 10;
-        }
-
-    }
-
-    /**
-     * Check if an ushahidi deployment has changed it's HTTP protocol to HTTPS
-     * or not. Then update if it has.
-     * 
-     * @param context - the calling activity.
-     */
-    public void updateDomain() {
-
-        Preferences.loadSettings(context);
-
-        StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
-        uriBuilder.append("/api?task=version");
-        uriBuilder.append("&resp=json");
-
-        try {
-            response = GetURL(uriBuilder.toString());
-            if (response != null) {
-
-                final int statusCode = response.getStatusLine().getStatusCode();
-
-                if (statusCode == 200) {
-
-                    jsonString = GetText(response);
-                    JSONObject jsonObject = new JSONObject(jsonString);
-                    String changedDomain = jsonObject.getJSONObject("payload").getString("domain");
-
-                    Preferences.domain = changedDomain;
-
-                    // save changes
-                    Preferences.saveSettings(context);
-
-                }
-            }
-
-        } catch (IOException e) {
-            Log.e(CLASS_TAG, e.toString());
-        } catch (JSONException e) {
-            Log.e(CLASS_TAG, e.toString());
-        }
-    }
+		} catch (IOException e) {
+			Log.e(CLASS_TAG, e.toString());
+		} catch (JSONException e) {
+			Log.e(CLASS_TAG, e.toString());
+		}
+	}
 
 }
