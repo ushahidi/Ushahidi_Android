@@ -28,6 +28,13 @@
         <ImageView style="@style/ActionBarTitleSeparator" />
 
         <ImageButton
+            android:id="@+id/filter_by_category"
+            style="@style/ActionBarTitle"
+            android:src="@android:drawable/arrow_down_float" />
+
+        <ImageView style="@style/ActionBarTitleSeparator" />
+        
+        <ImageButton
             android:id="@+id/add_report_btn"
             style="@style/ActionBarTitle"
             android:src="@drawable/button_add" />

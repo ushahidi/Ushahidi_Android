@@ -80,9 +80,12 @@ public class ListReportFragment extends
 
 	private ImageButton refreshReport = null;
 
+	private ImageButton filterReport = null;
+
 	private boolean refreshState = false;
 
 	private ApiUtils apiUtils;
+
 	public ListReportFragment() {
 		super(ListReportView.class, ListReportAdapter.class,
 				R.layout.list_report, R.menu.list_report, android.R.id.list);
@@ -296,6 +299,8 @@ public class ListReportFragment extends
 		addReport = (ImageButton) mRootView.findViewById(R.id.add_report_btn);
 		refreshReport = (ImageButton) mRootView
 				.findViewById(R.id.refresh_report_btn);
+		filterReport = (ImageButton) mRootView
+				.findViewById(R.id.filter_by_category);
 
 		if (addReport != null) {
 			addReport.setOnClickListener(new OnClickListener() {
@@ -316,6 +321,16 @@ public class ListReportFragment extends
 					new RefreshReports(getActivity()).execute((String) null);
 				}
 
+			});
+		}
+
+		if (filterReport != null) {
+			filterReport.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					showDropDownNav();
+				}
 			});
 		}
 
