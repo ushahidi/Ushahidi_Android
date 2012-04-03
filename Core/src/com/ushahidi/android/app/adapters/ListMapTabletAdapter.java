@@ -56,12 +56,10 @@ public class ListMapTabletAdapter extends BaseListAdapter<ListMapModel>
 		widget.mapName.setText(getItem(position).getName());
 		widget.mapDesc.setText(getItem(position).getDesc());
 		widget.mapUrl.setText(getItem(position).getUrl());
-		widget.mapId.setText(getItem(position).getId());
+		widget.mapId.setText(String.valueOf(getItem(position).getId()));
 
 		if (getItem(position).getId() == mapId) {
 			widget.arrow.setImageResource(R.drawable.deployment_selected);
-		} else {
-			widget.arrow.setImageResource(R.drawable.menu_arrow);
 		}
 
 		return row;

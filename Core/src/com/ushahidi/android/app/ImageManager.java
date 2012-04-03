@@ -34,7 +34,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
-import android.util.Log;
 
 import com.ushahidi.android.app.util.PhotoUtils;
 
@@ -118,7 +117,6 @@ public class ImageManager {
 	// after each and every download
 	public static void downloadImage(String imageUrl, String filename,
 			Context context) {
-		Log.i("Making directory ", "Dir " + getPhotoPath(context));
 		try {
 			byte[] imageData = retrieveImageData(imageUrl);
 			Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0,
@@ -141,7 +139,6 @@ public class ImageManager {
 	public static void writeImage(byte[] data, String filename, String path) {
 
 		deleteImage(filename, path);
-		Log.d("Deleting Images: ", path + filename);
 		if (data != null) {
 			FileOutputStream fOut;
 			try {
@@ -214,6 +211,29 @@ public class ImageManager {
 
 					return false;
 				}
+			}
+		}
+		return true;
+	}
+	
+	public static void deleteImages(Context context) {
+		if(isExternalStoragePresent()) {
+			File path = new File(Environment.getExternalStorageDirectory(),
+					context.getPackageName() + PHOTO);
+			deleteFiles(path);
+		}
+	}
+
+	private static boolean deleteFiles(File path) {
+		if (path.exists()) {
+			File[] files = path.listFiles();
+			if(files ==null) {
+				return true;
+			}
+			
+			//go through the folder and delete its content
+			for(int i=0; i < files.length;i++) {
+				files[i].delete();
 			}
 		}
 		return true;

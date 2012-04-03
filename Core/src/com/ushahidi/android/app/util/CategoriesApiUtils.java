@@ -130,7 +130,9 @@ public class CategoriesApiUtils {
 	}
 
 	private boolean saveCategories(List<Category> categories) {
+		
 		if (categories != null && categories.size() > 0) {
+			
 			return Database.mCategoryDao.addCategories(categories);
 		}
 		return false;

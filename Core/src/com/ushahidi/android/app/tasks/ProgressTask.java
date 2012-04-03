@@ -35,97 +35,97 @@ import com.ushahidi.android.app.R;
  */
 public abstract class ProgressTask extends Task<String, String, Boolean> {
 
-    protected final ProgressDialog dialog;
+	protected final ProgressDialog dialog;
 
-    protected ProgressCallback callback;
+	protected ProgressCallback callback;
 
-    protected ProgressTask(FragmentActivity activity) {
-        this(activity, R.string.loading_);
-    }
+	protected ProgressTask(FragmentActivity activity) {
+		this(activity, R.string.loading_);
+	}
 
-    protected ProgressTask(FragmentActivity activity, int message) {
-        super(activity);
-        this.dialog = new ProgressDialog(activity);
-        this.dialog.setCancelable(false);
-        this.dialog.setIndeterminate(true);
-        this.dialog.setMessage(activity.getString(message));
-    }
+	protected ProgressTask(FragmentActivity activity, int message) {
+		super(activity);
+		this.dialog = new ProgressDialog(activity);
+		this.dialog.setCancelable(false);
+		this.dialog.setIndeterminate(true);
+		this.dialog.setMessage(activity.getString(message));
+	}
 
-    protected ProgressTask(Activity activity) {
-        this(activity, R.string.loading_);
-    }
+	protected ProgressTask(Activity activity) {
+		this(activity, R.string.loading_);
+	}
 
-    protected ProgressTask(Activity activity, int message) {
-        super(activity);
-        this.dialog = new ProgressDialog(activity);
-        this.dialog.setCancelable(false);
-        this.dialog.setIndeterminate(true);
-        this.dialog.setMessage(activity.getString(message));
-    }
+	protected ProgressTask(Activity activity, int message) {
+		super(activity);
+		this.dialog = new ProgressDialog(activity);
+		this.dialog.setCancelable(false);
+		this.dialog.setIndeterminate(true);
+		this.dialog.setMessage(activity.getString(message));
+	}
 
-    protected ProgressTask(FragmentMapActivity activity) {
-        this(activity, R.string.loading_);
-    }
+	protected ProgressTask(FragmentMapActivity activity) {
+		this(activity, R.string.loading_);
+	}
 
-    protected ProgressTask(FragmentMapActivity activity, int message) {
-        super(activity);
-        this.dialog = new ProgressDialog(activity);
-        this.dialog.setCancelable(false);
-        this.dialog.setIndeterminate(true);
-        this.dialog.setMessage(activity.getString(message));
-    }
+	protected ProgressTask(FragmentMapActivity activity, int message) {
+		super(activity);
+		this.dialog = new ProgressDialog(activity);
+		this.dialog.setCancelable(false);
+		this.dialog.setIndeterminate(true);
+		this.dialog.setMessage(activity.getString(message));
+	}
 
-    protected ProgressTask(ListFragment activity) {
-        this(activity.getActivity(), R.string.loading_);
-    }
+	protected ProgressTask(ListFragment activity) {
+		this(activity.getActivity(), R.string.loading_);
+	}
 
-    protected ProgressTask(ListFragment activity, int message) {
-        super(activity);
-        this.dialog = new ProgressDialog(activity.getActivity());
-        this.dialog.setCancelable(false);
-        this.dialog.setIndeterminate(true);
-        this.dialog.setMessage(activity.getString(message));
-    }
+	protected ProgressTask(ListFragment activity, int message) {
+		super(activity);
+		this.dialog = new ProgressDialog(activity.getActivity());
+		this.dialog.setCancelable(false);
+		this.dialog.setIndeterminate(true);
+		this.dialog.setMessage(activity.getString(message));
+	}
 
-    protected ProgressTask(Fragment activity) {
-        this(activity.getActivity(), R.string.loading_);
-    }
+	protected ProgressTask(Fragment activity) {
+		this(activity.getActivity(), R.string.loading_);
+	}
 
-    protected ProgressTask(Fragment activity, int message) {
-        super(activity.getActivity());
-        this.dialog = new ProgressDialog(activity.getActivity());
-        this.dialog.setCancelable(false);
-        this.dialog.setIndeterminate(true);
-        this.dialog.setMessage(activity.getString(message));
-    }
+	protected ProgressTask(Fragment activity, int message) {
+		super(activity.getActivity());
+		this.dialog = new ProgressDialog(activity.getActivity());
+		this.dialog.setCancelable(false);
+		this.dialog.setIndeterminate(true);
+		this.dialog.setMessage(activity.getString(message));
+	}
 
-    public void register(ProgressCallback callback) {
-        this.callback = callback;
-    }
+	public void register(ProgressCallback callback) {
+		this.callback = callback;
+	}
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        dialog.show();
-    }
+	@Override
+	protected void onPreExecute() {
+		super.onPreExecute();
+		dialog.show();
+	}
 
-    @Override
-    protected void onProgressUpdate(String... values) {
-        super.onProgressUpdate(values);
-        if (values != null && values.length > 0) {
-            dialog.setMessage(values[0]);
-        }
-        if (!dialog.isShowing()) {
-            dialog.show();
-        }
-    }
+	@Override
+	protected void onProgressUpdate(String... values) {
+		super.onProgressUpdate(values);
+		if (values != null && values.length > 0) {
+			dialog.setMessage(values[0]);
+		}
+		if (!dialog.isShowing()) {
+			dialog.show();
+		}
+	}
 
-    @Override
-    protected void onPostExecute(Boolean success) {
-        super.onPostExecute(success);
-        dialog.dismiss();
-        if (callback != null) {
-            callback.execute();
-        }
-    }
+	@Override
+	protected void onPostExecute(Boolean success) {
+		super.onPostExecute(success);
+		dialog.dismiss();
+		if (callback != null) {
+			callback.execute();
+		}
+	}
 }

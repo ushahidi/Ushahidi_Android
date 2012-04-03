@@ -36,74 +36,75 @@ import com.ushahidi.android.app.views.ListReportView;
  * @author eyedol
  */
 public class ListAdminReportListFragment extends
-        BaseListFragment<ListReportView, ListReportModel, ListReportAdapter> {
+		BaseListFragment<ListReportView, ListReportModel, ListReportAdapter> {
 
-    public ListAdminReportListFragment() {
-        super(ListReportView.class, ListReportAdapter.class, R.layout.list_report,
-                R.menu.list_report, android.R.id.list);
-    }
+	public ListAdminReportListFragment() {
+		super(ListReportView.class, ListReportAdapter.class,
+				R.layout.list_report, R.menu.list_report, android.R.id.list);
+	}
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        // Example of progress queue for executing asynctasks
-        // which will execute TaskOne, then TaskTwo
-        /*
-         * new ProgressQueue( new TaskOne(this), new TaskTwo(this) ).execute();
-         */
-    }
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+		// Example of progress queue for executing asynctasks
+		// which will execute TaskOne, then TaskTwo
+		/*
+		 * new ProgressQueue( new TaskOne(this), new TaskTwo(this) ).execute();
+		 */
+	}
 
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        // toastShort("onItemClick %d", position);
-    }
+	public void onItemClick(AdapterView<?> adapterView, View view,
+			int position, long id) {
+		// toastShort("onItemClick %d", position);
+	}
 
-    /**
-     * Example of a ProgressTask
-     */
-    class TaskOne extends ProgressTask {
+	/**
+	 * Example of a ProgressTask
+	 */
+	class TaskOne extends ProgressTask {
 
-        public TaskOne(FragmentActivity activity) {
-            super(activity, R.string.loading_);
-            // pass custom loading message to super call
-        }
+		public TaskOne(FragmentActivity activity) {
+			super(activity, R.string.loading_);
+			// pass custom loading message to super call
+		}
 
-        @Override
-        protected Boolean doInBackground(String... strings) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return true;
-        }
-    }
+		@Override
+		protected Boolean doInBackground(String... strings) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			return true;
+		}
+	}
 
-    /**
-     * Another example of a ProgressTask
-     */
-    class TaskTwo extends ProgressTask {
+	/**
+	 * Another example of a ProgressTask
+	 */
+	class TaskTwo extends ProgressTask {
 
-        public TaskTwo(FragmentActivity activity) {
-            super(activity, R.string.loading_);
-            // pass custom loading message to super call
-        }
+		public TaskTwo(FragmentActivity activity) {
+			super(activity, R.string.loading_);
+			// pass custom loading message to super call
+		}
 
-        @Override
-        protected Boolean doInBackground(String... strings) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return true;
-        }
-    }
+		@Override
+		protected Boolean doInBackground(String... strings) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			return true;
+		}
+	}
 
-    @Override
-    protected void onLoaded(boolean success) {
-        // TODO Auto-generated method stub
+	@Override
+	protected void onLoaded(boolean success) {
+		// TODO Auto-generated method stub
 
-    }
+	}
 
 }

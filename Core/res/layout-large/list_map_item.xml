@@ -10,12 +10,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/map_arrow"
+        android:capitalize="characters"
         android:ellipsize="end"
         android:focusable="false"
         android:singleLine="true"
-        android:textStyle="bold"
-        android:capitalize="characters"
-        android:textColor="@color/date_color" />
+        android:textColor="@color/date_color"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/map_list_desc"
@@ -52,5 +52,15 @@
         android:singleLine="true"
         android:textColor="@color/date_color"
         android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/map_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_weight="1"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="5dip" />
 
 </RelativeLayout>

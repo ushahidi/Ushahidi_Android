@@ -42,7 +42,7 @@ public class AddCheckinActivity extends BaseEditMapActivity<AddCheckinView, AddC
     @Override
     protected boolean onSaveChanges() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override

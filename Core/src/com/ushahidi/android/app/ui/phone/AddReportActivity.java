@@ -89,7 +89,7 @@ public class AddReportActivity extends BaseEditMapActivity<AddReportView, AddRep
     @Override
     protected boolean onSaveChanges() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override

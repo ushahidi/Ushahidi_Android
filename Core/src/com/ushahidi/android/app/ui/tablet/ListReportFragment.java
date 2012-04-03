@@ -47,6 +47,7 @@ import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
 import com.ushahidi.android.app.ui.phone.ViewReportActivity;
+import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.views.ListReportView;
 
 /**
@@ -81,6 +82,7 @@ public class ListReportFragment extends
 
 	private boolean refreshState = false;
 
+	private ApiUtils apiUtils;
 	public ListReportFragment() {
 		super(ListReportView.class, ListReportAdapter.class,
 				R.layout.list_report, R.menu.list_report, android.R.id.list);
@@ -99,7 +101,7 @@ public class ListReportFragment extends
 		mListReportView = new ListReportView(getActivity());
 		mListReportAdapter = new ListReportAdapter(getActivity());
 		mHandler = new Handler();
-
+		apiUtils = new ApiUtils(getActivity());
 		mListReportView.getFilterReportView().addTextChangedListener(
 				new TextWatcher() {
 
@@ -369,6 +371,7 @@ public class ListReportFragment extends
 		protected Boolean doInBackground(String... strings) {
 			try {
 
+				apiUtils.clearAllReportData();
 				// fetch categories
 				new CategoriesHttpClient(getActivity()).getCategoriesFromWeb();
 

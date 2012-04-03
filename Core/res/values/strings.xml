@@ -261,7 +261,6 @@
 	<string name="sending_report_in_progress">Sending report...</string>
 	<string name="ushahidi_setup_title">Ushahidi Setup</string>
 	<string name="ushahidi_setup_blub">Setup an ushahidi deployment.</string>
-	<string name="all_categories">All</string>
 	<string name="recent_reports">Recent Reports</string>
 	<string name="on_phone">On Phone</string>
 	<string name="on_sd_card">On SD Card</string>
@@ -363,4 +362,5 @@
     <string name="no_news">No News</string>
     <string name="no_video">No Video</string>
     <string name="no_photos">No Photos</string>
+    <string name="all_categories">All Categories</string>
 </resources>

@@ -20,13 +20,13 @@
 
 package com.ushahidi.android.app.views;
 
-import com.ushahidi.android.app.R;
-
 import android.app.Activity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.ushahidi.android.app.R;
 
 public class ListReportView extends com.ushahidi.android.app.views.View {
 
@@ -46,7 +46,7 @@ public class ListReportView extends com.ushahidi.android.app.views.View {
 		emptyListText = (TextView) activity.findViewById(android.R.id.empty);
 		mTextView = (TextView) activity.findViewById(R.id.search_report);
 		footerText = (TextView) activity.findViewById(R.id.footer_text);
-		footerText.setText(R.string.all_categories);
+		//footerText.setText(R.string.all_categories);
 	}
 
 	public void displayEmptyListText() {

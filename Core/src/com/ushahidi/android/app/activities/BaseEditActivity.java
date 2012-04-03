@@ -32,89 +32,96 @@ import com.ushahidi.android.app.views.View;
 
 /**
  * BaseEditActivity
- *
+ * 
  * Add shared functionality that exists between all Edit Activities
  */
-public abstract class BaseEditActivity<V extends View, M extends Model> extends BaseActivity<V> {
+public abstract class BaseEditActivity<V extends View, M extends Model> extends
+		BaseActivity<V> {
 
-    public BaseEditActivity(Class<V> view, int layout, int menu) {
-        super(view, layout, menu);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
+	public BaseEditActivity(Class<V> view, int layout, int menu) {
+		super(view, layout, menu);
+	}
 
 	@Override
-	protected void onResume(){
+	protected void onStart() {
+		super.onStart();
+	}
+
+	@Override
+	protected void onResume() {
 		super.onResume();
 	}
 
-    @Override
-	protected void onPause() {
-        super.onPause();
-    }
-
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)  {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            log("onBackPressed");
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(getText(R.string.unsaved_changes))
-                   .setMessage(getText(R.string.would_you_like_to_save_your_changes_))
-                   .setCancelable(false)
-                   .setPositiveButton(getText(R.string.save), new DialogInterface.OnClickListener() {
-                       public void onClick(DialogInterface dialog, int id) {
-                           new SaveTask(BaseEditActivity.this).execute((String)null);
-                       }
-                   })
-                   .setNeutralButton(getText(R.string.discard), new DialogInterface.OnClickListener() {
-                       public void onClick(DialogInterface dialog, int id) {
-                           finish();
-                       }
-                   })
-                   .setNegativeButton(getText(R.string.cancel), new DialogInterface.OnClickListener() {
-                       public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                       }
-                   })
-            .create()
-            .show();
-            return false;
-        }
-        return super.onKeyDown(keyCode, event);
+	protected void onPause() {
+		super.onPause();
 	}
 
-    /**
-     *  Save Model class, return true if successful
-     * @return returns true if successful
-     */
-    protected abstract boolean onSaveChanges();
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+			log("onBackPressed");
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(getText(R.string.unsaved_changes))
+					.setMessage(
+							getText(R.string.would_you_like_to_save_your_changes_))
+					.setCancelable(false)
+					.setPositiveButton(getText(R.string.save),
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									new SaveTask(BaseEditActivity.this)
+											.execute((String) null);
+								}
+							})
+					.setNeutralButton(getText(R.string.discard),
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									finish();
+								}
+							})
+					.setNegativeButton(getText(R.string.cancel),
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									dialog.cancel();
+								}
+							}).create().show();
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 
-    /**
-     * Background progress task for saving Model
-     */
-    protected class SaveTask extends ProgressTask {
-        public SaveTask(FragmentActivity activity) {
-            super(activity, R.string.saving_);
-        }
+	/**
+	 * Save Model class, return true if successful
+	 * 
+	 * @return returns true if successful
+	 */
+	protected abstract boolean onSaveChanges();
 
-        @Override
-        protected Boolean doInBackground(String... args) {
-            return onSaveChanges();
-        }
+	/**
+	 * Background progress task for saving Model
+	 */
+	protected class SaveTask extends ProgressTask {
+		public SaveTask(FragmentActivity activity) {
+			super(activity, R.string.saving_);
+		}
 
-        @Override
-        protected void onPostExecute(Boolean success) {
-            super.onPostExecute(success);
-            if (success) {
-                toastLong(R.string.saved);
-                activity.finish();
-            }
-            else {
-                toastLong(R.string.not_saved);
-            }
-        }
-    }
+		@Override
+		protected Boolean doInBackground(String... args) {
+			return onSaveChanges();
+		}
+
+		@Override
+		protected void onPostExecute(Boolean success) {
+			super.onPostExecute(success);
+			if (success) {
+				toastLong(R.string.saved);
+				activity.finish();
+			} else {
+				toastLong(R.string.not_saved);
+			}
+		}
+	}
 }

@@ -39,7 +39,6 @@ import android.support.v4.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -107,8 +106,6 @@ public class ListMapActivity extends
 	private String filter = null;
 
 	private String errorMessage = "";
-
-	private String TAG = ListMapActivity.class.getSimpleName();
 
 	private ApiUtils apiUtils;
 
@@ -472,7 +469,6 @@ public class ListMapActivity extends
 			if (edit) {
 				final List<ListMapModel> listMap = listMapModel.loadMapById(
 						mId, mapId);
-				log(" ID " + mId + " map Id " + mapId);
 				if (listMap != null && listMap.size() > 0) {
 					addMapView.setMapName(listMap.get(0).getName());
 					addMapView.setMapDescription(listMap.get(0).getDesc());
@@ -669,7 +665,7 @@ public class ListMapActivity extends
 				toastLong(R.string.could_not_fetch_reports);
 			}
 		} catch (IllegalArgumentException e) {
-			Log.e(TAG, "IllegalArgumentException " + e.toString());
+			log(e.toString());
 		}
 	}
 

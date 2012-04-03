@@ -45,207 +45,219 @@ import com.ushahidi.android.app.views.View;
  * @author eyedol
  */
 public abstract class BaseListFragment<V extends View, M extends Model, L extends BaseListAdapter<M>>
-        extends ListFragment {
+		extends ListFragment {
 
-    /**
-     * ListView resource id
-     */
-    private final int listViewId;
+	/**
+	 * ListView resource id
+	 */
+	private final int listViewId;
 
-    /**
-     * ListAdpater class
-     */
-    private final Class<L> adapterClass;
+	/**
+	 * ListAdpater class
+	 */
+	private final Class<L> adapterClass;
 
-    /**
-     * ListAdapter
-     */
-    protected L adapter;
+	/**
+	 * ListAdapter
+	 */
+	protected L adapter;
 
-    /**
-     * ListView
-     */
-    protected ListView listView;
+	/**
+	 * ListView
+	 */
+	protected ListView listView;
 
-    /**
-     * Menu resource id
-     */
-    protected final int menu;
+	/**
+	 * Menu resource id
+	 */
+	protected final int menu;
 
-    /**
-     * Layout resource id
-     */
-    protected final int layout;
+	/**
+	 * Layout resource id
+	 */
+	protected final int layout;
 
-    /**
-     * View class
-     */
-    protected final Class<V> viewClass;
+	/**
+	 * View class
+	 */
+	protected final Class<V> viewClass;
 
-    /**
-     * View
-     */
-    protected V view;
+	/**
+	 * View
+	 */
+	protected V view;
 
-    /**
-     * BaseListActivity
-     * 
-     * @param view View class type
-     * @param adapter List adapter class type
-     * @param layout layout resource id
-     * @param menu menu resource id
-     * @param listView list view resource id
-     */
-    protected BaseListFragment(Class<V> view, Class<L> adapter, int layout, int menu, int listView) {
-        this.adapterClass = adapter;
-        this.listViewId = listView;
-        this.viewClass = view;
-        this.menu = menu;
-        this.layout = layout;
-    }
+	/**
+	 * BaseListActivity
+	 * 
+	 * @param view
+	 *            View class type
+	 * @param adapter
+	 *            List adapter class type
+	 * @param layout
+	 *            layout resource id
+	 * @param menu
+	 *            menu resource id
+	 * @param listView
+	 *            list view resource id
+	 */
+	protected BaseListFragment(Class<V> view, Class<L> adapter, int layout,
+			int menu, int listView) {
+		this.adapterClass = adapter;
+		this.listViewId = listView;
+		this.viewClass = view;
+		this.menu = menu;
+		this.layout = layout;
+	}
 
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		setHasOptionsMenu(true);
 
-        if (listViewId != 0) {
+		if (listViewId != 0) {
 
-            listView = getListView();
-            // listView.setOnItemClickListener(this);
-            android.view.View emptyView = getActivity().findViewById(android.R.id.empty);
-            if (emptyView != null) {
-                listView.setEmptyView(emptyView);
-            }
+			listView = getListView();
+			// listView.setOnItemClickListener(this);
+			android.view.View emptyView = getActivity().findViewById(
+					android.R.id.empty);
+			if (emptyView != null) {
+				listView.setEmptyView(emptyView);
+			}
 
-            adapter = createInstance(adapterClass, Context.class, getActivity());
+			adapter = createInstance(adapterClass, Context.class, getActivity());
 
-            listView.setAdapter(adapter);
-            listView.setFocusable(true);
-            listView.setFocusableInTouchMode(true);
-        }
-    }
+			listView.setAdapter(adapter);
+			listView.setFocusable(true);
+			listView.setFocusableInTouchMode(true);
+		}
+	}
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        if (this.menu != 0) {
-            inflater.inflate(this.menu, menu);
-        }
+		if (this.menu != 0) {
+			inflater.inflate(this.menu, menu);
+		}
 
-    }
+	}
 
-    @Override
-    public android.view.View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        android.view.View root = null;
-        if (layout != 0) {
-            root = inflater.inflate(layout, container, false);
-        }
-        return root;
-    }
+	@Override
+	public android.view.View onCreateView(LayoutInflater inflater,
+			ViewGroup container, Bundle savedInstanceState) {
+		android.view.View root = null;
+		if (layout != 0) {
+			root = inflater.inflate(layout, container, false);
+		}
+		return root;
+	}
 
-    /**
-     * Called after ListAdapter has been loaded
-     * 
-     * @param success true is successfully loaded
-     */
-    protected abstract void onLoaded(boolean success);
+	/**
+	 * Called after ListAdapter has been loaded
+	 * 
+	 * @param success
+	 *            true is successfully loaded
+	 */
+	protected abstract void onLoaded(boolean success);
 
-    @SuppressWarnings("unchecked")
-    protected M getSelectedItem() {
-        return (M)listView.getSelectedItem();
-    }
+	@SuppressWarnings("unchecked")
+	protected M getSelectedItem() {
+		return (M) listView.getSelectedItem();
+	}
 
-    public void onItemSelected(AdapterView<?> adapterView, android.view.View view, int position,
-            long id) {
-    }
+	public void onItemSelected(AdapterView<?> adapterView,
+			android.view.View view, int position, long id) {
+	}
 
-    public void onNothingSelected(AdapterView<?> adapterView) {
-    }
+	public void onNothingSelected(AdapterView<?> adapterView) {
+	}
 
-    /**
-     * ProgressTask sub-class for showing Loading... dialog while the
-     * BaseListAdapter loads the data
-     */
-    protected class LoadingTask extends ProgressTask {
-        public LoadingTask(ListFragment activity) {
-            super(activity, R.string.loading_);
-        }
+	/**
+	 * ProgressTask sub-class for showing Loading... dialog while the
+	 * BaseListAdapter loads the data
+	 */
+	protected class LoadingTask extends ProgressTask {
+		public LoadingTask(ListFragment activity) {
+			super(activity, R.string.loading_);
+		}
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            dialog.cancel();
-        }
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			dialog.cancel();
+		}
 
-        @Override
-        protected Boolean doInBackground(String... args) {
+		@Override
+		protected Boolean doInBackground(String... args) {
 
-            adapter.refresh();
+			adapter.refresh();
 
-            return true;
-        }
+			return true;
+		}
 
-        @Override
-        protected void onPostExecute(Boolean success) {
-            super.onPostExecute(success);
+		@Override
+		protected void onPostExecute(Boolean success) {
+			super.onPostExecute(success);
 
-            onLoaded(success);
-            listView.setAdapter(adapter);
-        }
-    }
+			onLoaded(success);
+			listView.setAdapter(adapter);
+		}
+	}
 
-    protected void log(String message) {
-        if (MainApplication.LOGGING_MODE)
-            Log.i(getClass().getName(), message);
-    }
+	protected void log(String message) {
+		if (MainApplication.LOGGING_MODE)
+			Log.i(getClass().getName(), message);
+	}
 
-    protected void log(String format, Object... args) {
-        if (MainApplication.LOGGING_MODE)
-            Log.i(getClass().getName(), String.format(format, args));
-    }
+	protected void log(String format, Object... args) {
+		if (MainApplication.LOGGING_MODE)
+			Log.i(getClass().getName(), String.format(format, args));
+	}
 
-    protected void log(String message, Exception ex) {
-        if (MainApplication.LOGGING_MODE)
-            Log.e(getClass().getName(), message, ex);
-    }
+	protected void log(String message, Exception ex) {
+		if (MainApplication.LOGGING_MODE)
+			Log.e(getClass().getName(), message, ex);
+	}
 
-    protected void toastLong(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-    }
+	protected void toastLong(String message) {
+		Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+	}
 
-    protected void toastLong(int message) {
-        Toast.makeText(getActivity(), getText(message), Toast.LENGTH_LONG).show();
-    }
+	protected void toastLong(int message) {
+		Toast.makeText(getActivity(), getText(message), Toast.LENGTH_LONG)
+				.show();
+	}
 
-    protected void toastShort(int message) {
-        Toast.makeText(getActivity(), getText(message), Toast.LENGTH_SHORT).show();
-    }
+	protected void toastShort(int message) {
+		Toast.makeText(getActivity(), getText(message), Toast.LENGTH_SHORT)
+				.show();
+	}
 
-    protected void toastShort(CharSequence message) {
-        Toast.makeText(getActivity(), message.toString(), Toast.LENGTH_SHORT).show();
-    }
+	protected void toastShort(CharSequence message) {
+		Toast.makeText(getActivity(), message.toString(), Toast.LENGTH_SHORT)
+				.show();
+	}
 
-    @SuppressWarnings("unchecked")
-    protected <T> T createInstance(Class<?> type, Class<?> constructor, Object... params) {
-        try {
-            return (T)type.getConstructor(constructor).newInstance(params);
-        } catch (InstantiationException e) {
-            log("InstantiationException", e);
-        } catch (IllegalAccessException e) {
-            log("IllegalAccessException", e);
-        } catch (InvocationTargetException e) {
-            log("InvocationTargetException", e);
-        } catch (NoSuchMethodException e) {
-            log("NoSuchMethodException", e);
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (java.lang.InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
-    }
+	@SuppressWarnings("unchecked")
+	protected <T> T createInstance(Class<?> type, Class<?> constructor,
+			Object... params) {
+		try {
+			return (T) type.getConstructor(constructor).newInstance(params);
+		} catch (InstantiationException e) {
+			log("InstantiationException", e);
+		} catch (IllegalAccessException e) {
+			log("IllegalAccessException", e);
+		} catch (InvocationTargetException e) {
+			log("InvocationTargetException", e);
+		} catch (NoSuchMethodException e) {
+			log("NoSuchMethodException", e);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (java.lang.InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }

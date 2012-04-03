@@ -33,6 +33,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.ushahidi.android.app.Preferences;
+import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.net.MainHttpClient;
 
 /**
@@ -118,6 +119,21 @@ public class ApiUtils extends MainHttpClient {
 		}
 		Preferences.saveSettings(context);
 		return checkinEnabled;
+	}
+
+	public  void clearAllReportData() {
+		// clear fields
+		Database.mReportCategoryDao.deleteAllReportCategory();
+
+		// clear database
+		Database.mReportDao.deleteAllReport();
+
+		// clear data
+		Database.mMediaDao.deleteAllMedia();
+
+		// clear up all categories
+		Database.mCategoryDao.deleteAllCategories();
+
 	}
 
 	/**
