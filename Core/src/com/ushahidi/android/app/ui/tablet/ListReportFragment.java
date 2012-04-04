@@ -403,7 +403,9 @@ public class ListReportFragment extends
 
 		@Override
 		protected void onPostExecute(Boolean result) {
+			log("onPostExecute33  " + status);
 			if (result) {
+				log("fetching ");
 				if (status == 4) {
 					toastLong(R.string.internet_connection);
 				} else if (status == 3) {
@@ -413,7 +415,7 @@ public class ListReportFragment extends
 				} else if (status == 1) {
 					toastLong(R.string.could_not_fetch_reports);
 				} else if (status == 0) {
-
+					log("successfully fetched");
 					mListReportAdapter.refresh();
 					mListReportView.getPullToRefreshListView().setAdapter(
 							mListReportAdapter);

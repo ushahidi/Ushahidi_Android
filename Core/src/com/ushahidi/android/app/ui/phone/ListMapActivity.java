@@ -45,21 +45,18 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.BaseListActivity;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
-import com.ushahidi.android.app.helpers.ActionModeHelper;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.MapsHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.util.ApiUtils;
-import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.AddMapView;
 import com.ushahidi.android.app.views.ListMapView;
 
@@ -124,15 +121,8 @@ public class ListMapActivity extends
 		listMapAdapter = new ListMapAdapter(this);
 		listMapModel = new ListMapModel();
 		apiUtils = new ApiUtils(this);
-		if (Util.isTablet(this)) {
-			listMapView.mListView.setLongClickable(true);
-			listMapView.mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-			listMapView.mListView
-					.setOnItemLongClickListener(new ActionModeHelper(this,
-							listMapView.mListView));
-		} else {
-			registerForContextMenu(listMapView.mListView);
-		}
+
+		registerForContextMenu(listMapView.mListView);
 
 		listMapView.mTextView.addTextChangedListener(new TextWatcher() {
 

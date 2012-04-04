@@ -48,9 +48,9 @@ public class ReportPhotoView extends View {
 
 	public void goNext(Drawable drawable) {
 		Animation out = AnimationUtils.loadAnimation(context,
-				android.R.anim.slide_out_right);
+				android.R.anim.fade_in);
 		Animation in = AnimationUtils.loadAnimation(context,
-				android.R.anim.slide_in_left);
+				android.R.anim.fade_out);
 		imageSwitcher.setInAnimation(in);
 		imageSwitcher.setOutAnimation(out);
 		imageSwitcher.setImageDrawable(drawable);
@@ -58,9 +58,9 @@ public class ReportPhotoView extends View {
 
 	public void goPrevious(Drawable drawable) {
 		Animation out = AnimationUtils.loadAnimation(context,
-				R.anim.slide_left_out);
+				android.R.anim.fade_in);
 		Animation in = AnimationUtils.loadAnimation(context,
-				R.anim.slide_right_in);
+				R.anim.fade_out);
 		imageSwitcher.setInAnimation(in);
 		imageSwitcher.setOutAnimation(out);
 		imageSwitcher.setImageDrawable(drawable);

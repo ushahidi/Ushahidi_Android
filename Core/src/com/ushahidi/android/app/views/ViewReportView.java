@@ -90,11 +90,11 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		body = (TextView) activity.findViewById(R.id.desc);
 		status = (TextView) activity.findViewById(R.id.status);
 		listNews = (ListView) activity.findViewById(R.id.list_news);
-		
+
 		photoAdapter = new ListPhotoAdapter(activity);
 		newsAdapter = new ListNewsAdapter(activity);
 		videoAdapter = new ListVideoAdapter(activity);
-		
+
 		listNewsEmptyView = (TextView) activity
 				.findViewById(R.id.empty_list_for_news);
 		if (listNewsEmptyView != null) {
@@ -218,8 +218,9 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	}
 
 	public void setStatus(String status) {
-
-		this.status.setText(status);
+		final String s = status == context.getString(R.string.report_verified) ? context
+				.getString(R.string.yes) : context.getString(R.string.no);
+		this.status.setText(s);
 	}
 
 	public String getStatus() {

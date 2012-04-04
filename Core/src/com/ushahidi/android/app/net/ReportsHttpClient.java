@@ -58,7 +58,7 @@ public class ReportsHttpClient extends MainHttpClient {
     public ReportsHttpClient(Context context) {
         super(context);
         this.context = context;
-        apiUtils = new ApiUtils(this.context);
+        apiUtils = new ApiUtils(context);
     }
 
     public int getAllReportFromWeb() {
