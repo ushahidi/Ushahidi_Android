@@ -68,7 +68,12 @@ public class ReportsApiUtils {
 
 	private JSONObject getReportPayloadObj() {
 		try {
-			return jsonObject.getJSONObject("payload");
+
+			if (!jsonObject.isNull("payload")) {
+				return jsonObject.getJSONObject("payload");
+			}
+
+			return new JSONObject();
 		} catch (JSONException e) {
 			log("JSONException", e);
 			return new JSONObject();
@@ -77,7 +82,10 @@ public class ReportsApiUtils {
 
 	private JSONArray getReportsArr() {
 		try {
-			return getReportPayloadObj().getJSONArray("incidents");
+			if (!getReportPayloadObj().isNull("incidents")) {
+				return getReportPayloadObj().getJSONArray("incidents");
+			}
+			return new JSONArray();
 		} catch (JSONException e) {
 			log("JSONException", e);
 			return new JSONArray();
@@ -90,12 +98,14 @@ public class ReportsApiUtils {
 			List<Report> listReport = new ArrayList<Report>();
 			JSONArray reportsArr = getReportsArr();
 			int id = 0;
-			if (reportsArr != null) {
+			if (reportsArr != null && reportsArr.length() > 0) {
 				for (int i = 0; i < reportsArr.length(); i++) {
 					Report report = new Report();
 					try {
-						id = reportsArr.getJSONObject(i)
-								.getJSONObject("incident").getInt("incidentid");
+						if (!reportsArr.getJSONObject(i).isNull("incident"))
+							id = reportsArr.getJSONObject(i)
+									.getJSONObject("incident")
+									.getInt("incidentid");
 						report.setDbId(id);
 						report.setTitle(reportsArr.getJSONObject(i)
 								.getJSONObject("incident")
@@ -123,17 +133,19 @@ public class ReportsApiUtils {
 								.getString("locationlongitude"));
 
 						// retrieve categories
-						JSONArray catsArr = reportsArr.getJSONObject(i)
-								.getJSONArray("categories");
-						for (int j = 0; j < catsArr.length(); j++) {
-							try {
+						if (!reportsArr.getJSONObject(i).isNull("categories")) {
+							JSONArray catsArr = reportsArr.getJSONObject(i)
+									.getJSONArray("categories");
+							for (int j = 0; j < catsArr.length(); j++) {
+								try {
 
-								saveCategories(
-										catsArr.getJSONObject(j)
-												.getJSONObject("category")
-												.getInt("id"), (int) id);
-							} catch (JSONException ex) {
-								log("JSONException", ex);
+									saveCategories(
+											catsArr.getJSONObject(j)
+													.getJSONObject("category")
+													.getInt("id"), (int) id);
+								} catch (JSONException ex) {
+									log("JSONException", ex);
+								}
 							}
 						}
 
@@ -145,7 +157,7 @@ public class ReportsApiUtils {
 								try {
 									if (!mediaArr.getJSONObject(w).isNull("id")) {
 
-										//save media
+										// save media
 										if (mediaArr.getJSONObject(w).getInt(
 												"type") == 1
 												&& (!mediaArr.getJSONObject(w)
@@ -175,7 +187,8 @@ public class ReportsApiUtils {
 																.getString(
 																		"link");
 
-												saveImages(link, fileName,context);
+												saveImages(link, fileName,
+														context);
 											}
 
 										} else {

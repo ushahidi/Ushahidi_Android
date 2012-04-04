@@ -9,24 +9,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_gravity="center"
         android:layout_toLeftOf="@+id/map_arrow"
-        android:capitalize="characters"
+        android:capitalize="sentences"
         android:ellipsize="end"
         android:focusable="false"
         android:singleLine="true"
         android:textColor="@color/date_color"
         android:textStyle="bold" />
-
+    
+    <!--  Hide this for now -->
     <TextView
         android:id="@+id/map_list_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/map_list_name"
         android:layout_toLeftOf="@+id/map_arrow"
         android:capitalize="sentences"
         android:ellipsize="end"
         android:focusable="false"
+        android:visibility="invisible"
         android:textColor="@color/date_color" />
 
     <TextView

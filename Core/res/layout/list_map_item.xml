@@ -8,6 +8,7 @@
         android:id="@+id/map_list_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/map_arrow"
         android:ellipsize="end"
@@ -16,7 +17,7 @@
         android:textStyle="bold"
         android:capitalize="characters"
         android:textColor="@color/date_color" />
-
+    <!-- Hide this for now  -->
     <TextView
         android:id="@+id/map_list_desc"
         android:layout_width="wrap_content"
@@ -25,8 +26,10 @@
         android:layout_below="@+id/map_list_name"
         android:layout_toLeftOf="@+id/map_arrow"
         android:capitalize="sentences"
+        android:visibility="invisible"
         android:ellipsize="end"
         android:focusable="false"
+        
         android:textColor="@color/date_color" />
 
     <TextView

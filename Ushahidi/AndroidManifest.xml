@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+<!--
+     Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
 	Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
 	This file may be used under the terms of the GNU Lesser General Public License 
 	version 3 as published by the Free Software Foundation and appearing in the 
@@ -7,240 +8,318 @@
 	following information to ensure the GNU Lesser General Public License version 
 	3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
 	have questions regarding the use of this file, please contact Ushahidi developers 
-	at team@ushahidi.com. -->
+	at team@ushahidi.com.
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.ushahidi.android.app" android:versionCode="25"
-          android:versionName="3.0.0">
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.VIBRATE" />
-	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	<uses-permission android:name="android.permission.CAMERA" />
-	<uses-permission android:name="android.permission.RECEIVE_SMS" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-feature android:name="android.hardware.camera" />
-	<!-- Enable this feature if you need autofocus <uses-feature android:name="android.hardware.camera.autofocus" 
-		/> -->
-	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="13" />
-	<supports-screens android:largeScreens="true"
-		android:normalScreens="true" android:smallScreens="true"
-		android:anyDensity="true" />
-	<application android:icon="@drawable/app_icon"
-		android:label="@string/app_name" android:name=".MainApplication"
-		android:theme="@style/Theme.Sherlock"
-        android:hardwareAccelerated="true" android:debuggable="true">
-		<uses-library android:name="com.google.android.maps" />
-		<activity android:name=".SplashScreen">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-		
-		<!-- Settings -->
-		<activity android:name=".Settings"
-			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-			android:label="@string/app_settings">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.PREFERENCE" />
-			</intent-filter>
-		</activity>
+    package="com.ushahidi.android.app"
+    android:versionCode="25"
+    android:versionName="3.0.0" >
 
-		<!-- Image capture -->
-		<activity
-			android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-			android:name=".ImageCapture" android:label="@string/str_post_photos">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-		
-		<!-- New Fragment Activities -->
-		
-		<!-- About -->
-        <activity android:name=".ui.phone.AboutActivity" android:label="@string/ushahidi_about">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <!--
+         Enable this feature if you need autofocus <uses-feature android:name="android.hardware.camera.autofocus" 
+		/>
+    -->
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="13" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
+
+    <application
+        android:name=".MainApplication"
+        android:debuggable="true"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/app_icon"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Sherlock" >
+        <uses-library android:name="com.google.android.maps" />
+
+        <activity android:name=".SplashScreen" >
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-		
-		<!-- Add a new report -->
+
+        <!-- Settings -->
         <activity
+            android:name=".Settings"
+            android:theme="@android:style/Theme.Black.NoTitleBar"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:name=".ui.phone.AddReportActivity" android:label="@string/add_report">
+            android:label="@string/app_settings" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.PREFERENCE" />
+            </intent-filter>
+        </activity>
+
+        <!-- Image capture -->
+        <activity
+            android:name=".ImageCapture"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/str_post_photos" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- New Fragment Activities -->
+
+
+        <!-- About -->
+        <activity
+            android:name=".ui.phone.AboutActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/ushahidi_about" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- Add a new report -->
+        <activity
+            android:name=".ui.phone.AddReportActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/add_report" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.CHOOSER" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        
-            <!-- Add a new checkin -->
+
+        <!-- Add a new checkin -->
         <activity
+            android:name=".ui.phone.AddCheckinActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:name=".ui.phone.AddCheckinActivity" android:label="@string/checkin_btn">
+            android:label="@string/checkin_btn" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.CHOOSER" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        
+
         <!-- List Reports -->
-        <activity android:name=".ui.tablet.ListReportActivity"
+        <activity
+            android:name=".ui.tablet.ListReportActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:label="@string/view_incident">
+            android:label="@string/view_incident" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="org.addhen.ushahidi.INCIDENTS" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="org.addhen.ushahidi.NEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
-        <!-- List Maps-->
-        <activity android:name=".ui.phone.ListMapActivity"
-            android:windowSoftInputMode="stateHidden"
+
+        <!-- List Maps -->
+        <activity
+            android:name=".ui.phone.ListMapActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:label="@string/maps">
+            android:label="@string/maps"
+            android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="org.addhen.ushahidi.INCIDENTS" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="org.addhen.ushahidi.NEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            
+
             <!-- Receives the search request. -->
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
             <!-- Points to searchable meta data. -->
-            <meta-data android:name="android.app.searchable"
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        
+
         <!-- report tab -->
         <activity
-            android:configChanges="orientation|keyboardHidden"
+            android:name=".ui.phone.ReportTabActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:name=".ui.phone.ReportTabActivity" >
-            <intent-filter >
+            android:launchMode="singleTop" >
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
-       <!-- View Reports -->
-        <activity android:name=".ui.tablet.DashboardActivity" android:label="@string/reports">
+
+        <!-- View Reports -->
+        <activity
+            android:name=".ui.tablet.DashboardActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/reports" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
+
         <!-- Launch View Reports -->
-        <activity android:name=".ui.phone.ViewReportActivity" android:label="@string/reports">
+        <activity
+            android:name=".ui.phone.ViewReportActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/reports" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
+
         <!-- Launch View Photos -->
-        <activity android:name=".ui.phone.ViewReportPhotoActivity" android:label="@string/photos">
+        <activity
+            android:name=".ui.phone.ViewReportPhotoActivity"
+            android:label="@string/photos" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
+
         <!-- Launch View News -->
-        <activity android:name=".ui.phone.ViewReportNewsActivity" android:label="@string/news">
+        <activity
+            android:name=".ui.phone.ViewReportNewsActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/news" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
+
         <!-- Launch View Video -->
-        <activity android:name=".ui.phone.ViewReportVideoActivity" android:label="@string/video">
+        <activity
+            android:name=".ui.phone.ViewReportVideoActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/video" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-            
-       <!-- View Checkins -->
-        <activity android:name=".ui.phone.ViewCheckinActivity" android:label="@string/checkins">
+
+        <!-- View Checkins -->
+        <activity
+            android:name=".ui.phone.ViewCheckinActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/checkins" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity> 
-        
-        <activity android:name=".activities.SplashScreenActivity">
+        </activity>
+        <activity android:name=".activities.SplashScreenActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity android:name=".ui.phone.ReportMapActivity">
+        <activity
+            android:name=".ui.phone.ReportMapActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-		
-		<!-- New Fragment Activities Ends -->
 
-		<!-- Receiver waits for connectivity change so offline messages can be 
-			sent -->
-		<receiver android:name=".OfflineIncidentSendReceiver"
-			android:enabled="true" android:priority="0">
-			<intent-filter>
-				<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-			</intent-filter>
-		</receiver>
+        <!-- New Fragment Activities Ends -->
 
-	</application>
+
+        <!--
+             Receiver waits for connectivity change so offline messages can be 
+			sent
+        -->
+        <receiver
+            android:name=".OfflineIncidentSendReceiver"
+            android:enabled="true"
+            android:priority="0" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+    </application>
 
 </manifest>

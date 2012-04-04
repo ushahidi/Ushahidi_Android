@@ -46,153 +46,171 @@ import com.ushahidi.android.app.util.ReportsApiUtils;
  */
 public class ReportsHttpClient extends MainHttpClient {
 
-    private static MultipartEntity entity;
+	private static MultipartEntity entity;
 
-    /**
-     * @param context
-     */
-    private Context context;
-    
-    private ApiUtils apiUtils;
+	/**
+	 * @param context
+	 */
+	private Context context;
 
-    public ReportsHttpClient(Context context) {
-        super(context);
-        this.context = context;
-        apiUtils = new ApiUtils(context);
-    }
+	private ApiUtils apiUtils;
 
-    public int getAllReportFromWeb() {
-        HttpResponse response;
-        String incidents = "";
-        
-        //get the right domain to work with
-        apiUtils.updateDomain();
-        
-        StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
-        uriBuilder.append("/api?task=incidents");
-        uriBuilder.append("&by=all");
-        uriBuilder.append("&limit=" + Preferences.totalReports);
-        uriBuilder.append("&resp=json");
-        
-        try {
-            response = GetURL(uriBuilder.toString());
+	public ReportsHttpClient(Context context) {
+		super(context);
+		this.context = context;
+		apiUtils = new ApiUtils(context);
+	}
 
-            if (response == null) {
-                // Network is down
-                return 100;
-            }
+	public int getAllReportFromWeb() {
+		HttpResponse response;
+		String incidents = "";
 
-            final int statusCode = response.getStatusLine().getStatusCode();
+		// get the right domain to work with
+		apiUtils.updateDomain();
 
-            if (statusCode == 200) {
+		StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
+		uriBuilder.append("/api?task=incidents");
+		uriBuilder.append("&by=all");
+		uriBuilder.append("&limit=" + Preferences.totalReports);
+		uriBuilder.append("&resp=json");
 
-                incidents = GetText(response);
+		try {
+			response = GetURL(uriBuilder.toString());
 
-                ReportsApiUtils reportsApiUtils = new ReportsApiUtils(incidents);
-                if (reportsApiUtils.saveReports(context)) {
-                    Preferences.incidentsResponse = incidents;
-                    return 0;
-                }
+			if (response == null) {
+				// Network is down
+				return 100;
+			}
 
-                // bad json string
-                return 99;
-            } else {
-                // Assuming connection timeout
-                return 110;
-            }
-        } catch (MalformedURLException ex) {
-            log("PostFileUpload(): MalformedURLException", ex);
-            // connection refused
-            return 111;
-        } catch (IllegalArgumentException ex) {
-            log("IllegalArgumentException", ex);
-            // invalid URI
-            return 120;
-        } catch (IOException e) {
-            log("IOException", e);
-            // There is no default deployment
-            return 112;
-        }
+			final int statusCode = response.getStatusLine().getStatusCode();
 
-    }
+			if (statusCode == 200) {
 
-    /**
-     * Upload files to server 0 - success, 1 - missing parameter, 2 - invalid
-     * parameter, 3 - post failed, 5 - access denied, 6 - access limited, 7 - no
-     * data, 8 - api disabled, 9 - no task found, 10 - json is wrong
-     */
-    public int PostFileUpload(String URL, HashMap<String, String> params) throws IOException {
-        log("PostFileUpload(): upload file to server.");
+				incidents = GetText(response);
 
-        entity = new MultipartEntity();
-        // Dipo Fix
-        try {
-            // wrap try around because this constructor can throw Error
-            final HttpPost httpost = new HttpPost(URL);
+				ReportsApiUtils reportsApiUtils = new ReportsApiUtils(incidents);
+				if (reportsApiUtils.saveReports(context)) {
+					return 0;
+				}
 
-            if (params != null) {
+				// bad json string
+				return 99;
+			} else {
+				// Assuming connection timeout
+				return 110;
+			}
+		} catch (MalformedURLException ex) {
+			log("PostFileUpload(): MalformedURLException", ex);
+			// connection refused
+			return 111;
+		} catch (IllegalArgumentException ex) {
+			log("IllegalArgumentException", ex);
+			// invalid URI
+			return 120;
+		} catch (IOException e) {
+			log("IOException", e);
+			// There is no default deployment
+			return 112;
+		}
 
-                entity.addPart("task", new StringBody(params.get("task")));
-                entity.addPart("incident_title", new StringBody(params.get("incident_title"),
-                        Charset.forName("UTF-8")));
-                entity.addPart(
-                        "incident_description",
-                        new StringBody(params.get("incident_description"), Charset.forName("UTF-8")));
-                entity.addPart("incident_date", new StringBody(params.get("incident_date")));
-                entity.addPart("incident_hour", new StringBody(params.get("incident_hour")));
-                entity.addPart("incident_minute", new StringBody(params.get("incident_minute")));
-                entity.addPart("incident_ampm", new StringBody(params.get("incident_ampm")));
-                entity.addPart("incident_category", new StringBody(params.get("incident_category")));
-                entity.addPart("latitude", new StringBody(params.get("latitude")));
-                entity.addPart("longitude", new StringBody(params.get("longitude")));
-                entity.addPart("location_name",
-                        new StringBody(params.get("location_name"), Charset.forName("UTF-8")));
-                entity.addPart("person_first",
-                        new StringBody(params.get("person_first"), Charset.forName("UTF-8")));
-                entity.addPart("person_last",
-                        new StringBody(params.get("person_last"), Charset.forName("UTF-8")));
-                entity.addPart("person_email",
-                        new StringBody(params.get("person_email"), Charset.forName("UTF-8")));
-                if (params.get("filename") != null) {
-                    if (!TextUtils.isEmpty(params.get("filename"))) {
-                        File file = new File(params.get("filename"));
-                        if (file.exists()) {
-                            entity.addPart("incident_photo[]",
-                                    new FileBody(new File(params.get("filename"))));
-                        }
-                    }
-                }
+	}
 
-                // NEED THIS NOW TO FIX ERROR 417
-                httpost.getParams().setBooleanParameter("http.protocol.expect-continue", false);
-                httpost.setEntity(entity);
+	/**
+	 * Upload files to server 0 - success, 1 - missing parameter, 2 - invalid
+	 * parameter, 3 - post failed, 5 - access denied, 6 - access limited, 7 - no
+	 * data, 8 - api disabled, 9 - no task found, 10 - json is wrong
+	 */
+	public int PostFileUpload(String URL, HashMap<String, String> params)
+			throws IOException {
+		log("PostFileUpload(): upload file to server.");
 
-                HttpResponse response = httpClient.execute(httpost);
-                Preferences.httpRunning = false;
+		entity = new MultipartEntity();
+		// Dipo Fix
+		try {
+			// wrap try around because this constructor can throw Error
+			final HttpPost httpost = new HttpPost(URL);
 
-                HttpEntity respEntity = response.getEntity();
-                if (respEntity != null) {
-                    InputStream serverInput = respEntity.getContent();
-                    return ApiUtils.extractPayloadJSON(GetText(serverInput));
+			if (params != null) {
 
-                }
-            }
+				entity.addPart("task", new StringBody(params.get("task")));
+				entity.addPart(
+						"incident_title",
+						new StringBody(params.get("incident_title"), Charset
+								.forName("UTF-8")));
+				entity.addPart("incident_description",
+						new StringBody(params.get("incident_description"),
+								Charset.forName("UTF-8")));
+				entity.addPart("incident_date",
+						new StringBody(params.get("incident_date")));
+				entity.addPart("incident_hour",
+						new StringBody(params.get("incident_hour")));
+				entity.addPart("incident_minute",
+						new StringBody(params.get("incident_minute")));
+				entity.addPart("incident_ampm",
+						new StringBody(params.get("incident_ampm")));
+				entity.addPart("incident_category",
+						new StringBody(params.get("incident_category")));
+				entity.addPart("latitude",
+						new StringBody(params.get("latitude")));
+				entity.addPart("longitude",
+						new StringBody(params.get("longitude")));
+				entity.addPart(
+						"location_name",
+						new StringBody(params.get("location_name"), Charset
+								.forName("UTF-8")));
+				entity.addPart(
+						"person_first",
+						new StringBody(params.get("person_first"), Charset
+								.forName("UTF-8")));
+				entity.addPart(
+						"person_last",
+						new StringBody(params.get("person_last"), Charset
+								.forName("UTF-8")));
+				entity.addPart(
+						"person_email",
+						new StringBody(params.get("person_email"), Charset
+								.forName("UTF-8")));
+				if (params.get("filename") != null) {
+					if (!TextUtils.isEmpty(params.get("filename"))) {
+						File file = new File(params.get("filename"));
+						if (file.exists()) {
+							entity.addPart("incident_photo[]", new FileBody(
+									new File(params.get("filename"))));
+						}
+					}
+				}
 
-        } catch (MalformedURLException ex) {
-            log("PostFileUpload(): MalformedURLException", ex);
+				// NEED THIS NOW TO FIX ERROR 417
+				httpost.getParams().setBooleanParameter(
+						"http.protocol.expect-continue", false);
+				httpost.setEntity(entity);
 
-            return 11;
-            // fall through and return false
-        } catch (IllegalArgumentException ex) {
-            log("IllegalArgumentException", ex);
-            // invalid URI
-            return 12;
-        } catch (IOException e) {
-            log("IOException", e);
-            // timeout
-            return 13;
-        }
-        return 10;
-    }
+				HttpResponse response = httpClient.execute(httpost);
+				Preferences.httpRunning = false;
+
+				HttpEntity respEntity = response.getEntity();
+				if (respEntity != null) {
+					InputStream serverInput = respEntity.getContent();
+					return ApiUtils.extractPayloadJSON(GetText(serverInput));
+
+				}
+			}
+
+		} catch (MalformedURLException ex) {
+			log("PostFileUpload(): MalformedURLException", ex);
+
+			return 11;
+			// fall through and return false
+		} catch (IllegalArgumentException ex) {
+			log("IllegalArgumentException", ex);
+			// invalid URI
+			return 12;
+		} catch (IOException e) {
+			log("IOException", e);
+			// timeout
+			return 13;
+		}
+		return 10;
+	}
 
 }

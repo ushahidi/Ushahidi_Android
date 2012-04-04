@@ -718,24 +718,28 @@ public class ListMapFragment extends
 			super.onPostExecute(success);
 			this.dialog.cancel();
 			if (success) {
-				if (status == 0) {
-					onLoaded(success);
-				} else if (status == 100) {
-					errorMessage = getString(R.string.internet_connection);
-					createDialog(DIALOG_SHOW_MESSAGE);
-				} else if (status == 99) {
-					errorMessage = getString(R.string.failed_to_add_report_online_db_error);
-					createDialog(DIALOG_SHOW_MESSAGE);
-				} else if (status == 112) {
-					errorMessage = getString(R.string.network_error);
-					createDialog(DIALOG_SHOW_MESSAGE);
+				if (status != null) {
+					if (status == 0) {
+						onLoaded(success);
+					} else if (status == 100) {
+						errorMessage = getString(R.string.internet_connection);
+						createDialog(DIALOG_SHOW_MESSAGE);
+					} else if (status == 99) {
+						errorMessage = getString(R.string.failed_to_add_report_online_db_error);
+						createDialog(DIALOG_SHOW_MESSAGE);
+					} else if (status == 112) {
+						errorMessage = getString(R.string.network_error);
+						createDialog(DIALOG_SHOW_MESSAGE);
+					} else {
+						errorMessage = getString(R.string.error_occured);
+						createDialog(DIALOG_SHOW_MESSAGE);
+
+					}
+
 				} else {
-					errorMessage = getString(R.string.error_occured) + " "
-							+ getString(R.string.reports).toLowerCase();
-					createDialog(DIALOG_SHOW_MESSAGE);
-
+					toastLong(R.string.could_not_fetch_reports);
 				}
-
+				
 			} else {
 				toastLong(R.string.could_not_fetch_reports);
 			}
@@ -744,7 +748,19 @@ public class ListMapFragment extends
 
 	@Override
 	protected void onLoaded(boolean success) {
+		try {
 
+			if (success) {
+
+				clearCachedReports();
+				goToReports();
+
+			} else {
+				toastLong(R.string.could_not_fetch_reports);
+			}
+		} catch (IllegalArgumentException e) {
+			log(e.toString());
+		}
 	}
 
 	/** Location stuff **/
