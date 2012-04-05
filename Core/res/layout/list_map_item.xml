@@ -26,7 +26,6 @@
         android:layout_below="@+id/map_list_name"
         android:layout_toLeftOf="@+id/map_arrow"
         android:capitalize="sentences"
-        android:visibility="invisible"
         android:ellipsize="end"
         android:focusable="false"
         
