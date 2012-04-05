@@ -265,7 +265,8 @@
                 <ListView
                     android:id="@+id/list_photos"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none" />
 
                 <TextView
                     android:id="@+id/empty_list_for_photos"

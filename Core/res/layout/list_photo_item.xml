@@ -10,4 +10,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true" />
 
+    <!-- This will hold the total number of images -->
+
+    <TextView
+        android:id="@+id/photo_total"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/list_report_photo"
+        android:text="3 images"
+        android:textColor="@color/black_color" />
+
 </RelativeLayout>
