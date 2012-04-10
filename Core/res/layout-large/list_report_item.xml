@@ -32,7 +32,7 @@
         android:layout_toRightOf="@+id/report_thumbnail"
         android:ellipsize="end"
         android:padding="3dip"
-        android:singleLine="true"
+        android:lines="1"
         android:textColor="@color/date_color"
         android:textStyle="bold" />
 
