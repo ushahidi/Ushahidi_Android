@@ -353,7 +353,7 @@ public class MainHttpClient {
      */
     public boolean isConnected() {
 
-        ConnectivityManager connectivity = (ConnectivityManager)this.context
+        ConnectivityManager connectivity = (ConnectivityManager)context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 
         final NetworkInfo networkInfo;networkInfo = connectivity.getActiveNetworkInfo();

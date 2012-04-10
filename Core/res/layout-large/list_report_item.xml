@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+    Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
+    This file may be used under the terms of the GNU Lesser General Public License 
+    version 3 as published by the Free Software Foundation and appearing in the 
+    file LICENSE.LGPL included in the packaging of this file. Please review the 
+    following information to ensure the GNU Lesser General Public License version 
+    3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
+    have questions regarding the use of this file, please contact Ushahidi developers 
+    at team@ushahidi.com.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dip" >
+
+    <ImageView
+        android:id="@+id/report_thumbnail"
+        android:layout_width="75dip"
+        android:layout_height="75dip"
+        android:layout_alignParentLeft="true"
+        android:adjustViewBounds="true"
+        android:paddingRight="5dip" />
+
+    <TextView
+        android:id="@+id/report_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/report_arrow"
+        android:layout_toRightOf="@+id/report_thumbnail"
+        android:ellipsize="end"
+        android:padding="3dip"
+        android:singleLine="true"
+        android:textColor="@color/date_color"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/report_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/report_title"
+        android:layout_toLeftOf="@+id/report_arrow"
+        android:layout_toRightOf="@+id/report_thumbnail"
+        android:ellipsize="end"
+        android:padding="3dip"
+        android:lines="1"
+        android:textColor="@color/date_color"/>
+
+    <TextView
+        android:id="@+id/report_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/report_description"
+        android:layout_toLeftOf="@+id/report_arrow"
+        android:layout_toRightOf="@+id/report_thumbnail"
+        android:padding="3dip"
+        android:textColor="@color/gray_color" />
+
+    <TextView
+        android:id="@+id/report_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@+id/report_arrow"
+        android:padding="3dip"
+        android:textColor="@color/gray_color" />
+
+    <TextView
+        android:id="@+id/report_categories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/report_location"
+        android:layout_toRightOf="@+id/report_thumbnail"
+        android:padding="5dip"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/date_color" />
+
+    <TextView
+        android:id="@+id/report_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/report_location"
+        android:padding="5dip"/>
+
+    <ImageView
+        android:id="@+id/report_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="5dip" />
+
+</RelativeLayout>

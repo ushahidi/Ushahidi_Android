@@ -43,7 +43,7 @@ public class SplashScreenActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
         setContentView(R.layout.splash);
 
         // thread for displaying the SplashScreen

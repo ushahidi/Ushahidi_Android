@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="10dip" >
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/list_report_photo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        />
     
     <!-- This will hold the total number of images -->
-    <TextView android:id="@+id/photo_total"
+    <TextView
+        android:id="@+id/photo_total"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/black_color"
-        android:layout_below="@+id/list_report_photo"/>
+        android:layout_alignLeft="@+id/list_report_photo"
+        android:layout_alignRight="@+id/list_report_photo"
+        android:layout_alignBottom="@+id/list_report_photo"
+        android:layout_alignParentLeft="true"
+        android:padding="10dip"
+        android:background="#AA000000"
+        android:text="Hello there"
+        android:textColor="@color/white_color" />
 </RelativeLayout>

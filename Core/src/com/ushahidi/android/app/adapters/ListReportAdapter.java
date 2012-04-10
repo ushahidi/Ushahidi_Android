@@ -12,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.entities.Category;
 import com.ushahidi.android.app.models.ListReportModel;
+import com.ushahidi.android.app.util.Util;
 
 public class ListReportAdapter extends BaseListAdapter<ListReportModel>
 		implements Filterable {
@@ -24,8 +26,12 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel>
 			this.thumbnail = (ImageView) view
 					.findViewById(R.id.report_thumbnail);
 			this.title = (TextView) view.findViewById(R.id.report_title);
+			this.description = (TextView) view
+					.findViewById(R.id.report_description);
 			this.date = (TextView) view.findViewById(R.id.report_date);
 			this.iLocation = (TextView) view.findViewById(R.id.report_location);
+			this.categories = (TextView) view
+					.findViewById(R.id.report_categories);
 			this.status = (TextView) view.findViewById(R.id.report_status);
 			this.arrow = (ImageView) view.findViewById(R.id.report_arrow);
 		}
@@ -38,7 +44,9 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel>
 
 		TextView status;
 
-		TextView mCategories;
+		TextView categories;
+
+		TextView description;
 
 		ImageView thumbnail;
 
@@ -82,6 +90,24 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel>
 		}
 	}
 
+	private String fetchCategories(int reportId) {
+		mListReportModel = new ListReportModel();
+		StringBuilder categories = new StringBuilder();
+		for (Category category : mListReportModel
+				.getCategoriesByReportId(reportId)) {
+			if (category.getCategoryTitle().length() > 0) {
+				categories.append(category.getCategoryTitle() + "|");
+			}
+
+		}
+
+		// delete the last |
+		if (categories.length() > 0) {
+			categories.deleteCharAt(categories.length() - 1);
+		}
+		return categories.toString();
+	}
+
 	public View getView(int position, View view, ViewGroup viewGroup) {
 
 		int colorPosition = position % colors.length;
@@ -97,9 +123,18 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel>
 		}
 
 		widgets.thumbnail.setImageDrawable(getItem(position).getThumbnail());
-		widgets.title.setText(getItem(position).getTitle());
+		widgets.title.setText(Util.capitalizeString(getItem(position)
+				.getTitle()));
 		widgets.date.setText(getItem(position).getDate());
-		widgets.iLocation.setText(getItem(position).getLocation());
+		widgets.description.setText(Util.capitalizeString(getItem(position)
+				.getDesc()));
+
+		// FIXME: do this properly.
+		widgets.categories.setText(Util
+				.capitalizeString(Util.limitString(fetchCategories((int) getItem(position)
+						.getId()), 100)));
+		widgets.iLocation.setText(Util.capitalizeString(getItem(position)
+				.getLocation()));
 		// change the status color
 
 		if (getItem(position).getStatus().equalsIgnoreCase(
@@ -111,7 +146,9 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel>
 					R.color.unverified_text_color)); // red
 		}
 
-		widgets.status.setText(getItem(position).getStatus());
+		widgets.status.setText(Util.capitalizeString(getItem(position)
+				.getStatus()));
+
 		widgets.arrow.setImageDrawable(getItem(position).getArrow());
 
 		return row;
