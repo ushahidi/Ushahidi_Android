@@ -26,6 +26,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.models.ListReportVideoModel;
@@ -39,6 +40,8 @@ public class ListVideoAdapter extends BaseListAdapter<ListReportVideoModel> {
 
 	private List<ListReportVideoModel> items;
 
+	private int totalVideos;
+
 	/**
 	 * @param context
 	 */
@@ -50,12 +53,12 @@ public class ListVideoAdapter extends BaseListAdapter<ListReportVideoModel> {
 
 		public Widgets(View view) {
 			super(view);
-			this.video = (WebView) view.findViewById(R.id.report_video_webview);
-
+			this.video = (TextView) view.findViewById(R.id.report_video_webview);
+			this.total = (TextView) view.findViewById(R.id.video_total);
 		}
 
-		WebView video;
-
+		TextView video;
+		TextView total;
 	}
 
 	/*
@@ -74,7 +77,10 @@ public class ListVideoAdapter extends BaseListAdapter<ListReportVideoModel> {
 			row.setTag(widgets);
 		}
 
-		widgets.video.loadUrl(getItem(position).getVideo());
+		//widgets.video.loadUrl(getItem(position).getVideo());
+		widgets.video.setText(getItem(position).getVideo());
+		widgets.total.setText(context.getResources().getQuantityString(
+				R.plurals.no_of_videos, totalVideos, totalVideos));
 		return row;
 	}
 
@@ -93,6 +99,7 @@ public class ListVideoAdapter extends BaseListAdapter<ListReportVideoModel> {
 	public void refresh(int reportId) {
 		mListReportVideoModel = new ListReportVideoModel();
 		final boolean loaded = mListReportVideoModel.load(reportId);
+		totalVideos = mListReportVideoModel.totalReportVideos();
 		if (loaded) {
 			items = mListReportVideoModel.getVideos();
 			this.setItems(items);

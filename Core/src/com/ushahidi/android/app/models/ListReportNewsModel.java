@@ -87,19 +87,17 @@ public class ListReportNewsModel extends Model {
 		mNewsModel = new ArrayList<ListReportNewsModel>();
 
 		if (mMedia != null && mMedia.size() > 0) {
-			for (Media item : mMedia) {
-				ListReportNewsModel newsModel = new ListReportNewsModel();
-				newsModel.setId(item.getDbId());
-				newsModel.setTitle(item.getLink());
-				newsModel.setUrl(item.getLink());
+			ListReportNewsModel newsModel = new ListReportNewsModel();
+			newsModel.setId(mMedia.get(0).getDbId());
+			newsModel.setTitle(mMedia.get(0).getLink());
+			newsModel.setUrl(mMedia.get(0).getLink());
+			mNewsModel.add(newsModel);
 
-				mNewsModel.add(newsModel);
-			}
 		}
 
 		return mNewsModel;
 	}
-	
+
 	public List<ListReportNewsModel> getNewsByReportId(int reportId) {
 		mNewsModel = new ArrayList<ListReportNewsModel>();
 		mMedia = Database.mMediaDao.fetchReportNews(reportId);
@@ -115,6 +113,13 @@ public class ListReportNewsModel extends Model {
 		}
 
 		return mNewsModel;
+	}
+
+	public int totalReportNews() {
+		if (mMedia != null && mMedia.size() > 0) {
+			return mMedia.size();
+		}
+		return 0;
 	}
 
 	/*

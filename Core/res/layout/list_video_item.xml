@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="5dip" >
+    android:padding="10dip" >
 
-    <WebView
+    <TextView
         android:id="@+id/report_video_webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:textColor="@color/date_color" />
 
-</LinearLayout>
+    <!-- This will hold the total number of images -->
+
+    <TextView
+        android:id="@+id/video_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/report_video_webview"
+        android:layout_toLeftOf="@+id/video_arrow"
+        android:textColor="@color/date_color"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/video_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_weight="1"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="5dip"
+        android:src="@drawable/menu_arrow" />
+
+</RelativeLayout>

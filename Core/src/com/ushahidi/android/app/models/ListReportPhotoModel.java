@@ -36,85 +36,96 @@ import com.ushahidi.android.app.util.Util;
  */
 public class ListReportPhotoModel extends Model {
 
-    private int id;
+	private int id;
 
-    private String photo;
+	private String photo;
 
-    private List<Media> mMedia;
+	private List<Media> mMedia;
 
-    private List<ListReportPhotoModel> mPhotoModel;
+	private List<ListReportPhotoModel> mPhotoModel;
 
-    public int getId() {
-        return this.id;
-    }
+	public int getId() {
+		return this.id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public String getPhoto() {
-        return this.photo;
-    }
+	public String getPhoto() {
+		return this.photo;
+	}
 
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.models.Model#load(android.content.Context)
-     */
-    @Override
-    public boolean load() {
-        return false;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.models.Model#load(android.content.Context)
+	 */
+	@Override
+	public boolean load() {
+		return false;
+	}
 
-    public boolean load(int reportId) {
-        mMedia = Database.mMediaDao.fetchReportPhoto(reportId);
-        if(mMedia != null) {
-        	return true;
-        }
-        return false;
-    }
+	public boolean load(int reportId) {
+		mMedia = Database.mMediaDao.fetchReportPhoto(reportId);
+		if (mMedia != null) {
+			return true;
+		}
+		return false;
+	}
 
-    public List<ListReportPhotoModel> getPhotos() {
-        mPhotoModel = new ArrayList<ListReportPhotoModel>();
+	public List<ListReportPhotoModel> getPhotos() {
+		mPhotoModel = new ArrayList<ListReportPhotoModel>();
 
-        if (mMedia != null && mMedia.size() > 0) {
-            for (Media item : mMedia) {
-                ListReportPhotoModel photoModel = new ListReportPhotoModel();
-                photoModel.setId(item.getDbId());
-                photoModel.setPhoto(item.getLink());
-                mPhotoModel.add(photoModel);
-            }
-        }
-   
-        return mPhotoModel;
-    }
-    
-    public List<ListReportPhotoModel> getPhotosByReportId(int reportId) {
-        mPhotoModel = new ArrayList<ListReportPhotoModel>();
-        mMedia = Database.mMediaDao.fetchReportPhoto(reportId);
-        if (mMedia != null && mMedia.size() > 0) {
-            for (Media item : mMedia) {
-                ListReportPhotoModel photoModel = new ListReportPhotoModel();
-                photoModel.setId(item.getDbId());
-                photoModel.setPhoto(item.getLink());
-                mPhotoModel.add(photoModel);
-            }
-        }
-   
-        return mPhotoModel;
-    }
+		if (mMedia != null && mMedia.size() > 0) {
+			ListReportPhotoModel photoModel = new ListReportPhotoModel();
+			photoModel.setId(mMedia.get(0).getDbId());
+			photoModel.setPhoto(mMedia.get(0).getLink());
+			mPhotoModel.add(photoModel);
 
-    public Drawable getImage(Context context, String path) {
-    	return ImageManager.getDrawables(context, path, Util.getScreenWidth(context));
-    }
-    
- 
-    @Override
-    public boolean save() {
-        return false;
-    }
+		}
+
+		return mPhotoModel;
+	}
+
+	public List<ListReportPhotoModel> getPhotosByReportId(int reportId) {
+
+		mPhotoModel = new ArrayList<ListReportPhotoModel>();
+		mMedia = Database.mMediaDao.fetchReportPhoto(reportId);
+
+		if (mMedia != null && mMedia.size() > 0) {
+
+			for (Media item : mMedia) {
+				ListReportPhotoModel photoModel = new ListReportPhotoModel();
+				photoModel.setId(item.getDbId());
+				photoModel.setPhoto(item.getLink());
+				mPhotoModel.add(photoModel);
+			}
+
+		}
+
+		return mPhotoModel;
+	}
+
+	public int totalReportPhoto() {
+		if (mMedia != null && mMedia.size() > 0) {
+			return mMedia.size();
+		}
+		return 0;
+	}
+
+	public Drawable getImage(Context context, String path) {
+		return ImageManager.getDrawables(context, path,
+				Util.getScreenWidth(context));
+	}
+
+	@Override
+	public boolean save() {
+		return false;
+	}
 
 }

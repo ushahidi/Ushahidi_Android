@@ -20,7 +20,6 @@
         android:layout_alignBottom="@+id/list_report_photo"
         android:layout_alignParentLeft="true"
         android:padding="10dip"
-        android:background="#AA000000"
-        android:text="Hello there"
+        android:background="@color/overlay_text_color"
         android:textColor="@color/white_color" />
 </RelativeLayout>

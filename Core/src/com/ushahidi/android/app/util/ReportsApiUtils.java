@@ -157,7 +157,7 @@ public class ReportsApiUtils {
 								try {
 									if (!mediaArr.getJSONObject(w).isNull("id")) {
 
-										// save media
+										// look out for images
 										if (mediaArr.getJSONObject(w).getInt(
 												"type") == 1
 												&& (!mediaArr.getJSONObject(w)
@@ -165,7 +165,7 @@ public class ReportsApiUtils {
 
 											final String fileName = getDateTime()
 													+ "jpg";
-											// save media
+											// save images to file
 											saveMedia(mediaArr.getJSONObject(w)
 													.getInt("id"), (int) id,
 													mediaArr.getJSONObject(w)
@@ -192,7 +192,7 @@ public class ReportsApiUtils {
 											}
 
 										} else {
-											// save media
+											// save media in database
 											saveMedia(mediaArr.getJSONObject(w)
 													.getInt("id"), (int) id,
 													mediaArr.getJSONObject(w)

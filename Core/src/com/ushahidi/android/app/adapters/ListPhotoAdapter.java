@@ -27,6 +27,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
@@ -41,6 +42,8 @@ public class ListPhotoAdapter extends BaseListAdapter<ListReportPhotoModel> {
 	private ListReportPhotoModel mListPhotoModel;
 
 	private List<ListReportPhotoModel> items;
+	
+	private int totalPhotos;
 
 	/**
 	 * @param context
@@ -54,11 +57,12 @@ public class ListPhotoAdapter extends BaseListAdapter<ListReportPhotoModel> {
 		public Widgets(View view) {
 			super(view);
 			this.photo = (ImageView) view.findViewById(R.id.list_report_photo);
+			this.total = (TextView) view.findViewById(R.id.photo_total);
 
 		}
 
 		ImageView photo;
-
+		TextView total;
 	}
 
 	/*
@@ -77,8 +81,11 @@ public class ListPhotoAdapter extends BaseListAdapter<ListReportPhotoModel> {
 			row.setTag(widgets);
 		}
 
+		// FIXME: only show the first item for now. In the future only get one
+		// item
 		widgets.photo.setImageDrawable(getPhoto(getItem(position).getPhoto()));
-
+		widgets.total.setText(context.getResources().getQuantityString(
+				R.plurals.no_of_images, totalPhotos, totalPhotos));
 		return row;
 	}
 
@@ -97,6 +104,7 @@ public class ListPhotoAdapter extends BaseListAdapter<ListReportPhotoModel> {
 	public void refresh(int reportId) {
 		mListPhotoModel = new ListReportPhotoModel();
 		final boolean loaded = mListPhotoModel.load(reportId);
+		totalPhotos = mListPhotoModel.totalReportPhoto();
 		if (loaded) {
 			items = mListPhotoModel.getPhotos();
 			this.setItems(items);
@@ -104,10 +112,9 @@ public class ListPhotoAdapter extends BaseListAdapter<ListReportPhotoModel> {
 	}
 
 	public Drawable getPhoto(String fileName) {
-		return ImageManager.getDrawables(context, fileName, Util.getScreenWidth(context));
-		//return Drawable.createFromPath(ImageManager.getPhotoPath(context)
-			//	+ fileName);
+		return ImageManager.getDrawables(context, fileName,
+				Util.getScreenWidth(context));
+
 	}
 
-	
 }

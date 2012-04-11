@@ -363,5 +363,19 @@
     <string name="no_video">No Video</string>
     <string name="no_photos">No Photos</string>
     <string name="all_categories">All Categories</string>
+    <plurals name="no_of_images">
+        <item quantity="one">%d image</item>
+        <item quantity="other">%d images</item>
+    </plurals>
+    
+    <plurals name="no_of_news">
+        <item quantity="one">%d news</item>
+        <item quantity="other">%d news</item>
+    </plurals>
+    
+    <plurals name="no_of_videos">
+        <item quantity="one">%d video</item>
+        <item quantity="other">%d videos</item>
+    </plurals>
     
 </resources>

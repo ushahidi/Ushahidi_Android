@@ -77,12 +77,10 @@ public class ListReportVideoModel extends Model {
 		mVideoModel = new ArrayList<ListReportVideoModel>();
 
 		if (mMedia != null && mMedia.size() > 0) {
-			for (Media item : mMedia) {
-				ListReportVideoModel videoModel = new ListReportVideoModel();
-				videoModel.setId(item.getDbId());
-				videoModel.setVideo(item.getLink());
-				mVideoModel.add(videoModel);
-			}
+			ListReportVideoModel videoModel = new ListReportVideoModel();
+			videoModel.setId(mMedia.get(0).getDbId());
+			videoModel.setVideo(mMedia.get(0).getLink());
+			mVideoModel.add(videoModel);
 		}
 
 		return mVideoModel;
@@ -101,6 +99,13 @@ public class ListReportVideoModel extends Model {
 		}
 
 		return mVideoModel;
+	}
+
+	public int totalReportVideos() {
+		if (mMedia != null && mMedia.size() > 0) {
+			return mMedia.size();
+		}
+		return 0;
 	}
 
 	/*
