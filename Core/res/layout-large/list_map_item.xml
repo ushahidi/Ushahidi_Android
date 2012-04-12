@@ -53,7 +53,7 @@
         android:layout_toLeftOf="@+id/map_arrow"
         android:capitalize="sentences"
         android:focusable="false"
-        android:singleLine="true"
+        android:lines="1"
         android:textColor="@color/date_color"
         android:visibility="gone" />
 

@@ -35,7 +35,7 @@ public class ReportTabFragment extends LocalActivityManagerFragment {
 
 	private void listListTab() {
 		if (mTabHost != null) {
-			addTab(TAG_LIST_REPORT, R.drawable.menu_list,
+			addTab(TAG_LIST_REPORT, R.drawable.list,
 					ListReportActivity.class);
 
 		}
@@ -43,7 +43,7 @@ public class ReportTabFragment extends LocalActivityManagerFragment {
 
 	private void listMapTab() {
 		if (mTabHost != null) {
-			addTab(TAG_MAP_REPORT, R.drawable.menu_map, ReportMapActivity.class);
+			addTab(TAG_MAP_REPORT, R.drawable.map, ReportMapActivity.class);
 
 		}
 	}

@@ -13,20 +13,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/background_color" >
+    android:background="@color/background_color"
+    android:padding="10dip" >
 
     <EditText
         android:id="@+id/search_report"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/search_hint"
-        android:singleLine="true" />
+        android:layout_above="@android:id/list"
+        android:inputType="textMultiLine" />
 
     <!-- List incidents -->
 
     <ListView
         android:id="@android:id/list"
-        style="@style/ListView" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"
+        android:fadingEdge="none"
+        android:listSelector="@android:color/transparent"
+        android:fastScrollEnabled="true"
+        android:scrollbars="vertical"
+        android:scrollingCache="false"
+        android:smoothScrollbar="true" />
 
     <!-- Here is the view to show if the list is emtpy -->
 
@@ -40,12 +51,12 @@
         android:layout_height="wrap_content"
         android:layout_above="@android:id/list"
         android:layout_alignParentBottom="true"
-        android:background="@color/background_color"
+        android:background="@android:color/transparent"
         android:padding="5dip" >
 
         <TextView
             android:id="@+id/footer_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="10dip"
             android:textColor="@color/title_color" />

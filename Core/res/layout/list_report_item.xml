@@ -14,6 +14,7 @@
     android:id="@+id/relativeLayout1"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="5dip"
     android:padding="5dip" >
 
     <ImageView
@@ -30,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/report_arrow"
         android:layout_toRightOf="@+id/report_thumbnail"
-        android:ellipsize="end"
+        
         android:paddingLeft="3dip"
         android:lines="1"
         android:textColor="@color/date_color"

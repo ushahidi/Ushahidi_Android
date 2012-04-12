@@ -34,7 +34,7 @@
     <color name="date_color">#262321</color>
     <color name="report_table">#f6f6ee</color>
     <color name="header_color">#3E51BC</color>
-    <color name="background_color">#ede7d1</color>
+    <color name="background_color">#fbfbf8</color>
     <color name="thick_background_color">#DDD0A3</color>
 
     <color name="white_color">#FFFFFF</color>
@@ -55,9 +55,9 @@
 
     <color name="list_view_date">#90544a</color>
     <color name="table_background">#f6f6ee</color>
-    <color name="table_odd_row_color">#f2eddc</color>
-    <color name="table_even_row_color">#efdbad</color>
-    <color name="table_selected_row_color">#e6ddbe</color>
+    <color name="table_odd_row_color">#f6f6ee</color>
+    <color name="table_even_row_color">#f9f9f3</color>
+    <color name="table_selected_row_color">#8d817a</color>
     <color name="table_header_color">#e6ddbe</color>
 
     <color name="verified_text_color">#99CC99</color>
@@ -83,7 +83,7 @@
 
     <!--GOOGLE MAPS API-->
     <!--Ushahidi original key  -->
-    <string name="google_map_api_key">02cv5Q8Rob0DjTbALxI3B9TpCf4SDUK6--VtGlQ</string>
-    <string name="google_map_api_key_production">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string>
+    <string name="google_map_api_key_dev">02cv5Q8Rob0DjTbALxI3B9TpCf4SDUK6--VtGlQ</string>
+    <string name="google_map_api_key">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string>
 	
 </resources>

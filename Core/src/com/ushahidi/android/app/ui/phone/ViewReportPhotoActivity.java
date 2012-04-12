@@ -60,7 +60,7 @@ public class ViewReportPhotoActivity extends
 	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
 	public ViewReportPhotoActivity() {
-		super(ReportPhotoView.class, R.layout.photo, R.menu.view_report);
+		super(ReportPhotoView.class, R.layout.photo, R.menu.view_media);
 	}
 
 	@Override
@@ -91,6 +91,9 @@ public class ViewReportPhotoActivity extends
 			goPrevious();
 			return true;
 
+		} else if (item.getItemId() == R.id.menu_share) {
+			final String share = "";
+			sharePhoto(share);
 		}
 
 		return super.onOptionsItemSelected(item);

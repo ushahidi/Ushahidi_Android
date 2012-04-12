@@ -11,7 +11,7 @@
 <resources>
     <style name="ActionBarTitleContainer">
 		<item name="android:id">@id/title_container</item>
-		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">45dip</item>
 		<item name="android:orientation">horizontal</item>
 		<item name="android:background">@drawable/actionbar_background</item>
@@ -19,37 +19,37 @@
 
 	<style name="ActionBarTitle">
 		<item name="android:layout_width">@dimen/actionbar_height</item>
-		<item name="android:layout_height">fill_parent</item>
+		<item name="android:layout_height">match_parent</item>
 		<item name="android:background">@drawable/button</item>
         <item name="android:src">@drawable/actionbar_icon</item>
 	</style>
 	<style name="ActionBarTitleSeparator">
 		<item name="android:layout_width">1dp</item>
-		<item name="android:layout_height">fill_parent</item>
+		<item name="android:layout_height">match_parent</item>
 		<item name="android:background">@color/title_separator</item>
 	</style>
 	<style name="ActionBarSeparator">
-		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">1dp</item>
 		<item name="android:background">@color/title_separator</item>
 	</style>
 	<style name="ActionBarTitleLogo">
 		<item name="android:id">@id/title_logo</item>
 		<item name="android:layout_width">wrap_content</item>
-		<item name="android:layout_height">fill_parent</item>
+		<item name="android:layout_height">match_parent</item>
 		<item name="android:clickable">true</item>
 	</style>
 
 	<style name="ActionBarTitleSpring">
 		<item name="android:layout_width">0dp</item>
-		<item name="android:layout_height">fill_parent</item>
+		<item name="android:layout_height">match_parent</item>
 		<item name="android:layout_weight">1</item>
 	</style>
 
 	<style name="ActionBarTitleText">
 		<item name="android:id">@id/title_text</item>
 		<item name="android:layout_width">0dp</item>
-		<item name="android:layout_height">fill_parent</item>
+		<item name="android:layout_height">match_parent</item>
 		<item name="android:layout_weight">1</item>
 		<item name="android:gravity">center_vertical</item>
 		<item name="android:textSize">@dimen/text_size_medium</item>
@@ -72,7 +72,7 @@
 
 	<style name="DashboardButton">
 		<item name="android:layout_gravity">center_vertical</item>
-		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:layout_weight">1</item>
 		<item name="android:gravity">center_horizontal</item>
@@ -84,7 +84,7 @@
 
 	<style name="BottomActionBarContainer">
 		<item name="android:id">@id/bottom_actionbar_container</item>
-		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">@dimen/bottom_actionbar_height</item>
 		<item name="android:orientation">horizontal</item>
 		<item name="android:background">@drawable/actionbar_background</item>
@@ -114,39 +114,39 @@
     
 	<!-- Android controls styling  -->
 	<style name="LinearLayout">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
     <style name="LinearLayout.Vertical">
         <item name="android:orientation">vertical</item>
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
     <style name="LinearLayout.Vertical.Full">
-        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_height">match_parent</item>
     </style>
     <style name="LinearLayout.Vertical.Wrap">
         <item name="android:layout_height">wrap_content</item>
     </style>
     <style name="LinearLayout.Horizontal">
         <item name="android:orientation">horizontal</item>
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
     <style name="LinearLayout.Horizontal.Full">
-        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_height">match_parent</item>
     </style>
     <style name="LinearLayout.Horizontal.Wrap">
         <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="ListView" parent="@android:style/Widget.ListView">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
     </style>
 
     <style name="TextView" parent="@android:style/Widget.TextView">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">1dp</item>
         <item name="android:paddingLeft">1dp</item>
@@ -170,8 +170,8 @@
     <style name="TextView.Empty">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">italic</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center_vertical|center_horizontal</item>
     </style>
     <style name="ListBarProgressIndicator" 
@@ -181,7 +181,7 @@
         <item name="android:indeterminate">true</item>
     </style>
     <style name="EditText" parent="@android:style/Widget.EditText">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">18sp</item>
         <item name="android:paddingLeft">4sp</item>

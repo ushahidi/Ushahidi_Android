@@ -45,7 +45,7 @@ public class ViewReportNewsActivity extends
 	private int reportId;
 
 	public ViewReportNewsActivity() {
-		super(ReportNewsView.class, R.layout.news, R.menu.view_report);
+		super(ReportNewsView.class, R.layout.news, R.menu.view_media);
 	}
 
 	@Override
@@ -76,6 +76,9 @@ public class ViewReportNewsActivity extends
 			goPrevious();
 			return true;
 
+		} else if (item.getItemId() == R.id.menu_share) {
+			final String share = "";
+			shareText(share);
 		}
 
 		return super.onOptionsItemSelected(item);

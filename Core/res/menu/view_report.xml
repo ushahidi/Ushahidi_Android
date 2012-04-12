@@ -12,28 +12,28 @@
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-   
     <item
         android:id="@+id/menu_backward"
-        android:icon="@drawable/go_backward"
+        android:icon="@drawable/previous"
         android:orderInCategory="0"
-        android:showAsAction="always"/>
-     <item
+        android:showAsAction="always"
+        android:title="@string/previous"/>
+    <item
         android:id="@+id/menu_forward"
-        android:icon="@drawable/go_forward"
+        android:icon="@drawable/next"
         android:orderInCategory="1"
         android:showAsAction="always"/>
-     
     <item
         android:id="@+id/menu_comment"
         android:icon="@drawable/comment"
         android:orderInCategory="2"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="never"
+        android:title="@string/comment"/>
     <item
         android:id="@+id/menu_share"
-        android:icon="@drawable/button_share"
+        android:icon="@drawable/share"
         android:orderInCategory="3"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_refresh"/>
+        android:showAsAction="never"
+        android:title="@string/share"/>
 
 </menu>

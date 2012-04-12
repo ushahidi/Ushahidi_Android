@@ -17,18 +17,17 @@
         android:orderInCategory="0"
         android:showAsAction="always"
         android:title="@string/categories"
-        android:icon="@android:drawable/arrow_down_float"/>
+        android:icon="@drawable/expand"/>
     
     <item
         android:id="@+id/menu_refresh"
-        android:icon="@drawable/button_refresh"
+        android:icon="@drawable/refresh"
         android:orderInCategory="1"
         android:showAsAction="always"
-        
         android:title="@string/menu_refresh"/>
     <item
         android:id="@+id/menu_add"
-        android:icon="@drawable/button_add"
+        android:icon="@drawable/add"
         android:orderInCategory="2"
         android:showAsAction="always"
         android:title="@string/add_report"/>

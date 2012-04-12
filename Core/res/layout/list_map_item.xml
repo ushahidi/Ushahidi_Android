@@ -1,68 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:padding="5dip" >
 
-    <TextView
-        android:id="@+id/map_list_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/map_arrow"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:focusable="false"
-        android:textStyle="bold"
-        android:capitalize="characters"
-        android:textColor="@color/date_color" />
-    <!-- Hide this for now  -->
-    <TextView
-        android:id="@+id/map_list_desc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/map_list_name"
-        android:layout_toLeftOf="@+id/map_arrow"
-        android:capitalize="sentences"
-        android:ellipsize="end"
-        android:focusable="false"
-        
-        android:textColor="@color/date_color" />
+        <TextView
+            android:id="@+id/map_list_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="center"
+            android:layout_toLeftOf="@+id/map_arrow"
+            android:capitalize="characters"
+            android:ellipsize="end"
+            android:focusable="false"
+            android:lines="1"
+            android:textColor="@color/date_color"
+            android:textStyle="bold" />
+        <!-- Hide this for now -->
 
-    <TextView
-        android:id="@+id/map_list_url"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:focusable="false"
-        android:layout_below="@+id/map_list_desc"
-        android:layout_toLeftOf="@+id/map_arrow"
-        android:textColor="@color/date_color" />
+        <TextView
+            android:id="@+id/map_list_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/map_list_name"
+            android:layout_toLeftOf="@+id/map_arrow"
+            android:capitalize="sentences"
+            android:ellipsize="end"
+            android:focusable="false"
+            android:textColor="@color/date_color" />
 
-    <TextView
-        android:id="@+id/map_list_id"
-        style="@android:style/TextAppearance.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/map_list_url"
-        android:layout_toLeftOf="@+id/map_arrow"
-        android:capitalize="sentences"
-        android:singleLine="true"
-        android:textColor="@color/date_color"
-        android:focusable="false"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/map_list_url"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/map_list_desc"
+            android:layout_toLeftOf="@+id/map_arrow"
+            android:focusable="false"
+            android:textColor="@color/date_color" />
 
-    <ImageView
-        android:id="@+id/map_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_alignParentRight="true"
-        android:layout_centerInParent="true"
-        android:layout_weight="1"
-        android:gravity="center_vertical|center_horizontal"
-        android:padding="5dip" />
+        <TextView
+            android:id="@+id/map_list_id"
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/map_list_url"
+            android:layout_toLeftOf="@+id/map_arrow"
+            android:capitalize="sentences"
+            android:focusable="false"
+            android:lines="1"
+            android:textColor="@color/date_color"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/map_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="5dip" />
 
 </RelativeLayout>

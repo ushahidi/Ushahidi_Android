@@ -25,8 +25,8 @@ public class ListMapAdapter extends BaseListAdapter<ListMapModel> implements
 	public ListMapAdapter(Context context) {
 		super(context);
 		listMapModel = new ListMapModel();
-		colors = new int[] { R.color.table_odd_row_color,
-				R.color.table_even_row_color };
+		colors = new int[] { R.drawable.odd_row_rounded_corners,
+				R.drawable.even_row_rounded_corners };
 	}
 
 	@Override
@@ -59,9 +59,9 @@ public class ListMapAdapter extends BaseListAdapter<ListMapModel> implements
 		widget.mapId.setText(String.valueOf(getItem(position).getId()));
 
 		if (getItem(position).getId() == mapId) {
-			widget.arrow.setImageResource(R.drawable.deployment_selected);
+			widget.arrow.setImageResource(R.drawable.selected);
 		} else {
-			widget.arrow.setImageResource(R.drawable.menu_arrow);
+			widget.arrow.setImageResource(R.drawable.arrow);
 		}
 
 		return row;

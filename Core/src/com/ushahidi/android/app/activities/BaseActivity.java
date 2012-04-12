@@ -41,6 +41,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.ushahidi.android.app.MainApplication;
+import com.ushahidi.android.app.Preferences;
+import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.views.View;
 
 /**
@@ -176,6 +178,33 @@ public abstract class BaseActivity<V extends View> extends FragmentActivity {
 	public void openActivityOrFragment(Intent intent) {
 		// Default implementation simply calls startActivity
 		startActivity(intent);
+	}
+
+	protected void shareText(String shareItem) {
+
+		final Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		intent.putExtra(Intent.EXTRA_TEXT, shareItem);
+
+		startActivity(Intent.createChooser(intent,
+				getText(R.string.title_share)));
+	}
+
+	protected void sharePhoto(String path) {
+
+		// TODO: consider bringing in shortlink to session
+		Preferences.loadSettings(this);
+		final String reportUrl = Preferences.domain;
+		final String shareString = getString(R.string.share_template, "",
+				reportUrl);
+		final Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("image/jpg");
+		intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + path));
+		intent.putExtra(Intent.EXTRA_TEXT, shareString);
+		startActivityForResult(
+				Intent.createChooser(intent, getText(R.string.title_share)), 0);
+		setResult(RESULT_OK);
+
 	}
 
 	/**

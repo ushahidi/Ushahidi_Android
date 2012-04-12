@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<!-- Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
 	Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
 	This file may be used under the terms of the GNU Lesser General Public License 
 	version 3 as published by the Free Software Foundation and appearing in the 
@@ -7,309 +8,304 @@
 	following information to ensure the GNU Lesser General Public License version 
 	3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
 	have questions regarding the use of this file, please contact Ushahidi developers 
-	at team@ushahidi.com. -->
+	at team@ushahidi.com.
+-->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-	<string name="app_name">Ushahidi</string>
-	<string name="add_incident">Add Report</string>
-	<string name="view_incident">View Reports</string>
-	<string name="incident_details">Report Detail</string>
-	<string name="app_settings">Settings </string>
-	<string name="ushahidi_about">About </string>
-	<string name="ushahidi_sync">Synchronize </string>
-	<string name="ushahidi_splash_screen">Splash Screen</string>
-	<string name="prompt_mesg">Choose A Category to Filter</string>
-	<string name="btn_country">Default location</string>
-	<string name="btn_confirm">Save</string>
-	<string name="str_post_photos">Add a Photo</string>
-	<string name="add_categories">Choose Categories</string>
-	<string name="alert_dialog_error_title">Oops</string>
-	<string name="invalid_email_address">An invalid email address was entered</string>
-	<string name="invalid_ushahidi_instance">Looks like the URL entered is not an Ushahidi deployment.</string>
-	<string name="btn_save">Save</string>
-	<string name="btn_find">Find me</string>
-	<string name="btn_reset">Reset</string>
-	<string name="btn_ok">Ok</string>
-	<string name="btn_add_photo">Add Photo</string>
-	<string name="btn_cancel">Cancel</string>
-	<string name="btn_send">Send</string>
+
+    <string name="app_name">Ushahidi</string>
+    <string name="add_incident">Add Report</string>
+    <string name="view_incident">View Reports</string>
+    <string name="incident_details">Report Detail</string>
+    <string name="app_settings">Settings </string>
+    <string name="ushahidi_about">About </string>
+    <string name="ushahidi_sync">Synchronize </string>
+    <string name="ushahidi_splash_screen">Splash Screen</string>
+    <string name="prompt_mesg">Choose A Category to Filter</string>
+    <string name="btn_country">Default location</string>
+    <string name="btn_confirm">Save</string>
+    <string name="str_post_photos">Add a Photo</string>
+    <string name="add_categories">Choose Categories</string>
+    <string name="alert_dialog_error_title">Oops</string>
+    <string name="invalid_email_address">An invalid email address was entered</string>
+    <string name="invalid_ushahidi_instance">Looks like the URL entered is not an Ushahidi deployment.</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_find">Find me</string>
+    <string name="btn_reset">Reset</string>
+    <string name="btn_ok">Ok</string>
+    <string name="btn_add_photo">Add Photo</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_send">Send</string>
     <string name="incident_datetime">Date and Time:</string>
-	<string name="incident_date">Change the date</string>
-	<string name="incident_verified">Verified</string>
-	<string name="incident_unverified">Unverified</string>
-	<string name="incident_location">Location:</string>
+    <string name="incident_date">Change the date</string>
+    <string name="incident_verified">Verified</string>
+    <string name="incident_unverified">Unverified</string>
+    <string name="incident_location">Location:</string>
     <string name="incident_latitude">Latitude</string>
     <string name="incident_longitude">Longitude</string>
-	<string name="add_location">Add a location</string>
-	<string name="view_map">Map</string>
-	<string name="incident_description">Description:</string>
-	<string name="incident_time">Change the time</string>
-	<string name="incident_title">Title:</string>
+    <string name="add_location">Add a location</string>
+    <string name="view_map">Map</string>
+    <string name="incident_description">Description:</string>
+    <string name="incident_time">Change the time</string>
+    <string name="incident_title">Title:</string>
     <string name="incident_category">Category:</string>
-	<string name="incident_add_category">Select Category</string>
-	<string name="incident_menu_add">Add Report</string>
-	<string name="incident_list">View Reports</string>
+    <string name="incident_add_category">Select Category</string>
+    <string name="incident_menu_add">Add Report</string>
+    <string name="incident_list">View Reports</string>
     <string name="incident_photos">Photos:</string>
-	<string name="menu_home">Home</string>
-	<string name="menu_sync">Sync</string>
-	<string name="instructions">Tap your location on the map</string>
-	<!-- Settings -->
-	<string name="menu_settings">Settings</string>
-	<string name="basic_settings">Basic settings</string>
-	<string name="advanced_settings">Advanced settings</string>
-	<string name="hint_advanced_settings">For more advanced settings</string>
-	<string name="txt_clear_cache">Clear cache</string>
-	<string name="txt_confirm_clear_cache">Are you sure you want to clear the cache?</string>
-	<string name="hint_clear_cache">Clear all stored data.</string>
-	<string name="option_location">Default folder</string>
-	<string name="hint_option_location">The location where you want to store items saved from the selected deployment.</string>
-	<string name="hint_SD_save_path">Type a folder name</string>
-	<string name="bg_notification">Background Notifications</string>
-	<string name="vibrate">Vibrate</string>
-	<string name="hint_vibrate">Will cause phone to vibrate</string>
-	<string name="ringtone">Ringtone</string>
-	<string name="hint_ringtone">Play a ringtone</string>
-	<string name="select_ringtone">Select Ringtone</string>
-	<string name="hint_select_ringtone">Change which ringtone to use</string>
-	<string name="flash_led">Flashing LED</string>
-	<string name="hint_flash_led">Cause phone\'s LED to flash</string>
-	<string name="hint_domain">Select the Ushahidi deployment that you wish to
+    <string name="menu_home">Home</string>
+    <string name="menu_sync">Sync</string>
+    <string name="instructions">Tap your location on the map</string>
+    <!-- Settings -->
+    <string name="menu_settings">Settings</string>
+    <string name="basic_settings">Basic settings</string>
+    <string name="advanced_settings">Advanced settings</string>
+    <string name="hint_advanced_settings">For more advanced settings</string>
+    <string name="txt_clear_cache">Clear cache</string>
+    <string name="txt_confirm_clear_cache">Are you sure you want to clear the cache?</string>
+    <string name="hint_clear_cache">Clear all stored data.</string>
+    <string name="option_location">Default folder</string>
+    <string name="hint_option_location">The location where you want to store items saved from the selected deployment.</string>
+    <string name="hint_SD_save_path">Type a folder name</string>
+    <string name="bg_notification">Background Notifications</string>
+    <string name="vibrate">Vibrate</string>
+    <string name="hint_vibrate">Will cause phone to vibrate</string>
+    <string name="ringtone">Ringtone</string>
+    <string name="hint_ringtone">Play a ringtone</string>
+    <string name="select_ringtone">Select Ringtone</string>
+    <string name="hint_select_ringtone">Change which ringtone to use</string>
+    <string name="flash_led">Flashing LED</string>
+    <string name="hint_flash_led">Cause phone\'s LED to flash</string>
+    <string name="hint_domain">Select the Ushahidi deployment that you wish to
 		interact with.</string>
-	<string name="chk_auto_fetch">Auto sync</string>
-	<string name="hint_auto_fetch">Ushahidi will automatically download new reports.
-	</string>
-	<string name="txt_auto_update_delay">Auto sync frequency</string>
-	<string name="hint_auto_update_delay">Set how often Ushahidi syncronizes with the
+    <string name="chk_auto_fetch">Auto sync</string>
+    <string name="hint_auto_fetch">Ushahidi will automatically download new reports.</string>
+    <string name="txt_auto_update_delay">Auto sync frequency</string>
+    <string name="hint_auto_update_delay">Set how often Ushahidi syncronizes with the
 		selected deployment.</string>
-	<string name="txt_path_SD">Path on SD:</string>
-	<string name="txt_cache">Cache files:</string>
-	<string name="txt_countries">Select a default country</string>
-	<string name="txt_domain">Choose your website</string>
-	<string name="txt_first_name">First name</string>
-	<string name="hint_first_name">For attribution when submitting a report
+    <string name="txt_path_SD">Path on SD:</string>
+    <string name="txt_cache">Cache files:</string>
+    <string name="txt_countries">Select a default country</string>
+    <string name="txt_domain">Choose your website</string>
+    <string name="txt_first_name">First name</string>
+    <string name="hint_first_name">For attribution when submitting a report
 		(optional).</string>
-	<string name="txt_last_name">Last name</string>
-	<string name="hint_last_name">Also for attribution when submitting a report
+    <string name="txt_last_name">Last name</string>
+    <string name="hint_last_name">Also for attribution when submitting a report
 		(optional).</string>
-	<string name="txt_email">E-mail address</string>
-	<string name="hint_email">For contact purposes only.</string>
-	<string name="txt_phonenumber">Mobile phone number</string>
-	<string name="hint_phonenumber">For send report only.</string>
-	<string name="total_reports">Number of reports</string>
-	<string name="hint_total_reports">The total number of reports to fetch from
+    <string name="txt_email">E-mail address</string>
+    <string name="hint_email">For contact purposes only.</string>
+    <string name="txt_phonenumber">Mobile phone number</string>
+    <string name="hint_phonenumber">For send report only.</string>
+    <string name="total_reports">Number of reports</string>
+    <string name="hint_total_reports">The total number of reports to fetch from
 		the
 		selected deployment.</string>
-	<string name="no_reports">There are no reports to be shown</string>
-	<!-- Menu -->
-	<string name="incident_menu_map">View Map</string>
-	<string name="incident_menu_refresh">Refresh</string>
-	<string name="reports">Reports</string>
-	<!-- about screen -->
-	<string name="menu_about">About</string>
-	<string name="ushahidi_url">ushahidi.com</string>
-	<string name="internet_connection">Network error, please ensure you are connected to
+    <string name="no_reports">There are no reports to be shown</string>
+    <!-- Menu -->
+    <string name="incident_menu_map">View Map</string>
+    <string name="incident_menu_refresh">Refresh</string>
+    <string name="reports">Reports</string>
+    <!-- about screen -->
+    <string name="menu_about">About</string>
+    <string name="ushahidi_url">ushahidi.com</string>
+    <string name="internet_connection">Network error, please ensure you are connected to
 		the Internet</string>
-	<string name="preferences_notifications">Notifications</string>
-	<!-- Add Report Screen -->
-	<string name="report_successfully_added_online">Report successfully posted online and entered into
+    <string name="preferences_notifications">Notifications</string>
+    <!-- Add Report Screen -->
+    <string name="report_successfully_added_online">Report successfully posted online and entered into
 		a moderation queue</string>
-	<string name="report_successfully_added_offline">Report sent to local storage due to
+    <string name="report_successfully_added_offline">Report sent to local storage due to
 		unavailability
 		of Internet. Remember to sync to the online
 		instance when there there
 		is Internet connection.</string>
-	<string name="failed_to_add_report_offline">Failed to send report.Check to see if you filled
+    <string name="failed_to_add_report_offline">Failed to send report.Check to see if you filled
 		all required fields.</string>
-	<string name="failed_to_add_report_online">Connection failure, cannot submit your report.
+    <string name="failed_to_add_report_online">Connection failure, cannot submit your report.
         Probably you are on a very slow connection or the server is down or very slow at the moment.</string>
-    <string name="failed_to_add_report_online_db_error">Check your Ushahidi deployment. The API might be down due to a database error or something went wrong with the Api call.</string>    
-	<string name="empty_report_title">Enter a title for the report.</string>
-	<string name="empty_report_description">Enter a description for the report.</string>
-	<string name="empty_report_location">The location name field is required.</string>
-	<string name="empty_report_categories">Select at least one category.</string>
-	<string name="hint_location">Enter location</string>
-	<string name="could_not_fetch_reports">Could not fetch reports.</string>
-	<string name="no_categories">Could not fetch categories.</string>
-	<string name="reports_successfully_fetched">Reports successfully fetched.</string>
-	<!-- Add location screen -->
-	<string name="find_location">Finding you...</string>
+    <string name="failed_to_add_report_online_db_error">Check your Ushahidi deployment. The API might be down due to a database error or something went wrong with the Api call.</string>
+    <string name="empty_report_title">Enter a title for the report.</string>
+    <string name="empty_report_description">Enter a description for the report.</string>
+    <string name="empty_report_location">The location name field is required.</string>
+    <string name="empty_report_categories">Select at least one category.</string>
+    <string name="hint_location">Enter location</string>
+    <string name="could_not_fetch_reports">Could not fetch reports.</string>
+    <string name="no_categories">Could not fetch categories.</string>
+    <string name="reports_successfully_fetched">Reports successfully fetched.</string>
+    <!-- Add location screen -->
+    <string name="find_location">Finding you...</string>
     <string name="location_disabled">Location Detection Disabled</string>
     <string name="location_reenable">Would you like to visit Location &amp; Security settings to re-enable location detection?</string>
-	<string name="location_not_found">A location can not currently be determined. Enable
+    <string name="location_not_found">A location can not currently be determined. Enable
 		more location sources i.e. GPS Satellites in Security and Location
 		Settings.</string>
-	<string name="loc_not_found">Your location could not be determined. Make sure
+    <string name="loc_not_found">Your location could not be determined. Make sure
 		you have pin point the exact location on the map.</string>
-	<string name="version">v1.1</string>
-	<string name="report_title">Title</string>
-	<string name="report_verified">Verified</string>
-	<string name="report_unverified">Unverified</string>
-	<string name="report_desc">Description</string>
-	<string name="report_category">Category</string>
-	<string name="report_date">Date</string>
-	<string name="report_location">Location</string>
-	<string name="report_photo">Photo</string>
-	<string name="status_no">No</string>
-	<string name="status_yes">Yes</string>
-	<string name="please_wait">Please wait...</string>
-	<string name="fetching_new_reports">Fetching new reports</string>
-	<string name="choose_method">Choose Method</string>
-	<string name="how_to_select_pic">Please choose how you would like to get the
+    <string name="version">v1.1</string>
+    <string name="report_title">Title</string>
+    <string name="report_verified">Verified</string>
+    <string name="report_unverified">Unverified</string>
+    <string name="report_desc">Description</string>
+    <string name="report_category">Category</string>
+    <string name="report_date">Date</string>
+    <string name="report_location">Location</string>
+    <string name="report_photo">Photo</string>
+    <string name="status_no">No</string>
+    <string name="status_yes">Yes</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="fetching_new_reports">Fetching new reports</string>
+    <string name="choose_method">Choose Method</string>
+    <string name="how_to_select_pic">Please choose how you would like to get the
 		picture.</string>
-	<string name="camera_option">Camera</string>
-	<string name="gallery_option">Gallery</string>
-	<string name="network_error">Network Error</string>
-	<string name="network_error_msg">Network Error, please ensure you are connected to
+    <string name="camera_option">Camera</string>
+    <string name="gallery_option">Gallery</string>
+    <string name="network_error">Network Error</string>
+    <string name="network_error_msg">Network Error, please ensure you are connected to
 		the Internet</string>
-	<string name="file_system_error">File System Error</string>
-	<string name="file_system_error_msg">File System Error, please ensure your save path is
+    <string name="file_system_error">File System Error</string>
+    <string name="file_system_error_msg">File System Error, please ensure your save path is
 		correct!</string>
-	<string name="read_more">Read more...</string>
+    <string name="read_more">Read more...</string>
 
-	<!-- Tab -->
-	<string name="tab_item_report_list">List</string>
-	<string name="tab_item_report_map">Map</string>
-	<string name="tab_item_checkin">Check Ins</string>
+    <!-- Tab -->
+    <string name="tab_item_report_list">List</string>
+    <string name="tab_item_report_map">Map</string>
+    <string name="tab_item_checkin">Check Ins</string>
 
-	<!-- Checkin Strings -->
-	<string name="checkin_btn">Check In</string>
-	<string name="checkin_message">Message</string>
-	<string name="checkin_enter_msg_hint">Enter message</string>
-	<string name="checkin_how_to_select_pic">Please choose how you would like to get the
+    <!-- Checkin Strings -->
+    <string name="checkin_btn">Check In</string>
+    <string name="checkin_message">Message</string>
+    <string name="checkin_enter_msg_hint">Enter message</string>
+    <string name="checkin_how_to_select_pic">Please choose how you would like to get the
 		picture.</string>
-	<string name="checkin_list">View Check In</string>
-	<string name="checkin_select_pic_file">File</string>
-	<string name="checkin_selected_photo">Selected photo</string>
-	<string name="view_checkins">View Check Ins</string>
-	<string name="checkin_progress_title">Working</string>
-	<string name="checkin_in_progress">Sending Check-in...</string>
-	<string name="checkin_progress_message">Getting location data...</string>
-	<string name="checkin_contact">Contact Info</string>
-	<string name="checkin_success_toast">Check in successful</string>
-	<string name="checkin_error_toast">Error encountered during check in</string>
-	<string name="checkin_empty_message">Please enter a check in message.</string>
-	<string name="checkin_no_location">Could not get your location. If you are using the
+    <string name="checkin_list">View Check In</string>
+    <string name="checkin_select_pic_file">File</string>
+    <string name="checkin_selected_photo">Selected photo</string>
+    <string name="view_checkins">View Check Ins</string>
+    <string name="checkin_progress_title">Working</string>
+    <string name="checkin_in_progress">Sending Check-in...</string>
+    <string name="checkin_progress_message">Getting location data...</string>
+    <string name="checkin_contact">Contact Info</string>
+    <string name="checkin_success_toast">Check in successful</string>
+    <string name="checkin_error_toast">Error encountered during check in</string>
+    <string name="checkin_empty_message">Please enter a check in message.</string>
+    <string name="checkin_no_location">Could not get your location. If you are using the
 		GPS feature of the phone make sure the phone can see the sky. If the
 		phone cannot see the sky, turn off the GPS to make use of your network
 		providers cell towers for location.</string>
-	<string name="could_not_fetch_checkin">Could not fetch check ins.</string>
-	<string name="checkins_successfully_fetched">Checkins successfully fetched.</string>
-	<string name="checkin_enter_firstname_hint">Enter first name</string>
-	<string name="checkin_enter_lastname_hint">Enter last name</string>
-	<string name="checkin_enter_email_hint">Enter email</string>
+    <string name="could_not_fetch_checkin">Could not fetch check ins.</string>
+    <string name="checkins_successfully_fetched">Checkins successfully fetched.</string>
+    <string name="checkin_enter_firstname_hint">Enter first name</string>
+    <string name="checkin_enter_lastname_hint">Enter last name</string>
+    <string name="checkin_enter_email_hint">Enter email</string>
     <string name="checkin_photo">Photo</string>
-	<string name="no_name">No name</string>
-	<string name="curr_location">Current location</string>
+    <string name="no_name">No name</string>
+    <string name="curr_location">Current location</string>
 
-	<!-- Notification message strings from OfflineIncidentSendReceiver -->
-	<string name="notification_status_bar_message">Report Sent</string>
-	<string name="notification_expanded_title">Ushahidi Report</string>
-	<string name="notification_expanded_message">Reports Sent Successfully</string>
-	<string name="change_photo">Change Photo</string>
+    <!-- Notification message strings from OfflineIncidentSendReceiver -->
+    <string name="notification_status_bar_message">Report Sent</string>
+    <string name="notification_expanded_title">Ushahidi Report</string>
+    <string name="notification_expanded_message">Reports Sent Successfully</string>
+    <string name="change_photo">Change Photo</string>
 
-	<!-- Deployment search -->
-	<string name="search_label">Deployments </string>
-	<!-- The hint text that appears in the search box. -->
-	<string name="search_hint">Type here to filter the list below...</string>
-	<string name="deployment_fetched_successful">Deployments successfully fetched</string>
-	<string name="could_not_fetch_data">Couldn\'t fetch new deployments due to network
+    <!-- Deployment search -->
+    <string name="search_label">Deployments </string>
+    <!-- The hint text that appears in the search box. -->
+    <string name="search_hint">Type here to filter the list below...</string>
+    <string name="deployment_fetched_successful">Deployments successfully fetched</string>
+    <string name="could_not_fetch_data">Couldn\'t fetch new deployments due to network
 		error.</string>
 
-	<!-- The description that will show up in the search settings for this source. -->
-	<string name="settings_description">Found deployments</string>
-	<string name="no_results">No results found for \"%s\"</string>
-	<!-- Shown above search results when we receive a search request. -->
-	<plurals name="search_results">
-		<item quantity="one">%1$d result for \"%2$s\": </item>
-		<item quantity="other">%1$d results for \"%2$s\": </item>
-	</plurals>
-	<!-- pull to refresh list -->
-	<string name="pull_to_refresh_pull_label">Pull to refresh...</string>
-	<string name="pull_to_refresh_release_label">Release to refresh...</string>
-	<string name="pull_to_refresh_refreshing_label">Loading...</string>
-	<string name="pull_to_refresh_tap_label">Tap to refresh...</string>
+    <!-- The description that will show up in the search settings for this source. -->
+    <string name="settings_description">Found deployments</string>
+    <string name="no_results">No results found for \"%s\"</string>
+    <!-- Shown above search results when we receive a search request. -->
+    <plurals name="search_results">
+        <item quantity="one">%1$d result for \"%2$s\": </item>
+        <item quantity="other">%1$d results for \"%2$s\": </item>
+    </plurals>
+    <!-- pull to refresh list -->
+    <string name="pull_to_refresh_pull_label">Pull to refresh...</string>
+    <string name="pull_to_refresh_release_label">Release to refresh...</string>
+    <string name="pull_to_refresh_refreshing_label">Loading...</string>
+    <string name="pull_to_refresh_tap_label">Tap to refresh...</string>
 
-	<!-- sharing -->
-	<string name="share_template">
-		Check out
-		<xliff:g id="title">%1$s</xliff:g>
-		at
-		<xliff:g id="reporturl">%2$s</xliff:g>
-	</string>
-	<string name="title_share">Share using</string>
-	<string name="select_distance">Select distance in km</string>
-	<!-- photos -->
-	<string name="preview_photo">Photo\%\</string>
+    <!-- sharing -->
+    <string name="share_template">		Check out<xliff:g id="title">%1$s</xliff:g>		at<xliff:g id="reporturl">%2$s</xliff:g></string>
+    <string name="title_share">Share using</string>
+    <string name="select_distance">Select distance in km</string>
+    <!-- photos -->
+    <string name="preview_photo">Photo\%\</string>
 
-	<!-- empty list -->
-	<string name="empty_checkins">No check ins</string>
-	<string name="empty_reports">No reports</string>
-	<string name="empty_deployments">No deployments</string>
+    <!-- empty list -->
+    <string name="empty_checkins">No check ins</string>
+    <string name="empty_reports">No reports</string>
+    <string name="empty_deployments">No deployments</string>
 
-	<!-- deployments -->
-	<string name="clear_all">Clear all</string>
-	<string name="confirm_clear">Are you sure you want to clear everything?</string>
-	<string name="items_cleared">Everything was successfully cleared</string>
-	<string name="no_items_cleared">No items to clear</string>
-	<string name="loading">Loading...</string>
-	<string name="deploymet_url">Deployment URL</string>
-	<string name="add_deployment">Add Deployment</string>
-	<string name="delete">Delete</string>
-	<string name="deployment_deleted">Deployment deleted</string>
-	<string name="deployment_deleted_failed">Failed to delete</string>
-	<string name="fix_error">Please make sure a name and a valid URL have been
+    <!-- deployments -->
+    <string name="clear_all">Clear all</string>
+    <string name="confirm_clear">Are you sure you want to clear everything?</string>
+    <string name="items_cleared">Everything was successfully cleared</string>
+    <string name="no_items_cleared">No items to clear</string>
+    <string name="loading">Loading...</string>
+    <string name="deploymet_url">Deployment URL</string>
+    <string name="add_deployment">Add Deployment</string>
+    <string name="delete">Delete</string>
+    <string name="deployment_deleted">Deployment deleted</string>
+    <string name="deployment_deleted_failed">Failed to delete</string>
+    <string name="fix_error">Please make sure a name and a valid URL have been
 		entered.</string>
-	<string name="sending_report_in_progress">Sending report...</string>
-	<string name="ushahidi_setup_title">Ushahidi Setup</string>
-	<string name="ushahidi_setup_blub">Setup an ushahidi deployment.</string>
-	<string name="recent_reports">Recent Reports</string>
-	<string name="on_phone">On Phone</string>
-	<string name="on_sd_card">On SD Card</string>
-	<string name="minutes">Minutes</string>
-	<string name="team">Team</string>
-	<string name="twitter">Twitter</string>
-	<string name="contact">Contact</string>
-	<string name="media">Media</string>
-	<string name="facebook">Facebook</string>
-	
-	<!-- Photo resize preferences -->
-	<string name="photo_resize_title">Photo Settings</string>
-	<string name="photo_resize_summary">Resize image width</string>
-	<string name="photo_size_pixels">pixels</string>
-	
-	<!-- Public deployment search / Add -->
-	<string name="deployment_search">Here you can search for public ushahidi deployments or manually add one.</string>
-	
-	<!-- Prompt user about saved draft -->
+    <string name="sending_report_in_progress">Sending report...</string>
+    <string name="ushahidi_setup_title">Ushahidi Setup</string>
+    <string name="ushahidi_setup_blub">Setup an ushahidi deployment.</string>
+    <string name="recent_reports">Recent Reports</string>
+    <string name="on_phone">On Phone</string>
+    <string name="on_sd_card">On SD Card</string>
+    <string name="minutes">Minutes</string>
+    <string name="team">Team</string>
+    <string name="twitter">Twitter</string>
+    <string name="contact">Contact</string>
+    <string name="media">Media</string>
+    <string name="facebook">Facebook</string>
+
+    <!-- Photo resize preferences -->
+    <string name="photo_resize_title">Photo Settings</string>
+    <string name="photo_resize_summary">Resize image width</string>
+    <string name="photo_size_pixels">pixels</string>
+
+    <!-- Public deployment search / Add -->
+    <string name="deployment_search">Here you can search for public ushahidi deployments or manually add one.</string>
+
+    <!-- Prompt user about saved draft -->
     <string name="message_saved_as_draft">Message saved as draft.</string>
-	
 
-	<!-- DEFAULT USHAHIDI DEPLOYMENT TO USE. DON'T REMOVE THIS LINE. RATHER EDIT THE VALUE -->
-	<string name="default_deployment"/>
-	
-	<!--  empty latitude -->
-	<string name="empty_latitude">No value entered for latitude field</string>
-	<string name="empty_longitude">No value entered for longitude field</string>
-	<string name="invalid_latitude">Invalid value entered for latitude. Eg valid value 3.4958585</string>
-	<string name="invalid_longitude">Invalid value entered for longitude. Eg valid value -3.4958585</string>
+    <!-- DEFAULT USHAHIDI DEPLOYMENT TO USE. DON'T REMOVE THIS LINE. RATHER EDIT THE VALUE -->
+    <string name="default_deployment" />
 
-	<!-- Open GeoSMS -->
-	<string name="less_report_title">The title field must be at least 3 and no more 200 characters long.</string>
-	<string name="less_report_location">The location name must be at least 3 characters.</string>
-	<string name="not_support_by_opengeosms">Open GeoSMS do NOT support sending a photo, do you want to send the report via Internet?</string>
-	<string name="report_way_internet">Internet</string>
-  <string name="report_way_opengeosms">Open GeoSMS</string>
-	<string name="incident_transmission">Transmission:</string>
-	<string name="send_way_title">Sending way</string>  	
-	<string name="deployment_domain_error">Please choose deployment first or the domain of deployment is empty</string>
-	<string name="report_opengeosms_successfully_sent">Report successfully sent and entered into a moderation queue</string>
-	<string name="report_opengeosms_cancelled">Cancelled to send report</string>
-	<string name="report_opengeosms_failure_sent">Failed to send report via Open GeoSMS</string>
-	<string name="report_opengeosms_failure_sent_no_service">No service!! Failed to send report via Open GeoSMS</string>
-	<string name="report_opengeosms_failure_sent_radio_off">Radio OFF!! Failed to send report via Open GeoSMS</string>
-	<string name="report_opengeosms_without_picture">This Report would be send without picture</string>
-	<string name="airplane_mode_on">Airplane mode is on!! Please turn it off to send report</string>
+    <!-- empty latitude -->
+    <string name="empty_latitude">No value entered for latitude field</string>
+    <string name="empty_longitude">No value entered for longitude field</string>
+    <string name="invalid_latitude">Invalid value entered for latitude. Eg valid value 3.4958585</string>
+    <string name="invalid_longitude">Invalid value entered for longitude. Eg valid value -3.4958585</string>
+
+    <!-- Open GeoSMS -->
+    <string name="less_report_title">The title field must be at least 3 and no more 200 characters long.</string>
+    <string name="less_report_location">The location name must be at least 3 characters.</string>
+    <string name="not_support_by_opengeosms">Open GeoSMS do NOT support sending a photo, do you want to send the report via Internet?</string>
+    <string name="report_way_internet">Internet</string>
+    <string name="report_way_opengeosms">Open GeoSMS</string>
+    <string name="incident_transmission">Transmission:</string>
+    <string name="send_way_title">Sending way</string>
+    <string name="deployment_domain_error">Please choose deployment first or the domain of deployment is empty</string>
+    <string name="report_opengeosms_successfully_sent">Report successfully sent and entered into a moderation queue</string>
+    <string name="report_opengeosms_cancelled">Cancelled to send report</string>
+    <string name="report_opengeosms_failure_sent">Failed to send report via Open GeoSMS</string>
+    <string name="report_opengeosms_failure_sent_no_service">No service!! Failed to send report via Open GeoSMS</string>
+    <string name="report_opengeosms_failure_sent_radio_off">Radio OFF!! Failed to send report via Open GeoSMS</string>
+    <string name="report_opengeosms_without_picture">This Report would be send without picture</string>
+    <string name="airplane_mode_on">Airplane mode is on!! Please turn it off to send report</string>
     <string name="reporting_via">Reporting via</string>
-    
+
     <!-- New Strings for V3 -->
     <string name="load">Load</string>
     <string name="loading_">Loading...</string>
@@ -363,19 +359,22 @@
     <string name="no_video">No Video</string>
     <string name="no_photos">No Photos</string>
     <string name="all_categories">All Categories</string>
+
     <plurals name="no_of_images">
         <item quantity="one">%d image</item>
         <item quantity="other">%d images</item>
     </plurals>
-    
     <plurals name="no_of_news">
         <item quantity="one">%d news</item>
         <item quantity="other">%d news</item>
     </plurals>
-    
     <plurals name="no_of_videos">
         <item quantity="one">%d video</item>
         <item quantity="other">%d videos</item>
     </plurals>
-    
+
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="comment">Comment</string>
+    <string name="share">Share</string>
 </resources>

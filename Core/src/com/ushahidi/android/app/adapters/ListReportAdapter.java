@@ -31,7 +31,7 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel>
 			this.date = (TextView) view.findViewById(R.id.report_date);
 			this.iLocation = (TextView) view.findViewById(R.id.report_location);
 			this.categories = (TextView) view
-					.findViewById(R.id.report_categories);
+					.findViewById(R.id.report_categories);	
 			this.status = (TextView) view.findViewById(R.id.report_status);
 			this.arrow = (ImageView) view.findViewById(R.id.report_arrow);
 		}
@@ -65,8 +65,8 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel>
 	public ListReportAdapter(Context context) {
 		super(context);
 		mContext = context;
-		colors = new int[] { R.color.table_odd_row_color,
-				R.color.table_even_row_color };
+		colors = new int[] { R.drawable.odd_row_rounded_corners,
+				R.drawable.even_row_rounded_corners };
 	}
 
 	@Override
@@ -123,8 +123,8 @@ public class ListReportAdapter extends BaseListAdapter<ListReportModel>
 		}
 
 		widgets.thumbnail.setImageDrawable(getItem(position).getThumbnail());
-		widgets.title.setText(Util.capitalizeString(getItem(position)
-				.getTitle()));
+		widgets.title.setText(getItem(position)
+				.getTitle());
 		widgets.date.setText(getItem(position).getDate());
 		widgets.description.setText(Util.capitalizeString(getItem(position)
 				.getDesc()));

@@ -216,8 +216,10 @@ public class ListReportModel extends Model {
 			for (Report item : mReports) {
 				ListReportModel listReportModel = new ListReportModel();
 				listReportModel.setId(item.getDbId());
-				listReportModel.setTitle(Util.capitalize(item.getTitle()));
-				listReportModel.setDesc(item.getDescription());
+				listReportModel
+						.setTitle(Util.capitalizeString(item.getTitle()));
+				listReportModel.setDesc(Util.capitalizeString(item
+						.getDescription()));
 				listReportModel.setDate(Util
 						.formatDate("yyyy-MM-dd HH:mm:ss",
 								item.getReportDate(),
@@ -225,14 +227,14 @@ public class ListReportModel extends Model {
 				final String status = Util.toInt(item.getVerified()) == 0 ? context
 						.getString(R.string.report_unverified) : context
 						.getString(R.string.report_verified);
-				listReportModel.setStatus(status);
-				listReportModel.setLocation(item.getLocationName());
+				listReportModel.setStatus(Util.capitalizeString(status));
+				listReportModel.setLocation(Util.capitalizeString(item
+						.getLocationName()));
 				listReportModel.setLatitude(item.getLatitude());
 				listReportModel.setLongitude(item.getLongitude());
 				listReportModel.setArrow(context.getResources().getDrawable(
-						R.drawable.menu_arrow));
-				listReportModel.setCategories(Util.capitalize(item
-						.getCategories()));
+						R.drawable.arrow));
+				listReportModel.setCategories(item.getCategories());
 				listReportModel.setMedia(item.getMedia());
 
 				final Drawable d = getImage(context, item.getDbId());
@@ -255,7 +257,7 @@ public class ListReportModel extends Model {
 		return Database.mCategoryDao.fetchAllCategoryTitles();
 
 	}
-	
+
 	public List<Category> getCategoriesByReportId(int reportId) {
 		return Database.mCategoryDao.fetchCategoryByReportId(reportId);
 	}

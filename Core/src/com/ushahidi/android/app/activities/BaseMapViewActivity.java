@@ -25,28 +25,29 @@ import com.ushahidi.android.app.views.View;
 
 /**
  * BaseViewActivity
- *
+ * 
  * Add shared functionality that exists between all View Activities
  */
-public abstract class BaseMapViewActivity<V extends View, M extends Model> extends BaseMapActivity<V> {
+public abstract class BaseMapViewActivity<V extends View, M extends Model>
+		extends BaseMapActivity<V> {
 
-    protected BaseMapViewActivity(Class<V> view, int layout, int menu, int mapView) {
-        super(view, layout, menu, mapView);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
+	protected BaseMapViewActivity(Class<V> view, int layout, int menu,
+			int mapView) {
+		super(view, layout, menu, mapView);
+	}
 
 	@Override
-	protected void onResume(){
+	protected void onStart() {
+		super.onStart();
+	}
+
+	@Override
+	protected void onResume() {
 		super.onResume();
 	}
 
-    @Override
+	@Override
 	protected void onPause() {
-        super.onPause();
-    }
-
+		super.onPause();
+	}
 }

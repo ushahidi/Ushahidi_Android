@@ -107,6 +107,9 @@ public class ViewReportActivity extends
 			}
 			return true;
 
+		} else if (item.getItemId() == R.id.menu_share) {
+			final String share = "";
+			shareText(share);
 		}
 
 		return super.onOptionsItemSelected(item);

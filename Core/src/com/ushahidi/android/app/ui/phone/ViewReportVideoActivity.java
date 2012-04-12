@@ -45,7 +45,7 @@ public class ViewReportVideoActivity extends
 	private int reportId;
 
 	public ViewReportVideoActivity() {
-		super(ReportVideoView.class, R.layout.video, R.menu.view_report);
+		super(ReportVideoView.class, R.layout.video, R.menu.view_media);
 	}
 
 	@Override
@@ -76,6 +76,9 @@ public class ViewReportVideoActivity extends
 			goPrevious();
 			return true;
 
+		} else if (item.getItemId() == R.id.menu_share) {
+			final String share = "";
+			shareText(share);
 		}
 
 		return super.onOptionsItemSelected(item);
