@@ -33,6 +33,7 @@ import android.widget.AdapterView;
 import android.widget.ViewSwitcher;
 
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.activities.BaseViewActivity;
 import com.ushahidi.android.app.models.ListReportPhotoModel;
 import com.ushahidi.android.app.views.ReportPhotoView;
@@ -94,7 +95,7 @@ public class ViewReportPhotoActivity extends
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_share) {
-			shareText(fileName);
+			sharePhoto(ImageManager.getPhotoPath(this) + fileName);
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -120,8 +121,7 @@ public class ViewReportPhotoActivity extends
 		if (photos != null) {
 			position--;
 			if ((position < (photos.size() - 1)) && (position != -1)) {
-				log("filename: "+ photos
-						.get(position).getPhoto());
+
 				view.imageSwitcher.setImageDrawable(photo.getImage(this, photos
 						.get(position).getPhoto()));
 				view.goPrevious();
