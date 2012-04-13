@@ -202,9 +202,7 @@ public class ViewReportPhotoActivity extends
 	 */
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		log("MotionEvent Yay");
 		if (gestureDetector.onTouchEvent(event)) {
-			log("MotionEvent :(");
 			return true;
 		}
 		return false;

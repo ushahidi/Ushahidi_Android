@@ -195,8 +195,8 @@ public abstract class BaseActivity<V extends View> extends FragmentActivity {
 		// TODO: consider bringing in shortlink to session
 		Preferences.loadSettings(this);
 		final String reportUrl = Preferences.domain;
-		final String shareString = getString(R.string.share_template, "",
-				reportUrl);
+		final String shareString = getString(R.string.share_template, " ",
+				" "+reportUrl);
 		final Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("image/jpg");
 		intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + path));

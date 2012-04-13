@@ -255,8 +255,6 @@ public class ListReportFragment extends
 
 	private void showDropDownNav() {
 
-		// if (categories != null && categories.size() > 0) {
-
 		new AlertDialog.Builder(getActivity())
 				.setTitle(getActivity().getString(R.string.prompt_mesg))
 				.setAdapter(spinnerArrayAdapter,
