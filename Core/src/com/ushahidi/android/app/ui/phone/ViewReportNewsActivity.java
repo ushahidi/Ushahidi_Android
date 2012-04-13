@@ -77,8 +77,7 @@ public class ViewReportNewsActivity extends
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_share) {
-			final String share = "";
-			shareText(share);
+			share();
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -116,8 +115,6 @@ public class ViewReportNewsActivity extends
 	private void initReport(int position) {
 		listNews = news.getNewsByReportId(reportId);
 		if (view.webView != null) {
-			// view.imageSwitcher.setFactory(this);
-			// view.imageSwitcher.setOnTouchListener(this);
 
 			if (listNews != null) {
 				view.url = listNews.get(position).getUrl();
@@ -136,4 +133,10 @@ public class ViewReportNewsActivity extends
 		setActionBarTitle(title.toString());
 	}
 
+	private void share() {
+		final String shareString = getString(R.string.share_template, " ",
+				" \n"+view.url);
+		shareText(shareString);
+
+	}
 }

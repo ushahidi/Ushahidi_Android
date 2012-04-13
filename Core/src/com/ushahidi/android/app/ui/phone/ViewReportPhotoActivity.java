@@ -53,6 +53,8 @@ public class ViewReportPhotoActivity extends
 
 	private int reportId;
 
+	private String fileName;
+
 	private GestureDetector gestureDetector;
 
 	private static final int SWIPE_MIN_DISTANCE = 120;
@@ -92,8 +94,7 @@ public class ViewReportPhotoActivity extends
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_share) {
-			final String share = "";
-			sharePhoto(share);
+			shareText(fileName);
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -103,9 +104,9 @@ public class ViewReportPhotoActivity extends
 		if (photos != null) {
 			position++;
 			if (!(position > (photos.size() - 1))) {
-				view.goNext(photo.getImage(this, photos.get(position)
-						.getPhoto()));
-
+				view.imageSwitcher.setImageDrawable(photo.getImage(this, photos
+						.get(position).getPhoto()));
+				view.goNext();
 				int page = position;
 				this.setTitle(page + 1);
 
@@ -119,8 +120,11 @@ public class ViewReportPhotoActivity extends
 		if (photos != null) {
 			position--;
 			if ((position < (photos.size() - 1)) && (position != -1)) {
-				view.goPrevious(photo.getImage(this, photos.get(position)
-						.getPhoto()));
+				log("filename: "+ photos
+						.get(position).getPhoto());
+				view.imageSwitcher.setImageDrawable(photo.getImage(this, photos
+						.get(position).getPhoto()));
+				view.goPrevious();
 
 				int page = position;
 				this.setTitle(page + 1);
@@ -138,6 +142,7 @@ public class ViewReportPhotoActivity extends
 		}
 		gestureDetector = new GestureDetector(new GestureDetectorListener());
 		if (photos != null) {
+			fileName = photos.get(position).getPhoto();
 			view.imageSwitcher.setImageDrawable(photo.getImage(this, photos
 					.get(position).getPhoto()));
 

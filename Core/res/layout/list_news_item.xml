@@ -15,7 +15,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/news_url"
+        android:id="@+id/news_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -23,20 +23,10 @@
         android:layout_toLeftOf="@+id/news_arrow"
         android:textColor="@color/date_color" />
 
-    <TextView
-        android:id="@+id/news_total"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/news_url"
-        android:layout_toLeftOf="@+id/news_arrow"
-        android:textStyle="bold"
-        android:textColor="@color/date_color" />
-
     <ImageView
         android:id="@+id/news_arrow"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
         android:gravity="center_vertical|center_horizontal"

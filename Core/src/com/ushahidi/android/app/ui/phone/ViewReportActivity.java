@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseMapViewActivity;
 import com.ushahidi.android.app.entities.Category;
@@ -52,6 +53,8 @@ public class ViewReportActivity extends
 	private int categoryId;
 
 	private int reportId;
+
+	private String reportTitle;
 
 	public ViewReportActivity() {
 		super(ViewReportView.class, R.layout.view_report, R.menu.view_report,
@@ -88,7 +91,7 @@ public class ViewReportActivity extends
 				position++;
 				if (!(position > (report.size() - 1))) {
 					initReport(position);
-
+					view.goNext();
 				} else {
 					position = report.size() - 1;
 				}
@@ -101,6 +104,7 @@ public class ViewReportActivity extends
 				position--;
 				if ((position < (report.size() - 1)) && (position != -1)) {
 					initReport(position);
+					view.goPrevious();
 				} else {
 					position = 0;
 				}
@@ -108,8 +112,7 @@ public class ViewReportActivity extends
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_share) {
-			final String share = "";
-			shareText(share);
+			share();
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -137,7 +140,8 @@ public class ViewReportActivity extends
 		if (report != null) {
 			reportId = (int) report.get(position).getId();
 
-			// fetch categories
+			reportTitle = report.get(position).getTitle();
+
 			view.setBody(report.get(position).getDesc());
 			view.setCategory(fetchCategories(reportId));
 			view.setLocation(report.get(position).getLocation());
@@ -197,8 +201,6 @@ public class ViewReportActivity extends
 			int page = position;
 			this.setTitle(page + 1);
 		}
-		// animate views
-		view.showViews();
 	}
 
 	public void setTitle(int page) {
@@ -209,28 +211,29 @@ public class ViewReportActivity extends
 		setActionBarTitle(title.toString());
 	}
 
+	private void share() {
+		final String reportUrl = Preferences.domain + "reports/view/"
+				+ reportId;
+		final String shareString = getString(R.string.share_template, " "
+				+ reportTitle, "\n" + reportUrl);
+		shareText(shareString);
+
+	}
+
 	@Override
 	public void onLocationChanged(Location arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

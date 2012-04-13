@@ -21,10 +21,9 @@
 package com.ushahidi.android.app.views;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.support.v4.app.FragmentMapActivity;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -173,7 +172,6 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	}
 
 	public void setTitle(String title) {
-		this.title.setTypeface(Typeface.DEFAULT_BOLD);
 		this.title.setText(title);
 	}
 
@@ -182,7 +180,6 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	}
 
 	public void setCategory(String category) {
-		this.category.setTextColor(Color.BLACK);
 		this.category.setText(category);
 	}
 
@@ -191,7 +188,6 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	}
 
 	public void setDate(String date) {
-		this.date.setTextColor(Color.BLACK);
 		this.date.setText(date);
 	}
 
@@ -200,7 +196,6 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	}
 
 	public void setLocation(String location) {
-		this.location.setTextColor(Color.BLACK);
 		this.location.setText(location);
 	}
 
@@ -209,7 +204,6 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	}
 
 	public void setBody(String body) {
-		this.body.setTextColor(Color.BLACK);
 		this.body.setText(body);
 	}
 
@@ -267,23 +261,15 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		return this.listVideos;
 	}
 
-	private void showPanel(android.view.View panel, boolean slideUp) {
-		panel.startAnimation(AnimationUtils.loadAnimation(context,
-				slideUp ? R.anim.slide_in : R.anim.slide_out_top));
-		panel.setVisibility(android.view.View.VISIBLE);
+	public void goNext() {
+
+		Animation in = AnimationUtils.loadAnimation(context, R.anim.slide_left_in);
+		viewReportRoot.startAnimation(in);
 	}
 
-	private void hidePanel(android.view.View panel, boolean slideDown) {
-		panel.startAnimation(AnimationUtils.loadAnimation(context,
-				slideDown ? R.anim.slide_out : R.anim.slide_in_top));
-		panel.setVisibility(android.view.View.GONE);
+	public void goPrevious() {
+		Animation out = AnimationUtils.loadAnimation(context, R.anim.slide_right_in);
+		viewReportRoot.startAnimation(out);
 	}
 
-	public void showViews() {
-		showPanel(viewReportRoot, true);
-	}
-
-	public void hideViews() {
-		hidePanel(viewReportRoot, true);
-	}
 }

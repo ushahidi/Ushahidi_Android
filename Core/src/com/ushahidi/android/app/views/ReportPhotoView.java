@@ -20,7 +20,6 @@
 package com.ushahidi.android.app.views;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentActivity;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -46,24 +45,16 @@ public class ReportPhotoView extends View {
 				.findViewById(R.id.imageSwitcher);
 	}
 
-	public void goNext(Drawable drawable) {
-		Animation out = AnimationUtils.loadAnimation(context,
-				android.R.anim.fade_in);
+	public void goNext() {
 		Animation in = AnimationUtils.loadAnimation(context,
-				android.R.anim.fade_out);
-		imageSwitcher.setInAnimation(in);
-		imageSwitcher.setOutAnimation(out);
-		imageSwitcher.setImageDrawable(drawable);
+				android.R.anim.fade_in);
+		imageSwitcher.startAnimation(in);
 	}
 
-	public void goPrevious(Drawable drawable) {
+	public void goPrevious() {
 		Animation out = AnimationUtils.loadAnimation(context,
 				android.R.anim.fade_in);
-		Animation in = AnimationUtils.loadAnimation(context,
-				R.anim.fade_out);
-		imageSwitcher.setInAnimation(in);
-		imageSwitcher.setOutAnimation(out);
-		imageSwitcher.setImageDrawable(drawable);
+		imageSwitcher.startAnimation(out);
 	}
 
 	public ImageView imageView() {

@@ -53,13 +53,10 @@ public class ListNewsAdapter extends BaseListAdapter<ListReportNewsModel> {
 		public Widgets(View view) {
 			super(view);
 			this.newsTitle = (TextView) view.findViewById(R.id.news_title);
-			this.newsUrl = (TextView) view.findViewById(R.id.news_url);
 			this.total = (TextView) view.findViewById(R.id.news_total);
 		}
 
 		TextView newsTitle;
-
-		TextView newsUrl;
 		
 		TextView total;
 
@@ -82,7 +79,6 @@ public class ListNewsAdapter extends BaseListAdapter<ListReportNewsModel> {
 		}
 
 		widgets.newsTitle.setText(getItem(position).getTitle());
-		widgets.newsUrl.setText(getItem(position).getUrl());
 		widgets.total.setText(context.getResources().getQuantityString(
 				R.plurals.no_of_news, totalNews, totalNews));
 		return row;

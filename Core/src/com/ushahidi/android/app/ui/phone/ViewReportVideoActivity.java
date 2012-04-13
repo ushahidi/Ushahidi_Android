@@ -77,8 +77,7 @@ public class ViewReportVideoActivity extends
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_share) {
-			final String share = "";
-			shareText(share);
+			share();
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -116,9 +115,6 @@ public class ViewReportVideoActivity extends
 	private void initReport(int position) {
 		listVideos = video.getVideosByReportId(reportId);
 		if (view.webView != null) {
-			// view.imageSwitcher.setFactory(this);
-			// view.imageSwitcher.setOnTouchListener(this);
-
 			if (listVideos != null) {
 				view.url = listVideos.get(position).getVideo();
 				view.setWebView();
@@ -135,6 +131,13 @@ public class ViewReportVideoActivity extends
 		if (listVideos != null)
 			title.append(listVideos.size());
 		setActionBarTitle(title.toString());
+	}
+
+	private void share() {
+		final String shareString = getString(R.string.share_template, " ",
+				" \n" + view.url);
+		shareText(shareString);
+
 	}
 
 }

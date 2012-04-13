@@ -164,7 +164,7 @@ public class ReportsApiUtils {
 														.isNull("link"))) {
 
 											final String fileName = getDateTime()
-													+ "jpg";
+													+ ".jpg";
 											// save images to file
 											saveMedia(mediaArr.getJSONObject(w)
 													.getInt("id"), (int) id,
@@ -245,7 +245,6 @@ public class ReportsApiUtils {
 	}
 
 	private void saveMedia(int mediaId, int reportId, int type, String link) {
-		log("Save Images: " + getDateTime());
 		Media media = new Media();
 		media.setDbId(mediaId);
 		media.setReportId(reportId);
