@@ -11,18 +11,20 @@
     at team@ushahidi.com.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.ushahidi.android.app"
     android:id="@+id/relativeLayout1"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dip"
     android:padding="5dip" >
 
-    <ImageView
+    <com.ushahidi.android.app.helpers.RoundedCornerImageView
         android:id="@+id/report_thumbnail"
         android:layout_width="50dip"
         android:layout_height="50dip"
         android:layout_alignParentLeft="true"
         android:adjustViewBounds="true"
+        app:cornerRadius="4dip"
         android:paddingRight="5dip" />
 
     <TextView

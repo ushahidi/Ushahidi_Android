@@ -32,6 +32,7 @@ import java.net.URL;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 
@@ -76,7 +77,7 @@ public class ImageManager {
 		if (original != null) {
 			// scale image
 			Bitmap scaled = PhotoUtils.scaleThumbnail(original);
-			return new FastBitmapDrawable(scaled);
+			return new BitmapDrawable(scaled);
 
 		}
 		return null;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
+<!--
   Copyright (c) 2010 Ushahidi Inc
   All rights reserved
   Contact: team@ushahidi.com
@@ -16,20 +16,27 @@
  
   If you have questions regarding the use of this file, please contact
   Ushahidi developers at team@ushahidi.com. 
- -->
+-->
 <resources>
-	<declare-styleable name="PhotoGallery">
-		<attr name="android:galleryItemBackground" />
-	</declare-styleable>
-	<declare-styleable name="AppTheme">
+
+    <declare-styleable name="PhotoGallery">
+        <attr name="android:galleryItemBackground" />
+    </declare-styleable>
+    <declare-styleable name="AppTheme">
         <attr name="actionbarTitleStyle" format="reference" />
         <attr name="actionbarItemStyle" format="reference" />
         <attr name="actionbarItemHomeStyle" format="reference" />
         <attr name="actionbarProgressIndicatorStyle" format="reference" />
     </declare-styleable>
-
     <declare-styleable name="BezelImageView">
         <attr name="maskDrawable" format="reference" />
         <attr name="borderDrawable" format="reference" />
     </declare-styleable>
+    
+    <!-- Attributes for RoundedCornerImageView -->
+    <declare-styleable name="RoundedCornerImageView">
+        <!-- Corner radius -->
+        <attr name="cornerRadius" format="dimension" />
+    </declare-styleable>
+
 </resources>
