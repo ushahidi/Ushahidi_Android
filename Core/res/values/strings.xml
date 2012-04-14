@@ -377,4 +377,7 @@
     <string name="next">Next</string>
     <string name="comment">Comment</string>
     <string name="share">Share</string>
+    <string name="traffic">Traffic</string>
+    <string name="satellite">Satellite</string>
+    <string name="normal">Normal</string>
 </resources>

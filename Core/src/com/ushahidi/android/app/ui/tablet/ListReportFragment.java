@@ -254,7 +254,7 @@ public class ListReportFragment extends
 	}
 
 	private void showDropDownNav() {
-
+		showCategories();
 		new AlertDialog.Builder(getActivity())
 				.setTitle(getActivity().getString(R.string.prompt_mesg))
 				.setAdapter(spinnerArrayAdapter,

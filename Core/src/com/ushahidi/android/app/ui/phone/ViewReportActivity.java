@@ -141,7 +141,7 @@ public class ViewReportActivity extends
 			reportId = (int) report.get(position).getId();
 
 			reportTitle = report.get(position).getTitle();
-
+			
 			view.setBody(report.get(position).getDesc());
 			view.setCategory(fetchCategories(reportId));
 			view.setLocation(report.get(position).getLocation());
@@ -198,6 +198,7 @@ public class ViewReportActivity extends
 			centerLocationWithMarker(getPoint(
 					Double.parseDouble(report.get(position).getLatitude()),
 					Double.parseDouble(report.get(position).getLongitude())));
+			view.mapView.setBuiltInZoomControls(false);
 			int page = position;
 			this.setTitle(page + 1);
 		}
