@@ -25,8 +25,8 @@ public class ListMapTabletAdapter extends BaseListAdapter<ListMapModel>
 	public ListMapTabletAdapter(Context context) {
 		super(context);
 		listMapModel = new ListMapModel();
-		colors = new int[] { R.color.table_odd_row_color,
-				R.color.table_even_row_color };
+		colors = new int[] { R.drawable.odd_row_rounded_corners,
+				R.drawable.even_row_rounded_corners };
 	}
 
 	@Override

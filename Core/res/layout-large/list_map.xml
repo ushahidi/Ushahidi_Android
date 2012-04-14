@@ -39,19 +39,22 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingTop="6dip" >
+        android:padding="10dip" >
 
         <!-- Holds the found deployments -->
 
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10.0sp"
             android:fadingEdge="none"
             android:fastScrollEnabled="true"
+            android:listSelector="@android:color/transparent"
             android:scrollbars="vertical"
-            android:scrollingCache="true"
-            android:smoothScrollbar="true" />
+            android:scrollingCache="false"
+            android:smoothScrollbar="true"  />
     </LinearLayout>
     <!-- Here is the view to show if the list is emtpy -->
 

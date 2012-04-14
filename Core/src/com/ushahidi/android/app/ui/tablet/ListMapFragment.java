@@ -613,8 +613,6 @@ public class ListMapFragment extends
 
 		protected Boolean status;
 
-		protected Context appContext;
-
 		private MapsHttpClient maps;
 
 		protected String distance;
@@ -625,7 +623,7 @@ public class ListMapFragment extends
 			super(activity, R.string.loading_);
 			// switch to a progress animation
 			refreshState = true;
-			maps = new MapsHttpClient(appContext);
+			maps = new MapsHttpClient(activity.getActivity());
 		}
 
 		@Override

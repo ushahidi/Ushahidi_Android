@@ -13,7 +13,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
         android:id="@+id/menu_save"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/send"
         android:orderInCategory="0"
         android:showAsAction="always"
         android:title="@string/save"/>
