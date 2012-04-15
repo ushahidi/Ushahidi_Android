@@ -69,4 +69,5 @@ public class ListReportView extends com.ushahidi.android.app.views.View {
 	public TextView getFilterReportView() {
 		return mTextView;
 	}
+
 }

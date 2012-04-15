@@ -131,4 +131,5 @@ public class ReportVideoView extends View {
 			super.onReceivedError(view, errorCode, description, failingUrl);
 		}
 	};
+
 }

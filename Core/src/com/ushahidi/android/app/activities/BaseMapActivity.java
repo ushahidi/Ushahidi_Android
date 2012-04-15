@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
+import com.ushahidi.android.app.MapUserLocation;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.MapMarker;
@@ -44,7 +45,7 @@ import com.ushahidi.android.app.views.View;
  * Activities
  */
 public abstract class BaseMapActivity<V extends View> extends
-		FragmentMapActivity implements LocationListener {
+		MapUserLocation implements LocationListener {
 
 	/**
 	 * Layout resource id
@@ -108,6 +109,7 @@ public abstract class BaseMapActivity<V extends View> extends
 		}
 		if (mapViewId != 0) {
 			mapView = (MapView) findViewById(mapViewId);
+			super.mapView = mapView;
 		}
 		if (locationManager == null) {
 			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -194,7 +196,7 @@ public abstract class BaseMapActivity<V extends View> extends
 		mapView.getController().setZoom(zoom);
 	}
 
-	protected static GeoPoint getPoint(double latitude, double longitude) {
+	protected  GeoPoint getPoint(double latitude, double longitude) {
 		return new GeoPoint((int) (latitude * 1000000.0),
 				(int) (longitude * 1000000.0));
 	}

@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.support.v4.app.FragmentMapActivity;
 import android.view.KeyEvent;
 
+import com.ushahidi.android.app.MapUserLocation;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.models.Model;
 import com.ushahidi.android.app.tasks.ProgressTask;
@@ -56,38 +57,39 @@ public abstract class BaseEditMapActivity<V extends View, M extends Model>
 	protected void onPause() {
 		super.onPause();
 	}
+	
+	protected void showDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(getText(R.string.unsaved_changes))
+				.setMessage(
+						getText(R.string.would_you_like_to_save_your_changes_))
+				.setCancelable(false)
+				.setPositiveButton(getText(R.string.save),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								new SaveTask(BaseEditMapActivity.this)
+										.execute((String) null);
+							}
+						})
+				.setNeutralButton(getText(R.string.discard),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								finish();
+							}
+						})
+				.setNegativeButton(getText(R.string.cancel),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						}).create().show();
+	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 			log("onBackPressed");
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle(getText(R.string.unsaved_changes))
-					.setMessage(
-							getText(R.string.would_you_like_to_save_your_changes_))
-					.setCancelable(false)
-					.setPositiveButton(getText(R.string.save),
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									new SaveTask(BaseEditMapActivity.this)
-											.execute((String) null);
-								}
-							})
-					.setNeutralButton(getText(R.string.discard),
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									finish();
-								}
-							})
-					.setNegativeButton(getText(R.string.cancel),
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							}).create().show();
+			showDialog();
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);

@@ -20,44 +20,61 @@
 
 package com.ushahidi.android.app.views;
 
-import android.support.v4.app.FragmentActivity;
-/*import android.widget.Button;
+import android.support.v4.app.FragmentMapActivity;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.maps.MapView;
+import com.ushahidi.android.app.R;
 
 /**
  * AddReportView All the widgets for /res/layout/add_report.xml
  */
 public class AddReportView extends View {
 
-    /*private EditText mIncidentTitle;
+	public EditText mIncidentTitle;
 
-    private EditText mIncidentLocation;
+	public EditText mIncidentLocation;
 
-    private EditText mIncidentDesc;
+	public EditText mIncidentDesc;
 
-    private ImageView mSelectedPhoto;
+	public ImageView mSelectedPhoto;
 
-    private EditText mLatitude;
+	public EditText mLatitude;
 
-    private EditText mLongitude;
+	public EditText mLongitude;
 
-    private TextView mActivityTitle;
+	public TextView mActivityTitle;
 
-    private Button mBtnSend;
+	public Button mBtnSend;
 
-    private Button mBtnAddCategory;
+	public Button mBtnAddCategory;
 
-    private Button mPickTime;
+	public Button mPickTime;
 
-    private Button mPickDate;
+	public Button mPickDate;
 
-    private Button mBtnPicture;*/
+	public Button mBtnPicture;
 
-    public AddReportView(FragmentActivity activity) {
-        super(activity);
-        // TODO Auto-generated constructor stub
-    }
+	public MapView mapView;
+
+	public AddReportView(FragmentMapActivity activity) {
+		super(activity);
+
+		mBtnPicture = (Button) activity.findViewById(R.id.btnPicture);
+		mBtnAddCategory = (Button) activity.findViewById(R.id.add_category);
+		mPickDate = (Button) activity.findViewById(R.id.pick_date);
+		mPickTime = (Button) activity.findViewById(R.id.pick_time);
+		mLatitude = (EditText) activity.findViewById(R.id.incident_latitude);
+		mLongitude = (EditText) activity.findViewById(R.id.incident_longitude);
+		mSelectedPhoto = (ImageView) activity.findViewById(R.id.sel_photo_prev);
+		mIncidentTitle = (EditText) activity.findViewById(R.id.incident_title);
+		mIncidentLocation = (EditText) activity
+				.findViewById(R.id.incident_location);
+		mIncidentDesc = (EditText) activity.findViewById(R.id.incident_desc);
+		this.mapView = (MapView) activity.findViewById(R.id.location_map);
+	}
 
 }

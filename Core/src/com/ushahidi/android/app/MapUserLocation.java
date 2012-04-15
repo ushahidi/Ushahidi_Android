@@ -15,15 +15,15 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.MotionEvent;
+import android.support.v4.app.FragmentMapActivity;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
-import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-public abstract class MapUserLocation extends MapActivity implements LocationListener {
+public abstract class MapUserLocation extends FragmentMapActivity implements LocationListener {
 
     protected static final int ONE_MINUTE = 60 * 1000;
 
@@ -120,7 +120,7 @@ public abstract class MapUserLocation extends MapActivity implements LocationLis
             marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
             mapController.setZoom(14);
 
-            mapView.setBuiltInZoomControls(true);
+            mapView.setBuiltInZoomControls(false);
             updatableMarker = createUpdatableMarker(marker, point);
             mapView.getOverlays().add((Overlay) updatableMarker);
         }

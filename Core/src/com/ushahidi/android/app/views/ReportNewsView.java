@@ -131,4 +131,5 @@ public class ReportNewsView extends View {
 			super.onReceivedError(view, errorCode, description, failingUrl);
 		}
 	};
+
 }

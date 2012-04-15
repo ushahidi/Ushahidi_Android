@@ -1,4 +1,4 @@
-package com.ushahidi.android.app;
+package com.ushahidi.android.app.tasks;
 
 /**
  ** Copyright (c) 2010 Ushahidi Inc

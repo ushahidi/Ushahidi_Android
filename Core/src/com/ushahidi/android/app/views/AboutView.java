@@ -87,4 +87,5 @@ public class AboutView extends com.ushahidi.android.app.views.View {
 			button.setVisibility(View.GONE);
 		}
 	}
+
 }

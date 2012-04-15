@@ -23,6 +23,7 @@ package com.ushahidi.android.app.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.MenuItem;
 import android.view.KeyEvent;
 
 import com.ushahidi.android.app.R;
@@ -58,39 +59,50 @@ public abstract class BaseEditActivity<V extends View, M extends Model> extends
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+			showDialogs();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+
+	}
+
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 			log("onBackPressed");
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle(getText(R.string.unsaved_changes))
-					.setMessage(
-							getText(R.string.would_you_like_to_save_your_changes_))
-					.setCancelable(false)
-					.setPositiveButton(getText(R.string.save),
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									new SaveTask(BaseEditActivity.this)
-											.execute((String) null);
-								}
-							})
-					.setNeutralButton(getText(R.string.discard),
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									finish();
-								}
-							})
-					.setNegativeButton(getText(R.string.cancel),
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							}).create().show();
+			showDialogs();
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	protected void showDialogs() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(getText(R.string.unsaved_changes))
+				.setMessage(
+						getText(R.string.would_you_like_to_save_your_changes_))
+				.setCancelable(false)
+				.setPositiveButton(getText(R.string.save),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								new SaveTask(BaseEditActivity.this)
+										.execute((String) null);
+							}
+						})
+				.setNeutralButton(getText(R.string.discard),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								finish();
+							}
+						})
+				.setNegativeButton(getText(R.string.cancel),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						}).create().show();
 	}
 
 	/**

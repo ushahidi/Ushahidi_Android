@@ -11,34 +11,34 @@
     at team@ushahidi.com.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/background_color"
     android:orientation="vertical" >
 
     <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
         <!-- Parent layout starts -->
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="10dip" >
 
             <!-- Title layout begins -->
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingBottom="10px" >
 
                 <TextView
                     android:id="@+id/lbl_title"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/incident_title"
                     android:textColor="@color/title_color"
@@ -46,7 +46,7 @@
 
                 <EditText
                     android:id="@+id/incident_title"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autoText="true"
                     android:capitalize="words" />
@@ -58,8 +58,8 @@
             <!-- Description layout starts -->
 
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:paddingBottom="10px" >
 
@@ -73,7 +73,7 @@
 
                 <EditText
                     android:id="@+id/incident_desc"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autoText="true"
                     android:gravity="top"
@@ -87,7 +87,7 @@
             <!-- Categories layout starts -->
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingBottom="10px" >
@@ -102,7 +102,7 @@
 
                 <Button
                     android:id="@+id/add_category"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/incident_add_category"
@@ -113,7 +113,7 @@
             <!-- Date layout starts. -->
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingBottom="10px" >
@@ -127,7 +127,7 @@
                     android:textStyle="bold" />
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
 
@@ -154,14 +154,14 @@
             <!-- Location layout starts. -->
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingBottom="10px" >
 
                 <TextView
                     android:id="@+id/incident_loc"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/incident_location"
                     android:textColor="@color/title_color"
@@ -171,7 +171,7 @@
 
                 <EditText
                     android:id="@+id/incident_location"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autoText="true"
                     android:capitalize="words"
@@ -180,14 +180,14 @@
 
                 <com.google.android.maps.MapView
                     android:id="@+id/location_map"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="250dip"
                     android:apiKey="@string/google_map_api_key"
                     android:clickable="true"
                     android:enabled="true" />
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingTop="5px" >
@@ -215,7 +215,7 @@
             <!-- Photo layout starts. -->
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingBottom="10px" >
@@ -229,14 +229,14 @@
 
                 <Button
                     android:id="@+id/btnPicture"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_add_photo"
                     android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/sel_photo_prev"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="fitCenter" />
             </LinearLayout>

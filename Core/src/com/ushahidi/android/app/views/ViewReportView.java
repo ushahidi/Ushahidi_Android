@@ -82,7 +82,6 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 				.findViewById(R.id.view_report_root);
 
 		mapView = (MapView) activity.findViewById(R.id.loc_map);
-		
 		title = (TextView) activity.findViewById(R.id.title);
 		category = (TextView) activity.findViewById(R.id.category);
 		date = (TextView) activity.findViewById(R.id.date);

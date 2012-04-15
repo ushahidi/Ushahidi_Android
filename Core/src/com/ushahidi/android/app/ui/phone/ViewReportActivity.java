@@ -242,4 +242,13 @@ public class ViewReportActivity extends
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.ushahidi.android.app.MapUserLocation#locationChanged(double, double)
+	 */
+	@Override
+	protected void locationChanged(double latitude, double longitude) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
