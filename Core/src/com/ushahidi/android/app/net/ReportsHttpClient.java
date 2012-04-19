@@ -123,7 +123,8 @@ public class ReportsHttpClient extends MainHttpClient {
 	public int PostFileUpload(String URL, HashMap<String, String> params)
 			throws IOException {
 		log("PostFileUpload(): upload file to server.");
-
+		
+		apiUtils.updateDomain();
 		entity = new MultipartEntity();
 		// Dipo Fix
 		try {

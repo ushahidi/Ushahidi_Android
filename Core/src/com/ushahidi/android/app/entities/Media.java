@@ -25,65 +25,77 @@ package com.ushahidi.android.app.entities;
  */
 public class Media implements IDbEntity {
 
-    private int id;
+	private int id;
 
-    private int checkinId;
+	private int checkinId;
 
-    private int reportId;
+	private int reportId;
 
-    private int type;
+	private int type;
 
-    private String link;
+	private int mediaId;
 
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.database.DbEntity#getDbId()
-     */
-    @Override
-    public int getDbId() {
-        return id;
-    }
+	private String link;
 
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.database.DbEntity#setDbId(java.lang.Long)
-     */
-    @Override
-    public void setDbId(int id) {
-        this.id = id;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.database.DbEntity#getDbId()
+	 */
+	@Override
+	public int getDbId() {
+		return id;
+	}
 
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.database.DbEntity#setDbId(java.lang.Long)
+	 */
+	@Override
+	public void setDbId(int id) {
+		this.id = id;
 
-    public int getCheckinId() {
-        return checkinId;
-    }
+	}
 
-    public void setCheckinId(int checkinId) {
-        this.checkinId = checkinId;
-    }
+	public int getMediaId() {
+		return this.mediaId;
+	}
 
-    public int getReportId() {
-        return this.reportId;
-    }
+	public void setMediaId(int mediaId) {
+		this.mediaId = mediaId;
+	}
 
-    public void setReportId(int reportId) {
-        this.reportId = reportId;
-    }
+	public int getCheckinId() {
+		return checkinId;
+	}
 
-    public int getType() {
-        return this.type;
-    }
+	public void setCheckinId(int checkinId) {
+		this.checkinId = checkinId;
+	}
 
-    public void setType(int type) {
-        this.type = type;
-    }
+	public int getReportId() {
+		return this.reportId;
+	}
 
-    public String getLink() {
-        return this.link;
-    }
+	public void setReportId(int reportId) {
+		this.reportId = reportId;
+	}
 
-    public void setLink(String link) {
-        this.link = link;
-    }
+	public int getType() {
+		return this.type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public String getLink() {
+		return this.link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
 
 }

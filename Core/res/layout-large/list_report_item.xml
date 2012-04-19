@@ -87,6 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/report_location"
+        android:textStyle="bold"
         android:padding="5dip"/>
 
     <ImageView

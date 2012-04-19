@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -576,7 +577,7 @@ public class ListMapActivity extends
 
 		protected Integer status;
 
-		public FetchMapReportTask(FragmentActivity activity) {
+		public FetchMapReportTask(Activity activity) {
 			super(activity, R.string.please_wait);
 			// pass custom loading message to super call
 		}
@@ -726,6 +727,14 @@ public class ListMapActivity extends
 	}
 
 	public void onStatusChanged(String provider, int status, Bundle extras) {
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ushahidi.android.app.activities.BaseListActivity#headerView()
+	 */
+	@Override
+	protected View headerView() {
+		return null;
 	}
 
 }

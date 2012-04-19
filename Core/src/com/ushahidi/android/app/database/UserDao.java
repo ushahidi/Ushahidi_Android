@@ -57,7 +57,7 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
             String.valueOf(userId)
         };
 
-        final String selection = USER_ID + " = ?";
+        final String selection = ID + " = ?";
 
         listUser = new ArrayList<User>();
 
@@ -131,14 +131,19 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
 
         User user = new User();
 
+        int idIndex;
         int userIdIndex;
         int usernameIndex;
         int userColorIndex;
 
         if (cursor != null) {
+        	if (cursor.getColumnIndex(ID) != -1) {
+                idIndex = cursor.getColumnIndexOrThrow(ID);
+                user.setDbId(cursor.getInt(idIndex));
+            }
             if (cursor.getColumnIndex(USER_ID) != -1) {
                 userIdIndex = cursor.getColumnIndexOrThrow(USER_ID);
-                user.setDbId(cursor.getInt(userIdIndex));
+                user.setUserId(cursor.getInt(userIdIndex));
             }
 
             if (cursor.getColumnIndex(USER_COLOR) != -1) {

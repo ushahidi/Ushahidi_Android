@@ -10,19 +10,18 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item
-        android:id="@+id/menu_send"
-        android:icon="@drawable/send"
-        android:orderInCategory="0"
-        android:showAsAction="always"
-        android:title="@string/save"/>
-    
-    <item
-        android:id="@+id/menu_clear"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:orderInCategory="1"
-        android:showAsAction="never"
-        android:title="@string/cancel"/>
-    
-</menu>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical"
+    android:padding="10dip" >
+
+    <EditText
+        android:id="@+id/filter_report"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/search_reports"
+        android:inputType="textMultiLine" />
+
+</LinearLayout>

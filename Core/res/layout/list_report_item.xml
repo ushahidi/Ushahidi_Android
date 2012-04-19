@@ -89,6 +89,7 @@
         android:layout_toLeftOf="@+id/report_arrow"
         android:layout_toRightOf="@+id/report_thumbnail"
         android:paddingLeft="3dip"
+        android:textStyle="bold"
         android:textColor="@color/verified_text_color" />
 
     <ImageView

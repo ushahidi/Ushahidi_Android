@@ -55,7 +55,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao, IMediaSche
                 String.valueOf(checkinId), String.valueOf(IMAGE)
         };
 
-        final String selection = CHECKIN_ID + " =? AND " + TYPE + " =?";
+        final String selection = ID + " =? AND " + TYPE + " =?";
         cursor = super.query(TABLE, MEDIA_COLUMNS, selection, selectionArgs, null);
         if (cursor != null) {
             cursor.moveToFirst();
@@ -250,7 +250,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao, IMediaSche
 
     private void setContentValue(Media media) {
         initialValues = new ContentValues();
-        initialValues.put(ID, media.getDbId());
+        initialValues.put(MEDIA_ID, media.getMediaId());
         initialValues.put(REPORT_ID, media.getReportId());
         initialValues.put(CHECKIN_ID, media.getCheckinId());
         initialValues.put(TYPE, media.getType());

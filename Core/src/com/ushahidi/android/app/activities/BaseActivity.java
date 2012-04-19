@@ -22,6 +22,7 @@ package com.ushahidi.android.app.activities;
 
 import java.lang.reflect.InvocationTargetException;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ import android.widget.Toast;
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.util.Objects;
 import com.ushahidi.android.app.views.View;
 
 /**
@@ -99,7 +101,7 @@ public abstract class BaseActivity<V extends View> extends FragmentActivity {
 			setContentView(layout);
 		}
 
-		view = createInstance(viewClass, FragmentActivity.class, this);
+		view = Objects.createInstance(viewClass, Activity.class, this);
 	}
 
 	@Override

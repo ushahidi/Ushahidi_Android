@@ -40,7 +40,7 @@
                     android:id="@+id/lbl_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/incident_title"
+                    android:text="@string/title"
                     android:textColor="@color/title_color"
                     android:textStyle="bold" />
 
@@ -67,7 +67,7 @@
                     android:id="@+id/lbl_incidents_dec"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/incident_description"
+                    android:text="@string/description"
                     android:textColor="@color/title_color"
                     android:textStyle="bold" />
 
@@ -96,7 +96,7 @@
                     android:id="@+id/lbl_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/incident_category"
+                    android:text="@string/category"
                     android:textColor="@color/title_color"
                     android:textStyle="bold" />
 
@@ -122,7 +122,7 @@
                     android:id="@+id/lbl_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/incident_datetime"
+                    android:text="@string/date_and_time"
                     android:textColor="@color/title_color"
                     android:textStyle="bold" />
 
@@ -163,7 +163,7 @@
                     android:id="@+id/incident_loc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/incident_location"
+                    android:text="@string/location"
                     android:textColor="@color/title_color"
                     android:textStyle="bold" />
 
@@ -223,7 +223,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/incident_photos"
+                    android:text="@string/photos"
                     android:textColor="@color/title_color"
                     android:textStyle="bold" />
 
@@ -241,6 +241,30 @@
                     android:scaleType="fitCenter" />
             </LinearLayout>
             <!-- Photo layout ends. -->
+            
+            <!-- News layout starts. -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10px" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/news"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold" />
+
+               
+                    <EditText
+                        android:id="@+id/report_news"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/enter_news_url"
+                        android:inputType="textWebEditText" />
+            </LinearLayout>
+            <!-- News layout ends. -->
 
         </LinearLayout>
         <!-- Parent layout ends. -->

@@ -24,6 +24,8 @@ public interface ICategorySchema {
 
 	public static final String ID = "_id";
 
+	public static final String CATEGORY_ID = "category_id";
+
 	public static final String TITLE = "category_title";
 
 	public static final String DESCRIPTION = "category_desc";
@@ -32,13 +34,24 @@ public interface ICategorySchema {
 
 	public static final String POSITION = "position";
 
-	public static final String[] COLUMNS = new String[] { ID, TITLE,
-			DESCRIPTION, COLOR, POSITION };
+	public static final String[] COLUMNS = new String[] { ID, CATEGORY_ID,
+			TITLE, DESCRIPTION, COLOR, POSITION };
 
 	public static final String TABLE = "categories";
 
 	public static final String CATEGORIES_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
-			+ TABLE+ " ("+ ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
-			+ TITLE+ " TEXT NOT NULL, "+ DESCRIPTION+ " TEXT, "+ COLOR+ " TEXT, " 
-			+ POSITION + " INTEGER " + ")";
+			+ TABLE
+			+ " ("
+			+ ID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ CATEGORY_ID
+			+ " INTEGER , "
+			+ TITLE
+			+ " TEXT NOT NULL, "
+			+ DESCRIPTION
+			+ " TEXT, "
+			+ COLOR
+			+ " TEXT, "
+			+ POSITION
+			+ " INTEGER " + ")";
 }

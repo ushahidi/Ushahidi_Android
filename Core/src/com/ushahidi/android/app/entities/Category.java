@@ -33,6 +33,8 @@ public class Category extends Model implements IDbEntity {
 	private String categoryColor = "";
 
 	private int categoryPosition = 0;
+	
+	private int categoryId = 0;
 
 	public String getCategoryTitle() {
 		return categoryTitle;
@@ -79,6 +81,14 @@ public class Category extends Model implements IDbEntity {
 	@Override
 	public int getDbId() {
 		return id;
+	}
+	
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
+	}
+	
+	public int getCategoryId() {
+		return this.categoryId;
 	}
 
 	/*

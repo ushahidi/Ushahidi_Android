@@ -116,6 +116,7 @@ public class CategorySpinnerAdater extends BaseArrayAdapter<Category> {
 			cat.setCategoryTitle(context.getString(R.string.all_categories));
 			cat.setCategoryPosition(0);
 			cat.setDbId(0);
+			cat.setCategoryId(0);
 			cat.setCategoryColor("000000");
 			add(cat.getCategoryTitle(), cat);
 			for (Category category : mListReportModel.getCategories(context)) {

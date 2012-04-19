@@ -31,6 +31,7 @@ public class User implements IDbEntity {
 
     private String userColor;
 
+    private int userId;
     /*
      * (non-Javadoc)
      * @see com.ushahidi.android.app.entities.IDbEntity#getDbId()
@@ -47,6 +48,14 @@ public class User implements IDbEntity {
     @Override
     public void setDbId(int id) {
         this.id = id;
+    }
+    
+    public int getUserId() {
+    	return this.userId;
+    }
+    
+    public void setUserId(int userId) {
+    	this.userId = userId;
     }
 
     public String getUsername() {

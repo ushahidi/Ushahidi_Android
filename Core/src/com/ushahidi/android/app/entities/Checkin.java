@@ -28,6 +28,8 @@ public class Checkin implements IDbEntity {
     private int id;
 
     private int userId;
+    
+    private int checkinId;
 
     private String message;
 
@@ -55,6 +57,14 @@ public class Checkin implements IDbEntity {
     @Override
     public void setDbId(int id) {
         this.id = id;
+    }
+    
+    public void setCheckinId(int checkinId) {
+    	this.checkinId = checkinId;
+    }
+    
+    public int getCheckinId() {
+    	return this.checkinId;
     }
 
     public int getUserId() {

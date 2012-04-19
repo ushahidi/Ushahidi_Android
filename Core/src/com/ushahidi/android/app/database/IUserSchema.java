@@ -25,19 +25,27 @@ package com.ushahidi.android.app.database;
  */
 public interface IUserSchema {
 
-    public static final String USER_TABLE = "users";
-    
-    public static final String USER_ID = "_id";
+	public static final String USER_TABLE = "users";
 
-    public static final String USER_NAME = "user_name";
+	public static final String ID = "_id";
 
-    public static final String USER_COLOR = "user_color";
-    
-    public static final String USER_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + USER_TABLE
-    + " (" + USER_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + USER_NAME
-    + " TEXT NOT NULL, " + USER_COLOR + " TEXT" + ")";
+	public static final String USER_ID = "user_id";
 
-    public static final String[] USER_COLUMNS = new String[] {
-            USER_ID, USER_NAME, USER_COLOR
-    };
+	public static final String USER_NAME = "user_name";
+
+	public static final String USER_COLOR = "user_color";
+
+	public static final String USER_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
+			+ USER_TABLE
+			+ " ("
+			+ ID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ USER_ID
+			+ " INTEGER , "
+			+ USER_NAME
+			+ " TEXT NOT NULL, "
+			+ USER_COLOR + " TEXT" + ")";
+
+	public static final String[] USER_COLUMNS = new String[] { ID, USER_ID,
+			USER_NAME, USER_COLOR };
 }

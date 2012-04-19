@@ -31,7 +31,9 @@ public interface IMediaSchema {
 
     // Checkins media
     public static final String ID = "_id";
-
+    
+    public static final String MEDIA_ID = "media_id";
+    
     public static final String CHECKIN_ID = "media_checkin_id";
 
     public static final String REPORT_ID = "media_report_id";
@@ -42,11 +44,11 @@ public interface IMediaSchema {
 
     // Checkin Media
     public static final String[] MEDIA_COLUMNS = new String[] {
-            ID, CHECKIN_ID, REPORT_ID, TYPE, LINK
+            ID, MEDIA_ID,CHECKIN_ID, REPORT_ID, TYPE, LINK
     };
 
     public static final String MEDIA_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE + " ("
-            + ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + CHECKIN_ID + " INTEGER, "
+            +ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ MEDIA_ID + " INTEGER , " + CHECKIN_ID + " INTEGER, "
             + REPORT_ID + " INTEGER, " + TYPE + " INTEGER, " + LINK + " TEXT " + ")";
     
     public static final int IMAGE = 1;

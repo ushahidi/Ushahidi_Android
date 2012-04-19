@@ -40,7 +40,7 @@ import com.ushahidi.android.app.adapters.ListVideoAdapter;
 /**
  * @author eyedol
  */
-public class ViewReportView extends com.ushahidi.android.app.views.View {
+public class ViewReportViews extends com.ushahidi.android.app.views.View {
 
 	private TextView title;
 
@@ -78,7 +78,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
 	private LayoutInflater inflater;
 
-	public ViewReportView(Activity activity) {
+	public ViewReportViews(Activity activity) {
 		super(activity);
 		this.context = activity;
 		this.inflater = (LayoutInflater) activity
@@ -123,7 +123,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
 	}
 
-	public ViewReportView(ViewGroup activity, Context context) {
+	public ViewReportViews(ViewGroup activity, Context context) {
 		super(activity);
 		this.context = context;
 

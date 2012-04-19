@@ -20,7 +20,7 @@
 
 package com.ushahidi.android.app.views;
 
-import android.support.v4.app.FragmentMapActivity;
+import android.app.Activity;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -47,6 +47,8 @@ public class AddReportView extends View {
 	public EditText mLongitude;
 
 	public TextView mActivityTitle;
+	
+	public EditText mNews;
 
 	public Button mBtnSend;
 
@@ -60,7 +62,7 @@ public class AddReportView extends View {
 
 	public MapView mapView;
 
-	public AddReportView(FragmentMapActivity activity) {
+	public AddReportView(Activity activity) {
 		super(activity);
 
 		mBtnPicture = (Button) activity.findViewById(R.id.btnPicture);
@@ -74,6 +76,7 @@ public class AddReportView extends View {
 		mIncidentLocation = (EditText) activity
 				.findViewById(R.id.incident_location);
 		mIncidentDesc = (EditText) activity.findViewById(R.id.incident_desc);
+		mNews = (EditText) activity.findViewById(R.id.report_news);
 		this.mapView = (MapView) activity.findViewById(R.id.location_map);
 	}
 

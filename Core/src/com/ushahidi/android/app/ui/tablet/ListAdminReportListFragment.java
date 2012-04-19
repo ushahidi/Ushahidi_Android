@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.models.ListReportModel;
@@ -36,10 +37,10 @@ import com.ushahidi.android.app.views.ListReportView;
  * @author eyedol
  */
 public class ListAdminReportListFragment extends
-		BaseListFragment<ListReportView, ListReportModel, ListReportAdapter> {
+		BaseListFragment<ListReportView, ListReportModel, ListFetchedReportAdapter> {
 
 	public ListAdminReportListFragment() {
-		super(ListReportView.class, ListReportAdapter.class,
+		super(ListReportView.class, ListFetchedReportAdapter.class,
 				R.layout.list_report, R.menu.list_report, android.R.id.list);
 	}
 
@@ -105,6 +106,15 @@ public class ListAdminReportListFragment extends
 	protected void onLoaded(boolean success) {
 		// TODO Auto-generated method stub
 
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ushahidi.android.app.fragments.BaseListFragment#headerView()
+	 */
+	@Override
+	protected View headerView() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

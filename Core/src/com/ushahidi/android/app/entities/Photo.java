@@ -17,35 +17,54 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
+package com.ushahidi.android.app.entities;
 
-package com.ushahidi.android.app.database;
+import com.ushahidi.android.app.models.Model;
 
 /**
- * Defines the schema for report category table.
- * 
  * @author eyedol
+ * 
  */
-public interface IReportCategorySchema {
+public class Photo extends Model implements IDbEntity {
 
-	public static String TABLE = "report_category";
+	private int id;
 
-	public static String ID = "_id";
+	private String photo;
 
-	public static String REPORT_ID = "report_id";
+	@Override
+	public int getDbId() {
+		return id;
+	}
 
-	public static String CATEGORY_ID = "category_id";
+	@Override
+	public void setDbId(int id) {
+		this.id = id;
 
-	public static final String REPORT_CATEGORY_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
-			+ TABLE
-			+ " ("
-			+ ID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ CATEGORY_ID
-			+ " INTEGER NOT NULL, "
-			+ REPORT_ID
-			+ " INTEGER NOT NULL )";
+	}
 
-	public static final String[] COLUMNS = new String[] { ID, CATEGORY_ID,
-			REPORT_ID, CATEGORY_ID };
+	public String getPhoto() {
+		return this.photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+
+	@Override
+	public boolean load() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.models.Model#save()
+	 */
+	@Override
+	public boolean save() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

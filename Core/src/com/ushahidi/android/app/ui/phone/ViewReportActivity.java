@@ -33,7 +33,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseMapViewActivity;
-import com.ushahidi.android.app.entities.Category;
+import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
+import com.ushahidi.android.app.adapters.ListReportAdapter;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.models.ViewReportModel;
 import com.ushahidi.android.app.views.ViewReportView;
@@ -47,6 +48,8 @@ public class ViewReportActivity extends
 	private ListReportModel reports;
 
 	private List<ListReportModel> report;
+
+	private ListFetchedReportAdapter reportAdapter;
 
 	private int position;
 
@@ -66,8 +69,6 @@ public class ViewReportActivity extends
 		super.onCreate(savedInstanceState);
 
 		reports = new ListReportModel();
-		view = new ViewReportView(this);
-
 		this.categoryId = getIntent().getExtras().getInt("category", 0);
 		this.position = getIntent().getExtras().getInt("id", 0);
 
@@ -76,8 +77,16 @@ public class ViewReportActivity extends
 		} else {
 			reports.load();
 		}
-		initReport(this.position);
+		
+		//because of header view, decrease position by one
+		initReport(this.position - 1);
 
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		stopLocating();
 	}
 
 	@Override
@@ -119,29 +128,18 @@ public class ViewReportActivity extends
 	}
 
 	private String fetchCategories(int reportId) {
-		StringBuilder categories = new StringBuilder();
-		for (Category category : reports.getCategoriesByReportId(reportId)) {
-			if (category.getCategoryTitle().length() > 0) {
-				categories.append(category.getCategoryTitle() + "|");
-			}
-
-		}
-
-		// delete the last |
-		if (categories.length() > 0) {
-			categories.deleteCharAt(categories.length() - 1);
-		}
-		return categories.toString();
+		reportAdapter = new ListFetchedReportAdapter(this);
+		return reportAdapter.fetchCategories(reportId);
 	}
 
 	private void initReport(int position) {
 		report = reports.getReports(this);
 
 		if (report != null) {
-			reportId = (int) report.get(position).getId();
+			reportId = (int) report.get(position).getReportId();
 
 			reportTitle = report.get(position).getTitle();
-			
+
 			view.setBody(report.get(position).getDesc());
 			view.setCategory(fetchCategories(reportId));
 			view.setLocation(report.get(position).getLocation());
@@ -242,13 +240,16 @@ public class ViewReportActivity extends
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ushahidi.android.app.MapUserLocation#locationChanged(double, double)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.MapUserLocation#locationChanged(double,
+	 * double)
 	 */
 	@Override
 	protected void locationChanged(double latitude, double longitude) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

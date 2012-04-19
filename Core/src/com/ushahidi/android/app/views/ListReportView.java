@@ -21,53 +21,25 @@
 package com.ushahidi.android.app.views;
 
 import android.app.Activity;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
 
-public class ListReportView extends com.ushahidi.android.app.views.View {
+public class ListReportView extends View {
 
 	private ArrayAdapter<String> spinnerArrayAdapter;
-
-	private ListView listReport;
-
-	private TextView emptyListText;
-
-	private TextView mTextView;
 
 	public TextView footerText;
 
 	public ListReportView(Activity activity) {
 		super(activity);
-		listReport = (ListView) activity.findViewById(android.R.id.list);
-		emptyListText = (TextView) activity.findViewById(android.R.id.empty);
-		mTextView = (TextView) activity.findViewById(R.id.search_report);
+		
 		footerText = (TextView) activity.findViewById(R.id.footer_text);
-		//footerText.setText(R.string.all_categories);
-	}
-
-	public void displayEmptyListText() {
-		if (listReport.getCount() == 0) {
-			emptyListText.setVisibility(View.VISIBLE);
-		} else {
-			emptyListText.setVisibility(View.GONE);
-		}
-
 	}
 
 	public ArrayAdapter<String> getArrayAdapter() {
 		return spinnerArrayAdapter;
-	}
-
-	public ListView getPullToRefreshListView() {
-		return listReport;
-	}
-
-	public TextView getFilterReportView() {
-		return mTextView;
 	}
 
 }

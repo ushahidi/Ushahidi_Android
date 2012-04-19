@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +16,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.ListFragment;
 import android.support.v4.view.MenuItem;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -343,7 +343,8 @@ public class ListMapFragment extends
 				listener.onMapSelected(sId);
 			}
 		} else {
-			FetchMapReportTask fetchMapReportTask = new FetchMapReportTask(this);
+			FetchMapReportTask fetchMapReportTask = new FetchMapReportTask(
+					getActivity());
 			fetchMapReportTask.id = sId;
 			fetchMapReportTask.execute((String) null);
 			if (fetchMapReportTask.getStatus() == android.os.AsyncTask.Status.FINISHED) {
@@ -366,7 +367,8 @@ public class ListMapFragment extends
 				listener.onMapSelected(sId);
 			}
 		} else {
-			FetchMapReportTask fetchMapReportTask = new FetchMapReportTask(this);
+			FetchMapReportTask fetchMapReportTask = new FetchMapReportTask(
+					getActivity());
 			fetchMapReportTask.id = sId;
 			fetchMapReportTask.execute((String) null);
 			if (fetchMapReportTask.getStatus() == android.os.AsyncTask.Status.FINISHED) {
@@ -619,11 +621,11 @@ public class ListMapFragment extends
 
 		protected Location location;
 
-		public LoadMapTask(ListFragment activity) {
+		public LoadMapTask(Activity activity) {
 			super(activity, R.string.loading_);
 			// switch to a progress animation
 			refreshState = true;
-			maps = new MapsHttpClient(activity.getActivity());
+			maps = new MapsHttpClient(activity);
 		}
 
 		@Override
@@ -674,7 +676,7 @@ public class ListMapFragment extends
 
 		protected Integer status;
 
-		public FetchMapReportTask(ListFragment activity) {
+		public FetchMapReportTask(Activity activity) {
 			super(activity, R.string.please_wait);
 			// pass custom loading message to super call
 		}
@@ -737,7 +739,7 @@ public class ListMapFragment extends
 				} else {
 					toastLong(R.string.could_not_fetch_reports);
 				}
-				
+
 			} else {
 				toastLong(R.string.could_not_fetch_reports);
 			}
@@ -811,7 +813,7 @@ public class ListMapFragment extends
 	public void onLocationChanged(Location loc) {
 		if (loc != null) {
 			location = loc;
-			LoadMapTask deploymentTask = new LoadMapTask(this);
+			LoadMapTask deploymentTask = new LoadMapTask(getActivity());
 			deploymentTask.location = location;
 			deploymentTask.distance = distance;
 			deploymentTask.execute();
@@ -827,6 +829,15 @@ public class ListMapFragment extends
 	}
 
 	public void onStatusChanged(String provider, int status, Bundle extras) {
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ushahidi.android.app.fragments.BaseListFragment#headerView()
+	 */
+	@Override
+	protected View headerView() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

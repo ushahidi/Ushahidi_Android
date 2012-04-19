@@ -25,10 +25,12 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Media;
+import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.util.Util;
 
 /**
@@ -36,35 +38,10 @@ import com.ushahidi.android.app.util.Util;
  */
 public class ListReportPhotoModel extends Model {
 
-	private int id;
-
-	private String photo;
-
 	private List<Media> mMedia;
 
-	private List<ListReportPhotoModel> mPhotoModel;
+	private List<Photo> mPhotoModel;
 
-	public int getId() {
-		return this.id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getPhoto() {
-		return this.photo;
-	}
-
-	public void setPhoto(String photo) {
-		this.photo = photo;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ushahidi.android.app.models.Model#load(android.content.Context)
-	 */
 	@Override
 	public boolean load() {
 		return false;
@@ -78,32 +55,32 @@ public class ListReportPhotoModel extends Model {
 		return false;
 	}
 
-	public List<ListReportPhotoModel> getPhotos() {
-		mPhotoModel = new ArrayList<ListReportPhotoModel>();
+	public List<Photo> getPhotos() {
+		mPhotoModel = new ArrayList<Photo>();
 
 		if (mMedia != null && mMedia.size() > 0) {
-			ListReportPhotoModel photoModel = new ListReportPhotoModel();
-			photoModel.setId(mMedia.get(0).getDbId());
-			photoModel.setPhoto(mMedia.get(0).getLink());
-			mPhotoModel.add(photoModel);
+			Photo photo = new Photo();
+			photo.setDbId(mMedia.get(0).getDbId());
+			photo.setPhoto(mMedia.get(0).getLink());
+			mPhotoModel.add(photo);
 
 		}
 
 		return mPhotoModel;
 	}
 
-	public List<ListReportPhotoModel> getPhotosByReportId(int reportId) {
+	public List<Photo> getPhotosByReportId(int reportId) {
 
-		mPhotoModel = new ArrayList<ListReportPhotoModel>();
+		mPhotoModel = new ArrayList<Photo>();
 		mMedia = Database.mMediaDao.fetchReportPhoto(reportId);
-
+		Log.i("ListReportPhotoModel ","Photo: "+reportId);
 		if (mMedia != null && mMedia.size() > 0) {
 
 			for (Media item : mMedia) {
-				ListReportPhotoModel photoModel = new ListReportPhotoModel();
-				photoModel.setId(item.getDbId());
-				photoModel.setPhoto(item.getLink());
-				mPhotoModel.add(photoModel);
+				Photo photo = new Photo();
+				photo.setDbId(item.getDbId());
+				photo.setPhoto(item.getLink());
+				mPhotoModel.add(photo);
 			}
 
 		}

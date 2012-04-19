@@ -13,9 +13,8 @@ import android.support.v4.view.MenuItem;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.google.android.maps.GeoPoint;

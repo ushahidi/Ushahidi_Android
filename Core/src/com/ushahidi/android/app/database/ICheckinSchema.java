@@ -25,32 +25,48 @@ package com.ushahidi.android.app.database;
  */
 public interface ICheckinSchema {
 
-    public static final String CHECKINS_TABLE = "checkins";
+	public static final String CHECKINS_TABLE = "checkins";
 
-    public static final String CHECKIN_ID = "_id";
+	public static final String ID = "_id";
 
-    public static final String CHECKIN_USER_ID = "user_id";
+	public static final String CHECKIN_ID = "checkin_id";
 
-    public static final String CHECKIN_MESG = "checkin_mesg";
+	public static final String CHECKIN_USER_ID = "user_id";
 
-    public static final String CHECKIN_DATE = "checkin_date";
+	public static final String CHECKIN_MESG = "checkin_mesg";
 
-    public static final String CHECKIN_LOC_NAME = "checki_loc_name";
+	public static final String CHECKIN_DATE = "checkin_date";
 
-    public static final String CHECKIN_LOC_LATITUDE = "checkin_loc_latitude";
+	public static final String CHECKIN_LOC_NAME = "checki_loc_name";
 
-    public static final String CHECKIN_LOC_LONGITUDE = "checkin_loc_longitude";
+	public static final String CHECKIN_LOC_LATITUDE = "checkin_loc_latitude";
 
-    // Checkins messages
-    public static final String[] CHECKINS_COLUMNS = new String[] {
-            CHECKIN_ID, CHECKIN_USER_ID, CHECKIN_MESG, CHECKIN_DATE, CHECKIN_LOC_NAME,
-            CHECKIN_LOC_LATITUDE, CHECKIN_LOC_LONGITUDE
-    };
+	public static final String CHECKIN_LOC_LONGITUDE = "checkin_loc_longitude";
 
-    public static final String CHECKINS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
-            + CHECKINS_TABLE + " (" + CHECKIN_ID + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, "
-            + CHECKIN_USER_ID + " INTEGER, " + CHECKIN_MESG + " TEXT NOT NULL, " + CHECKIN_DATE
-            + " DATE NOT NULL, " + CHECKIN_LOC_NAME + " TEXT NOT NULL, " + CHECKIN_LOC_LATITUDE
-            + " TEXT NOT NULL, " + CHECKIN_LOC_LONGITUDE + " TEXT NOT NULL" + ")";
+	// Checkins messages
+	public static final String[] CHECKINS_COLUMNS = new String[] { ID,
+			CHECKIN_ID, CHECKIN_USER_ID, CHECKIN_MESG, CHECKIN_DATE,
+			CHECKIN_LOC_NAME, CHECKIN_LOC_LATITUDE, CHECKIN_LOC_LONGITUDE };
+
+	public static final String CHECKINS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
+			+ CHECKINS_TABLE
+			+ " ("
+			+ ID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ CHECKIN_ID
+			+ " INTEGER , "
+			+ CHECKIN_USER_ID
+			+ " INTEGER, "
+			+ CHECKIN_MESG
+			+ " TEXT NOT NULL, "
+			+ CHECKIN_DATE
+			+ " DATE NOT NULL, "
+			+ CHECKIN_LOC_NAME
+			+ " TEXT NOT NULL, "
+			+ CHECKIN_LOC_LATITUDE
+			+ " TEXT NOT NULL, "
+			+ CHECKIN_LOC_LONGITUDE
+			+ " TEXT NOT NULL"
+			+ ")";
 
 }

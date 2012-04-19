@@ -36,11 +36,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
+import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
+import com.ushahidi.android.app.adapters.ListPendingReportAdapter;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
-import com.ushahidi.android.app.fragments.BaseListFragment;
+import com.ushahidi.android.app.fragments.BaseSectionListFragment;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
@@ -53,16 +56,13 @@ import com.ushahidi.android.app.views.ListReportView;
 /**
  * @author eyedol
  */
-public class ListReportFragment extends
-		BaseListFragment<ListReportView, ListReportModel, ListReportAdapter> {
+public class ListReportFragment
+		extends
+		BaseSectionListFragment<ListReportView, ListReportModel, ListReportAdapter> {
 
 	private int mPositionChecked = 0;
 
 	private int mPositionShown = 1;
-
-	public ListReportView mListReportView;
-
-	public ListReportAdapter mListReportAdapter;
 
 	private Handler mHandler;
 
@@ -86,6 +86,12 @@ public class ListReportFragment extends
 
 	private ApiUtils apiUtils;
 
+	private ListFetchedReportAdapter fetchedReportAdapter;
+
+	private ListPendingReportAdapter pendingReportAdapter;
+
+	private TextView categories;
+
 	public ListReportFragment() {
 		super(ListReportView.class, ListReportAdapter.class,
 				R.layout.list_report, R.menu.list_report, android.R.id.list);
@@ -94,6 +100,7 @@ public class ListReportFragment extends
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 	}
 
 	@Override
@@ -101,40 +108,72 @@ public class ListReportFragment extends
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
 
-		mListReportView = new ListReportView(getActivity());
-		mListReportAdapter = new ListReportAdapter(getActivity());
 		mHandler = new Handler();
 		apiUtils = new ApiUtils(getActivity());
-		mListReportView.getFilterReportView().addTextChangedListener(
-				new TextWatcher() {
+		fetchedReportAdapter = new ListFetchedReportAdapter(getActivity());
+		pendingReportAdapter = new ListPendingReportAdapter(getActivity());
 
-					public void afterTextChanged(Editable arg0) {
-
-					}
-
-					public void beforeTextChanged(CharSequence s, int start,
-							int count, int after) {
-
-					}
-
-					public void onTextChanged(CharSequence s, int start,
-							int before, int count) {
-
-						if (!(TextUtils.isEmpty(s.toString()))) {
-							filterTitle = s;
-							mHandler.post(filterReportList);
-						}
-
-					}
-
-				});
-
+		// add pending upload
+		if (pendingReportAdapter.getCount() > 0) {
+			adapter.addView(pendingHeader());
+			adapter.addAdapter(pendingReportAdapter);
+			// add fetched report
+			adapter.addView(fetchedHeader());
+		}
+		adapter.addAdapter(fetchedReportAdapter);
 		if (savedInstanceState != null) {
 			// Restore last state for checked position.
 			mPositionChecked = savedInstanceState.getInt("curChoice", 0);
 			mPositionShown = savedInstanceState.getInt("shownChoice", -1);
 		}
 
+	}
+
+	private View pendingHeader() {
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		ViewGroup viewGroup = (ViewGroup) inflater.inflate(
+				R.layout.list_pending_header, getListView(), false);
+		return viewGroup;
+	}
+
+	private View fetchedHeader() {
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		ViewGroup viewGroup = (ViewGroup) inflater.inflate(
+				R.layout.list_fetched_header, getListView(), false);
+		categories = (TextView) viewGroup
+				.findViewById(R.id.list_header_fetched);
+		return viewGroup;
+	}
+
+	protected View headerView() {
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		ViewGroup viewGroup = (ViewGroup) inflater.inflate(
+				R.layout.list_report_header, getListView(), false);
+		TextView textView = (TextView) viewGroup
+				.findViewById(R.id.filter_report);
+		textView.addTextChangedListener(new TextWatcher() {
+
+			public void afterTextChanged(Editable arg0) {
+
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+
+				if (!(TextUtils.isEmpty(s.toString()))) {
+					filterTitle = s;
+					mHandler.post(filterReportList);
+				}
+
+			}
+
+		});
+		return viewGroup;
 	}
 
 	@Override
@@ -168,8 +207,16 @@ public class ListReportFragment extends
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		l.setItemChecked(position, true);
-
-		launchViewReport(position);
+		if( fetchedReportAdapter == adapter.getAdapter(position) ) {
+			//fetchedReportAdapter.getItem
+			//toastLong("item at: "+fetchedReportAdapter.getItem(position).getTitle()+" ID: "+id);
+			launchViewReport(position);
+		}
+		log("getPositionForSection: "+adapter.getPositionForSection(position));
+		log("getSectionForPosition: "+adapter.getSectionForPosition(position));
+		log("getItemPosition:1  "+adapter.getSectionForPosition(adapter.getPositionForSection(position)));
+		log("getItemSection:2 "+adapter.getPositionForSection(adapter.getSectionForPosition(position)));
+		
 	}
 
 	public void setListMapListener(ListMapFragmentListener listener) {
@@ -207,11 +254,7 @@ public class ListReportFragment extends
 	final Runnable fetchReportList = new Runnable() {
 		public void run() {
 			try {
-				mListReportAdapter.refresh();
-				mListReportView.getPullToRefreshListView().setAdapter(
-						mListReportAdapter);
-				mListReportView.displayEmptyListText();
-				getListView().setTextFilterEnabled(true);
+				refreshReportLists();
 				showCategories();
 			} catch (Exception e) {
 				return;
@@ -225,10 +268,7 @@ public class ListReportFragment extends
 	final Runnable fetchReportListByCategory = new Runnable() {
 		public void run() {
 			try {
-				mListReportAdapter.refresh(filterCategory);
-				mListReportView.getPullToRefreshListView().setAdapter(
-						mListReportAdapter);
-				mListReportView.displayEmptyListText();
+				reportByCategoryList();
 			} catch (Exception e) {
 				return;
 			}
@@ -241,16 +281,27 @@ public class ListReportFragment extends
 	final Runnable filterReportList = new Runnable() {
 		public void run() {
 			try {
-				mListReportAdapter.getFilter().filter(filterTitle);
+
+				filterReportList();
 			} catch (Exception e) {
 				return;
 			}
 		}
 	};
 
-	public void refreshMapLists() {
-		mListReportAdapter.refresh();
-		mListReportView.displayEmptyListText();
+	private void refreshReportLists() {
+		fetchedReportAdapter.refresh();
+		pendingReportAdapter.refresh();
+	}
+
+	private void filterReportList() {
+		fetchedReportAdapter.getFilter().filter(filterTitle);
+		pendingReportAdapter.getFilter().filter(filterTitle);
+	}
+
+	private void reportByCategoryList() {
+		fetchedReportAdapter.refresh(filterCategory);
+		pendingReportAdapter.refresh(filterCategory);
 	}
 
 	private void showDropDownNav() {
@@ -265,10 +316,12 @@ public class ListReportFragment extends
 									int which) {
 
 								filterCategory = spinnerArrayAdapter.getTag(
-										which).getDbId();
+										which).getCategoryId();
 								final String all = spinnerArrayAdapter.getTag(
 										which).getCategoryTitle();
-								mListReportView.footerText.setText(all);
+								view.footerText.setText(all);
+								if (categories != null)
+									categories.setText(all);
 								if ((all != null)
 										&& (!TextUtils.isEmpty(all))
 										&& (all != getActivity().getString(
@@ -401,7 +454,6 @@ public class ListReportFragment extends
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			log("onPostExecute33  " + status);
 			if (result) {
 				log("fetching ");
 				if (status == 4) {
@@ -414,10 +466,7 @@ public class ListReportFragment extends
 					toastLong(R.string.could_not_fetch_reports);
 				} else if (status == 0) {
 					log("successfully fetched");
-					mListReportAdapter.refresh();
-					mListReportView.getPullToRefreshListView().setAdapter(
-							mListReportAdapter);
-					mListReportView.displayEmptyListText();
+					refreshReportLists();
 					showCategories();
 					refreshState = false;
 					updateRefreshStatus();
@@ -448,5 +497,4 @@ public class ListReportFragment extends
 		Intent i = new Intent(getActivity(), AddReportActivity.class);
 		startActivityForResult(i, 1);
 	}
-
 }

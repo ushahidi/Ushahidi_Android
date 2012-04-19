@@ -20,6 +20,8 @@
 
 package com.ushahidi.android.app.activities;
 
+import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -27,17 +29,17 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.support.v4.app.FragmentMapActivity;
 import android.support.v4.view.Menu;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
+import com.ushahidi.android.app.MapMarker;
 import com.ushahidi.android.app.MapUserLocation;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.MapMarker;
+import com.ushahidi.android.app.util.Objects;
 import com.ushahidi.android.app.views.View;
 
 /**
@@ -106,6 +108,7 @@ public abstract class BaseMapActivity<V extends View> extends
 		super.onCreate(savedInstanceState);
 		if (layout != 0) {
 			setContentView(layout);
+			
 		}
 		if (mapViewId != 0) {
 			mapView = (MapView) findViewById(mapViewId);
@@ -115,7 +118,7 @@ public abstract class BaseMapActivity<V extends View> extends
 			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		}
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+		view = Objects.createInstance(viewClass, Activity.class, this);
 	}
 
 	@Override

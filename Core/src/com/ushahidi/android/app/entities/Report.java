@@ -20,149 +20,168 @@
 
 package com.ushahidi.android.app.entities;
 
-
 public class Report implements IDbEntity {
 
-    private int id;
+	private int id;
 
-    private String title;
+	private String title;
 
-    private String description;
+	private String description;
 
-    private String date;
+	private String date;
 
-    private String mode;
+	private String mode;
 
-    private String verified;
+	private String verified;
 
-    private String locationname;
+	private String locationname;
 
-    private String latitude;
+	private String latitude;
 
-    private String longitude;
+	private String longitude;
 
-    private String categories;
+	private String categories;
 
-    private String media;
+	private String media;
 
-    private String image;
+	private String image;
 
-    public Report() {
+	private int reportId = 0;
+	
+	private int pending = 0;
 
-    }
+	public Report() {
 
-    public Report(String title, String description, String reportdate, String mode,
-            String verified, String locationame, String latitude, String longitude,
-            String categories, String media, String image) {
-        this.title = title;
-        this.description = description;
-        this.date = reportdate;
-        this.mode = mode;
-        this.verified = verified;
-        this.locationname = locationame;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.categories = categories;
-        this.media = media;
-        this.image = image;
+	}
 
-    }
+	public Report(String title, String description, String reportdate,
+			String mode, String verified, String locationame, String latitude,
+			String longitude, String categories, String media, String image) {
+		this.title = title;
+		this.description = description;
+		this.date = reportdate;
+		this.mode = mode;
+		this.verified = verified;
+		this.locationname = locationame;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.categories = categories;
+		this.media = media;
+		this.image = image;
 
-    @Override
-    public int getDbId() {
-        return id;
-    }
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	@Override
+	public int getDbId() {
+		return id;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public String getReportDate() {
-        return date;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setReportDate(String reportdate) {
-        this.date = reportdate;
-    }
+	public String getReportDate() {
+		return date;
+	}
 
-    public String getMode() {
-        return mode;
-    }
+	public void setReportDate(String reportdate) {
+		this.date = reportdate;
+	}
 
-    public void setMode(String mode) {
-        this.mode = mode;
-    }
+	public String getMode() {
+		return mode;
+	}
 
-    public String getVerified() {
-        return verified;
-    }
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
 
-    public void setVerified(String verified) {
-        this.verified = verified;
-    }
+	public String getVerified() {
+		return verified;
+	}
 
-    public String getLocationName() {
-        return locationname;
-    }
+	public void setVerified(String verified) {
+		this.verified = verified;
+	}
 
-    public void setLocationName(String locationname) {
-        this.locationname = locationname;
-    }
+	public String getLocationName() {
+		return locationname;
+	}
 
-    public String getLongitude() {
-        return longitude;
-    }
+	public void setLocationName(String locationname) {
+		this.locationname = locationname;
+	}
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
+	public String getLongitude() {
+		return longitude;
+	}
 
-    public String getLatitude() {
-        return latitude;
-    }
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-    
-    public String getCategories() {
-        return categories;
-    }
-    
-    public void setCategories(String categories){
-        this.categories = categories;
-    }
-    
-    public String getMedia(){
-        return this.media;
-    }
-    
-    public void setMedia(String media) {
-        this.media = media;
-    }
-    
-    public String getImage() {
-        return image;
-    }
-    
-    public void setImage(String image) {
-        this.image = image;
-    }
+	public String getLatitude() {
+		return latitude;
+	}
 
-    @Override
-    public void setDbId(int id) {
-        this.id = id;
-    }
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getCategories() {
+		return categories;
+	}
+
+	public void setCategories(String categories) {
+		this.categories = categories;
+	}
+
+	public String getMedia() {
+		return this.media;
+	}
+
+	public void setMedia(String media) {
+		this.media = media;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	@Override
+	public void setDbId(int id) {
+		this.id = id;
+	}
+
+	public void setReportId(int reportId) {
+		this.reportId = reportId;
+	}
+
+	public int getReportId() {
+		return this.reportId;
+	}
+	
+	public void setPending(int pending) {
+		this.pending = pending;
+	}
+
+	public int getPending() {
+		return this.pending;
+	}
 }

@@ -45,7 +45,10 @@ public class ListReportModel extends Model {
 
 	public List<ListReportModel> reportModel;
 
+	//FIXME:: I need to fix this to use the report entity instead.
 	private long id;
+	
+	private int reportId;
 
 	private String title;
 
@@ -175,6 +178,14 @@ public class ListReportModel extends Model {
 	public String getLongitude() {
 		return this.longitude;
 	}
+	
+	public void setReportId(int reportId) {
+		this.reportId = reportId;
+	}
+	
+	public int getReportId() {
+		return this.reportId;
+	}
 
 	@Override
 	public boolean load() {
@@ -199,6 +210,22 @@ public class ListReportModel extends Model {
 		}
 		return false;
 	}
+	
+	public boolean loadPendingReports() {
+		mReports = Database.mReportDao.fetchAllPendingReports();
+		if (mReports != null) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean loadPendingReportsByCategory(int categoryId) {
+		mReports = Database.mReportDao.fetchPendingReportByCategoryId(categoryId);
+		if (mReports != null) {
+			return true;
+		}
+		return false;
+	}
 
 	public boolean loadReportByCategory(int categoryId) {
 		mReports = Database.mReportDao.fetchReportByCategoryId(categoryId);
@@ -216,6 +243,7 @@ public class ListReportModel extends Model {
 			for (Report item : mReports) {
 				ListReportModel listReportModel = new ListReportModel();
 				listReportModel.setId(item.getDbId());
+				listReportModel.setReportId(item.getReportId());
 				listReportModel
 						.setTitle(Util.capitalizeString(item.getTitle()));
 				listReportModel.setDesc(Util.capitalizeString(item
@@ -237,7 +265,7 @@ public class ListReportModel extends Model {
 				listReportModel.setCategories(item.getCategories());
 				listReportModel.setMedia(item.getMedia());
 
-				final Drawable d = getImage(context, item.getDbId());
+				final Drawable d = getImage(context, item.getReportId());
 
 				if (d != null) {
 

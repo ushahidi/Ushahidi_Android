@@ -23,7 +23,6 @@ package com.ushahidi.android.app.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.MenuItem;
 import android.view.KeyEvent;
 
 import com.ushahidi.android.app.R;
@@ -56,16 +55,6 @@ public abstract class BaseEditActivity<V extends View, M extends Model> extends
 	@Override
 	protected void onPause() {
 		super.onPause();
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-			showDialogs();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-
 	}
 
 	@Override

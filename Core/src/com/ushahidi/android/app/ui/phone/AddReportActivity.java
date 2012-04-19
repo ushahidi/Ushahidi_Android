@@ -20,6 +20,7 @@
 
 package com.ushahidi.android.app.ui.phone;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,7 +36,10 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.view.MenuItem;
@@ -55,8 +59,10 @@ import com.ushahidi.android.app.activities.BaseEditMapActivity;
 import com.ushahidi.android.app.entities.Category;
 import com.ushahidi.android.app.models.AddReportModel;
 import com.ushahidi.android.app.models.ListReportModel;
+import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.GeocoderTask;
 import com.ushahidi.android.app.util.PhotoUtils;
+import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.AddReportView;
 
 /**
@@ -67,15 +73,6 @@ public class AddReportActivity extends
 		OnClickListener {
 
 	private ReverseGeocoderTask reverseGeocoderTask;
-	
-	/**
-     * category that exists on the phone before any connection to a server, at
-     * present it is trusted reporter, id number 4 but will change to specific
-     * 'uncategorized' category when it is ready on the server
-     */
-    private static final String UNCATEGORIZED_CATEGORY_ID = "4";
-
-    private static final String UNCATEGORIZED_CATEGORY_TITLE = "uncategorized";
 
 	private static final int DIALOG_ERROR_NETWORK = 0;
 
@@ -88,6 +85,12 @@ public class AddReportActivity extends
 	private static final int TIME_DIALOG_ID = 4;
 
 	private static final int DATE_DIALOG_ID = 5;
+
+	private static final int DIALOG_SHOW_MESSAGE = 6;
+
+	private static final int DIALOG_SHOW_REQUIRED = 7;
+
+	private static final int DIALOG_SHOW_PROMPT = 8;
 
 	private static final int REQUEST_CODE_CAMERA = 0;
 
@@ -109,9 +112,13 @@ public class AddReportActivity extends
 
 	private boolean mError = false;
 
+	private boolean draft = true;
+
 	private AddReportView addReport;
 
 	private int mCounter = 0;
+
+	private String mErrorMessage;
 
 	public AddReportActivity() {
 		super(AddReportView.class, R.layout.add_report, R.menu.add_report,
@@ -121,7 +128,6 @@ public class AddReportActivity extends
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		view = new AddReportView(this);
 		view.mLatitude.addTextChangedListener(latLonTextWatcher);
 		view.mLongitude.addTextChangedListener(latLonTextWatcher);
 		mapController = view.mapView.getController();
@@ -145,6 +151,36 @@ public class AddReportActivity extends
 		if (reverseGeocoderTask != null) {
 			reverseGeocoderTask.cancel(true);
 		}
+		final String selectedCategories = getSelectedCategories();
+
+		SharedPreferences.Editor editor = getPreferences(0).edit();
+		editor.putString("title", view.mIncidentTitle.getText().toString());
+		editor.putString("description", view.mIncidentDesc.getText().toString());
+		editor.putString("location", view.mIncidentLocation.getText()
+				.toString());
+		editor.putString("latitude", view.mLatitude.getText().toString());
+		editor.putString("longitude", view.mLongitude.getText().toString());
+
+		if (selectedCategories != null) {
+			editor.putString("categories", selectedCategories);
+		}
+		editor.putString("photo", Preferences.fileName);
+		editor.commit();
+		// Notify user that report has been saved as draft.
+		if (draft) {
+			Util.showToast(this, R.string.message_saved_as_draft);
+		}
+
+	}
+
+	/**
+	 * Upon being resumed we can retrieve the current state. This allows us to
+	 * update the state if it was changed at any time while paused.
+	 */
+	@Override
+	protected void onResume() {
+		getSharedText();
+		super.onResume();
 	}
 
 	@Override
@@ -154,7 +190,10 @@ public class AddReportActivity extends
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_send) {
-			// TODO : send report
+			addReports();
+			return true;
+		} else if (item.getItemId() == R.id.menu_clear) {
+			showDialog(DIALOG_SHOW_PROMPT);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -177,6 +216,133 @@ public class AddReportActivity extends
 		} else if (button.getId() == R.id.pick_time) {
 			showDialog(TIME_DIALOG_ID);
 		}
+	}
+
+	private void addReports() {
+		// Dipo Fix
+		mError = false;
+		boolean required = false;
+		// @inoran
+		// validate the title field
+		if (TextUtils.isEmpty(view.mIncidentTitle.getText())) {
+			mErrorMessage = getString(R.string.title) + "\n";
+			required = true;
+
+		} else if (view.mIncidentTitle.getText().length() < 3
+				|| view.mIncidentTitle.getText().length() > 200) {
+			mErrorMessage = getString(R.string.less_report_title) + "\n";
+			mError = true;
+		}
+
+		if (TextUtils.isEmpty(view.mIncidentDesc.getText())) {
+			mErrorMessage += getString(R.string.description) + "\n";
+			required = true;
+		}
+
+		// Dipo Fix
+		if (mVectorCategories.size() == 0) {
+			mErrorMessage += getString(R.string.category) + "\n";
+			required = true;
+		}
+
+		// validate lat long
+		if (TextUtils.isEmpty(view.mLatitude.getText().toString())) {
+			mErrorMessage += getString(R.string.latitude) + "\n";
+			required = true;
+		} else {
+
+			try {
+				Double.parseDouble(view.mLatitude.getText().toString());
+			} catch (NumberFormatException ex) {
+				mErrorMessage += getString(R.string.invalid_latitude) + "\n";
+				mError = true;
+			}
+		}
+
+		// validate lat long
+		if (TextUtils.isEmpty(view.mLongitude.getText().toString())) {
+			mErrorMessage += getString(R.string.longitude) + "\n";
+			mError = true;
+		} else {
+
+			try {
+				Double.parseDouble(view.mLongitude.getText().toString());
+			} catch (NumberFormatException ex) {
+				mErrorMessage += getString(R.string.invalid_longitude) + "\n";
+				mError = true;
+			}
+		}
+
+		// validate location
+		if (TextUtils.isEmpty(view.mIncidentLocation.getText())) {
+			mErrorMessage += getString(R.string.location);
+			required = true;
+		}
+
+		if (required) {
+			showDialog(DIALOG_SHOW_REQUIRED);
+		} else if (mError) {
+			showDialog(DIALOG_SHOW_MESSAGE);
+		} else {
+			
+			//TODO::// Save this in a db
+			/*AddReportsTask addReportsTask = new AddReportsTask();
+			addReportsTask.appContext = this;
+			addReportsTask.execute();*/
+
+		}
+	}
+
+	/**
+	 * Post directly to online.
+	 * 
+	 * @author henryaddo
+	 */
+	public int postToOnline() {
+		log("postToOnline(): posting report to online");
+
+		if (TextUtils.isEmpty(Preferences.domain)
+				|| Preferences.domain.equalsIgnoreCase("http://")) {
+			return 12;
+		}
+
+		String dates[] = mDateToSubmit.split(" ");
+		String time[] = dates[1].split(":");
+
+		String categories = Util.implode(mVectorCategories);
+		StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
+		urlBuilder.append("/api");
+
+		mParams.put("task", "report");
+		mParams.put("incident_title", view.mIncidentTitle.getText().toString());
+		mParams.put("incident_description", view.mIncidentDesc.getText()
+				.toString());
+		mParams.put("incident_date", dates[0]);
+		mParams.put("incident_hour", time[0]);
+		mParams.put("incident_minute", time[1]);
+		mParams.put("incident_ampm", dates[2].toLowerCase());
+		mParams.put("incident_category", categories);
+		mParams.put("latitude", view.mLatitude.getText().toString());
+		mParams.put("longitude", view.mLongitude.getText().toString());
+		mParams.put("location_name", view.mIncidentLocation.getText()
+				.toString());
+		mParams.put("person_first", Preferences.firstname);
+		mParams.put("person_last", Preferences.lastname);
+		mParams.put("person_email", Preferences.email);
+		mParams.put("filename", Preferences.fileName);
+
+		try {
+			final int status = new ReportsHttpClient(this).PostFileUpload(
+					urlBuilder.toString(), mParams);
+			log("Statuses: " + status);
+			return status;
+		} catch (IOException e) {
+			log("postToOnline(): IO exception failed to submit report "
+					+ Preferences.domain);
+			e.printStackTrace();
+			return 13;
+		}
+
 	}
 
 	/**
@@ -295,6 +461,58 @@ public class AddReportActivity extends
 					mCalendar.get(Calendar.YEAR),
 					mCalendar.get(Calendar.MONTH),
 					mCalendar.get(Calendar.DAY_OF_MONTH));
+
+		case DIALOG_SHOW_MESSAGE:
+			AlertDialog.Builder messageBuilder = new AlertDialog.Builder(this);
+			messageBuilder.setMessage(mErrorMessage).setPositiveButton(
+					getString(R.string.ok),
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+
+			AlertDialog showDialog = messageBuilder.create();
+			showDialog.show();
+			break;
+
+		case DIALOG_SHOW_REQUIRED:
+			AlertDialog.Builder requiredBuilder = new AlertDialog.Builder(this);
+			requiredBuilder.setTitle(R.string.required_fields);
+			requiredBuilder.setMessage(mErrorMessage).setPositiveButton(
+					getString(R.string.ok),
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+
+			AlertDialog showRequiredDialog = requiredBuilder.create();
+			showRequiredDialog.show();
+			break;
+
+		case DIALOG_SHOW_PROMPT: {
+			AlertDialog dialog = (new AlertDialog.Builder(this)).create();
+			dialog.setTitle(getString(R.string.unsaved_changes));
+			dialog.setMessage(getString(R.string.want_to_cancel));
+			dialog.setButton(getString(R.string.no),
+					new Dialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+
+							dialog.dismiss();
+						}
+					});
+			dialog.setButton2(getString(R.string.yes),
+					new Dialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							finish();
+							dialog.dismiss();
+						}
+					});
+
+			dialog.setCancelable(false);
+			return dialog;
+		}
 
 		}
 		return null;
@@ -467,44 +685,48 @@ public class AddReportActivity extends
 		return null;
 	}
 
-	public void onLocationChanged(Location arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected boolean onSaveChanges() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ushahidi.android.app.MapUserLocation#locationChanged(double,
-	 * double)
+	/**
+	 * Get shared text from other Android applications
 	 */
+	public void getSharedText() {
+		Intent intent = getIntent();
+		String action = intent.getAction();
+		if (action != null) {
+			if (action.equals(Intent.ACTION_SEND)
+					|| action.equals(Intent.ACTION_CHOOSER)) {
+				CharSequence text = intent
+						.getCharSequenceExtra(Intent.EXTRA_TEXT);
+				if (text != null) {
+					view.mIncidentDesc.setText(text);
+				}
+			}
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK) {
+			if (requestCode == REQUEST_CODE_CAMERA) {
+				Uri uri = PhotoUtils.getPhotoUri("photo.jpg", this);
+				Bitmap bitmap = PhotoUtils.getCameraPhoto(this, uri);
+				PhotoUtils.savePhoto(this, bitmap);
+				log(String.format("REQUEST_CODE_CAMERA %dx%d",
+						bitmap.getWidth(), bitmap.getHeight()));
+			} else if (requestCode == REQUEST_CODE_IMAGE) {
+				Bitmap bitmap = PhotoUtils
+						.getGalleryPhoto(this, data.getData());
+				PhotoUtils.savePhoto(this, bitmap);
+				log(String.format("REQUEST_CODE_IMAGE %dx%d",
+						bitmap.getWidth(), bitmap.getHeight()));
+			}
+			SharedPreferences.Editor editor = getPreferences(0).edit();
+			editor.putString("photo", PhotoUtils.getPhotoUri("photo.jpg", this)
+					.getPath());
+			editor.commit();
+		}
+	}
+
 	@Override
 	protected void locationChanged(double latitude, double longitude) {
 		updateMarker(latitude, longitude, true);
@@ -559,5 +781,38 @@ public class AddReportActivity extends
 			}
 		}
 	};
+
+	
+	/**
+	 * Go to reports screen
+	 */
+	public void goToReports() {
+		Intent intent = new Intent(AddReportActivity.this,
+				ReportTabActivity.class);
+		startActivityForResult(intent, 0);
+		setResult(RESULT_OK);
+	}
+
+	public void onLocationChanged(Location arg0) {
+	}
+
+	public void onProviderDisabled(String provider) {
+	}
+
+	public void onProviderEnabled(String provider) {
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+	}
+
+	@Override
+	protected boolean onSaveChanges() {
+		return true;
+	}
+
+	@Override
+	protected boolean isRouteDisplayed() {
+		return false;
+	}
 
 }

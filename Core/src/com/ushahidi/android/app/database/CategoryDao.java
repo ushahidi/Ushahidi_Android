@@ -42,7 +42,7 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 	@Override
 	public List<Category> fetchAllCategoryTitles() {
 		final String sortOrder = POSITION + " DESC";
-		final String columns[] = { ID, TITLE, COLOR, POSITION };
+		final String columns[] = { ID,CATEGORY_ID, TITLE, COLOR, POSITION };
 		listCategory = new ArrayList<Category>();
 		cursor = super.query(TABLE, columns, null, null, sortOrder);
 
@@ -70,7 +70,7 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 		final String sql = "SELECT *"
 				+ " FROM " + TABLE + " category INNER JOIN "
 				+ IReportCategorySchema.TABLE
-				+ " categories ON category." + ID + " = categories."
+				+ " categories ON category." + CATEGORY_ID + " = categories."
 				+ IReportCategorySchema.CATEGORY_ID + " WHERE categories."
 				+ IReportCategorySchema.REPORT_ID + " =? "+" ORDER BY  "
 				+ sortOrder;
@@ -142,11 +142,17 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 		int colorIndex;
 		int positionIndex;
 		int descriptionIndex;
+		int categoryIdIndex;
 
 		if (cursor != null) {
 			if (cursor.getColumnIndex(ID) != -1) {
 				idIndex = cursor.getColumnIndexOrThrow(ID);
 				category.setDbId(cursor.getInt(idIndex));
+			}
+			
+			if (cursor.getColumnIndex(CATEGORY_ID) != -1) {
+				categoryIdIndex = cursor.getColumnIndexOrThrow(CATEGORY_ID);
+				category.setCategoryId(cursor.getInt(categoryIdIndex));
 			}
 
 			if (cursor.getColumnIndex(TITLE) != -1) {
@@ -177,7 +183,7 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 
 	private void setContentValue(Category category) {
 		initialValues = new ContentValues();
-		initialValues.put(ID, category.getDbId());
+		initialValues.put(CATEGORY_ID, category.getCategoryId());
 		initialValues.put(TITLE, category.getCategoryTitle());
 		initialValues.put(DESCRIPTION, category.getCategoryDescription());
 		initialValues.put(COLOR, category.getCategoryColor());

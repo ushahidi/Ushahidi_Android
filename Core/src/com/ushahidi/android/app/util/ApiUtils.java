@@ -91,8 +91,7 @@ public class ApiUtils extends MainHttpClient {
 				JSONObject jsonObject = new JSONObject(jsonString);
 				int checkinStatus = jsonObject.getJSONObject("payload").getInt(
 						"checkins");
-				log("CheckinStatus " + checkinStatus + " URL "
-						+ uriBuilder.toString());
+				
 				if (checkinStatus == 1) {
 					return true;
 				}

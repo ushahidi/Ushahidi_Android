@@ -63,8 +63,8 @@ public class DashboardActivity extends FragmentMapActivity implements
 			listReportAdapter.refresh();
 			ListReportView listReportView = new ListReportView(this);
 			// listReportFragment.mListReportAdapter.refresh();
-			listReportView.getPullToRefreshListView().setAdapter(
-					listReportAdapter);
+			//listReportView.getPullToRefreshListView().setAdapter(
+				//	listReportAdapter);
 
 		} else {
 			Intent i = new Intent(this, ReportTabActivity.class);

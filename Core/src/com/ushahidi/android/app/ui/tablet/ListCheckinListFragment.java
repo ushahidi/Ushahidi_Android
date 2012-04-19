@@ -105,4 +105,13 @@ public class ListCheckinListFragment extends
 
 	}
 
+	/* (non-Javadoc)
+	 * @see com.ushahidi.android.app.fragments.BaseListFragment#headerView()
+	 */
+	@Override
+	protected View headerView() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

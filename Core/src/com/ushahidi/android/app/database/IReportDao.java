@@ -34,12 +34,19 @@ public interface IReportDao {
 
     // fetch all reports
     public List<Report> fetchAllReports();
+    
+ // fetch all reports
+    public List<Report> fetchAllPendingReports();
 
     // fetch reports by categories title: This is deprecated
     public List<Report> fetchReportByCategory(String category);
     
+    public List<Report> fetchPendingReportByCategory(String category);
+    
     // fetch reports by categories by id
     public List<Report> fetchReportByCategoryId(int categoryId);
+    
+    public List<Report> fetchPendingReportByCategoryId(int categoryId);
     
     // fetch reports by ID
     public List<Report> fetchReportById(long id);

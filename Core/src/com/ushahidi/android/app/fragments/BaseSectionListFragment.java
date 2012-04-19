@@ -37,7 +37,7 @@ import android.widget.Toast;
 
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.adapters.BaseListAdapter;
+import com.ushahidi.android.app.adapters.BaseSectionListAdapter;
 import com.ushahidi.android.app.models.Model;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.util.Objects;
@@ -46,7 +46,7 @@ import com.ushahidi.android.app.views.View;
 /**
  * @author eyedol
  */
-public abstract class BaseListFragment<V extends View, M extends Model, L extends BaseListAdapter<M>>
+public abstract class BaseSectionListFragment<V extends View, M extends Model, L extends BaseSectionListAdapter<M>>
 		extends ListFragment {
 
 	/**
@@ -103,7 +103,7 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
 	 * @param listView
 	 *            list view resource id
 	 */
-	protected BaseListFragment(Class<V> view, Class<L> adapter, int layout,
+	protected BaseSectionListFragment(Class<V> view, Class<L> adapter, int layout,
 			int menu, int listView) {
 		this.adapterClass = adapter;
 		this.listViewId = listView;

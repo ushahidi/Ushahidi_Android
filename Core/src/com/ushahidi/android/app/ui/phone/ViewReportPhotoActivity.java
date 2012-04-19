@@ -35,6 +35,7 @@ import android.widget.ViewSwitcher;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.activities.BaseViewActivity;
+import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.models.ListReportPhotoModel;
 import com.ushahidi.android.app.views.ReportPhotoView;
 
@@ -48,7 +49,7 @@ public class ViewReportPhotoActivity extends
 
 	private ListReportPhotoModel photo;
 
-	private List<ListReportPhotoModel> photos;
+	private List<Photo> photos;
 
 	private int position;
 

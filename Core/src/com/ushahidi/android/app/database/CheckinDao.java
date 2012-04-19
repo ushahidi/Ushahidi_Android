@@ -79,6 +79,7 @@ public class CheckinDao extends DbContentProvider implements ICheckinDao, ICheck
     protected Checkin cursorToEntity(Cursor cursor) {
         Checkin checkin = new Checkin();
         int idIndex;
+        int checkinIdIndex;
         int userIdIndex;
         int dateIndex;
         int messageIndex;
@@ -87,9 +88,14 @@ public class CheckinDao extends DbContentProvider implements ICheckinDao, ICheck
         int longitudeIndex;
 
         if (cursor != null) {
-            if (cursor.getColumnIndex(CHECKIN_ID) != -1) {
-                idIndex = cursor.getColumnIndexOrThrow(CHECKIN_ID);
+            if (cursor.getColumnIndex(ID) != -1) {
+                idIndex = cursor.getColumnIndexOrThrow(ID);
                 checkin.setDbId(cursor.getInt(idIndex));
+            }
+            
+            if (cursor.getColumnIndex(CHECKIN_ID) != -1) {
+            	checkinIdIndex = cursor.getColumnIndexOrThrow(CHECKIN_ID);
+                checkin.setCheckinId(cursor.getInt(checkinIdIndex));
             }
 
             if (cursor.getColumnIndex(CHECKIN_USER_ID) != -1) {
@@ -209,7 +215,8 @@ public class CheckinDao extends DbContentProvider implements ICheckinDao, ICheck
     private void setContentValue(Checkin checkins) {
 
         initialValues = new ContentValues();
-        initialValues.put(CHECKIN_ID, checkins.getDbId());
+        initialValues.put(ID, checkins.getDbId());
+        initialValues.put(CHECKIN_ID, checkins.getCheckinId());
         initialValues.put(CHECKIN_USER_ID, checkins.getUserId());
         initialValues.put(CHECKIN_MESG, checkins.getMessage());
         initialValues.put(CHECKIN_DATE, checkins.getDate());

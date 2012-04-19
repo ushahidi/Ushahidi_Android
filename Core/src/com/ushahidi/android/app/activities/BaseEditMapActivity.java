@@ -20,12 +20,11 @@
 
 package com.ushahidi.android.app.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.v4.app.FragmentMapActivity;
 import android.view.KeyEvent;
 
-import com.ushahidi.android.app.MapUserLocation;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.models.Model;
 import com.ushahidi.android.app.tasks.ProgressTask;
@@ -57,7 +56,7 @@ public abstract class BaseEditMapActivity<V extends View, M extends Model>
 	protected void onPause() {
 		super.onPause();
 	}
-	
+
 	protected void showDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(getText(R.string.unsaved_changes))
@@ -103,10 +102,10 @@ public abstract class BaseEditMapActivity<V extends View, M extends Model>
 	protected abstract boolean onSaveChanges();
 
 	/**
-	 * Background progress task for saving Model
+	 * Background progress task for saving a report as a task
 	 */
 	protected class SaveTask extends ProgressTask {
-		public SaveTask(FragmentMapActivity activity) {
+		public SaveTask(Activity activity) {
 			super(activity, R.string.saving_);
 		}
 
@@ -126,4 +125,5 @@ public abstract class BaseEditMapActivity<V extends View, M extends Model>
 			}
 		}
 	}
+
 }

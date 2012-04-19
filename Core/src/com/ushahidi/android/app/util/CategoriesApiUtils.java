@@ -83,7 +83,7 @@ public class CategoriesApiUtils {
 					try {
 						id = categoriesArr.getJSONObject(i)
 								.getJSONObject("category").getInt("id");
-						category.setDbId(id);
+						category.setCategoryId(id);
 						if (!categoriesArr.getJSONObject(i)
 								.getJSONObject("category").isNull("color")) {
 							category.setCategoryColor(categoriesArr

@@ -106,7 +106,7 @@ public class ReportsApiUtils {
 							id = reportsArr.getJSONObject(i)
 									.getJSONObject("incident")
 									.getInt("incidentid");
-						report.setDbId(id);
+						report.setReportId(id);
 						report.setTitle(reportsArr.getJSONObject(i)
 								.getJSONObject("incident")
 								.getString("incidenttitle"));
@@ -246,7 +246,7 @@ public class ReportsApiUtils {
 
 	private void saveMedia(int mediaId, int reportId, int type, String link) {
 		Media media = new Media();
-		media.setDbId(mediaId);
+		media.setMediaId(mediaId);
 		media.setReportId(reportId);
 		media.setType(type);
 		media.setLink(link);
