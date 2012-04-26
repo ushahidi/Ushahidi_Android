@@ -20,14 +20,14 @@
 
 package com.ushahidi.android.app.views;
 
-import android.support.v4.app.FragmentActivity;
+import android.app.Activity;
 /**
  * ExampleListView
  *
  * All the widgets for /res/layout/example_list.xml
  */
 public class ListCheckinView extends View {
-    public ListCheckinView(FragmentActivity activity) {
+    public ListCheckinView(Activity activity) {
         super(activity);
     }
 }

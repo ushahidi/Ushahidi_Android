@@ -41,6 +41,6 @@ public interface IReportCategoryDao {
 
     // delete all report categories
     public boolean deleteAllReportCategory();
-
-
+    
+    public boolean deleteReportCategoryByReportId(int reportId);
 }

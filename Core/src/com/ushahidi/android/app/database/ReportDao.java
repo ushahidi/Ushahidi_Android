@@ -27,6 +27,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.ushahidi.android.app.entities.IDbEntity;
 import com.ushahidi.android.app.entities.Report;
 
 public class ReportDao extends DbContentProvider implements IReportDao,
@@ -46,11 +47,12 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	public List<Report> fetchAllPendingReports() {
 
 		final String sortOrder = INCIDENT_DATE + " DESC";
-		final String selection = INCIDENT_PENDING + " = ?";
+		final String selection = INCIDENT_PENDING + " =?";
 		final String selectionArgs[] = { String.valueOf(1) };
 		listReport = new ArrayList<Report>();
 		cursor = super.query(INCIDENTS_TABLE, null, selection, selectionArgs,
 				sortOrder);
+		
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
@@ -85,13 +87,14 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 		return listReport;
 	}
-	
+
 	@Override
 	public List<Report> fetchPendingReportByCategory(String category) {
 		final String sortOrder = INCIDENT_TITLE + " DESC";
-		final String selectionArgs[] = { category, String.valueOf(0) };
+		final String selectionArgs[] = { category, String.valueOf(1) };
 
-		final String selection = INCIDENT_CATEGORIES + " LIKE ? AND "+INCIDENT_PENDING+" =? ";
+		final String selection = INCIDENT_CATEGORIES + " LIKE ? AND "
+				+ INCIDENT_PENDING + " =? ";
 
 		listReport = new ArrayList<Report>();
 
@@ -109,6 +112,32 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 		}
 
 		return listReport;
+	}
+
+	@Override
+	public int fetchPendingReportIdByDate(String date) {
+		final String sortOrder = ID + " DESC";
+		final String selectionArgs[] = { date, String.valueOf(1) };
+
+		final String selection = INCIDENT_DATE + " =? AND " + INCIDENT_PENDING
+				+ " =? ";
+		int id = 0;
+		listReport = new ArrayList<Report>();
+
+		cursor = super.query(INCIDENTS_TABLE, null, selection, selectionArgs,
+				sortOrder);
+		if (cursor != null) {
+
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				Report report = cursorToEntity(cursor);
+				id = report.getDbId();
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+
+		return id;
 	}
 
 	@Override
@@ -135,18 +164,18 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 		return listReport;
 	}
-	
+
 	@Override
 	public List<Report> fetchPendingReportByCategoryId(int categoryId) {
 		final String sortOrder = INCIDENT_TITLE + " DESC";
 		final String sql = "SELECT * FROM " + INCIDENTS_TABLE
 				+ " reports INNER JOIN " + IReportCategorySchema.TABLE
-				+ " cats ON reports." + INCIDENT_ID + " = cats."
-				+ IReportCategorySchema.REPORT_ID + " WHERE cats."
-				+ IReportCategorySchema.CATEGORY_ID + " =? AND "+INCIDENT_PENDING +"=? "+"ORDER BY  "
-				+ sortOrder;
-		final String selectionArgs[] = { String.valueOf(categoryId), String.valueOf(1) };
-
+				+ " cats ON reports." + ID + " = cats."
+				+ IReportCategorySchema.ID + " WHERE cats."
+				+ IReportCategorySchema.CATEGORY_ID + " =? AND "
+				+ INCIDENT_PENDING + "=? " + "ORDER BY  " + sortOrder;
+		final String selectionArgs[] = { String.valueOf(categoryId),
+				String.valueOf(1) };
 		listReport = new ArrayList<Report>();
 
 		cursor = super.rawQuery(sql, selectionArgs);
@@ -171,9 +200,10 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 				+ " reports INNER JOIN " + IReportCategorySchema.TABLE
 				+ " cats ON reports." + INCIDENT_ID + " = cats."
 				+ IReportCategorySchema.REPORT_ID + " WHERE cats."
-				+ IReportCategorySchema.CATEGORY_ID + " =? AND "+INCIDENT_PENDING +"=? "+"ORDER BY  "
-				+ sortOrder;
-		final String selectionArgs[] = { String.valueOf(categoryId), String.valueOf(0) };
+				+ IReportCategorySchema.CATEGORY_ID + " =? AND "
+				+ INCIDENT_PENDING + "=? " + "ORDER BY  " + sortOrder;
+		final String selectionArgs[] = { String.valueOf(categoryId),
+				String.valueOf(0) };
 
 		listReport = new ArrayList<Report>();
 
@@ -344,10 +374,19 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 		initialValues.put(INCIDENT_LOC_NAME, report.getLocationName());
 		initialValues.put(INCIDENT_LOC_LATITUDE, report.getLatitude());
 		initialValues.put(INCIDENT_LOC_LONGITUDE, report.getLongitude());
+		initialValues.put(INCIDENT_PENDING, report.getPending());
 	}
 
 	private ContentValues getContentValue() {
 		return initialValues;
+	}
+
+	@Override
+	public boolean deletePendingReportById(int id) {
+		final String selectionArgs[] = { String.valueOf(id),String.valueOf(1) };
+		final String selection = ID + " = ? AND "+INCIDENT_PENDING+" = ?";
+
+		return super.delete(INCIDENTS_TABLE, selection, selectionArgs) > 0;
 	}
 
 }

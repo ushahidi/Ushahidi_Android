@@ -165,4 +165,11 @@ public class ReportCategoryDao extends DbContentProvider implements IReportCateg
     private ContentValues getContentValue() {
         return initialValues;
     }
+    
+    @Override
+    public boolean deleteReportCategoryByReportId(int reportId) {
+    	final String selectionArgs[] = { String.valueOf(reportId) };
+		final String selection = REPORT_ID + " =?";
+		return super.delete(TABLE, selection, selectionArgs) > 0;
+    }
 }

@@ -270,6 +270,7 @@ public class ListMapFragment extends
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		new MenuInflater(getActivity()).inflate(R.menu.list_map_context, menu);
+
 	}
 
 	@Override
@@ -336,7 +337,6 @@ public class ListMapFragment extends
 			int position, long id) {
 		log("on map itemClicked");
 		final int sId = mListMapAdapter.getItem(position).getId();
-		;
 
 		if (isMapActive(sId)) {
 			if (listener != null) {
@@ -831,7 +831,9 @@ public class ListMapFragment extends
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ushahidi.android.app.fragments.BaseListFragment#headerView()
 	 */
 	@Override

@@ -20,8 +20,10 @@
 
 package com.ushahidi.android.app.models;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -34,6 +36,7 @@ import com.ushahidi.android.app.database.IMediaSchema;
 import com.ushahidi.android.app.entities.Category;
 import com.ushahidi.android.app.entities.Media;
 import com.ushahidi.android.app.entities.Report;
+import com.ushahidi.android.app.entities.ReportCategory;
 import com.ushahidi.android.app.util.Util;
 
 /**
@@ -45,9 +48,9 @@ public class ListReportModel extends Model {
 
 	public List<ListReportModel> reportModel;
 
-	//FIXME:: I need to fix this to use the report entity instead.
+	// FIXME:: I need to fix this to use the report entity instead.
 	private long id;
-	
+
 	private int reportId;
 
 	private String title;
@@ -178,11 +181,11 @@ public class ListReportModel extends Model {
 	public String getLongitude() {
 		return this.longitude;
 	}
-	
+
 	public void setReportId(int reportId) {
 		this.reportId = reportId;
 	}
-	
+
 	public int getReportId() {
 		return this.reportId;
 	}
@@ -210,7 +213,7 @@ public class ListReportModel extends Model {
 		}
 		return false;
 	}
-	
+
 	public boolean loadPendingReports() {
 		mReports = Database.mReportDao.fetchAllPendingReports();
 		if (mReports != null) {
@@ -218,9 +221,11 @@ public class ListReportModel extends Model {
 		}
 		return false;
 	}
-	
+
 	public boolean loadPendingReportsByCategory(int categoryId) {
-		mReports = Database.mReportDao.fetchPendingReportByCategoryId(categoryId);
+
+		mReports = Database.mReportDao
+				.fetchPendingReportByCategoryId(categoryId);
 		if (mReports != null) {
 			return true;
 		}
@@ -238,7 +243,7 @@ public class ListReportModel extends Model {
 
 	public List<ListReportModel> getReports(Context context) {
 		reportModel = new ArrayList<ListReportModel>();
-
+		Drawable d = null;
 		if (mReports != null && mReports.size() > 0) {
 			for (Report item : mReports) {
 				ListReportModel listReportModel = new ListReportModel();
@@ -265,7 +270,14 @@ public class ListReportModel extends Model {
 				listReportModel.setCategories(item.getCategories());
 				listReportModel.setMedia(item.getMedia());
 
-				final Drawable d = getImage(context, item.getReportId());
+				if (item.getReportId() == 0) {
+					// get pending reports images
+					d = getImage(context, item.getDbId());
+
+				} else {
+					// get fetched reports images
+					d = getImage(context, item.getReportId());
+				}
 
 				if (d != null) {
 
@@ -286,19 +298,83 @@ public class ListReportModel extends Model {
 
 	}
 
+	public boolean addPendingReport(Report report, Vector<String> category,
+			File[] pendingPhotos, String news) {
+		boolean status;
+		// add pending reports
+		status = Database.mReportDao.addReport(report);
+		int id = Database.mReportDao.fetchPendingReportIdByDate(report
+				.getReportDate());
+
+		// add category
+		if (status) {
+			if (category != null && category.size() > 0) {
+				for (String cat : category) {
+					ReportCategory reportCategory = new ReportCategory();
+					reportCategory.setCategoryId(Util.toInt(cat));
+					reportCategory.setReportId(id);
+					Database.mReportCategoryDao
+							.addReportCategory(reportCategory);
+
+				}
+			}
+
+			// add photos
+			if (pendingPhotos != null && pendingPhotos.length > 0) {
+				for (File file : pendingPhotos) {
+					if (file.exists()) {
+						Media media = new Media();
+						media.setMediaId(0);
+						media.setLink(file.getName());
+
+						// get report ID;
+						media.setReportId(id);
+						media.setType(IMediaSchema.IMAGE);
+						Database.mMediaDao.addMedia(media);
+					}
+				}
+
+			}
+
+			// add news
+			if (news != null && news.length() > 0) {
+				Media media = new Media();
+				media.setMediaId(0);
+				media.setLink(news);
+				// get report ID;
+				media.setReportId(id);
+				media.setType(IMediaSchema.NEWS);
+				Database.mMediaDao.addMedia(media);
+			}
+		}
+
+		return status;
+	}
+
 	public List<Category> getCategoriesByReportId(int reportId) {
+
 		return Database.mCategoryDao.fetchCategoryByReportId(reportId);
 	}
 
 	private Drawable getImage(Context context, int reportId) {
 		List<Media> sMedia = Database.mMediaDao.fetchMedia(
 				IMediaSchema.REPORT_ID, reportId, IMediaSchema.IMAGE, 1);
-
 		if (sMedia != null && sMedia.size() > 0) {
-
 			return ImageManager.getThumbnails(context, sMedia.get(0).getLink());
 
 		}
 		return context.getResources().getDrawable(R.drawable.report_icon);
+	}
+
+	public boolean deleteReport(int reportId) {
+		// delete report
+		Database.mReportDao.deletePendingReportById(reportId);
+
+		// delete categories
+		Database.mReportCategoryDao.deleteReportCategoryByReportId(reportId);
+
+		// delete media
+		Database.mMediaDao.deleteMediaByReportId(reportId);
+		return true;
 	}
 }

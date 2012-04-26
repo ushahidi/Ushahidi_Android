@@ -29,22 +29,37 @@ import com.ushahidi.android.app.entities.Media;
  */
 public interface IMediaDao {
 
-    public boolean deleteAllMedia();
+	// add
+	public boolean addMedia(List<Media> media);
 
-    public boolean addMedia(List<Media> media);
+	public boolean addMedia(Media media);
 
-    public boolean addMedia(Media media);
+	// select
+	public List<Media> fetchCheckinPhoto(int checkinId);
 
-    public List<Media> fetchCheckinPhoto(int checkinId);
+	public List<Media> fetchReportPhoto(int reportId);
 
-    public List<Media> fetchReportPhoto(int reportId);
-    
-    public List<Media> fetchReportAudio(int reportId);
-    
-    public List<Media> fetchReportNews(int reportId);
-    
-    public List<Media> fetchReportVideo(int reportId);
-    
-    public List<Media> fetchMedia(String itemType, int itemId, int mediaType, int limit);
+	public List<Media> fetchReportAudio(int reportId);
+
+	public List<Media> fetchReportNews(int reportId);
+
+	public List<Media> fetchReportVideo(int reportId);
+
+	public List<Media> fetchMedia(String itemType, int itemId, int mediaType,
+			int limit);
+
+	// delete
+	public boolean deleteAllMedia();
+	
+	public boolean deleteReportMediaByIdAndLink(int reportId, String link);
+
+	public boolean deleteMediaByReportId(int reportId);
+
+	public boolean deleteMediaByCheckinId(int checkinId);
+
+	// updates
+	public boolean updateMediaByReportId(int reportId);
+
+	public boolean updateMediaByCheckinId(int checkinId);
 
 }

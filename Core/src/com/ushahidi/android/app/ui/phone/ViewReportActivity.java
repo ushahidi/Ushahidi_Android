@@ -34,7 +34,6 @@ import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseMapViewActivity;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
-import com.ushahidi.android.app.adapters.ListReportAdapter;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.models.ViewReportModel;
 import com.ushahidi.android.app.views.ViewReportView;
@@ -79,7 +78,7 @@ public class ViewReportActivity extends
 		}
 		
 		//because of header view, decrease position by one
-		initReport(this.position - 1);
+		initReport(this.position);
 
 	}
 

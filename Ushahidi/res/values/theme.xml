@@ -31,6 +31,8 @@
     <color name="header_color">#3E51BC</color>
     <color name="background_color">#ede7d1</color>
     <color name="thick_background_color">#DDD0A3</color>
+    <color name="button_background_color">#ffffff</color>
+    <color name="button_stroke_color">#cac7c0</color>
     
     <color name="white_color">#FFFFFF</color>
     <color name="verified_color">#25991C</color>

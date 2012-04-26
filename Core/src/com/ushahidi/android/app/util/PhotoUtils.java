@@ -34,6 +34,7 @@ import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.util.PhotoUtils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -56,6 +57,9 @@ public class PhotoUtils {
 
 	private static final String CLASS_TAG = PhotoUtils.class.getCanonicalName();
 
+	// folder to save pending photos.
+	private static final String PENDING = "/pending";
+
 	public static int getScreenOrientation(Activity context) {
 		Display display = context.getWindowManager().getDefaultDisplay();
 		if (display.getWidth() == display.getHeight()) {
@@ -69,9 +73,25 @@ public class PhotoUtils {
 		}
 	}
 
+	public static File[] getPendingPhotos(Context context) {
+		File path = pendingPhotosPath(context);
+
+		if (path != null && path.exists()) {
+			return path.listFiles();
+		}
+		return null;
+	}
+
+	public static File pendingPhotosPath(Context context) {
+		File path = new File(Environment.getExternalStorageDirectory(),
+				context.getPackageName() + PENDING);
+
+		return path;
+	}
+
 	public static Uri getPhotoUri(String filename, Activity activity) {
 		File path = new File(Environment.getExternalStorageDirectory(),
-				activity.getPackageName());
+				activity.getPackageName() + PENDING);
 		if (!path.exists() && path.mkdir()) {
 			return Uri.fromFile(new File(path, filename));
 		}
@@ -81,7 +101,7 @@ public class PhotoUtils {
 	public static String getPhotoPath(Activity activity) {
 		Log.d(CLASS_TAG, "getPhotoPath");
 		File path = new File(Environment.getExternalStorageDirectory(),
-				activity.getPackageName());
+				activity.getPackageName() + PENDING);
 		return path.exists() ? path.getAbsolutePath() : null;
 
 	}
@@ -163,12 +183,13 @@ public class PhotoUtils {
 		return null;
 	}
 
-	public static boolean savePhoto(Activity activity, Bitmap bitmap) {
+	public static boolean savePhoto(Activity activity, Bitmap bitmap,
+			String fileName) {
 		try {
 			ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
 			bitmap.compress(Bitmap.CompressFormat.JPEG, 75, byteArray);
 			bitmap.recycle();
-			ImageManager.writeImage(byteArray.toByteArray(), "photo.jpg",
+			ImageManager.writeImage(byteArray.toByteArray(), fileName,
 					getPhotoPath(activity));
 			byteArray.flush();
 			return true;

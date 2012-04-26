@@ -74,7 +74,6 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 				+ IReportCategorySchema.CATEGORY_ID + " WHERE categories."
 				+ IReportCategorySchema.REPORT_ID + " =? "+" ORDER BY  "
 				+ sortOrder;
-	
 		listCategory = new ArrayList<Category>();
 		cursor = super.rawQuery(sql, new String[]{String.valueOf(reportId)});
 

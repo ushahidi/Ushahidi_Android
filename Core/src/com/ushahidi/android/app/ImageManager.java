@@ -40,7 +40,10 @@ import com.ushahidi.android.app.util.PhotoUtils;
 
 public class ImageManager {
 
-	private static final String PHOTO = "/photo";
+	// folder to save fetched photos.
+	private static final String PHOTO = "/fetched";
+
+	private static final String PENDING = "/pending";
 
 	public static Drawable getDrawables(Context context, String fileName) {
 
@@ -59,6 +62,33 @@ public class ImageManager {
 	public static Drawable getDrawables(Context context, String fileName,
 			int width) {
 		Bitmap original = BitmapFactory.decodeFile(getPhotoPath(context)
+				+ fileName);
+		if (original != null) {
+			// scale image
+			Bitmap scaled = PhotoUtils.scaleBitmapByWidth(original, width);
+			return new FastBitmapDrawable(scaled);
+
+		}
+		return null;
+	}
+
+	public static Drawable getPendingDrawables(Context context, String fileName) {
+
+		Bitmap original = BitmapFactory.decodeFile(getPendingPhotoPath(context)
+				+ fileName);
+		if (original != null) {
+			// scale image
+			Bitmap scaled = PhotoUtils.scaleBitmap(original);
+			return new FastBitmapDrawable(scaled);
+
+		}
+		return null;
+
+	}
+
+	public static Drawable getPendingDrawables(Context context,
+			String fileName, int width) {
+		Bitmap original = BitmapFactory.decodeFile(getPendingPhotoPath(context)
 				+ fileName);
 		if (original != null) {
 			// scale image
@@ -113,9 +143,6 @@ public class ImageManager {
 		return imageData;
 	}
 
-	// TODO: we could probably improve performance by re-using connections
-	// instead of closing them
-	// after each and every download
 	public static void downloadImage(String imageUrl, String filename,
 			Context context) {
 		try {
@@ -158,10 +185,10 @@ public class ImageManager {
 
 	}
 
-	public static String getPhotoPath(Context context) {
+	public static String getSavedPhotoPath(Context context, String folder) {
 		// create photo directory if it doesn't exist
 		File path = new File(Environment.getExternalStorageDirectory(),
-				context.getPackageName() + PHOTO);
+				context.getPackageName() + folder);
 		if (!path.exists()) {
 			// create path if it doesn't exist
 			if (createDirectory(context)) {
@@ -170,6 +197,28 @@ public class ImageManager {
 		}
 
 		return path.getAbsolutePath() + "/";
+	}
+
+	public static String getPhotoPath(Context context) {
+		return getSavedPhotoPath(context, PHOTO);
+	}
+
+	public static String getPendingPhotoPath(Context context) {
+		return getSavedPhotoPath(context, PENDING);
+	}
+
+	public static boolean deletePendingPhoto(Context context, String fileName) {
+
+		return deleteImage2(fileName, getSavedPhotoPath(context, PENDING));
+	}
+
+	public static boolean deleteImage2(String filename, String path) {
+		File f = new File(path, filename);
+		if (f.exists()) {
+			f.delete();
+			return true;
+		}
+		return false;
 	}
 
 	public static void deleteImage(String filename, String path) {
@@ -216,9 +265,9 @@ public class ImageManager {
 		}
 		return true;
 	}
-	
+
 	public static void deleteImages(Context context) {
-		if(isExternalStoragePresent()) {
+		if (isExternalStoragePresent()) {
 			File path = new File(Environment.getExternalStorageDirectory(),
 					context.getPackageName() + PHOTO);
 			deleteFiles(path);
@@ -228,16 +277,36 @@ public class ImageManager {
 	private static boolean deleteFiles(File path) {
 		if (path.exists()) {
 			File[] files = path.listFiles();
-			if(files ==null) {
+			if (files == null) {
 				return true;
 			}
-			
-			//go through the folder and delete its content
-			for(int i=0; i < files.length;i++) {
+
+			// go through the folder and delete its content
+			for (int i = 0; i < files.length; i++) {
 				files[i].delete();
 			}
 		}
 		return true;
+	}
+
+	public static void movePendingPhotos(Context context) {
+		File[] pendingPhotos = PhotoUtils.getPendingPhotos(context);
+
+		if (pendingPhotos != null && pendingPhotos.length > 0) {
+			for (File file : pendingPhotos) {
+				if (file.exists()) {
+					// move file
+					if (file.renameTo(new File(getPhotoPath(context)
+							+ file.getName()))) {
+
+						// delete after a successful move
+						file.delete();
+					}
+
+				}
+			}
+
+		}
 	}
 
 }

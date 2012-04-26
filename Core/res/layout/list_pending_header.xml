@@ -20,9 +20,9 @@
     android:orientation="horizontal" >
 
     <TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/list_header_pending"
         style="?android:attr/listSeparatorTextViewStyle"
+        android:background="@color/table_selected_row_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/pending_upload"

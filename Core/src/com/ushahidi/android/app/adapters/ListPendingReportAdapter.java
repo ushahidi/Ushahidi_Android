@@ -81,7 +81,7 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 	public void refresh(int categoryId) {
 		mListReportModel = new ListReportModel();
 		final boolean loaded = mListReportModel
-				. loadPendingReportsByCategory(categoryId);
+				.loadPendingReportsByCategory(categoryId);
 		if (loaded) {
 			items = mListReportModel.getReports(context);
 			this.setItems(items);
@@ -129,8 +129,8 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 
 		// FIXME: do this properly.
 		widgets.categories.setText(Util
-				.capitalizeString(Util.limitString(fetchCategories((int) getItem(position)
-						.getReportId()), 100)));
+				.capitalizeString(Util.limitString(fetchCategories((int) getItem(position).getId()), 100)));
+		
 		widgets.iLocation.setText(Util.capitalizeString(getItem(position)
 				.getLocation()));
 		// change the status color

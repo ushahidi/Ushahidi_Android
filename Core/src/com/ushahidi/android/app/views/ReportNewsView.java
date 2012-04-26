@@ -19,9 +19,9 @@
  **/
 package com.ushahidi.android.app.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -55,7 +55,7 @@ public class ReportNewsView extends View {
 	/**
 	 * @param activity
 	 */
-	public ReportNewsView(FragmentActivity activity) {
+	public ReportNewsView(Activity activity) {
 		super(activity);
 		this.context = activity;
 		viewAnimator = (ViewAnimator) activity

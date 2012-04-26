@@ -20,7 +20,8 @@
 
 package com.ushahidi.android.app.ui.phone;
 
-import java.io.IOException;
+import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,7 +37,6 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
@@ -46,20 +46,29 @@ import android.support.v4.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.DatePicker;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TimePicker;
+import android.widget.ViewSwitcher;
 
 import com.ushahidi.android.app.ImageManager;
-import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseEditMapActivity;
+import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.entities.Category;
+import com.ushahidi.android.app.entities.Report;
 import com.ushahidi.android.app.models.AddReportModel;
 import com.ushahidi.android.app.models.ListReportModel;
-import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.GeocoderTask;
 import com.ushahidi.android.app.util.PhotoUtils;
 import com.ushahidi.android.app.util.Util;
@@ -70,7 +79,7 @@ import com.ushahidi.android.app.views.AddReportView;
  */
 public class AddReportActivity extends
 		BaseEditMapActivity<AddReportView, AddReportModel> implements
-		OnClickListener {
+		OnClickListener, ViewSwitcher.ViewFactory, OnItemClickListener {
 
 	private ReverseGeocoderTask reverseGeocoderTask;
 
@@ -91,6 +100,8 @@ public class AddReportActivity extends
 	private static final int DIALOG_SHOW_REQUIRED = 7;
 
 	private static final int DIALOG_SHOW_PROMPT = 8;
+	
+	private static final int DIALOG_SHOW_DELETE_PROMPT = 9;
 
 	private static final int REQUEST_CODE_CAMERA = 0;
 
@@ -108,18 +119,20 @@ public class AddReportActivity extends
 
 	private HashMap<String, String> mCategoriesTitle = new HashMap<String, String>();
 
-	private HashMap<String, String> mParams = new HashMap<String, String>();
-
 	private boolean mError = false;
 
-	private boolean draft = true;
-
-	private AddReportView addReport;
+	private int id = 0;
 
 	private int mCounter = 0;
 
+	private UploadPhotoAdapter pendingPhoto;
+
 	private String mErrorMessage;
 
+	private String photoName;
+
+	private ListReportModel reportModel;
+	
 	public AddReportActivity() {
 		super(AddReportView.class, R.layout.add_report, R.menu.add_report,
 				R.id.location_map);
@@ -136,13 +149,32 @@ public class AddReportActivity extends
 		view.mPickDate.setOnClickListener(this);
 		view.mPickTime.setOnClickListener(this);
 		mCalendar = Calendar.getInstance();
-		updateDisplay();
+		pendingPhoto = new UploadPhotoAdapter(this);
+		view.gallery.setAdapter(pendingPhoto);
+		view.gallery.setOnItemClickListener(this);
+		view.mSwitcher.setFactory(this);
+		this.id = getIntent().getExtras().getInt("id", 0);
+		reportModel = new ListReportModel();
+		// edit existing report
+		if (id > 0) {
+
+			// make the delete button visible because we're editing
+			view.mDeleteReport.setOnClickListener(this);
+			view.mDeleteReport.setVisibility(View.VISIBLE);
+			pendingPhoto.refresh();
+			setSavedReport(id);
+		} else {
+			// add a new report
+			updateDisplay();
+			pendingPhoto.refresh();
+		}
+
+		registerForContextMenu(view.gallery);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-
 	}
 
 	@Override
@@ -151,26 +183,6 @@ public class AddReportActivity extends
 		if (reverseGeocoderTask != null) {
 			reverseGeocoderTask.cancel(true);
 		}
-		final String selectedCategories = getSelectedCategories();
-
-		SharedPreferences.Editor editor = getPreferences(0).edit();
-		editor.putString("title", view.mIncidentTitle.getText().toString());
-		editor.putString("description", view.mIncidentDesc.getText().toString());
-		editor.putString("location", view.mIncidentLocation.getText()
-				.toString());
-		editor.putString("latitude", view.mLatitude.getText().toString());
-		editor.putString("longitude", view.mLongitude.getText().toString());
-
-		if (selectedCategories != null) {
-			editor.putString("categories", selectedCategories);
-		}
-		editor.putString("photo", Preferences.fileName);
-		editor.commit();
-		// Notify user that report has been saved as draft.
-		if (draft) {
-			Util.showToast(this, R.string.message_saved_as_draft);
-		}
-
 	}
 
 	/**
@@ -183,6 +195,44 @@ public class AddReportActivity extends
 		super.onResume();
 	}
 
+	// Context Menu Stuff
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		new MenuInflater(this).inflate(R.menu.photo_context, menu);
+
+	}
+
+	@Override
+	public boolean onContextItemSelected(android.view.MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+		boolean result = performAction(item, info.position);
+
+		if (!result) {
+			result = super.onContextItemSelected(item);
+		}
+
+		return result;
+
+	}
+
+	public boolean performAction(android.view.MenuItem item, int position) {
+
+		if (item.getItemId() == R.id.remove_photo) {
+			// Delete by name
+			if (ImageManager.deletePendingPhoto(this,
+					pendingPhoto.getItem(position).getPhoto())) {
+				pendingPhoto.refresh();
+			}
+			return true;
+
+		}
+		return false;
+
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
@@ -190,7 +240,7 @@ public class AddReportActivity extends
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_send) {
-			addReports();
+			validateReports();
 			return true;
 		} else if (item.getItemId() == R.id.menu_clear) {
 			showDialog(DIALOG_SHOW_PROMPT);
@@ -203,9 +253,8 @@ public class AddReportActivity extends
 	@Override
 	public void onClick(View button) {
 		if (button.getId() == R.id.btnPicture) {
-			if (!TextUtils.isEmpty(Preferences.fileName)) {
-				ImageManager.deleteImage(Preferences.fileName, "");
-			}
+			// get a file name for the photo to be uploaded
+			photoName = Util.getDateTime() + ".jpg";
 			showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
 
 		} else if (button.getId() == R.id.add_category) {
@@ -215,10 +264,13 @@ public class AddReportActivity extends
 			showDialog(DATE_DIALOG_ID);
 		} else if (button.getId() == R.id.pick_time) {
 			showDialog(TIME_DIALOG_ID);
+		}else if(button.getId() == R.id.delete_report) {
+			showDialog(DIALOG_SHOW_DELETE_PROMPT);
 		}
+		
 	}
 
-	private void addReports() {
+	private void validateReports() {
 		// Dipo Fix
 		mError = false;
 		boolean required = false;
@@ -284,65 +336,76 @@ public class AddReportActivity extends
 		} else if (mError) {
 			showDialog(DIALOG_SHOW_MESSAGE);
 		} else {
-			
-			//TODO::// Save this in a db
-			/*AddReportsTask addReportsTask = new AddReportsTask();
-			addReportsTask.appContext = this;
-			addReportsTask.execute();*/
+			new SaveTask(this).execute((String) null);
 
 		}
 	}
 
 	/**
-	 * Post directly to online.
+	 * Post to local database
 	 * 
 	 * @author henryaddo
 	 */
-	public int postToOnline() {
-		log("postToOnline(): posting report to online");
+	private boolean addReport() {
+		log("Adding new reports to");
+		ListReportModel reportModel = new ListReportModel();
+		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
 
-		if (TextUtils.isEmpty(Preferences.domain)
-				|| Preferences.domain.equalsIgnoreCase("http://")) {
-			return 12;
+		Report report = new Report();
+
+		report.setTitle(view.mIncidentTitle.getText().toString());
+		report.setDescription(view.mIncidentDesc.getText().toString());
+		report.setLatitude(view.mLongitude.getText().toString());
+		report.setLongitude(view.mLatitude.getText().toString());
+		report.setLocationName(view.mIncidentLocation.getText().toString());
+		report.setReportDate(mDateToSubmit);
+		report.setMode(String.valueOf(0));
+		report.setVerified(String.valueOf(0));
+		report.setPending(1);
+
+		if (reportModel.addPendingReport(report, mVectorCategories,
+				pendingPhotos, view.mNews.getText().toString())) {
+			// move saved photos
+			log("Moving photos to fetched folder");
+			ImageManager.movePendingPhotos(this);
+			return true;
 		}
+		return false;
 
-		String dates[] = mDateToSubmit.split(" ");
-		String time[] = dates[1].split(":");
+	}
 
-		String categories = Util.implode(mVectorCategories);
-		StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
-		urlBuilder.append("/api");
+	/**
+	 * Edit existing report
+	 * 
+	 * @author henryaddo
+	 */
+	private void setSavedReport(int id) {
+		log("Adding new reports to");
+		
+		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
 
-		mParams.put("task", "report");
-		mParams.put("incident_title", view.mIncidentTitle.getText().toString());
-		mParams.put("incident_description", view.mIncidentDesc.getText()
-				.toString());
-		mParams.put("incident_date", dates[0]);
-		mParams.put("incident_hour", time[0]);
-		mParams.put("incident_minute", time[1]);
-		mParams.put("incident_ampm", dates[2].toLowerCase());
-		mParams.put("incident_category", categories);
-		mParams.put("latitude", view.mLatitude.getText().toString());
-		mParams.put("longitude", view.mLongitude.getText().toString());
-		mParams.put("location_name", view.mIncidentLocation.getText()
-				.toString());
-		mParams.put("person_first", Preferences.firstname);
-		mParams.put("person_last", Preferences.lastname);
-		mParams.put("person_email", Preferences.email);
-		mParams.put("filename", Preferences.fileName);
+		// set text part of reports
+		view.mIncidentTitle.setText("");
+		view.mIncidentDesc.setText("");
+		view.mLongitude.setText("");
+		view.mLatitude.setText("");
+		view.mIncidentLocation.setText("");
 
-		try {
-			final int status = new ReportsHttpClient(this).PostFileUpload(
-					urlBuilder.toString(), mParams);
-			log("Statuses: " + status);
-			return status;
-		} catch (IOException e) {
-			log("postToOnline(): IO exception failed to submit report "
-					+ Preferences.domain);
-			e.printStackTrace();
-			return 13;
+		// set date and time
+		setDateAndTime("");
+		// set the photos
+
+		// set news
+		view.mNews.setText("");
+	}
+	
+	private void deleteReport() {
+		//make sure it's and existing report
+		if(id > 0 ) {
+			if(reportModel.deleteReport(id)) {
+				finish();
+			}
 		}
-
 	}
 
 	/**
@@ -379,6 +442,7 @@ public class AddReportActivity extends
 		}
 
 		case DIALOG_CHOOSE_IMAGE_METHOD: {
+
 			AlertDialog dialog = (new AlertDialog.Builder(this)).create();
 			dialog.setTitle(getString(R.string.choose_method));
 			dialog.setMessage(getString(R.string.how_to_select_pic));
@@ -404,7 +468,7 @@ public class AddReportActivity extends
 							Intent intent = new Intent(
 									android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 							intent.putExtra(MediaStore.EXTRA_OUTPUT, PhotoUtils
-									.getPhotoUri("photo.jpg",
+									.getPhotoUri(photoName,
 											AddReportActivity.this));
 							startActivityForResult(intent, REQUEST_CODE_CAMERA);
 							dialog.dismiss();
@@ -491,6 +555,7 @@ public class AddReportActivity extends
 			showRequiredDialog.show();
 			break;
 
+		//prompt for unsaved changes
 		case DIALOG_SHOW_PROMPT: {
 			AlertDialog dialog = (new AlertDialog.Builder(this)).create();
 			dialog.setTitle(getString(R.string.unsaved_changes));
@@ -506,6 +571,31 @@ public class AddReportActivity extends
 					new Dialog.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
 							finish();
+							dialog.dismiss();
+						}
+					});
+
+			dialog.setCancelable(false);
+			return dialog;
+		}
+		
+		//prompt for report deletion
+		case DIALOG_SHOW_DELETE_PROMPT: {
+			AlertDialog dialog = (new AlertDialog.Builder(this)).create();
+			dialog.setTitle(getString(R.string.delete_report));
+			dialog.setMessage(getString(R.string.want_to_delete));
+			dialog.setButton(getString(R.string.no),
+					new Dialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+
+							dialog.dismiss();
+						}
+					});
+			dialog.setButton2(getString(R.string.yes),
+					new Dialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							//delete report
+							deleteReport();
 							dialog.dismiss();
 						}
 					});
@@ -579,9 +669,9 @@ public class AddReportActivity extends
 			int i = 0;
 			for (Category category : mListReportModel.getCategories(this)) {
 				categories[i] = category.getCategoryTitle();
-				mCategoriesTitle.put(String.valueOf(category.getDbId()),
+				mCategoriesTitle.put(String.valueOf(category.getCategoryId()),
 						category.getCategoryTitle());
-				mCategoriesId.add(String.valueOf(category.getDbId()));
+				mCategoriesId.add(String.valueOf(category.getCategoryId()));
 				i++;
 			}
 			return categories;
@@ -601,12 +691,46 @@ public class AddReportActivity extends
 			// Because the API doesn't support dates in diff Locale mode, force
 			// it to show time in US
 			SimpleDateFormat submitFormat = new SimpleDateFormat(
-					"MM/dd/yyyy hh:mm a", Locale.US);
+					"yyy-MM-dd kk:mm:ss", Locale.US);
 			mDateToSubmit = submitFormat.format(date);
 		} else {
 			view.mPickDate.setText(R.string.incident_date);
 			view.mPickTime.setText(R.string.incident_time);
 			mDateToSubmit = null;
+		}
+	}
+
+	private void setDateAndTime(String dateTime) {
+		if (dateTime != null && !(TextUtils.isEmpty(dateTime))) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+			Date date;
+			try {
+				date = dateFormat.parse(dateTime);
+
+				if (date != null) {
+
+					view.mPickDate.setText(dateFormat.format(date));
+
+					SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+					view.mPickTime.setText(timeFormat.format(date));
+
+					// Because the API doesn't support dates in diff Locale
+					// mode,
+					// force
+					// it to show time in US
+					SimpleDateFormat submitFormat = new SimpleDateFormat(
+							"yyy-MM-dd kk:mm:ss", Locale.US);
+					mDateToSubmit = submitFormat.format(date);
+				} else {
+					view.mPickDate.setText(R.string.incident_date);
+					view.mPickTime.setText(R.string.incident_time);
+					mDateToSubmit = null;
+				}
+
+			} catch (ParseException e) {
+				log(e.getMessage());
+
+			}
 		}
 	}
 
@@ -708,22 +832,22 @@ public class AddReportActivity extends
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == REQUEST_CODE_CAMERA) {
-				Uri uri = PhotoUtils.getPhotoUri("photo.jpg", this);
+
+				Uri uri = PhotoUtils.getPhotoUri(photoName, this);
 				Bitmap bitmap = PhotoUtils.getCameraPhoto(this, uri);
-				PhotoUtils.savePhoto(this, bitmap);
+				PhotoUtils.savePhoto(this, bitmap, photoName);
 				log(String.format("REQUEST_CODE_CAMERA %dx%d",
 						bitmap.getWidth(), bitmap.getHeight()));
+
 			} else if (requestCode == REQUEST_CODE_IMAGE) {
 				Bitmap bitmap = PhotoUtils
 						.getGalleryPhoto(this, data.getData());
-				PhotoUtils.savePhoto(this, bitmap);
+				PhotoUtils.savePhoto(this, bitmap, photoName);
 				log(String.format("REQUEST_CODE_IMAGE %dx%d",
 						bitmap.getWidth(), bitmap.getHeight()));
 			}
-			SharedPreferences.Editor editor = getPreferences(0).edit();
-			editor.putString("photo", PhotoUtils.getPhotoUri("photo.jpg", this)
-					.getPath());
-			editor.commit();
+
+			pendingPhoto.refresh();
 		}
 	}
 
@@ -782,7 +906,6 @@ public class AddReportActivity extends
 		}
 	};
 
-	
 	/**
 	 * Go to reports screen
 	 */
@@ -807,12 +930,44 @@ public class AddReportActivity extends
 
 	@Override
 	protected boolean onSaveChanges() {
-		return true;
+		return addReport();
 	}
 
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.widget.ViewSwitcher.ViewFactory#makeView()
+	 */
+	@Override
+	public View makeView() {
+		ImageView i = new ImageView(this);
+		i.setAdjustViewBounds(true);
+		i.setScaleType(ImageView.ScaleType.FIT_CENTER);
+		i.setLayoutParams(new ImageSwitcher.LayoutParams(
+				android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+				android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+
+		return i;
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget
+	 *      .AdapterView, android.view.View, int, long)
+	 */
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		this.view.mSwitcher.setImageDrawable(ImageManager.getPendingDrawables(
+				this, pendingPhoto.getItem(position).getPhoto(),
+				Util.getScreenWidth(this)));
+
 	}
 
 }

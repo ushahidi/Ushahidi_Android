@@ -20,12 +20,8 @@
 
 package com.ushahidi.android.app.util;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -163,7 +159,7 @@ public class ReportsApiUtils {
 												&& (!mediaArr.getJSONObject(w)
 														.isNull("link"))) {
 
-											final String fileName = getDateTime()
+											final String fileName = Util.getDateTime()
 													+ ".jpg";
 											// save images to file
 											saveMedia(mediaArr.getJSONObject(w)
@@ -262,12 +258,6 @@ public class ReportsApiUtils {
 		if (!TextUtils.isEmpty(linkUrl)) {
 			ImageManager.downloadImage(linkUrl, fileName, context);
 		}
-	}
-
-	private String getDateTime() {
-		DateFormat df = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
-		df.setTimeZone(TimeZone.getTimeZone("GMT"));
-		return df.format(new Date());
 	}
 
 	private void log(String message) {

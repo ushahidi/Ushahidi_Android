@@ -21,7 +21,6 @@
 package com.ushahidi.android.app.views;
 
 import android.app.Activity;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -51,15 +50,6 @@ public class ListMapView extends com.ushahidi.android.app.views.View {
         mProgressBar = (ProgressBar)activity.findViewById(R.id.map_refresh_progress);
     }
     
-    //TODO remove this when necessary
-    public ListMapView(FragmentActivity activity) {
-        super(activity);
-
-        mTextView = (TextView)activity.findViewById(R.id.search_map);
-        mEmptyList = (TextView)activity.findViewById(R.id.empty_list_for_maps);
-        mListView = (ListView)activity.findViewById(android.R.id.list);
-        mProgressBar = (ProgressBar)activity.findViewById(R.id.map_refresh_progress);
-    }
 
     public void displayEmptyListText() {
 

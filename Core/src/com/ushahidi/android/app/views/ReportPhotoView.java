@@ -19,8 +19,8 @@
  **/
 package com.ushahidi.android.app.views;
 
+import android.app.Activity;
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageSwitcher;
@@ -38,7 +38,7 @@ public class ReportPhotoView extends View {
 
 	public Context context;
 
-	public ReportPhotoView(FragmentActivity activity) {
+	public ReportPhotoView(Activity activity) {
 		super(activity);
 		this.context = activity;
 		imageSwitcher = (ImageSwitcher) activity

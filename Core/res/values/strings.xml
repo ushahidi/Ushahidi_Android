@@ -404,4 +404,8 @@
     <string name="delete">Delete</string>
     <string name="verified">Verified</string>
     <string name="unverified">Unverified</string>
+    <string name="remove">Remove</string>
+    <string name="uploading_pending_report">Uploading pending reports...</string>
+    <string name="delete_report">Delete report</string>
+    <string name="want_to_delete">Are you sure you want to delete?</string>
 </resources>

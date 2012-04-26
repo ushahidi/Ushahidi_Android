@@ -20,6 +20,7 @@
 
 package com.ushahidi.android.app.models;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,7 @@ import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Media;
 import com.ushahidi.android.app.entities.Photo;
+import com.ushahidi.android.app.util.PhotoUtils;
 import com.ushahidi.android.app.util.Util;
 
 /**
@@ -69,11 +71,31 @@ public class ListReportPhotoModel extends Model {
 		return mPhotoModel;
 	}
 
+	public List<Photo> getPendingPhotos(Context context) {
+		mPhotoModel = new ArrayList<Photo>();
+		File[] pendingPhotos = PhotoUtils.getPendingPhotos(context);
+		if (pendingPhotos != null && pendingPhotos.length > 0) {
+			int id = 0;
+			for (File file : pendingPhotos) {
+				if (file.exists()) {
+					id += 1;
+					Photo photo = new Photo();
+					photo.setDbId(id);
+					photo.setPhoto(file.getName());
+					mPhotoModel.add(photo);
+				}
+			}
+
+		}
+
+		return mPhotoModel;
+	}
+
 	public List<Photo> getPhotosByReportId(int reportId) {
 
 		mPhotoModel = new ArrayList<Photo>();
 		mMedia = Database.mMediaDao.fetchReportPhoto(reportId);
-		Log.i("ListReportPhotoModel ","Photo: "+reportId);
+		Log.i("ListReportPhotoModel ", "Photo: " + reportId);
 		if (mMedia != null && mMedia.size() > 0) {
 
 			for (Media item : mMedia) {

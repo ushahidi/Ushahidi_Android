@@ -25,6 +25,7 @@
         android:paddingBottom="2dip"
         android:paddingLeft="5dip"
         android:paddingTop="2dip"
+        android:background="@color/table_selected_row_color"
         android:text="@string/all_categories"
         android:textColor="@color/title_color" />
 

@@ -11,10 +11,8 @@
     at team@ushahidi.com.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_color"
-    android:orientation="vertical" >
+    style="@style/LinearLayout.Vertical.Full"
+    android:background="@color/background_color" >
 
     <ScrollView
         android:layout_width="match_parent"
@@ -23,129 +21,93 @@
         <!-- Parent layout starts -->
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
+            style="@style/LinearLayout.Vertical.Full"
             android:padding="10dip" >
 
             <!-- Title layout begins -->
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
+                style="@style/LinearLayout.Vertical.Wrap"
                 android:paddingBottom="10px" >
 
                 <TextView
                     android:id="@+id/lbl_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/title"
-                    android:textColor="@color/title_color"
-                    android:textStyle="bold" />
+                    style="@style/TextView.Label"
+                    android:text="@string/title" />
 
                 <EditText
                     android:id="@+id/incident_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:autoText="true"
-                    android:capitalize="words" />
+                    style="@style/EditText.Title" />
             </LinearLayout>
             <!-- Title layout ends. -->
 
 
-            
             <!-- Description layout starts -->
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
+                style="@style/LinearLayout.Vertical"
                 android:paddingBottom="10px" >
 
                 <TextView
                     android:id="@+id/lbl_incidents_dec"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/description"
-                    android:textColor="@color/title_color"
-                    android:textStyle="bold" />
+                    style="@style/TextView.Label"
+                    android:text="@string/description" />
 
                 <EditText
                     android:id="@+id/incident_desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/EditText.Multiline"
                     android:autoText="true"
                     android:gravity="top"
-                    android:inputType="textMultiLine|textCapSentences"
-                    android:lines="5"
-                    android:scrollbars="vertical"
-                    android:singleLine="false" />
+                    android:scrollbars="vertical" />
             </LinearLayout>
             <!-- Description layout ends. -->
+
 
             <!-- Categories layout starts -->
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
+                style="@style/LinearLayout.Vertical"
                 android:paddingBottom="10px" >
 
                 <TextView
                     android:id="@+id/lbl_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/category"
-                    android:textColor="@color/title_color"
-                    android:textStyle="bold" />
+                    style="@style/TextView.Label"
+                    android:text="@string/category" />
 
                 <Button
                     android:id="@+id/add_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/incident_add_category"
-                    android:textStyle="bold" />
+                    style="@style/Button.Select"
+                    android:text="@string/incident_add_category" />
             </LinearLayout>
             <!-- Categories layout ends. -->
+
 
             <!-- Date layout starts. -->
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
+                style="@style/LinearLayout.Vertical"
                 android:paddingBottom="10px" >
 
                 <TextView
                     android:id="@+id/lbl_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/date_and_time"
-                    android:textColor="@color/title_color"
-                    android:textStyle="bold" />
+                    style="@style/TextView.Label"
+                    android:text="@string/date_and_time" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                <LinearLayout style="@style/LinearLayout.Horizontal" >
 
                     <Button
                         android:id="@+id/pick_date"
+                        style="@style/Button.Select"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/incident_date"
-                        android:textStyle="bold" />
+                        android:text="@string/incident_date" />
 
                     <Button
                         android:id="@+id/pick_time"
+                        style="@style/Button.Select"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/incident_time"
-                        android:textStyle="bold" />
+                        android:text="@string/incident_time" />
                 </LinearLayout>
             </LinearLayout>
             <!-- Date layout ends. -->
@@ -154,46 +116,38 @@
             <!-- Location layout starts. -->
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
+                style="@style/LinearLayout.Vertical"
                 android:paddingBottom="10px" >
 
                 <TextView
                     android:id="@+id/incident_loc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/location"
-                    android:textColor="@color/title_color"
-                    android:textStyle="bold" />
+                    style="@style/TextView.Label"
+                    android:text="@string/location" />
 
                 <!-- location name -->
 
                 <EditText
                     android:id="@+id/incident_location"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/EditText.CapWords"
                     android:autoText="true"
-                    android:capitalize="words"
                     android:hint="@string/hint_location"
-                    android:inputType="textCapWords" />
+                    android:paddingBottom="2dip" />
 
                 <com.google.android.maps.MapView
                     android:id="@+id/location_map"
                     android:layout_width="match_parent"
-                    android:layout_height="250dip"
+                    android:layout_height="250dp"
                     android:apiKey="@string/google_map_api_key"
                     android:clickable="true"
                     android:enabled="true" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="5px" >
+                    style="@style/LinearLayout.Horizontal"
+                    android:paddingTop="5dp" >
 
                     <EditText
                         android:id="@+id/incident_latitude"
+                        style="@style/EditText.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -202,6 +156,7 @@
 
                     <EditText
                         android:id="@+id/incident_longitude"
+                        style="@style/EditText.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -215,54 +170,72 @@
             <!-- Photo layout starts. -->
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="10px" >
+                style="@style/LinearLayout.Vertical"
+                android:paddingBottom="5dp" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/photos"
-                    android:textColor="@color/title_color"
-                    android:textStyle="bold" />
+                    style="@style/TextView.Label"
+                    android:text="@string/photos" />
 
                 <Button
                     android:id="@+id/btnPicture"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/btn_add_photo"
-                    android:textStyle="bold" />
+                    style="@style/Button.Select"
+                    android:text="@string/btn_add_photo" />
 
-                <ImageView
-                    android:id="@+id/sel_photo_prev"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scaleType="fitCenter" />
+                <LinearLayout style="@style/LinearLayout.Horizontal"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp" >
+
+                    <Gallery
+                        android:id="@+id/gallery"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:longClickable="true"
+                        
+                        android:spacing="10dp" />
+                </LinearLayout>
+
+                <LinearLayout style="@style/LinearLayout.Horizontal" >
+
+                    <ImageSwitcher
+                        android:id="@+id/sel_image_switcher"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
             </LinearLayout>
             <!-- Photo layout ends. -->
-            
+
+
             <!-- News layout starts. -->
+
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
+                style="@style/LinearLayout.Vertical"
                 android:paddingBottom="10px" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/news"
-                    android:textColor="@color/title_color"
-                    android:textStyle="bold" />
+                    style="@style/TextView.Label"
+                    android:text="@string/news" />
 
-               
-                    <EditText
-                        android:id="@+id/report_news"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/enter_news_url"
-                        android:inputType="textWebEditText" />
+                <EditText
+                    android:id="@+id/report_news"
+                    style="@style/EditText.URL"
+                    android:hint="@string/enter_news_url" />
+            </LinearLayout>
+            <!-- News layout ends. -->
+
+
+            <!-- News layout starts. -->
+
+            <LinearLayout
+                style="@style/LinearLayout.Horizontal"
+                android:paddingBottom="10dp" >
+
+                <Button
+                    android:id="@+id/delete_report"
+                    style="@style/Button.Action"
+                    android:gravity="center"
+                    android:text="@string/delete"
+                    android:visibility="gone" />
             </LinearLayout>
             <!-- News layout ends. -->
 

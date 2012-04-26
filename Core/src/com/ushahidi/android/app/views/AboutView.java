@@ -1,10 +1,10 @@
 package com.ushahidi.android.app.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +18,7 @@ public class AboutView extends com.ushahidi.android.app.views.View {
 
 	private TextView version;
 
-	public AboutView(FragmentActivity activity) {
+	public AboutView(Activity activity) {
 		super(activity);
 		// VERSION
 		version = (TextView) activity.findViewById(R.id.version);

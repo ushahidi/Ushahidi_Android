@@ -25,42 +25,49 @@ import java.util.List;
 import com.ushahidi.android.app.entities.Report;
 
 /**
- * Define the methods for interacting with the report table. These methods needs to be 
- * implemented by {@link ReportDao}
+ * Define the methods for interacting with the report table. These methods needs
+ * to be implemented by {@link ReportDao}
+ * 
  * @author eyedol
- *
+ * 
  */
 public interface IReportDao {
 
-    // fetch all reports
-    public List<Report> fetchAllReports();
-    
- // fetch all reports
-    public List<Report> fetchAllPendingReports();
+	// fetch all reports
+	public List<Report> fetchAllReports();
 
-    // fetch reports by categories title: This is deprecated
-    public List<Report> fetchReportByCategory(String category);
-    
-    public List<Report> fetchPendingReportByCategory(String category);
-    
-    // fetch reports by categories by id
-    public List<Report> fetchReportByCategoryId(int categoryId);
-    
-    public List<Report> fetchPendingReportByCategoryId(int categoryId);
-    
-    // fetch reports by ID
-    public List<Report> fetchReportById(long id);
+	// fetch all reports
+	public List<Report> fetchAllPendingReports();
 
-    // delete all report
-    public boolean deleteAllReport();
+	// fetch reports by categories title: This is deprecated
+	public List<Report> fetchReportByCategory(String category);
 
-    // delete report by id
-    public boolean deleteReportById(long id);
+	public List<Report> fetchPendingReportByCategory(String category);
 
-    // add reports
-    public boolean addReport(Report report);
+	// fetch reports by categories by id
+	public List<Report> fetchReportByCategoryId(int categoryId);
 
-    // add report
-    public boolean addReport(List<Report> report);
+	public List<Report> fetchPendingReportByCategoryId(int categoryId);
+
+	// fetch reports by ID
+	public List<Report> fetchReportById(long id);
+
+	// delete all report
+	public boolean deleteAllReport();
+
+	// delete report by id
+	public boolean deleteReportById(long id);
+	
+	// delete report by id
+	public boolean deletePendingReportById(int id);
+
+	// add reports
+	public boolean addReport(Report report);
+
+	// add report
+	public boolean addReport(List<Report> report);
+
+	// fetch reports by categories title: This is deprecated
+	public int fetchPendingReportIdByDate(String date);
 
 }

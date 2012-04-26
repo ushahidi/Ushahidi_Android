@@ -90,8 +90,6 @@ public class ListReportFragment
 
 	private ListPendingReportAdapter pendingReportAdapter;
 
-	private TextView categories;
-
 	public ListReportFragment() {
 		super(ListReportView.class, ListReportAdapter.class,
 				R.layout.list_report, R.menu.list_report, android.R.id.list);
@@ -112,7 +110,7 @@ public class ListReportFragment
 		apiUtils = new ApiUtils(getActivity());
 		fetchedReportAdapter = new ListFetchedReportAdapter(getActivity());
 		pendingReportAdapter = new ListPendingReportAdapter(getActivity());
-
+		pendingReportAdapter.refresh();
 		// add pending upload
 		if (pendingReportAdapter.getCount() > 0) {
 			adapter.addView(pendingHeader());
@@ -121,6 +119,7 @@ public class ListReportFragment
 			adapter.addView(fetchedHeader());
 		}
 		adapter.addAdapter(fetchedReportAdapter);
+
 		if (savedInstanceState != null) {
 			// Restore last state for checked position.
 			mPositionChecked = savedInstanceState.getInt("curChoice", 0);
@@ -140,8 +139,7 @@ public class ListReportFragment
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		ViewGroup viewGroup = (ViewGroup) inflater.inflate(
 				R.layout.list_fetched_header, getListView(), false);
-		categories = (TextView) viewGroup
-				.findViewById(R.id.list_header_fetched);
+
 		return viewGroup;
 	}
 
@@ -188,9 +186,11 @@ public class ListReportFragment
 	public void onResume() {
 		super.onResume();
 		if (filterCategory == 0) {
-			mHandler.post(fetchReportList);
+			refreshReportLists();
+			showCategories();
+
 		} else {
-			mHandler.post(fetchReportListByCategory);
+			reportByCategoryList();
 		}
 	}
 
@@ -207,16 +207,20 @@ public class ListReportFragment
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		l.setItemChecked(position, true);
-		if( fetchedReportAdapter == adapter.getAdapter(position) ) {
-			//fetchedReportAdapter.getItem
-			//toastLong("item at: "+fetchedReportAdapter.getItem(position).getTitle()+" ID: "+id);
-			launchViewReport(position);
+		if (fetchedReportAdapter == adapter.getAdapter(position - 1)) {
+
+			int itemAt = (adapter.getCount() - position);
+
+			launchViewReport((fetchedReportAdapter.getCount() - itemAt) - 1);
+		} else if (pendingReportAdapter == adapter.getAdapter(position - 1)) {
+
+			int itemPosition = pendingReportAdapter.getCount() - position;
+			int itemAt = (pendingReportAdapter.getCount() - itemPosition) - 1;
+			launchAddReport((int) pendingReportAdapter.getItem(itemAt - 1)
+					.getId());
+
 		}
-		log("getPositionForSection: "+adapter.getPositionForSection(position));
-		log("getSectionForPosition: "+adapter.getSectionForPosition(position));
-		log("getItemPosition:1  "+adapter.getSectionForPosition(adapter.getPositionForSection(position)));
-		log("getItemSection:2 "+adapter.getPositionForSection(adapter.getSectionForPosition(position)));
-		
+
 	}
 
 	public void setListMapListener(ListMapFragmentListener listener) {
@@ -234,7 +238,7 @@ public class ListReportFragment
 			new RefreshReports(getActivity()).execute((String) null);
 			return true;
 		} else if (item.getItemId() == R.id.menu_add) {
-			launchAddReport();
+			launchAddReport(0);
 			return true;
 		} else if (item.getItemId() == R.id.filter_by) {
 
@@ -281,7 +285,6 @@ public class ListReportFragment
 	final Runnable filterReportList = new Runnable() {
 		public void run() {
 			try {
-
 				filterReportList();
 			} catch (Exception e) {
 				return;
@@ -317,11 +320,11 @@ public class ListReportFragment
 
 								filterCategory = spinnerArrayAdapter.getTag(
 										which).getCategoryId();
+
 								final String all = spinnerArrayAdapter.getTag(
 										which).getCategoryTitle();
 								view.footerText.setText(all);
-								if (categories != null)
-									categories.setText(all);
+
 								if ((all != null)
 										&& (!TextUtils.isEmpty(all))
 										&& (all != getActivity().getString(
@@ -358,7 +361,7 @@ public class ListReportFragment
 
 				@Override
 				public void onClick(View v) {
-					launchAddReport();
+					launchAddReport(0);
 				}
 
 			});
@@ -480,7 +483,13 @@ public class ListReportFragment
 
 	}
 
-	public void launchViewReport(int id) {
+	/**
+	 * Launch Activity to view the details of a report.
+	 * 
+	 * @param id
+	 *            The category id of the selected category.
+	 */
+	private void launchViewReport(int id) {
 		Intent i = new Intent(getActivity(), ViewReportActivity.class);
 		i.putExtra("id", id);
 		if (filterCategory > 0) {
@@ -488,13 +497,19 @@ public class ListReportFragment
 		} else {
 			i.putExtra("category", 0);
 		}
-		startActivityForResult(i, 0);
+		startActivityForResult(i, 1);
 		getActivity().overridePendingTransition(R.anim.home_enter,
 				R.anim.home_exit);
 	}
 
-	public void launchAddReport() {
+	/**
+	 * Launch Activity for adding new report
+	 */
+	private void launchAddReport(int id) {
 		Intent i = new Intent(getActivity(), AddReportActivity.class);
-		startActivityForResult(i, 1);
+		i.putExtra("id", id);
+		startActivityForResult(i, 2);
+		getActivity().overridePendingTransition(R.anim.home_enter,
+				R.anim.home_exit);
 	}
 }
