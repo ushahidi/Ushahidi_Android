@@ -23,6 +23,7 @@ package com.ushahidi.android.app.activities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.ushahidi.android.app.R;
@@ -40,6 +41,11 @@ public abstract class BaseEditMapActivity<V extends View, M extends Model>
 
 	public BaseEditMapActivity(Class<V> view, int layout, int menu, int mapView) {
 		super(view, layout, menu, mapView);
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 	}
 
 	@Override

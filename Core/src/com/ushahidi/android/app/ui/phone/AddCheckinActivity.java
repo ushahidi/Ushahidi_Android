@@ -34,7 +34,7 @@ import com.ushahidi.android.app.views.AddCheckinView;
 public class AddCheckinActivity extends BaseEditMapActivity<AddCheckinView, AddCheckinModel> {
 
     public AddCheckinActivity() {
-        super(AddCheckinView.class, R.layout.add_checkin, R.menu.add_checkin,
+        super(AddCheckinView.class,R.layout.add_checkin, R.menu.add_checkin,
                 R.id.checkin_location_map);
         // TODO Auto-generated constructor stub
     }

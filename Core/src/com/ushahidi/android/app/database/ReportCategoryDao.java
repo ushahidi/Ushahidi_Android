@@ -32,144 +32,183 @@ import com.ushahidi.android.app.entities.ReportCategory;
 /**
  * @author eyedol
  */
-public class ReportCategoryDao extends DbContentProvider implements IReportCategoryDao,
-        IReportCategorySchema {
+public class ReportCategoryDao extends DbContentProvider implements
+		IReportCategoryDao, IReportCategorySchema {
 
-    private Cursor cursor;
+	private Cursor cursor;
 
-    private List<ReportCategory> listReportCategories;
+	private List<ReportCategory> listReportCategories;
 
-    private ContentValues initialValues;
+	private ContentValues initialValues;
 
-    /**
-     * @param db
-     */
-    public ReportCategoryDao(SQLiteDatabase db) {
-        super(db);
-    }
+	/**
+	 * @param db
+	 */
+	public ReportCategoryDao(SQLiteDatabase db) {
+		super(db);
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.ushahidi.android.app.database.IReportCategoryDao#fetchReportCategory
-     * (long)
-     */
-    @Override
-    public List<ReportCategory> fetchReportCategory(long reportId) {
-        listReportCategories = new ArrayList<ReportCategory>();
-        final String selectionArgs[] = {
-            String.valueOf(reportId)
-        };
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ushahidi.android.app.database.IReportCategoryDao#fetchReportCategory
+	 * (long)
+	 */
+	@Override
+	public List<ReportCategory> fetchReportCategory(long reportId) {
+		listReportCategories = new ArrayList<ReportCategory>();
+		final String selectionArgs[] = { String.valueOf(reportId) };
 
-        final String selection = ID + " =?";
-        cursor = super.query(TABLE, COLUMNS, selection,
-                selectionArgs, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                ReportCategory reportCategory = cursorToEntity(cursor);
-                listReportCategories.add(reportCategory);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
-        return listReportCategories;
-    }
+		final String selection = ID + " =?";
+		cursor = super.query(TABLE, COLUMNS, selection, selectionArgs, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				ReportCategory reportCategory = cursorToEntity(cursor);
+				listReportCategories.add(reportCategory);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+		return listReportCategories;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.ushahidi.android.app.database.IReportCategoryDao#addReportCategory
-     * (com.ushahidi.android.app.entities.ReportCategory)
-     */
-    @Override
-    public boolean addReportCategory(ReportCategory reportCategory) {
-        // set values
-        setContentValue(reportCategory);
-        return super.insert(TABLE, getContentValue()) > 0;
-    }
+	@Override
+	public List<ReportCategory> fetchReportCategoryByReportId(int reportId) {
+		listReportCategories = new ArrayList<ReportCategory>();
+		final String selectionArgs[] = { String.valueOf(reportId) };
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.ushahidi.android.app.database.IReportCategoryDao#addReportCategories
-     * (java.util.List)
-     */
-    @Override
-    public boolean addReportCategories(List<ReportCategory> reportCategories) {
-        try {
-            mDb.beginTransaction();
+		final String selection = REPORT_ID + " =?";
+		cursor = super.query(TABLE, COLUMNS, selection, selectionArgs, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				ReportCategory reportCategory = cursorToEntity(cursor);
+				listReportCategories.add(reportCategory);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+		return listReportCategories;
+	}
 
-            for (ReportCategory reportCategory : reportCategories) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ushahidi.android.app.database.IReportCategoryDao#addReportCategory
+	 * (com.ushahidi.android.app.entities.ReportCategory)
+	 */
+	@Override
+	public boolean addReportCategory(ReportCategory reportCategory) {
+		// set values
+		setContentValue(reportCategory);
+		return super.insert(TABLE, getContentValue()) > 0;
+	}
 
-                addReportCategory(reportCategory);
-            }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ushahidi.android.app.database.IReportCategoryDao#addReportCategories
+	 * (java.util.List)
+	 */
+	@Override
+	public boolean addReportCategories(List<ReportCategory> reportCategories) {
+		try {
+			mDb.beginTransaction();
 
-            mDb.setTransactionSuccessful();
-        } finally {
-            mDb.endTransaction();
-        }
-        return true;
-    }
+			for (ReportCategory reportCategory : reportCategories) {
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.ushahidi.android.app.database.IReportCategoryDao#deleteAllReportCategory
-     * ()
-     */
-    @Override
-    public boolean deleteAllReportCategory() {
-        return super.delete(TABLE, null, null) > 0;
-    }
+				addReportCategory(reportCategory);
+			}
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.ushahidi.android.app.database.DbContentProvider#cursorToEntity(android
-     * .database.Cursor)
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    protected ReportCategory cursorToEntity(Cursor cursor) {
-        ReportCategory reportCategory = new ReportCategory();
-        int idIndex;
-        int reportIdIndex;
-        int categoryIdIndex;
+			mDb.setTransactionSuccessful();
+		} finally {
+			mDb.endTransaction();
+		}
+		return true;
+	}
 
-        if (cursor != null) {
-            if (cursor.getColumnIndex(ID) != -1) {
-                idIndex = cursor.getColumnIndexOrThrow(ID);
-                reportCategory.setDbId(cursor.getInt(idIndex));
-            }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ushahidi.android.app.database.IReportCategoryDao#deleteAllReportCategory
+	 * ()
+	 */
+	@Override
+	public boolean deleteAllReportCategory() {
+		return super.delete(TABLE, null, null) > 0;
+	}
 
-            if (cursor.getColumnIndex(REPORT_ID) != -1) {
-                reportIdIndex = cursor.getColumnIndexOrThrow(REPORT_ID);
-                reportCategory.setReportId(cursor.getInt(reportIdIndex));
-            }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ushahidi.android.app.database.DbContentProvider#cursorToEntity(android
+	 * .database.Cursor)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	protected ReportCategory cursorToEntity(Cursor cursor) {
+		ReportCategory reportCategory = new ReportCategory();
+		int idIndex;
+		int reportIdIndex;
+		int categoryIdIndex;
 
-            if (cursor.getColumnIndex(CATEGORY_ID) != -1) {
-                categoryIdIndex = cursor.getColumnIndexOrThrow(CATEGORY_ID);
-                reportCategory.setCategoryId(cursor.getInt(categoryIdIndex));
-            }
-        }
-        return reportCategory;
-    }
+		if (cursor != null) {
+			if (cursor.getColumnIndex(ID) != -1) {
+				idIndex = cursor.getColumnIndexOrThrow(ID);
+				reportCategory.setDbId(cursor.getInt(idIndex));
+			}
 
-    private void setContentValue(ReportCategory reportCategory) {
-        initialValues = new ContentValues();
-        initialValues.put(REPORT_ID, reportCategory.getReportId());
-        initialValues.put(CATEGORY_ID, reportCategory.getCategoryId());
-    }
+			if (cursor.getColumnIndex(REPORT_ID) != -1) {
+				reportIdIndex = cursor.getColumnIndexOrThrow(REPORT_ID);
+				reportCategory.setReportId(cursor.getInt(reportIdIndex));
+			}
 
-    private ContentValues getContentValue() {
-        return initialValues;
-    }
-    
-    @Override
-    public boolean deleteReportCategoryByReportId(int reportId) {
-    	final String selectionArgs[] = { String.valueOf(reportId) };
+			if (cursor.getColumnIndex(CATEGORY_ID) != -1) {
+				categoryIdIndex = cursor.getColumnIndexOrThrow(CATEGORY_ID);
+				reportCategory.setCategoryId(cursor.getInt(categoryIdIndex));
+			}
+		}
+		return reportCategory;
+	}
+
+	private void setContentValue(ReportCategory reportCategory) {
+		initialValues = new ContentValues();
+		initialValues.put(REPORT_ID, reportCategory.getReportId());
+		initialValues.put(CATEGORY_ID, reportCategory.getCategoryId());
+	}
+
+	private ContentValues getContentValue() {
+		return initialValues;
+	}
+
+	@Override
+	public boolean deleteReportCategoryByReportId(int reportId) {
+		final String selectionArgs[] = { String.valueOf(reportId) };
 		final String selection = REPORT_ID + " =?";
 		return super.delete(TABLE, selection, selectionArgs) > 0;
-    }
+	}
+
+	@Override
+	public boolean updateReportCategory(int reportId,
+			ReportCategory reportCategory) {
+		boolean status = false;
+		try {
+			mDb.beginTransaction();
+			final String selectionArgs[] = { String.valueOf(reportId) };
+			final String selection = REPORT_ID + " =?";
+			setContentValue(reportCategory);
+			status = super.update(TABLE, getContentValue(), selection,
+					selectionArgs) > 0;
+			mDb.setTransactionSuccessful();
+		} finally {
+			mDb.endTransaction();
+		}
+		return status;
+	}
 }

@@ -26,7 +26,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.database.Database;
@@ -95,7 +94,24 @@ public class ListReportPhotoModel extends Model {
 
 		mPhotoModel = new ArrayList<Photo>();
 		mMedia = Database.mMediaDao.fetchReportPhoto(reportId);
-		Log.i("ListReportPhotoModel ", "Photo: " + reportId);
+		if (mMedia != null && mMedia.size() > 0) {
+
+			for (Media item : mMedia) {
+				Photo photo = new Photo();
+				photo.setDbId(item.getDbId());
+				photo.setPhoto(item.getLink());
+				mPhotoModel.add(photo);
+			}
+
+		}
+
+		return mPhotoModel;
+	}
+	
+	public List<Photo> getPendingPhotosByReportId(int reportId) {
+
+		mPhotoModel = new ArrayList<Photo>();
+		mMedia = Database.mMediaDao.fetchPendingReportPhoto(reportId);
 		if (mMedia != null && mMedia.size() > 0) {
 
 			for (Media item : mMedia) {

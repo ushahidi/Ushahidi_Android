@@ -56,10 +56,10 @@ public interface IReportDao {
 	public boolean deleteAllReport();
 
 	// delete report by id
-	public boolean deleteReportById(long id);
-	
+	public boolean deleteReportById(long reportId);
+
 	// delete report by id
-	public boolean deletePendingReportById(int id);
+	public boolean deletePendingReportById(int reportId);
 
 	// add reports
 	public boolean addReport(Report report);
@@ -69,5 +69,11 @@ public interface IReportDao {
 
 	// fetch reports by categories title: This is deprecated
 	public int fetchPendingReportIdByDate(String date);
+
+	// fetch reports by categories title: This is deprecated
+	public Report fetchPendingReportIdById(int reportId);
+
+	// add reports
+	public boolean updatePendingReport(int reportId, Report report);
 
 }

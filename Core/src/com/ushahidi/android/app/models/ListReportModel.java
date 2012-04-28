@@ -20,10 +20,8 @@
 
 package com.ushahidi.android.app.models;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -36,7 +34,6 @@ import com.ushahidi.android.app.database.IMediaSchema;
 import com.ushahidi.android.app.entities.Category;
 import com.ushahidi.android.app.entities.Media;
 import com.ushahidi.android.app.entities.Report;
-import com.ushahidi.android.app.entities.ReportCategory;
 import com.ushahidi.android.app.util.Util;
 
 /**
@@ -296,59 +293,6 @@ public class ListReportModel extends Model {
 	public List<Category> getCategories(Context context) {
 		return Database.mCategoryDao.fetchAllCategoryTitles();
 
-	}
-
-	public boolean addPendingReport(Report report, Vector<String> category,
-			File[] pendingPhotos, String news) {
-		boolean status;
-		// add pending reports
-		status = Database.mReportDao.addReport(report);
-		int id = Database.mReportDao.fetchPendingReportIdByDate(report
-				.getReportDate());
-
-		// add category
-		if (status) {
-			if (category != null && category.size() > 0) {
-				for (String cat : category) {
-					ReportCategory reportCategory = new ReportCategory();
-					reportCategory.setCategoryId(Util.toInt(cat));
-					reportCategory.setReportId(id);
-					Database.mReportCategoryDao
-							.addReportCategory(reportCategory);
-
-				}
-			}
-
-			// add photos
-			if (pendingPhotos != null && pendingPhotos.length > 0) {
-				for (File file : pendingPhotos) {
-					if (file.exists()) {
-						Media media = new Media();
-						media.setMediaId(0);
-						media.setLink(file.getName());
-
-						// get report ID;
-						media.setReportId(id);
-						media.setType(IMediaSchema.IMAGE);
-						Database.mMediaDao.addMedia(media);
-					}
-				}
-
-			}
-
-			// add news
-			if (news != null && news.length() > 0) {
-				Media media = new Media();
-				media.setMediaId(0);
-				media.setLink(news);
-				// get report ID;
-				media.setReportId(id);
-				media.setType(IMediaSchema.NEWS);
-				Database.mMediaDao.addMedia(media);
-			}
-		}
-
-		return status;
 	}
 
 	public List<Category> getCategoriesByReportId(int reportId) {

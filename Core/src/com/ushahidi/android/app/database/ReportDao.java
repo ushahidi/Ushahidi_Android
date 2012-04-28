@@ -27,7 +27,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ushahidi.android.app.entities.IDbEntity;
 import com.ushahidi.android.app.entities.Report;
 
 public class ReportDao extends DbContentProvider implements IReportDao,
@@ -52,7 +51,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 		listReport = new ArrayList<Report>();
 		cursor = super.query(INCIDENTS_TABLE, null, selection, selectionArgs,
 				sortOrder);
-		
+
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
@@ -249,6 +248,31 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	}
 
 	@Override
+	public Report fetchPendingReportIdById(int reportId) {
+		final String sortOrder = INCIDENT_DATE + " DESC";
+		final String selectionArgs[] = { String.valueOf(reportId),
+				String.valueOf(1) };
+
+		final String selection = ID + " =? AND " + INCIDENT_PENDING + " =? ";
+		Report report = new Report();
+
+		cursor = super.query(INCIDENTS_TABLE, null, selection, selectionArgs,
+				sortOrder);
+		if (cursor != null) {
+
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				report = cursorToEntity(cursor);
+
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+
+		return report;
+	}
+
+	@Override
 	public boolean deleteAllReport() {
 		return super.delete(INCIDENTS_TABLE, null, null) > 0;
 	}
@@ -383,10 +407,30 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 	@Override
 	public boolean deletePendingReportById(int id) {
-		final String selectionArgs[] = { String.valueOf(id),String.valueOf(1) };
-		final String selection = ID + " = ? AND "+INCIDENT_PENDING+" = ?";
+		final String selectionArgs[] = { String.valueOf(id), String.valueOf(1) };
+		final String selection = ID + " = ? AND " + INCIDENT_PENDING + " = ?";
 
 		return super.delete(INCIDENTS_TABLE, selection, selectionArgs) > 0;
 	}
 
+	@Override
+	public boolean updatePendingReport(int reportId, Report report) {
+		boolean status = false;
+		try {
+			mDb.beginTransaction();
+			final String selectionArgs[] = { String.valueOf(reportId),
+					String.valueOf(1) };
+			final String selection = ID + " = ? AND " + INCIDENT_PENDING
+					+ " = ?";
+			setContentValue(report);
+			super.update(INCIDENTS_TABLE, getContentValue(), selection,
+					selectionArgs);
+
+			mDb.setTransactionSuccessful();
+			status = true;
+		} finally {
+			mDb.endTransaction();
+		}
+		return status;
+	}
 }

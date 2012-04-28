@@ -55,6 +55,8 @@ public class UploadPhotoAdapter extends BaseListAdapter<Photo> {
 
 	private List<Photo> items;
 
+	private boolean pending = false;
+
 	/**
 	 * @param context
 	 */
@@ -76,7 +78,13 @@ public class UploadPhotoAdapter extends BaseListAdapter<Photo> {
 			row.setTag(widgets);
 		}
 
-		widgets.photo.setImageDrawable(getPhoto(getItem(position).getPhoto()));
+		if (pending) {
+			widgets.photo.setImageDrawable(getPendingPhoto(getItem(position)
+					.getPhoto()));
+		} else {
+			widgets.photo.setImageDrawable(getPhoto(getItem(position)
+					.getPhoto()));
+		}
 		// widgets.photo.setBackgroundResource(imageBackgroundColor());
 		return row;
 
@@ -87,8 +95,17 @@ public class UploadPhotoAdapter extends BaseListAdapter<Photo> {
 	 */
 	@Override
 	public void refresh() {
+		pending = false;
 		mListPhotoModel = new ListReportPhotoModel();
 		items = mListPhotoModel.getPendingPhotos(context);
+		this.setItems(items);
+
+	}
+
+	public void refresh(int reportId) {
+		pending = true;
+		mListPhotoModel = new ListReportPhotoModel();
+		items = mListPhotoModel.getPendingPhotosByReportId(reportId);
 		this.setItems(items);
 
 	}
@@ -96,6 +113,12 @@ public class UploadPhotoAdapter extends BaseListAdapter<Photo> {
 	public Drawable getPhoto(String fileName) {
 
 		return ImageManager.getPendingDrawables(context, fileName);
+
+	}
+
+	public Drawable getPendingPhoto(String fileName) {
+
+		return ImageManager.getDrawables(context, fileName);
 
 	}
 

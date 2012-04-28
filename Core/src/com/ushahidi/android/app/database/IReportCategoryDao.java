@@ -43,4 +43,8 @@ public interface IReportCategoryDao {
     public boolean deleteAllReportCategory();
     
     public boolean deleteReportCategoryByReportId(int reportId);
+    
+    public List<ReportCategory> fetchReportCategoryByReportId(int reportId);
+    
+    public boolean updateReportCategory(int reportId, ReportCategory reportCategory);
 }

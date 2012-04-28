@@ -46,7 +46,6 @@ import android.support.v4.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
@@ -66,7 +65,9 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseEditMapActivity;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.entities.Category;
+import com.ushahidi.android.app.entities.Media;
 import com.ushahidi.android.app.entities.Report;
+import com.ushahidi.android.app.entities.ReportCategory;
 import com.ushahidi.android.app.models.AddReportModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.GeocoderTask;
@@ -100,7 +101,7 @@ public class AddReportActivity extends
 	private static final int DIALOG_SHOW_REQUIRED = 7;
 
 	private static final int DIALOG_SHOW_PROMPT = 8;
-	
+
 	private static final int DIALOG_SHOW_DELETE_PROMPT = 9;
 
 	private static final int REQUEST_CODE_CAMERA = 0;
@@ -123,8 +124,6 @@ public class AddReportActivity extends
 
 	private int id = 0;
 
-	private int mCounter = 0;
-
 	private UploadPhotoAdapter pendingPhoto;
 
 	private String mErrorMessage;
@@ -132,10 +131,13 @@ public class AddReportActivity extends
 	private String photoName;
 
 	private ListReportModel reportModel;
-	
+
+	private AddReportModel model;
+
 	public AddReportActivity() {
 		super(AddReportView.class, R.layout.add_report, R.menu.add_report,
 				R.id.location_map);
+		model = new AddReportModel();
 	}
 
 	@Override
@@ -161,7 +163,6 @@ public class AddReportActivity extends
 			// make the delete button visible because we're editing
 			view.mDeleteReport.setOnClickListener(this);
 			view.mDeleteReport.setVisibility(View.VISIBLE);
-			pendingPhoto.refresh();
 			setSavedReport(id);
 		} else {
 			// add a new report
@@ -259,15 +260,14 @@ public class AddReportActivity extends
 
 		} else if (button.getId() == R.id.add_category) {
 			showDialog(DIALOG_MULTIPLE_CATEGORY);
-			mCounter++;
 		} else if (button.getId() == R.id.pick_date) {
 			showDialog(DATE_DIALOG_ID);
 		} else if (button.getId() == R.id.pick_time) {
 			showDialog(TIME_DIALOG_ID);
-		}else if(button.getId() == R.id.delete_report) {
+		} else if (button.getId() == R.id.delete_report) {
 			showDialog(DIALOG_SHOW_DELETE_PROMPT);
 		}
-		
+
 	}
 
 	private void validateReports() {
@@ -348,7 +348,6 @@ public class AddReportActivity extends
 	 */
 	private boolean addReport() {
 		log("Adding new reports to");
-		ListReportModel reportModel = new ListReportModel();
 		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
 
 		Report report = new Report();
@@ -363,13 +362,23 @@ public class AddReportActivity extends
 		report.setVerified(String.valueOf(0));
 		report.setPending(1);
 
-		if (reportModel.addPendingReport(report, mVectorCategories,
-				pendingPhotos, view.mNews.getText().toString())) {
-			// move saved photos
-			log("Moving photos to fetched folder");
-			ImageManager.movePendingPhotos(this);
-			return true;
+		if (id == 0) {
+			// Add a new pending report
+			if (model.addPendingReport(report, mVectorCategories,
+					pendingPhotos, view.mNews.getText().toString())) {
+				// move saved photos
+				log("Moving photos to fetched folder");
+				ImageManager.movePendingPhotos(this);
+				return true;
+			}
+		} else {
+			// Update exisiting report
+			if (model.updatePendingReport(id, report, mVectorCategories,
+					pendingPhotos, view.mNews.getText().toString())) {
+				return true;
+			}
 		}
+
 		return false;
 
 	}
@@ -379,30 +388,45 @@ public class AddReportActivity extends
 	 * 
 	 * @author henryaddo
 	 */
-	private void setSavedReport(int id) {
-		log("Adding new reports to");
-		
-		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
+	private void setSavedReport(int reportId) {
 
 		// set text part of reports
-		view.mIncidentTitle.setText("");
-		view.mIncidentDesc.setText("");
-		view.mLongitude.setText("");
-		view.mLatitude.setText("");
-		view.mIncidentLocation.setText("");
+		Report report = model.fetchPendingReportById(reportId);
+		if (report != null) {
+			view.mIncidentTitle.setText(report.getTitle());
+			view.mIncidentDesc.setText(report.getDescription());
+			view.mLongitude.setText(report.getLongitude());
+			view.mLatitude.setText(report.getLatitude());
+			view.mIncidentLocation.setText(report.getLocationName());
 
-		// set date and time
-		setDateAndTime("");
+			// set date and time
+			setDateAndTime(report.getReportDate());
+		}
+
+		// set Categories.
+		mVectorCategories.clear();
+		for (ReportCategory reportCategory : model
+				.fetchReportCategories(reportId)) {
+			mVectorCategories
+					.add(String.valueOf(reportCategory.getCategoryId()));
+		}
+		setSelectedCategories(mVectorCategories);
+
 		// set the photos
+		pendingPhoto.refresh(id);
 
 		// set news
-		view.mNews.setText("");
+		List<Media> newsMedia = model.fetchReportNews(reportId);
+		if (newsMedia != null && newsMedia.size() > 0) {
+			view.mNews.setText(newsMedia.get(0).getLink());
+		}
 	}
-	
+
 	private void deleteReport() {
-		//make sure it's and existing report
-		if(id > 0 ) {
-			if(reportModel.deleteReport(id)) {
+		// make sure it's an existing report
+		if (id > 0) {
+			if (reportModel.deleteReport(id)) {
+				// return to report listing page.
 				finish();
 			}
 		}
@@ -485,7 +509,7 @@ public class AddReportActivity extends
 						.setTitle(R.string.add_categories)
 						.setMultiChoiceItems(
 								showCategories(),
-								null,
+								setCheckedCategories(),
 								new DialogInterface.OnMultiChoiceClickListener() {
 									public void onClick(DialogInterface dialog,
 											int whichButton, boolean isChecked) {
@@ -494,6 +518,7 @@ public class AddReportActivity extends
 										if (isChecked) {
 											mVectorCategories.add(mCategoriesId
 													.get(whichButton));
+
 											mError = false;
 										} else {
 											mVectorCategories
@@ -555,7 +580,7 @@ public class AddReportActivity extends
 			showRequiredDialog.show();
 			break;
 
-		//prompt for unsaved changes
+		// prompt for unsaved changes
 		case DIALOG_SHOW_PROMPT: {
 			AlertDialog dialog = (new AlertDialog.Builder(this)).create();
 			dialog.setTitle(getString(R.string.unsaved_changes));
@@ -578,8 +603,8 @@ public class AddReportActivity extends
 			dialog.setCancelable(false);
 			return dialog;
 		}
-		
-		//prompt for report deletion
+
+		// prompt for report deletion
 		case DIALOG_SHOW_DELETE_PROMPT: {
 			AlertDialog dialog = (new AlertDialog.Builder(this)).create();
 			dialog.setTitle(getString(R.string.delete_report));
@@ -594,7 +619,7 @@ public class AddReportActivity extends
 			dialog.setButton2(getString(R.string.yes),
 					new Dialog.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
-							//delete report
+							// delete report
 							deleteReport();
 							dialog.dismiss();
 						}
@@ -668,6 +693,7 @@ public class AddReportActivity extends
 
 			int i = 0;
 			for (Category category : mListReportModel.getCategories(this)) {
+
 				categories[i] = category.getCategoryTitle();
 				mCategoriesTitle.put(String.valueOf(category.getCategoryId()),
 						category.getCategoryTitle());
@@ -701,15 +727,19 @@ public class AddReportActivity extends
 	}
 
 	private void setDateAndTime(String dateTime) {
+
 		if (dateTime != null && !(TextUtils.isEmpty(dateTime))) {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+					"yyy-MM-dd kk:mm:ss", Locale.US);
 			Date date;
 			try {
+
 				date = dateFormat.parse(dateTime);
 
 				if (date != null) {
-
-					view.mPickDate.setText(dateFormat.format(date));
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+							"MMMM dd, yyyy");
+					view.mPickDate.setText(simpleDateFormat.format(date));
 
 					SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
 					view.mPickTime.setText(timeFormat.format(date));
@@ -751,21 +781,14 @@ public class AddReportActivity extends
 	};
 
 	/**
-	 * Sets nVectorCategories
-	 * 
-	 * @param aVectorCategories
-	 *            categories
-	 */
-	public void setVectorCategories(Vector<String> aVectorCategories) {
-		mVectorCategories = aVectorCategories;
-	}
-
-	/**
 	 * Sets the selected categories for submission
 	 * 
 	 * @param aSelectedCategories
 	 */
 	private void setSelectedCategories(Vector<String> aSelectedCategories) {
+		// initilaize categories
+		showCategories();
+
 		// clear
 		view.mBtnAddCategory.setText(R.string.incident_add_category);
 		if (aSelectedCategories.size() > 0) {
@@ -782,28 +805,49 @@ public class AddReportActivity extends
 			if (!TextUtils.isEmpty(categories.toString())) {
 				view.mBtnAddCategory.setText(categories.toString());
 			} else {
-
 				view.mBtnAddCategory.setText(R.string.incident_add_category);
 			}
 		}
 	}
 
 	/**
-	 * Get the selected categories as a csv
+	 * Get check selected categories
 	 * 
 	 * @param aSelectedCategories
 	 */
-	private String getSelectedCategories() {
-		if (mVectorCategories != null) {
-			if (mVectorCategories.size() > 0) {
-				StringBuilder categories = new StringBuilder();
-				for (String catetory : mVectorCategories) {
-					if (categories.length() > 0) {
-						categories.append(", ");
-					}
-					categories.append(catetory);
+	private boolean[] setCheckedCategories() {
+		// FIXME: Look into making this more efficient
+		if (mVectorCategories != null && mVectorCategories.size() > 0) {
+			ListReportModel mListReportModel = new ListReportModel();
+			List<Category> listCategories = mListReportModel
+					.getCategories(this);
+			if (listCategories != null && listCategories.size() > 0) {
+				int categoryCount = listCategories.size();
+				int categoryAmount = 0;
+				if (categoryCount > 0) {
+					categoryAmount = categoryCount;
+				} else {
+					categoryAmount = 1;
 				}
-				return categories.toString();
+
+				boolean categories[] = new boolean[categoryAmount];
+				mCategoryLength = categories.length;
+
+				int i = 0;
+				for (Category category : mListReportModel.getCategories(this)) {
+
+					if (mVectorCategories.contains(String.valueOf(category
+							.getCategoryId()))) {
+
+						categories[i] = true;
+					} else {
+						categories[i] = false;
+					}
+
+					i++;
+				}
+				return categories;
+
 			}
 		}
 		return null;

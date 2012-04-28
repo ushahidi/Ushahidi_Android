@@ -88,6 +88,25 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 		}
 		return listMedia;
 	}
+	
+	@Override
+	public List<Media> fetchPendingReportPhoto(int reportId) {
+		listMedia = new ArrayList<Media>();
+
+		final String selection = REPORT_ID + " = " + reportId + " AND " + TYPE
+				+ " =" + IMAGE;
+		cursor = super.query(TABLE, MEDIA_COLUMNS, selection, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				Media media = cursorToEntity(cursor);
+				listMedia.add(media);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+		return listMedia;
+	}
 
 	@Override
 	public List<Media> fetchReportVideo(int reportId) {
@@ -319,5 +338,21 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 
 	private ContentValues getContentValue() {
 		return initialValues;
+	}
+	
+	public boolean updateReportNews(int reportId, Media media) {
+		boolean status = false;
+		try {
+			mDb.beginTransaction();
+			final String selectionArgs[] = { String.valueOf(reportId) };
+			final String selection = REPORT_ID + " =?";
+			setContentValue(media);
+			status = super.update(TABLE, getContentValue(), selection,
+					selectionArgs) > 0;
+			mDb.setTransactionSuccessful();
+		} finally {
+			mDb.endTransaction();
+		}
+		return status;
 	}
 }

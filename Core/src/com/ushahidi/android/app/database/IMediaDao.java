@@ -50,7 +50,7 @@ public interface IMediaDao {
 
 	// delete
 	public boolean deleteAllMedia();
-	
+
 	public boolean deleteReportMediaByIdAndLink(int reportId, String link);
 
 	public boolean deleteMediaByReportId(int reportId);
@@ -61,5 +61,11 @@ public interface IMediaDao {
 	public boolean updateMediaByReportId(int reportId);
 
 	public boolean updateMediaByCheckinId(int checkinId);
+
+	// fetch pending report's photo
+	public List<Media> fetchPendingReportPhoto(int reportId);
+
+	// update news
+	public boolean updateReportNews(int reportId, Media media);
 
 }
