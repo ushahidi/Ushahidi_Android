@@ -26,6 +26,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.database.Database;
@@ -43,6 +44,10 @@ public class ListReportPhotoModel extends Model {
 
 	private List<Photo> mPhotoModel;
 
+	private static final String FETCHED = "fetched/";
+	
+	private static final String PENDING = "pending/";
+	
 	@Override
 	public boolean load() {
 		return false;
@@ -80,7 +85,8 @@ public class ListReportPhotoModel extends Model {
 					id += 1;
 					Photo photo = new Photo();
 					photo.setDbId(id);
-					photo.setPhoto(file.getName());
+					Log.i("ReportPhotoModel: ", "path "+file.getPath());
+					photo.setPhoto(PENDING+file.getName());
 					mPhotoModel.add(photo);
 				}
 			}
@@ -117,7 +123,7 @@ public class ListReportPhotoModel extends Model {
 			for (Media item : mMedia) {
 				Photo photo = new Photo();
 				photo.setDbId(item.getDbId());
-				photo.setPhoto(item.getLink());
+				photo.setPhoto(FETCHED+item.getLink());
 				mPhotoModel.add(photo);
 			}
 

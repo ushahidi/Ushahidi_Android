@@ -58,6 +58,26 @@ public class ImageManager {
 		return null;
 
 	}
+	
+	/**
+	 * Rename this to something meaningful
+	 * 
+	 * @param context
+	 * @param fileName
+	 * @return
+	 */
+	public static Drawable getDrawables2(Context context, String pathfileName) {
+
+		Bitmap original = BitmapFactory.decodeFile(getPhotoPath(context,"/"+pathfileName));
+		if (original != null) {
+			// scale image
+			Bitmap scaled = PhotoUtils.scaleBitmap(original);
+			return new FastBitmapDrawable(scaled);
+
+		}
+		return null;
+
+	}
 
 	public static Drawable getDrawables(Context context, String fileName,
 			int width) {
@@ -201,6 +221,10 @@ public class ImageManager {
 
 	public static String getPhotoPath(Context context) {
 		return getSavedPhotoPath(context, PHOTO);
+	}
+	
+	public static String getPhotoPath(Context context, String pathfileName) {
+		return getSavedPhotoPath(context, pathfileName);
 	}
 
 	public static String getPendingPhotoPath(Context context) {

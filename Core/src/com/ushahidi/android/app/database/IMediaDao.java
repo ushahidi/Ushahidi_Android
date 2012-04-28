@@ -66,6 +66,7 @@ public interface IMediaDao {
 	public List<Media> fetchPendingReportPhoto(int reportId);
 
 	// update news
-	public boolean updateReportNews(int reportId, Media media);
-
+	public boolean deleteReportNews(int reportId);
+	
+	public boolean deleteReportPhoto(int reportId);
 }

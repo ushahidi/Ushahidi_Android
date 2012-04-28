@@ -23,6 +23,7 @@ package com.ushahidi.android.app.ui.phone;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -66,6 +67,7 @@ import com.ushahidi.android.app.activities.BaseEditMapActivity;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.entities.Category;
 import com.ushahidi.android.app.entities.Media;
+import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.entities.Report;
 import com.ushahidi.android.app.entities.ReportCategory;
 import com.ushahidi.android.app.models.AddReportModel;
@@ -373,8 +375,15 @@ public class AddReportActivity extends
 			}
 		} else {
 			// Update exisiting report
+			List<Photo> photos = new ArrayList<Photo>();
+			for (int i = 0; i < pendingPhoto.getCount(); i++) {
+				photos.add(pendingPhoto.getItem(i));
+			}
 			if (model.updatePendingReport(id, report, mVectorCategories,
-					pendingPhotos, view.mNews.getText().toString())) {
+					photos, view.mNews.getText().toString())) {
+				// move saved photos
+				log("Moving photos to fetched folder");
+				ImageManager.movePendingPhotos(this);
 				return true;
 			}
 		}
@@ -854,6 +863,25 @@ public class AddReportActivity extends
 	}
 
 	/**
+	 * Set photo to be attached to an existing report
+	 */
+	private void addPhotoToReport() {
+		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
+		if (pendingPhotos != null && pendingPhotos.length > 0) {
+			int id = 0;
+			for (File file : pendingPhotos) {
+				if (file.exists()) {
+					id += 1;
+					Photo photo = new Photo();
+					photo.setDbId(id);
+					photo.setPhoto("pending/" + file.getName());
+					pendingPhoto.addItem(photo);
+				}
+			}
+		}
+	}
+
+	/**
 	 * Get shared text from other Android applications
 	 */
 	public void getSharedText() {
@@ -891,7 +919,12 @@ public class AddReportActivity extends
 						bitmap.getWidth(), bitmap.getHeight()));
 			}
 
-			pendingPhoto.refresh();
+			if (id > 0) {
+				log("Update: " + photoName);
+				addPhotoToReport();
+			} else {
+				pendingPhoto.refresh();
+			}
 		}
 	}
 

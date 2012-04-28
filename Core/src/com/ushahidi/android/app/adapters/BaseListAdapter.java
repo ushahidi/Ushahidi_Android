@@ -61,6 +61,7 @@ public abstract class BaseListAdapter<M extends Model> extends BaseAdapter {
     
     public void addItem(M item) {
         this.items.add(item);
+        notifyDataSetChanged();
     }
 
     public M getItem(int position) {

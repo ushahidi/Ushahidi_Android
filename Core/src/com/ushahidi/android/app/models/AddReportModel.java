@@ -26,6 +26,7 @@ import java.util.Vector;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IMediaSchema;
 import com.ushahidi.android.app.entities.Media;
+import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.entities.Report;
 import com.ushahidi.android.app.entities.ReportCategory;
 import com.ushahidi.android.app.util.Util;
@@ -76,6 +77,7 @@ public class AddReportModel extends Model {
 
 			// add news
 			if (news != null && news.length() > 0) {
+
 				Media media = new Media();
 				media.setMediaId(0);
 				media.setLink(news);
@@ -90,51 +92,52 @@ public class AddReportModel extends Model {
 	}
 
 	public boolean updatePendingReport(int reportId, Report report,
-			Vector<String> category, File[] pendingPhotos, String news) {
+			Vector<String> category, List<Photo> pendingPhotos, String news) {
 		boolean status;
 		// update pending reports
 		status = Database.mReportDao.updatePendingReport(reportId, report);
+
 		// update category
 		if (status) {
 			if (category != null && category.size() > 0) {
-				if (Database.mReportCategoryDao
-						.deleteReportCategoryByReportId(reportId)) {
-					// FIXME:: optimize this
-					// delete existing categories. It's easier this way
-					for (String cat : category) {
-						ReportCategory reportCategory = new ReportCategory();
-						reportCategory.setCategoryId(Util.toInt(cat));
-						reportCategory.setReportId(reportId);
-						Database.mReportCategoryDao
-								.addReportCategory(reportCategory);
+				// delete existing categories. It's easier this way
+				Database.mReportCategoryDao
+						.deleteReportCategoryByReportId(reportId);
 
-					}
+				for (String cat : category) {
+					ReportCategory reportCategory = new ReportCategory();
+					reportCategory.setCategoryId(Util.toInt(cat));
+					reportCategory.setReportId(reportId);
+					Database.mReportCategoryDao
+							.addReportCategory(reportCategory);
 
 				}
+
 			}
 
-			// add photos
-			/*if (pendingPhotos != null && pendingPhotos.length > 0) {
-				for (File file : pendingPhotos) {
-					if (file.exists()) {
-						Media media = new Media();
-						media.setMediaId(0);
-						media.setLink(file.getName());
+			// update photos
+			if (pendingPhotos != null && pendingPhotos.size() > 0) {
+				// delete existing photo
+				Database.mMediaDao.deleteReportPhoto(reportId);
+				for (Photo photo : pendingPhotos) {
+					Media media = new Media();
+					media.setMediaId(0);
+					//FIXME:: this is nasty.
+					String sections[] = photo.getPhoto().split("/");
+					media.setLink(sections[1]);
 
-						// get report ID;
-						media.setReportId(reportId);
-						media.setType(IMediaSchema.IMAGE);
-						Database.mMediaDao.addMedia(media);
-					} else {
-						//delete from database.
-						Database.mMediaDao.deleteReportMediaByIdAndLink(reportId, file.getName());
-					}
+					// get report ID
+					media.setReportId(reportId);
+					media.setType(IMediaSchema.IMAGE);
+					Database.mMediaDao.addMedia(media);
 				}
 
-			}*/
+			}
 
 			// add news
 			if (news != null && news.length() > 0) {
+				// delete existing news item
+				Database.mMediaDao.deleteReportNews(reportId);
 				Media media = new Media();
 				media.setMediaId(0);
 				media.setLink(news);
@@ -142,9 +145,9 @@ public class AddReportModel extends Model {
 				media.setReportId(reportId);
 				media.setType(IMediaSchema.NEWS);
 				Database.mMediaDao.addMedia(media);
+
 			}
 		}
-
 		return status;
 	}
 

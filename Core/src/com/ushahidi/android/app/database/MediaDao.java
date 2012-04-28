@@ -88,7 +88,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 		}
 		return listMedia;
 	}
-	
+
 	@Override
 	public List<Media> fetchPendingReportPhoto(int reportId) {
 		listMedia = new ArrayList<Media>();
@@ -237,11 +237,11 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 	}
 
 	public boolean deleteReportMediaByIdAndLink(int reportId, String link) {
-		
+
 		final String selectionArgs[] = { String.valueOf(reportId), link };
 		final String selection = ID + " =? AND " + LINK + " =?";
 		return super.delete(TABLE, selection, selectionArgs) > 0;
-		
+
 	}
 
 	/*
@@ -339,20 +339,16 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 	private ContentValues getContentValue() {
 		return initialValues;
 	}
+
+	public boolean deleteReportNews(int reportId) {
+		final String selectionArgs[] = { String.valueOf(reportId), String.valueOf(IMediaSchema.NEWS) };
+		final String selection = REPORT_ID + " =? AND " + TYPE + " =?";
+		return super.delete(TABLE, selection, selectionArgs) > 0 ;
+	}
 	
-	public boolean updateReportNews(int reportId, Media media) {
-		boolean status = false;
-		try {
-			mDb.beginTransaction();
-			final String selectionArgs[] = { String.valueOf(reportId) };
-			final String selection = REPORT_ID + " =?";
-			setContentValue(media);
-			status = super.update(TABLE, getContentValue(), selection,
-					selectionArgs) > 0;
-			mDb.setTransactionSuccessful();
-		} finally {
-			mDb.endTransaction();
-		}
-		return status;
+	public boolean deleteReportPhoto(int reportId) {
+		final String selectionArgs[] = { String.valueOf(reportId), String.valueOf(IMediaSchema.IMAGE) };
+		final String selection = REPORT_ID + " =? AND " + TYPE + " =?";
+		return super.delete(TABLE, selection, selectionArgs) > 0 ;
 	}
 }
