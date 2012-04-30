@@ -26,6 +26,7 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
@@ -266,7 +267,7 @@ public class ListReportModel extends Model {
 						R.drawable.arrow));
 				listReportModel.setCategories(item.getCategories());
 				listReportModel.setMedia(item.getMedia());
-
+				
 				if (item.getReportId() == 0) {
 					// get pending reports images
 					d = getImage(context, item.getDbId());
@@ -301,12 +302,44 @@ public class ListReportModel extends Model {
 	}
 
 	private Drawable getImage(Context context, int reportId) {
+		
 		List<Media> sMedia = Database.mMediaDao.fetchMedia(
 				IMediaSchema.REPORT_ID, reportId, IMediaSchema.IMAGE, 1);
 		if (sMedia != null && sMedia.size() > 0) {
+			Log.i("ListReportModel ", "link "+sMedia.get(0).getLink()+" reportId: "+reportId);
 			return ImageManager.getThumbnails(context, sMedia.get(0).getLink());
 
 		}
 		return context.getResources().getDrawable(R.drawable.report_icon);
+	}
+
+	/**
+	 * Deletes all fetched reports.
+	 * 
+	 * @param reportId The id of the report to be deleted.
+	 * 
+	 * @return boolean
+	 */
+	public boolean deleteAllFetchedReport(int reportId) {
+		
+		// delete fetched reports
+		if(Database.mReportDao.deleteReportById(reportId) )  {
+			Log.i("ListReportModel","Report deleted");
+		}
+
+		// delete categories
+		if( Database.mReportCategoryDao.deleteReportCategoryByReportId(reportId) ) {
+			Log.i("Report","Report deleted");
+		}
+		
+		if( Database.mCategoryDao.deleteAllCategories() ) {
+			Log.i("Category: ","Category deleted");
+		}
+
+		// delete media
+		if(Database.mMediaDao.deleteReportPhoto(reportId) ) {
+			Log.i("Media","Media deleted");
+		}
+		return true;
 	}
 }

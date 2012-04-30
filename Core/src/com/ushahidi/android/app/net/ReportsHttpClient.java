@@ -24,12 +24,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -91,18 +93,27 @@ public class ReportsHttpClient extends MainHttpClient {
 
 				ReportsApiUtils reportsApiUtils = new ReportsApiUtils(incidents);
 				if (reportsApiUtils.saveReports(context)) {
-					return 0;
+
+					// get the geographic midpoint for mapview
+					if (apiUtils.geographicMidpoint()) {
+						return 0;
+					}
+					return 0; // return success even if geographic fails
 				}
 
 				// bad json string
 				return 99;
-			} else {
-				// Assuming connection timeout
-				return 110;
 			}
+			return 100; // network down?
+		} catch (SocketTimeoutException e) {
+			log("SocketTimeoutException e", e);
+			return 110;
+		} catch (ConnectTimeoutException e) {
+			log("ConnectTimeoutException", e);
+			return 110;
 		} catch (MalformedURLException ex) {
 			log("PostFileUpload(): MalformedURLException", ex);
-			// connection refused
+			// invalid URL
 			return 111;
 		} catch (IllegalArgumentException ex) {
 			log("IllegalArgumentException", ex);
@@ -110,7 +121,7 @@ public class ReportsHttpClient extends MainHttpClient {
 			return 120;
 		} catch (IOException e) {
 			log("IOException", e);
-			// There is no default deployment
+			// connection refused
 			return 112;
 		}
 

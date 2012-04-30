@@ -19,13 +19,17 @@ import android.widget.ImageButton;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
+import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.ReportMapItemizedOverlay;
 import com.ushahidi.android.app.ReportMapOverlayItem;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
+import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
+import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.fragments.BaseFragment;
 import com.ushahidi.android.app.models.ListReportModel;
+import com.ushahidi.android.app.models.ListReportPhotoModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
@@ -57,8 +61,6 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 
 	private CategorySpinnerAdater spinnerArrayAdapter;
 
-	private CharSequence filterTitle = null;
-
 	private ViewGroup mRootView;
 
 	private ImageButton addReport = null;
@@ -84,8 +86,6 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 	 * }
 	 */
 
-	
-
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -102,12 +102,14 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 			if (id > 0) {
 				if (!Preferences.deploymentLatitude.equals("0.0")
 						&& !Preferences.deploymentLatitude.equals("0.0")) {
+
 					MapFragment.latitude = Double
 							.parseDouble(Preferences.deploymentLatitude);
 					MapFragment.longitude = Double
 							.parseDouble(Preferences.deploymentLongitude);
 
 				} else {
+
 					MapFragment.latitude = Double.parseDouble(mReportModel.get(
 							0).getLatitude());
 					MapFragment.longitude = Double.parseDouble(mReportModel
@@ -115,6 +117,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 
 				}
 			} else {
+
 				if (!Preferences.deploymentLatitude.equals("0.0")
 						&& !Preferences.deploymentLatitude.equals("0.0")) {
 					MapFragment.latitude = Double
@@ -123,6 +126,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 							.parseDouble(Preferences.deploymentLongitude);
 
 				} else {
+
 					MapFragment.latitude = Double.parseDouble(mReportModel.get(
 							0).getLatitude());
 					MapFragment.longitude = Double.parseDouble(mReportModel
@@ -142,7 +146,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		}
 		((ViewGroup) getView()).addView(map);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
@@ -342,7 +346,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		itemOverlay = new ReportMapItemizedOverlay<ReportMapOverlayItem>(
 				marker, map, getActivity());
 		if (mReportModel != null) {
-			
+
 			for (ListReportModel reportModel : mReportModel) {
 				itemOverlay.addOverlay(new ReportMapOverlayItem(getPoint(
 						Double.valueOf(reportModel.getLatitude()),
@@ -358,7 +362,29 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 
 	public void launchAddReport() {
 		Intent i = new Intent(getActivity(), AddReportActivity.class);
-		startActivityForResult(i, 1);
+		i.putExtra("id", 0);
+		startActivityForResult(i, 2);
+		getActivity().overridePendingTransition(R.anim.home_enter,
+				R.anim.home_exit);
+	}
+
+	private void deleteFetchedReport() {
+		final List<ListReportModel> items = new ListFetchedReportAdapter(
+				getActivity()).fetchedReports();
+		for (ListReportModel report : items) {
+			if (new ListReportModel().deleteAllFetchedReport(report
+					.getReportId())) {
+				final List<Photo> photos = new ListReportPhotoModel()
+						.getPhotosByReportId(report.getReportId());
+
+				for (Photo photo : photos) {
+					ImageManager.deletePendingPhoto(getActivity(),
+							"/" + photo.getPhoto());
+				}
+			}
+
+		}
+
 	}
 
 	/**
@@ -366,7 +392,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 	 */
 	class RefreshReports extends ProgressTask {
 
-		protected Integer status;
+		protected Integer status = 4; // there is no internet
 
 		public RefreshReports(Activity activity) {
 			super(activity, R.string.loading_);
@@ -385,13 +411,19 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		@Override
 		protected Boolean doInBackground(String... strings) {
 			try {
+				// check if there is internet
+				if (apiUtils.isConnected()) {
+					// delete everything before updating with a new one
+					deleteFetchedReport();
 
-				apiUtils.clearAllReportData();
-				// fetch categories
-				new CategoriesHttpClient(getActivity()).getCategoriesFromWeb();
+					// fetch categories -- assuming everything will go just
+					// right!
+					new CategoriesHttpClient(getActivity())
+							.getCategoriesFromWeb();
 
-				status = new ReportsHttpClient(getActivity())
-						.getAllReportFromWeb();
+					status = new ReportsHttpClient(getActivity())
+							.getAllReportFromWeb();
+				}
 
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -407,21 +439,20 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 				log("fetching ");
 				if (status == 4) {
 					toastLong(R.string.internet_connection);
-				} else if (status == 3) {
-					toastLong(R.string.invalid_ushahidi_instance);
-				} else if (status == 2) {
-					toastLong(R.string.could_not_fetch_reports);
-				} else if (status == 1) {
+				} else if (status == 110) {
+					toastLong(R.string.connection_timeout);
+				} else if (status == 100) {
 					toastLong(R.string.could_not_fetch_reports);
 				} else if (status == 0) {
 					log("successfully fetched");
 					mReportModel = mListReportModel.getReports(getActivity());
 					populateMap();
 					showCategories();
-					refreshState = false;
-					updateRefreshStatus();
+
 				}
 			}
+			refreshState = false;
+			updateRefreshStatus();
 		}
 	}
 

@@ -26,7 +26,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.database.Database;
@@ -85,7 +84,6 @@ public class ListReportPhotoModel extends Model {
 					id += 1;
 					Photo photo = new Photo();
 					photo.setDbId(id);
-					Log.i("ReportPhotoModel: ", "path "+file.getPath());
 					photo.setPhoto(PENDING+file.getName());
 					mPhotoModel.add(photo);
 				}

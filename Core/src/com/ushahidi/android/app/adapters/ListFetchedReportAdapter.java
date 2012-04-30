@@ -77,6 +77,21 @@ public class ListFetchedReportAdapter extends BaseListAdapter<ListReportModel>
 		}
 
 	}
+	
+	/**
+	 * Get all fetched reports.
+	 * 
+	 * @return List<ListReportModel>
+	 */
+	public List<ListReportModel> fetchedReports() {
+		mListReportModel = new ListReportModel();
+		final boolean loaded = mListReportModel.load();
+		if (loaded) {
+			return mListReportModel.getReports(context);
+		}
+		
+		return null;
+	}
 
 	public void refresh(int categoryId) {
 		mListReportModel = new ListReportModel();

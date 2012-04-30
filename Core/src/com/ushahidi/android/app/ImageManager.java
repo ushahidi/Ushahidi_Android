@@ -35,6 +35,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
+import android.util.Log;
 
 import com.ushahidi.android.app.util.PhotoUtils;
 
@@ -122,7 +123,8 @@ public class ImageManager {
 
 	public static Drawable getThumbnails(Context context, String fileName) {
 		// get image
-
+		Log.i("ImageManager","photoPath: "+getPhotoPath(context)
+				+ fileName);
 		Bitmap original = BitmapFactory.decodeFile(getPhotoPath(context)
 				+ fileName);
 		if (original != null) {

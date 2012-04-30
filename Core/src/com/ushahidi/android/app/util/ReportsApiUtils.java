@@ -216,7 +216,7 @@ public class ReportsApiUtils {
 		return null;
 	}
 
-	// Save report into databaset
+	// Save report into database
 	public boolean saveReports(Context context) {
 		List<Report> reports = getReportList(context);
 
@@ -241,6 +241,7 @@ public class ReportsApiUtils {
 	}
 
 	private void saveMedia(int mediaId, int reportId, int type, String link) {
+		log("downloading... "+link+" ReportId: "+reportId);
 		Media media = new Media();
 		media.setMediaId(mediaId);
 		media.setReportId(reportId);

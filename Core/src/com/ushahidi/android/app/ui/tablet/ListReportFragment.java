@@ -50,9 +50,11 @@ import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.adapters.ListPendingReportAdapter;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
+import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.fragments.BaseSectionListFragment;
 import com.ushahidi.android.app.models.AddReportModel;
 import com.ushahidi.android.app.models.ListReportModel;
+import com.ushahidi.android.app.models.ListReportPhotoModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
@@ -479,7 +481,7 @@ public class ListReportFragment
 				// dates
 				dates = Util.formatDate("MMMM dd, yyyy 'at' hh:mm:ss aaa",
 						report.getDate(), "MM/dd/yyyy hh:mm a").split(" ");
-				
+
 				time = dates[1].split(":");
 				mParams.put("incident_date", dates[0]);
 				mParams.put("incident_hour", time[0]);
@@ -490,14 +492,14 @@ public class ListReportFragment
 				categories = pendingReportAdapter
 						.fetchCategoriesId((int) report.getId());
 				mParams.put("incident_category", categories);
-				
+
 				mParams.put("latitude", report.getLatitude());
 				mParams.put("longitude", report.getLongitude());
 				mParams.put("location_name", report.getLocation());
 				mParams.put("person_first", Preferences.firstname);
 				mParams.put("person_last", Preferences.lastname);
 				mParams.put("person_email", Preferences.email);
-				
+
 				// load filenames
 				mParams.put("filename", new UploadPhotoAdapter(getActivity())
 						.pendingPhotos((int) report.getId()));
@@ -506,7 +508,7 @@ public class ListReportFragment
 				try {
 					if (new ReportsHttpClient(getActivity()).PostFileUpload(
 							urlBuilder.toString(), mParams)) {
-						deleteReport((int) report.getId());
+						deletePendingReport((int) report.getId());
 						return true;
 					}
 					return false;
@@ -519,7 +521,7 @@ public class ListReportFragment
 		return false;
 	}
 
-	private void deleteReport(int reportId) {
+	private void deletePendingReport(int reportId) {
 
 		// make sure it's an existing report
 		AddReportModel model = new AddReportModel();
@@ -534,6 +536,25 @@ public class ListReportFragment
 				// return to report listing page.
 			}
 		}
+	}
+
+	private void deleteFetchedReport() {
+		final List<ListReportModel> items = fetchedReportAdapter
+				.fetchedReports();
+		for (ListReportModel report : items) {
+			if (new ListReportModel().deleteAllFetchedReport(report
+					.getReportId())) {
+				final List<Photo> photos = new ListReportPhotoModel()
+						.getPhotosByReportId(report.getReportId());
+
+				for (Photo photo : photos) {
+					ImageManager.deletePendingPhoto(getActivity(),
+							"/" + photo.getPhoto());
+				}
+			}
+
+		}
+
 	}
 
 	/**
@@ -570,7 +591,7 @@ public class ListReportFragment
 	 */
 	class RefreshReports extends ProgressTask {
 
-		protected Integer status;
+		protected Integer status = 4; // there is no internet
 
 		public RefreshReports(Activity activity) {
 			super(activity, R.string.loading_);
@@ -589,17 +610,24 @@ public class ListReportFragment
 		@Override
 		protected Boolean doInBackground(String... strings) {
 			try {
+				// check if there is internet
+				if (apiUtils.isConnected()) {
 
-				apiUtils.clearAllReportData();
-				// fetch categories
-				new CategoriesHttpClient(getActivity()).getCategoriesFromWeb();
+					// upload pending reports.
+					if (!pendingReportAdapter.isEmpty()) {
+						uploadPendingReports();
+					}
+					
+					// delete everything before updating with a new one
+					deleteFetchedReport();
+					
+					// fetch categories -- assuming everything will go just
+					// right!
+					new CategoriesHttpClient(getActivity())
+							.getCategoriesFromWeb();
 
-				status = new ReportsHttpClient(getActivity())
-						.getAllReportFromWeb();
-
-				// upload pending reports.
-				if (!pendingReportAdapter.isEmpty()) {
-					uploadPendingReports();
+					status = new ReportsHttpClient(getActivity())
+							.getAllReportFromWeb();
 				}
 
 				Thread.sleep(1000);
@@ -616,19 +644,17 @@ public class ListReportFragment
 				log("fetching ");
 				if (status == 4) {
 					toastLong(R.string.internet_connection);
-				} else if (status == 3) {
-					toastLong(R.string.invalid_ushahidi_instance);
-				} else if (status == 2) {
-					toastLong(R.string.could_not_fetch_reports);
-				} else if (status == 1) {
+				} else if (status == 110) {
+					toastLong(R.string.connection_timeout);
+				} else if (status == 100) {
 					toastLong(R.string.could_not_fetch_reports);
 				} else if (status == 0) {
 					log("successfully fetched");
 					refreshReportLists();
 					showCategories();
-					refreshState = false;
-					updateRefreshStatus();
 				}
+				refreshState = false;
+				updateRefreshStatus();
 			}
 		}
 	}

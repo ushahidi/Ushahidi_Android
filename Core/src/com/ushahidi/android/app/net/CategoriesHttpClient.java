@@ -22,8 +22,10 @@ package com.ushahidi.android.app.net;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.conn.ConnectTimeoutException;
 
 import android.content.Context;
 
@@ -80,9 +82,15 @@ public class CategoriesHttpClient extends MainHttpClient {
 				// bad json string
 				return 99;
 			} else {
-				// Assuming connection timeout
-				return 110;
+				// network down?
+				return 100;
 			}
+		} catch (SocketTimeoutException e) {
+			log("SocketTimeoutException e", e);
+			return 110;
+		} catch (ConnectTimeoutException e) {
+			log("ConnectTimeoutException", e);
+			return 110;
 		} catch (MalformedURLException ex) {
 			log("PostFileUpload(): MalformedURLException", ex);
 			// connection refused
