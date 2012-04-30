@@ -146,6 +146,19 @@ public abstract class BaseSectionListAdapter<M extends Model> extends
 	}
 
 	/**
+	 * Remove item at specified position
+	 * 
+	 * @param adapter
+	 *            Source for row views for this section
+	 */
+	public void removeItem(int position) {
+
+		pieces.remove(position);
+		notifyDataSetChanged();
+
+	}
+
+	/**
 	 * Get the adapter associated with the specified position in the data set.
 	 * 
 	 * @param position
@@ -392,7 +405,9 @@ public abstract class BaseSectionListAdapter<M extends Model> extends
 		@Override
 		public boolean isEnabled(int position) {
 			return (true);
+			
 		}
+		
 	}
 
 	private class CascadeDataSetObserver extends DataSetObserver {

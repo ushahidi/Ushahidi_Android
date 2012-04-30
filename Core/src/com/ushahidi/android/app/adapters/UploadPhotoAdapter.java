@@ -76,9 +76,8 @@ public class UploadPhotoAdapter extends BaseListAdapter<Photo> {
 			row.setTag(widgets);
 		}
 
-		widgets.photo.setImageDrawable(getPhoto(getItem(position)
-				.getPhoto()));
-	
+		widgets.photo.setImageDrawable(getPhoto(getItem(position).getPhoto()));
+
 		// widgets.photo.setBackgroundResource(imageBackgroundColor());
 		return row;
 
@@ -100,6 +99,24 @@ public class UploadPhotoAdapter extends BaseListAdapter<Photo> {
 		items = mListPhotoModel.getPendingPhotosByReportId(reportId);
 		this.setItems(items);
 
+	}
+
+	public String pendingPhotos(int reportId) {
+		mListPhotoModel = new ListReportPhotoModel();
+		items = mListPhotoModel.getPendingPhotosByReportId(reportId);
+		StringBuilder photos = new StringBuilder();
+		for (Photo photo : items) {
+			if (photo.getPhoto().length() > 0) {
+				photos.append(photo.getPhoto() + ",");
+			}
+
+		}
+
+		// delete the last |
+		if (photos.length() > 0) {
+			photos.deleteCharAt(photos.length() - 1);
+		}
+		return photos.toString();
 	}
 
 	private Drawable getPhoto(String fileName) {

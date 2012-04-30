@@ -13,7 +13,6 @@ public class ListReportAdapter extends BaseSectionListAdapter<ListReportModel> {
 
 	@Override
 	public void refresh() {
-		
 	}
 
 }

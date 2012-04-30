@@ -20,6 +20,10 @@
 
 package com.ushahidi.android.app.ui.tablet;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -38,12 +42,16 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ushahidi.android.app.ImageManager;
+import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.adapters.ListPendingReportAdapter;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
+import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.fragments.BaseSectionListFragment;
+import com.ushahidi.android.app.models.AddReportModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
@@ -51,6 +59,7 @@ import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
 import com.ushahidi.android.app.ui.phone.ViewReportActivity;
 import com.ushahidi.android.app.util.ApiUtils;
+import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ListReportView;
 
 /**
@@ -108,18 +117,9 @@ public class ListReportFragment
 
 		mHandler = new Handler();
 		apiUtils = new ApiUtils(getActivity());
+		listView.setEmptyView(null);
 		fetchedReportAdapter = new ListFetchedReportAdapter(getActivity());
 		pendingReportAdapter = new ListPendingReportAdapter(getActivity());
-		pendingReportAdapter.refresh();
-		// add pending upload
-		if (pendingReportAdapter.getCount() > 0) {
-			adapter.addView(pendingHeader());
-			adapter.addAdapter(pendingReportAdapter);
-			// add fetched report
-			adapter.addView(fetchedHeader());
-		}
-		adapter.addAdapter(fetchedReportAdapter);
-
 		if (savedInstanceState != null) {
 			// Restore last state for checked position.
 			mPositionChecked = savedInstanceState.getInt("curChoice", 0);
@@ -185,6 +185,7 @@ public class ListReportFragment
 	@Override
 	public void onResume() {
 		super.onResume();
+
 		if (filterCategory == 0) {
 			refreshReportLists();
 			showCategories();
@@ -192,6 +193,9 @@ public class ListReportFragment
 		} else {
 			reportByCategoryList();
 		}
+
+		// upload pending report
+		executeUploadTask();
 	}
 
 	@Override
@@ -293,18 +297,60 @@ public class ListReportFragment
 	};
 
 	private void refreshReportLists() {
-		fetchedReportAdapter.refresh();
+
 		pendingReportAdapter.refresh();
+		fetchedReportAdapter.refresh();
+		adapter = new ListReportAdapter(getActivity());
+		if (!pendingReportAdapter.isEmpty()) {
+			adapter.addView(pendingHeader());
+			adapter.addAdapter(pendingReportAdapter);
+			// add fetched report
+			adapter.addView(fetchedHeader());
+			adapter.addAdapter(fetchedReportAdapter);
+		} else {
+			adapter.addAdapter(fetchedReportAdapter);
+		}
+		listView.setAdapter(adapter);
 	}
 
 	private void filterReportList() {
 		fetchedReportAdapter.getFilter().filter(filterTitle);
 		pendingReportAdapter.getFilter().filter(filterTitle);
+		adapter = new ListReportAdapter(getActivity());
+		if (!pendingReportAdapter.isEmpty()) {
+			adapter.addView(pendingHeader());
+			adapter.addAdapter(pendingReportAdapter);
+			// add fetched report
+			adapter.addView(fetchedHeader());
+			adapter.addAdapter(fetchedReportAdapter);
+		} else {
+			adapter.addAdapter(fetchedReportAdapter);
+		}
+		listView.setAdapter(adapter);
+
+	}
+
+	private void executeUploadTask() {
+		if (!pendingReportAdapter.isEmpty()) {
+			new UploadTask(getActivity()).execute((String) null);
+		}
 	}
 
 	private void reportByCategoryList() {
 		fetchedReportAdapter.refresh(filterCategory);
 		pendingReportAdapter.refresh(filterCategory);
+		adapter = new ListReportAdapter(getActivity());
+		if (!pendingReportAdapter.isEmpty()) {
+			adapter.addView(pendingHeader());
+			adapter.addAdapter(pendingReportAdapter);
+			// add fetched report
+			adapter.addView(fetchedHeader());
+			adapter.addAdapter(fetchedReportAdapter);
+		} else {
+			adapter.addAdapter(fetchedReportAdapter);
+		}
+		listView.setAdapter(adapter);
+
 	}
 
 	private void showDropDownNav() {
@@ -415,6 +461,110 @@ public class ListReportFragment
 		super.onActivityResult(requestCode, resultCode, intent);
 	}
 
+	private boolean uploadPendingReports() {
+
+		List<ListReportModel> items = pendingReportAdapter.pendingReports();
+		String categories;
+		String dates[];
+		String time[];
+		StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
+		urlBuilder.append("/api");
+		if (items != null) {
+			for (ListReportModel report : items) {
+				HashMap<String, String> mParams = new HashMap<String, String>();
+				mParams.put("task", "report");
+				mParams.put("incident_title", report.getTitle());
+				mParams.put("incident_description", report.getDesc());
+
+				// dates
+				dates = Util.formatDate("MMMM dd, yyyy 'at' hh:mm:ss aaa",
+						report.getDate(), "MM/dd/yyyy hh:mm a").split(" ");
+				
+				time = dates[1].split(":");
+				mParams.put("incident_date", dates[0]);
+				mParams.put("incident_hour", time[0]);
+				mParams.put("incident_minute", time[1]);
+				mParams.put("incident_ampm", dates[2].toLowerCase());
+
+				// fetch categories
+				categories = pendingReportAdapter
+						.fetchCategoriesId((int) report.getId());
+				mParams.put("incident_category", categories);
+				
+				mParams.put("latitude", report.getLatitude());
+				mParams.put("longitude", report.getLongitude());
+				mParams.put("location_name", report.getLocation());
+				mParams.put("person_first", Preferences.firstname);
+				mParams.put("person_last", Preferences.lastname);
+				mParams.put("person_email", Preferences.email);
+				
+				// load filenames
+				mParams.put("filename", new UploadPhotoAdapter(getActivity())
+						.pendingPhotos((int) report.getId()));
+
+				// upload
+				try {
+					if (new ReportsHttpClient(getActivity()).PostFileUpload(
+							urlBuilder.toString(), mParams)) {
+						deleteReport((int) report.getId());
+						return true;
+					}
+					return false;
+				} catch (IOException e) {
+					return false;
+				}
+
+			}
+		}
+		return false;
+	}
+
+	private void deleteReport(int reportId) {
+
+		// make sure it's an existing report
+		AddReportModel model = new AddReportModel();
+		UploadPhotoAdapter pendingPhoto = new UploadPhotoAdapter(getActivity());
+		if (reportId > 0) {
+			if (model.deleteReport(reportId)) {
+				// delete images
+				for (int i = 0; i < pendingPhoto.getCount(); i++) {
+					ImageManager.deletePendingPhoto(getActivity(), "/"
+							+ pendingPhoto.getItem(i).getPhoto());
+				}
+				// return to report listing page.
+			}
+		}
+	}
+
+	/**
+	 * Background progress task for saving Model
+	 */
+	protected class UploadTask extends ProgressTask {
+		public UploadTask(Activity activity) {
+			super(activity, R.string.uploading_pending_report);
+		}
+
+		@Override
+		protected Boolean doInBackground(String... args) {
+
+			// delete pending reports
+			return uploadPendingReports();
+
+		}
+
+		@Override
+		protected void onPostExecute(Boolean success) {
+			super.onPostExecute(success);
+			if (success) {
+				toastLong(R.string.uploaded);
+				refreshReportLists();
+				showCategories();
+			} else {
+				toastLong(R.string.failed);
+			}
+		}
+	}
+
 	/**
 	 * Refresh for new reports
 	 */
@@ -446,6 +596,11 @@ public class ListReportFragment
 
 				status = new ReportsHttpClient(getActivity())
 						.getAllReportFromWeb();
+
+				// upload pending reports.
+				if (!pendingReportAdapter.isEmpty()) {
+					uploadPendingReports();
+				}
 
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {

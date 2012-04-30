@@ -132,8 +132,6 @@ public class AddReportActivity extends
 
 	private String photoName;
 
-	private ListReportModel reportModel;
-
 	private AddReportModel model;
 
 	public AddReportActivity() {
@@ -158,7 +156,6 @@ public class AddReportActivity extends
 		view.gallery.setOnItemClickListener(this);
 		view.mSwitcher.setFactory(this);
 		this.id = getIntent().getExtras().getInt("id", 0);
-		reportModel = new ListReportModel();
 		// edit existing report
 		if (id > 0) {
 
@@ -224,12 +221,26 @@ public class AddReportActivity extends
 	public boolean performAction(android.view.MenuItem item, int position) {
 
 		if (item.getItemId() == R.id.remove_photo) {
-			// Delete by name
-			if (ImageManager.deletePendingPhoto(this,
-					pendingPhoto.getItem(position).getPhoto())) {
-				pendingPhoto.refresh();
+
+			// adding a new report
+			if (id == 0) {
+
+				// Delete by name
+				if (ImageManager.deletePendingPhoto(this, "/"
+						+ pendingPhoto.getItem(position).getPhoto())) {
+					pendingPhoto.refresh();
+				}
+				return true;
+			} else {
+
+				// editing existing report
+				if (ImageManager.deletePendingPhoto(this, "/"
+						+ pendingPhoto.getItem(position).getPhoto())) {
+
+					pendingPhoto.removeItem(position);
+				}
+				return true;
 			}
-			return true;
 
 		}
 		return false;
@@ -434,7 +445,12 @@ public class AddReportActivity extends
 	private void deleteReport() {
 		// make sure it's an existing report
 		if (id > 0) {
-			if (reportModel.deleteReport(id)) {
+			if (model.deleteReport(id)) {
+				// delete images
+				for (int i = 0; i < pendingPhoto.getCount(); i++) {
+					ImageManager.deletePendingPhoto(this, "/"
+							+ pendingPhoto.getItem(i).getPhoto());
+				}
 				// return to report listing page.
 				finish();
 			}

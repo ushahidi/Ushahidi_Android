@@ -122,7 +122,7 @@ public class AddReportModel extends Model {
 				for (Photo photo : pendingPhotos) {
 					Media media = new Media();
 					media.setMediaId(0);
-					//FIXME:: this is nasty.
+					// FIXME:: this is nasty.
 					String sections[] = photo.getPhoto().split("/");
 					media.setLink(sections[1]);
 
@@ -162,6 +162,18 @@ public class AddReportModel extends Model {
 
 	public List<Media> fetchReportNews(int reportId) {
 		return Database.mMediaDao.fetchReportNews(reportId);
+	}
+
+	public boolean deleteReport(int reportId) {
+		// delete report
+		Database.mReportDao.deletePendingReportById(reportId);
+
+		// delete categories
+		Database.mReportCategoryDao.deleteReportCategoryByReportId(reportId);
+
+		// delete media
+		Database.mMediaDao.deleteMediaByReportId(reportId);
+		return true;
 	}
 
 	@Override

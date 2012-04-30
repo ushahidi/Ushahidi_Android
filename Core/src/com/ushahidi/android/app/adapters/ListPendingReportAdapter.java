@@ -70,12 +70,21 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 	@Override
 	public void refresh() {
 		mListReportModel = new ListReportModel();
-		final boolean loaded = mListReportModel. loadPendingReports();
+		final boolean loaded = mListReportModel.loadPendingReports();
 		if (loaded) {
 			items = mListReportModel.getReports(context);
 			this.setItems(items);
 		}
 
+	}
+	
+	public List<ListReportModel> pendingReports() {
+		mListReportModel = new ListReportModel();
+		final boolean loaded = mListReportModel.loadPendingReports();
+		if (loaded) {
+			return mListReportModel.getReports(context);
+		}
+		return null;
 	}
 
 	public void refresh(int categoryId) {
@@ -100,6 +109,24 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 		}
 
 		// delete the last |
+		if (categories.length() > 0) {
+			categories.deleteCharAt(categories.length() - 1);
+		}
+		return categories.toString();
+	}
+	
+	public String fetchCategoriesId(int reportId) {
+		mListReportModel = new ListReportModel();
+		StringBuilder categories = new StringBuilder();
+		for (Category category : mListReportModel
+				.getCategoriesByReportId(reportId)) {
+			if (category.getCategoryTitle().length() > 0) {
+				categories.append(category.getCategoryId() + ",");
+			}
+
+		}
+
+		// delete the last ,
 		if (categories.length() > 0) {
 			categories.deleteCharAt(categories.length() - 1);
 		}

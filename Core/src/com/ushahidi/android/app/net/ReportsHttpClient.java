@@ -37,6 +37,7 @@ import org.apache.http.entity.mime.content.StringBody;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.ReportsApiUtils;
@@ -120,10 +121,10 @@ public class ReportsHttpClient extends MainHttpClient {
 	 * parameter, 3 - post failed, 5 - access denied, 6 - access limited, 7 - no
 	 * data, 8 - api disabled, 9 - no task found, 10 - json is wrong
 	 */
-	public int PostFileUpload(String URL, HashMap<String, String> params)
+	public boolean PostFileUpload(String URL, HashMap<String, String> params)
 			throws IOException {
 		log("PostFileUpload(): upload file to server.");
-		
+
 		apiUtils.updateDomain();
 		entity = new MultipartEntity();
 		// Dipo Fix
@@ -173,10 +174,17 @@ public class ReportsHttpClient extends MainHttpClient {
 								.forName("UTF-8")));
 				if (params.get("filename") != null) {
 					if (!TextUtils.isEmpty(params.get("filename"))) {
-						File file = new File(params.get("filename"));
-						if (file.exists()) {
-							entity.addPart("incident_photo[]", new FileBody(
-									new File(params.get("filename"))));
+						String filenames[] = params.get("filename").split(",");
+						for (int i = 0; i > filenames.length; i++) {
+							File file = new File(ImageManager.getPhotoPath(
+									context, filenames[i]));
+							if (file.exists()) {
+								entity.addPart(
+										"incident_photo[]",
+										new FileBody(new File(ImageManager
+												.getPhotoPath(context,
+														filenames[i]))));
+							}
 						}
 					}
 				}
@@ -192,26 +200,29 @@ public class ReportsHttpClient extends MainHttpClient {
 				HttpEntity respEntity = response.getEntity();
 				if (respEntity != null) {
 					InputStream serverInput = respEntity.getContent();
-					return ApiUtils.extractPayloadJSON(GetText(serverInput));
-
+					int status = ApiUtils
+							.extractPayloadJSON(GetText(serverInput));
+					if (status == 0) {
+						return true;
+					}
+					return false;
 				}
 			}
 
 		} catch (MalformedURLException ex) {
 			log("PostFileUpload(): MalformedURLException", ex);
 
-			return 11;
+			return false;
 			// fall through and return false
 		} catch (IllegalArgumentException ex) {
 			log("IllegalArgumentException", ex);
 			// invalid URI
-			return 12;
+			return false;
 		} catch (IOException e) {
 			log("IOException", e);
 			// timeout
-			return 13;
+			return false;
 		}
-		return 10;
+		return false;
 	}
-
 }

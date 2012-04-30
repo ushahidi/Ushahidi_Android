@@ -31,10 +31,12 @@ public class ListReportView extends View {
 	private ArrayAdapter<String> spinnerArrayAdapter;
 
 	public TextView footerText;
+	
+	public TextView emptyText;
 
 	public ListReportView(Activity activity) {
 		super(activity);
-		
+		emptyText = (TextView) activity.findViewById(android.R.id.empty);
 		footerText = (TextView) activity.findViewById(R.id.footer_text);
 	}
 

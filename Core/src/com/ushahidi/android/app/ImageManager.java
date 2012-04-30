@@ -58,7 +58,7 @@ public class ImageManager {
 		return null;
 
 	}
-	
+
 	/**
 	 * Rename this to something meaningful
 	 * 
@@ -68,7 +68,8 @@ public class ImageManager {
 	 */
 	public static Drawable getDrawables2(Context context, String pathfileName) {
 
-		Bitmap original = BitmapFactory.decodeFile(getPhotoPath(context,"/"+pathfileName));
+		Bitmap original = BitmapFactory.decodeFile(getPhotoPath(context, "/"
+				+ pathfileName));
 		if (original != null) {
 			// scale image
 			Bitmap scaled = PhotoUtils.scaleBitmap(original);
@@ -222,7 +223,7 @@ public class ImageManager {
 	public static String getPhotoPath(Context context) {
 		return getSavedPhotoPath(context, PHOTO);
 	}
-	
+
 	public static String getPhotoPath(Context context, String pathfileName) {
 		return getSavedPhotoPath(context, pathfileName);
 	}
@@ -232,12 +233,11 @@ public class ImageManager {
 	}
 
 	public static boolean deletePendingPhoto(Context context, String fileName) {
-
-		return deleteImage2(fileName, getSavedPhotoPath(context, PENDING));
+		return deleteImage2(getSavedPhotoPath(context, fileName));
 	}
 
-	public static boolean deleteImage2(String filename, String path) {
-		File f = new File(path, filename);
+	public static boolean deleteImage2(String path) {
+		File f = new File(path);
 		if (f.exists()) {
 			f.delete();
 			return true;

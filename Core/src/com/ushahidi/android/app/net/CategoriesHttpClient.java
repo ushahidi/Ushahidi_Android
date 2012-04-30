@@ -20,22 +20,12 @@
 
 package com.ushahidi.android.app.net;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.nio.charset.Charset;
-import java.util.HashMap;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.util.ApiUtils;
@@ -46,146 +36,66 @@ import com.ushahidi.android.app.util.CategoriesApiUtils;
  */
 public class CategoriesHttpClient extends MainHttpClient {
 
-    private static MultipartEntity entity;
+	private ApiUtils apiUtils;
 
-    private ApiUtils apiUtils;
-    /**
-     * @param context
-     */
-    public CategoriesHttpClient(Context context) {
-        super(context);
-        apiUtils = new ApiUtils(context);
-    }
+	/**
+	 * @param context
+	 */
+	public CategoriesHttpClient(Context context) {
+		super(context);
+		apiUtils = new ApiUtils(context);
+	}
 
-    public int getCategoriesFromWeb() {
-        HttpResponse response;
-        String categoriesResponse = "";
-        
-      //get the right domain to work with
-        apiUtils.updateDomain();
-        StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
-        uriBuilder.append("/api?task=categories");
-        uriBuilder.append("&resp=json");
-        try {
-            response = GetURL(uriBuilder.toString());
+	public int getCategoriesFromWeb() {
+		HttpResponse response;
+		String categoriesResponse = "";
 
-            if (response == null) {
-                // Network is down
-                return 100;
-            }
+		// get the right domain to work with
+		apiUtils.updateDomain();
+		StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
+		uriBuilder.append("/api?task=categories");
+		uriBuilder.append("&resp=json");
+		try {
+			response = GetURL(uriBuilder.toString());
 
-            final int statusCode = response.getStatusLine().getStatusCode();
+			if (response == null) {
+				// Network is down
+				return 100;
+			}
 
-            if (statusCode == 200) {
+			final int statusCode = response.getStatusLine().getStatusCode();
 
-                categoriesResponse = GetText(response);
+			if (statusCode == 200) {
 
-                CategoriesApiUtils categoriesApiUtils = new CategoriesApiUtils(categoriesResponse);
-                if (categoriesApiUtils.getCategoriesList()) {
-                    Preferences.categoriesResponse = categoriesResponse;
+				categoriesResponse = GetText(response);
 
-                    return 0;
-                }
+				CategoriesApiUtils categoriesApiUtils = new CategoriesApiUtils(
+						categoriesResponse);
+				if (categoriesApiUtils.getCategoriesList()) {
+					Preferences.categoriesResponse = categoriesResponse;
 
-                // bad json string
-                return 99;
-            } else {
-                // Assuming connection timeout
-                return 110;
-            }
-        } catch (MalformedURLException ex) {
-            log("PostFileUpload(): MalformedURLException", ex);
-            // connection refused
-            return 111;
-        } catch (IllegalArgumentException ex) {
-            log("IllegalArgumentException", ex);
-            // invalid URI
-            return 120;
-        } catch (IOException e) {
-            log("IOException", e);
-            // There is no default deployment
-            return 112;
-        }
+					return 0;
+				}
 
-    }
+				// bad json string
+				return 99;
+			} else {
+				// Assuming connection timeout
+				return 110;
+			}
+		} catch (MalformedURLException ex) {
+			log("PostFileUpload(): MalformedURLException", ex);
+			// connection refused
+			return 111;
+		} catch (IllegalArgumentException ex) {
+			log("IllegalArgumentException", ex);
+			// invalid URI
+			return 120;
+		} catch (IOException e) {
+			log("IOException", e);
+			// There is no default deployment
+			return 112;
+		}
 
-    /**
-     * Upload files to server 0 - success, 1 - missing parameter, 2 - invalid
-     * parameter, 3 - post failed, 5 - access denied, 6 - access limited, 7 - no
-     * data, 8 - api disabled, 9 - no task found, 10 - json is wrong
-     */
-    public int PostFileUpload(String URL, HashMap<String, String> params) throws IOException {
-        log("PostFileUpload(): upload file to server.");
-
-        entity = new MultipartEntity();
-        // Dipo Fix
-        try {
-            // wrap try around because this constructor can throw Error
-            final HttpPost httpost = new HttpPost(URL);
-
-            if (params != null) {
-
-                entity.addPart("task", new StringBody(params.get("task")));
-                entity.addPart("incident_title", new StringBody(params.get("incident_title"),
-                        Charset.forName("UTF-8")));
-                entity.addPart(
-                        "incident_description",
-                        new StringBody(params.get("incident_description"), Charset.forName("UTF-8")));
-                entity.addPart("incident_date", new StringBody(params.get("incident_date")));
-                entity.addPart("incident_hour", new StringBody(params.get("incident_hour")));
-                entity.addPart("incident_minute", new StringBody(params.get("incident_minute")));
-                entity.addPart("incident_ampm", new StringBody(params.get("incident_ampm")));
-                entity.addPart("incident_category", new StringBody(params.get("incident_category")));
-                entity.addPart("latitude", new StringBody(params.get("latitude")));
-                entity.addPart("longitude", new StringBody(params.get("longitude")));
-                entity.addPart("location_name",
-                        new StringBody(params.get("location_name"), Charset.forName("UTF-8")));
-                entity.addPart("person_first",
-                        new StringBody(params.get("person_first"), Charset.forName("UTF-8")));
-                entity.addPart("person_last",
-                        new StringBody(params.get("person_last"), Charset.forName("UTF-8")));
-                entity.addPart("person_email",
-                        new StringBody(params.get("person_email"), Charset.forName("UTF-8")));
-                if (params.get("filename") != null) {
-                    if (!TextUtils.isEmpty(params.get("filename"))) {
-                        File file = new File(params.get("filename"));
-                        if (file.exists()) {
-                            entity.addPart("incident_photo[]",
-                                    new FileBody(new File(params.get("filename"))));
-                        }
-                    }
-                }
-
-                // NEED THIS NOW TO FIX ERROR 417
-                httpost.getParams().setBooleanParameter("http.protocol.expect-continue", false);
-                httpost.setEntity(entity);
-
-                HttpResponse response = httpClient.execute(httpost);
-                Preferences.httpRunning = false;
-
-                HttpEntity respEntity = response.getEntity();
-                if (respEntity != null) {
-                    InputStream serverInput = respEntity.getContent();
-                    return ApiUtils.extractPayloadJSON(GetText(serverInput));
-
-                }
-            }
-
-        } catch (MalformedURLException ex) {
-            log("PostFileUpload(): MalformedURLException", ex);
-
-            return 11;
-            // fall through and return false
-        } catch (IllegalArgumentException ex) {
-            log("IllegalArgumentException", ex);
-            // invalid URI
-            return 12;
-        } catch (IOException e) {
-            log("IOException", e);
-            // timeout
-            return 13;
-        }
-        return 10;
-    }
-
+	}
 }

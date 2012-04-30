@@ -309,16 +309,4 @@ public class ListReportModel extends Model {
 		}
 		return context.getResources().getDrawable(R.drawable.report_icon);
 	}
-
-	public boolean deleteReport(int reportId) {
-		// delete report
-		Database.mReportDao.deletePendingReportById(reportId);
-
-		// delete categories
-		Database.mReportCategoryDao.deleteReportCategoryByReportId(reportId);
-
-		// delete media
-		Database.mMediaDao.deleteMediaByReportId(reportId);
-		return true;
-	}
 }

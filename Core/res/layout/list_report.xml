@@ -50,6 +50,6 @@
     <TextView
         android:id="@android:id/empty"
         style="@style/TextView.Empty"
-        android:text="@string/no_items" />
+        android:visibility="gone" />
 
 </RelativeLayout>
