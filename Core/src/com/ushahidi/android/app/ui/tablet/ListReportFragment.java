@@ -617,10 +617,10 @@ public class ListReportFragment
 					if (!pendingReportAdapter.isEmpty()) {
 						uploadPendingReports();
 					}
-					
+
 					// delete everything before updating with a new one
 					deleteFetchedReport();
-					
+
 					// fetch categories -- assuming everything will go just
 					// right!
 					new CategoriesHttpClient(getActivity())

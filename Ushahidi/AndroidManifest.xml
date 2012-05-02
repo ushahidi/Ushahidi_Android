@@ -246,6 +246,7 @@
         <!-- Launch View Photos -->
         <activity
             android:name=".ui.phone.ViewReportPhotoActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/photos" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

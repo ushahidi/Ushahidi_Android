@@ -6,15 +6,15 @@
 
         <TextView
             android:id="@+id/map_list_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_gravity="center"
             android:layout_toLeftOf="@+id/map_arrow"
             android:capitalize="characters"
             android:ellipsize="end"
-            android:focusable="false"
             android:lines="1"
+            android:focusable="false"
             android:textColor="@color/date_color"
             android:textStyle="bold" />
         <!-- Hide this for now -->
@@ -27,13 +27,13 @@
             android:layout_below="@+id/map_list_name"
             android:layout_toLeftOf="@+id/map_arrow"
             android:capitalize="sentences"
-            android:ellipsize="end"
             android:focusable="false"
+            android:ellipsize="end"
             android:textColor="@color/date_color" />
 
         <TextView
             android:id="@+id/map_list_url"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/map_list_desc"
@@ -44,14 +44,14 @@
         <TextView
             android:id="@+id/map_list_id"
             style="@android:style/TextAppearance.Small"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/map_list_url"
             android:layout_toLeftOf="@+id/map_arrow"
             android:capitalize="sentences"
-            android:focusable="false"
             android:lines="1"
+            android:focusable="false"
             android:textColor="@color/date_color"
             android:visibility="gone" />
 

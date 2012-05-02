@@ -89,13 +89,9 @@ public class ListMapActivity extends
 
 	private Handler mHandler;
 
-	private ListMapView listMapView;
-
 	private int mId = 0;
 
 	private int mapId = 0;
-
-	private ListMapAdapter listMapAdapter;
 
 	private ListMapModel listMapModel;
 
@@ -111,6 +107,7 @@ public class ListMapActivity extends
 		super(ListMapView.class, ListMapAdapter.class, R.layout.list_map,
 				R.menu.list_map, android.R.id.list);
 		mHandler = new Handler();
+		listMapModel = new ListMapModel();
 
 	}
 
@@ -118,37 +115,36 @@ public class ListMapActivity extends
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		actionBar.setDisplayHomeAsUpEnabled(false);
-		listMapView = new ListMapView(this);
-		listMapAdapter = new ListMapAdapter(this);
-		listMapModel = new ListMapModel();
 		apiUtils = new ApiUtils(this);
+		registerForContextMenu(listView);
 
-		registerForContextMenu(listMapView.mListView);
+		// filter map list
+		if (view != null) {
+			view.mSearchMap.addTextChangedListener(new TextWatcher() {
 
-		listMapView.mTextView.addTextChangedListener(new TextWatcher() {
+				public void afterTextChanged(Editable arg0) {
 
-			public void afterTextChanged(Editable arg0) {
-
-			}
-
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-
-			}
-
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-
-				if (!(TextUtils.isEmpty(s.toString()))) {
-					filter = s.toString();
-					mHandler.post(filterMapList);
-				} else {
-					mHandler.post(fetchMapList);
 				}
 
-			}
+				public void beforeTextChanged(CharSequence s, int start,
+						int count, int after) {
 
-		});
+				}
+
+				public void onTextChanged(CharSequence s, int start,
+						int before, int count) {
+
+					if (!(TextUtils.isEmpty(s.toString()))) {
+						filter = s.toString();
+						mHandler.post(filterMapList);
+					} else {
+						mHandler.post(fetchMapList);
+					}
+
+				}
+
+			});
+		}
 	}
 
 	@Override
@@ -180,7 +176,7 @@ public class ListMapActivity extends
 			try {
 				if (status) {
 					toastShort(R.string.map_deleted);
-					listMapAdapter.refresh();
+					adapter.refresh();
 				} else {
 					toastShort(R.string.map_deleted_failed);
 				}
@@ -196,10 +192,7 @@ public class ListMapActivity extends
 	final Runnable fetchMapList = new Runnable() {
 		public void run() {
 			try {
-				listMapAdapter.refresh();
-				listMapView.mListView.setAdapter(listMapAdapter);
-				listMapView.displayEmptyListText();
-				listMapView.mListView.requestFocus();
+				adapter.refresh();
 			} catch (Exception e) {
 				return;
 			}
@@ -213,7 +206,7 @@ public class ListMapActivity extends
 		public void run() {
 			try {
 
-				listMapAdapter.getFilter().filter(filter);
+				adapter.getFilter().filter(filter);
 
 			} catch (Exception e) {
 				return;
@@ -252,8 +245,8 @@ public class ListMapActivity extends
 	};
 
 	public void refreshMapLists() {
-		listMapAdapter.refresh();
-		listMapView.displayEmptyListText();
+		adapter.refresh();
+		// view.displayEmptyListText();
 	}
 
 	// Context Menu Stuff
@@ -279,8 +272,8 @@ public class ListMapActivity extends
 
 	public boolean performAction(android.view.MenuItem item, int position) {
 
-		mId = listMapAdapter.getItem(position).getId();
-		mapId = listMapAdapter.getItem(position).getMapId();
+		mId = adapter.getItem(position).getId();
+		mapId = adapter.getItem(position).getMapId();
 
 		if (item.getItemId() == R.id.map_delete) {
 			// Delete by ID
@@ -324,11 +317,13 @@ public class ListMapActivity extends
 
 	}
 
+	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
 
-		final int sId = listMapAdapter.getItem(position).getId();
-
+		final int sId = adapter.getItem(position).getId();
+		
+		log("ID: "+sId);
 		if (isMapActive(sId)) {
 			goToReports();
 		} else {
@@ -560,9 +555,9 @@ public class ListMapActivity extends
 				toastShort(R.string.deployment_fetched_successful);
 			}
 			refresh.setActionView(null);
-			listMapAdapter.refresh();
-			listMapView.mProgressBar.setVisibility(View.GONE);
-			listMapView.displayEmptyListText();
+			adapter.refresh();
+			view.mProgressBar.setVisibility(View.GONE);
+			// view.displayEmptyListText();
 		}
 
 	}
@@ -639,7 +634,7 @@ public class ListMapActivity extends
 				} else {
 					toastLong(R.string.could_not_fetch_reports);
 				}
-				
+
 			} else {
 				toastLong(R.string.could_not_fetch_reports);
 			}
@@ -651,7 +646,7 @@ public class ListMapActivity extends
 		try {
 
 			if (success) {
-				
+
 				goToReports();
 
 			} else {
@@ -729,9 +724,6 @@ public class ListMapActivity extends
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ushahidi.android.app.activities.BaseListActivity#headerView()
-	 */
 	@Override
 	protected View headerView() {
 		return null;

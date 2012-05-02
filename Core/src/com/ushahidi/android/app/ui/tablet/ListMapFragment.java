@@ -76,8 +76,6 @@ public class ListMapFragment extends
 
 	private ListMapModel mListMapModel;
 
-	private ListMapView mListMapView;
-
 	private ListMapTabletAdapter mListMapAdapter;
 
 	private boolean edit = true;
@@ -117,20 +115,18 @@ public class ListMapFragment extends
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
-
-		mListMapView = new ListMapView(getActivity());
 		mListMapAdapter = new ListMapTabletAdapter(getActivity());
 		mListMapModel = new ListMapModel();
 		apiUtils = new ApiUtils(getActivity());
 		if (Util.isHoneycomb()) {
-			mListMapView.mListView.setLongClickable(true);
-			mListMapView.mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-			mListMapView.mListView
+			listView.setLongClickable(true);
+			listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+			listView
 					.setOnItemLongClickListener(new ActionModeHelper(this,
-							mListMapView.mListView));
+							listView));
 		} else {
 
-			registerForContextMenu(mListMapView.mListView);
+			registerForContextMenu(listView);
 		}
 
 		mHandler.post(fetchMapList);
@@ -139,7 +135,7 @@ public class ListMapFragment extends
 			int position = savedInstanceState.getInt(STATE_CHECKED, -1);
 
 			if (position > -1) {
-				mListMapView.mListView.setItemChecked(position, true);
+				listView.setItemChecked(position, true);
 			}
 		}
 
@@ -149,7 +145,7 @@ public class ListMapFragment extends
 	public void onSaveInstanceState(Bundle state) {
 		super.onSaveInstanceState(state);
 		state.putInt(STATE_CHECKED,
-				mListMapView.mListView.getCheckedItemPosition());
+				listView.getCheckedItemPosition());
 	}
 
 	@Override
@@ -207,8 +203,8 @@ public class ListMapFragment extends
 		public void run() {
 			try {
 				mListMapAdapter.refresh();
-				mListMapView.mListView.setAdapter(mListMapAdapter);
-				mListMapView.displayEmptyListText();
+				//mListMapView.mListView.setAdapter(mListMapAdapter);
+				//mListMapView.displayEmptyListText();
 			} catch (Exception e) {
 				return;
 			}
@@ -222,7 +218,7 @@ public class ListMapFragment extends
 		public void run() {
 			try {
 				mListMapAdapter.getFilter().filter(filter);
-				mListMapView.displayEmptyListText();
+				//mListMapView.displayEmptyListText();
 			} catch (Exception e) {
 				return;
 			}
@@ -261,8 +257,8 @@ public class ListMapFragment extends
 
 	public void refreshMapLists() {
 		mListMapAdapter.refresh();
-		mListMapView.mListView.setAdapter(mListMapAdapter);
-		mListMapView.displayEmptyListText();
+		//mListMapView.mListView.setAdapter(mListMapAdapter);
+	//mListMapView.displayEmptyListText();
 	}
 
 	// Context Menu Stuff
@@ -658,8 +654,8 @@ public class ListMapFragment extends
 				toastShort(R.string.deployment_fetched_successful);
 			}
 			mListMapAdapter.refresh();
-			mListMapView.mListView.setAdapter(mListMapAdapter);
-			mListMapView.displayEmptyListText();
+			//mListMapView.mListView.setAdapter(mListMapAdapter);
+		//	mListMapView.displayEmptyListText();
 			refreshState = false;
 			updateRefreshStatus();
 		}

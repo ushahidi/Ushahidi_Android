@@ -150,7 +150,7 @@ public class ApiUtils extends MainHttpClient {
 						.getString("latitude");
 				Preferences.deploymentLongitude = jsonArray.getJSONObject(0)
 						.getString("longitude");
-
+				Log.i("ApitUtls","ApiUtils: "+Preferences.deploymentLatitude+" Longitude: "+Preferences.deploymentLongitude);
 				// save changes
 				Preferences.saveSettings(context);
 				return true;

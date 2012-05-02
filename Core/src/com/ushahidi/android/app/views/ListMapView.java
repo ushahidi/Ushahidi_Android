@@ -21,8 +21,6 @@
 package com.ushahidi.android.app.views;
 
 import android.app.Activity;
-import android.view.View;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -33,34 +31,17 @@ import com.ushahidi.android.app.R;
  */
 public class ListMapView extends com.ushahidi.android.app.views.View {
 
-    public TextView mTextView;
+	public TextView mSearchMap;
 
-    public TextView mEmptyList;
+	public TextView mEmptyList;
 
-    public ListView mListView;
+	public ProgressBar mProgressBar;
 
-    public ProgressBar mProgressBar;
-
-    public ListMapView(Activity activity) {
-        super(activity);
-
-        mTextView = (TextView)activity.findViewById(R.id.search_map);
-        mEmptyList = (TextView)activity.findViewById(R.id.empty_list_for_maps);
-        mListView = (ListView)activity.findViewById(android.R.id.list);
-        mProgressBar = (ProgressBar)activity.findViewById(R.id.map_refresh_progress);
-    }
-    
-
-    public void displayEmptyListText() {
-
-        if (mListView.getCount() == 0) {
-            mEmptyList.setVisibility(View.VISIBLE);
-            mListView.setVisibility(View.GONE);
-        } else {
-            mEmptyList.setVisibility(View.GONE);
-            mListView.setVisibility(View.VISIBLE);
-        }
-
-    }
+	public ListMapView(Activity activity) {
+		super(activity);
+		mSearchMap = (TextView) activity.findViewById(R.id.search_map);
+		mProgressBar = (ProgressBar) activity
+				.findViewById(R.id.map_refresh_progress);
+	}
 
 }

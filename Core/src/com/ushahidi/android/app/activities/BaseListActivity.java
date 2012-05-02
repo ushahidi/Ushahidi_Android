@@ -30,6 +30,7 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.BaseListAdapter;
 import com.ushahidi.android.app.models.Model;
 import com.ushahidi.android.app.tasks.ProgressTask;
+import com.ushahidi.android.app.util.Objects;
 import com.ushahidi.android.app.views.View;
 
 /**
@@ -96,11 +97,9 @@ public abstract class BaseListActivity<V extends View, M extends Model, L extend
 				listView.setEmptyView(emptyView);
 			}
 
-			adapter = createInstance(adapterClass, Context.class, this);
+			adapter = Objects.createInstance(adapterClass, Context.class, this);
 			listView.setAdapter(adapter);
 			listView.setFocusable(true);
-			listView.setFocusableInTouchMode(true);
-
 		}
 	}
 

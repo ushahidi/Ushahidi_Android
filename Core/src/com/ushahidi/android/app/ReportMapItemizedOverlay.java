@@ -27,7 +27,6 @@ public class ReportMapItemizedOverlay<Item extends OverlayItem> extends
     }
 
     public void addOverlay(ReportMapOverlayItem overlay) {
-    	items.clear();
         items.add(overlay);
         populate();
     }

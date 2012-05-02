@@ -101,10 +101,11 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		if (mReportModel.size() > 0) {
 			if (id > 0) {
 				if (!Preferences.deploymentLatitude.equals("0.0")
-						&& !Preferences.deploymentLatitude.equals("0.0")) {
+						&& !Preferences.deploymentLongitude.equals("0.0")) {
 
 					MapFragment.latitude = Double
 							.parseDouble(Preferences.deploymentLatitude);
+
 					MapFragment.longitude = Double
 							.parseDouble(Preferences.deploymentLongitude);
 
@@ -119,7 +120,8 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 			} else {
 
 				if (!Preferences.deploymentLatitude.equals("0.0")
-						&& !Preferences.deploymentLatitude.equals("0.0")) {
+						&& !Preferences.deploymentLongitude.equals("0.0")) {
+
 					MapFragment.latitude = Double
 							.parseDouble(Preferences.deploymentLatitude);
 					MapFragment.longitude = Double
@@ -131,6 +133,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 							0).getLatitude());
 					MapFragment.longitude = Double.parseDouble(mReportModel
 							.get(0).getLongitude());
+
 				}
 
 			}
@@ -193,7 +196,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 									int which) {
 
 								filterCategory = spinnerArrayAdapter.getTag(
-										which).getDbId();
+										which).getCategoryId();
 								final String all = spinnerArrayAdapter.getTag(
 										which).getCategoryTitle();
 								if ((all != null)
@@ -241,6 +244,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 	final Runnable fetchReportList = new Runnable() {
 		public void run() {
 			try {
+				mListReportModel.load();
 				mReportModel = mListReportModel.getReports(getActivity());
 				populateMap();
 				showCategories();
@@ -346,8 +350,11 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		itemOverlay = new ReportMapItemizedOverlay<ReportMapOverlayItem>(
 				marker, map, getActivity());
 		if (mReportModel != null) {
-
+			log("ListReportModel: " + mReportModel.size());
 			for (ListReportModel reportModel : mReportModel) {
+				log("ListReportModel: " + "Latitude "
+						+ reportModel.getLatitude() + " Longitude "
+						+ reportModel.getLongitude());
 				itemOverlay.addOverlay(new ReportMapOverlayItem(getPoint(
 						Double.valueOf(reportModel.getLatitude()),
 						Double.valueOf(reportModel.getLongitude())),
@@ -357,7 +364,11 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 			}
 		}
 		map.getOverlays().clear();
-		map.getOverlays().add(itemOverlay);
+
+		if (itemOverlay.size() > 0) {
+			map.getOverlays().add(itemOverlay);
+		}
+
 	}
 
 	public void launchAddReport() {

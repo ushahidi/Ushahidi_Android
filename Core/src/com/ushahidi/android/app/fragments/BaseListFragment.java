@@ -20,8 +20,6 @@
 
 package com.ushahidi.android.app.fragments;
 
-import java.lang.reflect.InvocationTargetException;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -243,29 +241,6 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
 	protected void toastShort(CharSequence message) {
 		Toast.makeText(getActivity(), message.toString(), Toast.LENGTH_SHORT)
 				.show();
-	}
-
-	@SuppressWarnings("unchecked")
-	protected <T> T createInstance(Class<?> type, Class<?> constructor,
-			Object... params) {
-		try {
-			return (T) type.getConstructor(constructor).newInstance(params);
-		} catch (InstantiationException e) {
-			log("InstantiationException", e);
-		} catch (IllegalAccessException e) {
-			log("IllegalAccessException", e);
-		} catch (InvocationTargetException e) {
-			log("InvocationTargetException", e);
-		} catch (NoSuchMethodException e) {
-			log("NoSuchMethodException", e);
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (java.lang.InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 }
