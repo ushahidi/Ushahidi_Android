@@ -1,4 +1,3 @@
-
 package com.ushahidi.android.app;
 
 import java.util.ArrayList;
@@ -13,54 +12,55 @@ import com.ushahidi.android.app.views.BalloonOverlayView;
 import com.ushahidi.android.app.views.ReportMapBallonOverlayView;
 
 public class ReportMapItemizedOverlay<Item extends OverlayItem> extends
-        MapItemizedOverlay<ReportMapOverlayItem> {
-	
-    private ArrayList<ReportMapOverlayItem> items = new ArrayList<ReportMapOverlayItem>();
+		MapItemizedOverlay<ReportMapOverlayItem> {
 
-    private Activity mActivity;
-    
-    private Drawable marker;
+	private ArrayList<ReportMapOverlayItem> items = new ArrayList<ReportMapOverlayItem>();
 
-    public ReportMapItemizedOverlay(Drawable marker, MapView mapView, Activity activity) {
-        super(boundCenter(marker), mapView);
-        mActivity = activity;
-        this.marker = marker;
-    }
+	private Activity mActivity;
 
-    public void addOverlay(ReportMapOverlayItem overlay) {
-        items.add(overlay);
-        populate();
-    }
+	private Drawable marker;
 
-    @Override
-    protected ReportMapOverlayItem createItem(int i) {
-        return items.get(i);
-    }
+	public ReportMapItemizedOverlay(Drawable marker, MapView mapView,
+			Activity activity) {
+		super(boundCenter(marker), mapView);
+		mActivity = activity;
+		this.marker = marker;
+	}
 
-    @Override
-    public int size() {
-        return items.size();
-    }
+	public void addOverlay(ReportMapOverlayItem overlay) {
+		items.add(overlay);
+		populate();
+	}
 
-    @Override
-    protected boolean onBalloonTap(int index, ReportMapOverlayItem item) {
-    	
-        ReportMapBallonOverlayView.viewReports(index, item.getFilterCategory());
-        
-        return true;
-    }
+	@Override
+	protected ReportMapOverlayItem createItem(int i) {
+		return items.get(i);
+	}
 
-    @Override
-    protected BalloonOverlayView<ReportMapOverlayItem> createBalloonOverlayView() {
-        // use our custom balloon view with our custom overlay item type:
-        return new ReportMapBallonOverlayView<ReportMapOverlayItem>(getMapView().getContext(),
-                getBalloonBottomOffset(), mActivity);
-    }
-    
-    @Override
-    public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-        super.draw(canvas, mapView, shadow);
-        boundCenterBottom(marker);
-    }
+	@Override
+	public int size() {
+		return items.size();
+	}
+
+	@Override
+	protected boolean onBalloonTap(int index, ReportMapOverlayItem item) {
+
+		ReportMapBallonOverlayView.viewReports(index, item.getFilterCategory());
+
+		return true;
+	}
+
+	@Override
+	protected BalloonOverlayView<ReportMapOverlayItem> createBalloonOverlayView() {
+		// use our custom balloon view with our custom overlay item type:
+		return new ReportMapBallonOverlayView<ReportMapOverlayItem>(
+				getMapView().getContext(), getBalloonBottomOffset(), mActivity);
+	}
+
+	@Override
+	public void draw(Canvas canvas, MapView mapView, boolean shadow) {
+		super.draw(canvas, mapView, shadow);
+		boundCenterBottom(marker);
+	}
 
 }

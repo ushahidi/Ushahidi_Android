@@ -53,10 +53,7 @@ public abstract class MapItemizedOverlay<Item extends OverlayItem> extends Itemi
         super(marker);
 
         this.mapView = mapView;
-        this.viewOffset = 20;
-        // this.iMap = iMap;
-        // this.mNewIncidents = mNewIncidents;
-        // this.extras = extras;
+        this.viewOffset = 30;
         this.mc = mapView.getController();
 
     }

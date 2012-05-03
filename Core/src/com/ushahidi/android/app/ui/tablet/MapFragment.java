@@ -324,7 +324,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		}
 		map.getOverlays().clear();
 		if (itemOverlay.size() > 0) {
-			//map.getController().animateTo(itemOverlay.getCenter());
+			map.getController().animateTo(itemOverlay.getCenter());
 			map.getController().zoomToSpan(itemOverlay.getLatSpanE6(),
 					itemOverlay.getLonSpanE6());
 			map.getOverlays().add(itemOverlay);
