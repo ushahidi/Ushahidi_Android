@@ -19,14 +19,13 @@
  **/
 package com.ushahidi.android.app.util;
 
-import android.util.Log;
-import android.view.InflateException;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
+
+import android.util.Log;
+import android.view.InflateException;
 
 public class Objects {
 

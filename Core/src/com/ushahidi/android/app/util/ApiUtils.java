@@ -25,7 +25,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.http.HttpResponse;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -119,51 +118,6 @@ public class ApiUtils extends MainHttpClient {
 		}
 		Preferences.saveSettings(context);
 		return checkinEnabled;
-	}
-
-	public boolean geographicMidpoint() {
-
-		Preferences.loadSettings(context);
-
-		updateDomain();
-
-		StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
-		uriBuilder.append("/api?task=geographicmidpoint");
-		uriBuilder.append("&resp=json");
-
-		try {
-			response = GetURL(uriBuilder.toString());
-			if (response == null) {
-				return false;
-			}
-
-			final int statusCode = response.getStatusLine().getStatusCode();
-
-			if (statusCode == 200) {
-
-				jsonString = GetText(response);
-				JSONObject jsonObject = new JSONObject(jsonString);
-
-				JSONArray jsonArray = jsonObject.getJSONObject("payload")
-						.getJSONArray("geographic_midpoint");
-				Preferences.deploymentLatitude = jsonArray.getJSONObject(0)
-						.getString("latitude");
-				Preferences.deploymentLongitude = jsonArray.getJSONObject(0)
-						.getString("longitude");
-				Log.i("ApitUtls","ApiUtils: "+Preferences.deploymentLatitude+" Longitude: "+Preferences.deploymentLongitude);
-				// save changes
-				Preferences.saveSettings(context);
-				return true;
-
-			}
-		} catch (IOException e) {
-
-			return false;
-		} catch (JSONException e) {
-
-			return false;
-		}
-		return false;
 	}
 
 	public void clearAllReportData() {

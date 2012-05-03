@@ -228,4 +228,5 @@ public class CheckinDao extends DbContentProvider implements ICheckinDao, ICheck
     private ContentValues getContentValue() {
         return initialValues;
     }
+
 }

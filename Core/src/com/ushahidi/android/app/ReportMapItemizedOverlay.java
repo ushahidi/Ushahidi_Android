@@ -14,6 +14,7 @@ import com.ushahidi.android.app.views.ReportMapBallonOverlayView;
 
 public class ReportMapItemizedOverlay<Item extends OverlayItem> extends
         MapItemizedOverlay<ReportMapOverlayItem> {
+	
     private ArrayList<ReportMapOverlayItem> items = new ArrayList<ReportMapOverlayItem>();
 
     private Activity mActivity;
@@ -43,7 +44,9 @@ public class ReportMapItemizedOverlay<Item extends OverlayItem> extends
 
     @Override
     protected boolean onBalloonTap(int index, ReportMapOverlayItem item) {
-        ReportMapBallonOverlayView.viewReports(item.getId(), item.getFilterCategory());
+    	
+        ReportMapBallonOverlayView.viewReports(index, item.getFilterCategory());
+        
         return true;
     }
 

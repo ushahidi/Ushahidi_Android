@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
@@ -48,12 +49,6 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 	private ReportMapItemizedOverlay<ReportMapOverlayItem> itemOverlay;
 
 	private Handler mHandler;
-
-	private static double latitude;
-
-	private static double longitude;
-
-	private int id = 1;
 
 	private int filterCategory = 0;
 
@@ -99,48 +94,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 				R.string.google_map_api_key));
 		Preferences.loadSettings(getActivity());
 		if (mReportModel.size() > 0) {
-			if (id > 0) {
-				if (!Preferences.deploymentLatitude.equals("0.0")
-						&& !Preferences.deploymentLongitude.equals("0.0")) {
-
-					MapFragment.latitude = Double
-							.parseDouble(Preferences.deploymentLatitude);
-
-					MapFragment.longitude = Double
-							.parseDouble(Preferences.deploymentLongitude);
-
-				} else {
-
-					MapFragment.latitude = Double.parseDouble(mReportModel.get(
-							0).getLatitude());
-					MapFragment.longitude = Double.parseDouble(mReportModel
-							.get(0).getLongitude());
-
-				}
-			} else {
-
-				if (!Preferences.deploymentLatitude.equals("0.0")
-						&& !Preferences.deploymentLongitude.equals("0.0")) {
-
-					MapFragment.latitude = Double
-							.parseDouble(Preferences.deploymentLatitude);
-					MapFragment.longitude = Double
-							.parseDouble(Preferences.deploymentLongitude);
-
-				} else {
-
-					MapFragment.latitude = Double.parseDouble(mReportModel.get(
-							0).getLatitude());
-					MapFragment.longitude = Double.parseDouble(mReportModel
-							.get(0).getLongitude());
-
-				}
-
-			}
-
 			map.setClickable(true);
-			map.getController().setCenter(
-					getPoint(MapFragment.latitude, MapFragment.longitude));
 			map.setBuiltInZoomControls(true);
 			mHandler.post(mMarkersOnMap);
 
@@ -181,6 +135,15 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	protected View headerView() {
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		ViewGroup viewGroup = (ViewGroup) inflater.inflate(
+				R.layout.map_view_header, null, false);
+		TextView textView = (TextView) viewGroup.findViewById(R.id.map_header);
+		textView.setText(R.string.all_categories);
+		return viewGroup;
 	}
 
 	// FIXME:: look into how to put this in it own class
@@ -350,11 +313,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		itemOverlay = new ReportMapItemizedOverlay<ReportMapOverlayItem>(
 				marker, map, getActivity());
 		if (mReportModel != null) {
-			log("ListReportModel: " + mReportModel.size());
 			for (ListReportModel reportModel : mReportModel) {
-				log("ListReportModel: " + "Latitude "
-						+ reportModel.getLatitude() + " Longitude "
-						+ reportModel.getLongitude());
 				itemOverlay.addOverlay(new ReportMapOverlayItem(getPoint(
 						Double.valueOf(reportModel.getLatitude()),
 						Double.valueOf(reportModel.getLongitude())),
@@ -364,8 +323,10 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 			}
 		}
 		map.getOverlays().clear();
-
 		if (itemOverlay.size() > 0) {
+			//map.getController().animateTo(itemOverlay.getCenter());
+			map.getController().zoomToSpan(itemOverlay.getLatSpanE6(),
+					itemOverlay.getLonSpanE6());
 			map.getOverlays().add(itemOverlay);
 		}
 

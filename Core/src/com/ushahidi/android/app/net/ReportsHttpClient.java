@@ -93,11 +93,6 @@ public class ReportsHttpClient extends MainHttpClient {
 
 				ReportsApiUtils reportsApiUtils = new ReportsApiUtils(incidents);
 				if (reportsApiUtils.saveReports(context)) {
-
-					// get the geographic midpoint for mapview
-					if (apiUtils.geographicMidpoint()) {
-						return 0;
-					}
 					return 0; // return success even if geographic fails
 				}
 

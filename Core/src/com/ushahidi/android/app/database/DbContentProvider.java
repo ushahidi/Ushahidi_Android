@@ -22,6 +22,7 @@ public abstract class DbContentProvider {
     }
 
     protected abstract <T extends IDbEntity> T cursorToEntity(Cursor cursor);
+    
 
     public DbContentProvider(SQLiteDatabase db) {
 
