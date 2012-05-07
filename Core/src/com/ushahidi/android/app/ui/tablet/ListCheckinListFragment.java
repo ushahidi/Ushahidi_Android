@@ -34,7 +34,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -75,6 +74,8 @@ public class ListCheckinListFragment
 	private int filterUserId = 0;
 
 	private CharSequence filterTitle = null;
+
+	private boolean refreshState = false;
 
 	public ListCheckinListFragment() {
 		super(ListCheckinView.class, ListCheckinAdapter.class,
@@ -224,8 +225,19 @@ public class ListCheckinListFragment
 
 	private void filterChecinList() {
 		fetchedAdapter.getFilter().filter(filterTitle);
-
+		pendingAdapter.getFilter().filter(filterTitle);
 		adapter = new ListCheckinAdapter(getActivity());
+
+		if (!pendingAdapter.isEmpty()) {
+			adapter.addView(pendingHeader());
+			adapter.addAdapter(pendingAdapter);
+			// add fetched checkin
+			adapter.addView(fetchedHeader());
+			adapter.addAdapter(fetchedAdapter);
+		} else {
+			adapter.addAdapter(fetchedAdapter);
+		}
+
 		listView.setAdapter(fetchedAdapter);
 	}
 
@@ -325,9 +337,14 @@ public class ListCheckinListFragment
 		super.onSaveInstanceState(outState);
 	}
 
-	public void onItemClick(AdapterView<?> adapterView, View view,
-			int position, long id) {
-		// toastShort("onItemClick %d", position);
+	private void updateRefreshStatus() {
+		if (refresh != null) {
+			if (refreshState)
+				refresh.setActionView(R.layout.indeterminate_progress_action);
+			else
+				refresh.setActionView(null);
+		}
+
 	}
 
 	/**
