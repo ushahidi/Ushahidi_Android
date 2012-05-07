@@ -20,10 +20,12 @@
 
 package com.ushahidi.android.app.entities;
 
+import com.ushahidi.android.app.models.Model;
+
 /**
  * @author eyedol
  */
-public class User implements IDbEntity {
+public class User extends Model implements IDbEntity {
 
     private int id;
 
@@ -73,5 +75,23 @@ public class User implements IDbEntity {
     public void setUserColor(String userColor) {
         this.userColor = userColor;
     }
+
+	/* (non-Javadoc)
+	 * @see com.ushahidi.android.app.models.Model#load()
+	 */
+	@Override
+	public boolean load() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ushahidi.android.app.models.Model#save()
+	 */
+	@Override
+	public boolean save() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

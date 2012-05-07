@@ -410,4 +410,8 @@
     <string name="want_to_delete">Are you sure you want to delete?</string>
     <string name="failed">Failed</string>
     <string name="connection_timeout">Connection time</string>
+    <string name="unknown">Unknown</string>
+    <string name="all_users">All Users</string>
+    <string name="add_checkin">Add Checkin</string>
+    <string name="users">Users</string>
 </resources>

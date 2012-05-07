@@ -13,15 +13,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     
     <item
-        android:id="@+id/menu_refresh"
+        android:id="@+id/menu_filter_by_users"
+        android:orderInCategory="0"
+        android:showAsAction="always"
+        android:title="@string/categories"
+        android:icon="@drawable/expand"/>
+    
+    <item
+        android:id="@+id/menu_refresh_checkin"
         android:icon="@drawable/refresh"
         android:orderInCategory="0"
         android:showAsAction="always"
         android:title="@string/menu_refresh"/>
     <item
-        android:id="@+id/menu_add"
+        android:id="@+id/menu_add_checkin"
         android:icon="@drawable/add"
         android:orderInCategory="1"
         android:showAsAction="always"
-        android:title="@string/add_report"/>
+        android:title="@string/add_checkin"/>
 </menu>

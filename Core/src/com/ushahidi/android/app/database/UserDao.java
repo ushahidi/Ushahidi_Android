@@ -34,141 +34,166 @@ import com.ushahidi.android.app.entities.User;
  */
 public class UserDao extends DbContentProvider implements IUserSchema, IUserDao {
 
-    private Cursor cursor;
+	private Cursor cursor;
 
-    private List<User> listUser;
+	private List<User> listUser;
 
-    private ContentValues initialValues;
+	private ContentValues initialValues;
 
-    /**
-     * @param db
-     */
-    public UserDao(SQLiteDatabase db) {
-        super(db);
-    }
+	/**
+	 * @param db
+	 */
+	public UserDao(SQLiteDatabase db) {
+		super(db);
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.database.IUserDao#fetchUsersById(int)
-     */
-    @Override
-    public List<User> fetchUsersById(int userId) {
-        final String selectionArgs[] = {
-            String.valueOf(userId)
-        };
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.database.IUserDao#fetchUsersById(int)
+	 */
+	@Override
+	public List<User> fetchUsersById(int userId) {
+		final String selectionArgs[] = { String.valueOf(userId) };
 
-        final String selection = ID + " = ?";
+		final String selection = ID + " = ?";
 
-        listUser = new ArrayList<User>();
+		listUser = new ArrayList<User>();
 
-        cursor = super.query(USER_TABLE, USER_COLUMNS, selection, selectionArgs, USER_NAME);
+		cursor = super.query(USER_TABLE, USER_COLUMNS, selection,
+				selectionArgs, USER_NAME);
 
-        if (cursor != null) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                User user = cursorToEntity(cursor);
-                listUser.add(user);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
+		if (cursor != null) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				User user = cursorToEntity(cursor);
+				listUser.add(user);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
 
-        return listUser;
-    }
+		return listUser;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.ushahidi.android.app.database.IUserDao#addUser(com.ushahidi.android
-     * .app.entities.User)
-     */
-    @Override
-    public boolean addUser(User user) {
-        // set values
-        setContentValue(user);
-        return super.insert(USER_TABLE, getContentValue()) > 0;
-    }
+	@Override
+	public List<User> fetchUsers() {
 
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.database.IUserDao#addUser(java.util.List)
-     */
-    @Override
-    public boolean addUser(List<User> users) {
-        try {
-            mDb.beginTransaction();
+		listUser = new ArrayList<User>();
 
-            for (User user : users) {
+		cursor = super.query(USER_TABLE, USER_COLUMNS, null,
+				null, ID);
 
-                addUser(user);
-            }
+		if (cursor != null) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				User user = cursorToEntity(cursor);
+				listUser.add(user);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
 
-            mDb.setTransactionSuccessful();
-        } finally {
-            mDb.endTransaction();
-        }
-        return true;
-    }
+		return listUser;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.database.IUserDao#deleteAllUsers()
-     */
-    @Override
-    public boolean deleteAllUsers() {
-        return super.delete(USER_TABLE, null, null) > 0;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ushahidi.android.app.database.IUserDao#addUser(com.ushahidi.android
+	 * .app.entities.User)
+	 */
+	@Override
+	public boolean addUser(User user) {
+		// set values
+		setContentValue(user);
+		return super.insert(USER_TABLE, getContentValue()) > 0;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.ushahidi.android.app.database.DbContentProvider#cursorToEntity(android
-     * .database.Cursor)
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    protected User cursorToEntity(Cursor cursor) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.database.IUserDao#addUser(java.util.List)
+	 */
+	@Override
+	public boolean addUser(List<User> users) {
+		try {
+			mDb.beginTransaction();
 
-        User user = new User();
+			for (User user : users) {
 
-        int idIndex;
-        int userIdIndex;
-        int usernameIndex;
-        int userColorIndex;
+				addUser(user);
+			}
 
-        if (cursor != null) {
-        	if (cursor.getColumnIndex(ID) != -1) {
-                idIndex = cursor.getColumnIndexOrThrow(ID);
-                user.setDbId(cursor.getInt(idIndex));
-            }
-            if (cursor.getColumnIndex(USER_ID) != -1) {
-                userIdIndex = cursor.getColumnIndexOrThrow(USER_ID);
-                user.setUserId(cursor.getInt(userIdIndex));
-            }
+			mDb.setTransactionSuccessful();
+		} finally {
+			mDb.endTransaction();
+		}
+		return true;
+	}
 
-            if (cursor.getColumnIndex(USER_COLOR) != -1) {
-                userColorIndex = cursor.getColumnIndexOrThrow(USER_COLOR);
-                user.setUserColor(cursor.getString(userColorIndex));
-            }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.database.IUserDao#deleteAllUsers()
+	 */
+	@Override
+	public boolean deleteAllUsers() {
+		return super.delete(USER_TABLE, null, null) > 0;
+	}
 
-            if (cursor.getColumnIndex(USER_COLOR) != -1) {
-                usernameIndex = cursor.getColumnIndexOrThrow(USER_NAME);
-                user.setUsername(cursor.getString(usernameIndex));
-            }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ushahidi.android.app.database.DbContentProvider#cursorToEntity(android
+	 * .database.Cursor)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	protected User cursorToEntity(Cursor cursor) {
 
-        }
-        return user;
-    }
+		User user = new User();
 
-    private void setContentValue(User user) {
-        initialValues = new ContentValues();
-        initialValues.put(USER_ID, user.getDbId());
-        initialValues.put(USER_NAME, user.getUsername());
-        initialValues.put(USER_COLOR, user.getUserColor());
-    }
+		int idIndex;
+		int userIdIndex;
+		int usernameIndex;
+		int userColorIndex;
 
-    private ContentValues getContentValue() {
-        return initialValues;
-    }
+		if (cursor != null) {
+			if (cursor.getColumnIndex(ID) != -1) {
+				idIndex = cursor.getColumnIndexOrThrow(ID);
+				user.setDbId(cursor.getInt(idIndex));
+			}
+			if (cursor.getColumnIndex(USER_ID) != -1) {
+				userIdIndex = cursor.getColumnIndexOrThrow(USER_ID);
+				user.setUserId(cursor.getInt(userIdIndex));
+			}
+
+			if (cursor.getColumnIndex(USER_COLOR) != -1) {
+				userColorIndex = cursor.getColumnIndexOrThrow(USER_COLOR);
+				user.setUserColor(cursor.getString(userColorIndex));
+			}
+
+			if (cursor.getColumnIndex(USER_COLOR) != -1) {
+				usernameIndex = cursor.getColumnIndexOrThrow(USER_NAME);
+				user.setUsername(cursor.getString(usernameIndex));
+			}
+
+		}
+		return user;
+	}
+
+	private void setContentValue(User user) {
+		initialValues = new ContentValues();
+		initialValues.put(USER_ID, user.getDbId());
+		initialValues.put(USER_NAME, user.getUsername());
+		initialValues.put(USER_COLOR, user.getUserColor());
+	}
+
+	private ContentValues getContentValue() {
+		return initialValues;
+	}
 
 }

@@ -306,7 +306,6 @@ public class ListReportModel extends Model {
 		List<Media> sMedia = Database.mMediaDao.fetchMedia(
 				IMediaSchema.REPORT_ID, reportId, IMediaSchema.IMAGE, 1);
 		if (sMedia != null && sMedia.size() > 0) {
-			Log.i("ListReportModel ", "link "+sMedia.get(0).getLink()+" reportId: "+reportId);
 			return ImageManager.getThumbnails(context, sMedia.get(0).getLink());
 
 		}

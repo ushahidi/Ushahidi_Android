@@ -33,7 +33,6 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/report_arrow"
         android:layout_toRightOf="@+id/report_thumbnail"
-        
         android:paddingLeft="3dip"
         android:lines="1"
         android:textColor="@color/date_color"

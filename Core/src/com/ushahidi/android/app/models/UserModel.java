@@ -17,27 +17,33 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
-
-package com.ushahidi.android.app.database;
+package com.ushahidi.android.app.models;
 
 import java.util.List;
 
+import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.User;
 
 /**
  * @author eyedol
+ * 
+ * @param <users>
+ * 
  */
-public interface IUserDao {
+public class UserModel<users> extends Model {
 
-    public List<User> fetchUsersById(int userId);
-    
-    public List<User> fetchUsers();
-    
-    // add user
-    public boolean addUser(User user);
+	public List<User> users;
+	
+	@Override
+	public boolean load() {
+		users = Database.mUserDao.fetchUsers();
+		return true;
+	}
 
-    // add users
-    public boolean addUser(List<User> user);
+	@Override
+	public boolean save() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-    public boolean deleteAllUsers();
 }

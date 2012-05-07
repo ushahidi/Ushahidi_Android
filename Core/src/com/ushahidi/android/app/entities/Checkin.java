@@ -20,98 +20,145 @@
 
 package com.ushahidi.android.app.entities;
 
+import com.ushahidi.android.app.models.Model;
+
+import android.graphics.drawable.Drawable;
+
 /**
  * @author eyedol
  */
-public class Checkin implements IDbEntity {
+public class Checkin extends Model implements IDbEntity {
 
-    private int id;
+	private int id;
 
-    private int userId;
-    
-    private int checkinId;
+	private int userId;
 
-    private String message;
+	private int checkinId;
 
-    private String date;
+	private int pending = 0;
 
-    private String locationName;
+	private String message;
 
-    private String locationLatitude;
+	private String date;
 
-    private String locationLongitude;
+	private String username;
 
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.entities.IDbEntity#getDbId()
-     */
-    @Override
-    public int getDbId() {
-        return id;
-    }
+	private String locationName;
 
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.entities.IDbEntity#setDbId(int)
-     */
-    @Override
-    public void setDbId(int id) {
-        this.id = id;
-    }
-    
-    public void setCheckinId(int checkinId) {
-    	this.checkinId = checkinId;
-    }
-    
-    public int getCheckinId() {
-    	return this.checkinId;
-    }
+	private String locationLatitude;
 
-    public int getUserId() {
-        return userId;
-    }
+	private String locationLongitude;
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+	private Drawable thumbnail;
 
-    public String getMessage() {
-        return message;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.entities.IDbEntity#getDbId()
+	 */
+	@Override
+	public int getDbId() {
+		return id;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.entities.IDbEntity#setDbId(int)
+	 */
+	@Override
+	public void setDbId(int id) {
+		this.id = id;
+	}
 
-    public String getDate() {
-        return date;
-    }
+	public void setCheckinId(int checkinId) {
+		this.checkinId = checkinId;
+	}
 
-    public void setDate(String date) {
-        this.date = date;
-    }
+	public int getCheckinId() {
+		return this.checkinId;
+	}
 
-    public String getLocationName() {
-        return locationName;
-    }
+	public int getUserId() {
+		return userId;
+	}
 
-    public void setLocationName(String locationName) {
-        this.locationName = locationName;
-    }
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 
-    public String getLocationLatitude() {
-        return locationLatitude;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public void setLocationLatitude(String locationLatitude) {
-        this.locationLatitude = locationLatitude;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public String getLocationLongitude() {
-        return locationLongitude;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    public void setLocationLongitude(String locationLongitude) {
-        this.locationLongitude = locationLongitude;
-    }
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getLocationName() {
+		return locationName;
+	}
+
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
+	}
+
+	public String getLocationLatitude() {
+		return locationLatitude;
+	}
+
+	public void setLocationLatitude(String locationLatitude) {
+		this.locationLatitude = locationLatitude;
+	}
+
+	public String getLocationLongitude() {
+		return locationLongitude;
+	}
+
+	public void setLocationLongitude(String locationLongitude) {
+		this.locationLongitude = locationLongitude;
+	}
+
+	public void setThumbnail(Drawable thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+	public Drawable getThumbnail() {
+		return this.thumbnail;
+	}
+
+	public void setPending(int pending) {
+		this.pending = pending;
+	}
+
+	public int getPending() {
+		return this.pending;
+	}
+
+	@Override
+	public boolean load() {
+
+		return false;
+	}
+
+	@Override
+	public boolean save() {
+		return false;
+	}
 }

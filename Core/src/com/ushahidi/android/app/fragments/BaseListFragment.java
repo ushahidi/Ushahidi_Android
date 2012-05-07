@@ -33,6 +33,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.internal.app.SherlockActivity;
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.BaseListAdapter;
@@ -129,7 +130,6 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
 			
 			view = Objects.createInstance(viewClass, Activity.class, getActivity());
 			adapter = Objects.createInstance(adapterClass, Context.class, getActivity());
-
 			listView.setAdapter(adapter);
 			listView.setFocusable(true);
 			listView.setFocusableInTouchMode(true);
