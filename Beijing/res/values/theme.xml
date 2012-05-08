@@ -1,8 +1,8 @@
 <resources>
     <!-- DEPLOYMENT INFORMATION -->
     <string name="app_name">交通出行互动平台</string>
-    <string name="deployment_url">http://114.251.208.133/ushahidi/</string>
-    <string name="team_url">http://114.251.208.133/ushahidi/</string>
+    <string name="deployment_url">http://www.ourtransport.net/ushahidi/</string>
+    <string name="team_url">http://www.ourtransport.net/ushahidi/</string>
     <string name="media_url"/>
     <string name="twitter_url"/>
     <string name="facebook_url"/>
