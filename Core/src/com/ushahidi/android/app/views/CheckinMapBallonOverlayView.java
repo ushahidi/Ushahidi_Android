@@ -9,13 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.maps.OverlayItem;
+import com.ushahidi.android.app.CheckinMapOverlayItem;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.ReportMapOverlayItem;
 import com.ushahidi.android.app.ui.phone.ViewCheckinActivity;
-import com.ushahidi.android.app.ui.phone.ViewReportActivity;
 
 public class CheckinMapBallonOverlayView<Item extends OverlayItem> extends
-		BalloonOverlayView<ReportMapOverlayItem> {
+		BalloonOverlayView<CheckinMapOverlayItem> {
 
 	private TextView title;
 
@@ -60,7 +59,7 @@ public class CheckinMapBallonOverlayView<Item extends OverlayItem> extends
 	}
 
 	@Override
-	protected void setBalloonData(ReportMapOverlayItem item, ViewGroup parent) {
+	protected void setBalloonData(CheckinMapOverlayItem item, ViewGroup parent) {
 
 		title.setText(item.getTitle());
 		snippet.setText(item.getSnippet());
@@ -74,7 +73,7 @@ public class CheckinMapBallonOverlayView<Item extends OverlayItem> extends
 		i.putExtra("id", position);
 		if (filterCategory != null
 				&& !filterCategory.equalsIgnoreCase(mActivity
-						.getString(R.string.all_categories))) {
+						.getString(R.string.all_users))) {
 			i.putExtra("category", filterCategory);
 		} else {
 			i.putExtra("category", "");

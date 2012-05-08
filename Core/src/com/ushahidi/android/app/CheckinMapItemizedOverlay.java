@@ -9,12 +9,13 @@ import android.graphics.drawable.Drawable;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.views.BalloonOverlayView;
+import com.ushahidi.android.app.views.CheckinMapBallonOverlayView;
 import com.ushahidi.android.app.views.ReportMapBallonOverlayView;
 
 public class CheckinMapItemizedOverlay<Item extends OverlayItem> extends
-		MapItemizedOverlay<ReportMapOverlayItem> {
+		MapItemizedOverlay<CheckinMapOverlayItem> {
 
-	private ArrayList<ReportMapOverlayItem> items = new ArrayList<ReportMapOverlayItem>();
+	private ArrayList<CheckinMapOverlayItem> items = new ArrayList<CheckinMapOverlayItem>();
 
 	private Activity mActivity;
 
@@ -27,13 +28,13 @@ public class CheckinMapItemizedOverlay<Item extends OverlayItem> extends
 		this.marker = marker;
 	}
 
-	public void addOverlay(ReportMapOverlayItem overlay) {
+	public void addOverlay(CheckinMapOverlayItem overlay) {
 		items.add(overlay);
 		populate();
 	}
 
 	@Override
-	protected ReportMapOverlayItem createItem(int i) {
+	protected CheckinMapOverlayItem createItem(int i) {
 		return items.get(i);
 	}
 
@@ -43,7 +44,7 @@ public class CheckinMapItemizedOverlay<Item extends OverlayItem> extends
 	}
 
 	@Override
-	protected boolean onBalloonTap(int index, ReportMapOverlayItem item) {
+	protected boolean onBalloonTap(int index, CheckinMapOverlayItem item) {
 
 		ReportMapBallonOverlayView.viewReports(index, item.getFilterCategory());
 
@@ -51,9 +52,9 @@ public class CheckinMapItemizedOverlay<Item extends OverlayItem> extends
 	}
 
 	@Override
-	protected BalloonOverlayView<ReportMapOverlayItem> createBalloonOverlayView() {
+	protected BalloonOverlayView<CheckinMapOverlayItem> createBalloonOverlayView() {
 		// use our custom balloon view with our custom overlay item type:
-		return new ReportMapBallonOverlayView<ReportMapOverlayItem>(
+		return new CheckinMapBallonOverlayView<CheckinMapOverlayItem>(
 				getMapView().getContext(), getBalloonBottomOffset(), mActivity);
 	}
 

@@ -20,33 +20,35 @@ import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
+import com.ushahidi.android.app.CheckinMapItemizedOverlay;
+import com.ushahidi.android.app.CheckinMapOverlayItem;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.ReportMapItemizedOverlay;
-import com.ushahidi.android.app.ReportMapOverlayItem;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
+import com.ushahidi.android.app.adapters.UserSpinnerAdater;
 import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.fragments.BaseFragment;
+import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.models.ListReportPhotoModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
-import com.ushahidi.android.app.ui.phone.AddReportActivity;
+import com.ushahidi.android.app.ui.phone.AddCheckinActivity;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
-public class MapCheckinFragment<ReportMapItemOverlay> extends BaseFragment {
+public class MapCheckinFragment<CheckinMapItemOverlay> extends BaseFragment {
 
 	private MapView map = null;
 
-	private ListReportModel mListReportModel;
+	private ListCheckinModel mListCheckinModel;
 
-	List<ListReportModel> mReportModel;
+	List<ListCheckinModel> mCheckinModel;
 
-	private ReportMapItemizedOverlay<ReportMapOverlayItem> itemOverlay;
+	private CheckinMapItemizedOverlay<CheckinMapOverlayItem> itemOverlay;
 
 	private Handler mHandler;
 
@@ -54,7 +56,7 @@ public class MapCheckinFragment<ReportMapItemOverlay> extends BaseFragment {
 
 	private MenuItem refresh;
 
-	private CategorySpinnerAdater spinnerArrayAdapter;
+	private UserSpinnerAdater spinnerArrayAdapter;
 
 	private ViewGroup mRootView;
 
@@ -84,16 +86,16 @@ public class MapCheckinFragment<ReportMapItemOverlay> extends BaseFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mListReportModel = new ListReportModel();
-		mListReportModel.load();
-		mReportModel = mListReportModel.getReports(getActivity());
+		mListCheckinModel = new ListCheckinModel();
+		mListCheckinModel.load();
+		mCheckinModel = mListCheckinModel.getCheckins(getActivity());
 		showCategories();
 		mHandler = new Handler();
 		apiUtils = new ApiUtils(getActivity());
 		map = new MapView(getActivity(), getActivity().getString(
 				R.string.google_map_api_key));
 		Preferences.loadSettings(getActivity());
-		if (mReportModel.size() > 0) {
+		if (mCheckinModel.size() > 0) {
 			map.setClickable(true);
 			map.setBuiltInZoomControls(true);
 			mHandler.post(mMarkersOnMap);
@@ -159,13 +161,13 @@ public class MapCheckinFragment<ReportMapItemOverlay> extends BaseFragment {
 									int which) {
 
 								filterCategory = spinnerArrayAdapter.getTag(
-										which).getCategoryId();
+										which).getUserId();
 								final String all = spinnerArrayAdapter.getTag(
-										which).getCategoryTitle();
+										which).getUsername();
 								if ((all != null)
 										&& (!TextUtils.isEmpty(all))
 										&& (all != getActivity().getString(
-												R.string.all_categories))) {
+												R.string.all_users))) {
 
 									mHandler.post(fetchReportListByCategory);
 
@@ -179,7 +181,7 @@ public class MapCheckinFragment<ReportMapItemOverlay> extends BaseFragment {
 	}
 
 	public void showCategories() {
-		spinnerArrayAdapter = new CategorySpinnerAdater(getActivity());
+		spinnerArrayAdapter = new UserSpinnerAdater(getActivity());
 		spinnerArrayAdapter.refresh();
 	}
 
@@ -189,10 +191,11 @@ public class MapCheckinFragment<ReportMapItemOverlay> extends BaseFragment {
 	final Runnable fetchReportListByCategory = new Runnable() {
 		public void run() {
 			try {
-				final boolean loaded = mListReportModel
-						.loadReportByCategory(filterCategory);
+				final boolean loaded = mListCheckinModel
+						.loadCheckinByUser(filterCategory);
 				if (loaded) {
-					mReportModel = mListReportModel.getReports(getActivity());
+					mCheckinModel = mListCheckinModel
+							.getCheckins(getActivity());
 					populateMap();
 				}
 			} catch (Exception e) {
@@ -207,8 +210,8 @@ public class MapCheckinFragment<ReportMapItemOverlay> extends BaseFragment {
 	final Runnable fetchReportList = new Runnable() {
 		public void run() {
 			try {
-				mListReportModel.load();
-				mReportModel = mListReportModel.getReports(getActivity());
+				mListCheckinModel.load();
+				mCheckinModel = mListCheckinModel.getCheckins(getActivity());
 				populateMap();
 				showCategories();
 			} catch (Exception e) {
@@ -287,7 +290,7 @@ public class MapCheckinFragment<ReportMapItemOverlay> extends BaseFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (mReportModel.size() == 0) {
+		if (mCheckinModel.size() == 0) {
 			mHandler.post(mMarkersOnMap);
 		}
 	}
@@ -310,16 +313,16 @@ public class MapCheckinFragment<ReportMapItemOverlay> extends BaseFragment {
 		Drawable marker = getResources().getDrawable(R.drawable.map_marker_red);
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
 				marker.getIntrinsicHeight());
-		itemOverlay = new ReportMapItemizedOverlay<ReportMapOverlayItem>(
+		itemOverlay = new CheckinMapItemizedOverlay<CheckinMapOverlayItem>(
 				marker, map, getActivity());
-		if (mReportModel != null) {
-			for (ListReportModel reportModel : mReportModel) {
-				itemOverlay.addOverlay(new ReportMapOverlayItem(getPoint(
-						Double.valueOf(reportModel.getLatitude()),
-						Double.valueOf(reportModel.getLongitude())),
-						reportModel.getTitle(), Util.limitString(
-								reportModel.getDesc(), 30), reportModel
-								.getThumbnail(), reportModel.getId(), ""));
+		if (mCheckinModel != null) {
+			for (ListCheckinModel checkinModel : mCheckinModel) {
+				itemOverlay.addOverlay(new CheckinMapOverlayItem(getPoint(
+						Double.valueOf(checkinModel.getLocationLatitude()),
+						Double.valueOf(checkinModel.getLocationLongitude())),
+						checkinModel.getUsername(), Util.limitString(
+								checkinModel.getMessage(), 30), checkinModel
+								.getThumbnail(), checkinModel.getDbId(), ""));
 			}
 		}
 		map.getOverlays().clear();
@@ -333,7 +336,7 @@ public class MapCheckinFragment<ReportMapItemOverlay> extends BaseFragment {
 	}
 
 	public void launchAddReport() {
-		Intent i = new Intent(getActivity(), AddReportActivity.class);
+		Intent i = new Intent(getActivity(), AddCheckinActivity.class);
 		i.putExtra("id", 0);
 		startActivityForResult(i, 2);
 		getActivity().overridePendingTransition(R.anim.home_enter,
@@ -417,7 +420,8 @@ public class MapCheckinFragment<ReportMapItemOverlay> extends BaseFragment {
 					toastLong(R.string.could_not_fetch_reports);
 				} else if (status == 0) {
 					log("successfully fetched");
-					mReportModel = mListReportModel.getReports(getActivity());
+					mCheckinModel = mListCheckinModel
+							.getCheckins(getActivity());
 					populateMap();
 					showCategories();
 
