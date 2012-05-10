@@ -11,199 +11,95 @@
     at team@ushahidi.com.
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
-    android:orientation="vertical" >
+    android:background="@color/table_even_row_color"
+    android:fillViewport="true" >
 
-    <ScrollView
-        android:id="@+id/view_checking"
+    <ViewAnimator
+        android:id="@+id/view_checkin_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
+        <!-- Title starts -->
 
-            <!-- Title starts -->
+        <LinearLayout style="@style/LinearLayout.Vertical" >
 
-            <LinearLayout
-                android:id="@+id/top_items_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/chek_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="15px"
-                    android:paddingLeft="10px"
-                    android:paddingRight="10px"
-                    android:paddingTop="15px"
-                    android:singleLine="false"
-                    android:text="@string/report_title"
-                    android:textColor="@color/title_color"
-                    android:textStyle="bold" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/checkin_title"
+                style="@style/TextView.Label"
+                android:text="@string/report_title" />
 
             <LinearLayout
                 android:id="@+id/top_items_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/table_even_row_color"
-                android:orientation="vertical" >
+                style="@style/LinearLayout.Vertical"
+                android:background="@color/table_even_row_color" >
 
                 <TextView
                     android:id="@+id/checkin_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="15px"
-                    android:paddingLeft="10px"
-                    android:paddingRight="10px"
-                    android:paddingTop="15px"
-                    android:singleLine="false" />
+                    style="@style/TextView.Title" />
             </LinearLayout>
             <!-- Title ends -->
 
 
             <!-- Description starts -->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/checkin_desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="15px"
-                    android:paddingLeft="10px"
-                    android:paddingRight="10px"
-                    android:paddingTop="15px"
-                    android:singleLine="false"
-                    android:text="@string/report_desc"
-                    android:textColor="@color/title_color"
-                    android:textStyle="bold" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/checkin_desc"
+                style="@style/TextView.Label"
+                android:text="@string/report_desc" />
 
             <LinearLayout
                 android:id="@+id/top_items_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/table_even_row_color"
-                android:orientation="vertical" >
+                style="@style/LinearLayout.Vertical"
+                android:background="@color/table_even_row_color" >
 
                 <!-- Main content area. -->
 
-                <ScrollView
-                    android:id="@+id/description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fadingEdge="none"
-                    android:paddingLeft="10px"
-                    android:paddingRight="10px"
-                    android:paddingTop="5px" >
-
-                    <TextView
-                        android:id="@+id/checkin_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:autoLink="all"
-                        android:fadingEdge="none"
-                        android:paddingBottom="15px"
-                        android:paddingTop="15px"
-                        android:singleLine="false"
-                        android:textColor="@color/black_color" />
-                </ScrollView>
+                <TextView
+                    android:id="@+id/checkin_description"
+                    style="@style/TextView.Description" />
             </LinearLayout>
             <!-- Description ends -->
 
 
             <!-- Date starts -->
 
-            <LinearLayout
-                android:id="@+id/top_items_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/checkin_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="15px"
-                    android:paddingLeft="10px"
-                    android:paddingRight="10px"
-                    android:paddingTop="15px"
-                    android:singleLine="false"
-                    android:text="@string/report_date"
-                    android:textColor="@color/title_color"
-                    android:textStyle="bold" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/checkin_date"
+                style="@style/TextView.Label"
+                android:text="@string/report_date" />
 
             <LinearLayout
                 android:id="@+id/date_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/table_even_row_color"
-                android:orientation="vertical" >
+                style="@style/LinearLayout.Vertical"
+                android:background="@color/table_even_row_color" >
 
                 <TextView
                     android:id="@+id/date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="15px"
-                    android:paddingLeft="10px"
-                    android:paddingRight="10px"
-                    android:paddingTop="15px"
-                    android:singleLine="false" />
+                    style="@style/TextView.Title" />
             </LinearLayout>
             <!-- Date ends -->
 
 
             <!-- Location starts -->
 
-            <LinearLayout
-                android:id="@+id/location_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/checking_loc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="15px"
-                    android:paddingLeft="10px"
-                    android:paddingRight="10px"
-                    android:paddingTop="15px"
-                    android:singleLine="false"
-                    android:text="@string/report_location"
-                    android:textColor="@color/title_color"
-                    android:textStyle="bold" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/checking_loc"
+                style="@style/TextView.Label"
+                android:text="@string/report_location" />
 
             <!-- Location ends -->
+
+
             <!-- Map starts -->
 
             <LinearLayout
                 android:id="@+id/top_items_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/table_even_row_color"
-                android:orientation="vertical"
-                android:paddingBottom="15px"
-                android:paddingLeft="10px"
-                android:paddingRight="10px"
-                android:paddingTop="15px" >
+                style="@style/LinearLayout.Vertical"
+                android:background="@color/table_even_row_color" >
 
                 <com.google.android.maps.MapView
                     android:id="@+id/loc_map"
@@ -213,50 +109,36 @@
                     android:apiKey="@string/google_map_api_key"
                     android:clickable="true"
                     android:enabled="true" />
-            </LinearLayout>
-            <!-- Map ends -->
+            </LinearLayout> <!-- Map ends -->
 
 
             <!-- Photo starts -->
 
-            <LinearLayout
-                android:id="@+id/photo_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/checkin_photo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="15px"
-                    android:paddingLeft="10px"
-                    android:paddingRight="10px"
-                    android:paddingTop="15px"
-                    android:singleLine="false"
-                    android:text="@string/report_photo"
-                    android:textColor="@color/title_color"
-                    android:textStyle="bold" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/checkin_photo"
+                style="@style/TextView.Label"
+                android:text="@string/report_photo" />
 
             <LinearLayout
                 android:id="@+id/img_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/table_even_row_color"
-                android:orientation="vertical"
-                android:padding="10px" >
+                style="@style/LinearLayout.Vertical" >
 
-                <ImageView
-                    android:id="@+id/checkin_img"
+                <ListView
+                    android:id="@+id/list_checkin_photos"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:onClick="onImageClick"
-                    android:scaleType="centerCrop" />
-            </LinearLayout>
-            <!-- Photo ends -->
-        </LinearLayout>
-    </ScrollView>
+                    android:layout_height="wrap_content"
+                    android:listSelector="@color/table_selected_row_color"
+                    android:scrollbars="none" />
 
-</LinearLayout>
+                <TextView
+                    android:id="@+id/empty_photo_list"
+                    style="@style/TextView.Empty"
+                    android:padding="10dip"
+                    android:text="@string/no_photos"
+                    android:textColor="@color/black_color" />
+            </LinearLayout> <!-- Photo ends -->
+
+        </LinearLayout>
+    </ViewAnimator>
+
+</ScrollView>

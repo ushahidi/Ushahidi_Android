@@ -25,7 +25,6 @@ import com.ushahidi.android.app.CheckinMapOverlayItem;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.adapters.UserSpinnerAdater;
 import com.ushahidi.android.app.entities.Photo;
@@ -417,7 +416,7 @@ public class MapCheckinFragment<CheckinMapItemOverlay> extends BaseFragment {
 				} else if (status == 110) {
 					toastLong(R.string.connection_timeout);
 				} else if (status == 100) {
-					toastLong(R.string.could_not_fetch_reports);
+					toastLong(R.string.could_not_fetch_checkin);
 				} else if (status == 0) {
 					log("successfully fetched");
 					mCheckinModel = mListCheckinModel

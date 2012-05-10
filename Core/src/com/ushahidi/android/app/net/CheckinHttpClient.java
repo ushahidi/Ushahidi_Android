@@ -42,7 +42,7 @@ import android.text.TextUtils;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.util.ApiUtils;
-import com.ushahidi.android.app.util.ReportsApiUtils;
+import com.ushahidi.android.app.util.CheckinApiUtils;
 
 /**
  * @author eyedol
@@ -64,17 +64,18 @@ public class CheckinHttpClient extends MainHttpClient {
 		apiUtils = new ApiUtils(context);
 	}
 
-	public int getAllReportFromWeb() {
+	public int getAllCheckinFromWeb() {
 		HttpResponse response;
-		String incidents = "";
+		String checkins = "";
 
 		// get the right domain to work with
 		apiUtils.updateDomain();
 
 		StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
-		uriBuilder.append("/api?task=incidents");
-		uriBuilder.append("&by=all");
-		uriBuilder.append("&limit=" + Preferences.totalReports);
+		uriBuilder.append("/api?task=checkin");
+		uriBuilder.append("&action=get_ci");
+		uriBuilder.append("&sort=desc");
+		uriBuilder.append("&sqllimit=" + Preferences.totalReports);
 		uriBuilder.append("&resp=json");
 
 		try {
@@ -89,11 +90,14 @@ public class CheckinHttpClient extends MainHttpClient {
 
 			if (statusCode == 200) {
 
-				incidents = GetText(response);
+				checkins = GetText(response);
 
-				ReportsApiUtils reportsApiUtils = new ReportsApiUtils(incidents);
-				if (reportsApiUtils.saveReports(context)) {
-					return 0; // return success even if geographic fails
+				CheckinApiUtils checkinsApiUtils = new CheckinApiUtils(checkins);
+				if (checkinsApiUtils.saveCheckins(context)) {
+					// save users
+					if (checkinsApiUtils.saveUsers()) {
+						return 0; // return success
+					}
 				}
 
 				// bad json string
@@ -141,56 +145,35 @@ public class CheckinHttpClient extends MainHttpClient {
 			if (params != null) {
 
 				entity.addPart("task", new StringBody(params.get("task")));
+				entity.addPart("action", new StringBody(params.get("action")));
+				entity.addPart("mobileid", new StringBody(params.get("mobileid")));
+				entity.addPart("message", new StringBody(params.get("message"),
+						Charset.forName("UTF-8")));
+				entity.addPart("lat", new StringBody(params.get("lat")));
+				entity.addPart("lon", new StringBody(params.get("lon")));
 				entity.addPart(
-						"incident_title",
-						new StringBody(params.get("incident_title"), Charset
-								.forName("UTF-8")));
-				entity.addPart("incident_description",
-						new StringBody(params.get("incident_description"),
-								Charset.forName("UTF-8")));
-				entity.addPart("incident_date",
-						new StringBody(params.get("incident_date")));
-				entity.addPart("incident_hour",
-						new StringBody(params.get("incident_hour")));
-				entity.addPart("incident_minute",
-						new StringBody(params.get("incident_minute")));
-				entity.addPart("incident_ampm",
-						new StringBody(params.get("incident_ampm")));
-				entity.addPart("incident_category",
-						new StringBody(params.get("incident_category")));
-				entity.addPart("latitude",
-						new StringBody(params.get("latitude")));
-				entity.addPart("longitude",
-						new StringBody(params.get("longitude")));
-				entity.addPart(
-						"location_name",
-						new StringBody(params.get("location_name"), Charset
+						"firstname",
+						new StringBody(params.get("firstname"), Charset
 								.forName("UTF-8")));
 				entity.addPart(
-						"person_first",
-						new StringBody(params.get("person_first"), Charset
+						"lastname",
+						new StringBody(params.get("lastname"), Charset
 								.forName("UTF-8")));
-				entity.addPart(
-						"person_last",
-						new StringBody(params.get("person_last"), Charset
-								.forName("UTF-8")));
-				entity.addPart(
-						"person_email",
-						new StringBody(params.get("person_email"), Charset
-								.forName("UTF-8")));
+				entity.addPart("email", new StringBody(params.get("email"),
+						Charset.forName("UTF-8")));
+
 				if (params.get("filename") != null) {
 					if (!TextUtils.isEmpty(params.get("filename"))) {
-						String filenames[] = params.get("filename").split(",");
-						for (int i = 0; i > filenames.length; i++) {
-							File file = new File(ImageManager.getPhotoPath(
-									context, filenames[i]));
-							if (file.exists()) {
-								entity.addPart(
-										"incident_photo[]",
-										new FileBody(new File(ImageManager
-												.getPhotoPath(context,
-														filenames[i]))));
-							}
+
+						File file = new File(ImageManager.getPhotoPath(context,
+								params.get("filename")));
+						if (file.exists()) {
+							entity.addPart(
+									"photo",
+									new FileBody(new File(ImageManager
+											.getPhotoPath(context,
+													params.get("filename")))));
+
 						}
 					}
 				}

@@ -77,7 +77,6 @@ public class ViewReportActivity extends
 			reports.load();
 		}
 		
-		//because of header view, decrease position by one
 		initReport(this.position);
 
 	}
@@ -247,7 +246,6 @@ public class ViewReportActivity extends
 	 */
 	@Override
 	protected void locationChanged(double latitude, double longitude) {
-		// TODO Auto-generated method stub
 
 	}
 

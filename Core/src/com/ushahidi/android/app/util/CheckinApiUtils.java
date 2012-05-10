@@ -35,9 +35,9 @@ import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.entities.Checkin;
 import com.ushahidi.android.app.entities.Media;
-import com.ushahidi.android.app.entities.Report;
-import com.ushahidi.android.app.entities.ReportCategory;
+import com.ushahidi.android.app.entities.User;
 
 /**
  * Handle processing of the JSON string as returned from the HTTP request. Main
@@ -62,92 +62,88 @@ public class CheckinApiUtils {
 		}
 	}
 
-	private JSONObject getReportPayloadObj() {
+	private JSONObject getCheckinsObject() {
 		try {
-
-			if (!jsonObject.isNull("payload")) {
-				return jsonObject.getJSONObject("payload");
-			}
-
-			return new JSONObject();
+			return jsonObject.getJSONObject("payload");
 		} catch (JSONException e) {
-			log("JSONException", e);
 			return new JSONObject();
 		}
 	}
 
-	private JSONArray getReportsArr() {
+	private JSONArray getCheckinsArray() {
 		try {
-			if (!getReportPayloadObj().isNull("incidents")) {
-				return getReportPayloadObj().getJSONArray("incidents");
-			}
-			return new JSONArray();
+			return getCheckinsObject().getJSONArray("checkins");
 		} catch (JSONException e) {
-			log("JSONException", e);
 			return new JSONArray();
 		}
 	}
 
-	public List<Report> getReportList(Context context) {
+	private JSONArray getCheckinsUsersArray() {
+		try {
+			return getCheckinsObject().getJSONArray("users");
+		} catch (JSONException e) {
+			return new JSONArray();
+		}
+	}
+
+	public ArrayList<User> getCheckinsUsersList() {
+		if (processingResult) {
+			ArrayList<User> checkinsUsersList = new ArrayList<User>();
+			JSONArray checkinsUsersArray = getCheckinsUsersArray();
+			if (checkinsUsersArray != null) {
+				for (int index = 0; index < checkinsUsersArray.length(); index++) {
+					User users = new User();
+
+					try {
+						users.setDbId(checkinsUsersArray.getJSONObject(index)
+								.getInt("id"));
+						users.setUsername(checkinsUsersArray.getJSONObject(
+								index).getString("name"));
+						users.setUserColor(checkinsUsersArray.getJSONObject(
+								index).getString("color"));
+					} catch (JSONException e) {
+
+						processingResult = false;
+						return null;
+					}
+
+					checkinsUsersList.add(users);
+				}
+
+				return checkinsUsersList;
+			}
+		}
+		return null;
+	}
+
+	public List<Checkin> getCheckinsList(Context context) {
 		log("Save report");
 		if (processingResult) {
-			List<Report> listReport = new ArrayList<Report>();
-			JSONArray reportsArr = getReportsArr();
+			List<Checkin> checkinList = new ArrayList<Checkin>();
+			JSONArray checkinsArray = getCheckinsArray();
 			int id = 0;
-			if (reportsArr != null && reportsArr.length() > 0) {
-				for (int i = 0; i < reportsArr.length(); i++) {
-					Report report = new Report();
+			if (checkinsArray != null && checkinsArray.length() > 0) {
+				for (int i = 0; i < checkinsArray.length(); i++) {
+					Checkin currentCheckin = new Checkin();
 					try {
-						if (!reportsArr.getJSONObject(i).isNull("incident"))
-							id = reportsArr.getJSONObject(i)
-									.getJSONObject("incident")
-									.getInt("incidentid");
-						report.setReportId(id);
-						report.setTitle(reportsArr.getJSONObject(i)
-								.getJSONObject("incident")
-								.getString("incidenttitle"));
-						report.setDescription(reportsArr.getJSONObject(i)
-								.getJSONObject("incident")
-								.getString("incidentdescription"));
-						report.setReportDate(reportsArr.getJSONObject(i)
-								.getJSONObject("incident")
-								.getString("incidentdate"));
-						report.setMode(reportsArr.getJSONObject(i)
-								.getJSONObject("incident")
-								.getString("incidentmode"));
-						report.setVerified(reportsArr.getJSONObject(i)
-								.getJSONObject("incident")
-								.getString("incidentverified"));
-						report.setLocationName(reportsArr.getJSONObject(i)
-								.getJSONObject("incident")
-								.getString("locationname"));
-						report.setLatitude(reportsArr.getJSONObject(i)
-								.getJSONObject("incident")
-								.getString("locationlatitude"));
-						report.setLongitude(reportsArr.getJSONObject(i)
-								.getJSONObject("incident")
-								.getString("locationlongitude"));
-
-						// retrieve categories
-						if (!reportsArr.getJSONObject(i).isNull("categories")) {
-							JSONArray catsArr = reportsArr.getJSONObject(i)
-									.getJSONArray("categories");
-							for (int j = 0; j < catsArr.length(); j++) {
-								try {
-
-									saveCategories(
-											catsArr.getJSONObject(j)
-													.getJSONObject("category")
-													.getInt("id"), (int) id);
-								} catch (JSONException ex) {
-									log("JSONException", ex);
-								}
-							}
-						}
+						currentCheckin.setCheckinId(checkinsArray
+								.getJSONObject(i).getInt("id"));
+						currentCheckin.setLocationName(checkinsArray
+								.getJSONObject(i).getString("loc"));
+						currentCheckin.setLocationLatitude(checkinsArray
+								.getJSONObject(i).getString("lat"));
+						currentCheckin.setLocationLongitude(checkinsArray
+								.getJSONObject(i).getString("lon"));
+						currentCheckin.setDate(checkinsArray.getJSONObject(i)
+								.getString("date"));
+						currentCheckin.setMessage(checkinsArray
+								.getJSONObject(i).getString("msg"));
+						currentCheckin.setUserId(checkinsArray.getJSONObject(i)
+								.getInt("user"));
 
 						// retrieve media.
-						if (!reportsArr.getJSONObject(i).isNull("media")) {
-							JSONArray mediaArr = reportsArr.getJSONObject(i)
+						if (!checkinsArray.getJSONObject(i).isNull("media")) {
+							JSONArray mediaArr = checkinsArray.getJSONObject(i)
 									.getJSONArray("media");
 							for (int w = 0; w < mediaArr.length(); w++) {
 								try {
@@ -159,8 +155,8 @@ public class CheckinApiUtils {
 												&& (!mediaArr.getJSONObject(w)
 														.isNull("link"))) {
 
-											final String fileName = Util.getDateTime()
-													+ ".jpg";
+											final String fileName = Util
+													.getDateTime() + ".jpg";
 											// save images to file
 											saveMedia(mediaArr.getJSONObject(w)
 													.getInt("id"), (int) id,
@@ -207,44 +203,40 @@ public class CheckinApiUtils {
 						processingResult = false;
 						return null;
 					}
-					listReport.add(report);
+					checkinList.add(currentCheckin);
 				}
-				return listReport;
+				return checkinList;
 			}
 
 		}
 		return null;
 	}
 
-	// Save report into database
-	public boolean saveReports(Context context) {
-		List<Report> reports = getReportList(context);
+	// Save checkins into database
+	public boolean saveCheckins(Context context) {
+		List<Checkin> checkins = getCheckinsList(context);
 
-		if (reports != null) {
+		if (checkins != null) {
 
-			return Database.mReportDao.addReport(reports);
+			return Database.mCheckin.addCheckins(checkins);
 		}
 
 		return false;
 	}
 
-	private void saveCategories(int categoryId, int reportId) {
-
-		ReportCategory reportCategory = new ReportCategory();
-		reportCategory.setCategoryId(categoryId);
-		reportCategory.setReportId(reportId);
-		List<ReportCategory> reportCategories = new ArrayList<ReportCategory>();
-		reportCategories.add(reportCategory);
-
-		// save new data
-		Database.mReportCategoryDao.addReportCategories(reportCategories);
+	public boolean saveUsers() {
+		List<User> users = getCheckinsUsersList();
+		if (users != null && users.size() > 0) {
+			return Database.mUserDao.addUser(users);
+		}
+		return false;
 	}
 
-	private void saveMedia(int mediaId, int reportId, int type, String link) {
-		log("downloading... "+link+" ReportId: "+reportId);
+	private void saveMedia(int mediaId, int checkinId, int type, String link) {
+		log("downloading... " + link + " CheckinId: " + checkinId);
 		Media media = new Media();
 		media.setMediaId(mediaId);
-		media.setReportId(reportId);
+		media.setReportId(checkinId);
 		media.setType(type);
 		media.setLink(link);
 		List<Media> sMedia = new ArrayList<Media>();

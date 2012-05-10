@@ -47,6 +47,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
@@ -475,5 +476,11 @@ public class Util {
 		DateFormat df = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
 		df.setTimeZone(TimeZone.getTimeZone("GMT"));
 		return df.format(new Date());
+	}
+
+	public static String IMEI(Context context) {
+		TelephonyManager TelephonyMgr = (TelephonyManager) context
+				.getSystemService(Context.TELEPHONY_SERVICE);
+		return TelephonyMgr.getDeviceId(); // Requires READ_PHONE_STATE
 	}
 }

@@ -19,17 +19,87 @@
  **/
 package com.ushahidi.android.app.views;
 
-import android.support.v4.app.FragmentActivity;
+import android.app.Activity;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.ViewAnimator;
+
+import com.google.android.maps.MapView;
+import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.adapters.ListPhotoAdapter;
 
 /**
  * @author eyedol
- *
+ * 
  */
-public class ViewCheckinView extends View {
+public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 
-    public ViewCheckinView(FragmentActivity activity) {
-        super(activity);
-        // TODO Auto-generated constructor stub
-    }
+	public TextView name;
+	public TextView message;
+	public TextView date;
+	public ViewAnimator viewCheckinRoot;
+	public LayoutInflater inflater;
+	public ListView listPhotos;
+	public TextView listPhotosEmptyView;
+	public ListPhotoAdapter photoAdapter;
+	public MapView mapView;
+	private Context context;
+
+	public ViewCheckinView(Activity activity) {
+		super(activity);
+		this.context = activity;
+		this.viewCheckinRoot = (ViewAnimator) activity
+				.findViewById(R.id.view_checkin_root);
+		this.mapView = (MapView) activity.findViewById(R.id.loc_map);
+		this.name = (TextView) activity.findViewById(R.id.checkin_title);
+		this.message = (TextView) activity
+				.findViewById(R.id.checkin_description);
+		this.date = (TextView) activity.findViewById(R.id.checkin_date);
+		this.photoAdapter = new ListPhotoAdapter(activity);
+
+		this.listPhotos = (ListView) activity.findViewById(R.id.list_photos);
+		this.listPhotosEmptyView = (TextView) activity
+				.findViewById(R.id.empty_photo_list);
+
+		if (this.listPhotosEmptyView != null) {
+			this.listPhotos.setEmptyView(listPhotosEmptyView);
+		}
+
+	}
+
+	public View filterReport() {
+		View view = inflater.inflate(R.layout.list_report_header, null);
+		return view;
+	}
+
+	public void setListPhotos(int reportId) {
+		if (listPhotos != null) {
+			ListPhotoAdapter adapter = new ListPhotoAdapter(context);
+			adapter.refresh(reportId);
+			listPhotos.setAdapter(adapter);
+		}
+	}
+
+	public ListView getListPhotos() {
+		return this.listPhotos;
+	}
+
+	public void goNext() {
+
+		Animation in = AnimationUtils.loadAnimation(context,
+				R.anim.slide_left_in);
+		viewCheckinRoot.startAnimation(in);
+	}
+
+	public void goPrevious() {
+		Animation out = AnimationUtils.loadAnimation(context,
+				R.anim.slide_right_in);
+		viewCheckinRoot.startAnimation(out);
+	}
 
 }

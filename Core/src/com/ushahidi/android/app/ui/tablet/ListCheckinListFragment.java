@@ -26,7 +26,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -44,10 +43,7 @@ import com.ushahidi.android.app.adapters.ListPendingCheckinAdapter;
 import com.ushahidi.android.app.adapters.UserSpinnerAdater;
 import com.ushahidi.android.app.fragments.BaseSectionListFragment;
 import com.ushahidi.android.app.models.ListCheckinModel;
-import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.CheckinHttpClient;
-import com.ushahidi.android.app.net.ReportsHttpClient;
-import com.ushahidi.android.app.net.UsersHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddCheckinActivity;
 import com.ushahidi.android.app.ui.phone.ViewCheckinActivity;
@@ -397,13 +393,8 @@ public class ListCheckinListFragment
 					// delete everything before updating with a new one
 					deleteFetchedCheckin();
 
-					// fetch categories -- assuming everything will go just
-					// right!
-					new UsersHttpClient(getActivity())
-							.getCategoriesFromWeb();
-
 					status = new CheckinHttpClient(getActivity())
-							.getAllReportFromWeb();
+							.getAllCheckinFromWeb();
 				}
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -415,15 +406,15 @@ public class ListCheckinListFragment
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if (result) {
-				log("fetching ");
+				log("fetching checkins");
 				if (status == 4) {
 					toastLong(R.string.internet_connection);
 				} else if (status == 110) {
 					toastLong(R.string.connection_timeout);
 				} else if (status == 100) {
-					toastLong(R.string.could_not_fetch_reports);
+					toastLong(R.string.could_not_fetch_checkin);
 				} else if (status == 0) {
-					log("successfully fetched");
+					log("successfully fetched checkins");
 					refreshCheckinList();
 					showUsers();
 				}

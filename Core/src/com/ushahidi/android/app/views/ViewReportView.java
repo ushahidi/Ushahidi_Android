@@ -85,7 +85,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
 		viewReportRoot = (ViewAnimator) activity
-				.findViewById(R.id.view_report_root);
+				.findViewById(R.id.view_checkin_root);
 
 		mapView = (MapView) activity.findViewById(R.id.loc_map);
 		title = (TextView) activity.findViewById(R.id.title);
