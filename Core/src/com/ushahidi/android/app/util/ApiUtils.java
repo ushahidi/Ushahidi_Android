@@ -272,13 +272,15 @@ public class ApiUtils {
      *         data, 8 - api disabled, 9 - no task found, 10 - json is wrong
      */
     public static int extractPayloadJSON(String json_data) {
-        Log.d(CLASS_TAG, "extractPayloadJSON(): " + json_data);
+    	Log.d(CLASS_TAG, "extractPayloadJSON(): New " + json_data);
+       
         try {
             jsonObject = new JSONObject(json_data);
             final String errorCode = jsonObject.getJSONObject("error").getString("code");
+            Log.d(CLASS_TAG, "extractPayloadJSON(): New " + errorCode);
             return Integer.parseInt(errorCode);
         } catch (JSONException e) {
-            Log.e(CLASS_TAG, e.toString());
+            e.printStackTrace();
             return 10;
         }
 
