@@ -18,32 +18,15 @@
 
     <TextView
         android:id="@+id/footer_text"
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:paddingBottom="2dip"
-        android:paddingLeft="5dip"
-        android:paddingTop="2dip"
-        android:background="@color/table_selected_row_color"
-        android:text="@string/all_categories"
-        android:textColor="@color/title_color" />
+        style="@style/ListView"
+        android:text="@string/all_categories" />
 
     <!-- List report -->
 
     <ListView
         android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/footer_text"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="10.0sp"
-        android:fadingEdge="none"
-        android:fastScrollEnabled="true"
-        android:listSelector="@android:color/transparent"
-        android:scrollbars="vertical"
-        android:scrollingCache="false"
-        android:smoothScrollbar="true" />
+        style="@style/ListView"
+        android:layout_below="@id/footer_text" />
 
     <!-- Here is the view to show if the list is emtpy -->
 

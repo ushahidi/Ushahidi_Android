@@ -86,9 +86,6 @@ public class ListCheckinFragment
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		// Example of progress queue for executing asynctasks
-		// which will execute TaskOne, then TaskTwo
-		// new ProgressQueue(new TaskOne(this), new TaskTwo(this)).execute();
 	}
 
 	@Override
@@ -191,7 +188,7 @@ public class ListCheckinFragment
 	private void refreshCheckinList() {
 		fetchedAdapter.refresh();
 		pendingAdapter.refresh();
-		adapter = new ListCheckinAdapter(getActivity());
+
 		if (!pendingAdapter.isEmpty()) {
 			adapter.addView(pendingHeader());
 			adapter.addAdapter(pendingAdapter);
@@ -208,8 +205,6 @@ public class ListCheckinFragment
 	private void refreshCheckinByUserList() {
 		fetchedAdapter.refresh(filterUserId);
 		pendingAdapter.refresh(filterUserId);
-
-		adapter = new ListCheckinAdapter(getActivity());
 
 		if (!pendingAdapter.isEmpty()) {
 			adapter.addView(pendingHeader());
@@ -355,7 +350,7 @@ public class ListCheckinFragment
 	}
 
 	private void deletePendingCheckin(int checkinId) {
-		
+
 	}
 
 	/**

@@ -249,7 +249,6 @@ public class ListMapActivity extends
 
 	public void refreshMapLists() {
 		adapter.refresh();
-		// view.displayEmptyListText();
 	}
 
 	// Context Menu Stuff

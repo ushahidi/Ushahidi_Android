@@ -11,35 +11,27 @@
   at team@ushahidi.com.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/background_color" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:padding="10dp" >
 
-    <!-- List incidents -->
-
+    <TextView
+        android:id="@+id/footer_text"
+        style="@style/TextView.FilterBy"
+        android:text="@string/all_users" />
+    
+    <!-- List checkins -->
     <ListView
         android:id="@android:id/list"
-        style="@style/ListView" />
+        style="@style/ListView"
+        android:layout_below="@id/footer_text" />
 
     <!-- Here is the view to show if the list is emtpy -->
-
     <TextView
         android:id="@android:id/empty"
         style="@style/TextView.Empty"
-        android:text="@string/no_items" />
-    
-    <!-- Categories Area. -->
-    <LinearLayout android:orientation="vertical"
-        android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" android:paddingBottom="5px"
-        android:paddingLeft="7px" android:paddingRight="9px">
-        <LinearLayout android:orientation="horizontal"
-            android:layout_width="fill_parent" android:layout_height="wrap_content">
+        android:text="@string/no_items"
+        android:visibility="gone" />
 
-            <Spinner android:id="@+id/filter_checkin" android:prompt="@string/prompt_mesg"
-                android:drawSelectorOnTop="true" android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-    </LinearLayout>
-    
 </RelativeLayout>

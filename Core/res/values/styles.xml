@@ -156,6 +156,14 @@
     <style name="ListView" parent="@android:style/Widget.ListView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">10.0sp</item>
+        <item name="android:fadingEdge">none</item>
+        <item name="android:fastScrollEnabled">true</item>
+        <item name="android:listSelector">@android:color/transparent</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollingCache">false</item>
+        <item name="android:smoothScrollbar">true</item>
     </style>
 
     <style name="TextView" parent="@android:style/Widget.TextView">
@@ -169,6 +177,15 @@
     <style name="TextView.Label">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/title_color</item>
+    </style>
+
+    <style name="TextView.FilterBy">
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:background">@color/table_selected_row_color</item>
+        <item name="android:paddingBottom">2dip</item>
+        <item name="android:paddingLeft">5dip</item>
+        <item name="android:paddingTop">2dip</item>
         <item name="android:textColor">@color/title_color</item>
     </style>
 
@@ -259,7 +276,7 @@
         <item name="android:inputType">text</item>
         <item name="android:maxLines">1</item>
     </style>
-    
+
     <style name="EditText.Title">
         <item name="android:inputType">text</item>
         <item name="android:maxLines">1</item>
