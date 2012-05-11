@@ -54,6 +54,7 @@ import com.ushahidi.android.app.activities.BaseListActivity;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
+import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.net.MapsHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
@@ -118,6 +119,8 @@ public class ListMapActivity extends
 		apiUtils = new ApiUtils(this);
 		registerForContextMenu(listView);
 
+		// load current settings
+		Preferences.loadSettings(this);
 		// filter map list
 		if (view != null) {
 			view.mSearchMap.addTextChangedListener(new TextWatcher() {
@@ -320,12 +323,13 @@ public class ListMapActivity extends
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
-
 		final int sId = adapter.getItem(position).getId();
-		
-		log("ID: "+sId);
 		if (isMapActive(sId)) {
-			goToReports();
+			if (Preferences.isCheckinEnabled == 0) {
+				goToReports();
+			} else {
+				goToCheckins();
+			}
 		} else {
 			FetchMapReportTask fetchMapReportTask = new FetchMapReportTask(this);
 			fetchMapReportTask.id = sId;
@@ -351,9 +355,17 @@ public class ListMapActivity extends
 
 	}
 
-	public void goToReports() {
+	private void goToReports() {
 		Intent launchIntent;
 		launchIntent = new Intent(this, ReportTabActivity.class);
+		startActivityForResult(launchIntent, 0);
+		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+		setResult(RESULT_OK);
+	}
+
+	private void goToCheckins() {
+		Intent launchIntent;
+		launchIntent = new Intent(this, CheckinTabActivity.class);
 		startActivityForResult(launchIntent, 0);
 		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		setResult(RESULT_OK);
@@ -588,13 +600,16 @@ public class ListMapActivity extends
 						// fetch categories
 						new CategoriesHttpClient(ListMapActivity.this)
 								.getCategoriesFromWeb();
-						// fetch reports
 
+						// fetch reports
 						status = new ReportsHttpClient(ListMapActivity.this)
 								.getAllReportFromWeb();
-					}
+					} else {
 
-					// TODO process checkin if there is one
+						// TODO process checkin if there is one
+						status = new CheckinHttpClient(ListMapActivity.this)
+								.getAllCheckinFromWeb();
+					}
 
 				} else {
 					status = 113;
@@ -620,7 +635,7 @@ public class ListMapActivity extends
 						errorMessage = getString(R.string.internet_connection);
 						createDialog(DIALOG_SHOW_MESSAGE);
 					} else if (status == 99) {
-						errorMessage = getString(R.string.failed_to_add_report_online_db_error);
+						errorMessage = getString(R.string.failed);
 						createDialog(DIALOG_SHOW_MESSAGE);
 					} else if (status == 112) {
 						errorMessage = getString(R.string.network_error);
@@ -632,11 +647,11 @@ public class ListMapActivity extends
 					}
 
 				} else {
-					toastLong(R.string.could_not_fetch_reports);
+					toastLong(R.string.failed);
 				}
 
 			} else {
-				toastLong(R.string.could_not_fetch_reports);
+				toastLong(R.string.failed);
 			}
 		}
 	}
@@ -646,11 +661,15 @@ public class ListMapActivity extends
 		try {
 
 			if (success) {
-
-				goToReports();
+				if (Preferences.isCheckinEnabled == 1) {
+					toastLong(R.string.checkin_is_enabled);
+					goToCheckins();
+				} else {
+					goToReports();
+				}
 
 			} else {
-				toastLong(R.string.could_not_fetch_reports);
+				toastLong(R.string.failed);
 			}
 		} catch (IllegalArgumentException e) {
 			log(e.toString());

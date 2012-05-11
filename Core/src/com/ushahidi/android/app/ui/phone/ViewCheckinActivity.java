@@ -47,7 +47,7 @@ public class ViewCheckinActivity extends
 	private List<ListCheckinModel> listCheckin;
 
 	private ListFetchedCheckinAdapter checkinAdapter;
-
+	
 	private int position;
 
 	private int userId;

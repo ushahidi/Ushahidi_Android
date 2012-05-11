@@ -10,6 +10,7 @@ public interface IReportSchema {
 	public static final String ID = "_id";
 
 	public static final String INCIDENT_ID = "incident_id";
+	
 	public static final String INCIDENT_TITLE = "incident_title";
 
 	public static final String INCIDENT_DESC = "incident_desc";

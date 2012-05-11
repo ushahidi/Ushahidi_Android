@@ -92,13 +92,13 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 	public void goNext() {
 
 		Animation in = AnimationUtils.loadAnimation(context,
-				R.anim.slide_left_in);
+				R.anim.slide_right_in);
 		viewCheckinRoot.startAnimation(in);
 	}
 
 	public void goPrevious() {
 		Animation out = AnimationUtils.loadAnimation(context,
-				R.anim.slide_right_in);
+				R.anim.slide_left_in);
 		viewCheckinRoot.startAnimation(out);
 	}
 

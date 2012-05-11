@@ -37,10 +37,12 @@ import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.helpers.ActionModeHelper;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
+import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.net.MapsHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
+import com.ushahidi.android.app.ui.phone.CheckinTabActivity;
 import com.ushahidi.android.app.ui.phone.ReportTabActivity;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
@@ -121,9 +123,8 @@ public class ListMapFragment extends
 		if (Util.isHoneycomb()) {
 			listView.setLongClickable(true);
 			listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-			listView
-					.setOnItemLongClickListener(new ActionModeHelper(this,
-							listView));
+			listView.setOnItemLongClickListener(new ActionModeHelper(this,
+					listView));
 		} else {
 
 			registerForContextMenu(listView);
@@ -144,8 +145,7 @@ public class ListMapFragment extends
 	@Override
 	public void onSaveInstanceState(Bundle state) {
 		super.onSaveInstanceState(state);
-		state.putInt(STATE_CHECKED,
-				listView.getCheckedItemPosition());
+		state.putInt(STATE_CHECKED, listView.getCheckedItemPosition());
 	}
 
 	@Override
@@ -203,8 +203,8 @@ public class ListMapFragment extends
 		public void run() {
 			try {
 				mListMapAdapter.refresh();
-				//mListMapView.mListView.setAdapter(mListMapAdapter);
-				//mListMapView.displayEmptyListText();
+				// mListMapView.mListView.setAdapter(mListMapAdapter);
+				// mListMapView.displayEmptyListText();
 			} catch (Exception e) {
 				return;
 			}
@@ -218,7 +218,7 @@ public class ListMapFragment extends
 		public void run() {
 			try {
 				mListMapAdapter.getFilter().filter(filter);
-				//mListMapView.displayEmptyListText();
+				// mListMapView.displayEmptyListText();
 			} catch (Exception e) {
 				return;
 			}
@@ -257,8 +257,8 @@ public class ListMapFragment extends
 
 	public void refreshMapLists() {
 		mListMapAdapter.refresh();
-		//mListMapView.mListView.setAdapter(mListMapAdapter);
-	//mListMapView.displayEmptyListText();
+		// mListMapView.mListView.setAdapter(mListMapAdapter);
+		// mListMapView.displayEmptyListText();
 	}
 
 	// Context Menu Stuff
@@ -452,6 +452,14 @@ public class ListMapFragment extends
 		bundle.putInt("tab_index", 0);
 		launchIntent = new Intent(getActivity(), ReportTabActivity.class);
 		launchIntent.putExtra("tab", bundle);
+		startActivityForResult(launchIntent, 0);
+		getActivity().setResult(FragmentActivity.RESULT_OK);
+		getActivity().finish();
+	}
+
+	private void goToCheckins() {
+		Intent launchIntent;
+		launchIntent = new Intent(getActivity(), CheckinTabActivity.class);
 		startActivityForResult(launchIntent, 0);
 		getActivity().setResult(FragmentActivity.RESULT_OK);
 		getActivity().finish();
@@ -654,8 +662,8 @@ public class ListMapFragment extends
 				toastShort(R.string.deployment_fetched_successful);
 			}
 			mListMapAdapter.refresh();
-			//mListMapView.mListView.setAdapter(mListMapAdapter);
-		//	mListMapView.displayEmptyListText();
+			// mListMapView.mListView.setAdapter(mListMapAdapter);
+			// mListMapView.displayEmptyListText();
 			refreshState = false;
 			updateRefreshStatus();
 		}
@@ -692,10 +700,13 @@ public class ListMapFragment extends
 						// fetch reports
 						status = new ReportsHttpClient(getActivity())
 								.getAllReportFromWeb();
+					} else {
+
+						// TODO process checkin if there is one
+						status = new CheckinHttpClient(getActivity())
+								.getAllCheckinFromWeb();
 					}
 
-					// TODO process checkins when there is one.
-					// status = apiUtils.processCheckins();
 				} else {
 					status = 113;
 				}
@@ -712,7 +723,6 @@ public class ListMapFragment extends
 		@Override
 		protected void onPostExecute(Boolean success) {
 			super.onPostExecute(success);
-			this.dialog.cancel();
 			if (success) {
 				if (status != null) {
 					if (status == 0) {
@@ -721,7 +731,7 @@ public class ListMapFragment extends
 						errorMessage = getString(R.string.internet_connection);
 						createDialog(DIALOG_SHOW_MESSAGE);
 					} else if (status == 99) {
-						errorMessage = getString(R.string.failed_to_add_report_online_db_error);
+						errorMessage = getString(R.string.failed);
 						createDialog(DIALOG_SHOW_MESSAGE);
 					} else if (status == 112) {
 						errorMessage = getString(R.string.network_error);
@@ -733,11 +743,11 @@ public class ListMapFragment extends
 					}
 
 				} else {
-					toastLong(R.string.could_not_fetch_reports);
+					toastLong(R.string.failed);
 				}
 
 			} else {
-				toastLong(R.string.could_not_fetch_reports);
+				toastLong(R.string.failed);
 			}
 		}
 	}
@@ -747,12 +757,15 @@ public class ListMapFragment extends
 		try {
 
 			if (success) {
-
-				clearCachedReports();
-				goToReports();
+				if (Preferences.isCheckinEnabled == 1) {
+					toastLong(R.string.checkin_is_enabled);
+					goToCheckins();
+				} else {
+					goToReports();
+				}
 
 			} else {
-				toastLong(R.string.could_not_fetch_reports);
+				toastLong(R.string.failed);
 			}
 		} catch (IllegalArgumentException e) {
 			log(e.toString());

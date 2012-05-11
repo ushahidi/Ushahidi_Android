@@ -25,18 +25,28 @@ import com.ushahidi.android.app.entities.Checkin;
 
 /**
  * @author eyedol
- *
+ * 
  */
 public interface ICheckinDao {
 
-    public List<Checkin> fetchAllCheckins();
-    
-    public List<Checkin> fetchCheckinsByUserdId(int id);
-    
-    public boolean deleteAllCheckins();
-    
-    public boolean addCheckin(Checkin checkin);
-    
-    public boolean addCheckins(List<Checkin> checkins);
-    
+	public List<Checkin> fetchAllCheckins();
+
+	public List<Checkin> fetchAllPendingCheckins();
+
+	public List<Checkin> fetchCheckinsByUserId(int userId);
+
+	public List<Checkin> fetchPendingCheckinsByUserId(int userId);
+
+	// delete checkin by id
+	public boolean deletePendingCheckinById(int checkinId);
+
+	public boolean deleteAllCheckins();
+
+	public boolean addCheckin(Checkin checkin);
+
+	public boolean addCheckins(List<Checkin> checkins);
+
+	// update pending checkin
+	public boolean updatePendingCheckin(int checkinId, Checkin checkin);
+
 }

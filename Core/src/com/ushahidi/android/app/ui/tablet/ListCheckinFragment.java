@@ -53,7 +53,7 @@ import com.ushahidi.android.app.views.ListCheckinView;
 /**
  * @author eyedol
  */
-public class ListCheckinListFragment
+public class ListCheckinFragment
 		extends
 		BaseSectionListFragment<ListCheckinView, ListCheckinModel, ListCheckinAdapter> {
 
@@ -77,7 +77,7 @@ public class ListCheckinListFragment
 
 	private boolean refreshState = false;
 
-	public ListCheckinListFragment() {
+	public ListCheckinFragment() {
 		super(ListCheckinView.class, ListCheckinAdapter.class,
 				R.layout.list_checkin, R.menu.list_checkin, android.R.id.list);
 	}
@@ -355,7 +355,7 @@ public class ListCheckinListFragment
 	}
 
 	private void deletePendingCheckin(int checkinId) {
-
+		
 	}
 
 	/**

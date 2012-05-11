@@ -59,7 +59,8 @@ public class ListPendingCheckinAdapter extends
 	@Override
 	public void refresh() {
 		mListCheckinModel = new ListCheckinModel();
-		final boolean loaded = mListCheckinModel.load();
+		final boolean loaded = mListCheckinModel.loadPendingCheckin();
+
 		if (loaded) {
 			items = mListCheckinModel.getCheckins(context);
 			this.setItems(items);
@@ -68,9 +69,11 @@ public class ListPendingCheckinAdapter extends
 	}
 
 	public void refresh(int userId) {
-
 		mListCheckinModel = new ListCheckinModel();
-		final boolean loaded = mListCheckinModel.loadCheckinByUser(userId);
+		
+		final boolean loaded = mListCheckinModel
+				.loadPendingCheckinByUser(userId);
+
 		if (loaded) {
 			items = mListCheckinModel.getCheckins(context);
 			this.setItems(items);
@@ -136,6 +139,7 @@ public class ListPendingCheckinAdapter extends
 		@Override
 		protected void publishResults(CharSequence constraint,
 				FilterResults results) {
+			
 			List<ListCheckinModel> checkins = (ArrayList<ListCheckinModel>) results.values;
 			setItems(checkins);
 

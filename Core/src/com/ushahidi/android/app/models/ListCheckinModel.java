@@ -53,13 +53,29 @@ public class ListCheckinModel extends Checkin {
 	}
 
 	public boolean loadCheckinByUser(int userid) {
-		mCheckins = Database.mCheckin.fetchCheckinsByUserdId(userid);
+		mCheckins = Database.mCheckin.fetchCheckinsByUserId(userid);
 		if (mCheckins != null) {
 			return true;
 		}
 		return false;
 	}
-	
+
+	public boolean loadPendingCheckin() {
+		mCheckins = Database.mCheckin.fetchAllCheckins();
+		if (mCheckins != null) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean loadPendingCheckinByUser(int userid) {
+		mCheckins = Database.mCheckin.fetchPendingCheckinsByUserId(userid);
+		if (mCheckins != null) {
+			return true;
+		}
+		return false;
+	}
 
 	public List<ListCheckinModel> getCheckins(Context context) {
 		final List<ListCheckinModel> checkins = new ArrayList<ListCheckinModel>();

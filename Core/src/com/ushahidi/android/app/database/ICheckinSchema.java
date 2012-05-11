@@ -43,10 +43,13 @@ public interface ICheckinSchema {
 
 	public static final String CHECKIN_LOC_LONGITUDE = "checkin_loc_longitude";
 
+	public static final String CHECKIN_PENDING = "pending";
+
 	// Checkins messages
 	public static final String[] CHECKINS_COLUMNS = new String[] { ID,
 			CHECKIN_ID, CHECKIN_USER_ID, CHECKIN_MESG, CHECKIN_DATE,
-			CHECKIN_LOC_NAME, CHECKIN_LOC_LATITUDE, CHECKIN_LOC_LONGITUDE };
+			CHECKIN_LOC_NAME, CHECKIN_LOC_LATITUDE, CHECKIN_LOC_LONGITUDE,
+			CHECKIN_PENDING };
 
 	public static final String CHECKINS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
 			+ CHECKINS_TABLE
@@ -66,7 +69,7 @@ public interface ICheckinSchema {
 			+ CHECKIN_LOC_LATITUDE
 			+ " TEXT NOT NULL, "
 			+ CHECKIN_LOC_LONGITUDE
-			+ " TEXT NOT NULL"
-			+ ")";
+			+ " TEXT NOT NULL, "
+			+ CHECKIN_PENDING + " INTEGER DEFAULT 0 " + ")";
 
 }
