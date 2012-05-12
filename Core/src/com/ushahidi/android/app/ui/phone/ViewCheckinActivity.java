@@ -59,7 +59,7 @@ public class ViewCheckinActivity extends
 
 	public ViewCheckinActivity() {
 		super(ViewCheckinView.class, R.layout.view_checkin,
-				R.menu.view_checkin, R.id.loc_map);
+				R.menu.view_checkin, R.id.checkin_loc_map);
 		checkinModel = new ListCheckinModel();
 	}
 
@@ -79,7 +79,7 @@ public class ViewCheckinActivity extends
 		// because of header view, decrease position by one
 		initCheckin(this.position);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
@@ -111,7 +111,7 @@ public class ViewCheckinActivity extends
 			}
 			return true;
 
-		} 
+		}
 
 		return super.onOptionsItemSelected(item);
 	}
@@ -132,6 +132,7 @@ public class ViewCheckinActivity extends
 			if (view != null) {
 				view.setTitle(listCheckin.get(position).getUsername());
 				view.setBody(listCheckin.get(position).getMessage());
+				view.setDate(listCheckin.get(position).getDate());
 				view.setListPhotos((int) checkinId);
 				view.getListPhotos().setOnItemClickListener(
 						new OnItemClickListener() {

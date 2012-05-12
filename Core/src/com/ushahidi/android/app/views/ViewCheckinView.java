@@ -57,21 +57,21 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 		this.viewCheckinRoot = (ViewAnimator) activity
 				.findViewById(R.id.view_checkin_root);
 
-		this.mapView = (MapView) activity.findViewById(R.id.loc_map);
+		this.mapView = (MapView) activity.findViewById(R.id.checkin_loc_map);
 
 		name = (TextView) activity.findViewById(R.id.checkin_title);
 
-		this.message = (TextView) activity
+		message = (TextView) activity
 				.findViewById(R.id.checkin_description);
 
-		this.date = (TextView) activity.findViewById(R.id.checkin_date);
+		date = (TextView) activity.findViewById(R.id.checkin_date);
 
-		this.photoAdapter = new ListPhotoAdapter(activity);
+		photoAdapter = new ListPhotoAdapter(activity);
 
-		this.listPhotos = (ListView) activity.findViewById(R.id.list_photos);
+		listPhotos = (ListView) activity.findViewById(R.id.list_checkin_photos);
 
-		this.listPhotosEmptyView = (TextView) activity
-				.findViewById(R.id.empty_photo_list);
+		listPhotosEmptyView = (TextView) activity
+				.findViewById(R.id.checkin_empty_photo_list);
 
 		if (this.listPhotosEmptyView != null) {
 			this.listPhotos.setEmptyView(listPhotosEmptyView);
