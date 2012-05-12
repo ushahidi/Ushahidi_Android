@@ -10,6 +10,7 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com.
 -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,8 +19,8 @@
     android:padding="10dip" >
 
     <EditText
-        android:id="@+id/filter_report"
+        android:id="@+id/filter_checkins"
         style="@style/EditText.Search"
-        android:hint="@string/search_reports" />
+        android:hint="@string/search_checkins" />
 
 </LinearLayout>

@@ -28,14 +28,13 @@
         <LinearLayout style="@style/LinearLayout.Vertical" >
 
             <TextView
-                android:id="@+id/checkin_title"
                 style="@style/TextView.Label"
                 android:text="@string/report_title" />
 
             <LinearLayout
                 android:id="@+id/top_items_layout"
                 style="@style/LinearLayout.Vertical"
-                android:background="@color/table_even_row_color" >
+                android:background="@color/table_odd_row_color" >
 
                 <TextView
                     android:id="@+id/checkin_title"
@@ -54,7 +53,7 @@
             <LinearLayout
                 android:id="@+id/top_items_layout"
                 style="@style/LinearLayout.Vertical"
-                android:background="@color/table_even_row_color" >
+                android:background="@color/table_odd_row_color" >
 
                 <!-- Main content area. -->
 
@@ -68,17 +67,16 @@
             <!-- Date starts -->
 
             <TextView
-                android:id="@+id/checkin_date"
                 style="@style/TextView.Label"
                 android:text="@string/report_date" />
 
             <LinearLayout
                 android:id="@+id/date_layout"
                 style="@style/LinearLayout.Vertical"
-                android:background="@color/table_even_row_color" >
+                android:background="@color/table_odd_row_color" >
 
                 <TextView
-                    android:id="@+id/date"
+                    android:id="@+id/checkin_date"
                     style="@style/TextView.Title" />
             </LinearLayout>
             <!-- Date ends -->
@@ -99,7 +97,7 @@
             <LinearLayout
                 android:id="@+id/top_items_layout"
                 style="@style/LinearLayout.Vertical"
-                android:background="@color/table_even_row_color" >
+                android:background="@color/table_odd_row_color" >
 
                 <com.google.android.maps.MapView
                     android:id="@+id/loc_map"
@@ -121,7 +119,8 @@
 
             <LinearLayout
                 android:id="@+id/img_layout"
-                style="@style/LinearLayout.Vertical" >
+                style="@style/LinearLayout.Vertical"
+                android:background="@color/table_odd_row_color" >
 
                 <ListView
                     android:id="@+id/list_checkin_photos"

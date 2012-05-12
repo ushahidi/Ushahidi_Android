@@ -178,8 +178,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	}
 
 	public View filterReport() {
-		View view = inflater.inflate(R.layout.list_report_header, null);
-		return view;
+		View v = inflater.inflate(R.layout.list_report_header, null);
+		return v;
 	}
 
 	public void setTitle(String title) {

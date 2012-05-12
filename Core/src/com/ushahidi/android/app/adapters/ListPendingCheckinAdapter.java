@@ -85,7 +85,7 @@ public class ListPendingCheckinAdapter extends
 
 		int colorPosition = position % colors.length;
 		View row = inflater
-				.inflate(R.layout.list_report_item, viewGroup, false);
+				.inflate(R.layout.list_checkin_item, viewGroup, false);
 		row.setBackgroundResource(colors[colorPosition]);
 
 		Widgets widgets = (Widgets) row.getTag();

@@ -24,6 +24,7 @@ import java.util.List;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -47,7 +48,7 @@ public class ViewCheckinActivity extends
 	private List<ListCheckinModel> listCheckin;
 
 	private ListFetchedCheckinAdapter checkinAdapter;
-	
+
 	private int position;
 
 	private int userId;
@@ -60,8 +61,15 @@ public class ViewCheckinActivity extends
 		super(ViewCheckinView.class, R.layout.view_checkin,
 				R.menu.view_checkin, R.id.loc_map);
 		checkinModel = new ListCheckinModel();
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
 		this.userId = getIntent().getExtras().getInt("userid", 0);
 		this.position = getIntent().getExtras().getInt("id", 0);
+
 		if (userId > 0) {
 			checkinModel.loadCheckinByUser(userId);
 		} else {
@@ -71,39 +79,84 @@ public class ViewCheckinActivity extends
 		// because of header view, decrease position by one
 		initCheckin(this.position);
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+			finish();
+			return true;
+		} else if (item.getItemId() == R.id.menu_forward) {
+
+			if (listCheckin != null) {
+				position++;
+				if (!(position > (listCheckin.size() - 1))) {
+					initCheckin(position);
+					view.goNext();
+				} else {
+					position = listCheckin.size() - 1;
+				}
+			}
+			return true;
+
+		} else if (item.getItemId() == R.id.menu_backward) {
+
+			if (listCheckin != null) {
+				position--;
+				if ((position < (listCheckin.size() - 1)) && (position != -1)) {
+					initCheckin(position);
+					view.goPrevious();
+				} else {
+					position = 0;
+				}
+			}
+			return true;
+
+		} 
+
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		stopLocating();
+	}
 
 	private void initCheckin(int position) {
 		listCheckin = checkinModel.getCheckins(this);
-
+		log("Position: " + listCheckin.size());
 		if (listCheckin != null) {
 			userId = (int) listCheckin.get(position).getUserId();
 
 			title = listCheckin.get(position).getUsername();
-			view.name.setText(listCheckin.get(position).getUsername());
-			view.message.setText(listCheckin.get(position).getMessage());
-			view.setListPhotos((int) checkinId);
-			view.getListPhotos().setOnItemClickListener(
-					new OnItemClickListener() {
+			if (view != null) {
+				view.setTitle(listCheckin.get(position).getUsername());
+				view.setBody(listCheckin.get(position).getMessage());
+				view.setListPhotos((int) checkinId);
+				view.getListPhotos().setOnItemClickListener(
+						new OnItemClickListener() {
 
-						public void onItemClick(AdapterView<?> parent, View v,
-								int position, long id) {
-							Intent i = new Intent(ViewCheckinActivity.this,
-									ViewReportPhotoActivity.class);
-							i.putExtra("reportid", checkinId);
-							i.putExtra("position", position);
-							startActivityForResult(i, 0);
-							overridePendingTransition(R.anim.home_enter,
-									R.anim.home_exit);
-						}
-					});
+							public void onItemClick(AdapterView<?> parent,
+									View v, int position, long id) {
+								Intent i = new Intent(ViewCheckinActivity.this,
+										ViewReportPhotoActivity.class);
+								i.putExtra("reportid", checkinId);
+								i.putExtra("position", position);
+								startActivityForResult(i, 0);
+								overridePendingTransition(R.anim.home_enter,
+										R.anim.home_exit);
+							}
+						});
 
-			centerLocationWithMarker(getPoint(Double.parseDouble(listCheckin
-					.get(position).getLocationLatitude()),
-					Double.parseDouble(listCheckin.get(position)
-							.getLocationLongitude())));
-			view.mapView.setBuiltInZoomControls(false);
-			int page = position;
-			this.setTitle(page + 1);
+				centerLocationWithMarker(getPoint(
+						Double.parseDouble(listCheckin.get(position)
+								.getLocationLatitude()),
+						Double.parseDouble(listCheckin.get(position)
+								.getLocationLongitude())));
+				view.mapView.setBuiltInZoomControls(false);
+				int page = position;
+				this.setTitle(page + 1);
+			}
 		}
 	}
 

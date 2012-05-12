@@ -61,7 +61,7 @@ public class ListCheckinModel extends Checkin {
 	}
 
 	public boolean loadPendingCheckin() {
-		mCheckins = Database.mCheckin.fetchAllCheckins();
+		mCheckins = Database.mCheckin.fetchAllPendingCheckins();
 		if (mCheckins != null) {
 			return true;
 		}

@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ListView;
@@ -55,14 +56,20 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 		this.context = activity;
 		this.viewCheckinRoot = (ViewAnimator) activity
 				.findViewById(R.id.view_checkin_root);
+
 		this.mapView = (MapView) activity.findViewById(R.id.loc_map);
-		this.name = (TextView) activity.findViewById(R.id.checkin_title);
+
+		name = (TextView) activity.findViewById(R.id.checkin_title);
+
 		this.message = (TextView) activity
 				.findViewById(R.id.checkin_description);
+
 		this.date = (TextView) activity.findViewById(R.id.checkin_date);
+
 		this.photoAdapter = new ListPhotoAdapter(activity);
 
 		this.listPhotos = (ListView) activity.findViewById(R.id.list_photos);
+
 		this.listPhotosEmptyView = (TextView) activity
 				.findViewById(R.id.empty_photo_list);
 
@@ -70,11 +77,39 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 			this.listPhotos.setEmptyView(listPhotosEmptyView);
 		}
 
+		this.inflater = (LayoutInflater) activity
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
 	}
 
-	public View filterReport() {
-		View view = inflater.inflate(R.layout.list_report_header, null);
-		return view;
+	public View filterCheckin() {
+		View v = this.inflater.inflate(R.layout.list_checkin_header, null);
+		return v;
+	}
+	
+	public void setTitle(String title) {
+		this.name.setText(title);
+	}
+
+	public String getTitle() {
+		return this.getTitle().toString();
+	}
+
+
+	public void setDate(String date) {
+		this.date.setText(date);
+	}
+
+	public String getDate() {
+		return this.date.getText().toString();
+	}
+
+	public void setBody(String body) {
+		this.message.setText(body);
+	}
+
+	public String getBody() {
+		return this.message.getText().toString();
 	}
 
 	public void setListPhotos(int reportId) {

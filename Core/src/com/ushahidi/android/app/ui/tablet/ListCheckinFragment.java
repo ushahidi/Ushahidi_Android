@@ -40,6 +40,7 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListCheckinAdapter;
 import com.ushahidi.android.app.adapters.ListFetchedCheckinAdapter;
 import com.ushahidi.android.app.adapters.ListPendingCheckinAdapter;
+import com.ushahidi.android.app.adapters.ListReportAdapter;
 import com.ushahidi.android.app.adapters.UserSpinnerAdater;
 import com.ushahidi.android.app.fragments.BaseSectionListFragment;
 import com.ushahidi.android.app.models.ListCheckinModel;
@@ -92,7 +93,6 @@ public class ListCheckinFragment
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
-
 		mHandler = new Handler();
 		apiUtils = new ApiUtils(getActivity());
 		listView.setEmptyView(null);
@@ -119,9 +119,9 @@ public class ListCheckinFragment
 	protected View headerView() {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		ViewGroup viewGroup = (ViewGroup) inflater.inflate(
-				R.layout.list_report_header, getListView(), false);
+				R.layout.list_checkin_header, getListView(), false);
 		TextView textView = (TextView) viewGroup
-				.findViewById(R.id.filter_report);
+				.findViewById(R.id.filter_checkins);
 		textView.addTextChangedListener(new TextWatcher() {
 
 			public void afterTextChanged(Editable arg0) {
@@ -139,6 +139,8 @@ public class ListCheckinFragment
 				if (!(TextUtils.isEmpty(s.toString()))) {
 					filterTitle = s;
 					mHandler.post(filterCheckinList);
+				} else {
+					mHandler.post(fetchCheckinList);
 				}
 
 			}
@@ -188,7 +190,7 @@ public class ListCheckinFragment
 	private void refreshCheckinList() {
 		fetchedAdapter.refresh();
 		pendingAdapter.refresh();
-
+		adapter = new ListCheckinAdapter(getActivity());
 		if (!pendingAdapter.isEmpty()) {
 			adapter.addView(pendingHeader());
 			adapter.addAdapter(pendingAdapter);
@@ -199,12 +201,14 @@ public class ListCheckinFragment
 		} else {
 			adapter.addAdapter(fetchedAdapter);
 		}
-		listView.setAdapter(fetchedAdapter);
+
+		listView.setAdapter(adapter);
 	}
 
 	private void refreshCheckinByUserList() {
 		fetchedAdapter.refresh(filterUserId);
 		pendingAdapter.refresh(filterUserId);
+		adapter = new ListCheckinAdapter(getActivity());
 
 		if (!pendingAdapter.isEmpty()) {
 			adapter.addView(pendingHeader());
@@ -217,7 +221,7 @@ public class ListCheckinFragment
 			adapter.addAdapter(fetchedAdapter);
 		}
 
-		listView.setAdapter(fetchedAdapter);
+		listView.setAdapter(adapter);
 	}
 
 	private void filterChecinList() {
@@ -235,7 +239,7 @@ public class ListCheckinFragment
 			adapter.addAdapter(fetchedAdapter);
 		}
 
-		listView.setAdapter(fetchedAdapter);
+		listView.setAdapter(adapter);
 	}
 
 	@Override

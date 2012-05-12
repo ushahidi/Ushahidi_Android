@@ -8,11 +8,9 @@
 
     <EditText
         android:id="@+id/search_map"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/search_maps"
-        android:inputType="textMultiLine" />
-    
+        style="@style/EditText.Search"
+        android:hint="@string/search_maps" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,16 +22,7 @@
 
         <ListView
             android:id="@android:id/list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="10.0sp"
-            android:fadingEdge="none"
-            android:fastScrollEnabled="true"
-            android:listSelector="@android:color/transparent"
-            android:scrollbars="vertical"
-            android:scrollingCache="false"
-            android:smoothScrollbar="true" />
+            style="@style/ListView" />
     </LinearLayout>
     <!-- Here is the view to show if the list is emtpy -->
 
