@@ -2,7 +2,8 @@
 <resources>
     <!-- dimensions for upload photo preview -->
     <dimen name="preview_photo_width">75dp</dimen>
-    <dimen name="preview_photo_height">7dp</dimen>
+    <dimen name="preview_photo_height">75dp</dimen>
+    <dimen name="mapview_height">250dp</dimen>
     <dimen name="colorstrip_height">4dp</dimen>
     <dimen name="corner_radius">8dp</dimen>
     <dimen name="tab_space_top">4dp</dimen>

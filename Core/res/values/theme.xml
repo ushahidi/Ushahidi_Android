@@ -69,6 +69,8 @@
     <color name="tab_unselected_color">#404041</color>
     <color name="list_divider_color">#e0e0e0</color>
     <color name="overlay_text_color">#aa000000</color>
+    <color name="tab_background">#1a1a1a</color>
+    <color name="selectable_color">#7C2811</color>
 
 	<!-- TEXT SIZE -->
     <dimen name="text_size_small">14sp</dimen>

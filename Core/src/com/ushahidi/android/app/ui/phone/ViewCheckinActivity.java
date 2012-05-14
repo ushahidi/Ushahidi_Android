@@ -31,7 +31,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseMapViewActivity;
-import com.ushahidi.android.app.adapters.ListFetchedCheckinAdapter;
 import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ViewCheckinModel;
 import com.ushahidi.android.app.views.ViewCheckinView;
@@ -47,15 +46,11 @@ public class ViewCheckinActivity extends
 
 	private List<ListCheckinModel> listCheckin;
 
-	private ListFetchedCheckinAdapter checkinAdapter;
-
 	private int position;
 
 	private int userId;
 
 	private int checkinId;
-
-	private String title;
 
 	public ViewCheckinActivity() {
 		super(ViewCheckinView.class, R.layout.view_checkin,
@@ -124,11 +119,9 @@ public class ViewCheckinActivity extends
 
 	private void initCheckin(int position) {
 		listCheckin = checkinModel.getCheckins(this);
-		log("Position: " + listCheckin.size());
+
 		if (listCheckin != null) {
 			userId = (int) listCheckin.get(position).getUserId();
-
-			title = listCheckin.get(position).getUsername();
 			if (view != null) {
 				view.setTitle(listCheckin.get(position).getUsername());
 				view.setBody(listCheckin.get(position).getMessage());

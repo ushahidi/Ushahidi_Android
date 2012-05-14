@@ -31,7 +31,7 @@ public class User extends Model implements IDbEntity {
 
     private String username;
 
-    private String userColor;
+    private String color;
 
     private int userId;
     /*
@@ -68,12 +68,16 @@ public class User extends Model implements IDbEntity {
         this.username = username;
     }
 
-    public String getUserColor() {
-        return userColor;
+    public String getColor() {
+        return color;
     }
 
-    public void setUserColor(String userColor) {
-        this.userColor = userColor;
+    public void setColor(String color) {
+    	if (color.startsWith("#")) {
+			this.color = color;
+		} else {
+			this.color = "#" + color;
+		}
     }
 
 	/* (non-Javadoc)

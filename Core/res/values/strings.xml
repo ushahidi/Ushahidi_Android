@@ -416,4 +416,5 @@
     <string name="users">Users</string>
     <string name="checkin_is_enabled">Checkin is enabled</string>
     <string name="search_checkins">Search Checkins...</string>
+    <string name="delete_checkins">Delete checkins</string>
 </resources>

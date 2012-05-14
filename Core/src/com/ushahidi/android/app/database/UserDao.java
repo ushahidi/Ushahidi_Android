@@ -173,7 +173,7 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
 
 			if (cursor.getColumnIndex(USER_COLOR) != -1) {
 				userColorIndex = cursor.getColumnIndexOrThrow(USER_COLOR);
-				user.setUserColor(cursor.getString(userColorIndex));
+				user.setColor(cursor.getString(userColorIndex));
 			}
 
 			if (cursor.getColumnIndex(USER_COLOR) != -1) {
@@ -189,7 +189,7 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
 		initialValues = new ContentValues();
 		initialValues.put(USER_ID, user.getDbId());
 		initialValues.put(USER_NAME, user.getUsername());
-		initialValues.put(USER_COLOR, user.getUserColor());
+		initialValues.put(USER_COLOR, user.getColor());
 	}
 
 	private ContentValues getContentValue() {

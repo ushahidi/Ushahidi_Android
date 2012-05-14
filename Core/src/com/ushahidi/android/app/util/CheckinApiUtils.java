@@ -99,7 +99,7 @@ public class CheckinApiUtils {
 								.getInt("id"));
 						users.setUsername(checkinsUsersArray.getJSONObject(
 								index).getString("name"));
-						users.setUserColor(checkinsUsersArray.getJSONObject(
+						users.setColor(checkinsUsersArray.getJSONObject(
 								index).getString("color"));
 					} catch (JSONException e) {
 

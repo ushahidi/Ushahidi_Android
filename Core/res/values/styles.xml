@@ -12,6 +12,21 @@
 -->
 <resources>
 
+    <!-- style actionbar selectable items -->
+    <style name="Theme.Ushahidi" parent="Theme.Sherlock">
+        <item name="selectableItemBackground">@drawable/ad_selectable_background</item>
+        <item name="actionBarTabStyle">@style/UshahidiActionBarTabStyle</item>
+        
+    </style>
+
+    <!-- style for the tabs -->
+    <style name="UshahidiActionBarTabStyle" parent="Widget.Sherlock.Light.ActionBar.TabView">
+        <item name="android:background">@drawable/actionbar_tab_bg</item>
+        <item name="android:paddingLeft">32dp</item>
+        <item name="android:paddingRight">32dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
     <style name="ActionBarTitleContainer">
         <item name="android:id">@id/title_container</item>
         <item name="android:layout_width">match_parent</item>
@@ -129,6 +144,7 @@
         <item name="android:orientation">vertical</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">10dp</item>
     </style>
 
     <style name="LinearLayout.Vertical.Full">
@@ -160,7 +176,7 @@
         <item name="android:dividerHeight">10.0sp</item>
         <item name="android:fadingEdge">none</item>
         <item name="android:fastScrollEnabled">true</item>
-        <item name="android:listSelector">@android:color/transparent</item>
+        <item name="android:listSelector">@color/table_selected_row_color</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollingCache">false</item>
         <item name="android:smoothScrollbar">true</item>
@@ -220,6 +236,18 @@
         <item name="android:indeterminate">true</item>
     </style>
 
+    <style name="MapView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:apiKey">@string/google_map_api_key</item>
+        <item name="android:clickable">true</item>
+        <item name="android:enabled">true</item>
+    </style>
+
+    <style name="MapView.Location">
+        <item name="android:layout_height">@dimen/mapview_height</item>
+    </style>
+
     <style name="EditText" parent="@android:style/Widget.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -257,6 +285,9 @@
     <style name="EditText.Multiline">
         <item name="android:inputType">textMultiLine|textCapSentences</item>
         <item name="android:minLines">5</item>
+        <item name="android:autoText">true</item>
+        <item name="android:gravity">top</item>
+        <item name="android:scrollbars">vertical</item>
     </style>
 
     <style name="EditText.URL">
@@ -311,11 +342,14 @@
         <item name="android:padding">10sp</item>
     </style>
 
-    <style name="Button.Action">
+    <style name="Button.Delete">
         <item name="android:background">@drawable/button_send</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/delete</item>
+        <item name="android:visibility">gone</item>
     </style>
 
     <style name="Button.Select">

@@ -69,12 +69,16 @@ public class UserSpinnerAdater extends BaseArrayAdapter<User> {
 		}
 
 		if (getTag(position).getUsername() != null) {
-			widget.title.setText(getTag(position).getUsername());
+			if (TextUtils.isEmpty(getTag(position).getUsername())) {
+				widget.title.setText(context.getString(R.string.unknown));
+			} else {
+				widget.title.setText(getTag(position).getUsername());
+			}
 		}
 
 		// check if color is set
-		if (getTag(position).getUserColor() != null) {
-			if (TextUtils.isEmpty(getTag(position).getUserColor().trim())) {
+		if (getTag(position).getColor() != null) {
+			if (TextUtils.isEmpty(getTag(position).getColor().trim())) {
 				try {
 					widget.color.setBackgroundColor(Color
 							.parseColor(DEFAULT_COLOR));
@@ -84,7 +88,7 @@ public class UserSpinnerAdater extends BaseArrayAdapter<User> {
 			} else {
 				try {
 					widget.color.setBackgroundColor(Color.parseColor(getTag(
-							position).getUserColor().trim()));
+							position).getColor().trim()));
 				} catch (IllegalArgumentException exception) {
 					log("Error parsing color", exception);
 				}
@@ -106,18 +110,18 @@ public class UserSpinnerAdater extends BaseArrayAdapter<User> {
 	 */
 	@Override
 	public void refresh() {
-		UserModel mUserModel = new UserModel();
+		UserModel<User> mUserModel = new UserModel<User>();
 		List<User> listUsers;
 		if (mUserModel.load()) {
 			listUsers = mUserModel.users;
 			if (listUsers != null && listUsers.size() > 0) {
-				
-				// This is to make room for all categories label
+
+				// This is to make room for all users label
 				User sUser = new User();
 				sUser.setUserId(0);
 				sUser.setDbId(0);
 				sUser.setUsername(context.getString(R.string.all_users));
-				sUser.setUserColor(DEFAULT_COLOR);
+				sUser.setColor(DEFAULT_COLOR);
 				add(sUser.getUsername(), sUser);
 
 				for (User user : listUsers) {

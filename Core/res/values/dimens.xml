@@ -20,6 +20,7 @@
     <!-- dimensions for upload photo preview -->
     <dimen name="preview_photo_width">75dp</dimen>
     <dimen name="preview_photo_height">75dp</dimen>
+    <dimen name="mapview_height">250dp</dimen>
     
     <dimen name="frag_rounding_radius">20dp</dimen>
     <dimen name="progress_action_padding">8dp</dimen>

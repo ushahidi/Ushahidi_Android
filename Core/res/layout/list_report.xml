@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/footer_text"
-        style="@style/ListView"
+        style="@style/TextView.FilterBy"
         android:text="@string/all_categories" />
 
     <!-- List report -->

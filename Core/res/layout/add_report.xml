@@ -55,10 +55,7 @@
 
                 <EditText
                     android:id="@+id/incident_desc"
-                    style="@style/EditText.Multiline"
-                    android:autoText="true"
-                    android:gravity="top"
-                    android:scrollbars="vertical" />
+                    style="@style/EditText.Multiline" />
             </LinearLayout>
             <!-- Description layout ends. -->
 
@@ -135,11 +132,7 @@
 
                 <com.google.android.maps.MapView
                     android:id="@+id/location_map"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:apiKey="@string/google_map_api_key"
-                    android:clickable="true"
-                    android:enabled="true" />
+                    style="@style/MapView.Location" />
 
                 <LinearLayout
                     style="@style/LinearLayout.Horizontal"
@@ -182,16 +175,16 @@
                     style="@style/Button.Select"
                     android:text="@string/btn_add_photo" />
 
-                <LinearLayout style="@style/LinearLayout.Horizontal"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp" >
+                <LinearLayout
+                    style="@style/LinearLayout.Horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp" >
 
                     <Gallery
                         android:id="@+id/gallery"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:longClickable="true"
-                        
                         android:spacing="10dp" />
                 </LinearLayout>
 
@@ -224,20 +217,15 @@
             <!-- News layout ends. -->
 
 
-            <!-- News layout starts. -->
+            <!-- Delete layout starts. -->
 
-            <LinearLayout
-                style="@style/LinearLayout.Horizontal"
-                android:paddingBottom="10dp" >
+            <LinearLayout style="@style/LinearLayout.Horizontal" >
 
                 <Button
                     android:id="@+id/delete_report"
-                    style="@style/Button.Action"
-                    android:gravity="center"
-                    android:text="@string/delete"
-                    android:visibility="gone" />
+                    style="@style/Button.Delete" />
             </LinearLayout>
-            <!-- News layout ends. -->
+            <!-- Delete layout ends. -->
 
         </LinearLayout>
         <!-- Parent layout ends. -->
