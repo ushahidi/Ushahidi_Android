@@ -176,7 +176,7 @@
         <item name="android:dividerHeight">10.0sp</item>
         <item name="android:fadingEdge">none</item>
         <item name="android:fastScrollEnabled">true</item>
-        <item name="android:listSelector">@color/table_selected_row_color</item>
+        <item name="android:listSelector">@android:color/transparent</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollingCache">false</item>
         <item name="android:smoothScrollbar">true</item>

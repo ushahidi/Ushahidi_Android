@@ -43,7 +43,7 @@ public class ListMapAdapter extends BaseListAdapter<ListMapModel> implements
 		View row = inflater.inflate(R.layout.list_map_item, viewGroup, false);
 		int colorPosition = position % colors.length;
 		row.setBackgroundResource(colors[colorPosition]);
-
+		
 		Widgets widget = (Widgets) row.getTag();
 
 		if (widget == null) {

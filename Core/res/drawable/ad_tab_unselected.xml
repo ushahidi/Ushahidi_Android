@@ -5,7 +5,7 @@
         android:centerX="-1"
         android:centerY="0.9"
         android:endColor="@color/tab_background"
-        android:startColor="@color/title_color"
+        android:startColor="@color/selectable_color"
         android:type="sweep" />
 
 </shape>
