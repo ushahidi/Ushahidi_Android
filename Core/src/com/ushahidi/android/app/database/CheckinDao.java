@@ -88,6 +88,29 @@ public class CheckinDao extends DbContentProvider implements ICheckinDao,
 		return listCheckin;
 	}
 
+	@Override
+	public Checkin fetchPendingCheckinById(int checkinId) {
+		listCheckin = new ArrayList<Checkin>();
+		final String sortOrder = CHECKIN_DATE + " DESC";
+		final String selection = CHECKIN_PENDING + " = ? AND " + ID + " =?";
+		final String selectionArgs[] = { String.valueOf(1),
+				String.valueOf(checkinId) };
+		Checkin checkin = new Checkin();
+		cursor = super.query(CHECKINS_TABLE, CHECKINS_COLUMNS, selection,
+				selectionArgs, sortOrder);
+
+		if (cursor != null) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				checkin = cursorToEntity(cursor);
+
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+		return checkin;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Checkin cursorToEntity(Cursor cursor) {

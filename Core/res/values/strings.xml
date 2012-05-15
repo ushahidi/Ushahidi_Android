@@ -331,7 +331,7 @@
     <string name="default_location">Default location</string>
     <string name="add_a_photo">Add a Photo</string>
     <string name="choose_categories">Choose Categories</string>
-    <string name="add_map">Enter Map Details</string>
+    <string name="enter_map_details">Enter Map Details</string>
     <string name="checkin">Check In</string>
     <string name="checkins">Check Ins</string>
     <string name="report">Report</string>
@@ -417,4 +417,9 @@
     <string name="checkin_is_enabled">Checkin is enabled</string>
     <string name="search_checkins">Search Checkins...</string>
     <string name="delete_checkins">Delete checkins</string>
+    <string name="personal_information">Personal information</string>
+    <string name="add_map_by_url">Add Map By URL</string>
+    <string name="find_maps_around_me">Find Maps Around Me</string>
+    <string name="add_map">Add Map</string>
+    <string name="finding_map">Finding map...</string>
 </resources>

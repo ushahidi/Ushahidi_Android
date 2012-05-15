@@ -936,7 +936,6 @@ public class AddReportActivity extends
 			}
 
 			if (id > 0) {
-				log("Update: " + photoName);
 				addPhotoToReport();
 			} else {
 				pendingPhoto.refresh();
@@ -1003,10 +1002,7 @@ public class AddReportActivity extends
 	 * Go to reports screen
 	 */
 	public void goToReports() {
-		Intent intent = new Intent(AddReportActivity.this,
-				ReportTabActivity.class);
-		startActivityForResult(intent, 0);
-		setResult(RESULT_OK);
+		finish();
 	}
 
 	public void onLocationChanged(Location arg0) {

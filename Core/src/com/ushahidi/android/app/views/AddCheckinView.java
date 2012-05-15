@@ -19,17 +19,67 @@
  **/
 package com.ushahidi.android.app.views;
 
+import com.google.android.maps.MapView;
+import com.ushahidi.android.app.R;
+
 import android.app.Activity;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * @author eyedol
- *
+ * 
  */
 public class AddCheckinView extends View {
 
-    public AddCheckinView(Activity activity) {
-        super(activity);
-        // TODO Auto-generated constructor stub
-    }
+	public EditText mCheckinMessageText;
+
+	public EditText mFirstName;
+
+	public EditText mLastName;
+
+	public EditText mEmailAddress;
+
+	public ImageView mCheckImgPrev;
+
+	public TextView mCheckinLocation;
+
+	public TextView mFirstNameLabel;
+
+	public TextView mLastNameLabel;
+
+	public TextView mEmaiLabel;
+
+	public TextView mContactLabel;
+
+	public Button mPickPhoto;
+
+	public MapView mMapView;
+	
+	public Button mDeleteCheckin;
+
+	public AddCheckinView(Activity activity) {
+		super(activity);
+		mCheckinMessageText = (EditText) activity
+				.findViewById(R.id.checkin_message_text);
+		mPickPhoto = (Button) activity.findViewById(R.id.checkin_photo_button);
+		mDeleteCheckin = (Button) activity.findViewById(R.id.delete_checkin);
+		mFirstName = (EditText) activity.findViewById(R.id.checkin_firstname);
+		mLastName = (EditText) activity.findViewById(R.id.checkin_lastname);
+		mEmailAddress = (EditText) activity.findViewById(R.id.checkin_email);
+		mFirstNameLabel = (TextView) activity
+				.findViewById(R.id.checkin_lbl_firstname);
+		mLastNameLabel = (TextView) activity
+				.findViewById(R.id.checkin_lbl_lastname);
+		mEmaiLabel = (TextView) activity.findViewById(R.id.txt_lbl_email);
+		mContactLabel = (TextView) activity
+				.findViewById(R.id.personal_information);
+		mCheckImgPrev = (ImageView) activity
+				.findViewById(R.id.checkin_photo_preview);
+		mCheckinLocation = (TextView) activity.findViewById(R.id.latlon);
+		mMapView = (MapView) activity.findViewById(R.id.checkin_location_map);
+	}
 
 }

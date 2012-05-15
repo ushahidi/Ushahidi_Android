@@ -20,6 +20,8 @@
 
 package com.ushahidi.android.app.ui.phone;
 
+import java.io.File;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -28,6 +30,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.view.MenuItem;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -36,9 +39,11 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 
 import com.ushahidi.android.app.ImageManager;
+import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseEditMapActivity;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
+import com.ushahidi.android.app.entities.Checkin;
 import com.ushahidi.android.app.models.AddCheckinModel;
 import com.ushahidi.android.app.util.PhotoUtils;
 import com.ushahidi.android.app.util.Util;
@@ -48,8 +53,8 @@ import com.ushahidi.android.app.views.AddCheckinView;
  * @author eyedol
  */
 public class AddCheckinActivity extends
-		BaseEditMapActivity<AddCheckinView, AddCheckinModel>  implements
-		OnClickListener{
+		BaseEditMapActivity<AddCheckinView, AddCheckinModel> implements
+		OnClickListener {
 
 	private boolean mError = false;
 
@@ -61,12 +66,16 @@ public class AddCheckinActivity extends
 
 	private String photoName;
 
+	private double latitude;
+
+	private double longitude;
+
 	private static final int DIALOG_ERROR_NETWORK = 0;
 
 	private static final int DIALOG_ERROR_SAVING = 1;
 
 	private static final int DIALOG_CHOOSE_IMAGE_METHOD = 2;
-	
+
 	private static final int DIALOG_SHOW_MESSAGE = 3;
 
 	private static final int DIALOG_SHOW_REQUIRED = 4;
@@ -78,19 +87,47 @@ public class AddCheckinActivity extends
 	private static final int REQUEST_CODE_CAMERA = 0;
 
 	private static final int REQUEST_CODE_IMAGE = 1;
+	
+	private AddCheckinModel model;
 
 	public AddCheckinActivity() {
 		super(AddCheckinView.class, R.layout.add_checkin, R.menu.add_checkin,
 				R.id.checkin_location_map);
-		// TODO Auto-generated constructor stub
+		model = new AddCheckinModel();
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		pendingPhoto = new UploadPhotoAdapter(this);
 		this.id = getIntent().getExtras().getInt("id", 0);
-		
+		mapController = view.mMapView.getController();
+		view.mPickPhoto.setOnClickListener(this);
+		// Validate so empty text isn't sent over
+		view.mCheckinMessageText
+				.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+					public void onFocusChange(View v, boolean hasFocus) {
+						if (!hasFocus) {
+							if (TextUtils.isEmpty(view.mCheckinMessageText
+									.getText())) {
+								view.mCheckinMessageText
+										.setError(getString(R.string.checkin_empty_message));
+							}
+						}
+					}
+				});
+		// edit existing report
+		if (id > 0) {
+
+			// make the delete button visible because we're editing
+			view.mDeleteCheckin.setOnClickListener(this);
+			view.mDeleteCheckin.setVisibility(View.VISIBLE);
+			setSavedCheckins(id);
+		} else {
+			// add a new report
+			pendingPhoto.refresh();
+		}
+		hidePersonalInfo();
 	}
 
 	// Context Menu Stuff
@@ -145,6 +182,43 @@ public class AddCheckinActivity extends
 
 	}
 
+	private void setSavedCheckins(int id) {
+
+	}
+
+	/**
+	 * Hide contact info if first and last names are set at the settings screen
+	 */
+	private void hidePersonalInfo() {
+		// contact
+		if ((!TextUtils.isEmpty(Preferences.firstname))
+				&& (!TextUtils.isEmpty(Preferences.lastname))
+				&& (!TextUtils.isEmpty(Preferences.email))) {
+
+			view.mContactLabel.setVisibility(View.GONE);
+		}
+
+		if (!TextUtils.isEmpty(Preferences.firstname)) {
+			view.mFirstNameLabel.setVisibility(View.GONE);
+			view.mFirstName.setVisibility(View.GONE);
+		}
+
+		if (!TextUtils.isEmpty(Preferences.lastname)) {
+			view.mLastName.setVisibility(View.GONE);
+			view.mLastName.setVisibility(View.GONE);
+		}
+
+		if (!TextUtils.isEmpty(Preferences.email)) {
+			view.mEmaiLabel.setVisibility(View.GONE);
+			view.mEmailAddress.setVisibility(View.GONE);
+		}
+
+		view.mFirstName.setText(Preferences.firstname);
+		view.mLastName.setText(Preferences.lastname);
+		view.mEmailAddress.setText(Preferences.email);
+
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
@@ -164,7 +238,7 @@ public class AddCheckinActivity extends
 
 	@Override
 	public void onClick(View button) {
-		if (button.getId() == R.id.btnPicture) {
+		if (button.getId() == R.id.checkin_photo_button) {
 			// get a file name for the photo to be uploaded
 			photoName = Util.getDateTime() + ".jpg";
 			showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
@@ -177,6 +251,27 @@ public class AddCheckinActivity extends
 
 	private void deleteCheckins() {
 
+	}
+
+	private boolean addCheckins() {
+		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
+		Checkin checkin = new Checkin();
+		checkin.setPending(1);
+		checkin.setMessage(view.mCheckinMessageText.getText().toString());
+		checkin.setLocationLatitude(String.valueOf(this.latitude));
+		checkin.setLocationLongitude(String.valueOf(this.longitude));
+		if( id == 0 ) {
+			//add new checkin
+			
+		} else {
+			//edit an existing checkin.
+			
+		}
+		return false;
+	}
+
+	private void goToCheckin() {
+		finish();
 	}
 
 	/**
@@ -334,46 +429,34 @@ public class AddCheckinActivity extends
 
 	@Override
 	protected boolean onSaveChanges() {
-		// TODO Auto-generated method stub
+		addCheckins();
 		return true;
 	}
 
 	@Override
 	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void onLocationChanged(Location location) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ushahidi.android.app.MapUserLocation#locationChanged(double,
-	 * double)
-	 */
 	@Override
 	protected void locationChanged(double latitude, double longitude) {
-		// TODO Auto-generated method stub
-
+		updateMarker(latitude, longitude, true);
+		this.latitude = latitude;
+		this.longitude = longitude;
+		view.mCheckinLocation.setText(String.format("%f, %f", latitude,
+				longitude));
 	}
 
 }

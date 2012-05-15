@@ -80,8 +80,6 @@ public class ListMapActivity extends
 
 	private static final int DIALOG_SHOW_MESSAGE = 3;
 
-	private MenuItem refresh;
-
 	private LocationManager mLocationMgr = null;
 
 	private static Location location;
@@ -297,8 +295,7 @@ public class ListMapActivity extends
 		if (item.getItemId() == R.id.clear_map) {
 			createDialog(DIALOG_CLEAR_DEPLOYMENT);
 			return true;
-		} else if (item.getItemId() == R.id.menu_refresh) {
-			refresh = item;
+		} else if (item.getItemId() == R.id.menu_find) {
 			createDialog(DIALOG_DISTANCE);
 			return true;
 		} else if (item.getItemId() == R.id.menu_add) {
@@ -419,14 +416,20 @@ public class ListMapActivity extends
 		case DIALOG_DISTANCE:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.select_distance);
-			builder.setItems(items, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
+			builder.setSingleChoiceItems(items, Preferences.selectedDistance,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int item) {
 
-					distance = items[item];
-
-					setDeviceLocation();
-				}
-			});
+							distance = items[item];
+							
+							setDeviceLocation();
+							Preferences.selectedDistance = item;
+							// save prefrences
+							Preferences.saveSettings(ListMapActivity.this);
+							dialog.cancel();
+							toastLong(R.string.finding_map);
+						}
+					});
 
 			AlertDialog alert = builder.create();
 			alert.show();
@@ -477,7 +480,7 @@ public class ListMapActivity extends
 			final AlertDialog.Builder addBuilder = new AlertDialog.Builder(this);
 
 			addBuilder
-					.setTitle(R.string.add_map)
+					.setTitle(R.string.enter_map_details)
 					.setView(textEntryView)
 					.setNegativeButton(R.string.btn_cancel,
 							new DialogInterface.OnClickListener() {
@@ -533,7 +536,6 @@ public class ListMapActivity extends
 		public LoadMapTask(FragmentActivity activity) {
 			super(activity, R.string.loading_);
 			// switch to a progress animation
-			refresh.setActionView(R.layout.indeterminate_progress_action);
 			maps = new MapsHttpClient(ListMapActivity.this);
 		}
 
@@ -565,7 +567,7 @@ public class ListMapActivity extends
 
 				toastShort(R.string.deployment_fetched_successful);
 			}
-			refresh.setActionView(null);
+			
 			adapter.refresh();
 			view.mProgressBar.setVisibility(View.GONE);
 			// view.displayEmptyListText();

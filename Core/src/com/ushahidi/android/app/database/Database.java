@@ -120,6 +120,9 @@ public class Database {
 			db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
 			// create map aka deployment table
 			db.execSQL(IMapSchema.MAP_TABLE_CREATE);
+			//create default map
+			//TODO:: check if default map is set.
+			db.execSQL(IMapSchema.DEFAULT_MAP_CREATE);
 			db.execSQL(IReportCategorySchema.REPORT_CATEGORY_TABLE_CREATE);
 			db.execSQL(IMediaSchema.MEDIA_TABLE_CREATE);
 			db.execSQL(IUserSchema.USER_TABLE_CREATE);

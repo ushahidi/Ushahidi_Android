@@ -84,8 +84,6 @@ public class ListMapFragment extends
 
 	private boolean refreshState = false;
 
-	private MenuItem refresh;
-
 	private ImageButton addMap = null;
 
 	private ImageButton refreshMap = null;
@@ -307,8 +305,8 @@ public class ListMapFragment extends
 		if (item.getItemId() == R.id.clear_map) {
 			createDialog(DIALOG_CLEAR_DEPLOYMENT);
 			return true;
-		} else if (item.getItemId() == R.id.menu_refresh) {
-			refresh = item;
+		} else if (item.getItemId() == R.id.menu_find) {
+
 			createDialog(DIALOG_DISTANCE);
 			return true;
 		} else if (item.getItemId() == R.id.menu_add) {
@@ -438,12 +436,6 @@ public class ListMapFragment extends
 			}
 		}
 
-		if (refresh != null) {
-			if (refreshState)
-				refresh.setActionView(R.layout.indeterminate_progress_action);
-			else
-				refresh.setActionView(null);
-		}
 	}
 
 	public void goToReports() {
@@ -516,14 +508,20 @@ public class ListMapFragment extends
 		case DIALOG_DISTANCE:
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			builder.setTitle(R.string.select_distance);
-			builder.setItems(items, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
+			builder.setSingleChoiceItems(items, Preferences.selectedDistance,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int item) {
 
-					distance = items[item];
+							distance = items[item];
 
-					setDeviceLocation();
-				}
-			});
+							setDeviceLocation();
+							Preferences.selectedDistance = item;
+							// save prefrences
+							Preferences.saveSettings(getActivity());
+							dialog.cancel();
+							toastLong(R.string.finding_map);
+						}
+					});
 
 			AlertDialog alert = builder.create();
 			alert.show();
@@ -574,7 +572,7 @@ public class ListMapFragment extends
 					getActivity());
 
 			addBuilder
-					.setTitle(R.string.add_map)
+					.setTitle(R.string.enter_map_details)
 					.setView(textEntryView)
 					.setPositiveButton(R.string.btn_ok,
 							new DialogInterface.OnClickListener() {

@@ -79,14 +79,14 @@
                     android:scaleType="centerCrop" />
             </LinearLayout>
 
-            <!-- contact -->
+            <!-- personal information -->
 
             <LinearLayout style="@style/LinearLayout.Vertical" >
 
                 <TextView
-                    android:id="@+id/checkin_contact"
+                    android:id="@+id/personal_information"
                     style="@style/TextView.Label"
-                    android:text="@string/checkin_contact" />
+                    android:text="@string/personal_information" />
 
                 <TextView
                     android:id="@+id/checkin_lbl_firstname"

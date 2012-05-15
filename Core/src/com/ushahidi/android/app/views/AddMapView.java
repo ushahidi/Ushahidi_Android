@@ -97,7 +97,7 @@ public class AddMapView {
      */
     public boolean addMapDetails() {
         if ((ApiUtils.validateUshahidiInstance(getMapUrl())) && !(TextUtils.isEmpty(getMapName()))) {
-
+        	
             Map map = new Map();
             map.setMapId(0);
             map.setCatId(0);
