@@ -21,15 +21,13 @@
 package com.ushahidi.android.app.models;
 
 import java.io.File;
-import java.util.Vector;
+import java.util.List;
 
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IMediaSchema;
 import com.ushahidi.android.app.entities.Checkin;
 import com.ushahidi.android.app.entities.Media;
-import com.ushahidi.android.app.entities.Report;
-import com.ushahidi.android.app.entities.ReportCategory;
-import com.ushahidi.android.app.util.Util;
+import com.ushahidi.android.app.entities.Photo;
 
 public class AddCheckinModel extends Model {
 
@@ -37,7 +35,7 @@ public class AddCheckinModel extends Model {
 		boolean status;
 		// add pending reports
 		status = Database.mCheckin.addCheckin(checkin);
-		//int id = Database.mCheckin.
+		// int id = Database.mCheckin.
 		int id = 0;
 		// add photos
 		if (pendingPhotos != null && pendingPhotos.length > 0) {
@@ -52,6 +50,34 @@ public class AddCheckinModel extends Model {
 					media.setType(IMediaSchema.IMAGE);
 					Database.mMediaDao.addMedia(media);
 				}
+			}
+
+		}
+
+		return status;
+	}
+
+	public boolean updatePendingCheckin(int checkinId, Checkin checkin,
+			List<Photo> pendingPhotos) {
+		boolean status;
+		// update pending reports
+		status = Database.mCheckin.updatePendingCheckin(checkinId, checkin);
+
+		// update photos
+		if (pendingPhotos != null && pendingPhotos.size() > 0) {
+			// delete existing photo
+			Database.mMediaDao.deleteReportPhoto(checkinId);
+			for (Photo photo : pendingPhotos) {
+				Media media = new Media();
+				media.setMediaId(0);
+				// FIXME:: this is nasty.
+				String sections[] = photo.getPhoto().split("/");
+				media.setLink(sections[1]);
+
+				// get report ID
+				media.setCheckinId(checkinId);
+				media.setType(IMediaSchema.IMAGE);
+				Database.mMediaDao.addMedia(media);
 			}
 
 		}

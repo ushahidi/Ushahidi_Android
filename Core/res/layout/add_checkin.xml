@@ -70,13 +70,26 @@
                     style="@style/Button.Select"
                     android:text="@string/btn_add_photo" />
 
-                <ImageView
-                    android:id="@+id/checkin_photo_preview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:paddingBottom="5px"
-                    android:scaleType="centerCrop" />
+                <LinearLayout
+                    style="@style/LinearLayout.Horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp" >
+
+                    <Gallery
+                        android:id="@+id/checkin_gallery"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:longClickable="true"
+                        android:spacing="10dp" />
+                </LinearLayout>
+
+                <LinearLayout style="@style/LinearLayout.Horizontal" >
+
+                    <ImageSwitcher
+                        android:id="@+id/checkin_image_switcher"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
             </LinearLayout>
 
             <!-- personal information -->

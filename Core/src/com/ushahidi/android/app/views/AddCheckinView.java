@@ -19,14 +19,16 @@
  **/
 package com.ushahidi.android.app.views;
 
-import com.google.android.maps.MapView;
-import com.ushahidi.android.app.R;
-
 import android.app.Activity;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.Gallery;
+import android.widget.ImageSwitcher;
 import android.widget.TextView;
+
+import com.google.android.maps.MapView;
+import com.ushahidi.android.app.R;
 
 /**
  * @author eyedol
@@ -42,8 +44,6 @@ public class AddCheckinView extends View {
 
 	public EditText mEmailAddress;
 
-	public ImageView mCheckImgPrev;
-
 	public TextView mCheckinLocation;
 
 	public TextView mFirstNameLabel;
@@ -57,8 +57,12 @@ public class AddCheckinView extends View {
 	public Button mPickPhoto;
 
 	public MapView mMapView;
-	
+
 	public Button mDeleteCheckin;
+
+	public Gallery gallery;
+
+	public ImageSwitcher mSwitcher;
 
 	public AddCheckinView(Activity activity) {
 		super(activity);
@@ -76,10 +80,16 @@ public class AddCheckinView extends View {
 		mEmaiLabel = (TextView) activity.findViewById(R.id.txt_lbl_email);
 		mContactLabel = (TextView) activity
 				.findViewById(R.id.personal_information);
-		mCheckImgPrev = (ImageView) activity
-				.findViewById(R.id.checkin_photo_preview);
+
 		mCheckinLocation = (TextView) activity.findViewById(R.id.latlon);
 		mMapView = (MapView) activity.findViewById(R.id.checkin_location_map);
+		mSwitcher = (ImageSwitcher) activity
+				.findViewById(R.id.checkin_image_switcher);
+		mSwitcher.setInAnimation(AnimationUtils.loadAnimation(activity,
+				android.R.anim.fade_in));
+		mSwitcher.setOutAnimation(AnimationUtils.loadAnimation(activity,
+				android.R.anim.fade_out));
+		gallery = (Gallery) activity.findViewById(R.id.checkin_gallery);
 	}
 
 }

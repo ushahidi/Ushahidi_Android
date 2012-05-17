@@ -562,7 +562,7 @@ public class ListReportFragment
 	 */
 	protected class UploadTask extends ProgressTask {
 		public UploadTask(Activity activity) {
-			super(activity, R.string.uploading_pending_report);
+			super(activity, R.string.uploading);
 		}
 
 		@Override

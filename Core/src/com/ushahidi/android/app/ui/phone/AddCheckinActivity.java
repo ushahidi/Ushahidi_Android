@@ -21,22 +21,35 @@
 package com.ushahidi.android.app.ui.phone;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.view.MenuItem;
 import android.text.TextUtils;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
+import android.widget.ViewSwitcher;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
@@ -44,7 +57,10 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseEditMapActivity;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.entities.Checkin;
+import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.models.AddCheckinModel;
+import com.ushahidi.android.app.net.CheckinHttpClient;
+import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.util.PhotoUtils;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.AddCheckinView;
@@ -54,7 +70,7 @@ import com.ushahidi.android.app.views.AddCheckinView;
  */
 public class AddCheckinActivity extends
 		BaseEditMapActivity<AddCheckinView, AddCheckinModel> implements
-		OnClickListener {
+		OnClickListener, ViewSwitcher.ViewFactory, OnItemClickListener {
 
 	private boolean mError = false;
 
@@ -87,8 +103,10 @@ public class AddCheckinActivity extends
 	private static final int REQUEST_CODE_CAMERA = 0;
 
 	private static final int REQUEST_CODE_IMAGE = 1;
-	
+
 	private AddCheckinModel model;
+
+	private String locationName;
 
 	public AddCheckinActivity() {
 		super(AddCheckinView.class, R.layout.add_checkin, R.menu.add_checkin,
@@ -103,19 +121,10 @@ public class AddCheckinActivity extends
 		this.id = getIntent().getExtras().getInt("id", 0);
 		mapController = view.mMapView.getController();
 		view.mPickPhoto.setOnClickListener(this);
-		// Validate so empty text isn't sent over
-		view.mCheckinMessageText
-				.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-					public void onFocusChange(View v, boolean hasFocus) {
-						if (!hasFocus) {
-							if (TextUtils.isEmpty(view.mCheckinMessageText
-									.getText())) {
-								view.mCheckinMessageText
-										.setError(getString(R.string.checkin_empty_message));
-							}
-						}
-					}
-				});
+		pendingPhoto = new UploadPhotoAdapter(this);
+		view.gallery.setAdapter(pendingPhoto);
+		view.gallery.setOnItemClickListener(this);
+		view.mSwitcher.setFactory(this);
 		// edit existing report
 		if (id > 0) {
 
@@ -127,7 +136,11 @@ public class AddCheckinActivity extends
 			// add a new report
 			pendingPhoto.refresh();
 		}
+
+		registerForContextMenu(view.gallery);
+
 		hidePersonalInfo();
+
 	}
 
 	// Context Menu Stuff
@@ -151,6 +164,11 @@ public class AddCheckinActivity extends
 
 		return result;
 
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
 	}
 
 	public boolean performAction(android.view.MenuItem item, int position) {
@@ -183,6 +201,35 @@ public class AddCheckinActivity extends
 	}
 
 	private void setSavedCheckins(int id) {
+
+	}
+
+	/**
+	 * Validate checkin before sending
+	 */
+	private void validateCheckins() {
+		// Validate so empty text isn't sent over
+		mError = false;
+		boolean required = false;
+		// validate the title field
+		if (TextUtils.isEmpty(view.mCheckinMessageText.getText())) {
+			mErrorMessage = getString(R.string.checkin_empty_message) + "\n";
+			required = true;
+
+		} else if (view.mCheckinMessageText.getText().length() < 3
+				|| view.mCheckinMessageText.getText().length() > 200) {
+			mErrorMessage = getString(R.string.checkin_empty_message) + "\n";
+			mError = true;
+		}
+
+		if (required) {
+			showDialog(DIALOG_SHOW_REQUIRED);
+		} else if (mError) {
+			showDialog(DIALOG_SHOW_MESSAGE);
+		} else {
+			new UploadTask(this).execute((String) null);
+
+		}
 
 	}
 
@@ -226,7 +273,7 @@ public class AddCheckinActivity extends
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_send_checkin) {
-			// validateReports();
+			validateCheckins();
 			return true;
 		} else if (item.getItemId() == R.id.menu_cancel_checkin) {
 			showDialog(DIALOG_SHOW_PROMPT);
@@ -234,6 +281,34 @@ public class AddCheckinActivity extends
 		}
 		return super.onOptionsItemSelected(item);
 
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK) {
+			if (requestCode == REQUEST_CODE_CAMERA) {
+
+				Uri uri = PhotoUtils.getPhotoUri(photoName, this);
+				Bitmap bitmap = PhotoUtils.getCameraPhoto(this, uri);
+				PhotoUtils.savePhoto(this, bitmap, photoName);
+				log(String.format("REQUEST_CODE_CAMERA %dx%d",
+						bitmap.getWidth(), bitmap.getHeight()));
+
+			} else if (requestCode == REQUEST_CODE_IMAGE) {
+				Bitmap bitmap = PhotoUtils
+						.getGalleryPhoto(this, data.getData());
+				PhotoUtils.savePhoto(this, bitmap, photoName);
+				log(String.format("REQUEST_CODE_IMAGE %dx%d",
+						bitmap.getWidth(), bitmap.getHeight()));
+			}
+
+			if (id > 0) {
+				addPhotoToCheckin();
+			} else {
+				pendingPhoto.refresh();
+			}
+		}
 	}
 
 	@Override
@@ -249,25 +324,161 @@ public class AddCheckinActivity extends
 
 	}
 
-	private void deleteCheckins() {
-
+	/**
+	 * Set photo to be attached to an existing report
+	 */
+	private void addPhotoToCheckin() {
+		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
+		if (pendingPhotos != null && pendingPhotos.length > 0) {
+			int id = 0;
+			for (File file : pendingPhotos) {
+				if (file.exists()) {
+					id += 1;
+					Photo photo = new Photo();
+					photo.setDbId(id);
+					photo.setPhoto("pending/" + file.getName());
+					pendingPhoto.addItem(photo);
+				}
+			}
+		}
 	}
 
-	private boolean addCheckins() {
+	private void deleteCheckins() {
+
+		// make sure it's an existing report
+		if (id > 0) {
+			if (model.deleteCheckin(id)) {
+
+				// delete images
+				for (int i = 0; i < pendingPhoto.getCount(); i++) {
+					ImageManager.deletePendingPhoto(this, "/"
+							+ pendingPhoto.getItem(i).getPhoto());
+				}
+
+				// return to checkin listing page.
+				goToCheckin();
+			}
+		}
+	}
+
+	private int addCheckins() {
+
 		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
 		Checkin checkin = new Checkin();
 		checkin.setPending(1);
 		checkin.setMessage(view.mCheckinMessageText.getText().toString());
 		checkin.setLocationLatitude(String.valueOf(this.latitude));
 		checkin.setLocationLongitude(String.valueOf(this.longitude));
-		if( id == 0 ) {
-			//add new checkin
-			
-		} else {
-			//edit an existing checkin.
-			
+		checkin.setDate((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
+				.format(new Date()));
+		checkin.setLocationName(locationName);
+
+		// upload to the web
+		if (!uploadPendingCheckin(checkin)) {
+			if (id == 0) {
+
+				// add new checkin
+				if (model.addPendingCheckin(checkin, pendingPhotos)) {
+					// move saved photos
+					log("Moving photos to fetched folder");
+					ImageManager.movePendingPhotos(this);
+					return 1; // successfully added to database.
+				}
+			} else {
+
+				// update an existing checkin.
+				List<Photo> photos = new ArrayList<Photo>();
+				for (int i = 0; i < pendingPhoto.getCount(); i++) {
+					photos.add(pendingPhoto.getItem(i));
+				}
+				if (model.updatePendingCheckin(id, checkin, photos)) {
+					// move saved photos
+					log("Moving photos to fetched folder");
+					ImageManager.movePendingPhotos(this);
+					return 2; // update succeeded
+				}
+			}
+			return 0;// upload succeeded
+		}
+		return 3; // failed
+	}
+
+	private boolean uploadPendingCheckin(Checkin checkin) {
+
+		final StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
+		urlBuilder.append("/api");
+		final HashMap<String, String> mParams = new HashMap<String, String>();
+
+		if (checkin != null) {
+
+			final String photo = new UploadPhotoAdapter(this)
+					.pendingPhotos((int) checkin.getCheckinId());
+
+			mParams.put("task", "checkin");
+			mParams.put("action", "ci");
+			mParams.put("mobileid", Util.IMEI(this));
+			mParams.put("lat", checkin.getLocationLatitude());
+			mParams.put("lon", checkin.getLocationLongitude());
+			mParams.put("message", checkin.getMessage());
+			mParams.put("firstname", view.mFirstName.getText().toString());
+			mParams.put("lastname", view.mLastName.getText().toString());
+			mParams.put("email", view.mEmailAddress.getText().toString());
+
+			// load filenames
+			if (!TextUtils.isEmpty(photo)) {
+				mParams.put("filename", photo);
+			}
+			// upload
+			try {
+				if (new CheckinHttpClient(this).PostFileUpload(
+						urlBuilder.toString(), mParams)) {
+					model.deleteCheckin((int) checkin.getDbId());
+					return true;
+				}
+				return false;
+			} catch (IOException e) {
+				return false;
+			}
 		}
 		return false;
+
+	}
+
+	/**
+	 * Upload pending checkins
+	 */
+	class UploadTask extends ProgressTask {
+
+		protected int status = 3;
+
+		public UploadTask(Activity activity) {
+			super(activity, R.string.loading_);
+			// pass custom loading message to super call
+		}
+
+		@Override
+		protected Boolean doInBackground(String... strings) {
+			status = addCheckins();
+			if (status < 3) {
+				return true;
+			}
+			return false;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean success) {
+			super.onPostExecute(success);
+			if (success) {
+				if (status == 0) {
+					toastLong(R.string.uploaded);
+				} else if (status == 1 || status == 2) {
+					toastLong(R.string.saved);
+				}
+
+			} else {
+				toastLong(R.string.failed);
+			}
+		}
 	}
 
 	private void goToCheckin() {
@@ -406,7 +617,6 @@ public class AddCheckinActivity extends
 			dialog.setButton(getString(R.string.no),
 					new Dialog.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
-
 							dialog.dismiss();
 						}
 					});
@@ -429,7 +639,6 @@ public class AddCheckinActivity extends
 
 	@Override
 	protected boolean onSaveChanges() {
-		addCheckins();
 		return true;
 	}
 
@@ -455,8 +664,46 @@ public class AddCheckinActivity extends
 		updateMarker(latitude, longitude, true);
 		this.latitude = latitude;
 		this.longitude = longitude;
+
+		if (TextUtils.isEmpty(locationName)) {
+			locationName = getString(R.string.unknown);
+		}
+
 		view.mCheckinLocation.setText(String.format("%f, %f", latitude,
 				longitude));
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.widget.ViewSwitcher.ViewFactory#makeView()
+	 */
+	@Override
+	public View makeView() {
+		ImageView i = new ImageView(this);
+		i.setAdjustViewBounds(true);
+		i.setScaleType(ImageView.ScaleType.FIT_CENTER);
+		i.setLayoutParams(new ImageSwitcher.LayoutParams(
+				android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+				android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+
+		return i;
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget
+	 *      .AdapterView, android.view.View, int, long)
+	 */
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		this.view.mSwitcher.setImageDrawable(ImageManager.getPendingDrawables(
+				this, pendingPhoto.getItem(position).getPhoto(),
+				Util.getScreenWidth(this)));
+
 	}
 
 }

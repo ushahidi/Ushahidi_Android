@@ -405,7 +405,6 @@
     <string name="verified">Verified</string>
     <string name="unverified">Unverified</string>
     <string name="remove">Remove</string>
-    <string name="uploading_pending_report">Uploading pending reports...</string>
     <string name="delete_report">Delete report</string>
     <string name="want_to_delete">Are you sure you want to delete?</string>
     <string name="failed">Failed</string>
@@ -422,4 +421,5 @@
     <string name="find_maps_around_me">Find Maps Around Me</string>
     <string name="add_map">Add Map</string>
     <string name="finding_map">Finding map...</string>
+    <string name="uploading">Uploading...</string>
 </resources>

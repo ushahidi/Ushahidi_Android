@@ -40,7 +40,6 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListCheckinAdapter;
 import com.ushahidi.android.app.adapters.ListFetchedCheckinAdapter;
 import com.ushahidi.android.app.adapters.ListPendingCheckinAdapter;
-import com.ushahidi.android.app.adapters.ListReportAdapter;
 import com.ushahidi.android.app.adapters.UserSpinnerAdater;
 import com.ushahidi.android.app.fragments.BaseSectionListFragment;
 import com.ushahidi.android.app.models.ListCheckinModel;
@@ -346,14 +345,11 @@ public class ListCheckinFragment
 	}
 
 	private boolean uploadPendingCheckin() {
-		return true;
+		
+		return false;
 	}
 
 	private void deleteFetchedCheckin() {
-
-	}
-
-	private void deletePendingCheckin(int checkinId) {
 
 	}
 
