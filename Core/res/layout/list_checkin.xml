@@ -17,7 +17,7 @@
     android:padding="10dp" >
 
     <TextView
-        android:id="@+id/footer_text"
+        android:id="@+id/checkin_filter_by"
         style="@style/TextView.FilterBy"
         android:text="@string/all_users" />
     
@@ -25,14 +25,12 @@
     <ListView
         android:id="@android:id/list"
         style="@style/ListView"
-        android:layout_below="@id/footer_text" />
+        android:layout_below="@id/checkin_filter_by" />
 
     <!-- Here is the view to show if the list is emtpy -->
     <TextView
         android:id="@android:id/empty"
         style="@style/TextView.Empty"
-        android:text="@string/no_items"
-        android:textColor="#0000ff"
         android:visibility="gone"/>
 
 </RelativeLayout>

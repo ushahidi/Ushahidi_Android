@@ -48,9 +48,12 @@ import com.ushahidi.android.app.adapters.ListFetchedCheckinAdapter;
 import com.ushahidi.android.app.adapters.ListPendingCheckinAdapter;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.adapters.UserSpinnerAdater;
+import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.fragments.BaseSectionListFragment;
 import com.ushahidi.android.app.models.AddCheckinModel;
 import com.ushahidi.android.app.models.ListCheckinModel;
+import com.ushahidi.android.app.models.ListReportModel;
+import com.ushahidi.android.app.models.ListReportPhotoModel;
 import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddCheckinActivity;
@@ -329,7 +332,7 @@ public class ListCheckinFragment
 
 								final String all = spinnerArrayAdapter.getTag(
 										which).getUsername();
-								// view.footerText.setText(all);
+								view. footerText.setText(all);
 
 								if ((all != null)
 										&& (!TextUtils.isEmpty(all))
@@ -418,7 +421,21 @@ public class ListCheckinFragment
 	}
 
 	private void deleteFetchedCheckin() {
+		final List<ListCheckinModel> items = fetchedAdapter
+				.fetchedCheckins();
+		for (ListCheckinModel checkin : items) {
+			if (new ListReportModel().deleteAllFetchedReport(checkin
+					.getCheckinId())) {
+				final List<Photo> photos = new ListReportPhotoModel()
+						.getPhotosByCheckinId(checkin.getCheckinId());
 
+				for (Photo photo : photos) {
+					ImageManager.deletePendingPhoto(getActivity(),
+							"/" + photo.getPhoto());
+				}
+			}
+
+		}
 	}
 
 	/**
@@ -493,7 +510,7 @@ public class ListCheckinFragment
 	class UploadTask extends ProgressTask {
 
 		public UploadTask(Activity activity) {
-			super(activity, R.string.loading_);
+			super(activity, R.string.uploading);
 			// pass custom loading message to super call
 		}
 
@@ -532,6 +549,7 @@ public class ListCheckinFragment
 	private void launchViewCheckin(int id) {
 		Intent i = new Intent(getActivity(), ViewCheckinActivity.class);
 		i.putExtra("id", id);
+		log("userId " + filterUserId);
 		if (filterUserId > 0) {
 			i.putExtra("userid", filterUserId);
 		} else {

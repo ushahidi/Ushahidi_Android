@@ -30,7 +30,7 @@ import android.widget.ImageView;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.entities.Photo;
-import com.ushahidi.android.app.models.ListReportPhotoModel;
+import com.ushahidi.android.app.models.ListPhotoModel;
 
 /**
  * This is the adapter for photos to be uploaded to the server.
@@ -51,7 +51,7 @@ public class UploadPhotoAdapter extends BaseListAdapter<Photo> {
 		ImageView photo;
 	}
 
-	private ListReportPhotoModel mListPhotoModel;
+	private ListPhotoModel mListPhotoModel;
 
 	private List<Photo> items;
 
@@ -88,21 +88,21 @@ public class UploadPhotoAdapter extends BaseListAdapter<Photo> {
 	 */
 	@Override
 	public void refresh() {
-		mListPhotoModel = new ListReportPhotoModel();
+		mListPhotoModel = new ListPhotoModel();
 		items = mListPhotoModel.getPendingPhotos(context);
 		this.setItems(items);
 
 	}
 
 	public void refresh(int reportId) {
-		mListPhotoModel = new ListReportPhotoModel();
+		mListPhotoModel = new ListPhotoModel();
 		items = mListPhotoModel.getPendingPhotosByReportId(reportId);
 		this.setItems(items);
 
 	}
 
 	public String pendingPhotos(int reportId) {
-		mListPhotoModel = new ListReportPhotoModel();
+		mListPhotoModel = new ListPhotoModel();
 		items = mListPhotoModel.getPendingPhotosByReportId(reportId);
 		StringBuilder photos = new StringBuilder();
 		for (Photo photo : items) {

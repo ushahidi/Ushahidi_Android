@@ -30,7 +30,7 @@ import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.fragments.BaseFragment;
 import com.ushahidi.android.app.models.ListReportModel;
-import com.ushahidi.android.app.models.ListReportPhotoModel;
+import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
@@ -346,7 +346,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		for (ListReportModel report : items) {
 			if (new ListReportModel().deleteAllFetchedReport(report
 					.getReportId())) {
-				final List<Photo> photos = new ListReportPhotoModel()
+				final List<Photo> photos = new ListPhotoModel()
 						.getPhotosByReportId(report.getReportId());
 
 				for (Photo photo : photos) {

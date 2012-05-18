@@ -11,39 +11,24 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+        <LinearLayout style="@style/LinearLayout.Vertical" >
 
             <!-- Title starts -->
 
             <TextView
                 android:id="@+id/report_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dip"
-                android:singleLine="false"
-                android:text="@string/report_title"
-                android:textColor="@color/title_color"
-                android:textStyle="bold" />
+                style="@style/TextView.Label"
+                android:text="@string/report_title" />
 
             <LinearLayout
                 android:id="@+id/title_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/LinearLayout.Vertical"
                 android:layout_below="@+id/report_title"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
+                android:background="@color/table_odd_row_color" >
 
                 <TextView
                     android:id="@+id/title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/table_odd_row_color"
-                    android:padding="10dip"
-                    android:singleLine="false"
-                    android:textColor="@color/black_color"/>
+                    style="@style/TextView.Title" />
             </LinearLayout>
             <!-- Title ends -->
 
@@ -52,27 +37,18 @@
 
             <TextView
                 android:id="@+id/report_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/TextView.Label"
                 android:layout_below="@+id/title_layout"
-                android:padding="10dip"
-                android:text="@string/report_verified"
-                android:textColor="@color/title_color"
-                android:textStyle="bold" />
+                android:text="@string/report_verified" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/LinearLayout.Vertical"
                 android:layout_below="@+id/report_status"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
+                android:background="@color/table_odd_row_color" >
 
                 <TextView
                     android:id="@+id/status"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dip"
-                    android:textColor="@color/black_color"/>
+                    style="@style/TextView.Title" />
             </LinearLayout>
             <!-- Status ends -->
 
@@ -81,30 +57,19 @@
 
             <TextView
                 android:id="@+id/report_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/TextView.Label"
                 android:layout_below="@+id/status"
-                android:padding="10dip"
-                android:text="@string/report_desc"
-                android:textColor="@color/title_color"
-                android:textStyle="bold" />
+                android:text="@string/report_desc" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/LinearLayout.Vertical"
                 android:layout_below="@+id/report_status"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
+                android:background="@color/table_odd_row_color" >
 
                 <TextView
                     android:id="@+id/desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/report_description"
-                    android:autoLink="all"
-                    android:fadingEdge="none"
-                    android:padding="10dip"
-                    android:textColor="@color/black_color"/>
+                    style="@style/TextView.Description"
+                    android:layout_below="@+id/report_description" />
             </LinearLayout>
             <!-- Description ends -->
 
@@ -113,28 +78,19 @@
 
             <TextView
                 android:id="@+id/report_category"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/TextView.Label"
                 android:layout_below="@+id/desc"
-                android:padding="10dip"
-                android:text="@string/report_category"
-                android:textColor="@color/title_color"
-                android:textStyle="bold" />
+                android:text="@string/report_category" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/LinearLayout.Vertical"
                 android:layout_below="@+id/report_status"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
+                android:background="@color/table_odd_row_color" >
 
                 <TextView
                     android:id="@+id/category"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/report_category"
-                    android:padding="10dip"
-                    android:textColor="@color/black_color"/>
+                    style="@style/TextView.Title"
+                    android:layout_below="@+id/report_category" />
             </LinearLayout>
 
             <!-- Category ends -->
@@ -144,29 +100,19 @@
 
             <TextView
                 android:id="@+id/report_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/TextView.Label"
                 android:layout_below="@+id/category"
-                android:padding="10dip"
-                android:text="@string/report_date"
-                android:textColor="@color/title_color"
-                android:textStyle="bold" />
+                android:text="@string/report_date" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/LinearLayout.Vertical"
                 android:layout_below="@+id/report_status"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
+                android:background="@color/table_odd_row_color" >
 
                 <TextView
                     android:id="@+id/date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/report_date"
-                    android:padding="10dip"
-                    android:lines="1"
-                    android:textColor="@color/black_color" />
+                    style="@style/TextView.Title"
+                    android:layout_below="@+id/report_date" />
             </LinearLayout>
 
             <!-- Date ends -->
@@ -176,28 +122,18 @@
 
             <TextView
                 android:id="@+id/report_loc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/TextView.Label"
                 android:layout_below="@+id/date"
-                android:padding="10dip"
-                android:text="@string/report_location"
-                android:textColor="@color/title_color"
-                android:textStyle="bold" />
+                android:text="@string/report_location" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/report_status"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
+                style="@style/LinearLayout.Vertical"
+                android:layout_below="@+id/report_status" >
 
                 <TextView
                     android:id="@+id/location"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/report_loc"
-                    android:padding="10dip"
-                    android:textColor="@color/black_color" />
+                    style="@style/TextView.Title"
+                    android:layout_below="@+id/report_loc" />
             </LinearLayout>
             <!-- Location ends -->
 
@@ -252,16 +188,16 @@
                     android:id="@+id/list_photos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="none"
-                    android:listSelector="@color/table_selected_row_color" />
+                    android:listSelector="@color/table_selected_row_color"
+                    android:scrollbars="none" />
 
                 <TextView
                     android:id="@+id/empty_list_for_photos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/no_photos"
                     android:padding="10dip"
-                    android:textColor="@color/black_color"/>
+                    android:text="@string/no_photos"
+                    android:textColor="@color/black_color" />
             </LinearLayout>
 
             <!-- Photo ends -->
@@ -300,7 +236,7 @@
                     android:layout_height="wrap_content"
                     android:padding="10dip"
                     android:text="@string/no_news"
-                    android:textColor="@color/black_color"/>
+                    android:textColor="@color/black_color" />
             </LinearLayout>
 
             <!-- News ends -->
@@ -338,7 +274,7 @@
                     android:layout_height="wrap_content"
                     android:padding="10dip"
                     android:text="@string/no_video"
-                    android:textColor="@color/black_color"/>
+                    android:textColor="@color/black_color" />
             </LinearLayout>
             <!-- Video ends -->
         </LinearLayout>

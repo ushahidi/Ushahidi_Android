@@ -36,18 +36,18 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.activities.BaseViewActivity;
 import com.ushahidi.android.app.entities.Photo;
-import com.ushahidi.android.app.models.ListReportPhotoModel;
+import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.views.ReportPhotoView;
 
 /**
  * @author eyedol
  */
 public class ViewReportPhotoActivity extends
-		BaseViewActivity<ReportPhotoView, ListReportPhotoModel> implements
+		BaseViewActivity<ReportPhotoView, ListPhotoModel> implements
 		AdapterView.OnItemSelectedListener, ViewSwitcher.ViewFactory,
 		View.OnTouchListener {
 
-	private ListReportPhotoModel photo;
+	private ListPhotoModel photo;
 
 	private List<Photo> photos;
 
@@ -71,7 +71,7 @@ public class ViewReportPhotoActivity extends
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		photo = new ListReportPhotoModel();
+		photo = new ListPhotoModel();
 		view = new ReportPhotoView(this);
 
 		this.reportId = getIntent().getExtras().getInt("reportid", 0);

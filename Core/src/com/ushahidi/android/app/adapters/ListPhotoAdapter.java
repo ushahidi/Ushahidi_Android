@@ -32,7 +32,7 @@ import android.widget.TextView;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.entities.Photo;
-import com.ushahidi.android.app.models.ListReportPhotoModel;
+import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.util.Util;
 
 /**
@@ -40,7 +40,7 @@ import com.ushahidi.android.app.util.Util;
  */
 public class ListPhotoAdapter extends BaseListAdapter<Photo> {
 
-	private ListReportPhotoModel mListPhotoModel;
+	private ListPhotoModel mListPhotoModel;
 
 	private List<Photo> items;
 	
@@ -103,7 +103,7 @@ public class ListPhotoAdapter extends BaseListAdapter<Photo> {
 	}
 
 	public void refresh(int reportId) {
-		mListPhotoModel = new ListReportPhotoModel();
+		mListPhotoModel = new ListPhotoModel();
 		final boolean loaded = mListPhotoModel.load(reportId);
 		totalPhotos = mListPhotoModel.totalReportPhoto();
 		if (loaded) {

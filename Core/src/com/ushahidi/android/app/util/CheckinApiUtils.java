@@ -99,8 +99,8 @@ public class CheckinApiUtils {
 								.getInt("id"));
 						users.setUsername(checkinsUsersArray.getJSONObject(
 								index).getString("name"));
-						users.setColor(checkinsUsersArray.getJSONObject(
-								index).getString("color"));
+						users.setColor(checkinsUsersArray.getJSONObject(index)
+								.getString("color"));
 					} catch (JSONException e) {
 
 						processingResult = false;
@@ -236,7 +236,7 @@ public class CheckinApiUtils {
 		log("downloading... " + link + " CheckinId: " + checkinId);
 		Media media = new Media();
 		media.setMediaId(mediaId);
-		media.setReportId(checkinId);
+		media.setCheckinId(checkinId);
 		media.setType(type);
 		media.setLink(link);
 		List<Media> sMedia = new ArrayList<Media>();

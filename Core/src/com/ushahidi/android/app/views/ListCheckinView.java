@@ -20,14 +20,24 @@
 
 package com.ushahidi.android.app.views;
 
+import com.ushahidi.android.app.R;
+
 import android.app.Activity;
+import android.widget.TextView;
+
 /**
  * ExampleListView
- *
+ * 
  * All the widgets for /res/layout/example_list.xml
  */
 public class ListCheckinView extends View {
-    public ListCheckinView(Activity activity) {
-        super(activity);
-    }
+	public TextView footerText;
+
+	public TextView emptyText;
+
+	public ListCheckinView(Activity activity) {
+		super(activity);
+		emptyText = (TextView) activity.findViewById(android.R.id.empty);
+		footerText = (TextView) activity.findViewById(R.id.checkin_filter_by);
+	}
 }

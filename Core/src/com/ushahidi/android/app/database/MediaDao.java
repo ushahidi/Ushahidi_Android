@@ -55,7 +55,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 		final String selectionArgs[] = { String.valueOf(checkinId),
 				String.valueOf(IMAGE) };
 
-		final String selection = ID + " =? AND " + TYPE + " =?";
+		final String selection = CHECKIN_ID + " =? AND " + TYPE + " =?";
 		cursor = super.query(TABLE, MEDIA_COLUMNS, selection, selectionArgs,
 				null);
 		if (cursor != null) {
@@ -75,6 +75,25 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 		listMedia = new ArrayList<Media>();
 
 		final String selection = REPORT_ID + " = " + reportId + " AND " + TYPE
+				+ " =" + IMAGE;
+		cursor = super.query(TABLE, MEDIA_COLUMNS, selection, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				Media media = cursorToEntity(cursor);
+				listMedia.add(media);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+		return listMedia;
+	}
+	
+	@Override
+	public List<Media> fetchPendingCheckinPhoto(int checkinId) {
+		listMedia = new ArrayList<Media>();
+
+		final String selection = CHECKIN_ID + " = " + checkinId + " AND " + TYPE
 				+ " =" + IMAGE;
 		cursor = super.query(TABLE, MEDIA_COLUMNS, selection, null, null);
 		if (cursor != null) {
@@ -213,7 +232,10 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 	 * Delete all media attached to this checkin
 	 */
 	public boolean deleteMediaByCheckinId(int checkinId) {
-		return false;
+		final String selectionArgs[] = { String.valueOf(checkinId) };
+
+		final String selection = ID + " =?";
+		return super.delete(TABLE, selection, selectionArgs) > 0;
 	}
 
 	/**

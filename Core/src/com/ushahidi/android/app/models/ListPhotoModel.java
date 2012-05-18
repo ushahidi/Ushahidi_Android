@@ -37,16 +37,16 @@ import com.ushahidi.android.app.util.Util;
 /**
  * @author eyedol
  */
-public class ListReportPhotoModel extends Model {
+public class ListPhotoModel extends Model {
 
 	private List<Media> mMedia;
 
 	private List<Photo> mPhotoModel;
 
 	private static final String FETCHED = "fetched/";
-	
+
 	private static final String PENDING = "pending/";
-	
+
 	@Override
 	public boolean load() {
 		return false;
@@ -84,7 +84,7 @@ public class ListReportPhotoModel extends Model {
 					id += 1;
 					Photo photo = new Photo();
 					photo.setDbId(id);
-					photo.setPhoto(PENDING+file.getName());
+					photo.setPhoto(PENDING + file.getName());
 					mPhotoModel.add(photo);
 				}
 			}
@@ -111,7 +111,7 @@ public class ListReportPhotoModel extends Model {
 
 		return mPhotoModel;
 	}
-	
+
 	public List<Photo> getPendingPhotosByReportId(int reportId) {
 
 		mPhotoModel = new ArrayList<Photo>();
@@ -121,7 +121,7 @@ public class ListReportPhotoModel extends Model {
 			for (Media item : mMedia) {
 				Photo photo = new Photo();
 				photo.setDbId(item.getDbId());
-				photo.setPhoto(FETCHED+item.getLink());
+				photo.setPhoto(FETCHED + item.getLink());
 				mPhotoModel.add(photo);
 			}
 
