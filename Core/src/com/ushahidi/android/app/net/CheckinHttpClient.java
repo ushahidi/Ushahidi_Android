@@ -191,6 +191,7 @@ public class CheckinHttpClient extends MainHttpClient {
 					InputStream serverInput = respEntity.getContent();
 					int status = ApiUtils
 							.extractPayloadJSON(GetText(serverInput));
+					log("Post to Server: "+status);
 					if (status == 0) {
 						return true;
 					}

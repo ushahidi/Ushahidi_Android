@@ -80,6 +80,15 @@ public class ListPendingCheckinAdapter extends
 		}
 
 	}
+	
+	public List<ListCheckinModel> pendingCheckin() {
+		mListCheckinModel = new ListCheckinModel();
+		final boolean loaded = mListCheckinModel.loadPendingCheckin();
+		if (loaded) {
+			return mListCheckinModel.getCheckins(context);
+		}
+		return null;
+	}
 
 	public View getView(int position, View view, ViewGroup viewGroup) {
 

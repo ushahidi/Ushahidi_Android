@@ -251,7 +251,7 @@ public class AddCheckinActivity extends
 		}
 
 		if (!TextUtils.isEmpty(Preferences.lastname)) {
-			view.mLastName.setVisibility(View.GONE);
+			view.mLastNameLabel.setVisibility(View.GONE);
 			view.mLastName.setVisibility(View.GONE);
 		}
 
@@ -371,12 +371,13 @@ public class AddCheckinActivity extends
 		checkin.setLocationLongitude(String.valueOf(this.longitude));
 		checkin.setDate((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
 				.format(new Date()));
-		checkin.setLocationName(locationName);
+		
+		//set location to unknown so to save failed checkin to a database.
+		checkin.setLocationName(getString(R.string.unknown));
 
 		// upload to the web
 		if (!uploadPendingCheckin(checkin)) {
 			if (id == 0) {
-
 				// add new checkin
 				if (model.addPendingCheckin(checkin, pendingPhotos)) {
 					// move saved photos
@@ -398,9 +399,9 @@ public class AddCheckinActivity extends
 					return 2; // update succeeded
 				}
 			}
-			return 0;// upload succeeded
+			return 3;// upload failed
 		}
-		return 3; // failed
+		return 0; // upload succeeded
 	}
 
 	private boolean uploadPendingCheckin(Checkin checkin) {
@@ -452,7 +453,7 @@ public class AddCheckinActivity extends
 		protected int status = 3;
 
 		public UploadTask(Activity activity) {
-			super(activity, R.string.loading_);
+			super(activity, R.string.uploading);
 			// pass custom loading message to super call
 		}
 
@@ -470,7 +471,8 @@ public class AddCheckinActivity extends
 			super.onPostExecute(success);
 			if (success) {
 				if (status == 0) {
-					toastLong(R.string.uploaded);
+					toastLong(String.format("%s %s", getString(R.string.uploaded), status));
+					
 				} else if (status == 1 || status == 2) {
 					toastLong(R.string.saved);
 				}
@@ -478,6 +480,7 @@ public class AddCheckinActivity extends
 			} else {
 				toastLong(R.string.failed);
 			}
+			goToCheckin();
 		}
 	}
 

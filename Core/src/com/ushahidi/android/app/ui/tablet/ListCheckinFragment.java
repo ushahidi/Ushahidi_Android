@@ -20,6 +20,10 @@
 
 package com.ushahidi.android.app.ui.tablet;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -36,18 +40,23 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ushahidi.android.app.ImageManager;
+import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListCheckinAdapter;
 import com.ushahidi.android.app.adapters.ListFetchedCheckinAdapter;
 import com.ushahidi.android.app.adapters.ListPendingCheckinAdapter;
+import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.adapters.UserSpinnerAdater;
 import com.ushahidi.android.app.fragments.BaseSectionListFragment;
+import com.ushahidi.android.app.models.AddCheckinModel;
 import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddCheckinActivity;
 import com.ushahidi.android.app.ui.phone.ViewCheckinActivity;
 import com.ushahidi.android.app.util.ApiUtils;
+import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ListCheckinView;
 
 /**
@@ -148,6 +157,12 @@ public class ListCheckinFragment
 		return viewGroup;
 	}
 
+	private void executeUploadTask() {
+		if (!pendingAdapter.isEmpty()) {
+			new UploadTask(getActivity()).execute((String) null);
+		}
+	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -159,6 +174,9 @@ public class ListCheckinFragment
 		} else {
 			refreshCheckinByUserList();
 		}
+
+		// upload pending checkin
+		executeUploadTask();
 	}
 
 	@Override
@@ -344,8 +362,58 @@ public class ListCheckinFragment
 
 	}
 
+	private void deletePendingCheckin(int checkinId) {
+		// make sure it's an existing report
+		AddCheckinModel model = new AddCheckinModel();
+		UploadPhotoAdapter pendingPhoto = new UploadPhotoAdapter(getActivity());
+		if (checkinId > 0) {
+			if (model.deleteCheckin(checkinId)) {
+				// delete images
+				for (int i = 0; i < pendingPhoto.getCount(); i++) {
+					ImageManager.deletePendingPhoto(getActivity(), "/"
+							+ pendingPhoto.getItem(i).getPhoto());
+				}
+				// return to report listing page.
+			}
+		}
+	}
+
 	private boolean uploadPendingCheckin() {
-		
+		List<ListCheckinModel> items = pendingAdapter.pendingCheckin();
+		StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
+		urlBuilder.append("/api");
+		if (items != null) {
+			for (ListCheckinModel checkin : items) {
+				final HashMap<String, String> mParams = new HashMap<String, String>();
+				mParams.put("task", "checkin");
+				mParams.put("action", "ci");
+				mParams.put("mobileid", Util.IMEI(getActivity()));
+				mParams.put("lat", checkin.getLocationLatitude());
+				mParams.put("lon", checkin.getLocationLongitude());
+				mParams.put("message", checkin.getMessage());
+				mParams.put("firstname", Preferences.firstname);
+				mParams.put("lastname", Preferences.lastname);
+				mParams.put("email", Preferences.email);
+				final String photo = new UploadPhotoAdapter(getActivity())
+						.pendingPhotos((int) checkin.getCheckinId());
+
+				// load filenames
+				if (!TextUtils.isEmpty(photo)) {
+					mParams.put("filename", photo);
+				}
+				// upload
+				try {
+					if (new CheckinHttpClient(getActivity()).PostFileUpload(
+							urlBuilder.toString(), mParams)) {
+						deletePendingCheckin((int) checkin.getDbId());
+						return true;
+					}
+					return false;
+				} catch (IOException e) {
+					return false;
+				}
+			}
+		}
 		return false;
 	}
 

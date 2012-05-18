@@ -235,7 +235,6 @@ public class CheckinDao extends DbContentProvider implements ICheckinDao,
 	private void setContentValue(Checkin checkins) {
 
 		initialValues = new ContentValues();
-		initialValues.put(ID, checkins.getDbId());
 		initialValues.put(CHECKIN_ID, checkins.getCheckinId());
 		initialValues.put(CHECKIN_USER_ID, checkins.getUserId());
 		initialValues.put(CHECKIN_MESG, checkins.getMessage());
