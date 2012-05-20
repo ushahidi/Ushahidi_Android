@@ -66,9 +66,9 @@ public class ListFetchedCheckinAdapter extends
 		}
 
 	}
-	
+
 	public void refresh(int userId) {
-		
+
 		mListCheckinModel = new ListCheckinModel();
 		final boolean loaded = mListCheckinModel.loadCheckinByUser(userId);
 		if (loaded) {
@@ -78,11 +78,20 @@ public class ListFetchedCheckinAdapter extends
 
 	}
 
+	public List<ListCheckinModel> fetchedCheckins() {
+		mListCheckinModel = new ListCheckinModel();
+		final boolean loaded = mListCheckinModel.load();
+		if (loaded) {
+			return mListCheckinModel.getCheckins(context);
+		}
+		return null;
+	}
+
 	public View getView(int position, View view, ViewGroup viewGroup) {
 
 		int colorPosition = position % colors.length;
-		View row = inflater
-				.inflate(R.layout.list_checkin_item, viewGroup, false);
+		View row = inflater.inflate(R.layout.list_checkin_item, viewGroup,
+				false);
 		row.setBackgroundResource(colors[colorPosition]);
 
 		Widgets widgets = (Widgets) row.getTag();

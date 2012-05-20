@@ -59,6 +59,14 @@ public class ListPhotoModel extends Model {
 		}
 		return false;
 	}
+	
+	public boolean loadCheckinPhoto(int checkinId) {
+		mMedia = Database.mMediaDao.fetchCheckinPhoto(checkinId);
+		if (mMedia != null) {
+			return true;
+		}
+		return false;
+	}
 
 	public List<Photo> getPhotos() {
 		mPhotoModel = new ArrayList<Photo>();
@@ -112,10 +120,46 @@ public class ListPhotoModel extends Model {
 		return mPhotoModel;
 	}
 
+	public List<Photo> getPhotosByCheckinId(int checkinId) {
+
+		mPhotoModel = new ArrayList<Photo>();
+		mMedia = Database.mMediaDao.fetchCheckinPhoto(checkinId);
+		if (mMedia != null && mMedia.size() > 0) {
+
+			for (Media item : mMedia) {
+				Photo photo = new Photo();
+				photo.setDbId(item.getDbId());
+				photo.setPhoto(item.getLink());
+				mPhotoModel.add(photo);
+			}
+
+		}
+
+		return mPhotoModel;
+	}
+
 	public List<Photo> getPendingPhotosByReportId(int reportId) {
 
 		mPhotoModel = new ArrayList<Photo>();
 		mMedia = Database.mMediaDao.fetchPendingReportPhoto(reportId);
+		if (mMedia != null && mMedia.size() > 0) {
+
+			for (Media item : mMedia) {
+				Photo photo = new Photo();
+				photo.setDbId(item.getDbId());
+				photo.setPhoto(FETCHED + item.getLink());
+				mPhotoModel.add(photo);
+			}
+
+		}
+
+		return mPhotoModel;
+	}
+
+	public List<Photo> getPendingPhotosByCheckinId(int checkinId) {
+
+		mPhotoModel = new ArrayList<Photo>();
+		mMedia = Database.mMediaDao.fetchPendingCheckinPhoto(checkinId);
 		if (mMedia != null && mMedia.size() > 0) {
 
 			for (Media item : mMedia) {

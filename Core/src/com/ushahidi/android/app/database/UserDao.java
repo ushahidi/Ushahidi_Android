@@ -56,7 +56,7 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
 	public List<User> fetchUsersById(int userId) {
 		final String selectionArgs[] = { String.valueOf(userId) };
 
-		final String selection = ID + " = ?";
+		final String selection = USER_ID + " = ?";
 
 		listUser = new ArrayList<User>();
 
@@ -187,7 +187,7 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
 
 	private void setContentValue(User user) {
 		initialValues = new ContentValues();
-		initialValues.put(USER_ID, user.getDbId());
+		initialValues.put(USER_ID, user.getUserId());
 		initialValues.put(USER_NAME, user.getUsername());
 		initialValues.put(USER_COLOR, user.getColor());
 	}

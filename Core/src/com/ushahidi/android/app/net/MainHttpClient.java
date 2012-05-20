@@ -21,9 +21,7 @@
 package com.ushahidi.android.app.net;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,319 +64,337 @@ import com.ushahidi.android.app.Preferences;
 
 public class MainHttpClient {
 
-    protected static DefaultHttpClient httpClient;
+	protected static DefaultHttpClient httpClient;
 
-    private HttpParams httpParameters;
+	private HttpParams httpParameters;
 
-    private static final String CLASS_TAG = MainHttpClient.class.getSimpleName();
+	private static final String CLASS_TAG = MainHttpClient.class
+			.getSimpleName();
 
-    private int timeoutConnection = 60000;
+	private int timeoutConnection = 60000;
 
-    private int timeoutSocket = 60000;
+	private int timeoutSocket = 60000;
 
-    private static final int IO_BUFFER_SIZE = 512;
+	private static final int IO_BUFFER_SIZE = 512;
 
-    private Context context;
-    public MainHttpClient(Context context) {
-        this.context = context;
-        httpParameters = new BasicHttpParams();
-        httpParameters.setParameter(ConnManagerPNames.MAX_TOTAL_CONNECTIONS, 1);
-        httpParameters.setParameter(ConnManagerPNames.MAX_CONNECTIONS_PER_ROUTE,
-                new ConnPerRouteBean(1));
+	private Context context;
 
-        httpParameters.setParameter(HttpProtocolParams.USE_EXPECT_CONTINUE, false);
-        HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
-        HttpProtocolParams.setContentCharset(httpParameters, "utf8");
+	public MainHttpClient(Context context) {
+		this.context = context;
+		httpParameters = new BasicHttpParams();
+		httpParameters.setParameter(ConnManagerPNames.MAX_TOTAL_CONNECTIONS, 1);
+		httpParameters.setParameter(
+				ConnManagerPNames.MAX_CONNECTIONS_PER_ROUTE,
+				new ConnPerRouteBean(1));
 
-        // Set the timeout in milliseconds until a connection is established.
-        HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+		httpParameters.setParameter(HttpProtocolParams.USE_EXPECT_CONTINUE,
+				false);
+		HttpProtocolParams.setVersion(httpParameters, HttpVersion.HTTP_1_1);
+		HttpProtocolParams.setContentCharset(httpParameters, "utf8");
 
-        // in milliseconds which is the timeout for waiting for data.
-        HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+		// Set the timeout in milliseconds until a connection is established.
+		HttpConnectionParams.setConnectionTimeout(httpParameters,
+				timeoutConnection);
 
-        SchemeRegistry schemeRegistry = new SchemeRegistry();
+		// in milliseconds which is the timeout for waiting for data.
+		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
-        // http scheme
-        schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        // https scheme
-        try {
-            schemeRegistry.register(new Scheme("https", new TrustedSocketFactory(
-                    Preferences.domain, false), 443));
-        } catch (KeyManagementException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+		SchemeRegistry schemeRegistry = new SchemeRegistry();
 
-        httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(httpParameters,
-                schemeRegistry), httpParameters);
+		// http scheme
+		schemeRegistry.register(new Scheme("http", PlainSocketFactory
+				.getSocketFactory(), 80));
+		// https scheme
+		try {
+			schemeRegistry.register(new Scheme("https",
+					new TrustedSocketFactory(Preferences.domain, false), 443));
+		} catch (KeyManagementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-    }
+		httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(
+				httpParameters, schemeRegistry), httpParameters);
 
-    /*
-     * private static String getCredentials(String userName, String password){
-     * return HttpBase64.encodeBytes((userName + ":" + password).getBytes()); }
-     */
+	}
 
-    public HttpResponse GetURL(String URL) throws IOException {
-        Preferences.httpRunning = true;
+	/*
+	 * private static String getCredentials(String userName, String password){
+	 * return HttpBase64.encodeBytes((userName + ":" + password).getBytes()); }
+	 */
 
-        // only do the connection where there is internet.
-        if (isConnected()) {
+	public HttpResponse GetURL(String URL) throws IOException {
+		Preferences.httpRunning = true;
 
-            try {
-                // wrap try around because this constructor can throw Error
-                final HttpGet httpget = new HttpGet(URL);
-                httpget.addHeader("User-Agent", "Ushahidi-Android/1.0)");
+		// only do the connection where there is internet.
+		if (isConnected()) {
 
-                // Post, check and show the result (not really spectacular, but
-                // works):
-                HttpResponse response = httpClient.execute(httpget);
+			try {
+				// wrap try around because this constructor can throw Error
+				final HttpGet httpget = new HttpGet(URL);
+				httpget.addHeader("User-Agent", "Ushahidi-Android/1.0)");
 
-                return response;
+				// Post, check and show the result (not really spectacular, but
+				// works):
+				HttpResponse response = httpClient.execute(httpget);
 
-            } catch (final Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+				return response;
 
-        }
-        return null;
+			} catch (final Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-    }
+		}
+		return null;
 
-    public HttpResponse PostURL(String URL, List<NameValuePair> data, String Referer)
-            throws IOException {
+	}
 
-        if (isConnected()) {
-            // Dipo Fix
-            try {
-                // wrap try around because this constructor can throw Error
-                final HttpPost httpost = new HttpPost(URL);
-                // org.apache.http.client.methods.
-                if (Referer.length() > 0) {
-                    httpost.addHeader("Referer", Referer);
-                }
-                if (data != null) {
-                    try {
-                        // NEED THIS NOW TO FIX ERROR 417
-                        httpost.getParams().setBooleanParameter("http.protocol.expect-continue",
-                                false);
+	public HttpResponse PostURL(String URL, List<NameValuePair> data,
+			String Referer) throws IOException {
 
-                        httpost.setEntity(new UrlEncodedFormEntity(data, HTTP.UTF_8));
+		if (isConnected()) {
+			// Dipo Fix
+			try {
+				// wrap try around because this constructor can throw Error
+				final HttpPost httpost = new HttpPost(URL);
+				// org.apache.http.client.methods.
+				if (Referer.length() > 0) {
+					httpost.addHeader("Referer", Referer);
+				}
+				if (data != null) {
+					try {
+						// NEED THIS NOW TO FIX ERROR 417
+						httpost.getParams().setBooleanParameter(
+								"http.protocol.expect-continue", false);
 
-                    } catch (final UnsupportedEncodingException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+						httpost.setEntity(new UrlEncodedFormEntity(data,
+								HTTP.UTF_8));
 
-                        return null;
-                    }
-                }
+					} catch (final UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 
-                // Post, check and show the result (not really spectacular, but
-                // works):
-                try {
-                    HttpResponse response = httpClient.execute(httpost);
-                    Preferences.httpRunning = false;
-                    return response;
+						return null;
+					}
+				}
 
-                } catch (final Exception e) {
+				// Post, check and show the result (not really spectacular, but
+				// works):
+				try {
+					HttpResponse response = httpClient.execute(httpost);
+					Preferences.httpRunning = false;
+					return response;
 
-                }
-            } catch (final Exception e) {
-                e.printStackTrace();
-            }
+				} catch (final Exception e) {
 
-        }
-        return null;
+				}
+			} catch (final Exception e) {
+				e.printStackTrace();
+			}
 
-    }
+		}
+		return null;
 
-    public HttpResponse PostURL(String URL, List<NameValuePair> data) throws IOException {
-        return PostURL(URL, data, "");
-    }
+	}
 
-    public static void setHttpHeader(Object header) {
+	public HttpResponse PostURL(String URL, List<NameValuePair> data)
+			throws IOException {
+		return PostURL(URL, data, "");
+	}
 
-        if (header != null) {
+	public static void setHttpHeader(Object header) {
 
-        }
-    }
+		if (header != null) {
 
-    public String SendMultiPartData(String URL, MultipartEntity postData) throws IOException {
+		}
+	}
 
-        Log.d(CLASS_TAG, "PostFileUpload(): upload file to server.");
+	public String SendMultiPartData(String URL, MultipartEntity postData)
+			throws IOException {
 
-        // Dipo Fix
-        try {
-            // wrap try around because this constructor can throw Error
-            final HttpPost httpost = new HttpPost(URL);
+		Log.d(CLASS_TAG, "PostFileUpload(): upload file to server.");
 
-            if (postData != null) {
-                Log.i(CLASS_TAG, "PostFileUpload(): ");
-                // NEED THIS NOW TO FIX ERROR 417
-                httpost.getParams().setBooleanParameter("http.protocol.expect-continue", false);
-                httpost.setEntity(postData);
-                // Header
-                // httpost.addHeader("Authorization","Basic "+
-                // getCredentials(userName, userPassword));
-                HttpResponse response = httpClient.execute(httpost);
-                Preferences.httpRunning = false;
+		// Dipo Fix
+		try {
+			// wrap try around because this constructor can throw Error
+			final HttpPost httpost = new HttpPost(URL);
 
-                HttpEntity respEntity = response.getEntity();
-                if (respEntity != null) {
-                    InputStream serverInput = respEntity.getContent();
+			if (postData != null) {
+				Log.i(CLASS_TAG, "PostFileUpload(): ");
+				// NEED THIS NOW TO FIX ERROR 417
+				httpost.getParams().setBooleanParameter(
+						"http.protocol.expect-continue", false);
+				httpost.setEntity(postData);
+				// Header
+				// httpost.addHeader("Authorization","Basic "+
+				// getCredentials(userName, userPassword));
+				HttpResponse response = httpClient.execute(httpost);
+				Preferences.httpRunning = false;
 
-                    return GetText(serverInput);
+				HttpEntity respEntity = response.getEntity();
+				if (respEntity != null) {
+					InputStream serverInput = respEntity.getContent();
 
-                }
-            }
+					return GetText(serverInput);
 
-        } catch (MalformedURLException ex) {
-            log("MalformedURLException", ex.toString());
-            ex.printStackTrace();
-            return "";
-            // fall through and return false
-        } catch (Exception ex) {
-            return "";
-        }
-        return "";
-    }
+				}
+			}
 
-    public byte[] fetchImage2(String address) throws MalformedURLException, IOException {
-        InputStream in = null;
-        OutputStream out = null;
-        HttpResponse response;
+		} catch (MalformedURLException ex) {
+			log("MalformedURLException", ex.toString());
+			ex.printStackTrace();
+			return "";
+			// fall through and return false
+		} catch (Exception ex) {
+			return "";
+		}
+		return "";
+	}
 
-        try {
-            response = GetURL(address);
-            in = new BufferedInputStream(response.getEntity().getContent(), IO_BUFFER_SIZE);
+	public byte[] fetchImage2(String address) throws MalformedURLException,
+			IOException {
 
-            final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
-            out = new BufferedOutputStream(dataStream, 4 * 1024);
-            copy(in, out);
-            out.flush();
+		HttpResponse response;
 
-            // need to close stream before return statement
-            closeStream(in);
-            closeStream(out);
+		try {
+			response = GetURL(address);
+			int fileSize = (int) response.getEntity().getContentLength();
+			if (fileSize < 0) {
+				return null;
+			}
+			byte[] imageData = new byte[fileSize];
 
-            return dataStream.toByteArray();
-        } catch (IOException e) {
-            // android.util.Log.e("IO", "Could not load buddy icon: " + this,
-            // e);
+			BufferedInputStream istream = new BufferedInputStream(response
+					.getEntity().getContent(), IO_BUFFER_SIZE);
+			int bytesRead = 0;
+			int offset = 0;
+			while (bytesRead != -1 && offset < fileSize) {
+				bytesRead = istream.read(imageData, offset, fileSize - offset);
+				offset += bytesRead;
+			}
 
-        } finally {
-            closeStream(in);
-            closeStream(out);
+			// clean up
+			istream.close();
+			return imageData;
+		} catch (IOException e) {
+			// android.util.Log.e("IO", "Could not load buddy icon: " + this,
+			// e);
 
-        }
-        return null;
+		}
+		return null;
+	}
 
-    }
+	/**
+	 * Copy the content of the input stream into the output stream, using a
+	 * temporary byte array buffer whose size is defined by
+	 * {@link #IO_BUFFER_SIZE}.
+	 * 
+	 * @param in
+	 *            The input stream to copy from.
+	 * @param out
+	 *            The output stream to copy to.
+	 * @throws IOException
+	 *             If any error occurs during the copy.
+	 */
+	private void copy(InputStream in, OutputStream out) throws IOException {
+		byte[] b = new byte[4 * 1024];
+		int read;
+		while ((read = in.read(b)) != -1) {
+			out.write(b, 0, read);
+		}
+	}
 
-    /**
-     * Copy the content of the input stream into the output stream, using a
-     * temporary byte array buffer whose size is defined by
-     * {@link #IO_BUFFER_SIZE}.
-     * 
-     * @param in The input stream to copy from.
-     * @param out The output stream to copy to.
-     * @throws IOException If any error occurs during the copy.
-     */
-    private void copy(InputStream in, OutputStream out) throws IOException {
-        byte[] b = new byte[4 * 1024];
-        int read;
-        while ((read = in.read(b)) != -1) {
-            out.write(b, 0, read);
-        }
-    }
+	/**
+	 * Closes the specified stream.
+	 * 
+	 * @param stream
+	 *            The stream to close.
+	 */
+	private void closeStream(Closeable stream) {
+		if (stream != null) {
+			try {
+				stream.close();
+			} catch (IOException e) {
+				android.util.Log.e("IO", "Could not close stream", e);
+			}
+		}
+	}
 
-    /**
-     * Closes the specified stream.
-     * 
-     * @param stream The stream to close.
-     */
-    private void closeStream(Closeable stream) {
-        if (stream != null) {
-            try {
-                stream.close();
-            } catch (IOException e) {
-                android.util.Log.e("IO", "Could not close stream", e);
-            }
-        }
-    }
+	public String GetText(HttpResponse response) {
+		String text = "";
+		try {
+			text = GetText(response.getEntity().getContent());
+		} catch (final Exception ex) {
+		}
+		return text;
+	}
 
-    public String GetText(HttpResponse response) {
-        String text = "";
-        try {
-            text = GetText(response.getEntity().getContent());
-        } catch (final Exception ex) {
-        }
-        return text;
-    }
+	public String GetText(InputStream in) {
+		String text = "";
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(in, "UTF-8"),
+					1024);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		final StringBuilder sb = new StringBuilder();
+		String line = null;
+		try {
+			if (reader != null) {
+				while ((line = reader.readLine()) != null) {
+					sb.append(line + "\n");
+				}
+				text = sb.toString();
+			}
+		} catch (final Exception ex) {
+		} finally {
+			try {
+				in.close();
+			} catch (final Exception ex) {
+			}
+		}
+		return text;
+	}
 
-    public String GetText(InputStream in) {
-        String text = "";
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(in, "UTF-8"), 1024);
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        final StringBuilder sb = new StringBuilder();
-        String line = null;
-        try {
-            if (reader != null) {
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line + "\n");
-                }
-                text = sb.toString();
-            }
-        } catch (final Exception ex) {
-        } finally {
-            try {
-                in.close();
-            } catch (final Exception ex) {
-            }
-        }
-        return text;
-    }
-    
-    /**
-     * Is there internet connection
-     */
-    public boolean isConnected() {
+	/**
+	 * Is there internet connection
+	 */
+	public boolean isConnected() {
 
-        ConnectivityManager connectivity = (ConnectivityManager)context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager connectivity = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        final NetworkInfo networkInfo;networkInfo = connectivity.getActiveNetworkInfo();
-        // NetworkInfo info
+		final NetworkInfo networkInfo;
+		networkInfo = connectivity.getActiveNetworkInfo();
+		// NetworkInfo info
 
-        if (networkInfo != null && networkInfo.isConnected() && networkInfo.isAvailable()) {
-            return true;
-        }
-        return false;
+		if (networkInfo != null && networkInfo.isConnected()
+				&& networkInfo.isAvailable()) {
+			return true;
+		}
+		return false;
 
-    }
+	}
 
-    protected void log(String message) {
-        if (MainApplication.LOGGING_MODE)
-            Log.i(getClass().getName(), message);
-    }
+	protected void log(String message) {
+		if (MainApplication.LOGGING_MODE)
+			Log.i(getClass().getName(), message);
+	}
 
-    protected void log(String format, Object... args) {
-        if (MainApplication.LOGGING_MODE)
-            Log.i(getClass().getName(), String.format(format, args));
-    }
+	protected void log(String format, Object... args) {
+		if (MainApplication.LOGGING_MODE)
+			Log.i(getClass().getName(), String.format(format, args));
+	}
 
-    protected void log(String message, Exception ex) {
-        if (MainApplication.LOGGING_MODE)
-            Log.e(getClass().getName(), message, ex);
-    }
+	protected void log(String message, Exception ex) {
+		if (MainApplication.LOGGING_MODE)
+			Log.e(getClass().getName(), message, ex);
+	}
 
 }

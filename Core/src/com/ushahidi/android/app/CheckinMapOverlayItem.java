@@ -11,14 +11,14 @@ public class CheckinMapOverlayItem extends OverlayItem {
 
 	protected long mId;
 
-	protected String mFilterCategory;
+	protected int  mFilterUserId;
 
 	public CheckinMapOverlayItem(GeoPoint point, String title, String snippet,
-			Drawable image, long id, String filterCategory) {
+			Drawable image, long id, int filterUserId) {
 		super(point, title, snippet);
 		this.mImage = image;
 		this.mId = id;
-		this.mFilterCategory = filterCategory;
+		this. mFilterUserId = filterUserId;
 	}
 
 	public Drawable getImage() {
@@ -37,12 +37,12 @@ public class CheckinMapOverlayItem extends OverlayItem {
 		this.mId = id;
 	}
 
-	public String getFilterCategory() {
-		return mFilterCategory;
+	public int getFilterUserId() {
+		return this.mFilterUserId;
 	}
 
-	public void setFilterCategory(String filterCategory) {
-		this.mFilterCategory = filterCategory;
+	public void setFilterCategory(int filterUserId) {
+		this. mFilterUserId = filterUserId;
 	}
 
 }

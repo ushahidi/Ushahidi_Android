@@ -285,6 +285,14 @@ public class CheckinDao extends DbContentProvider implements ICheckinDao,
 		return super.delete(CHECKINS_TABLE, selection, selectionArgs) > 0;
 	}
 
+	public boolean deleteCheckinById(int checkinId) {
+		final String selectionArgs[] = { String.valueOf(checkinId),
+				String.valueOf(0) };
+		final String selection = ID + " = ? AND " + CHECKIN_PENDING + " = ?";
+
+		return super.delete(CHECKINS_TABLE, selection, selectionArgs) > 0;
+	}
+
 	@Override
 	public boolean updatePendingCheckin(int checkinId, Checkin checkin) {
 		boolean status = false;
@@ -304,6 +312,32 @@ public class CheckinDao extends DbContentProvider implements ICheckinDao,
 			mDb.endTransaction();
 		}
 		return status;
+	}
+	
+	@Override
+	public int fetchPendingCheckinIdByDate(String date) {
+		final String sortOrder = ID + " DESC";
+		final String selectionArgs[] = { date, String.valueOf(1) };
+
+		final String selection = CHECKIN_DATE + " =? AND " + CHECKIN_PENDING
+				+ " =? ";
+		int id = 0;
+		listCheckin= new ArrayList<Checkin>();
+
+		cursor = super.query(CHECKINS_TABLE, null, selection, selectionArgs,
+				sortOrder);
+		if (cursor != null) {
+
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				Checkin checkin = cursorToEntity(cursor);
+				id = checkin.getDbId();
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+
+		return id;
 	}
 
 }

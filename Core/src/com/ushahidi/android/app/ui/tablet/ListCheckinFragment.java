@@ -52,8 +52,7 @@ import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.fragments.BaseSectionListFragment;
 import com.ushahidi.android.app.models.AddCheckinModel;
 import com.ushahidi.android.app.models.ListCheckinModel;
-import com.ushahidi.android.app.models.ListReportModel;
-import com.ushahidi.android.app.models.ListReportPhotoModel;
+import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddCheckinActivity;
@@ -329,17 +328,17 @@ public class ListCheckinFragment
 
 								filterUserId = spinnerArrayAdapter
 										.getTag(which).getUserId();
-
+								
 								final String all = spinnerArrayAdapter.getTag(
 										which).getUsername();
-								view. footerText.setText(all);
+								view.footerText.setText(all);
 
 								if ((all != null)
 										&& (!TextUtils.isEmpty(all))
 										&& (all != getActivity().getString(
 												R.string.all_users))) {
 
-									mHandler.post(filterCheckinList);
+									mHandler.post(fetchCheckinListByUser);
 
 								} else {
 									mHandler.post(fetchCheckinList);
@@ -421,12 +420,11 @@ public class ListCheckinFragment
 	}
 
 	private void deleteFetchedCheckin() {
-		final List<ListCheckinModel> items = fetchedAdapter
-				.fetchedCheckins();
+		final List<ListCheckinModel> items = fetchedAdapter.fetchedCheckins();
 		for (ListCheckinModel checkin : items) {
-			if (new ListReportModel().deleteAllFetchedReport(checkin
+			if (new ListCheckinModel().deleteAllFetchedCheckin(checkin
 					.getCheckinId())) {
-				final List<Photo> photos = new ListReportPhotoModel()
+				final List<Photo> photos = new ListPhotoModel()
 						.getPhotosByCheckinId(checkin.getCheckinId());
 
 				for (Photo photo : photos) {
@@ -549,7 +547,7 @@ public class ListCheckinFragment
 	private void launchViewCheckin(int id) {
 		Intent i = new Intent(getActivity(), ViewCheckinActivity.class);
 		i.putExtra("id", id);
-		log("userId " + filterUserId);
+		
 		if (filterUserId > 0) {
 			i.putExtra("userid", filterUserId);
 		} else {

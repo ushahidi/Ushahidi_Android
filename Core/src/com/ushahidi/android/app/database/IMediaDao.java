@@ -72,4 +72,6 @@ public interface IMediaDao {
 	public boolean deleteReportNews(int reportId);
 
 	public boolean deleteReportPhoto(int reportId);
+
+	public boolean deleteCheckinPhoto(int checkinId);
 }

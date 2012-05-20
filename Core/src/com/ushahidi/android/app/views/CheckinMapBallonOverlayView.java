@@ -26,8 +26,8 @@ public class CheckinMapBallonOverlayView<Item extends OverlayItem> extends
 
 	private static Activity mActivity;
 
-	public CheckinMapBallonOverlayView(Context context, int balloonBottomOffset,
-			Activity activity) {
+	public CheckinMapBallonOverlayView(Context context,
+			int balloonBottomOffset, Activity activity) {
 		super(context, balloonBottomOffset);
 		mActivity = activity;
 	}
@@ -47,12 +47,12 @@ public class CheckinMapBallonOverlayView<Item extends OverlayItem> extends
 		image = (ImageView) v.findViewById(R.id.balloon_item_image);
 	}
 
-	public static void viewReports(final int id, final String filterCategory) {
-		launchViewReport(id, filterCategory);
+	public static void viewCheckins(final int id, final int filterUserId) {
+		launchViewReport(id, filterUserId);
 
 		readMore.setOnClickListener(new OnClickListener() {
 			public void onClick(android.view.View view) {
-				launchViewReport(id, filterCategory);
+				launchViewReport(id, filterUserId);
 			}
 		});
 
@@ -67,16 +67,13 @@ public class CheckinMapBallonOverlayView<Item extends OverlayItem> extends
 
 	}
 
-	private static void launchViewReport(int position,
-			final String filterCategory) {
+	private static void launchViewReport(int position, final int filterUserId) {
 		Intent i = new Intent(mActivity, ViewCheckinActivity.class);
 		i.putExtra("id", position);
-		if (filterCategory != null
-				&& !filterCategory.equalsIgnoreCase(mActivity
-						.getString(R.string.all_users))) {
-			i.putExtra("category", filterCategory);
+		if (filterUserId > 0) {
+			i.putExtra("userid", filterUserId);
 		} else {
-			i.putExtra("category", "");
+			i.putExtra("userid", 0);
 		}
 		mActivity.startActivityForResult(i, 0);
 		mActivity

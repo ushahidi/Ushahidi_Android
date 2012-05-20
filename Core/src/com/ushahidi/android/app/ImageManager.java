@@ -20,14 +20,11 @@
 
 package com.ushahidi.android.app;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -35,8 +32,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
-import android.util.Log;
 
+import com.ushahidi.android.app.net.MainHttpClient;
 import com.ushahidi.android.app.util.PhotoUtils;
 
 public class ImageManager {
@@ -123,8 +120,6 @@ public class ImageManager {
 
 	public static Drawable getThumbnails(Context context, String fileName) {
 		// get image
-		Log.i("ImageManager","photoPath: "+getPhotoPath(context)
-				+ fileName);
 		Bitmap original = BitmapFactory.decodeFile(getPhotoPath(context)
 				+ fileName);
 		if (original != null) {
@@ -136,40 +131,17 @@ public class ImageManager {
 		return null;
 	}
 
-	protected static byte[] retrieveImageData(String imageUrl)
+	protected static byte[] retrieveImageData(String imageUrl, Context context)
 			throws IOException {
-		URL url = new URL(imageUrl);
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-		// determine the image size and allocate a buffer
-		int fileSize = connection.getContentLength();
-		if (fileSize < 0) {
-			return null;
-		}
-		byte[] imageData = new byte[fileSize];
-
-		// download the file
-
-		BufferedInputStream istream = new BufferedInputStream(
-				connection.getInputStream());
-		int bytesRead = 0;
-		int offset = 0;
-		while (bytesRead != -1 && offset < fileSize) {
-			bytesRead = istream.read(imageData, offset, fileSize - offset);
-			offset += bytesRead;
-		}
-
-		// clean up
-		istream.close();
-		connection.disconnect();
-
-		return imageData;
+		MainHttpClient httpClient = new MainHttpClient(context);
+		return httpClient.fetchImage2(imageUrl);
 	}
 
 	public static void downloadImage(String imageUrl, String filename,
 			Context context) {
 		try {
-			byte[] imageData = retrieveImageData(imageUrl);
+			byte[] imageData = retrieveImageData(imageUrl, context);
 			Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0,
 					imageData.length);
 			ByteArrayOutputStream byteArray = new ByteArrayOutputStream();

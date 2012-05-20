@@ -25,6 +25,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
@@ -130,11 +131,37 @@ public class ListCheckinModel extends Checkin {
 	}
 
 	private String getUsername(Context context, int userId) {
+		Log.i("ListCheckinModel","User Id "+userId);
 		List<User> sUser = Database.mUserDao.fetchUsersById(userId);
 		if (sUser != null && sUser.size() > 0) {
 			return sUser.get(0).getUsername();
 		}
 		return context.getText(R.string.unknown).toString();
+	}
+	
+	/**
+	 * Deletes all fetched reports.
+	 * 
+	 * @param reportId The id of the report to be deleted.
+	 * 
+	 * @return boolean
+	 */
+	public boolean deleteAllFetchedCheckin(int checkinId) {
+		
+		// delete fetched reports
+		if(Database.mCheckin.deleteAllCheckins() )  {
+			Log.i("ListCheckinModel","Checkin deleted");
+		}
+		
+		if( Database.mUserDao.deleteAllUsers() ) {
+			Log.i("Users: ","Users deleted");
+		}
+
+		// delete media
+		if(Database.mMediaDao.deleteCheckinPhoto(checkinId) ) {
+			Log.i("Media","Media deleted");
+		}
+		return true;
 	}
 
 	@Override

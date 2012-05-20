@@ -36,11 +36,16 @@ public interface ICheckinDao {
 	public List<Checkin> fetchCheckinsByUserId(int userId);
 
 	public List<Checkin> fetchPendingCheckinsByUserId(int userId);
-	
+
 	public Checkin fetchPendingCheckinById(int checkinId);
+	
+	public int fetchPendingCheckinIdByDate(String date);
 
 	// delete checkin by id
 	public boolean deletePendingCheckinById(int checkinId);
+
+	// delete checkin by id
+	public boolean deleteCheckinById(int checkinId);
 
 	public boolean deleteAllCheckins();
 

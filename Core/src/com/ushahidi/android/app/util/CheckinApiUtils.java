@@ -95,7 +95,7 @@ public class CheckinApiUtils {
 					User users = new User();
 
 					try {
-						users.setDbId(checkinsUsersArray.getJSONObject(index)
+						users.setUserId(checkinsUsersArray.getJSONObject(index)
 								.getInt("id"));
 						users.setUsername(checkinsUsersArray.getJSONObject(
 								index).getString("name"));
@@ -126,8 +126,8 @@ public class CheckinApiUtils {
 				for (int i = 0; i < checkinsArray.length(); i++) {
 					Checkin currentCheckin = new Checkin();
 					try {
-						currentCheckin.setCheckinId(checkinsArray
-								.getJSONObject(i).getInt("id"));
+						id = checkinsArray.getJSONObject(i).getInt("id");
+						currentCheckin.setCheckinId(id);
 						currentCheckin.setLocationName(checkinsArray
 								.getJSONObject(i).getString("loc"));
 						currentCheckin.setLocationLatitude(checkinsArray
@@ -247,7 +247,7 @@ public class CheckinApiUtils {
 	}
 
 	private void saveImages(String linkUrl, String fileName, Context context) {
-
+		log("Save Images: " + linkUrl + " FileName: " + fileName);
 		if (!TextUtils.isEmpty(linkUrl)) {
 			ImageManager.downloadImage(linkUrl, fileName, context);
 		}

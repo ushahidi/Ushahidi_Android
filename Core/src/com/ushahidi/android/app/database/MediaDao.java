@@ -373,4 +373,10 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 		final String selection = REPORT_ID + " =? AND " + TYPE + " =?";
 		return super.delete(TABLE, selection, selectionArgs) > 0 ;
 	}
+	
+	public boolean deleteCheckinPhoto(int checkinId) {
+		final String selectionArgs[] = { String.valueOf(checkinId), String.valueOf(IMediaSchema.IMAGE) };
+		final String selection = CHECKIN_ID + " =? AND " + TYPE + " =?";
+		return super.delete(TABLE, selection, selectionArgs) > 0 ;
+	}
 }

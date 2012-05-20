@@ -111,6 +111,16 @@ public class ListPhotoAdapter extends BaseListAdapter<Photo> {
 			this.setItems(items);
 		}
 	}
+	
+	public void refreshCheckinPhotos(int checkinId) {
+		mListPhotoModel = new ListPhotoModel();
+		final boolean loaded = mListPhotoModel.loadCheckinPhoto(checkinId);
+		totalPhotos = mListPhotoModel.totalReportPhoto();
+		if (loaded) {
+			items = mListPhotoModel.getPhotos();
+			this.setItems(items);
+		}
+	}
 
 	public Drawable getPhoto(String fileName) {
 		return ImageManager.getDrawables(context, fileName,

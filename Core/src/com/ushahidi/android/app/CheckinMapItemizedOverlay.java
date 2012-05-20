@@ -10,7 +10,6 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.views.BalloonOverlayView;
 import com.ushahidi.android.app.views.CheckinMapBallonOverlayView;
-import com.ushahidi.android.app.views.ReportMapBallonOverlayView;
 
 public class CheckinMapItemizedOverlay<Item extends OverlayItem> extends
 		MapItemizedOverlay<CheckinMapOverlayItem> {
@@ -46,7 +45,7 @@ public class CheckinMapItemizedOverlay<Item extends OverlayItem> extends
 	@Override
 	protected boolean onBalloonTap(int index, CheckinMapOverlayItem item) {
 
-		ReportMapBallonOverlayView.viewReports(index, item.getFilterCategory());
+		CheckinMapBallonOverlayView.viewCheckins(index, item.getFilterUserId());
 
 		return true;
 	}

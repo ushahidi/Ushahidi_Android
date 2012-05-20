@@ -121,7 +121,7 @@ public class ViewCheckinActivity extends
 		listCheckin = checkinModel.getCheckins(this);
 
 		if (listCheckin != null) {
-			userId = (int) listCheckin.get(position).getUserId();
+			checkinId = (int) listCheckin.get(position).getCheckinId();
 			if (view != null) {
 				view.setTitle(listCheckin.get(position).getUsername());
 				view.setBody(listCheckin.get(position).getMessage());

@@ -51,7 +51,7 @@ public class MapCheckinFragment<CheckinMapItemOverlay> extends BaseFragment {
 
 	private Handler mHandler;
 
-	private int filterCategory = 0;
+	private int filterUserId = 0;
 
 	private MenuItem refresh;
 
@@ -159,7 +159,7 @@ public class MapCheckinFragment<CheckinMapItemOverlay> extends BaseFragment {
 							public void onClick(DialogInterface dialog,
 									int which) {
 
-								filterCategory = spinnerArrayAdapter.getTag(
+								filterUserId = spinnerArrayAdapter.getTag(
 										which).getUserId();
 								final String all = spinnerArrayAdapter.getTag(
 										which).getUsername();
@@ -191,7 +191,7 @@ public class MapCheckinFragment<CheckinMapItemOverlay> extends BaseFragment {
 		public void run() {
 			try {
 				final boolean loaded = mListCheckinModel
-						.loadCheckinByUser(filterCategory);
+						.loadCheckinByUser(filterUserId);
 				if (loaded) {
 					mCheckinModel = mListCheckinModel
 							.getCheckins(getActivity());
@@ -321,7 +321,7 @@ public class MapCheckinFragment<CheckinMapItemOverlay> extends BaseFragment {
 						Double.valueOf(checkinModel.getLocationLongitude())),
 						checkinModel.getUsername(), Util.limitString(
 								checkinModel.getMessage(), 30), checkinModel
-								.getThumbnail(), checkinModel.getDbId(), ""));
+								.getThumbnail(), checkinModel.getDbId(), filterUserId));
 			}
 		}
 		map.getOverlays().clear();

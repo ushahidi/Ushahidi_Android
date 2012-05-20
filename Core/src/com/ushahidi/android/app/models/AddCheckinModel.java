@@ -36,7 +36,8 @@ public class AddCheckinModel extends Model {
 		// add pending reports
 		status = Database.mCheckin.addCheckin(checkin);
 		// int id = Database.mCheckin.
-		int id = 0;
+		int id = Database.mCheckin.fetchPendingCheckinIdByDate(checkin.getDate());
+		
 		// add photos
 		if (pendingPhotos != null && pendingPhotos.length > 0) {
 			for (File file : pendingPhotos) {

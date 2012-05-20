@@ -111,10 +111,10 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 		return this.message.getText().toString();
 	}
 
-	public void setListPhotos(int reportId) {
+	public void setListPhotos(int checkinId) {
 		if (listPhotos != null) {
 			ListPhotoAdapter adapter = new ListPhotoAdapter(context);
-			adapter.refresh(reportId);
+			adapter.refreshCheckinPhotos(checkinId);
 			listPhotos.setAdapter(adapter);
 		}
 	}
