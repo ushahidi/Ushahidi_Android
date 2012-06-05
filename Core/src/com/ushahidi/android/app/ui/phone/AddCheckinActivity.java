@@ -201,7 +201,16 @@ public class AddCheckinActivity extends
 	}
 
 	private void setSavedCheckins(int id) {
-
+		Checkin checkin = model.fetchPendingCheckinById(id);
+		if(checkin !=null) {
+			this.latitude = Double.valueOf(checkin.getLocationLatitude());
+			this.longitude = Double.valueOf(checkin.getLocationLongitude());
+			view.mCheckinMessageText.setText(checkin.getMessage());
+			view.mCheckinLocation.setText(String.format("%f, %f", latitude,
+					longitude));
+			// set the photos
+			pendingPhoto.refresh(id);
+		}
 	}
 
 	/**

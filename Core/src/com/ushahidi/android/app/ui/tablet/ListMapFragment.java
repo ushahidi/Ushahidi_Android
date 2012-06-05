@@ -32,7 +32,6 @@ import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
-import com.ushahidi.android.app.adapters.ListMapTabletAdapter;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.helpers.ActionModeHelper;
 import com.ushahidi.android.app.models.ListMapModel;
@@ -78,7 +77,7 @@ public class ListMapFragment extends
 
 	private ListMapModel mListMapModel;
 
-	private ListMapTabletAdapter mListMapAdapter;
+	//private ListMapTabletAdapter mListMapAdapter;
 
 	private boolean edit = true;
 
@@ -115,7 +114,7 @@ public class ListMapFragment extends
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
-		mListMapAdapter = new ListMapTabletAdapter(getActivity());
+		//mListMapAdapter = new ListMapTabletAdapter(getActivity());
 		mListMapModel = new ListMapModel();
 		apiUtils = new ApiUtils(getActivity());
 		if (Util.isHoneycomb()) {
@@ -127,7 +126,7 @@ public class ListMapFragment extends
 
 			registerForContextMenu(listView);
 		}
-
+		log("Adapter count "+adapter.getCount());
 		mHandler.post(fetchMapList);
 
 		if (savedInstanceState != null) {
@@ -200,7 +199,7 @@ public class ListMapFragment extends
 	final Runnable fetchMapList = new Runnable() {
 		public void run() {
 			try {
-				mListMapAdapter.refresh();
+				adapter.refresh();
 				// mListMapView.mListView.setAdapter(mListMapAdapter);
 				// mListMapView.displayEmptyListText();
 			} catch (Exception e) {
@@ -215,7 +214,7 @@ public class ListMapFragment extends
 	final Runnable filterMapList = new Runnable() {
 		public void run() {
 			try {
-				mListMapAdapter.getFilter().filter(filter);
+				adapter.getFilter().filter(filter);
 				// mListMapView.displayEmptyListText();
 			} catch (Exception e) {
 				return;
@@ -254,7 +253,7 @@ public class ListMapFragment extends
 	};
 
 	public void refreshMapLists() {
-		mListMapAdapter.refresh();
+		adapter.refresh();
 		// mListMapView.mListView.setAdapter(mListMapAdapter);
 		// mListMapView.displayEmptyListText();
 	}
@@ -283,8 +282,8 @@ public class ListMapFragment extends
 
 	public boolean performAction(android.view.MenuItem item, int position) {
 
-		mId = mListMapAdapter.getItem(position).getId();
-		mapId = mListMapAdapter.getItem(position).getMapId();
+		mId = adapter.getItem(position).getId();
+		mapId = adapter.getItem(position).getMapId();
 		if (item.getItemId() == R.id.map_delete) {
 			// Delete by ID
 			edit = false;
@@ -330,7 +329,7 @@ public class ListMapFragment extends
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
 		log("on map itemClicked");
-		final int sId = mListMapAdapter.getItem(position).getId();
+		final int sId = adapter.getItem(position).getId();
 
 		if (isMapActive(sId)) {
 			if (listener != null) {
@@ -354,7 +353,7 @@ public class ListMapFragment extends
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		l.setItemChecked(position, true);
 
-		final int sId = mListMapAdapter.getItem(position).getId();
+		final int sId = adapter.getItem(position).getId();
 
 		if (isMapActive(sId)) {
 			if (listener != null) {
@@ -659,7 +658,7 @@ public class ListMapFragment extends
 
 				toastShort(R.string.deployment_fetched_successful);
 			}
-			mListMapAdapter.refresh();
+			adapter.refresh();
 			// mListMapView.mListView.setAdapter(mListMapAdapter);
 			// mListMapView.displayEmptyListText();
 			refreshState = false;

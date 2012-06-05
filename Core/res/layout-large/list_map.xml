@@ -59,7 +59,7 @@
     <!-- Here is the view to show if the list is emtpy -->
 
     <TextView
-        android:id="@+id/empty_list_for_maps"
+        android:id="@android:id/empty"
         style="@style/TextView.Empty"
         android:text="@string/no_items" />
     <!-- progress bar -->

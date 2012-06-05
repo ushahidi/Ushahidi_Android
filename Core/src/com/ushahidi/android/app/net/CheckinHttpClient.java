@@ -189,12 +189,14 @@ public class CheckinHttpClient extends MainHttpClient {
 				HttpEntity respEntity = response.getEntity();
 				if (respEntity != null) {
 					InputStream serverInput = respEntity.getContent();
-					int status = ApiUtils
+					if(serverInput !=null) {
+						//TODO:: get the status confirmation code to work
+						int status = ApiUtils
 							.extractPayloadJSON(GetText(serverInput));
-					log("Post to Server: "+status);
-					if (status == 0) {
+						
 						return true;
 					}
+					
 					return false;
 				}
 			}
