@@ -55,10 +55,13 @@ import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseEditMapActivity;
+import com.ushahidi.android.app.adapters.ListFetchedCheckinAdapter;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.entities.Checkin;
 import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.models.AddCheckinModel;
+import com.ushahidi.android.app.models.ListCheckinModel;
+import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.util.PhotoUtils;
@@ -334,7 +337,7 @@ public class AddCheckinActivity extends
 	}
 
 	/**
-	 * Set photo to be attached to an existing report
+	 * Set photo to be attached to a pending checkin
 	 */
 	private void addPhotoToCheckin() {
 		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
@@ -422,8 +425,8 @@ public class AddCheckinActivity extends
 		if (checkin != null) {
 
 			final String photo = new UploadPhotoAdapter(this)
-					.pendingPhotos((int) checkin.getCheckinId());
-
+					.pendingCheckinPhotos();
+			log("upload photos "+photo);
 			mParams.put("task", "checkin");
 			mParams.put("action", "ci");
 			mParams.put("mobileid", Util.IMEI(this));
@@ -443,6 +446,11 @@ public class AddCheckinActivity extends
 				if (new CheckinHttpClient(this).PostFileUpload(
 						urlBuilder.toString(), mParams)) {
 					model.deleteCheckin((int) checkin.getDbId());
+					//delete pending photo.
+					for (int i = 0; i < pendingPhoto.getCount(); i++) {
+						ImageManager.deletePendingPhoto(this, "/"
+								+ pendingPhoto.getItem(i).getPhoto());
+					}
 					return true;
 				}
 				return false;
@@ -452,6 +460,23 @@ public class AddCheckinActivity extends
 		}
 		return false;
 
+	}
+	
+	private void deleteFetchedCheckin() {
+		final List<ListCheckinModel> items =  new ListFetchedCheckinAdapter(this).fetchedCheckins();
+		for (ListCheckinModel checkin : items) {
+			if (new ListCheckinModel().deleteAllFetchedCheckin(checkin
+					.getCheckinId())) {
+				final List<Photo> photos = new ListPhotoModel()
+						.getPhotosByCheckinId(checkin.getCheckinId());
+
+				for (Photo photo : photos) {
+					ImageManager.deletePendingPhoto(this,
+							"/" + photo.getPhoto());
+				}
+			}
+
+		}
 	}
 
 	/**
@@ -470,6 +495,12 @@ public class AddCheckinActivity extends
 		protected Boolean doInBackground(String... strings) {
 			status = addCheckins();
 			if (status < 3) {
+				//get uploaded checkin
+				// delete everything before updating with a new one
+				deleteFetchedCheckin();
+
+				new CheckinHttpClient(AddCheckinActivity.this)
+						.getAllCheckinFromWeb();
 				return true;
 			}
 			return false;
@@ -480,7 +511,7 @@ public class AddCheckinActivity extends
 			super.onPostExecute(success);
 			if (success) {
 				if (status == 0) {
-					toastLong(String.format("%s %s", getString(R.string.uploaded), status));
+					toastLong(getString(R.string.uploaded));
 					
 				} else if (status == 1 || status == 2) {
 					toastLong(R.string.saved);

@@ -118,6 +118,24 @@ public class UploadPhotoAdapter extends BaseListAdapter<Photo> {
 		}
 		return photos.toString();
 	}
+	
+	public String pendingCheckinPhotos() {
+		mListPhotoModel = new ListPhotoModel();
+		items = mListPhotoModel.getPendingPhotos(context);
+		StringBuilder photos = new StringBuilder();
+		for (Photo photo : items) {
+			if (photo.getPhoto().length() > 0) {
+				photos.append(photo.getPhoto() + ",");
+			}
+
+		}
+
+		// delete the last |
+		if (photos.length() > 0) {
+			photos.deleteCharAt(photos.length() - 1);
+		}
+		return photos.toString();
+	}
 
 	private Drawable getPhoto(String fileName) {
 		return ImageManager.getDrawables2(context, fileName);

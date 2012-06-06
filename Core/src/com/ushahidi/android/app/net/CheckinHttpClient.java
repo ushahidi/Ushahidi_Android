@@ -167,13 +167,14 @@ public class CheckinHttpClient extends MainHttpClient {
 
 						File file = new File(ImageManager.getPhotoPath(context,
 								params.get("filename")));
-						if (file.exists()) {
-							entity.addPart(
-									"photo",
-									new FileBody(new File(ImageManager
-											.getPhotoPath(context,
-													params.get("filename")))));
-
+						
+						if(file !=null) {
+							if (file.exists()) {
+								log("file exists: "+file.getName());
+								entity.addPart(
+										"photo",
+										new FileBody(file));
+							}
 						}
 					}
 				}

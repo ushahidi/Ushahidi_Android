@@ -515,8 +515,15 @@ public class ListCheckinFragment
 		@Override
 		protected Boolean doInBackground(String... strings) {
 
-			return uploadPendingCheckin();
+			if(uploadPendingCheckin()) {
+				// delete everything before updating with a new one
+				deleteFetchedCheckin();
 
+				new CheckinHttpClient(getActivity())
+						.getAllCheckinFromWeb();
+				return true;
+			}
+			return false;
 		}
 
 		@Override

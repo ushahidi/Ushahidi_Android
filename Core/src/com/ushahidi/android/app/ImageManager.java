@@ -183,7 +183,7 @@ public class ImageManager {
 	public static String getSavedPhotoPath(Context context, String folder) {
 		// create photo directory if it doesn't exist
 		File path = new File(Environment.getExternalStorageDirectory(),
-				context.getPackageName() + folder);
+				String.format("%s%s%s", context.getPackageName(), "/", folder) );
 		if (!path.exists()) {
 			// create path if it doesn't exist
 			if (createDirectory(context)) {
