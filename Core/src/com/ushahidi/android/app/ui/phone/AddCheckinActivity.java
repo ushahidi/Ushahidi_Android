@@ -724,11 +724,12 @@ public class AddCheckinActivity extends
 	 */
 	@Override
 	public View makeView() {
+		
 		ImageView i = new ImageView(this);
 		i.setAdjustViewBounds(true);
-		i.setScaleType(ImageView.ScaleType.FIT_CENTER);
+		 i.setScaleType(ImageView.ScaleType.FIT_XY);
 		i.setLayoutParams(new ImageSwitcher.LayoutParams(
-				android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+				android.view.ViewGroup.LayoutParams.FILL_PARENT,
 				android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 
 		return i;
@@ -746,7 +747,6 @@ public class AddCheckinActivity extends
 		this.view.mSwitcher.setImageDrawable(ImageManager.getPendingDrawables(
 				this, pendingPhoto.getItem(position).getPhoto(),
 				Util.getScreenWidth(this)));
-
 	}
 
 }

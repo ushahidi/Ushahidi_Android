@@ -271,12 +271,20 @@ public class ImageManager {
 			deleteFiles(path);
 		}
 	}
+	
+	public static void deletePendingImages(Context context) {
+		if (isExternalStoragePresent()) {
+			File path = new File(Environment.getExternalStorageDirectory(),
+					context.getPackageName() + PENDING);
+			deleteFiles(path);
+		}
+	}
 
 	private static boolean deleteFiles(File path) {
 		if (path.exists()) {
 			File[] files = path.listFiles();
 			if (files == null) {
-				return true;
+				return false;
 			}
 
 			// go through the folder and delete its content

@@ -20,7 +20,6 @@
 
 package com.ushahidi.android.app.ui.phone;
 
-import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +28,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -47,12 +45,15 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.BaseListActivity;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
+import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListMapModel;
+import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.net.MapsHttpClient;
@@ -370,26 +371,18 @@ public class ListMapActivity extends
 	/**
 	 * Clear saved reports
 	 */
-	public void clearCachedReports() {
-
-		// delete unset photo
-		if (Preferences.fileName != null) {
-			File f = new File(Preferences.fileName);
-			if (f != null) {
-				if (f.exists()) {
-					f.delete();
-				}
-			}
-		}
-
-		// clear persistent data
-		SharedPreferences.Editor editor = getPreferences(0).edit();
-		editor.putString("title", "");
-		editor.putString("desc", "");
-		editor.putString("date", "");
-		editor.putString("selectedphoto", "");
-		editor.putInt("requestedcode", 0);
-		editor.commit();
+	public void clearCachedData() {
+		//delete reports
+		new ListReportModel().deleteReport();
+		
+		//delete checkins data
+		new ListCheckinModel().deleteCheckin();
+		
+		//delete pending photos
+		ImageManager.deleteImages(this);
+		
+		//delete fetched photos
+		ImageManager.deletePendingImages(this);
 	}
 
 	/**
@@ -595,9 +588,9 @@ public class ListMapActivity extends
 			try {
 				if (id != 0) {
 					listMapModel.activateDeployment(ListMapActivity.this, id);
-
+					clearCachedData();
 					if (!apiUtils.isCheckinEnabled()) {
-
+							
 						// fetch categories
 						new CategoriesHttpClient(ListMapActivity.this)
 								.getCategoriesFromWeb();
@@ -748,5 +741,5 @@ public class ListMapActivity extends
 	protected View headerView() {
 		return null;
 	}
-
+	
 }

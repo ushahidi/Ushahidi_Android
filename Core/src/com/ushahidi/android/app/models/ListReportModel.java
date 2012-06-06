@@ -341,4 +341,26 @@ public class ListReportModel extends Model {
 		}
 		return true;
 	}
+	
+	public boolean deleteReport() {
+		// delete fetched reports
+				if(Database.mReportDao.deleteAllReport())  {
+					Log.i("ListReportModel","Report deleted");
+				}
+
+				// delete categories
+				if( Database.mReportCategoryDao.deleteAllReportCategory()) {
+					Log.i("Report","Report deleted");
+				}
+				
+				if( Database.mCategoryDao.deleteAllCategories() ) {
+					Log.i("Category: ","Category deleted");
+				}
+
+				// delete media
+				if(Database.mMediaDao.deleteAllMedia()) {
+					Log.i("Media","Media deleted");
+				}
+				return true;
+	}
 }

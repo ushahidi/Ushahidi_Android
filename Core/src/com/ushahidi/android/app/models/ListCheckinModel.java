@@ -163,6 +163,24 @@ public class ListCheckinModel extends Checkin {
 		}
 		return true;
 	}
+	
+public boolean deleteCheckin() {
+		
+		// delete fetched reports
+		if(Database.mCheckin.deleteAllCheckins() )  {
+			Log.i("ListCheckinModel","Checkin deleted");
+		}
+		
+		if( Database.mUserDao.deleteAllUsers() ) {
+			Log.i("Users: ","Users deleted");
+		}
+
+		// delete media
+		if(Database.mMediaDao.deleteAllMedia() ) {
+			Log.i("Media","Media deleted");
+		}
+		return true;
+	}
 
 	@Override
 	public boolean save() {

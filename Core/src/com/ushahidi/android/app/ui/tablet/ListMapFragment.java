@@ -28,13 +28,16 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.helpers.ActionModeHelper;
+import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListMapModel;
+import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.net.MapsHttpClient;
@@ -459,27 +462,18 @@ public class ListMapFragment extends
 	/**
 	 * Clear saved reports
 	 */
-	public void clearCachedReports() {
-
-		// delete unset photo
-		if (Preferences.fileName != null) {
-			File f = new File(Preferences.fileName);
-			if (f != null) {
-				if (f.exists()) {
-					f.delete();
-				}
-			}
-		}
-
-		// clear persistent data
-		SharedPreferences.Editor editor = getActivity().getPreferences(0)
-				.edit();
-		editor.putString("title", "");
-		editor.putString("desc", "");
-		editor.putString("date", "");
-		editor.putString("selectedphoto", "");
-		editor.putInt("requestedcode", 0);
-		editor.commit();
+	public void clearCachedData() {
+		//delete reports
+		new ListReportModel().deleteReport();
+		
+		//delete checkins data
+		new ListCheckinModel().deleteCheckin();
+		
+		//delete pending photos
+		ImageManager.deleteImages(getActivity());
+		
+		//delete fetched photos
+		ImageManager.deletePendingImages(getActivity());
 	}
 
 	/**
@@ -687,7 +681,7 @@ public class ListMapFragment extends
 			try {
 				if (id != 0) {
 					mListMapModel.activateDeployment(getActivity(), id);
-
+					clearCachedData();
 					if (!apiUtils.isCheckinEnabled()) {
 
 						// fetch categories
