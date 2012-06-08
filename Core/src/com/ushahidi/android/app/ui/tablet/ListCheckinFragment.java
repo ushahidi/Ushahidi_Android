@@ -20,14 +20,13 @@
 
 package com.ushahidi.android.app.ui.tablet;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.MenuItem;
@@ -40,25 +39,18 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ushahidi.android.app.ImageManager;
-import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListCheckinAdapter;
 import com.ushahidi.android.app.adapters.ListFetchedCheckinAdapter;
 import com.ushahidi.android.app.adapters.ListPendingCheckinAdapter;
-import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.adapters.UserSpinnerAdater;
-import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.fragments.BaseSectionListFragment;
-import com.ushahidi.android.app.models.AddCheckinModel;
 import com.ushahidi.android.app.models.ListCheckinModel;
-import com.ushahidi.android.app.models.ListPhotoModel;
-import com.ushahidi.android.app.net.CheckinHttpClient;
-import com.ushahidi.android.app.tasks.ProgressTask;
+import com.ushahidi.android.app.services.FetchCheckins;
+import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.ui.phone.AddCheckinActivity;
 import com.ushahidi.android.app.ui.phone.ViewCheckinActivity;
 import com.ushahidi.android.app.util.ApiUtils;
-import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ListCheckinView;
 
 /**
@@ -88,6 +80,10 @@ public class ListCheckinFragment
 
 	private boolean refreshState = false;
 
+	public ProgressDialog dialog;
+
+	private Intent fetchCheckins;
+
 	public ListCheckinFragment() {
 		super(ListCheckinView.class, ListCheckinAdapter.class,
 				R.layout.list_checkin, R.menu.list_checkin, android.R.id.list);
@@ -105,6 +101,7 @@ public class ListCheckinFragment
 		setHasOptionsMenu(true);
 		mHandler = new Handler();
 		apiUtils = new ApiUtils(getActivity());
+
 		listView.setEmptyView(null);
 		fetchedAdapter = new ListFetchedCheckinAdapter(getActivity());
 		pendingAdapter = new ListPendingCheckinAdapter(getActivity());
@@ -159,33 +156,48 @@ public class ListCheckinFragment
 		return viewGroup;
 	}
 
-	private void executeUploadTask() {
-		if (!pendingAdapter.isEmpty()) {
-			new UploadTask(getActivity()).execute((String) null);
-		}
+	private void fetchCheckins() {
+		getActivity().registerReceiver(fetchBroadcastReceiver,
+				new IntentFilter(SyncServices.FETCH_CHECKIN_SERVICES_ACTION));
+		refreshState = true;
+		updateRefreshStatus();
+		fetchCheckins = new Intent(getActivity(), FetchCheckins.class);
+		getActivity().startService(fetchCheckins);
+		/*
+		 * if (!pendingAdapter.isEmpty()) { // new
+		 * UploadTask(getActivity()).execute((String) null); }
+		 */
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		getActivity().registerReceiver(fetchBroadcastReceiver,
+				new IntentFilter(SyncServices.FETCH_CHECKIN_SERVICES_ACTION));
 		refreshCheckinList();
 		if (filterUserId == 0) {
 			refreshCheckinList();
 			showUsers();
-
 		} else {
 			refreshCheckinByUserList();
 		}
 
-		// upload pending checkin
-		executeUploadTask();
+	}
+
+	public void onPause() {
+		super.onPause();
+		try {
+			getActivity().unregisterReceiver(fetchBroadcastReceiver);
+		} catch (IllegalArgumentException e) {
+		}
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh_checkin) {
 			refresh = item;
-			new FetchCheckins(getActivity()).execute((String) null);
+			fetchCheckins();
+			// new FetchCheckins(getActivity()).execute((String) null);
 			return true;
 		} else if (item.getItemId() == R.id.menu_add_checkin) {
 			launchAddCheckin(0);
@@ -328,7 +340,7 @@ public class ListCheckinFragment
 
 								filterUserId = spinnerArrayAdapter
 										.getTag(which).getUserId();
-								
+
 								final String all = spinnerArrayAdapter.getTag(
 										which).getUsername();
 								view.footerText.setText(all);
@@ -364,180 +376,60 @@ public class ListCheckinFragment
 
 	}
 
-	private void deletePendingCheckin(int checkinId) {
-		// make sure it's an existing report
-		AddCheckinModel model = new AddCheckinModel();
-		UploadPhotoAdapter pendingPhoto = new UploadPhotoAdapter(getActivity());
-		if (checkinId > 0) {
-			if (model.deleteCheckin(checkinId)) {
-				// delete images
-				for (int i = 0; i < pendingPhoto.getCount(); i++) {
-					ImageManager.deletePendingPhoto(getActivity(), "/"
-							+ pendingPhoto.getItem(i).getPhoto());
-				}
-				// return to report listing page.
-			}
-		}
-	}
-
-	private boolean uploadPendingCheckin() {
-		List<ListCheckinModel> items = pendingAdapter.pendingCheckin();
-		StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
-		urlBuilder.append("/api");
-		if (items != null) {
-			for (ListCheckinModel checkin : items) {
-				final HashMap<String, String> mParams = new HashMap<String, String>();
-				mParams.put("task", "checkin");
-				mParams.put("action", "ci");
-				mParams.put("mobileid", Util.IMEI(getActivity()));
-				mParams.put("lat", checkin.getLocationLatitude());
-				mParams.put("lon", checkin.getLocationLongitude());
-				mParams.put("message", checkin.getMessage());
-				mParams.put("firstname", Preferences.firstname);
-				mParams.put("lastname", Preferences.lastname);
-				mParams.put("email", Preferences.email);
-				final String photo = new UploadPhotoAdapter(getActivity())
-						.pendingPhotos((int) checkin.getCheckinId());
-
-				// load filenames
-				if (!TextUtils.isEmpty(photo)) {
-					mParams.put("filename", photo);
-				}
-				// upload
-				try {
-					if (new CheckinHttpClient(getActivity()).PostFileUpload(
-							urlBuilder.toString(), mParams)) {
-						deletePendingCheckin((int) checkin.getDbId());
-						return true;
-					}
-					return false;
-				} catch (IOException e) {
-					return false;
-				}
-			}
-		}
-		return false;
-	}
-
-	private void deleteFetchedCheckin() {
-		final List<ListCheckinModel> items = fetchedAdapter.fetchedCheckins();
-		for (ListCheckinModel checkin : items) {
-			if (new ListCheckinModel().deleteAllFetchedCheckin(checkin
-					.getCheckinId())) {
-				final List<Photo> photos = new ListPhotoModel()
-						.getPhotosByCheckinId(checkin.getCheckinId());
-
-				for (Photo photo : photos) {
-					ImageManager.deletePendingPhoto(getActivity(),
-							"/" + photo.getPhoto());
-				}
-			}
-
-		}
-	}
-
 	/**
 	 * Example of a ProgressTask
+	 * 
+	 * class FetchCheckins extends ProgressTask {
+	 * 
+	 * protected Integer status = 4; // there is no internet
+	 * 
+	 * public FetchCheckins(Activity activity) { super(activity,
+	 * R.string.loading_); refreshState = true; }
+	 * 
+	 * @Override protected void onPreExecute() { super.onPreExecute();
+	 *           dialog.cancel(); refreshState = true; updateRefreshStatus(); }
+	 * @Override protected Boolean doInBackground(String... strings) { try {
+	 * 
+	 *           // check if there is internet if (apiUtils.isConnected()) {
+	 * 
+	 *           // upload pending reports. if (!pendingAdapter.isEmpty()) {
+	 *           uploadPendingCheckin(); }
+	 * 
+	 *           // delete everything before updating with a new one
+	 *           deleteFetchedCheckin();
+	 * 
+	 *           status = new CheckinHttpClient(getActivity())
+	 *           .getAllCheckinFromWeb(); } Thread.sleep(1000); } catch
+	 *           (InterruptedException e) { e.printStackTrace(); } return true;
+	 *           }
+	 * @Override protected void onPostExecute(Boolean result) { if (result) {
+	 *           log("fetching checkins"); if (status == 4) {
+	 *           toastLong(R.string.internet_connection); } else if (status ==
+	 *           110) { toastLong(R.string.connection_timeout); } else if
+	 *           (status == 100) { toastLong(R.string.could_not_fetch_checkin);
+	 *           } else if (status == 0) { log("successfully fetched checkins");
+	 *           refreshCheckinList(); showUsers(); } refreshState = false;
+	 *           updateRefreshStatus(); } } }
+	 * 
+	 *           /** Upload pending checkins
+	 * 
+	 *           class UploadTask extends ProgressTask {
+	 * 
+	 *           public UploadTask(Activity activity) { super(activity,
+	 *           R.string.uploading); // pass custom loading message to super
+	 *           call }
+	 * @Override protected Boolean doInBackground(String... strings) {
+	 * 
+	 *           if(uploadPendingCheckin()) { // delete everything before
+	 *           updating with a new one deleteFetchedCheckin();
+	 * 
+	 *           new CheckinHttpClient(getActivity()) .getAllCheckinFromWeb();
+	 *           return true; } return false; }
+	 * @Override protected void onPostExecute(Boolean success) {
+	 *           super.onPostExecute(success); if (success) {
+	 *           toastLong(R.string.uploaded); refreshCheckinList();
+	 *           showUsers(); } else { toastLong(R.string.failed); } } }
 	 */
-	class FetchCheckins extends ProgressTask {
-
-		protected Integer status = 4; // there is no internet
-
-		public FetchCheckins(Activity activity) {
-			super(activity, R.string.loading_);
-			refreshState = true;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			dialog.cancel();
-			refreshState = true;
-			updateRefreshStatus();
-		}
-
-		@Override
-		protected Boolean doInBackground(String... strings) {
-			try {
-
-				// check if there is internet
-				if (apiUtils.isConnected()) {
-
-					// upload pending reports.
-					if (!pendingAdapter.isEmpty()) {
-						uploadPendingCheckin();
-					}
-
-					// delete everything before updating with a new one
-					deleteFetchedCheckin();
-
-					status = new CheckinHttpClient(getActivity())
-							.getAllCheckinFromWeb();
-				}
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			return true;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			if (result) {
-				log("fetching checkins");
-				if (status == 4) {
-					toastLong(R.string.internet_connection);
-				} else if (status == 110) {
-					toastLong(R.string.connection_timeout);
-				} else if (status == 100) {
-					toastLong(R.string.could_not_fetch_checkin);
-				} else if (status == 0) {
-					log("successfully fetched checkins");
-					refreshCheckinList();
-					showUsers();
-				}
-				refreshState = false;
-				updateRefreshStatus();
-			}
-		}
-	}
-
-	/**
-	 * Upload pending checkins
-	 */
-	class UploadTask extends ProgressTask {
-
-		public UploadTask(Activity activity) {
-			super(activity, R.string.uploading);
-			// pass custom loading message to super call
-		}
-
-		@Override
-		protected Boolean doInBackground(String... strings) {
-
-			if(uploadPendingCheckin()) {
-				// delete everything before updating with a new one
-				deleteFetchedCheckin();
-
-				new CheckinHttpClient(getActivity())
-						.getAllCheckinFromWeb();
-				return true;
-			}
-			return false;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean success) {
-			super.onPostExecute(success);
-			if (success) {
-				toastLong(R.string.uploaded);
-				refreshCheckinList();
-				showUsers();
-			} else {
-				toastLong(R.string.failed);
-			}
-		}
-	}
 
 	@Override
 	protected void onLoaded(boolean success) {
@@ -554,7 +446,7 @@ public class ListCheckinFragment
 	private void launchViewCheckin(int id) {
 		Intent i = new Intent(getActivity(), ViewCheckinActivity.class);
 		i.putExtra("id", id);
-		
+
 		if (filterUserId > 0) {
 			i.putExtra("userid", filterUserId);
 		} else {
@@ -575,4 +467,33 @@ public class ListCheckinFragment
 		getActivity().overridePendingTransition(R.anim.home_enter,
 				R.anim.home_exit);
 	}
+
+	private BroadcastReceiver fetchBroadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent != null) {
+
+				int status = intent.getIntExtra("status", 4);
+				refreshState = false;
+				updateRefreshStatus();
+				// Log.i("ListCheckinFragment: ", " Status "+status);
+				if (status == 4) {
+					toastLong(R.string.internet_connection);
+				} else if (status == 110) {
+					toastLong(R.string.connection_timeout);
+				} else if (status == 100) {
+					toastLong(R.string.could_not_fetch_checkin);
+				} else if (status == 0) {
+					log("successfully fetched checkins");
+					refreshCheckinList();
+					showUsers();
+				}
+			}
+
+			try {
+				getActivity().unregisterReceiver(fetchBroadcastReceiver);
+			} catch (IllegalArgumentException e) {
+			}
+		}
+	};
 }

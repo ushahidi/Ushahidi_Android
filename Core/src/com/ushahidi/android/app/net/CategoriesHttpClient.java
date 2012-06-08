@@ -70,7 +70,7 @@ public class CategoriesHttpClient extends MainHttpClient {
 			if (statusCode == 200) {
 
 				categoriesResponse = GetText(response);
-				log("categories : "+categoriesResponse);
+				
 				CategoriesApiUtils categoriesApiUtils = new CategoriesApiUtils(
 						categoriesResponse);
 				if (categoriesApiUtils.getCategoriesList()) {

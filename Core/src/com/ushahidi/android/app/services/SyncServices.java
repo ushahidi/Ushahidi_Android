@@ -19,7 +19,11 @@ import android.util.Log;
 public abstract class SyncServices extends IntentService {
 
 	public static String SYNC_SERVICES_ACTION = "com.ushahidi.android.app.services.sync";
+	
 	public static String UPLOAD_CHECKIN_SERVICES_ACTION = "com.ushahidi.android.app.services.uploadcheckin";
+	
+	public static String FETCH_CHECKIN_SERVICES_ACTION = "com.ushahidi.android.app.services.uploadcheckin";
+	
     protected static String CLASS_TAG = SyncServices.class.getSimpleName();
 
     protected static PowerManager.WakeLock mStartingService = null;

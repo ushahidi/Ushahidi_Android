@@ -326,6 +326,7 @@
         <!-- Services -->
         <service android:name=".services.UploadCheckins" />
         <service android:name=".services.FetchReports" />
+        <service android:name=".services.FetchCheckins" />
 
         <!--
              Receiver waits for connectivity change so offline messages can be 
