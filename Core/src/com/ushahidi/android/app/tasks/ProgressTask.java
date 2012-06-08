@@ -42,7 +42,7 @@ public abstract class ProgressTask extends Task<String, String, Boolean> {
 	protected ProgressTask(Activity activity, int message) {
 		super(activity);
 		this.dialog = new ProgressDialog(activity);
-		this.dialog.setCancelable(false);
+		this.dialog.setCancelable(true);
 		this.dialog.setIndeterminate(true);
 		this.dialog.setMessage(activity.getString(message));
 	}

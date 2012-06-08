@@ -63,6 +63,7 @@ public class SplashScreenActivity extends FragmentActivity {
                 } finally {
                     if (Util.isTablet(SplashScreenActivity.this)) {
                         startActivity(new Intent(SplashScreenActivity.this, DashboardActivity.class));
+                        overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
                         finish();
                     } else {
                         startActivity(new Intent(SplashScreenActivity.this, ListMapActivity.class));

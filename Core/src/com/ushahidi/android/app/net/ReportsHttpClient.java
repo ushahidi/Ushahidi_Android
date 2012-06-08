@@ -86,11 +86,11 @@ public class ReportsHttpClient extends MainHttpClient {
 			}
 
 			final int statusCode = response.getStatusLine().getStatusCode();
-
+			log("Status code: "+statusCode);
 			if (statusCode == 200) {
 
 				incidents = GetText(response);
-
+				log("JsonString: "+incidents);
 				ReportsApiUtils reportsApiUtils = new ReportsApiUtils(incidents);
 				if (reportsApiUtils.saveReports(context)) {
 					return 0; // return success even if geographic fails

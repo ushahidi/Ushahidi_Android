@@ -6,7 +6,7 @@ import android.support.v4.view.MenuItem;
 
 import com.ushahidi.android.app.R;
 
-public class ReportMapActivity extends FragmentMapActivity {
+public class CheckinMapActivity extends FragmentMapActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

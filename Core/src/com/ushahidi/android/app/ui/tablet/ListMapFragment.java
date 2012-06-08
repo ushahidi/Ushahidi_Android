@@ -1,15 +1,15 @@
 package com.ushahidi.android.app.ui.tablet;
 
-import java.io.File;
 import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -42,6 +42,7 @@ import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.net.MapsHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
+import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.ui.phone.CheckinTabActivity;
@@ -80,7 +81,7 @@ public class ListMapFragment extends
 
 	private ListMapModel mListMapModel;
 
-	//private ListMapTabletAdapter mListMapAdapter;
+	// private ListMapTabletAdapter mListMapAdapter;
 
 	private boolean edit = true;
 
@@ -102,6 +103,10 @@ public class ListMapFragment extends
 
 	static private final String STATE_CHECKED = "com.ushahidi.android.app.activity.STATE_CHECKED";
 
+	private Intent fetchReports;
+
+	public ProgressDialog dialog;
+
 	public ListMapFragment() {
 		super(ListMapView.class, ListMapAdapter.class, R.layout.list_map, 0,
 				android.R.id.list);
@@ -117,9 +122,14 @@ public class ListMapFragment extends
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
-		//mListMapAdapter = new ListMapTabletAdapter(getActivity());
+		// mListMapAdapter = new ListMapTabletAdapter(getActivity());
 		mListMapModel = new ListMapModel();
 		apiUtils = new ApiUtils(getActivity());
+		this.dialog = new ProgressDialog(getActivity());
+		this.dialog.setCancelable(true);
+		this.dialog.setIndeterminate(true);
+		this.dialog.setMessage(getString(R.string.please_wait));
+
 		if (Util.isHoneycomb()) {
 			listView.setLongClickable(true);
 			listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -129,7 +139,7 @@ public class ListMapFragment extends
 
 			registerForContextMenu(listView);
 		}
-		log("Adapter count "+adapter.getCount());
+		log("Adapter count " + adapter.getCount());
 		mHandler.post(fetchMapList);
 
 		if (savedInstanceState != null) {
@@ -140,6 +150,15 @@ public class ListMapFragment extends
 			}
 		}
 
+	}
+
+	private void fetchReports(int id) {
+		if (id != 0) {
+			mListMapModel.activateDeployment(getActivity(), id);
+			dialog.show();
+			fetchReports = new Intent(getActivity(), FetchReports.class);
+			getActivity().startService(fetchReports);
+		}
 	}
 
 	@Override
@@ -339,15 +358,18 @@ public class ListMapFragment extends
 				listener.onMapSelected(sId);
 			}
 		} else {
-			FetchMapReportTask fetchMapReportTask = new FetchMapReportTask(
-					getActivity());
-			fetchMapReportTask.id = sId;
-			fetchMapReportTask.execute((String) null);
-			if (fetchMapReportTask.getStatus() == android.os.AsyncTask.Status.FINISHED) {
-				if (listener != null) {
-					listener.onMapSelected(sId);
-				}
-			}
+			fetchReports(sId);
+			/*
+			 * FetchMapReportTask fetchMapReportTask = new FetchMapReportTask(
+			 * getActivity()); fetchMapReportTask.id = sId;
+			 * fetchMapReportTask.execute((String) null);
+			 */
+			listener.onMapSelected(sId);
+			/*
+			 * if (fetchMapReportTask.getStatus() ==
+			 * android.os.AsyncTask.Status.FINISHED) { if (listener != null) {
+			 * listener.onMapSelected(sId); } }
+			 */
 		}
 
 	}
@@ -463,16 +485,16 @@ public class ListMapFragment extends
 	 * Clear saved reports
 	 */
 	public void clearCachedData() {
-		//delete reports
+		// delete reports
 		new ListReportModel().deleteReport();
-		
-		//delete checkins data
+
+		// delete checkins data
 		new ListCheckinModel().deleteCheckin();
-		
-		//delete pending photos
+
+		// delete pending photos
 		ImageManager.deleteImages(getActivity());
-		
-		//delete fetched photos
+
+		// delete fetched photos
 		ImageManager.deletePendingImages(getActivity());
 	}
 
@@ -669,7 +691,7 @@ public class ListMapFragment extends
 
 		protected int id;
 
-		protected Integer status;
+		protected Integer status = 113;
 
 		public FetchMapReportTask(Activity activity) {
 			super(activity, R.string.please_wait);
@@ -691,19 +713,19 @@ public class ListMapFragment extends
 						// fetch reports
 						status = new ReportsHttpClient(getActivity())
 								.getAllReportFromWeb();
+						return false;
 					} else {
 
 						// TODO process checkin if there is one
 						status = new CheckinHttpClient(getActivity())
 								.getAllCheckinFromWeb();
+						return true;
 					}
 
-				} else {
-					status = 113;
 				}
 
 				Thread.sleep(1000);
-				return true;
+				return false;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				return false;
@@ -841,5 +863,38 @@ public class ListMapFragment extends
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent != null) {
+				int status = intent.getIntExtra("status", 113);
+				getActivity().unregisterReceiver(broadcastReceiver);
+				dialog.cancel();
+
+				if (status == 0) {
+					onLoaded(true);
+				} else if (status == 100) {
+					errorMessage = getString(R.string.internet_connection);
+					createDialog(DIALOG_SHOW_MESSAGE);
+				} else if (status == 99) {
+					errorMessage = getString(R.string.failed);
+					createDialog(DIALOG_SHOW_MESSAGE);
+				} else if (status == 112) {
+					errorMessage = getString(R.string.network_error);
+					createDialog(DIALOG_SHOW_MESSAGE);
+				} else {
+					errorMessage = getString(R.string.error_occured);
+					createDialog(DIALOG_SHOW_MESSAGE);
+
+				}
+
+			} else {
+				toastLong(R.string.failed);
+			}
+
+		}
+
+	};
 
 }

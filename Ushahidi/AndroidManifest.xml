@@ -322,7 +322,10 @@
         </activity>
 
         <!-- New Fragment Activities Ends -->
-
+        
+        <!-- Services -->
+        <service android:name=".services.UploadCheckins" />
+        <service android:name=".services.FetchReports" />
 
         <!--
              Receiver waits for connectivity change so offline messages can be 
@@ -336,6 +339,16 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+        
+         <!-- connectivity changed -->
+        <receiver
+            android:name=".services.ConnectivityChangedReceiver"
+            enabled="false" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        
     </application>
 
 </manifest>

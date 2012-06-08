@@ -208,6 +208,10 @@ public class ListReportFragment
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		if(new RefreshReports(getActivity()).cancel(true)) {
+			refreshState = false;
+			updateRefreshStatus();
+		}
 	}
 
 	@Override
@@ -612,7 +616,7 @@ public class ListReportFragment
 			try {
 				// check if there is internet
 				if (apiUtils.isConnected()) {
-
+					log("URL: "+Preferences.domain);
 					// upload pending reports.
 					if (!pendingReportAdapter.isEmpty()) {
 						uploadPendingReports();
@@ -628,14 +632,16 @@ public class ListReportFragment
 
 					status = new ReportsHttpClient(getActivity())
 							.getAllReportFromWeb();
+					return true;
 				}
 
 				Thread.sleep(1000);
+				return false;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				return false;
 			}
-			return true;
+			
 		}
 
 		@Override

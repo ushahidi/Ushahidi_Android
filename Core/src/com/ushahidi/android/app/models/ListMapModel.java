@@ -163,9 +163,7 @@ public class ListMapModel extends Model {
 	 * @return 2 -- No internet connection
 	 */
 	public void activateDeployment(Context context, int id) {
-
 		List<Map> listMap = Database.mMapDao.fetchMapById(id);
-
 		if (listMap != null & listMap.size() > 0) {
 			Preferences.loadSettings(context);
 			Preferences.activeDeployment = id;

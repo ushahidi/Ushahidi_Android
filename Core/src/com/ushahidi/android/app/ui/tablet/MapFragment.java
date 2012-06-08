@@ -35,6 +35,7 @@ import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
+import com.ushahidi.android.app.ui.tablet.ListReportFragment.RefreshReports;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
@@ -289,6 +290,14 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		super.onResume();
 		if (mReportModel.size() == 0) {
 			mHandler.post(mMarkersOnMap);
+		}
+	}
+	
+	public void onDestroy() {
+		super.onDestroy();
+		if(new RefreshReports(getActivity()).cancel(true)) {
+			refreshState = false;
+			updateRefreshStatus();
 		}
 	}
 

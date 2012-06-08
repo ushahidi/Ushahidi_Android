@@ -43,8 +43,8 @@ public class ReportTabFragment extends LocalActivityManagerFragment {
 
 	private void listMapTab() {
 		if (mTabHost != null) {
+			
 			addTab(TAG_MAP_REPORT, R.drawable.map, ReportMapActivity.class);
-
 		}
 	}
 
@@ -56,7 +56,6 @@ public class ReportTabFragment extends LocalActivityManagerFragment {
 				R.layout.tab_indicator, tabHost.getTabWidget(), false);
 		ImageView icon = (ImageView) tabIndicator.findViewById(R.id.icon);
 		icon.setImageResource(drawableId);
-
 		spec.setIndicator(tabIndicator);
 		spec.setContent(intent);
 		tabHost.addTab(spec);

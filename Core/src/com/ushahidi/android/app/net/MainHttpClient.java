@@ -71,9 +71,9 @@ public class MainHttpClient {
 	private static final String CLASS_TAG = MainHttpClient.class
 			.getSimpleName();
 
-	private int timeoutConnection = 60000;
+	private int timeoutConnection = 3000;
 
-	private int timeoutSocket = 60000;
+	private int timeoutSocket = 3000;
 
 	private static final int IO_BUFFER_SIZE = 512;
 
@@ -118,6 +118,7 @@ public class MainHttpClient {
 
 		httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(
 				httpParameters, schemeRegistry), httpParameters);
+		httpClient.setParams(httpParameters);
 
 	}
 
@@ -329,6 +330,8 @@ public class MainHttpClient {
 		try {
 			text = GetText(response.getEntity().getContent());
 		} catch (final Exception ex) {
+			ex.printStackTrace();
+			return text;
 		}
 		return text;
 	}
@@ -353,10 +356,14 @@ public class MainHttpClient {
 				text = sb.toString();
 			}
 		} catch (final Exception ex) {
+			ex.printStackTrace();
+			return text;
 		} finally {
 			try {
 				in.close();
 			} catch (final Exception ex) {
+				ex.printStackTrace();
+				return text;
 			}
 		}
 		return text;

@@ -25,9 +25,12 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -58,6 +61,8 @@ import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.net.MapsHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
+import com.ushahidi.android.app.services.FetchReports;
+import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.views.AddMapView;
@@ -103,6 +108,10 @@ public class ListMapActivity extends
 
 	private ApiUtils apiUtils;
 
+	private Intent fetchReports;
+
+	public ProgressDialog dialog;
+
 	public ListMapActivity() {
 		super(ListMapView.class, ListMapAdapter.class, R.layout.list_map,
 				R.menu.list_map, android.R.id.list);
@@ -117,7 +126,10 @@ public class ListMapActivity extends
 		actionBar.setDisplayHomeAsUpEnabled(false);
 		apiUtils = new ApiUtils(this);
 		registerForContextMenu(listView);
-
+		this.dialog = new ProgressDialog(this);
+		this.dialog.setCancelable(true);
+		this.dialog.setIndeterminate(true);
+		this.dialog.setMessage(getString(R.string.please_wait));
 		// load current settings
 		Preferences.loadSettings(this);
 		// filter map list
@@ -152,12 +164,23 @@ public class ListMapActivity extends
 	@Override
 	public void onResume() {
 		super.onResume();
+		registerReceiver(broadcastReceiver, new IntentFilter(
+				SyncServices.SYNC_SERVICES_ACTION));
 		mHandler.post(fetchMapList);
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
+	}
+	
+	protected void onPause() {
+        super.onPause();
+        try {
+        	unregisterReceiver(broadcastReceiver);
+		} catch (IllegalArgumentException e) {
+		}
+        
 	}
 
 	@Override
@@ -328,11 +351,19 @@ public class ListMapActivity extends
 				goToCheckins();
 			}
 		} else {
-			FetchMapReportTask fetchMapReportTask = new FetchMapReportTask(this);
-			fetchMapReportTask.id = sId;
-			fetchMapReportTask.execute((String) null);
+			
+			fetchReports(sId);
 		}
 
+	}
+
+	private void fetchReports(int id) {
+		if (id != 0) {
+			listMapModel.activateDeployment(ListMapActivity.this, id);
+			dialog.show();
+			fetchReports = new Intent(this, FetchReports.class);
+			startService(fetchReports);
+		}
 	}
 
 	/**
@@ -372,16 +403,16 @@ public class ListMapActivity extends
 	 * Clear saved reports
 	 */
 	public void clearCachedData() {
-		//delete reports
+		// delete reports
 		new ListReportModel().deleteReport();
-		
-		//delete checkins data
+
+		// delete checkins data
 		new ListCheckinModel().deleteCheckin();
-		
-		//delete pending photos
+
+		// delete pending photos
 		ImageManager.deleteImages(this);
-		
-		//delete fetched photos
+
+		// delete fetched photos
 		ImageManager.deletePendingImages(this);
 	}
 
@@ -414,7 +445,7 @@ public class ListMapActivity extends
 						public void onClick(DialogInterface dialog, int item) {
 
 							distance = items[item];
-							
+
 							setDeviceLocation();
 							Preferences.selectedDistance = item;
 							// save prefrences
@@ -560,7 +591,7 @@ public class ListMapActivity extends
 
 				toastShort(R.string.deployment_fetched_successful);
 			}
-			
+
 			adapter.refresh();
 			view.mProgressBar.setVisibility(View.GONE);
 			// view.displayEmptyListText();
@@ -576,7 +607,7 @@ public class ListMapActivity extends
 
 		protected int id;
 
-		protected Integer status;
+		protected Integer status = 113;
 
 		public FetchMapReportTask(Activity activity) {
 			super(activity, R.string.please_wait);
@@ -590,7 +621,7 @@ public class ListMapActivity extends
 					listMapModel.activateDeployment(ListMapActivity.this, id);
 					clearCachedData();
 					if (!apiUtils.isCheckinEnabled()) {
-							
+
 						// fetch categories
 						new CategoriesHttpClient(ListMapActivity.this)
 								.getCategoriesFromWeb();
@@ -598,19 +629,19 @@ public class ListMapActivity extends
 						// fetch reports
 						status = new ReportsHttpClient(ListMapActivity.this)
 								.getAllReportFromWeb();
+						return true;
 					} else {
 
 						// TODO process checkin if there is one
 						status = new CheckinHttpClient(ListMapActivity.this)
 								.getAllCheckinFromWeb();
+						return true;
 					}
 
-				} else {
-					status = 113;
 				}
 
 				Thread.sleep(1000);
-				return true;
+				return false;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				return false;
@@ -741,5 +772,40 @@ public class ListMapActivity extends
 	protected View headerView() {
 		return null;
 	}
+
 	
+	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent != null) {
+				int status = intent.getIntExtra("status", 113);
+				unregisterReceiver(broadcastReceiver);
+				dialog.cancel();
+				
+				if (status == 0) {
+					onLoaded(true);
+				} else if (status == 100) {
+					errorMessage = getString(R.string.internet_connection);
+					createDialog(DIALOG_SHOW_MESSAGE);
+				} else if (status == 99) {
+					errorMessage = getString(R.string.failed);
+					createDialog(DIALOG_SHOW_MESSAGE);
+				} else if (status == 112) {
+					errorMessage = getString(R.string.network_error);
+					createDialog(DIALOG_SHOW_MESSAGE);
+				} else {
+					errorMessage = getString(R.string.error_occured);
+					createDialog(DIALOG_SHOW_MESSAGE);
+
+				}
+
+			} else {
+				toastLong(R.string.failed);
+			}
+
+			
+		}
+
+	};
+
 }

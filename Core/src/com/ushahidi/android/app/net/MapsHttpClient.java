@@ -99,7 +99,7 @@ public class MapsHttpClient extends MainHttpClient {
 
                 return GetText(response);
             }
-            // UshahidiPref.incidentsResponse = incidents;
+            
         } catch (MalformedURLException e) {
             return null;
         } catch (IOException e) {

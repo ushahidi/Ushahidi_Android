@@ -76,18 +76,20 @@ public class ApiUtils extends MainHttpClient {
 		StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
 		uriBuilder.append("/api?task=version");
 		uriBuilder.append("&resp=json");
-
+		log("Domain: "+Preferences.domain);
 		try {
 			response = GetURL(uriBuilder.toString());
+			
 			if (response == null) {
 				return false;
 			}
 
 			final int statusCode = response.getStatusLine().getStatusCode();
-
+			
 			if (statusCode == 200) {
-
+				log("json "+jsonString+" statusCode");
 				jsonString = GetText(response);
+				log("json "+jsonString);
 				JSONObject jsonObject = new JSONObject(jsonString);
 				int checkinStatus = jsonObject.getJSONObject("payload").getInt(
 						"checkins");
@@ -97,6 +99,7 @@ public class ApiUtils extends MainHttpClient {
 				}
 				return false;
 			}
+			return false;
 		} catch (IOException e) {
 
 			return false;
@@ -104,7 +107,6 @@ public class ApiUtils extends MainHttpClient {
 
 			return false;
 		}
-		return false;
 	}
 
 	public boolean isCheckinEnabled() {

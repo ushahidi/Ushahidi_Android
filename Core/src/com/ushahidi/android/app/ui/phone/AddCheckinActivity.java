@@ -21,18 +21,17 @@
 package com.ushahidi.android.app.ui.phone;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
@@ -55,15 +54,12 @@ import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseEditMapActivity;
-import com.ushahidi.android.app.adapters.ListFetchedCheckinAdapter;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.entities.Checkin;
 import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.models.AddCheckinModel;
-import com.ushahidi.android.app.models.ListCheckinModel;
-import com.ushahidi.android.app.models.ListPhotoModel;
-import com.ushahidi.android.app.net.CheckinHttpClient;
-import com.ushahidi.android.app.tasks.ProgressTask;
+import com.ushahidi.android.app.services.SyncServices;
+import com.ushahidi.android.app.services.UploadCheckins;
 import com.ushahidi.android.app.util.PhotoUtils;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.AddCheckinView;
@@ -111,6 +107,10 @@ public class AddCheckinActivity extends
 
 	private String locationName;
 
+	private Intent uploadCheckins;
+
+	public ProgressDialog dialog;
+
 	public AddCheckinActivity() {
 		super(AddCheckinView.class, R.layout.add_checkin, R.menu.add_checkin,
 				R.id.checkin_location_map);
@@ -122,6 +122,10 @@ public class AddCheckinActivity extends
 		super.onCreate(savedInstanceState);
 		pendingPhoto = new UploadPhotoAdapter(this);
 		this.id = getIntent().getExtras().getInt("id", 0);
+		this.dialog = new ProgressDialog(this);
+		this.dialog.setCancelable(true);
+		this.dialog.setIndeterminate(true);
+		this.dialog.setMessage(getString(R.string.uploading));
 		mapController = view.mMapView.getController();
 		view.mPickPhoto.setOnClickListener(this);
 		pendingPhoto = new UploadPhotoAdapter(this);
@@ -170,8 +174,19 @@ public class AddCheckinActivity extends
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		registerReceiver(uploadBroadcastReceiver, new IntentFilter(
+				SyncServices.UPLOAD_CHECKIN_SERVICES_ACTION));
+
+	}
+
 	protected void onPause() {
 		super.onPause();
+		try {
+			unregisterReceiver(uploadBroadcastReceiver);
+		} catch (IllegalArgumentException e) {
+		}
 	}
 
 	public boolean performAction(android.view.MenuItem item, int position) {
@@ -205,7 +220,7 @@ public class AddCheckinActivity extends
 
 	private void setSavedCheckins(int id) {
 		Checkin checkin = model.fetchPendingCheckinById(id);
-		if(checkin !=null) {
+		if (checkin != null) {
 			this.latitude = Double.valueOf(checkin.getLocationLatitude());
 			this.longitude = Double.valueOf(checkin.getLocationLongitude());
 			view.mCheckinMessageText.setText(checkin.getMessage());
@@ -239,8 +254,8 @@ public class AddCheckinActivity extends
 		} else if (mError) {
 			showDialog(DIALOG_SHOW_MESSAGE);
 		} else {
-			new UploadTask(this).execute((String) null);
-
+			// new UploadTask(this).execute((String) null);
+			addCheckins();
 		}
 
 	}
@@ -373,9 +388,8 @@ public class AddCheckinActivity extends
 		}
 	}
 
-	private int addCheckins() {
-
-		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
+	private void addCheckins() {
+		dialog.show();
 		Checkin checkin = new Checkin();
 		checkin.setPending(1);
 		checkin.setMessage(view.mCheckinMessageText.getText().toString());
@@ -383,145 +397,28 @@ public class AddCheckinActivity extends
 		checkin.setLocationLongitude(String.valueOf(this.longitude));
 		checkin.setDate((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
 				.format(new Date()));
-		
-		//set location to unknown so to save failed checkin to a database.
+		// set location to unknown so to save failed checkin to a database.
 		checkin.setLocationName(getString(R.string.unknown));
 
-		// upload to the web
-		if (!uploadPendingCheckin(checkin)) {
-			if (id == 0) {
-				// add new checkin
-				if (model.addPendingCheckin(checkin, pendingPhotos)) {
-					// move saved photos
-					log("Moving photos to fetched folder");
-					ImageManager.movePendingPhotos(this);
-					return 1; // successfully added to database.
-				}
-			} else {
+		Bundle checkins = new Bundle();
+		checkins.putString("firstname", view.mFirstName.getText().toString());
+		checkins.putString("lastname", view.mLastName.getText().toString());
+		checkins.putString("email", view.mEmailAddress.getText().toString());
+		checkins.putInt("pending", 1);
+		checkins.putString("message", view.mCheckinMessageText.getText()
+				.toString());
+		checkins.putString("latitude", String.valueOf(this.latitude));
+		checkins.putString("longitude", String.valueOf(this.longitude));
+		checkins.putString("date",
+				(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
+						.format(new Date()));
+		checkins.putString("location", getString(R.string.unknown));
+		checkins.putInt("id", id);
 
-				// update an existing checkin.
-				List<Photo> photos = new ArrayList<Photo>();
-				for (int i = 0; i < pendingPhoto.getCount(); i++) {
-					photos.add(pendingPhoto.getItem(i));
-				}
-				if (model.updatePendingCheckin(id, checkin, photos)) {
-					// move saved photos
-					log("Moving photos to fetched folder");
-					ImageManager.movePendingPhotos(this);
-					return 2; // update succeeded
-				}
-			}
-			return 3;// upload failed
-		}
-		return 0; // upload succeeded
-	}
+		uploadCheckins = new Intent(this, UploadCheckins.class);
+		uploadCheckins.putExtras(checkins);
+		startService(uploadCheckins);
 
-	private boolean uploadPendingCheckin(Checkin checkin) {
-
-		final StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
-		urlBuilder.append("/api");
-		final HashMap<String, String> mParams = new HashMap<String, String>();
-
-		if (checkin != null) {
-
-			final String photo = new UploadPhotoAdapter(this)
-					.pendingCheckinPhotos();
-			log("upload photos "+photo);
-			mParams.put("task", "checkin");
-			mParams.put("action", "ci");
-			mParams.put("mobileid", Util.IMEI(this));
-			mParams.put("lat", checkin.getLocationLatitude());
-			mParams.put("lon", checkin.getLocationLongitude());
-			mParams.put("message", checkin.getMessage());
-			mParams.put("firstname", view.mFirstName.getText().toString());
-			mParams.put("lastname", view.mLastName.getText().toString());
-			mParams.put("email", view.mEmailAddress.getText().toString());
-
-			// load filenames
-			if (!TextUtils.isEmpty(photo)) {
-				mParams.put("filename", photo);
-			}
-			// upload
-			try {
-				if (new CheckinHttpClient(this).PostFileUpload(
-						urlBuilder.toString(), mParams)) {
-					model.deleteCheckin((int) checkin.getDbId());
-					//delete pending photo.
-					for (int i = 0; i < pendingPhoto.getCount(); i++) {
-						ImageManager.deletePendingPhoto(this, "/"
-								+ pendingPhoto.getItem(i).getPhoto());
-					}
-					return true;
-				}
-				return false;
-			} catch (IOException e) {
-				return false;
-			}
-		}
-		return false;
-
-	}
-	
-	private void deleteFetchedCheckin() {
-		final List<ListCheckinModel> items =  new ListFetchedCheckinAdapter(this).fetchedCheckins();
-		for (ListCheckinModel checkin : items) {
-			if (new ListCheckinModel().deleteAllFetchedCheckin(checkin
-					.getCheckinId())) {
-				final List<Photo> photos = new ListPhotoModel()
-						.getPhotosByCheckinId(checkin.getCheckinId());
-
-				for (Photo photo : photos) {
-					ImageManager.deletePendingPhoto(this,
-							"/" + photo.getPhoto());
-				}
-			}
-
-		}
-	}
-
-	/**
-	 * Upload pending checkins
-	 */
-	class UploadTask extends ProgressTask {
-
-		protected int status = 3;
-
-		public UploadTask(Activity activity) {
-			super(activity, R.string.uploading);
-			// pass custom loading message to super call
-		}
-
-		@Override
-		protected Boolean doInBackground(String... strings) {
-			status = addCheckins();
-			if (status < 3) {
-				//get uploaded checkin
-				// delete everything before updating with a new one
-				deleteFetchedCheckin();
-
-				new CheckinHttpClient(AddCheckinActivity.this)
-						.getAllCheckinFromWeb();
-				return true;
-			}
-			return false;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean success) {
-			super.onPostExecute(success);
-			if (success) {
-				if (status == 0) {
-					toastLong(getString(R.string.uploaded));
-					
-				} else if (status == 1 || status == 2) {
-					toastLong(R.string.saved);
-				}
-
-			} else {
-				toastLong(R.string.failed);
-			}
-			goToCheckin();
-		}
 	}
 
 	private void goToCheckin() {
@@ -724,10 +621,10 @@ public class AddCheckinActivity extends
 	 */
 	@Override
 	public View makeView() {
-		
+
 		ImageView i = new ImageView(this);
 		i.setAdjustViewBounds(true);
-		 i.setScaleType(ImageView.ScaleType.FIT_XY);
+		i.setScaleType(ImageView.ScaleType.FIT_XY);
 		i.setLayoutParams(new ImageSwitcher.LayoutParams(
 				android.view.ViewGroup.LayoutParams.FILL_PARENT,
 				android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -749,4 +646,28 @@ public class AddCheckinActivity extends
 				Util.getScreenWidth(this)));
 	}
 
+	private BroadcastReceiver uploadBroadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent != null) {
+				int status = intent.getIntExtra("status", 3);
+				try {
+					unregisterReceiver(uploadBroadcastReceiver);
+				} catch (IllegalArgumentException e) {
+				}
+				dialog.cancel();
+				if (status == 0) {
+					toastLong(getString(R.string.uploaded));
+
+				} else if (status == 1 || status == 2) {
+					toastLong(R.string.saved);
+				}
+
+			} else {
+				toastLong(R.string.failed);
+			}
+			goToCheckin();
+
+		}
+	};
 }
