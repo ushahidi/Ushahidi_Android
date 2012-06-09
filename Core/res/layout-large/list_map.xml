@@ -19,6 +19,7 @@
             style="@style/ActionBarTitleText"
             android:gravity="center"
             android:text="@string/maps" />
+
         <ImageView style="@style/ActionBarTitleSeparator" />
 
         <ImageButton
@@ -45,16 +46,8 @@
 
         <ListView
             android:id="@android:id/list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="10.0sp"
-            android:fadingEdge="none"
-            android:fastScrollEnabled="true"
-            android:listSelector="@android:color/transparent"
-            android:scrollbars="vertical"
-            android:scrollingCache="false"
-            android:smoothScrollbar="true"  />
+            style="@style/ListView"
+            android:focusable="true" />
     </LinearLayout>
     <!-- Here is the view to show if the list is emtpy -->
 

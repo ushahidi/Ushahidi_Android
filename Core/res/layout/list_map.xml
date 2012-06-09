@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
-    android:orientation="vertical"
     android:padding="10dip" >
 
     <EditText
@@ -11,19 +10,12 @@
         style="@style/EditText.Search"
         android:hint="@string/search_maps" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:paddingTop="6dip" >
+    <ListView
+        android:id="@android:id/list"
+        style="@style/ListView"
+        android:focusable="true"
+        android:layout_below="@id/search_map" />
 
-        <!-- Holds the found deployments -->
-
-        <ListView
-            android:id="@android:id/list"
-            style="@style/ListView" />
-    </LinearLayout>
     <!-- Here is the view to show if the list is emtpy -->
 
     <TextView
@@ -38,4 +30,4 @@
         style="@style/ListBarProgressIndicator"
         android:visibility="gone" />
 
-</LinearLayout>
+</RelativeLayout>

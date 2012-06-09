@@ -283,7 +283,6 @@ public class ListCheckinFragment
 			int itemPosition = pendingAdapter.getCount() - position;
 			int itemAt = (pendingAdapter.getCount() - itemPosition) - 1;
 			launchAddCheckin((int) pendingAdapter.getItem(itemAt - 1).getDbId());
-
 		}
 
 	}
