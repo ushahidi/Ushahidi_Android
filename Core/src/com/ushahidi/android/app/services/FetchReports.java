@@ -35,9 +35,9 @@ import com.ushahidi.android.app.util.ApiUtils;
  * 
  */
 public class FetchReports extends SyncServices {
-	
+
 	private static String CLASS_TAG = FetchReports.class.getSimpleName();
-	
+
 	private Intent statusIntent; // holds the status of the sync and sends it to
 
 	private int status = 113;
@@ -57,10 +57,10 @@ public class FetchReports extends SyncServices {
 		// delete checkins data
 		new ListCheckinModel().deleteCheckin();
 
-		// delete pending photos
+		// delete fetched photos
 		ImageManager.deleteImages(this);
 
-		// delete fetched photos
+		// delete pending photos
 		ImageManager.deletePendingImages(this);
 	}
 
@@ -70,7 +70,7 @@ public class FetchReports extends SyncServices {
 		Log.i(CLASS_TAG, "executeTask() executing this task");
 		clearCachedData();
 		if (!new ApiUtils(this).isCheckinEnabled()) {
-			
+
 			// fetch categories
 			new CategoriesHttpClient(this).getCategoriesFromWeb();
 			// fetch reports

@@ -32,10 +32,8 @@ import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.adapters.ListFetchedCheckinAdapter;
 import com.ushahidi.android.app.adapters.ListPendingCheckinAdapter;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
-import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.models.AddCheckinModel;
 import com.ushahidi.android.app.models.ListCheckinModel;
-import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
@@ -108,18 +106,10 @@ public class FetchCheckins extends SyncServices {
 		pendingAdapter = new ListPendingCheckinAdapter(this);
 		final List<ListCheckinModel> items = fetchedAdapter.fetchedCheckins();
 		for (ListCheckinModel checkin : items) {
-			if (new ListCheckinModel().deleteAllFetchedCheckin(checkin
-					.getCheckinId())) {
-				final List<Photo> photos = new ListPhotoModel()
-						.getPhotosByCheckinId(checkin.getCheckinId());
-
-				for (Photo photo : photos) {
-					ImageManager.deletePendingPhoto(this,
-							"/" + photo.getPhoto());
-				}
-			}
-
+			new ListCheckinModel().deleteAllFetchedCheckin(checkin
+					.getCheckinId());
 		}
+		ImageManager.deleteImages(this);
 	}
 
 	private void deletePendingCheckin(int checkinId) {

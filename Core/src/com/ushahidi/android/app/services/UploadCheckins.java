@@ -38,7 +38,6 @@ import com.ushahidi.android.app.entities.Checkin;
 import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.models.AddCheckinModel;
 import com.ushahidi.android.app.models.ListCheckinModel;
-import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.util.PhotoUtils;
 import com.ushahidi.android.app.util.Util;
@@ -156,18 +155,11 @@ public class UploadCheckins extends SyncServices {
 		final List<ListCheckinModel> items = new ListFetchedCheckinAdapter(this)
 				.fetchedCheckins();
 		for (ListCheckinModel checkin : items) {
-			if (new ListCheckinModel().deleteAllFetchedCheckin(checkin
-					.getCheckinId())) {
-				final List<Photo> photos = new ListPhotoModel()
-						.getPhotosByCheckinId(checkin.getCheckinId());
-
-				for (Photo photo : photos) {
-					ImageManager.deletePendingPhoto(this,
-							"/" + photo.getPhoto());
-				}
-			}
-
+			new ListCheckinModel().deleteAllFetchedCheckin(checkin
+					.getCheckinId());
 		}
+		// delete fetched photos
+		ImageManager.deleteImages(this);
 	}
 
 	@Override
@@ -176,7 +168,7 @@ public class UploadCheckins extends SyncServices {
 		Log.i(CLASS_TAG, "executeTask() executing this task");
 		if (intent != null) {
 			Bundle bundle = intent.getExtras();
-			
+
 			status = addCheckins(bundle);
 			if (status < 3) {
 				// get uploaded checkin
@@ -185,9 +177,9 @@ public class UploadCheckins extends SyncServices {
 
 				new CheckinHttpClient(this).getAllCheckinFromWeb();
 
-				statusIntent.putExtra("status", status);
-				sendBroadcast(statusIntent);
 			}
+			statusIntent.putExtra("status", status);
+			sendBroadcast(statusIntent);
 		}
 
 	}

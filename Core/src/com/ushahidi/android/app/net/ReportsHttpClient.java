@@ -86,11 +86,11 @@ public class ReportsHttpClient extends MainHttpClient {
 			}
 
 			final int statusCode = response.getStatusLine().getStatusCode();
-			log("Status code: "+statusCode);
+			log("Status code: " + statusCode);
 			if (statusCode == 200) {
 
 				incidents = GetText(response);
-				log("JsonString: "+incidents);
+				log("JsonString: " + incidents);
 				ReportsApiUtils reportsApiUtils = new ReportsApiUtils(incidents);
 				if (reportsApiUtils.saveReports(context)) {
 					return 0; // return success even if geographic fails
@@ -178,18 +178,20 @@ public class ReportsHttpClient extends MainHttpClient {
 						"person_email",
 						new StringBody(params.get("person_email"), Charset
 								.forName("UTF-8")));
+				
 				if (params.get("filename") != null) {
+					
 					if (!TextUtils.isEmpty(params.get("filename"))) {
 						String filenames[] = params.get("filename").split(",");
+						log("filenames "+filenames[0]);
 						for (int i = 0; i > filenames.length; i++) {
 							File file = new File(ImageManager.getPhotoPath(
 									context, filenames[i]));
+							log("Photos: "+ new File(ImageManager.getPhotoPath(
+									context, filenames[i])));
 							if (file.exists()) {
-								entity.addPart(
-										"incident_photo[]",
-										new FileBody(new File(ImageManager
-												.getPhotoPath(context,
-														filenames[i]))));
+								entity.addPart("incident_photo[]",
+										new FileBody(file));
 							}
 						}
 					}

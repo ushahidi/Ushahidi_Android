@@ -64,17 +64,7 @@
 
     <ListView
         android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="10.0sp"
-        android:fadingEdge="none"
-        android:listSelector="@android:color/transparent"
-        android:fastScrollEnabled="true"
-        android:scrollbars="vertical"
-        android:scrollingCache="false"
-        android:padding="10dip"
-        android:smoothScrollbar="true" />
+        style="@style/ListView" />
 
     <!-- Here is the view to show if the list is emtpy -->
 

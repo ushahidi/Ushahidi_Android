@@ -170,7 +170,7 @@ public class CheckinHttpClient extends MainHttpClient {
 						
 						if(file !=null) {
 							if (file.exists()) {
-								log("file exists: "+file.getName());
+								
 								entity.addPart(
 										"photo",
 										new FileBody(file));

@@ -503,7 +503,7 @@ public class ListReportFragment
 				mParams.put("person_first", Preferences.firstname);
 				mParams.put("person_last", Preferences.lastname);
 				mParams.put("person_email", Preferences.email);
-
+				
 				// load filenames
 				mParams.put("filename", new UploadPhotoAdapter(getActivity())
 						.pendingPhotos((int) report.getId()));
