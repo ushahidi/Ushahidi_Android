@@ -131,11 +131,12 @@ public class ViewCheckinActivity extends
 						new OnItemClickListener() {
 
 							public void onItemClick(AdapterView<?> parent,
-									View v, int position, long id) {
+									View v, int pos, long id) {
 								Intent i = new Intent(ViewCheckinActivity.this,
 										ViewReportPhotoActivity.class);
+								log("Checkin position: "+pos+" Checkin Id: "+checkinId);
 								i.putExtra("reportid", checkinId);
-								i.putExtra("position", position);
+								i.putExtra("position", pos);
 								startActivityForResult(i, 0);
 								overridePendingTransition(R.anim.home_enter,
 										R.anim.home_exit);

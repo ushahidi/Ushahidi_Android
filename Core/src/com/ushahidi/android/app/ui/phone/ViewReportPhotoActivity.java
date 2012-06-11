@@ -136,13 +136,20 @@ public class ViewReportPhotoActivity extends
 	}
 
 	private void initReport(int position) {
+
 		photos = photo.getPhotosByReportId(reportId);
+		// Hack:: get by report ID, if it returns nothing get by checkin ID
+		// FIXME:: make this independent of ID
+		if (photos.size() == 0) {
+			photos = photo.getPhotosByCheckinId(reportId);
+		}
 		if (view.imageSwitcher != null) {
 			view.imageSwitcher.setFactory(this);
 			view.imageSwitcher.setOnTouchListener(this);
 		}
+
 		gestureDetector = new GestureDetector(new GestureDetectorListener());
-		if (photos != null) {
+		if (photos != null && photos.size() > 0) {
 			fileName = photos.get(position).getPhoto();
 			view.imageSwitcher.setImageDrawable(photo.getImage(this, photos
 					.get(position).getPhoto()));
