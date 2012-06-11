@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:focusable="false"
     android:padding="5dip" >
 
     <TextView
@@ -38,7 +39,6 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/map_list_desc"
         android:layout_toLeftOf="@+id/map_arrow"
-        android:focusable="false"
         android:textColor="@color/date_color" />
 
     <TextView
@@ -58,11 +58,10 @@
     <ImageView
         android:id="@+id/map_arrow"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
         android:layout_weight="1"
-        android:focusable="false"
         android:gravity="center_vertical|center_horizontal"
         android:padding="5dip" />
 

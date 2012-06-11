@@ -13,6 +13,7 @@
     <ListView
         android:id="@android:id/list"
         style="@style/ListView"
+        android:paddingTop="10dip"
         android:focusable="true"
         android:layout_below="@id/search_map" />
 
