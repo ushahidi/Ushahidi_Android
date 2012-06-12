@@ -29,6 +29,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.ushahidi.android.app.Preferences;
@@ -118,10 +119,13 @@ public class Database {
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(IReportSchema.INCIDENTS_TABLE_CREATE);
 			db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
-			// create map aka deployment table
-			db.execSQL(IMapSchema.MAP_TABLE_CREATE);
-			//create default map
-			//TODO:: check if default map is set.
+			if (doesVirtualTableExists(db, IMapSchema.TABLE)) {
+				// create map aka deployment table
+				db.execSQL(IMapSchema.MAP_TABLE_CREATE);
+			}
+			
+			// create default map
+			// TODO:: check if default map is set.
 			db.execSQL(IMapSchema.DEFAULT_MAP_CREATE);
 			db.execSQL(IReportCategorySchema.REPORT_CATEGORY_TABLE_CREATE);
 			db.execSQL(IMediaSchema.MEDIA_TABLE_CREATE);
@@ -135,117 +139,116 @@ public class Database {
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
 					+ newVersion + " which destroys all old data");
-			List<String> incidentsColumns;
-			List<String> categoriesColumns;
+
 			List<String> addIncidentColumns;
 			List<String> checkinsColums;
-			List<String> checkinsMediaColums;
 			List<String> usersColumns;
-			// List<String> deploymentColumns;
+			List<String> deploymentColumns;
+			try {
+				// upgrade incident table
+				Log.i("Upgrading", "Upgrading incidents table");
+				dropColumn(db, IReportSchema.INCIDENTS_TABLE_CREATE,
+						IReportSchema.INCIDENTS_TABLE, new String[] {
+								IReportSchema.INCIDENT_CATEGORIES,
+								IReportSchema.INCIDENT_MEDIA,
+								IReportSchema.INCIDENT_IMAGE, "is_unread" });
 
-			// upgrade incident table
-			db.execSQL(IReportSchema.INCIDENTS_TABLE_CREATE);
-			incidentsColumns = Database.getColumns(db,
-					IReportSchema.INCIDENTS_TABLE);
-			db.execSQL("ALTER TABLE " + IReportSchema.INCIDENTS_TABLE
-					+ " RENAME TO temp_" + IReportSchema.INCIDENTS_TABLE);
-			db.execSQL(IReportSchema.INCIDENTS_TABLE_CREATE);
-			incidentsColumns.retainAll(Database.getColumns(db,
-					IReportSchema.INCIDENTS_TABLE));
-			String cols = Database.join(incidentsColumns, ",");
-			db.execSQL(String.format(
-					"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-					IReportSchema.INCIDENTS_TABLE, cols, cols,
-					IReportSchema.INCIDENTS_TABLE));
-			db.execSQL("DROP TABLE IF EXISTS temp_"
-					+ IReportSchema.INCIDENTS_TABLE);
+				// upgrade category table
+				Log.i("Upgrading", "Upgrading categories table");
+				dropColumn(db, ICategorySchema.CATEGORIES_TABLE_CREATE,
+						ICategorySchema.TABLE, new String[] { "is_unread" });
 
-			// upgrade category table
-			db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
-			categoriesColumns = Database.getColumns(db, ICategorySchema.TABLE);
-			db.execSQL("ALTER TABLE " + ICategorySchema.TABLE
-					+ " RENAME TO temp_" + ICategorySchema.TABLE);
-			db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
-			categoriesColumns.retainAll(Database.getColumns(db,
-					ICategorySchema.TABLE));
-			String catsCols = Database.join(categoriesColumns, ",");
-			db.execSQL(String.format(
-					"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-					ICategorySchema.TABLE, catsCols, catsCols,
-					ICategorySchema.TABLE));
-			db.execSQL("DROP TABLE IF EXISTS temp_" + ICategorySchema.TABLE);
+				// upgrade add incident table
+				Log.i("Upgrading", "Upgrading offline incidents table");
+				db.execSQL(IOfflineReportSchema.OFFLINE_REPORT_TABLE_CREATE);
+				addIncidentColumns = Database.getColumns(db,
+						IOfflineReportSchema.OFFLINE_REPORT_TABLE);
+				db.execSQL("ALTER TABLE "
+						+ IOfflineReportSchema.OFFLINE_REPORT_TABLE
+						+ " RENAME TO temp_"
+						+ IOfflineReportSchema.OFFLINE_REPORT_TABLE);
+				db.execSQL(IOfflineReportSchema.OFFLINE_REPORT_TABLE_CREATE);
+				addIncidentColumns.retainAll(Database.getColumns(db,
+						IOfflineReportSchema.OFFLINE_REPORT_TABLE));
+				String addIncidentCols = Database.join(addIncidentColumns, ",");
+				db.execSQL(String.format(
+						"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
+						IOfflineReportSchema.OFFLINE_REPORT_TABLE,
+						addIncidentCols, addIncidentCols,
+						IOfflineReportSchema.OFFLINE_REPORT_TABLE));
+				db.execSQL("DROP TABLE IF EXISTS temp_"
+						+ IOfflineReportSchema.OFFLINE_REPORT_TABLE);
 
-			// upgrade add incident table
-			db.execSQL(IOfflineReportSchema.OFFLINE_REPORT_TABLE_CREATE);
-			addIncidentColumns = Database.getColumns(db,
-					IOfflineReportSchema.OFFLINE_REPORT_TABLE);
-			db.execSQL("ALTER TABLE "
-					+ IOfflineReportSchema.OFFLINE_REPORT_TABLE
-					+ " RENAME TO temp_"
-					+ IOfflineReportSchema.OFFLINE_REPORT_TABLE);
-			db.execSQL(IOfflineReportSchema.OFFLINE_REPORT_TABLE_CREATE);
-			addIncidentColumns.retainAll(Database.getColumns(db,
-					IOfflineReportSchema.OFFLINE_REPORT_TABLE));
-			String addIncidentCols = Database.join(addIncidentColumns, ",");
-			db.execSQL(String.format(
-					"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-					IOfflineReportSchema.OFFLINE_REPORT_TABLE, addIncidentCols,
-					addIncidentCols, IOfflineReportSchema.OFFLINE_REPORT_TABLE));
-			db.execSQL("DROP TABLE IF EXISTS temp_"
-					+ IOfflineReportSchema.OFFLINE_REPORT_TABLE);
+				// upgrade checkin table
+				Log.i("Upgrading", "Upgrading checkins table");
+				db.execSQL(ICheckinSchema.CHECKINS_TABLE_CREATE);
+				checkinsColums = Database.getColumns(db,
+						ICheckinSchema.CHECKINS_TABLE);
+				db.execSQL("ALTER TABLE " + ICheckinSchema.CHECKINS_TABLE
+						+ " RENAME TO temp_" + ICheckinSchema.CHECKINS_TABLE);
+				db.execSQL(ICheckinSchema.CHECKINS_TABLE_CREATE);
+				checkinsColums.retainAll(Database.getColumns(db,
+						ICheckinSchema.CHECKINS_TABLE));
+				String checkinsCols = Database.join(checkinsColums, ",");
 
-			// upgrade checkin table
-			db.execSQL(ICheckinSchema.CHECKINS_TABLE_CREATE);
-			checkinsColums = Database.getColumns(db,
-					ICheckinSchema.CHECKINS_TABLE);
-			db.execSQL("ALTER TABLE " + ICheckinSchema.CHECKINS_TABLE
-					+ " RENAME TO temp_" + ICheckinSchema.CHECKINS_TABLE);
-			db.execSQL(ICheckinSchema.CHECKINS_TABLE_CREATE);
-			checkinsColums.retainAll(Database.getColumns(db,
-					ICheckinSchema.CHECKINS_TABLE));
-			String checkinsCols = Database.join(checkinsColums, ",");
-			db.execSQL(String.format(
-					"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-					ICheckinSchema.CHECKINS_TABLE, checkinsCols, checkinsCols,
-					ICheckinSchema.CHECKINS_TABLE));
-			db.execSQL("DROP TABLE IF EXISTS temp_"
-					+ ICheckinSchema.CHECKINS_TABLE);
+				db.execSQL(String.format(
+						"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
+						ICheckinSchema.CHECKINS_TABLE, checkinsCols,
+						checkinsCols, ICheckinSchema.CHECKINS_TABLE));
+				db.execSQL("DROP TABLE IF EXISTS temp_"
+						+ ICheckinSchema.CHECKINS_TABLE);
 
-			// upgrade checkin media table
-			db.execSQL(IMediaSchema.MEDIA_TABLE_CREATE);
-			checkinsMediaColums = Database.getColumns(db, IMediaSchema.TABLE);
-			db.execSQL("ALTER TABLE " + IMediaSchema.TABLE + " RENAME TO temp_"
-					+ IMediaSchema.TABLE);
-			db.execSQL(IMediaSchema.MEDIA_TABLE_CREATE);
-			checkinsMediaColums.retainAll(Database.getColumns(db,
-					IMediaSchema.TABLE));
-			String checkinsMediaCols = Database.join(checkinsMediaColums, ",");
-			db.execSQL(String.format(
-					"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-					IMediaSchema.TABLE, checkinsMediaCols, checkinsMediaCols,
-					IMediaSchema.TABLE));
-			db.execSQL("DROP TABLE IF EXISTS temp_" + IMediaSchema.TABLE);
+				// upgrade checkin media table
+				Log.i("Upgrading", "Upgrading checkin media table");
+				dropColumn(db, IMediaSchema.MEDIA_TABLE_CREATE,
+						IMediaSchema.TABLE, new String[] {
+								"media_thumbnail_link", "media_medium_link" });
 
-			// upgrade checkin users table
-			db.execSQL(IUserSchema.USER_TABLE_CREATE);
-			usersColumns = Database.getColumns(db, IUserSchema.USER_TABLE);
-			db.execSQL("ALTER TABLE " + IUserSchema.USER_TABLE
-					+ " RENAME TO temp_" + IUserSchema.USER_TABLE);
-			db.execSQL(IUserSchema.USER_TABLE_CREATE);
-			usersColumns.retainAll(Database.getColumns(db,
-					IUserSchema.USER_TABLE));
-			String usersCols = Database.join(usersColumns, ",");
-			db.execSQL(String.format(
-					"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-					IUserSchema.USER_TABLE, usersCols, usersCols,
-					IUserSchema.USER_TABLE));
-			db.execSQL("DROP TABLE IF EXISTS temp_" + IUserSchema.USER_TABLE);
+				// upgrade checkin users table
+				Log.i("Upgrading", "Upgrading checkin users table");
+				db.execSQL(IUserSchema.USER_TABLE_CREATE);
+				usersColumns = Database.getColumns(db, IUserSchema.USER_TABLE);
+				db.execSQL("ALTER TABLE " + IUserSchema.USER_TABLE
+						+ " RENAME TO temp_" + IUserSchema.USER_TABLE);
+				db.execSQL(IUserSchema.USER_TABLE_CREATE);
+				usersColumns.retainAll(Database.getColumns(db,
+						IUserSchema.USER_TABLE));
+				String usersCols = Database.join(usersColumns, ",");
+				db.execSQL(String.format(
+						"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
+						IUserSchema.USER_TABLE, usersCols, usersCols,
+						IUserSchema.USER_TABLE));
+				db.execSQL("DROP TABLE IF EXISTS temp_"
+						+ IUserSchema.USER_TABLE);
 
-			// upgrade deployment table
-			db.execSQL("DROP TABLE IF EXISTS " + IMapSchema.TABLE);
-			onCreate(db);
+				// upgrade deployment table
+				deploymentColumns = Database.getColumns(db, IMapSchema.TABLE);
+				db.execSQL("ALTER TABLE " + IMapSchema.TABLE
+						+ " RENAME TO temp_" + IMapSchema.TABLE);
+
+				db.execSQL("DROP TABLE IF EXISTS " + IMapSchema.TABLE);
+
+				db.execSQL(IMapSchema.MAP_TABLE_CREATE);
+				deploymentColumns.retainAll(Database.getColumns(db,
+						IMapSchema.TABLE));
+
+				String deploymentCols = Database.join(deploymentColumns, ",");
+				db.execSQL(String.format(
+						"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
+						IMapSchema.TABLE, deploymentCols, deploymentCols,
+						IMapSchema.TABLE));
+
+				db.execSQL("DROP TABLE IF EXISTS temp_" + IMapSchema.TABLE);
+
+				//create missing table
+				db.execSQL(IReportCategorySchema.REPORT_CATEGORY_TABLE_CREATE); 
+				
+				onCreate(db);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
 		}
-
 	}
 
 	/**
@@ -289,6 +292,61 @@ public class Database {
 
 	public Database(Context context) {
 		this.mContext = context;
+	}
+
+	public static List<String> getTableColumns(SQLiteDatabase db,
+			String tableName) {
+		ArrayList<String> columns = new ArrayList<String>();
+		String cmd = "pragma table_info(" + tableName + ");";
+		Cursor cur = db.rawQuery(cmd, null);
+
+		while (cur.moveToNext()) {
+			columns.add(cur.getString(cur.getColumnIndex("name")));
+		}
+		cur.close();
+
+		return columns;
+	}
+
+	// Credits:
+	// http://udinic.wordpress.com/2012/05/09/sqlite-drop-column-support/
+	private static void dropColumn(SQLiteDatabase db, String createTableCmd,
+			String tableName, String[] colsToRemove) {
+
+		List<String> updatedTableColumns = getTableColumns(db, tableName);
+		// Remove the columns we don't want anymore from the table's list of
+		// columns
+		updatedTableColumns.removeAll(Arrays.asList(colsToRemove));
+
+		String columnsSeperated = TextUtils.join(",", updatedTableColumns);
+
+		db.execSQL("ALTER TABLE " + tableName + " RENAME TO " + tableName
+				+ "_old;");
+
+		// Creating the table on its new format (no redundant columns)
+		db.execSQL(createTableCmd);
+
+		// Populating the table with the data
+		db.execSQL("INSERT INTO " + tableName + "(" + columnsSeperated
+				+ ") SELECT " + columnsSeperated + " FROM " + tableName
+				+ "_old;");
+		db.execSQL("DROP TABLE " + tableName + "_old;");
+	}
+
+	public static boolean doesVirtualTableExists(SQLiteDatabase db,
+			String tableName) {
+
+		Cursor cursor = db
+				.rawQuery(
+						String.format(
+								"SELECT DISTINCT tbl_name from sqlite_master where tbl_name ='%s'",
+								tableName), null);
+		if (cursor.getCount() > 0) {
+			cursor.close();
+			return true;
+		}
+		cursor.close();
+		return false;
 	}
 
 	public Database open() throws SQLException {
