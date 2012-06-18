@@ -20,6 +20,7 @@
 package com.ushahidi.android.app.views;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,6 +64,8 @@ public class AddCheckinView extends View {
 	public Gallery gallery;
 
 	public ImageSwitcher mSwitcher;
+	
+	public ProgressDialog dialog;
 
 	public AddCheckinView(Activity activity) {
 		super(activity);
@@ -90,6 +93,12 @@ public class AddCheckinView extends View {
 		mSwitcher.setOutAnimation(AnimationUtils.loadAnimation(activity,
 				android.R.anim.fade_out));
 		gallery = (Gallery) activity.findViewById(R.id.checkin_gallery);
+		
+		this.dialog = new ProgressDialog(activity);
+		this.dialog.setCancelable(true);
+		this.dialog.setIndeterminate(true);
+		this.dialog.setMessage(activity.getResources().getString(R.string.uploading));
+		
 	}
 
 }

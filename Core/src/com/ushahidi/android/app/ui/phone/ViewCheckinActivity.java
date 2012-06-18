@@ -106,6 +106,13 @@ public class ViewCheckinActivity extends
 			}
 			return true;
 
+		} else if (item.getItemId() == R.id.menu_comment) {
+			Intent i = new Intent(ViewCheckinActivity.this,
+					AddCommentActivity.class);
+
+			i.putExtra("reportid", checkinId);
+			startActivityForResult(i, 0);
+			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -134,7 +141,24 @@ public class ViewCheckinActivity extends
 									View v, int pos, long id) {
 								Intent i = new Intent(ViewCheckinActivity.this,
 										ViewReportPhotoActivity.class);
-								log("Checkin position: "+pos+" Checkin Id: "+checkinId);
+								log("Checkin position: " + pos
+										+ " Checkin Id: " + checkinId);
+								i.putExtra("reportid", checkinId);
+								i.putExtra("position", pos);
+								startActivityForResult(i, 0);
+								overridePendingTransition(R.anim.home_enter,
+										R.anim.home_exit);
+							}
+						});
+
+				view.setListComments((int) checkinId);
+				view.getListComments().setOnItemClickListener(
+						new OnItemClickListener() {
+
+							public void onItemClick(AdapterView<?> parent,
+									View v, int pos, long id) {
+								Intent i = new Intent(ViewCheckinActivity.this,
+										ListCommentActivity.class);
 								i.putExtra("reportid", checkinId);
 								i.putExtra("position", pos);
 								startActivityForResult(i, 0);

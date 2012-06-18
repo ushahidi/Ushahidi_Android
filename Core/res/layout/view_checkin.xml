@@ -137,6 +137,39 @@
                     android:textColor="@color/black_color" />
             </LinearLayout> <!-- Photo ends -->
 
+
+            <!-- Comment starts -->
+
+            <TextView
+                android:id="@+id/report_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/video_report"
+                android:padding="10dip"
+                android:text="@string/comments"
+                android:textColor="@color/title_color"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                style="@style/LinearLayout.Vertical"
+                android:background="@color/table_odd_row_color" >
+
+                <ListView
+                    android:id="@+id/list_comments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:listSelector="@color/table_selected_row_color"
+                    android:scrollbars="none" />
+
+                <TextView
+                    android:id="@+id/empty_list_for_comment"
+                    style="@style/TextView.Empty"
+                    android:padding="10dip"
+                    android:text="@string/no_comments"
+                    android:textColor="@color/black_color" />
+            </LinearLayout>
+            <!-- Comment ends -->
+
         </LinearLayout>
     </ViewAnimator>
 

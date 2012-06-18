@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <TextView
+        android:id="@+id/comment_author"
+        android:text="Henry Addo"
+        style="@style/TextView.Label" />
+
+    <TextView
+        android:id="@+id/comment_date"
+        style="@style/TextView.Label"
+        android:layout_alignParentRight="true"
+        android:gravity="right"
+        android:text="Nov 28, 2011"/>
+
+    <TextView
+        android:id="@+id/comment_description"
+        style="@style/TextView.Value"
+        android:text="Merge branch 'master' of github.com:ushahidi/Ushahidi_Web into 2.0"
+        android:layout_below="@+id/comment_date" />
+    
+    <TextView
+        android:id="@+id/comment_total"
+        style="@style/TextView.Label"
+        android:layout_alignLeft="@+id/comment_description"
+        android:layout_alignRight="@+id/comment_description"
+        android:layout_alignBottom="@+id/comment_description"
+        android:layout_alignParentLeft="true"
+        android:padding="10dip"
+        android:background="@color/overlay_text_color"
+        android:textColor="@color/white_color" />
+
+</RelativeLayout>

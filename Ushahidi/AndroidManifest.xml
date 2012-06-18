@@ -320,11 +320,32 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name=".ui.phone.ListCommentActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name=".ui.phone.AddCommentActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <!-- New Fragment Activities Ends -->
         
         <!-- Services -->
         <service android:name=".services.UploadCheckins" />
+        <service android:name=".services.UploadComments" />
         <service android:name=".services.FetchReports" />
         <service android:name=".services.FetchCheckins" />
 

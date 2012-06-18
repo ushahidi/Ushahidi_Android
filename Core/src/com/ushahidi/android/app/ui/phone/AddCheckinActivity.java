@@ -109,8 +109,6 @@ public class AddCheckinActivity extends
 
 	private Intent uploadCheckins;
 
-	public ProgressDialog dialog;
-
 	public AddCheckinActivity() {
 		super(AddCheckinView.class, R.layout.add_checkin, R.menu.add_checkin,
 				R.id.checkin_location_map);
@@ -122,10 +120,7 @@ public class AddCheckinActivity extends
 		super.onCreate(savedInstanceState);
 		pendingPhoto = new UploadPhotoAdapter(this);
 		this.id = getIntent().getExtras().getInt("id", 0);
-		this.dialog = new ProgressDialog(this);
-		this.dialog.setCancelable(true);
-		this.dialog.setIndeterminate(true);
-		this.dialog.setMessage(getString(R.string.uploading));
+		
 		mapController = view.mMapView.getController();
 		view.mPickPhoto.setOnClickListener(this);
 		pendingPhoto = new UploadPhotoAdapter(this);
@@ -389,7 +384,7 @@ public class AddCheckinActivity extends
 	}
 
 	private void addCheckins() {
-		dialog.show();
+		view.dialog.show();
 		Checkin checkin = new Checkin();
 		checkin.setPending(1);
 		checkin.setMessage(view.mCheckinMessageText.getText().toString());
@@ -655,7 +650,7 @@ public class AddCheckinActivity extends
 					unregisterReceiver(uploadBroadcastReceiver);
 				} catch (IllegalArgumentException e) {
 				}
-				dialog.cancel();
+				view.dialog.cancel();
 				if (status == 0) {
 					toastLong(getString(R.string.uploaded));
 

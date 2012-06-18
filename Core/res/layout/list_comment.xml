@@ -10,18 +10,23 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item
-        android:id="@+id/menu_send_checkin"
-        android:icon="@drawable/send"
-        android:orderInCategory="0"
-        android:showAsAction="always"
-        android:title="@string/save"/> 
-    <item
-        android:id="@+id/menu_cancel_checkin"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:orderInCategory="1"
-        android:showAsAction="never"
-        android:title="@string/cancel"/>
-    
-</menu>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:padding="10dip" >
+
+    <!-- List comment -->
+
+    <ListView
+        android:id="@android:id/list"
+        style="@style/ListView" />
+
+    <!-- Here is the view to show if the list is emtpy -->
+
+    <TextView
+        android:id="@android:id/empty"
+        style="@style/TextView.Empty"
+        android:visibility="gone" />
+
+</RelativeLayout>

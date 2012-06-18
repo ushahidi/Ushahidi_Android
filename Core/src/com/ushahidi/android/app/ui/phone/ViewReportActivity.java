@@ -76,7 +76,7 @@ public class ViewReportActivity extends
 		} else {
 			reports.load();
 		}
-		
+
 		initReport(this.position);
 
 	}
@@ -120,6 +120,13 @@ public class ViewReportActivity extends
 
 		} else if (item.getItemId() == R.id.menu_share) {
 			share();
+		} else if (item.getItemId() == R.id.menu_comment) {
+			Intent i = new Intent(ViewReportActivity.this,
+					AddCommentActivity.class);
+
+			i.putExtra("reportid", reportId);
+			startActivityForResult(i, 0);
+			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -183,6 +190,21 @@ public class ViewReportActivity extends
 								View view, int position, long id) {
 							Intent i = new Intent(ViewReportActivity.this,
 									ViewReportVideoActivity.class);
+							i.putExtra("reportid", reportId);
+							i.putExtra("position", position);
+							startActivityForResult(i, 0);
+							overridePendingTransition(R.anim.home_enter,
+									R.anim.home_exit);
+						}
+					});
+			
+			view.getListComments().setOnItemClickListener(
+					new OnItemClickListener() {
+
+						public void onItemClick(AdapterView<?> parent,
+								View view, int position, long id) {
+							Intent i = new Intent(ViewReportActivity.this,
+									ListCommentActivity.class);
 							i.putExtra("reportid", reportId);
 							i.putExtra("position", position);
 							startActivityForResult(i, 0);

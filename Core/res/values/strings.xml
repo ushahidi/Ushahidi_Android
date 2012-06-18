@@ -120,13 +120,13 @@
 		instance when there there
 		is Internet connection.</string>
     <string name="failed_to_add_report_offline">Failed to send report.Check to see if you filled
-		all required fields.</string>
+		all  fields.</string>
     <string name="failed_to_add_report_online">Connection failure, cannot submit your report.
         Probably you are on a very slow connection or the server is down or very slow at the moment.</string>
     <string name="failed_to_add_report_online_db_error">Check your Ushahidi deployment. The API might be down due to a database error or something went wrong with the Api call.</string>
     <string name="empty_report_title">Enter a title for the report.</string>
     <string name="empty_report_description">Enter a description for the report.</string>
-    <string name="empty_report_location">The location name field is required.</string>
+    <string name="empty_report_location">The location name field is .</string>
     <string name="empty_report_categories">Select at least one category.</string>
     <string name="hint_location">Enter location</string>
     <string name="could_not_fetch_reports">Could not fetch reports.</string>
@@ -358,24 +358,33 @@
     <string name="no_news">No News</string>
     <string name="no_video">No Video</string>
     <string name="no_photos">No Photos</string>
+    <string name="no_comments">No Comments</string>
     <string name="all_categories">All Categories</string>
 
     <plurals name="no_of_images">
         <item quantity="one">%d image</item>
         <item quantity="other">%d images</item>
     </plurals>
+    
     <plurals name="no_of_news">
         <item quantity="one">%d news</item>
         <item quantity="other">%d news</item>
     </plurals>
+    
     <plurals name="no_of_videos">
         <item quantity="one">%d video</item>
         <item quantity="other">%d videos</item>
+    </plurals>
+    
+    <plurals name="no_of_comments">
+        <item quantity="one">%d comment</item>
+        <item quantity="other">%d comments</item>
     </plurals>
 
     <string name="previous">Previous</string>
     <string name="next">Next</string>
     <string name="comment">Comment</string>
+    <string name="comments">Comments</string>
     <string name="share">Share</string>
     <string name="traffic">Traffic</string>
     <string name="satellite">Satellite</string>
@@ -422,4 +431,8 @@
     <string name="add_map">Add Map</string>
     <string name="finding_map">Finding map...</string>
     <string name="uploading">Uploading...</string>
+    <string name="full_name">Full name</string>
+    <string name="enter_full_name">Please enter a full name</string>
+    <string name="valid_email_address">Please enter a valid email address</string>
+    <string name="enter_comment">Please enter a comment and it should be 3 characters or more long.</string>
 </resources>

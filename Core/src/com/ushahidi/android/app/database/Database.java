@@ -109,6 +109,8 @@ public class Database {
 	public static CheckinDao mCheckin; // checkins
 
 	public static UserDao mUserDao; // user
+	
+	public static CommentDao mCommentDao; //comment
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		DatabaseHelper(Context context) {
@@ -132,6 +134,7 @@ public class Database {
 			db.execSQL(IUserSchema.USER_TABLE_CREATE);
 			db.execSQL(ICheckinSchema.CHECKINS_TABLE_CREATE);
 			db.execSQL(IOfflineReportSchema.OFFLINE_REPORT_TABLE_CREATE);
+			db.execSQL(ICommentSchema.COMMENT_TABLE_CREATE);
 
 		}
 
@@ -240,8 +243,9 @@ public class Database {
 
 				db.execSQL("DROP TABLE IF EXISTS temp_" + IMapSchema.TABLE);
 
-				//create missing table
+				//create missing tables
 				db.execSQL(IReportCategorySchema.REPORT_CATEGORY_TABLE_CREATE); 
+				db.execSQL(ICommentSchema.COMMENT_TABLE_CREATE);
 				
 				onCreate(db);
 			} catch (SQLException e) {
@@ -360,6 +364,7 @@ public class Database {
 		mOfflineReport = new OfflineReportDao(mDb);
 		mCheckin = new CheckinDao(mDb);
 		mUserDao = new UserDao(mDb);
+		mCommentDao = new CommentDao(mDb);
 		return this;
 	}
 

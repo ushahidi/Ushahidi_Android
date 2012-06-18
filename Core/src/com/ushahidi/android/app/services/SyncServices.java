@@ -22,7 +22,9 @@ public abstract class SyncServices extends IntentService {
 	
 	public static String UPLOAD_CHECKIN_SERVICES_ACTION = "com.ushahidi.android.app.services.uploadcheckin";
 	
-	public static String FETCH_CHECKIN_SERVICES_ACTION = "com.ushahidi.android.app.services.uploadcheckin";
+	public static String FETCH_CHECKIN_SERVICES_ACTION = "com.ushahidi.android.app.services.fetchcheckin";
+	
+	public static String UPLOAD_COMMENT_SERVICES_ACTION = "com.ushahidi.android.app.services.uploadcomment";
 	
     protected static String CLASS_TAG = SyncServices.class.getSimpleName();
 

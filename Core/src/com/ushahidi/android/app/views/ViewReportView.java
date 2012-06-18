@@ -33,6 +33,7 @@ import android.widget.ViewAnimator;
 
 import com.google.android.maps.MapView;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.adapters.ListCommentAdapter;
 import com.ushahidi.android.app.adapters.ListNewsAdapter;
 import com.ushahidi.android.app.adapters.ListPhotoAdapter;
 import com.ushahidi.android.app.adapters.ListVideoAdapter;
@@ -60,6 +61,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
 	private TextView listVideoEmptyView;
 
+	private TextView listCommentEmptyView;
+
 	public MapView mapView;
 
 	private ListView listNews;
@@ -68,6 +71,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
 	private ListView listVideos;
 
+	private ListView listComments;
+
 	private Context context;
 
 	private ViewAnimator viewReportRoot;
@@ -75,7 +80,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	public ListPhotoAdapter photoAdapter;
 	public ListNewsAdapter newsAdapter;
 	public ListVideoAdapter videoAdapter;
-
+	public ListCommentAdapter commentAdapter;
 	private LayoutInflater inflater;
 
 	public ViewReportView(Activity activity) {
@@ -83,7 +88,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		this.context = activity;
 		this.inflater = (LayoutInflater) activity
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
+
 		viewReportRoot = (ViewAnimator) activity
 				.findViewById(R.id.view_report_root);
 
@@ -99,7 +104,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		photoAdapter = new ListPhotoAdapter(activity);
 		newsAdapter = new ListNewsAdapter(activity);
 		videoAdapter = new ListVideoAdapter(activity);
-
+		commentAdapter = new ListCommentAdapter(activity);
 		listNewsEmptyView = (TextView) activity
 				.findViewById(R.id.empty_list_for_news);
 		if (listNewsEmptyView != null) {
@@ -121,32 +126,18 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 			listVideos.setEmptyView(listVideoEmptyView);
 		}
 
+		listComments = (ListView) activity.findViewById(R.id.list_comments);
+		listCommentEmptyView = (TextView) activity
+				.findViewById(R.id.empty_list_for_comment);
+		if (listCommentEmptyView != null) {
+			listComments.setEmptyView(listCommentEmptyView);
+		}
+
 	}
 
 	public ViewReportView(ViewGroup activity, Context context) {
 		super(activity);
 		this.context = context;
-
-		/*
-		 * viewReportRoot = (LinearLayout) activity
-		 * .findViewById(R.id.view_report_root);
-		 */
-		/*
-		 * titleStub = ((ViewStub) activity.findViewById(R.id.stub_title))
-		 * .inflate(); descriptionStub = ((ViewStub) activity
-		 * .findViewById(R.id.stub_description)).inflate(); statusStub =
-		 * ((ViewStub) activity.findViewById(R.id.stub_status)) .inflate();
-		 * dateStub = ((ViewStub)
-		 * activity.findViewById(R.id.stub_date)).inflate(); locationStub =
-		 * ((ViewStub) activity.findViewById(R.id.stub_location)) .inflate();
-		 * categoriesStub = ((ViewStub)
-		 * activity.findViewById(R.id.stub_category)) .inflate(); // mapStub =
-		 * ((ViewStub) // activity.findViewById(R.id.stub_map)).inflate(); /*
-		 * photoStub = ((ViewStub) activity.findViewById(R.id.stub_photo))
-		 * .inflate(); newsStub = ((ViewStub)
-		 * activity.findViewById(R.id.stub_news)).inflate(); videoStub =
-		 * ((ViewStub) activity.findViewById(R.id.stub_video)) .inflate();
-		 */
 		mapView = (MapView) activity.findViewById(R.id.loc_map);
 		title = (TextView) activity.findViewById(R.id.title);
 		category = (TextView) activity.findViewById(R.id.category);
@@ -175,6 +166,14 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		if (listVideoEmptyView != null) {
 			listVideos.setEmptyView(listVideoEmptyView);
 		}
+		
+		listComments = (ListView) activity.findViewById(R.id.list_comments);
+		listCommentEmptyView = (TextView) activity
+				.findViewById(R.id.empty_list_for_comment);
+		if (listCommentEmptyView != null) {
+			listComments.setEmptyView(listCommentEmptyView);
+		}
+		
 	}
 
 	public View filterReport() {
@@ -258,6 +257,18 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
 	public ListView getListPhotos() {
 		return this.listPhotos;
+	}
+	
+	public void setListComments(int reportId) {
+		if (listComments != null) {
+			ListCommentAdapter adapter = new ListCommentAdapter(context);
+			adapter.refresh(reportId);
+			listComments.setAdapter(adapter);
+		}
+	}
+
+	public ListView getListComments() {
+		return this.listComments;
 	}
 
 	public void setListVideos(int reportId) {

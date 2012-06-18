@@ -31,6 +31,7 @@ import android.widget.ViewAnimator;
 
 import com.google.android.maps.MapView;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.adapters.ListCommentAdapter;
 import com.ushahidi.android.app.adapters.ListPhotoAdapter;
 
 /**
@@ -45,7 +46,9 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 	public ViewAnimator viewCheckinRoot;
 	public LayoutInflater inflater;
 	public ListView listPhotos;
+	public ListView listComments;
 	public TextView listPhotosEmptyView;
+	private TextView listCommentEmptyView;
 	public ListPhotoAdapter photoAdapter;
 	public MapView mapView;
 	private Context context;
@@ -60,20 +63,25 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 
 		name = (TextView) activity.findViewById(R.id.checkin_title);
 
-		message = (TextView) activity
-				.findViewById(R.id.checkin_description);
+		message = (TextView) activity.findViewById(R.id.checkin_description);
 
 		date = (TextView) activity.findViewById(R.id.checkin_date);
 
 		photoAdapter = new ListPhotoAdapter(activity);
 
 		listPhotos = (ListView) activity.findViewById(R.id.list_checkin_photos);
-
 		listPhotosEmptyView = (TextView) activity
 				.findViewById(R.id.checkin_empty_photo_list);
 
 		if (this.listPhotosEmptyView != null) {
 			this.listPhotos.setEmptyView(listPhotosEmptyView);
+		}
+
+		listComments = (ListView) activity.findViewById(R.id.list_comments);
+		listCommentEmptyView = (TextView) activity
+				.findViewById(R.id.empty_list_for_comment);
+		if (listCommentEmptyView != null) {
+			listComments.setEmptyView(listCommentEmptyView);
 		}
 
 		this.inflater = (LayoutInflater) activity
@@ -85,7 +93,7 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 		View v = this.inflater.inflate(R.layout.list_checkin_header, null);
 		return v;
 	}
-	
+
 	public void setTitle(String title) {
 		this.name.setText(title);
 	}
@@ -93,7 +101,6 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 	public String getTitle() {
 		return this.getTitle().toString();
 	}
-
 
 	public void setDate(String date) {
 		this.date.setText(date);
@@ -117,6 +124,18 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 			adapter.refreshCheckinPhotos(checkinId);
 			listPhotos.setAdapter(adapter);
 		}
+	}
+
+	public void setListComments(int checkinId) {
+		if (listPhotos != null) {
+			ListCommentAdapter adapter = new ListCommentAdapter(context);
+			adapter.refreshCheckinComment(checkinId);
+			listComments.setAdapter(adapter);
+		}
+	}
+
+	public ListView getListComments() {
+		return this.listComments;
 	}
 
 	public ListView getListPhotos() {
