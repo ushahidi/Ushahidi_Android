@@ -178,9 +178,8 @@ public class UploadCheckins extends SyncServices {
 				new CheckinHttpClient(this).getAllCheckinFromWeb();
 
 			}
-			statusIntent.putExtra("status", status);
-			sendBroadcast(statusIntent);
 		}
-
+		statusIntent.putExtra("status", status);
+		sendBroadcast(statusIntent);
 	}
 }

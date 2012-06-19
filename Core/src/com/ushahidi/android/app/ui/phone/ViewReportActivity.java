@@ -22,7 +22,10 @@ package com.ushahidi.android.app.ui.phone;
 
 import java.util.List;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.MenuItem;
@@ -36,6 +39,8 @@ import com.ushahidi.android.app.activities.BaseMapViewActivity;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.models.ViewReportModel;
+import com.ushahidi.android.app.services.FetchReportsComments;
+import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.views.ViewReportView;
 
 /**
@@ -57,6 +62,8 @@ public class ViewReportActivity extends
 	private int reportId;
 
 	private String reportTitle;
+	
+	private Intent fetchReportComments;
 
 	public ViewReportActivity() {
 		super(ViewReportView.class, R.layout.view_report, R.menu.view_report,
@@ -76,15 +83,36 @@ public class ViewReportActivity extends
 		} else {
 			reports.load();
 		}
-
+		
 		initReport(this.position);
+		fetchComments();
 
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		registerReceiver(fetchBroadcastReceiver,
+				new IntentFilter(SyncServices.FETCH_REPORT_COMMENTS_SERVICES_ACTION));
 		stopLocating();
+	}
+	
+	public void onPause() {
+		super.onPause();
+		try {
+			unregisterReceiver(fetchBroadcastReceiver);
+		} catch (IllegalArgumentException e) {
+		}
+	}
+	
+	private void fetchComments() {
+		registerReceiver(fetchBroadcastReceiver,
+				new IntentFilter(SyncServices.FETCH_REPORT_COMMENTS_SERVICES_ACTION));
+		
+		view.dialog.show();
+		fetchReportComments = new Intent(this, FetchReportsComments.class);
+		fetchReportComments.putExtra("reportid", reportId);
+		startService(fetchReportComments);
 	}
 
 	@Override
@@ -270,5 +298,32 @@ public class ViewReportActivity extends
 	protected void locationChanged(double latitude, double longitude) {
 
 	}
+	
+	private BroadcastReceiver fetchBroadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent != null) {
+
+				int status = intent.getIntExtra("status", 4);
+				view.dialog.cancel();
+				if (status == 4) {
+					toastLong(R.string.internet_connection);
+				} else if (status == 110) {
+					toastLong(R.string.connection_timeout);
+				} else if (status == 100) {
+					toastLong(R.string.could_not_fetch_comment);
+				} else if (status == 0) {
+					log("successfully fetched comments");
+					//refreshCheckinList();
+					//showUsers();
+				}
+			}
+
+			try {
+				unregisterReceiver(fetchBroadcastReceiver);
+			} catch (IllegalArgumentException e) {
+			}
+		}
+	};
 
 }

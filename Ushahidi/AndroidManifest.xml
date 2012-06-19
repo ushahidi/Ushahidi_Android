@@ -345,6 +345,8 @@
         
         <!-- Services -->
         <service android:name=".services.UploadCheckins" />
+        <service android:name=".services.FetchCheckinsComments"/>
+        <service android:name=".services.FetchReportsComments"/>
         <service android:name=".services.UploadComments" />
         <service android:name=".services.FetchReports" />
         <service android:name=".services.FetchCheckins" />

@@ -163,10 +163,6 @@ public class ListCheckinFragment
 		updateRefreshStatus();
 		fetchCheckins = new Intent(getActivity(), FetchCheckins.class);
 		getActivity().startService(fetchCheckins);
-		/*
-		 * if (!pendingAdapter.isEmpty()) { // new
-		 * UploadTask(getActivity()).execute((String) null); }
-		 */
 	}
 
 	@Override

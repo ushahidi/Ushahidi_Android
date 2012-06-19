@@ -146,7 +146,7 @@ public class CommentHttpClient extends MainHttpClient {
 				comments = GetText(response);
 
 				CommentApiUtils commentApiUtils = new CommentApiUtils(comments);
-				if (commentApiUtils.saveComments(context)) {
+				if (commentApiUtils.saveCheckinsComments(context)) {
 					return 0; // return success
 				}
 

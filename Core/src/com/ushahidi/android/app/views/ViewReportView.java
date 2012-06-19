@@ -105,6 +105,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		newsAdapter = new ListNewsAdapter(activity);
 		videoAdapter = new ListVideoAdapter(activity);
 		commentAdapter = new ListCommentAdapter(activity);
+		this.dialog.setMessage(activity.getResources().getString(
+				R.string.please_wait));
 		listNewsEmptyView = (TextView) activity
 				.findViewById(R.id.empty_list_for_news);
 		if (listNewsEmptyView != null) {
@@ -132,6 +134,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		if (listCommentEmptyView != null) {
 			listComments.setEmptyView(listCommentEmptyView);
 		}
+		
 
 	}
 

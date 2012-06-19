@@ -21,7 +21,10 @@ package com.ushahidi.android.app.ui.phone;
 
 import java.util.List;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.MenuItem;
@@ -33,6 +36,9 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseMapViewActivity;
 import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ViewCheckinModel;
+import com.ushahidi.android.app.services.FetchCheckinsComments;
+import com.ushahidi.android.app.services.FetchReportsComments;
+import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.views.ViewCheckinView;
 
 /**
@@ -51,6 +57,8 @@ public class ViewCheckinActivity extends
 	private int userId;
 
 	private int checkinId;
+	
+	private Intent fetchCheckinComments;
 
 	public ViewCheckinActivity() {
 		super(ViewCheckinView.class, R.layout.view_checkin,
@@ -73,6 +81,7 @@ public class ViewCheckinActivity extends
 
 		// because of header view, decrease position by one
 		initCheckin(this.position);
+		fetchComments();
 	}
 
 	@Override
@@ -121,7 +130,29 @@ public class ViewCheckinActivity extends
 	@Override
 	public void onResume() {
 		super.onResume();
+		registerReceiver(fetchBroadcastReceiver,
+				new IntentFilter(SyncServices.FETCH_CHECKIN_COMMENTS_SERVICES_ACTION));
 		stopLocating();
+	}
+	
+	public void onPause() {
+		super.onPause();
+		try {
+			unregisterReceiver(fetchBroadcastReceiver);
+		} catch (IllegalArgumentException e) {
+		}
+	}
+	
+	private void fetchComments() {
+		registerReceiver(fetchBroadcastReceiver,
+				new IntentFilter(SyncServices.FETCH_CHECKIN_COMMENTS_SERVICES_ACTION));
+		
+		//refreshState = true;
+		//updateRefreshStatus();
+		view.dialog.show();
+		fetchCheckinComments = new Intent(this, FetchCheckinsComments.class);
+		fetchCheckinComments.putExtra("checkinid", checkinId);
+		startService(fetchCheckinComments);
 	}
 
 	private void initCheckin(int position) {
@@ -208,5 +239,32 @@ public class ViewCheckinActivity extends
 	protected void locationChanged(double latitude, double longitude) {
 
 	}
+	
+	private BroadcastReceiver fetchBroadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent != null) {
+
+				int status = intent.getIntExtra("status", 4);
+				view.dialog.cancel();
+				if (status == 4) {
+					toastLong(R.string.internet_connection);
+				} else if (status == 110) {
+					toastLong(R.string.connection_timeout);
+				} else if (status == 100) {
+					toastLong(R.string.could_not_fetch_comment);
+				} else if (status == 0) {
+					log("successfully fetched comments");
+					//refreshCheckinList();
+					//showUsers();
+				}
+			}
+
+			try {
+				unregisterReceiver(fetchBroadcastReceiver);
+			} catch (IllegalArgumentException e) {
+			}
+		}
+	};
 
 }

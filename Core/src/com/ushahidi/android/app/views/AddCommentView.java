@@ -19,12 +19,11 @@
  **/
 package com.ushahidi.android.app.views;
 
-import com.ushahidi.android.app.R;
-
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.ushahidi.android.app.R;
 
 /**
  * @author eyedol
@@ -38,7 +37,7 @@ public class AddCommentView extends View {
 	public EditText fullName;
 	public EditText emailAddress;
 	public EditText comment;
-	public ProgressDialog dialog;
+	
 
 	/**
 	 * @param activity
@@ -53,12 +52,8 @@ public class AddCommentView extends View {
 		emailAddress = (EditText) activity.findViewById(R.id.comment_email);
 		commentLbl = (TextView) activity.findViewById(R.id.comment_message);
 		comment = (EditText) activity.findViewById(R.id.comment_message);
-		this.dialog = new ProgressDialog(activity);
-		this.dialog.setCancelable(true);
-		this.dialog.setIndeterminate(true);
 		this.dialog.setMessage(activity.getResources().getString(
 				R.string.uploading));
-
 	}
 
 }

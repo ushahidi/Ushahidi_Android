@@ -158,6 +158,17 @@ public class CommentApiUtils {
 
 		return false;
 	}
+	
+	// Save checkins into database
+		public boolean saveCheckinsComments(Context context) {
+			List<Comment> comments = getCheckinCommentsList(context);
+			if (comments != null) {
+
+				return Database.mCommentDao.addComment(comments);
+			}
+
+			return false;
+		}
 
 	private void log(String message) {
 		if (MainApplication.LOGGING_MODE)

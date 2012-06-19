@@ -23,7 +23,10 @@ package com.ushahidi.android.app.views;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
+import com.ushahidi.android.app.R;
+
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.util.Log;
 
 /**
@@ -33,6 +36,8 @@ import android.util.Log;
  * annotation
  */
 public abstract class View {
+	
+	public ProgressDialog dialog;
 
 	/**
 	 * View Map View
@@ -41,6 +46,12 @@ public abstract class View {
 	 *            Activity
 	 */
 	public View(Activity activity) {
+		this.dialog = new ProgressDialog(activity);
+		this.dialog.setCancelable(true);
+		this.dialog.setIndeterminate(true);
+		this.dialog.setMessage(activity.getResources().getString(
+				R.string.uploading));
+		
 		for (Class<?> clazz : new Class[] { getClass(),
 				getClass().getSuperclass() }) {
 			if (clazz != null && View.class.isAssignableFrom(clazz)) {
@@ -75,6 +86,7 @@ public abstract class View {
 	 *            View
 	 */
 	public View(android.view.View view) {
+		
 		for (Class<?> clazz : new Class[] { getClass(),
 				getClass().getSuperclass() }) {
 			if (clazz != null && View.class.isAssignableFrom(clazz)) {
