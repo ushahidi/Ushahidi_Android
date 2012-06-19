@@ -121,7 +121,7 @@ public class Database {
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(IReportSchema.INCIDENTS_TABLE_CREATE);
 			db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
-			if (doesVirtualTableExists(db, IMapSchema.TABLE)) {
+			if (!doesVirtualTableExists(db, IMapSchema.TABLE)) {
 				// create map aka deployment table
 				db.execSQL(IMapSchema.MAP_TABLE_CREATE);
 			}

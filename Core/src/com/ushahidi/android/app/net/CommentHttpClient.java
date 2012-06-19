@@ -117,7 +117,7 @@ public class CommentHttpClient extends MainHttpClient {
 		}
 
 	}
-	
+
 	public int getCheckinComments(int checkinid) {
 		HttpResponse response;
 		String comments = "";
@@ -205,11 +205,13 @@ public class CommentHttpClient extends MainHttpClient {
 						"comment_email",
 						new StringBody(params.get("comment_email"), Charset
 								.forName("UTF-8")));
-				if (params.get("incident_id") != null)
+				if ((params.get("incident_id") != null)
+						&& (Integer.valueOf(params.get("incident_id")) != 0))
 					entity.addPart("incident_id",
 							new StringBody(params.get("incident_id")));
 
-				if (params.get("checkin_id") != null)
+				if ((params.get("checkin_id") != null)
+						&& (Integer.valueOf(params.get("checkin_id")) != 0))
 					entity.addPart(
 							"checkin_id",
 							new StringBody(params.get("checkin_id"), Charset

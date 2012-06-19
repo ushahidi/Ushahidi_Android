@@ -175,7 +175,6 @@ public class AddCommentActivity extends
 				.toString());
 		comments.putString("comment_email", view.emailAddress.getText()
 				.toString());
-		log("reportID: "+reportId);
 		comments.putInt("report_id", reportId);
 		comments.putInt("checkin_id", checkinId);
 

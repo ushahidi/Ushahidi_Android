@@ -110,7 +110,7 @@ public class ViewCheckinActivity extends
 			Intent i = new Intent(ViewCheckinActivity.this,
 					AddCommentActivity.class);
 
-			i.putExtra("reportid", checkinId);
+			i.putExtra("checkinid", checkinId);
 			startActivityForResult(i, 0);
 			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		}
