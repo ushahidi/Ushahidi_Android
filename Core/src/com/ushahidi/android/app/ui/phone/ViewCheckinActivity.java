@@ -37,7 +37,6 @@ import com.ushahidi.android.app.activities.BaseMapViewActivity;
 import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ViewCheckinModel;
 import com.ushahidi.android.app.services.FetchCheckinsComments;
-import com.ushahidi.android.app.services.FetchReportsComments;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.views.ViewCheckinView;
 

@@ -48,7 +48,7 @@ public class CommentApiUtils {
 
 	public CommentApiUtils(String jsonString) {
 		processingResult = true;
-
+		log("JSONString: " + jsonString);
 		try {
 			jsonObject = new JSONObject(jsonString);
 		} catch (JSONException e) {
@@ -83,17 +83,21 @@ public class CommentApiUtils {
 				for (int i = 0; i < commentArray.length(); i++) {
 					Comment currentComment = new Comment();
 					try {
-						id = commentArray.getJSONObject(i).getInt("id");
+						id = commentArray.getJSONObject(i)
+								.getJSONObject("comment").getInt("id");
 						currentComment.setCommentId(id);
 						currentComment.setReportId(commentArray
-								.getJSONObject(i).getInt("incident_id"));
+								.getJSONObject(i).getJSONObject("comment")
+								.getInt("incident_id"));
 						currentComment.setCommentAuthor(commentArray
-								.getJSONObject(i).getString("comment_author"));
+								.getJSONObject(i).getJSONObject("comment")
+								.getString("comment_author"));
 						currentComment.setCommentDate(commentArray
-								.getJSONObject(i).getString("comment_email"));
+								.getJSONObject(i).getJSONObject("comment")
+								.getString("comment_email"));
 						currentComment.setCommentDescription(commentArray
-								.getJSONObject(i).getString(
-										"comment_description"));
+								.getJSONObject(i).getJSONObject("comment")
+								.getString("comment_description"));
 
 					} catch (JSONException e) {
 						log("JSONException", e);
@@ -109,7 +113,7 @@ public class CommentApiUtils {
 		}
 		return null;
 	}
-	
+
 	public List<Comment> getCheckinCommentsList(Context context) {
 		log("Save comments");
 		if (processingResult) {
@@ -151,24 +155,32 @@ public class CommentApiUtils {
 	public boolean saveComments(Context context) {
 		List<Comment> comments = getCommentsList(context);
 
-		if (comments != null) {
-
+		if (comments != null && comments.size() > 0) {
+			// remove existing comments
+			for (Comment comment : comments) {
+				Database.mCommentDao.deleteCommentByReportId(comment
+						.getReportId());
+			}
 			return Database.mCommentDao.addComment(comments);
 		}
 
 		return false;
 	}
-	
+
 	// Save checkins into database
-		public boolean saveCheckinsComments(Context context) {
-			List<Comment> comments = getCheckinCommentsList(context);
-			if (comments != null) {
-
-				return Database.mCommentDao.addComment(comments);
+	public boolean saveCheckinsComments(Context context) {
+		List<Comment> comments = getCheckinCommentsList(context);
+		if (comments != null && comments.size() > 0) {
+			// remove existing comments
+			for (Comment comment : comments) {
+				Database.mCommentDao.deleteCommentByCheckinId(comment
+						.getCommentId());
 			}
-
-			return false;
+			return Database.mCommentDao.addComment(comments);
 		}
+
+		return false;
+	}
 
 	private void log(String message) {
 		if (MainApplication.LOGGING_MODE)
