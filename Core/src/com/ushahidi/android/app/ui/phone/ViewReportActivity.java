@@ -109,7 +109,6 @@ public class ViewReportActivity extends
 		registerReceiver(fetchBroadcastReceiver,
 				new IntentFilter(SyncServices.FETCH_REPORT_COMMENTS_SERVICES_ACTION));
 		
-		view.dialog.show();
 		fetchReportComments = new Intent(this, FetchReportsComments.class);
 		fetchReportComments.putExtra("reportid", reportId);
 		startService(fetchReportComments);

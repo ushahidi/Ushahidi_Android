@@ -34,20 +34,22 @@ import com.ushahidi.android.app.util.Util;
  * @author eyedol
  * 
  */
-public class ListCommentAdapter extends BaseListAdapter<ListCommentModel> {
-
-	/**
-	 * @param context
-	 */
-	public ListCommentAdapter(Context context) {
-		super(context);
-	}
+public class CommentAdapter extends BaseListAdapter<ListCommentModel> {
 
 	private ListCommentModel mListCommentModel;
 
 	private List<ListCommentModel> items;
 
-	private int totalComments;
+	private int[] colors;
+
+	/**
+	 * @param context
+	 */
+	public CommentAdapter(Context context) {
+		super(context);
+		colors = new int[] { R.drawable.odd_row_rounded_corners,
+				R.drawable.even_row_rounded_corners };
+	}
 
 	class Widgets extends com.ushahidi.android.app.views.View {
 
@@ -58,14 +60,12 @@ public class ListCommentAdapter extends BaseListAdapter<ListCommentModel> {
 			this.commentDate = (TextView) view.findViewById(R.id.comment_date);
 			this.commentDescription = (TextView) view
 					.findViewById(R.id.comment_description);
-			this.total = (TextView) view.findViewById(R.id.comment_total);
 
 		}
 
 		TextView commentAuthor;
 		TextView commentDate;
 		TextView commentDescription;
-		TextView total;
 	}
 
 	/*
@@ -76,8 +76,9 @@ public class ListCommentAdapter extends BaseListAdapter<ListCommentModel> {
 	 */
 	@Override
 	public View getView(int position, View view, ViewGroup viewGroup) {
-		View row = inflater.inflate(R.layout.list_comment_item, viewGroup,
-				false);
+		int colorPosition = position % colors.length;
+		View row = inflater.inflate(R.layout.comment_item, viewGroup, false);
+		row.setBackgroundResource(colors[colorPosition]);
 		Widgets widgets = (Widgets) row.getTag();
 
 		if (widgets == null) {
@@ -92,8 +93,6 @@ public class ListCommentAdapter extends BaseListAdapter<ListCommentModel> {
 				getItem(position).getCommentDate(), "MMM dd, yyyy"));
 		widgets.commentDescription.setText(getItem(position)
 				.getCommentDescription());
-		widgets.total.setText(context.getResources().getQuantityString(
-				R.plurals.no_of_comments, totalComments, totalComments));
 		return row;
 	}
 
@@ -112,9 +111,8 @@ public class ListCommentAdapter extends BaseListAdapter<ListCommentModel> {
 	public void refresh(int reportId) {
 		mListCommentModel = new ListCommentModel();
 		final boolean loaded = mListCommentModel.load(reportId);
-		totalComments = mListCommentModel.totalComments();
 		if (loaded) {
-			items = mListCommentModel.getComments();
+			items = mListCommentModel.getCommentsByReportId(reportId);
 			this.setItems(items);
 		}
 	}
@@ -122,9 +120,8 @@ public class ListCommentAdapter extends BaseListAdapter<ListCommentModel> {
 	public void refreshCheckinComment(int checkinId) {
 		mListCommentModel = new ListCommentModel();
 		final boolean loaded = mListCommentModel.loadCheckinComment(checkinId);
-		totalComments = mListCommentModel.totalComments();
 		if (loaded) {
-			items = mListCommentModel.getComments();
+			items = mListCommentModel.getCommentsByCheckintId(checkinId);
 			this.setItems(items);
 		}
 	}

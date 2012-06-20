@@ -49,6 +49,25 @@ public class ListCommentModel extends Comment {
 		return false;
 	}
 
+	public List<ListCommentModel> getComments() {
+		final List<ListCommentModel> comments = new ArrayList<ListCommentModel>();
+		if (mCommentModel != null && mCommentModel.size() > 0) {
+
+			ListCommentModel comment = new ListCommentModel();
+			comment.setDbId(mCommentModel.get(0).getDbId());
+			comment.setCommentAuthor(mCommentModel.get(0).getCommentAuthor());
+			comment.setCommentDescription(mCommentModel.get(0)
+					.getCommentDescription());
+			comment.setReportId(mCommentModel.get(0).getReportId());
+			comment.setCommentId(mCommentModel.get(0).getCommentId());
+			comment.setCommentDate(mCommentModel.get(0).getCommentDate());
+			comments.add(comment);
+
+		}
+
+		return comments;
+	}
+
 	public int totalComments() {
 		if (mCommentModel != null && mCommentModel.size() > 0) {
 			return mCommentModel.size();

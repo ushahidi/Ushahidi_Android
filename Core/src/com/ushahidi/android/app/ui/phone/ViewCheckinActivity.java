@@ -56,7 +56,7 @@ public class ViewCheckinActivity extends
 	private int userId;
 
 	private int checkinId;
-	
+
 	private Intent fetchCheckinComments;
 
 	public ViewCheckinActivity() {
@@ -129,11 +129,11 @@ public class ViewCheckinActivity extends
 	@Override
 	public void onResume() {
 		super.onResume();
-		registerReceiver(fetchBroadcastReceiver,
-				new IntentFilter(SyncServices.FETCH_CHECKIN_COMMENTS_SERVICES_ACTION));
+		registerReceiver(fetchBroadcastReceiver, new IntentFilter(
+				SyncServices.FETCH_CHECKIN_COMMENTS_SERVICES_ACTION));
 		stopLocating();
 	}
-	
+
 	public void onPause() {
 		super.onPause();
 		try {
@@ -141,14 +141,11 @@ public class ViewCheckinActivity extends
 		} catch (IllegalArgumentException e) {
 		}
 	}
-	
+
 	private void fetchComments() {
-		registerReceiver(fetchBroadcastReceiver,
-				new IntentFilter(SyncServices.FETCH_CHECKIN_COMMENTS_SERVICES_ACTION));
-		
-		//refreshState = true;
-		//updateRefreshStatus();
-		view.dialog.show();
+		registerReceiver(fetchBroadcastReceiver, new IntentFilter(
+				SyncServices.FETCH_CHECKIN_COMMENTS_SERVICES_ACTION));
+
 		fetchCheckinComments = new Intent(this, FetchCheckinsComments.class);
 		fetchCheckinComments.putExtra("checkinid", checkinId);
 		startService(fetchCheckinComments);
@@ -238,7 +235,7 @@ public class ViewCheckinActivity extends
 	protected void locationChanged(double latitude, double longitude) {
 
 	}
-	
+
 	private BroadcastReceiver fetchBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -254,8 +251,8 @@ public class ViewCheckinActivity extends
 					toastLong(R.string.could_not_fetch_comment);
 				} else if (status == 0) {
 					log("successfully fetched comments");
-					//refreshCheckinList();
-					//showUsers();
+					// refreshCheckinList();
+					// showUsers();
 				}
 			}
 

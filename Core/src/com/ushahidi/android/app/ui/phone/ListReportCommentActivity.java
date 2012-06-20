@@ -19,15 +19,21 @@
  **/
 package com.ushahidi.android.app.ui.phone;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseListActivity;
-import com.ushahidi.android.app.adapters.ListCommentAdapter;
+import com.ushahidi.android.app.adapters.CommentAdapter;
 import com.ushahidi.android.app.models.ListCommentModel;
+import com.ushahidi.android.app.services.FetchReportsComments;
+import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.views.ListCommentView;
 
 /**
@@ -35,9 +41,11 @@ import com.ushahidi.android.app.views.ListCommentView;
  * 
  */
 public class ListReportCommentActivity extends
-		BaseListActivity<ListCommentView, ListCommentModel, ListCommentAdapter> {
+		BaseListActivity<ListCommentView, ListCommentModel, CommentAdapter> {
 
 	private int reportId = 0;
+
+	private Intent fetchReportComments;
 
 	/**
 	 * @param view
@@ -47,7 +55,7 @@ public class ListReportCommentActivity extends
 	 * @param listView
 	 */
 	public ListReportCommentActivity() {
-		super(ListCommentView.class, ListCommentAdapter.class,
+		super(ListCommentView.class, CommentAdapter.class,
 				R.layout.list_comment, R.menu.list_comment, android.R.id.list);
 	}
 
@@ -56,10 +64,42 @@ public class ListReportCommentActivity extends
 		super.onCreate(savedInstanceState);
 		adapter.refresh(reportId);
 	}
-	
+
 	public void onResume() {
 		super.onResume();
+		fetchComments();
 		adapter.refreshCheckinComment(reportId);
+	}
+
+	public void onPause() {
+		super.onPause();
+		try {
+			unregisterReceiver(fetchBroadcastReceiver);
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	private void fetchComments() {
+		registerReceiver(fetchBroadcastReceiver, new IntentFilter(
+				SyncServices.FETCH_REPORT_COMMENTS_SERVICES_ACTION));
+
+		fetchReportComments = new Intent(this, FetchReportsComments.class);
+		fetchReportComments.putExtra("reportid", reportId);
+		startService(fetchReportComments);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+			finish();
+			return true;
+
+		} else if (item.getItemId() == R.id.menu_comment) {
+			goToAddComment(reportId);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+
 	}
 
 	/**
@@ -72,10 +112,12 @@ public class ListReportCommentActivity extends
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
 
+		reportId = adapter.getItem(position).getReportId();
+	}
+
+	private void goToAddComment(int reportId) {
 		Intent i;
 		i = new Intent(this, AddCommentActivity.class);
-
-		reportId = adapter.getItem(position).getReportId();
 		i.putExtra("reportid", reportId);
 
 		startActivityForResult(i, 0);
@@ -104,5 +146,32 @@ public class ListReportCommentActivity extends
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	private BroadcastReceiver fetchBroadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent != null) {
+
+				int status = intent.getIntExtra("status", 4);
+				view.dialog.cancel();
+				if (status == 4) {
+					toastLong(R.string.internet_connection);
+				} else if (status == 110) {
+					toastLong(R.string.connection_timeout);
+				} else if (status == 100) {
+					toastLong(R.string.could_not_fetch_comment);
+				} else if (status == 0) {
+					log("successfully fetched comments");
+					// refreshCheckinList();
+					// showUsers();
+				}
+			}
+
+			try {
+				unregisterReceiver(fetchBroadcastReceiver);
+			} catch (IllegalArgumentException e) {
+			}
+		}
+	};
 
 }

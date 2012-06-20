@@ -94,7 +94,7 @@ public class CommentApiUtils {
 								.getString("comment_author"));
 						currentComment.setCommentDate(commentArray
 								.getJSONObject(i).getJSONObject("comment")
-								.getString("comment_email"));
+								.getString("comment_date"));
 						currentComment.setCommentDescription(commentArray
 								.getJSONObject(i).getJSONObject("comment")
 								.getString("comment_description"));

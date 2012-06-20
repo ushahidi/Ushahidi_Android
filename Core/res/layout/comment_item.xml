@@ -17,13 +17,5 @@
         android:id="@+id/comment_description"
         style="@style/TextView.Value"
         android:layout_below="@+id/comment_date" />
-    
-    <TextView
-        android:id="@+id/comment_total"
-        style="@style/TextView.Label"
-        android:layout_below="@+id/comment_description"
-        android:padding="10dip"
-        android:background="@color/overlay_text_color"
-        android:textColor="@color/white_color" />
 
 </RelativeLayout>
