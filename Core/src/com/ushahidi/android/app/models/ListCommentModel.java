@@ -70,7 +70,7 @@ public class ListCommentModel extends Comment {
 				comment.setReportId(item.getReportId());
 				comment.setCommentId(item.getCommentId());
 				comment.setCommentDate(item.getCommentDate());
-				mCommentModel.add(comment);
+				comments.add(comment);
 			}
 
 		}
@@ -92,7 +92,7 @@ public class ListCommentModel extends Comment {
 				comment.setCheckinId(item.getCheckinId());
 				comment.setCommentId(item.getCommentId());
 				comment.setCommentDate(item.getCommentDate());
-				mCommentModel.add(comment);
+				comments.add(comment);
 			}
 
 		}

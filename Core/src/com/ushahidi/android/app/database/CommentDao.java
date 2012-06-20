@@ -19,6 +19,7 @@
  **/
 package com.ushahidi.android.app.database;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -26,6 +27,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.ushahidi.android.app.entities.Comment;
+import com.ushahidi.android.app.models.ListCommentModel;
 
 /**
  * @author eyedol
@@ -92,6 +94,7 @@ public class CommentDao extends DbContentProvider implements ICommentDao,
 	 */
 	@Override
 	public List<Comment> fetchCheckinComment(int checkinId) {
+		listComment = new ArrayList<Comment>();
 		final String selection = CHECKIN_ID + " = " + checkinId;
 		cursor = super.query(TABLE, COMMENT_COLUMN, selection, null, null);
 		if (cursor != null) {
@@ -114,6 +117,7 @@ public class CommentDao extends DbContentProvider implements ICommentDao,
 	 */
 	@Override
 	public List<Comment> fetchReportComment(int reportId) {
+		listComment = new ArrayList<Comment>();
 		final String selection = REPORT_ID + " = " + reportId;
 		cursor = super.query(TABLE, COMMENT_COLUMN, selection, null, null);
 		if (cursor != null) {

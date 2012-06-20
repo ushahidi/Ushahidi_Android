@@ -188,7 +188,7 @@ public class ViewCheckinActivity extends
 							public void onItemClick(AdapterView<?> parent,
 									View v, int pos, long id) {
 								Intent i = new Intent(ViewCheckinActivity.this,
-										ListCommentActivity.class);
+										ListReportCommentActivity.class);
 								i.putExtra("reportid", checkinId);
 								i.putExtra("position", pos);
 								startActivityForResult(i, 0);

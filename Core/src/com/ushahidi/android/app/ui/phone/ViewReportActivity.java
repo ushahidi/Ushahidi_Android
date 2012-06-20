@@ -182,6 +182,7 @@ public class ViewReportActivity extends
 			view.setListNews((int) reportId);
 			view.setListPhotos((int) reportId);
 			view.setListVideos((int) reportId);
+			view.setListComments(reportId);
 			view.getListPhotos().setOnItemClickListener(
 					new OnItemClickListener() {
 
@@ -232,7 +233,7 @@ public class ViewReportActivity extends
 						public void onItemClick(AdapterView<?> parent,
 								View view, int position, long id) {
 							Intent i = new Intent(ViewReportActivity.this,
-									ListCommentActivity.class);
+									ListReportCommentActivity.class);
 							i.putExtra("reportid", reportId);
 							i.putExtra("position", position);
 							startActivityForResult(i, 0);
