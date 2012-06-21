@@ -161,6 +161,7 @@ public class ViewCheckinActivity extends
 				view.setBody(listCheckin.get(position).getMessage());
 				view.setDate(listCheckin.get(position).getDate());
 				view.setListPhotos((int) checkinId);
+				view.setListComments(checkinId);
 				view.getListPhotos().setOnItemClickListener(
 						new OnItemClickListener() {
 
@@ -168,8 +169,6 @@ public class ViewCheckinActivity extends
 									View v, int pos, long id) {
 								Intent i = new Intent(ViewCheckinActivity.this,
 										ViewReportPhotoActivity.class);
-								log("Checkin position: " + pos
-										+ " Checkin Id: " + checkinId);
 								i.putExtra("reportid", checkinId);
 								i.putExtra("position", pos);
 								startActivityForResult(i, 0);
@@ -185,8 +184,8 @@ public class ViewCheckinActivity extends
 							public void onItemClick(AdapterView<?> parent,
 									View v, int pos, long id) {
 								Intent i = new Intent(ViewCheckinActivity.this,
-										ListReportCommentActivity.class);
-								i.putExtra("reportid", checkinId);
+										ListCheckinCommentActivity.class);
+								i.putExtra("checkinid", checkinId);
 								i.putExtra("position", pos);
 								startActivityForResult(i, 0);
 								overridePendingTransition(R.anim.home_enter,

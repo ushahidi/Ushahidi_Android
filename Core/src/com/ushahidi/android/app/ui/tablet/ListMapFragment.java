@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -36,6 +37,7 @@ import com.ushahidi.android.app.adapters.ListMapAdapter;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.helpers.ActionModeHelper;
 import com.ushahidi.android.app.models.ListCheckinModel;
+import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
@@ -43,6 +45,7 @@ import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.net.MapsHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.services.FetchReports;
+import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.ui.phone.CheckinTabActivity;
@@ -170,6 +173,8 @@ public class ListMapFragment extends
 	@Override
 	public void onResume() {
 		super.onResume();
+		getActivity().registerReceiver(broadcastReceiver, new IntentFilter(
+				SyncServices.SYNC_SERVICES_ACTION));
 		mHandler.post(fetchMapList);
 	}
 
@@ -183,6 +188,15 @@ public class ListMapFragment extends
 	public void onDestroy() {
 		super.onDestroy();
 		stopLocating();
+	}
+	
+	public void onPause() {
+        super.onPause();
+        try {
+        	getActivity().unregisterReceiver(broadcastReceiver);
+		} catch (IllegalArgumentException e) {
+		}
+        
 	}
 
 	public void setListMapListener(ListMapFragmentListener listener) {
@@ -490,6 +504,9 @@ public class ListMapFragment extends
 
 		// delete checkins data
 		new ListCheckinModel().deleteCheckin();
+		
+		//delete comment data
+		new ListCommentModel().deleteComments();
 
 		// delete pending photos
 		ImageManager.deleteImages(getActivity());

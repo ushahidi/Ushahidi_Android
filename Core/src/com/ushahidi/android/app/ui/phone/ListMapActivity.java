@@ -23,7 +23,6 @@ package com.ushahidi.android.app.ui.phone;
 import java.util.Date;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -48,23 +47,16 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.BaseListActivity;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
-import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListMapModel;
-import com.ushahidi.android.app.models.ListReportModel;
-import com.ushahidi.android.app.net.CategoriesHttpClient;
-import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.net.MapsHttpClient;
-import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.tasks.ProgressTask;
-import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.views.AddMapView;
 import com.ushahidi.android.app.views.ListMapView;
 
@@ -106,8 +98,6 @@ public class ListMapActivity extends
 
 	private String errorMessage = "";
 
-	private ApiUtils apiUtils;
-
 	private Intent fetchReports;
 
 	public ProgressDialog dialog;
@@ -124,7 +114,6 @@ public class ListMapActivity extends
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		actionBar.setDisplayHomeAsUpEnabled(false);
-		apiUtils = new ApiUtils(this);
 		registerForContextMenu(listView);
 		this.dialog = new ProgressDialog(this);
 		this.dialog.setCancelable(true);
@@ -173,14 +162,14 @@ public class ListMapActivity extends
 	public void onStart() {
 		super.onStart();
 	}
-	
+
 	protected void onPause() {
-        super.onPause();
-        try {
-        	unregisterReceiver(broadcastReceiver);
+		super.onPause();
+		try {
+			unregisterReceiver(broadcastReceiver);
 		} catch (IllegalArgumentException e) {
 		}
-        
+
 	}
 
 	@Override
@@ -351,7 +340,7 @@ public class ListMapActivity extends
 				goToCheckins();
 			}
 		} else {
-			
+
 			fetchReports(sId);
 		}
 
@@ -397,23 +386,6 @@ public class ListMapActivity extends
 		startActivityForResult(launchIntent, 0);
 		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		setResult(RESULT_OK);
-	}
-
-	/**
-	 * Clear saved reports
-	 */
-	public void clearCachedData() {
-		// delete reports
-		new ListReportModel().deleteReport();
-
-		// delete checkins data
-		new ListCheckinModel().deleteCheckin();
-
-		// delete pending photos
-		ImageManager.deleteImages(this);
-
-		// delete fetched photos
-		ImageManager.deletePendingImages(this);
 	}
 
 	/**
@@ -599,106 +571,8 @@ public class ListMapActivity extends
 
 	}
 
-	/**
-	 * Load the map's report
-	 */
-
-	class FetchMapReportTask extends ProgressTask {
-
-		protected int id;
-
-		protected Integer status = 113;
-
-		public FetchMapReportTask(Activity activity) {
-			super(activity, R.string.please_wait);
-			// pass custom loading message to super call
-		}
-
-		@Override
-		protected Boolean doInBackground(String... strings) {
-			try {
-				if (id != 0) {
-					listMapModel.activateDeployment(ListMapActivity.this, id);
-					clearCachedData();
-					if (!apiUtils.isCheckinEnabled()) {
-
-						// fetch categories
-						new CategoriesHttpClient(ListMapActivity.this)
-								.getCategoriesFromWeb();
-
-						// fetch reports
-						status = new ReportsHttpClient(ListMapActivity.this)
-								.getAllReportFromWeb();
-						return true;
-					} else {
-
-						// TODO process checkin if there is one
-						status = new CheckinHttpClient(ListMapActivity.this)
-								.getAllCheckinFromWeb();
-						return true;
-					}
-
-				}
-
-				Thread.sleep(1000);
-				return false;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				return false;
-			}
-
-		}
-
-		@Override
-		protected void onPostExecute(Boolean success) {
-			super.onPostExecute(success);
-			if (success) {
-				if (status != null) {
-					if (status == 0) {
-						onLoaded(success);
-					} else if (status == 100) {
-						errorMessage = getString(R.string.internet_connection);
-						createDialog(DIALOG_SHOW_MESSAGE);
-					} else if (status == 99) {
-						errorMessage = getString(R.string.failed);
-						createDialog(DIALOG_SHOW_MESSAGE);
-					} else if (status == 112) {
-						errorMessage = getString(R.string.network_error);
-						createDialog(DIALOG_SHOW_MESSAGE);
-					} else {
-						errorMessage = getString(R.string.error_occured);
-						createDialog(DIALOG_SHOW_MESSAGE);
-
-					}
-
-				} else {
-					toastLong(R.string.failed);
-				}
-
-			} else {
-				toastLong(R.string.failed);
-			}
-		}
-	}
-
 	@Override
 	protected void onLoaded(boolean success) {
-		try {
-
-			if (success) {
-				if (Preferences.isCheckinEnabled == 1) {
-					toastLong(R.string.checkin_is_enabled);
-					goToCheckins();
-				} else {
-					goToReports();
-				}
-
-			} else {
-				toastLong(R.string.failed);
-			}
-		} catch (IllegalArgumentException e) {
-			log(e.toString());
-		}
 	}
 
 	/** Location stuff **/
@@ -773,7 +647,6 @@ public class ListMapActivity extends
 		return null;
 	}
 
-	
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -781,7 +654,7 @@ public class ListMapActivity extends
 				int status = intent.getIntExtra("status", 113);
 				unregisterReceiver(broadcastReceiver);
 				dialog.cancel();
-				
+
 				if (status == 0) {
 					onLoaded(true);
 				} else if (status == 100) {
@@ -803,7 +676,6 @@ public class ListMapActivity extends
 				toastLong(R.string.failed);
 			}
 
-			
 		}
 
 	};

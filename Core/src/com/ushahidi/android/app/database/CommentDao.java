@@ -27,7 +27,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.ushahidi.android.app.entities.Comment;
-import com.ushahidi.android.app.models.ListCommentModel;
 
 /**
  * @author eyedol

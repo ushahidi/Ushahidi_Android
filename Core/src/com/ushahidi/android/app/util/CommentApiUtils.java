@@ -124,17 +124,21 @@ public class CommentApiUtils {
 				for (int i = 0; i < commentArray.length(); i++) {
 					Comment currentComment = new Comment();
 					try {
-						id = commentArray.getJSONObject(i).getInt("id");
+						id = commentArray.getJSONObject(i)
+								.getJSONObject("comment").getInt("id");
 						currentComment.setCommentId(id);
-						currentComment.setReportId(commentArray
-								.getJSONObject(i).getInt("checkin_id"));
+						currentComment.setCheckinId(commentArray
+								.getJSONObject(i).getJSONObject("comment")
+								.getInt("checkin_id"));
 						currentComment.setCommentAuthor(commentArray
-								.getJSONObject(i).getString("comment_author"));
+								.getJSONObject(i).getJSONObject("comment")
+								.getString("comment_author"));
 						currentComment.setCommentDate(commentArray
-								.getJSONObject(i).getString("comment_email"));
+								.getJSONObject(i).getJSONObject("comment")
+								.getString("comment_date"));
 						currentComment.setCommentDescription(commentArray
-								.getJSONObject(i).getString(
-										"comment_description"));
+								.getJSONObject(i).getJSONObject("comment")
+								.getString("comment_description"));
 
 					} catch (JSONException e) {
 						log("JSONException", e);
@@ -174,7 +178,7 @@ public class CommentApiUtils {
 			// remove existing comments
 			for (Comment comment : comments) {
 				Database.mCommentDao.deleteCommentByCheckinId(comment
-						.getCommentId());
+						.getCheckinId());
 			}
 			return Database.mCommentDao.addComment(comments);
 		}

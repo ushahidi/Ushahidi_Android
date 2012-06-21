@@ -24,6 +24,7 @@ import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.models.ListCheckinModel;
+import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.CheckinHttpClient;
@@ -56,6 +57,9 @@ public class FetchReports extends SyncServices {
 
 		// delete checkins data
 		new ListCheckinModel().deleteCheckin();
+
+		// delete comment data
+		new ListCommentModel().deleteComments();
 
 		// delete fetched photos
 		ImageManager.deleteImages(this);
