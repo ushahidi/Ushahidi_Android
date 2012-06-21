@@ -314,8 +314,7 @@ public class ViewReportActivity extends
 					toastLong(R.string.could_not_fetch_comment);
 				} else if (status == 0) {
 					log("successfully fetched comments");
-					//refreshCheckinList();
-					//showUsers();
+					view.setListComments(reportId);
 				}
 			}
 

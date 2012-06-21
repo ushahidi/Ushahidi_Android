@@ -63,7 +63,6 @@ public class ListCheckinCommentActivity extends
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		checkinId = getIntent().getExtras().getInt("checkinid");
-		log("Checkin ID: "+checkinId);
 		adapter.refreshCheckinComment(checkinId);
 	}
 

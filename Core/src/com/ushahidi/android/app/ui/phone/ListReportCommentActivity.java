@@ -62,6 +62,7 @@ public class ListReportCommentActivity extends
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		reportId = getIntent().getExtras().getInt("reportid");
 		adapter.refresh(reportId);
 	}
 
