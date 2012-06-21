@@ -573,6 +573,22 @@ public class ListMapActivity extends
 
 	@Override
 	protected void onLoaded(boolean success) {
+		try {
+
+			if (success) {
+				if (Preferences.isCheckinEnabled == 1) {
+					toastLong(R.string.checkin_is_enabled);
+					goToCheckins();
+				} else {
+					goToReports();
+				}
+
+			} else {
+				toastLong(R.string.failed);
+			}
+		} catch (IllegalArgumentException e) {
+			log(e.toString());
+		}
 	}
 
 	/** Location stuff **/
