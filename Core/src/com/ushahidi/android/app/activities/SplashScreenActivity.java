@@ -147,6 +147,12 @@ public class SplashScreenActivity extends FragmentActivity {
 						return true;
 					}
 				}
+				if (Preferences.isCheckinEnabled == 1) {
+					goToCheckins();
+				} else {
+					goToReports();
+				}
+				return true;
 			}
 		} catch (Exception ex) {
 			Log.e("Dashboard", "checkDefaultDeployment Exception", ex);
@@ -160,6 +166,8 @@ public class SplashScreenActivity extends FragmentActivity {
 		startActivityForResult(launchIntent, 0);
 		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		setResult(RESULT_OK);
+		finish();
+		
 	}
 
 	private void goToCheckins() {
@@ -168,6 +176,7 @@ public class SplashScreenActivity extends FragmentActivity {
 		startActivityForResult(launchIntent, 0);
 		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		setResult(RESULT_OK);
+		finish();
 	}
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
