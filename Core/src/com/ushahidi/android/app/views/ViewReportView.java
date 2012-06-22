@@ -264,9 +264,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	
 	public void setListComments(int reportId) {
 		if (listComments != null) {
-			ListCommentAdapter adapter = new ListCommentAdapter(context);
-			adapter.refresh(reportId);
-			listComments.setAdapter(adapter);
+			commentAdapter.refresh(reportId);
+			listComments.setAdapter(commentAdapter);
 		}
 	}
 

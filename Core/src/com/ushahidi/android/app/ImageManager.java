@@ -135,7 +135,7 @@ public class ImageManager {
 			throws IOException {
 
 		MainHttpClient httpClient = new MainHttpClient(context);
-		return httpClient.fetchImage2(imageUrl);
+		return httpClient.fetchImage(imageUrl);
 	}
 
 	public static void downloadImage(String imageUrl, String filename,

@@ -94,8 +94,9 @@ public class CommentDao extends DbContentProvider implements ICommentDao,
 	@Override
 	public List<Comment> fetchCheckinComment(int checkinId) {
 		listComment = new ArrayList<Comment>();
+		final String sortOrder = COMMENT_DATE + " DESC";
 		final String selection = CHECKIN_ID + " = " + checkinId;
-		cursor = super.query(TABLE, COMMENT_COLUMN, selection, null, null);
+		cursor = super.query(TABLE, COMMENT_COLUMN, selection, null, sortOrder);
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
@@ -117,8 +118,9 @@ public class CommentDao extends DbContentProvider implements ICommentDao,
 	@Override
 	public List<Comment> fetchReportComment(int reportId) {
 		listComment = new ArrayList<Comment>();
+		final String sortOrder = COMMENT_DATE + " DESC";
 		final String selection = REPORT_ID + " = " + reportId;
-		cursor = super.query(TABLE, COMMENT_COLUMN, selection, null, null);
+		cursor = super.query(TABLE, COMMENT_COLUMN, selection, null, sortOrder);
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {

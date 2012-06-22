@@ -50,6 +50,7 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 	public TextView listPhotosEmptyView;
 	private TextView listCommentEmptyView;
 	public ListPhotoAdapter photoAdapter;
+	public ListCommentAdapter commentAdapter;
 	public MapView mapView;
 	private Context context;
 
@@ -68,7 +69,9 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 		date = (TextView) activity.findViewById(R.id.checkin_date);
 
 		photoAdapter = new ListPhotoAdapter(activity);
-
+		
+		commentAdapter = new ListCommentAdapter(context);
+		
 		listPhotos = (ListView) activity.findViewById(R.id.list_checkin_photos);
 		listPhotosEmptyView = (TextView) activity
 				.findViewById(R.id.checkin_empty_photo_list);
@@ -128,9 +131,8 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 
 	public void setListComments(int checkinId) {
 		if (listPhotos != null) {
-			ListCommentAdapter adapter = new ListCommentAdapter(context);
-			adapter.refreshCheckinComment(checkinId);
-			listComments.setAdapter(adapter);
+			commentAdapter.refreshCheckinComment(checkinId);
+			listComments.setAdapter(commentAdapter);
 		}
 	}
 

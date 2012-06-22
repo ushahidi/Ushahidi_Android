@@ -131,6 +131,7 @@ public class ViewCheckinActivity extends
 		super.onResume();
 		registerReceiver(fetchBroadcastReceiver, new IntentFilter(
 				SyncServices.FETCH_CHECKIN_COMMENTS_SERVICES_ACTION));
+		view.commentAdapter.refreshCheckinComment(checkinId);
 		stopLocating();
 	}
 

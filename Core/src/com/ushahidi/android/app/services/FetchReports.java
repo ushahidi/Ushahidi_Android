@@ -77,13 +77,13 @@ public class FetchReports extends SyncServices {
 
 			// fetch categories
 			new CategoriesHttpClient(this).getCategoriesFromWeb();
-			// fetch reports
+			// fetch reportsx
 			status = new ReportsHttpClient(this).getAllReportFromWeb();
 
 		} else {
-
 			// TODO process checkin if there is one
 			status = new CheckinHttpClient(this).getAllCheckinFromWeb();
+			Log.i("FetchReports: ","Gosh "+status);
 		}
 
 		statusIntent.putExtra("status", status);

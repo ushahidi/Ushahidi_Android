@@ -63,12 +63,13 @@ public class ListReportCommentActivity extends
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		reportId = getIntent().getExtras().getInt("reportid");
+		fetchComments();
 		adapter.refresh(reportId);
 	}
 
 	public void onResume() {
 		super.onResume();
-		fetchComments();
+		
 		adapter.refreshCheckinComment(reportId);
 	}
 
@@ -172,6 +173,7 @@ public class ListReportCommentActivity extends
 				unregisterReceiver(fetchBroadcastReceiver);
 			} catch (IllegalArgumentException e) {
 			}
+			stopService(fetchReportComments);
 		}
 	};
 

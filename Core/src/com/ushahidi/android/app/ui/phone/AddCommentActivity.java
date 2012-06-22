@@ -242,6 +242,7 @@ public class AddCommentActivity extends
 					unregisterReceiver(uploadBroadcastReceiver);
 				} catch (IllegalArgumentException e) {
 				}
+				stopService(uploadComment);
 				view.dialog.cancel();
 				if (status == 0) {
 					toastLong(getString(R.string.uploaded));

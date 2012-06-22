@@ -13,7 +13,7 @@
     <string name="provider_authorities">com.ushahidi.android.app.data.deploymentprovider</string>
 
     <!-- NAMESPACE  -->
-    <string name="rounded_corner">http://schemas.android.com/apk/res/com.ushahidi.android.beijigntransport</string>
+    <string name="rounded_corner">http://schemas.android.com/apk/res/com.ushahidi.android.app</string>
     <!-- ICON IMAGES -->
     <drawable name="app_icon">@drawable/icon</drawable>
     <drawable name="logo_icon">@drawable/logo</drawable>

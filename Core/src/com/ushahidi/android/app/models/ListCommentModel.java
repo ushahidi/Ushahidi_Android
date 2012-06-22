@@ -126,9 +126,7 @@ public class ListCommentModel extends Comment {
 			Log.i("ListCommentModel","Comment deleted");
 			return true;
 		}
-		
 		Log.i("ListCommentModel","Comment deletetion failed!");
-		
 		return false;
 	}
 

@@ -21,7 +21,9 @@
 package com.ushahidi.android.app.net;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +31,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -287,6 +290,38 @@ public class MainHttpClient {
 
 		}
 		return null;
+	}
+
+	public byte[] fetchImage(String address) throws MalformedURLException,
+			IOException {
+		InputStream in = null;
+		OutputStream out = null;
+
+		try {
+			in = new BufferedInputStream(new URL(address).openStream(),
+					IO_BUFFER_SIZE);
+
+			final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+			out = new BufferedOutputStream(dataStream, 4 * 1024);
+			copy(in, out);
+			out.flush();
+
+			// need to close stream before return statement
+			closeStream(in);
+			closeStream(out);
+
+			return dataStream.toByteArray();
+		} catch (IOException e) {
+			// android.util.Log.e("IO", "Could not load buddy icon: " + this,
+			// e);
+
+		} finally {
+			closeStream(in);
+			closeStream(out);
+
+		}
+		return null;
+
 	}
 
 	/**

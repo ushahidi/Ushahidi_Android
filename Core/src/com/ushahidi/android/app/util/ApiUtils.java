@@ -76,24 +76,24 @@ public class ApiUtils extends MainHttpClient {
 		StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
 		uriBuilder.append("/api?task=version");
 		uriBuilder.append("&resp=json");
-		log("Domain: "+Preferences.domain);
+		
 		try {
 			response = GetURL(uriBuilder.toString());
 			
 			if (response == null) {
+				log("Dome "+Preferences.domain);
 				return false;
 			}
 
 			final int statusCode = response.getStatusLine().getStatusCode();
 			
 			if (statusCode == 200) {
-				log("json "+jsonString+" statusCode");
 				jsonString = GetText(response);
-				log("json "+jsonString);
+				log("jack "+jsonString+" domains "+Preferences.domain);
 				JSONObject jsonObject = new JSONObject(jsonString);
 				int checkinStatus = jsonObject.getJSONObject("payload").getInt(
 						"checkins");
-
+				log("Checkin status "+checkinStatus);
 				if (checkinStatus == 1) {
 					return true;
 				}
@@ -204,7 +204,7 @@ public class ApiUtils extends MainHttpClient {
 	public void updateDomain() {
 
 		Preferences.loadSettings(context);
-
+		
 		StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
 		uriBuilder.append("/api?task=version");
 		uriBuilder.append("&resp=json");
@@ -216,8 +216,9 @@ public class ApiUtils extends MainHttpClient {
 				final int statusCode = response.getStatusLine().getStatusCode();
 
 				if (statusCode == 200) {
-
+					
 					jsonString = GetText(response);
+					Log.i("Update domain ","Update "+jsonString);
 					JSONObject jsonObject = new JSONObject(jsonString);
 					String changedDomain = jsonObject.getJSONObject("payload")
 							.getString("domain");

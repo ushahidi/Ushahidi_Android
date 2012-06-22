@@ -54,16 +54,17 @@ public class UploadComments extends SyncServices {
 
 		if (bundle != null) {
 			if (bundle.getInt("report_id") > 0) {
-				
+
 				mParams.put("incident_id",
 						String.valueOf(bundle.getInt("report_id")));
 			}
 
 			if (bundle.getInt("checkin_id") > 0) {
+				Log.i("Comment ", "ID " + bundle.getInt("checkin_id"));
 				mParams.put("checkin_id",
 						String.valueOf(bundle.getInt("checkin_id")));
 			}
-			
+
 			mParams.put("comment_author", bundle.getString("comment_author"));
 			mParams.put("comment_description",
 					bundle.getString("comment_description"));
@@ -72,7 +73,15 @@ public class UploadComments extends SyncServices {
 			try {
 				if (new CommentHttpClient(this).PostFileUpload(
 						urlBuilder.toString(), mParams)) {
-
+					// fetch comments
+					if (bundle.getInt("report_id") > 0) {
+						new CommentHttpClient(this).getReportComments(bundle
+								.getInt("report_id"));
+					}
+					if (bundle.getInt("checkin_id") > 0) {
+						new CommentHttpClient(this).getCheckinComments(bundle
+								.getInt("checkin_id"));
+					}
 					return 0;
 				}
 				return 1;

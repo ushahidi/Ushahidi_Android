@@ -23,6 +23,7 @@ package com.ushahidi.android.app.ui.phone;
 import java.util.Date;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -47,16 +48,24 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.BaseListActivity;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
+import com.ushahidi.android.app.models.ListCheckinModel;
+import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListMapModel;
+import com.ushahidi.android.app.models.ListReportModel;
+import com.ushahidi.android.app.net.CategoriesHttpClient;
+import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.net.MapsHttpClient;
+import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.tasks.ProgressTask;
+import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.views.AddMapView;
 import com.ushahidi.android.app.views.ListMapView;
 
@@ -349,6 +358,8 @@ public class ListMapActivity extends
 	private void fetchReports(int id) {
 		if (id != 0) {
 			listMapModel.activateDeployment(ListMapActivity.this, id);
+			// registerReceiver(broadcastReceiver, new IntentFilter(
+			// / SyncServices.SYNC_SERVICES_ACTION));
 			dialog.show();
 			fetchReports = new Intent(this, FetchReports.class);
 			startService(fetchReports);
@@ -515,6 +526,26 @@ public class ListMapActivity extends
 	}
 
 	/**
+	 * Clear saved reports
+	 */
+	public void clearCachedData() {
+		// delete reports
+		new ListReportModel().deleteReport();
+
+		// delete checkins data
+		new ListCheckinModel().deleteCheckin();
+
+		// delete comment data
+		new ListCommentModel().deleteComments();
+
+		// delete fetched photos
+		ImageManager.deleteImages(this);
+
+		// delete pending photos
+		ImageManager.deletePendingImages(this);
+	}
+
+	/**
 	 * Load Map details from the web
 	 */
 	class LoadMapTask extends ProgressTask {
@@ -569,6 +600,88 @@ public class ListMapActivity extends
 			// view.displayEmptyListText();
 		}
 
+	}
+
+	/**
+	 * Load the map's report
+	 */
+
+	class FetchMapReportTask extends ProgressTask {
+
+		protected int id;
+
+		protected Integer status = 113;
+
+		public FetchMapReportTask(Activity activity) {
+			super(activity, R.string.please_wait);
+			// pass custom loading message to super call
+		}
+
+		@Override
+		protected Boolean doInBackground(String... strings) {
+			try {
+				if (id != 0) {
+					listMapModel.activateDeployment(ListMapActivity.this, id);
+					clearCachedData();
+					if (!new ApiUtils(ListMapActivity.this).isCheckinEnabled()) {
+
+						// fetch categories
+						new CategoriesHttpClient(ListMapActivity.this)
+								.getCategoriesFromWeb();
+
+						// fetch reports
+						status = new ReportsHttpClient(ListMapActivity.this)
+								.getAllReportFromWeb();
+						return false;
+					} else {
+
+						// TODO process checkin if there is one
+						status = new CheckinHttpClient(ListMapActivity.this)
+								.getAllCheckinFromWeb();
+						return true;
+					}
+
+				}
+
+				Thread.sleep(1000);
+				return false;
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				return false;
+			}
+
+		}
+
+		@Override
+		protected void onPostExecute(Boolean success) {
+			super.onPostExecute(success);
+			if (success) {
+				if (status != null) {
+					if (status == 0) {
+						onLoaded(success);
+					} else if (status == 100) {
+						errorMessage = getString(R.string.internet_connection);
+						createDialog(DIALOG_SHOW_MESSAGE);
+					} else if (status == 99) {
+						errorMessage = getString(R.string.failed);
+						createDialog(DIALOG_SHOW_MESSAGE);
+					} else if (status == 112) {
+						errorMessage = getString(R.string.network_error);
+						createDialog(DIALOG_SHOW_MESSAGE);
+					} else {
+						errorMessage = getString(R.string.error_occured);
+						createDialog(DIALOG_SHOW_MESSAGE);
+
+					}
+
+				} else {
+					toastLong(R.string.failed);
+				}
+
+			} else {
+				toastLong(R.string.failed);
+			}
+		}
 	}
 
 	@Override
@@ -668,7 +781,7 @@ public class ListMapActivity extends
 		public void onReceive(Context context, Intent intent) {
 			if (intent != null) {
 				int status = intent.getIntExtra("status", 113);
-				unregisterReceiver(broadcastReceiver);
+				stopService(fetchReports);
 				dialog.cancel();
 
 				if (status == 0) {

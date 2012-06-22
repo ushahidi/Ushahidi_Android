@@ -63,12 +63,12 @@ public class ListCheckinCommentActivity extends
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		checkinId = getIntent().getExtras().getInt("checkinid");
+		fetchComments();
 		adapter.refreshCheckinComment(checkinId);
 	}
 
 	public void onResume() {
 		super.onResume();
-		fetchComments();
 		adapter.refreshCheckinComment(checkinId);
 	}
 	
@@ -119,7 +119,7 @@ public class ListCheckinCommentActivity extends
 	private void goToAddComment(int checkinId) {
 		Intent i;
 		i = new Intent(this, AddCommentActivity.class);
-		i.putExtra("reportid", checkinId);
+		i.putExtra("checkinid", checkinId);
 
 		startActivityForResult(i, 0);
 		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
@@ -172,6 +172,7 @@ public class ListCheckinCommentActivity extends
 				unregisterReceiver(fetchBroadcastReceiver);
 			} catch (IllegalArgumentException e) {
 			}
+			stopService(fetchCheckinComments);
 		}
 	};
 
