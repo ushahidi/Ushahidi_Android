@@ -35,8 +35,7 @@ public class CheckinTabFragment extends LocalActivityManagerFragment {
 
 	private void listListTab() {
 		if (mTabHost != null) {
-			addTab(TAG_LIST_CHECKIN, R.drawable.list, ListReportActivity.class);
-
+			addTab(TAG_LIST_CHECKIN, R.drawable.list, ListCheckinFragmentActivity.class);
 		}
 	}
 
@@ -61,7 +60,6 @@ public class CheckinTabFragment extends LocalActivityManagerFragment {
 
 	static CheckinTabFragment newInstance() {
 		CheckinTabFragment f = new CheckinTabFragment();
-
 		return f;
 	}
 }

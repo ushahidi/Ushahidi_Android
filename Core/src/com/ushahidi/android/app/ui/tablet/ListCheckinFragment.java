@@ -50,7 +50,6 @@ import com.ushahidi.android.app.services.FetchCheckins;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.ui.phone.AddCheckinActivity;
 import com.ushahidi.android.app.ui.phone.ViewCheckinActivity;
-import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.views.ListCheckinView;
 
 /**
@@ -63,11 +62,7 @@ public class ListCheckinFragment
 	private ListFetchedCheckinAdapter fetchedAdapter;
 
 	private ListPendingCheckinAdapter pendingAdapter;
-
-	private ApiUtils apiUtils;
-
-	private ViewGroup mRootView;
-
+	
 	private Handler mHandler;
 
 	private MenuItem refresh;
@@ -100,7 +95,6 @@ public class ListCheckinFragment
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
 		mHandler = new Handler();
-		apiUtils = new ApiUtils(getActivity());
 
 		listView.setEmptyView(null);
 		fetchedAdapter = new ListFetchedCheckinAdapter(getActivity());

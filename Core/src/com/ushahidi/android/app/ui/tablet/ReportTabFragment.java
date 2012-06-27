@@ -35,7 +35,7 @@ public class ReportTabFragment extends LocalActivityManagerFragment {
 
 	private void listListTab() {
 		if (mTabHost != null) {
-			addTab(TAG_LIST_REPORT, R.drawable.list, ListReportActivity.class);
+			addTab(TAG_LIST_REPORT, R.drawable.list, ListReportFragmentActivity.class);
 
 		}
 	}
