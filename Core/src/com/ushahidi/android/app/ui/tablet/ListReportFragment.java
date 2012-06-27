@@ -26,7 +26,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,8 +38,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ListPopupWindow;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.ImageManager;
@@ -54,8 +56,8 @@ import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.fragments.BaseSectionListFragment;
 import com.ushahidi.android.app.models.AddReportModel;
-import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.models.ListPhotoModel;
+import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
@@ -70,7 +72,9 @@ import com.ushahidi.android.app.views.ListReportView;
  */
 public class ListReportFragment
 		extends
-		BaseSectionListFragment<ListReportView, ListReportModel, ListReportAdapter> {
+		BaseSectionListFragment<ListReportView, ListReportModel, ListReportAdapter>
+		implements PopupWindow.OnDismissListener,
+		AdapterView.OnItemClickListener {
 
 	private int mPositionChecked = 0;
 
@@ -102,7 +106,7 @@ public class ListReportFragment
 
 	private ListPendingReportAdapter pendingReportAdapter;
 
-	public Context context;
+	private ListPopupWindow mListPopupWindow;
 
 	public ListReportFragment() {
 		super(ListReportView.class, ListReportAdapter.class,
@@ -122,7 +126,6 @@ public class ListReportFragment
 
 		mHandler = new Handler();
 		apiUtils = new ApiUtils(getActivity());
-		context = getActivity();
 		listView.setEmptyView(null);
 		fetchedReportAdapter = new ListFetchedReportAdapter(getActivity());
 		pendingReportAdapter = new ListPendingReportAdapter(getActivity());
@@ -255,9 +258,7 @@ public class ListReportFragment
 			launchAddReport(0);
 			return true;
 		} else if (item.getItemId() == R.id.filter_by) {
-
-			showDropDownNav();
-
+			showCategoriesList();
 			return true;
 		} else if (item.getItemId() == android.R.id.home) {
 			getActivity().finish();
@@ -345,6 +346,14 @@ public class ListReportFragment
 			new UploadTask(getActivity()).execute((String) null);
 		}
 	}
+	
+	private void showCategoriesList() {
+		if (Util.isHoneycomb()) {
+			showListWindowPopup();
+		} else {
+			showDropDownNav();
+		}
+	}
 
 	private void reportByCategoryList() {
 		fetchedReportAdapter.refresh(filterCategory);
@@ -365,8 +374,8 @@ public class ListReportFragment
 
 	public void showDropDownNav() {
 		showCategories();
-		new AlertDialog.Builder(context)
-				.setTitle(context.getString(R.string.prompt_mesg))
+		new AlertDialog.Builder(getActivity())
+				.setTitle(getActivity().getString(R.string.prompt_mesg))
 				.setAdapter(spinnerArrayAdapter,
 						new DialogInterface.OnClickListener() {
 
@@ -397,8 +406,20 @@ public class ListReportFragment
 						}).create().show();
 	}
 
+	public void showListWindowPopup() {
+		showCategories();
+		mListPopupWindow = new ListPopupWindow(getActivity());
+		mListPopupWindow.setAdapter(spinnerArrayAdapter);
+		mListPopupWindow.setModal(true);
+		mListPopupWindow.setContentWidth(400);
+		mListPopupWindow.setAnchorView(filterReport);
+		mListPopupWindow.setOnItemClickListener(ListReportFragment.this);
+		mListPopupWindow.show();
+		mListPopupWindow.setOnDismissListener(ListReportFragment.this);
+	}
+
 	public void showCategories() {
-		spinnerArrayAdapter = new CategorySpinnerAdater(context);
+		spinnerArrayAdapter = new CategorySpinnerAdater(getActivity());
 		spinnerArrayAdapter.refresh();
 	}
 
@@ -439,7 +460,7 @@ public class ListReportFragment
 
 				@Override
 				public void onClick(View v) {
-					showDropDownNav();
+					showCategoriesList();
 				}
 			});
 		}
@@ -702,5 +723,42 @@ public class ListReportFragment
 		startActivityForResult(i, 2);
 		getActivity().overridePendingTransition(R.anim.home_enter,
 				R.anim.home_exit);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget
+	 * .AdapterView, android.view.View, int, long)
+	 */
+	@Override
+	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+		filterCategory = spinnerArrayAdapter.getTag(position).getCategoryId();
+
+		final String all = spinnerArrayAdapter.getTag(position)
+				.getCategoryTitle();
+		view.footerText.setText(all);
+
+		if ((all != null) && (!TextUtils.isEmpty(all))
+				&& (all != getActivity().getString(R.string.all_categories))) {
+
+			reportByCategoryList();
+
+		} else {
+			refreshReportLists();
+			showCategories();
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.widget.PopupWindow.OnDismissListener#onDismiss()
+	 */
+	@Override
+	public void onDismiss() {
+		mListPopupWindow = null;
 	}
 }

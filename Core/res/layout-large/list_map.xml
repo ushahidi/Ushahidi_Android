@@ -10,7 +10,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:padding="10dip" >
+        android:paddingTop="10dip"
+        android:paddingBottom="20dip"
+        android:paddingRight="20dip"
+        android:paddingLeft="10dip" >
 
         <!-- Holds the found deployments -->
 

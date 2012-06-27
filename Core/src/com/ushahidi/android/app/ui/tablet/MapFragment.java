@@ -29,13 +29,12 @@ import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.fragments.BaseFragment;
-import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.models.ListPhotoModel;
+import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
-import com.ushahidi.android.app.ui.tablet.ListReportFragment.RefreshReports;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
@@ -72,15 +71,6 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 	public MapFragment() {
 		super(R.menu.map_report);
 	}
-
-	/*
-	 * @Override public View onCreateView(LayoutInflater inflater, ViewGroup
-	 * container, Bundle savedInstanceState) {
-	 * 
-	 * return (new FrameLayout(getActivity()));
-	 * 
-	 * }
-	 */
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {

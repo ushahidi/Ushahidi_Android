@@ -11,10 +11,11 @@
     at team@ushahidi.com.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@color/background_color"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="10dip" >
 
     <!-- toolbar -->
 
@@ -22,10 +23,10 @@
         android:id="@+id/title_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:paddingTop="10dip"
         android:gravity="right"
-        android:orientation="horizontal" >
+        android:background="@android:color/transparent"
+        android:orientation="horizontal"
+        android:paddingBottom="10dip" >
 
         <ImageButton
             android:id="@+id/filter_by_category"
@@ -48,22 +49,20 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/footer_text"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/title_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/title_color" />
-    <!-- List incidents -->
+        android:background="@drawable/map_rounded_corner_bg"
+        android:orientation="horizontal"
+        android:padding="10dip" >
 
-    <ListView
-        android:id="@android:id/list"
-        
-        style="@style/ListView" />
-
-    <!-- Here is the view to show if the list is emtpy -->
-    <TextView
-        android:id="@android:id/empty"
-        style="@style/TextView.Empty"
-        android:text="@string/no_items" />
+        <fragment
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/map_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.ushahidi.android.app.ui.tablet.MapCheckinFragment" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -16,41 +16,27 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItem;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.helpers.ActionModeHelper;
-import com.ushahidi.android.app.models.ListCheckinModel;
-import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListMapModel;
-import com.ushahidi.android.app.models.ListReportModel;
-import com.ushahidi.android.app.net.CategoriesHttpClient;
-import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.net.MapsHttpClient;
-import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
-import com.ushahidi.android.app.ui.phone.CheckinTabActivity;
-import com.ushahidi.android.app.ui.phone.ReportTabActivity;
-import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.AddMapView;
 import com.ushahidi.android.app.views.ListMapView;
@@ -92,8 +78,6 @@ public class ListMapFragment extends
 
 	private ListMapFragmentListener listener = null;
 
-	private ApiUtils apiUtils;
-
 	private String errorMessage = "";
 
 	static private final String STATE_CHECKED = "com.ushahidi.android.app.activity.STATE_CHECKED";
@@ -118,7 +102,6 @@ public class ListMapFragment extends
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
 		mListMapModel = new ListMapModel();
-		apiUtils = new ApiUtils(getActivity());
 		this.dialog = new ProgressDialog(getActivity());
 		this.dialog.setCancelable(true);
 		this.dialog.setIndeterminate(true);
@@ -360,21 +343,10 @@ public class ListMapFragment extends
 
 		if (isMapActive(sId)) {
 			if (listener != null) {
-				listener.onMapSelected(sId);
+				listener.onMapSelected();
 			}
 		} else {
 			fetchReports(sId);
-			/*
-			 * FetchMapReportTask fetchMapReportTask = new FetchMapReportTask(
-			 * getActivity()); fetchMapReportTask.id = sId;
-			 * fetchMapReportTask.execute((String) null);
-			 */
-			listener.onMapSelected(sId);
-			/*
-			 * if (fetchMapReportTask.getStatus() ==
-			 * android.os.AsyncTask.Status.FINISHED) { if (listener != null) {
-			 * listener.onMapSelected(sId); } }
-			 */
 		}
 
 	}
@@ -387,7 +359,7 @@ public class ListMapFragment extends
 
 		if (isMapActive(sId)) {
 			if (listener != null) {
-				listener.onMapSelected(sId);
+				listener.onMapSelected();
 			}
 		} else {
 
@@ -411,45 +383,6 @@ public class ListMapFragment extends
 		}
 		return false;
 
-	}
-
-	public void goToReports() {
-		Intent launchIntent;
-		Bundle bundle = new Bundle();
-		bundle.putInt("tab_index", 0);
-		launchIntent = new Intent(getActivity(), ReportTabActivity.class);
-		launchIntent.putExtra("tab", bundle);
-		startActivityForResult(launchIntent, 0);
-		getActivity().setResult(FragmentActivity.RESULT_OK);
-		getActivity().finish();
-	}
-
-	private void goToCheckins() {
-		Intent launchIntent;
-		launchIntent = new Intent(getActivity(), CheckinTabActivity.class);
-		startActivityForResult(launchIntent, 0);
-		getActivity().setResult(FragmentActivity.RESULT_OK);
-		getActivity().finish();
-	}
-
-	/**
-	 * Clear saved reports
-	 */
-	public void clearCachedData() {
-		// delete reports
-		new ListReportModel().deleteReport();
-
-		// delete checkins data
-		new ListCheckinModel().deleteCheckin();
-
-		// delete comment data
-		new ListCommentModel().deleteComments();
-
-		// delete pending photos
-		ImageManager.deleteImages(getActivity());
-
-		// delete fetched photos
-		ImageManager.deletePendingImages(getActivity());
 	}
 
 	/**
@@ -602,7 +535,7 @@ public class ListMapFragment extends
 		protected void onPreExecute() {
 			super.onPreExecute();
 			dialog.cancel();
-			
+
 		}
 
 		@Override
@@ -627,91 +560,9 @@ public class ListMapFragment extends
 				toastShort(R.string.deployment_fetched_successful);
 			}
 			adapter.refresh();
-			
-		}
-
-	}
-
-	/**
-	 * Load the map's report
-	 */
-
-	class FetchMapReportTask extends ProgressTask {
-
-		protected int id;
-
-		protected Integer status = 113;
-
-		public FetchMapReportTask(Activity activity) {
-			super(activity, R.string.please_wait);
-			// pass custom loading message to super call
-		}
-
-		@Override
-		protected Boolean doInBackground(String... strings) {
-			try {
-				if (id != 0) {
-					mListMapModel.activateDeployment(getActivity(), id);
-					clearCachedData();
-					if (!apiUtils.isCheckinEnabled()) {
-
-						// fetch categories
-						new CategoriesHttpClient(getActivity())
-								.getCategoriesFromWeb();
-
-						// fetch reports
-						status = new ReportsHttpClient(getActivity())
-								.getAllReportFromWeb();
-						return false;
-					} else {
-
-						// TODO process checkin if there is one
-						status = new CheckinHttpClient(getActivity())
-								.getAllCheckinFromWeb();
-						return true;
-					}
-
-				}
-
-				Thread.sleep(1000);
-				return false;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				return false;
-			}
 
 		}
 
-		@Override
-		protected void onPostExecute(Boolean success) {
-			super.onPostExecute(success);
-			if (success) {
-				if (status != null) {
-					if (status == 0) {
-						onLoaded(success);
-					} else if (status == 100) {
-						errorMessage = getString(R.string.internet_connection);
-						createDialog(DIALOG_SHOW_MESSAGE);
-					} else if (status == 99) {
-						errorMessage = getString(R.string.failed);
-						createDialog(DIALOG_SHOW_MESSAGE);
-					} else if (status == 112) {
-						errorMessage = getString(R.string.network_error);
-						createDialog(DIALOG_SHOW_MESSAGE);
-					} else {
-						errorMessage = getString(R.string.error_occured);
-						createDialog(DIALOG_SHOW_MESSAGE);
-
-					}
-
-				} else {
-					toastLong(R.string.failed);
-				}
-
-			} else {
-				toastLong(R.string.failed);
-			}
-		}
 	}
 
 	@Override
@@ -723,7 +574,7 @@ public class ListMapFragment extends
 					toastLong(R.string.checkin_is_enabled);
 				}
 				if (listener != null) {
-					listener.onMapSelected(sId);
+					listener.onMapSelected();
 				}
 
 			} else {
@@ -817,9 +668,8 @@ public class ListMapFragment extends
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent != null) {
-				
+
 				int status = intent.getIntExtra("status", 113);
-				log("Status: "+status);
 				getActivity().stopService(fetchReports);
 				dialog.cancel();
 

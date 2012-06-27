@@ -1,5 +1,5 @@
 package com.ushahidi.android.app.ui.tablet;
 
 public interface ListMapFragmentListener {
-    void onMapSelected(int mapId);
+    void onMapSelected();
 }

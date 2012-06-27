@@ -153,7 +153,29 @@
 
         <!-- List Reports -->
         <activity
-            android:name=".ui.tablet.ListReportActivity"
+            android:name=".ui.tablet.ListReportFragmentActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/view_incident" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.addhen.ushahidi.INCIDENTS" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.addhen.ushahidi.NEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <!-- List Checkins -->
+        <activity
+            android:name=".ui.tablet.ListCheckinFragmentActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/view_incident" >
             <intent-filter>
@@ -325,6 +347,16 @@
         </activity>
         <activity
             android:name=".ui.phone.ReportMapActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name=".ui.phone.CheckinMapActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

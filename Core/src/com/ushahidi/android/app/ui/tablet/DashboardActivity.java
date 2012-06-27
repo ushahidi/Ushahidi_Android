@@ -15,8 +15,10 @@ import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 
 import com.ushahidi.android.app.MainApplication;
+import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
+import com.ushahidi.android.app.ui.phone.CheckinTabActivity;
 import com.ushahidi.android.app.ui.phone.ReportTabActivity;
 
 public class DashboardActivity extends FragmentMapActivity implements
@@ -30,6 +32,8 @@ public class DashboardActivity extends FragmentMapActivity implements
 
 	private ReportTabFragment reportTabFragment;
 
+	private CheckinTabFragment checkinTabFragment;
+
 	private static final int DIALOG_DISTANCE = 0;
 
 	private static final int DIALOG_CLEAR_DEPLOYMENT = 1;
@@ -39,9 +43,9 @@ public class DashboardActivity extends FragmentMapActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.dashboard_items);
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		Preferences.loadSettings(this);
 		mSpinnerAdapter = ArrayAdapter
 				.createFromResource(this, R.array.nav_list,
 						android.R.layout.simple_spinner_dropdown_item);
@@ -60,11 +64,20 @@ public class DashboardActivity extends FragmentMapActivity implements
 				.getVisibility() == View.VISIBLE);
 
 		if (detailsInline) {
+
 			maps.enablePersistentSelection();
-			reportTabFragment = new ReportTabFragment();
 			FragmentTransaction ft = getSupportFragmentManager()
 					.beginTransaction();
-			ft.add(R.id.show_fragment, reportTabFragment);
+			// checkin enabled
+			if (Preferences.isCheckinEnabled == 1) {
+				checkinTabFragment = new CheckinTabFragment();
+				ft.add(R.id.show_fragment, checkinTabFragment);
+
+			} else {
+				reportTabFragment = new ReportTabFragment();
+				ft.add(R.id.show_fragment, reportTabFragment);
+			}
+
 			ft.setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
 			ft.commit();
 		} else if (f != null) {
@@ -74,19 +87,33 @@ public class DashboardActivity extends FragmentMapActivity implements
 	}
 
 	@Override
-	public void onMapSelected(int mapId) {
+	public void onMapSelected() {
 		if (detailsInline) {
-			reportTabFragment = new ReportTabFragment();
 			FragmentTransaction ft = getSupportFragmentManager()
 					.beginTransaction();
-			ft.replace(R.id.show_fragment, reportTabFragment);
+			// checkin enabled
+			if (Preferences.isCheckinEnabled == 1) {
+				checkinTabFragment = new CheckinTabFragment();
+				ft.replace(R.id.show_fragment, checkinTabFragment);
+
+			} else {
+				reportTabFragment = new ReportTabFragment();
+				ft.replace(R.id.show_fragment, reportTabFragment);
+			}
+
 			ft.setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
 			ft.commit();
 
 		} else {
-			Intent i = new Intent(this, ReportTabActivity.class);
-			startActivity(i);
-			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+			if (Preferences.isCheckinEnabled == 1) {
+				Intent i = new Intent(this, CheckinTabActivity.class);
+				startActivity(i);
+				overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+			} else {
+				Intent i = new Intent(this, ReportTabActivity.class);
+				startActivity(i);
+				overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+			}
 		}
 
 	}
@@ -103,7 +130,7 @@ public class DashboardActivity extends FragmentMapActivity implements
 		if (item.getItemId() == R.id.app_about) {
 			showDialog();
 			return true;
-		
+
 		} else if (item.getItemId() == R.id.app_settings) {
 			startActivity(new Intent(this, Settings.class));
 			return true;

@@ -16,9 +16,9 @@
     android:background="@color/background_color"
     android:orientation="vertical"
      >
+     
     <EditText
         android:id="@+id/filter_report"
         style="@style/EditText.Search"
         android:hint="@string/search_reports" />
-
 </LinearLayout>

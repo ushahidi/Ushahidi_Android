@@ -35,8 +35,13 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.ListPopupWindow;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
@@ -50,6 +55,7 @@ import com.ushahidi.android.app.services.FetchCheckins;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.ui.phone.AddCheckinActivity;
 import com.ushahidi.android.app.ui.phone.ViewCheckinActivity;
+import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ListCheckinView;
 
 /**
@@ -57,12 +63,14 @@ import com.ushahidi.android.app.views.ListCheckinView;
  */
 public class ListCheckinFragment
 		extends
-		BaseSectionListFragment<ListCheckinView, ListCheckinModel, ListCheckinAdapter> {
+		BaseSectionListFragment<ListCheckinView, ListCheckinModel, ListCheckinAdapter>
+		implements PopupWindow.OnDismissListener,
+		AdapterView.OnItemClickListener {
 
 	private ListFetchedCheckinAdapter fetchedAdapter;
 
 	private ListPendingCheckinAdapter pendingAdapter;
-	
+
 	private Handler mHandler;
 
 	private MenuItem refresh;
@@ -78,6 +86,16 @@ public class ListCheckinFragment
 	public ProgressDialog dialog;
 
 	private Intent fetchCheckins;
+
+	private ViewGroup mRootView;
+
+	private ImageButton addCheckin = null;
+
+	private ImageButton refreshCheckin = null;
+
+	private ImageButton filterCheckin = null;
+
+	private ListPopupWindow mListPopupWindow;
 
 	public ListCheckinFragment() {
 		super(ListCheckinView.class, ListCheckinAdapter.class,
@@ -150,6 +168,51 @@ public class ListCheckinFragment
 		return viewGroup;
 	}
 
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		mRootView = (ViewGroup) inflater.inflate(R.layout.list_checkin, null);
+		addCheckin = (ImageButton) mRootView.findViewById(R.id.add_checkin_btn);
+		refreshCheckin = (ImageButton) mRootView
+				.findViewById(R.id.refresh_checkin_btn);
+		filterCheckin = (ImageButton) mRootView
+				.findViewById(R.id.filter_by_users);
+
+		if (addCheckin != null) {
+			addCheckin.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					launchAddCheckin(0);
+				}
+
+			});
+		}
+
+		if (refreshCheckin != null) {
+			refreshCheckin.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					fetchCheckins();
+				}
+
+			});
+		}
+
+		if (filterCheckin != null) {
+			filterCheckin.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					showUsersList();
+				}
+			});
+		}
+
+		return mRootView;
+	}
+
 	private void fetchCheckins() {
 		getActivity().registerReceiver(fetchBroadcastReceiver,
 				new IntentFilter(SyncServices.FETCH_CHECKIN_SERVICES_ACTION));
@@ -187,14 +250,12 @@ public class ListCheckinFragment
 		if (item.getItemId() == R.id.menu_refresh_checkin) {
 			refresh = item;
 			fetchCheckins();
-			// new FetchCheckins(getActivity()).execute((String) null);
 			return true;
 		} else if (item.getItemId() == R.id.menu_add_checkin) {
 			launchAddCheckin(0);
 			return true;
 		} else if (item.getItemId() == R.id.menu_filter_by_users) {
-			showDropDownNav();
-
+			showUsersList();
 			return true;
 		} else if (item.getItemId() == android.R.id.home) {
 			getActivity().finish();
@@ -316,8 +377,17 @@ public class ListCheckinFragment
 		}
 	};
 
+	private void showUsersList() {
+		if (Util.isHoneycomb()) {
+			showListWindowPopup();
+		} else {
+			showDropDownNav();
+		}
+	}
+
 	private void showDropDownNav() {
 		showUsers();
+
 		new AlertDialog.Builder(getActivity())
 				.setTitle(getActivity().getString(R.string.prompt_mesg))
 				.setAdapter(spinnerArrayAdapter,
@@ -350,6 +420,18 @@ public class ListCheckinFragment
 						}).create().show();
 	}
 
+	private void showListWindowPopup() {
+		showUsers();
+		mListPopupWindow = new ListPopupWindow(getActivity());
+		mListPopupWindow.setAdapter(spinnerArrayAdapter);
+		mListPopupWindow.setModal(true);
+		mListPopupWindow.setContentWidth(200);
+		mListPopupWindow.setAnchorView(filterCheckin);
+		mListPopupWindow.setOnItemClickListener(ListCheckinFragment.this);
+		mListPopupWindow.show();
+		mListPopupWindow.setOnDismissListener(ListCheckinFragment.this);
+	}
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -365,65 +447,9 @@ public class ListCheckinFragment
 
 	}
 
-	/**
-	 * Example of a ProgressTask
-	 * 
-	 * class FetchCheckins extends ProgressTask {
-	 * 
-	 * protected Integer status = 4; // there is no internet
-	 * 
-	 * public FetchCheckins(Activity activity) { super(activity,
-	 * R.string.loading_); refreshState = true; }
-	 * 
-	 * @Override protected void onPreExecute() { super.onPreExecute();
-	 *           dialog.cancel(); refreshState = true; updateRefreshStatus(); }
-	 * @Override protected Boolean doInBackground(String... strings) { try {
-	 * 
-	 *           // check if there is internet if (apiUtils.isConnected()) {
-	 * 
-	 *           // upload pending reports. if (!pendingAdapter.isEmpty()) {
-	 *           uploadPendingCheckin(); }
-	 * 
-	 *           // delete everything before updating with a new one
-	 *           deleteFetchedCheckin();
-	 * 
-	 *           status = new CheckinHttpClient(getActivity())
-	 *           .getAllCheckinFromWeb(); } Thread.sleep(1000); } catch
-	 *           (InterruptedException e) { e.printStackTrace(); } return true;
-	 *           }
-	 * @Override protected void onPostExecute(Boolean result) { if (result) {
-	 *           log("fetching checkins"); if (status == 4) {
-	 *           toastLong(R.string.internet_connection); } else if (status ==
-	 *           110) { toastLong(R.string.connection_timeout); } else if
-	 *           (status == 100) { toastLong(R.string.could_not_fetch_checkin);
-	 *           } else if (status == 0) { log("successfully fetched checkins");
-	 *           refreshCheckinList(); showUsers(); } refreshState = false;
-	 *           updateRefreshStatus(); } } }
-	 * 
-	 *           /** Upload pending checkins
-	 * 
-	 *           class UploadTask extends ProgressTask {
-	 * 
-	 *           public UploadTask(Activity activity) { super(activity,
-	 *           R.string.uploading); // pass custom loading message to super
-	 *           call }
-	 * @Override protected Boolean doInBackground(String... strings) {
-	 * 
-	 *           if(uploadPendingCheckin()) { // delete everything before
-	 *           updating with a new one deleteFetchedCheckin();
-	 * 
-	 *           new CheckinHttpClient(getActivity()) .getAllCheckinFromWeb();
-	 *           return true; } return false; }
-	 * @Override protected void onPostExecute(Boolean success) {
-	 *           super.onPostExecute(success); if (success) {
-	 *           toastLong(R.string.uploaded); refreshCheckinList();
-	 *           showUsers(); } else { toastLong(R.string.failed); } } }
-	 */
-
 	@Override
 	protected void onLoaded(boolean success) {
 		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -465,7 +491,6 @@ public class ListCheckinFragment
 				int status = intent.getIntExtra("status", 4);
 				refreshState = false;
 				updateRefreshStatus();
-				// Log.i("ListCheckinFragment: ", " Status "+status);
 				if (status == 4) {
 					toastLong(R.string.internet_connection);
 				} else if (status == 110) {
@@ -485,4 +510,40 @@ public class ListCheckinFragment
 			}
 		}
 	};
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.widget.PopupWindow.OnDismissListener#onDismiss()
+	 */
+	@Override
+	public void onDismiss() {
+		mListPopupWindow = null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget
+	 * .AdapterView, android.view.View, int, long)
+	 */
+	@Override
+	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+		filterUserId = spinnerArrayAdapter.getTag(position).getUserId();
+
+		final String all = spinnerArrayAdapter.getTag(position).getUsername();
+		view.footerText.setText(all);
+
+		if ((all != null) && (!TextUtils.isEmpty(all))
+				&& (all != getActivity().getString(R.string.all_users))) {
+
+			refreshCheckinByUserList();
+		} else {
+			refreshCheckinList();
+		}
+		if (mListPopupWindow != null) {
+			mListPopupWindow.dismiss();
+		}
+	}
 }

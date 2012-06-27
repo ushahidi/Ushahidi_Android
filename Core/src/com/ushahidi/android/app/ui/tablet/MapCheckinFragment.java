@@ -73,14 +73,6 @@ public class MapCheckinFragment<CheckinMapItemOverlay> extends BaseFragment {
 		super(R.menu.map_report);
 	}
 
-	/*
-	 * @Override public View onCreateView(LayoutInflater inflater, ViewGroup
-	 * container, Bundle savedInstanceState) {
-	 * 
-	 * return (new FrameLayout(getActivity()));
-	 * 
-	 * }
-	 */
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {

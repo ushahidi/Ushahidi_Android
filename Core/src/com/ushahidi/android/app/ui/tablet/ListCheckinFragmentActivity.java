@@ -10,7 +10,7 @@ public class ListCheckinFragmentActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setContentView(R.layout.list_report_tab); 
+      setContentView(R.layout.list_checkin_tab); 
     }
     
 }

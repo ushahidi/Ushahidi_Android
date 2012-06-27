@@ -24,12 +24,8 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:paddingBottom="10dip"
+        android:gravity="right"
         android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/list_report_title"
-            style="@style/ActionBarTitleText"
-            android:gravity="center" />
 
         <ImageButton
             android:id="@+id/filter_by_category"
