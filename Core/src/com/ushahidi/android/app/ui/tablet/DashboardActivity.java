@@ -3,6 +3,7 @@ package com.ushahidi.android.app.ui.tablet;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentMapActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -10,27 +11,45 @@ import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.SpinnerAdapter;
 
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
-import com.ushahidi.android.app.adapters.ListReportAdapter;
 import com.ushahidi.android.app.ui.phone.ReportTabActivity;
-import com.ushahidi.android.app.views.ListReportView;
 
 public class DashboardActivity extends FragmentMapActivity implements
-		ListMapFragmentListener {
+		ListMapFragmentListener, ActionBar.OnNavigationListener {
 
 	private boolean detailsInline = false;
+
+	private SpinnerAdapter mSpinnerAdapter;
+
+	private ListMapFragment maps;
+
+	private ReportTabFragment reportTabFragment;
+
+	private static final int DIALOG_DISTANCE = 0;
+
+	private static final int DIALOG_CLEAR_DEPLOYMENT = 1;
+
+	private static final int DIALOG_ADD_DEPLOYMENT = 2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.dashboard_items);
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		mSpinnerAdapter = ArrayAdapter
+				.createFromResource(this, R.array.nav_list,
+						android.R.layout.simple_spinner_dropdown_item);
 
-		ListMapFragment maps = (ListMapFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.list_map_fragment);
+		getSupportActionBar().setListNavigationCallbacks(mSpinnerAdapter, this);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		maps = (ListMapFragment) getSupportFragmentManager().findFragmentById(
+				R.id.list_map_fragment);
 		maps.setListMapListener(this);
 
 		// check if we have a frame to embed list fragment
@@ -42,7 +61,7 @@ public class DashboardActivity extends FragmentMapActivity implements
 
 		if (detailsInline) {
 			maps.enablePersistentSelection();
-			ReportTabFragment reportTabFragment = new ReportTabFragment();
+			reportTabFragment = new ReportTabFragment();
 			FragmentTransaction ft = getSupportFragmentManager()
 					.beginTransaction();
 			ft.add(R.id.show_fragment, reportTabFragment);
@@ -56,15 +75,13 @@ public class DashboardActivity extends FragmentMapActivity implements
 
 	@Override
 	public void onMapSelected(int mapId) {
-		log("message id" + mapId);
 		if (detailsInline) {
-			ListReportAdapter listReportAdapter = new ListReportAdapter(
-					DashboardActivity.this);
-			listReportAdapter.refresh();
-			ListReportView listReportView = new ListReportView(this);
-			// listReportFragment.mListReportAdapter.refresh();
-			//listReportView.getPullToRefreshListView().setAdapter(
-				//	listReportAdapter);
+			reportTabFragment = new ReportTabFragment();
+			FragmentTransaction ft = getSupportFragmentManager()
+					.beginTransaction();
+			ft.replace(R.id.show_fragment, reportTabFragment);
+			ft.setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
+			ft.commit();
 
 		} else {
 			Intent i = new Intent(this, ReportTabActivity.class);
@@ -76,7 +93,7 @@ public class DashboardActivity extends FragmentMapActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.list_map, menu);
+		getMenuInflater().inflate(R.menu.list_report, menu);
 		return true;
 
 	}
@@ -86,9 +103,9 @@ public class DashboardActivity extends FragmentMapActivity implements
 		if (item.getItemId() == R.id.app_about) {
 			showDialog();
 			return true;
+		
 		} else if (item.getItemId() == R.id.app_settings) {
 			startActivity(new Intent(this, Settings.class));
-
 			return true;
 		}
 
@@ -133,6 +150,30 @@ public class DashboardActivity extends FragmentMapActivity implements
 	@Override
 	protected boolean isRouteDisplayed() {
 		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.ActionBar.OnNavigationListener#
+	 * onNavigationItemSelected(int, long)
+	 */
+	@Override
+	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+
+		// add map is selected
+		if (itemPosition == 1) {
+			maps.edit = false;
+			maps.createDialog(DIALOG_ADD_DEPLOYMENT);
+			return true;
+		} else if (itemPosition == 2) { // find map around me
+			maps.createDialog(DIALOG_DISTANCE);
+			return true;
+		} else if (itemPosition == 3) { // clear all map
+			maps.createDialog(DIALOG_CLEAR_DEPLOYMENT);
+			return true;
+		}
 		return false;
 	}
 }

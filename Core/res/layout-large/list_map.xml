@@ -5,36 +5,6 @@
     android:background="@color/background_color"
     android:orientation="vertical" >
 
-    <LinearLayout style="@style/ActionBarTitleContainer" >
-
-        <ImageButton
-            android:id="@+id/list_map_toolbar_add"
-            style="@style/ActionBarTitle"
-            android:src="@drawable/button_add" />
-
-        <ImageView style="@style/ActionBarTitleSeparator" />
-
-        <TextView
-            android:id="@+id/list_map_toolbar_title"
-            style="@style/ActionBarTitleText"
-            android:gravity="center"
-            android:text="@string/maps" />
-
-        <ImageView style="@style/ActionBarTitleSeparator" />
-
-        <ImageButton
-            android:id="@+id/list_map_refresh_btn"
-            style="@style/ActionBarTitle"
-            android:src="@drawable/button_refresh" />
-
-        <ProgressBar
-            android:id="@+id/list_map_refresh_progress"
-            style="@style/TitleBarProgressIndicator"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <ImageView style="@style/ActionBarSeparator" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

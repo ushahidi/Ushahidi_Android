@@ -10,15 +10,15 @@ import android.widget.TabHost;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.helpers.LocalActivityManagerFragment;
-import com.ushahidi.android.app.ui.phone.ReportMapActivity;
+import com.ushahidi.android.app.ui.phone.CheckinMapActivity;
 
-public class ReportTabFragment extends LocalActivityManagerFragment {
+public class CheckinTabFragment extends LocalActivityManagerFragment {
 
 	private TabHost mTabHost;
 
-	private static final String TAG_LIST_REPORT = "list";
+	private static final String TAG_LIST_CHECKIN = "list";
 
-	private static final String TAG_MAP_REPORT = "map";
+	private static final String TAG_MAP_CHECKIN = "map";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,14 +35,14 @@ public class ReportTabFragment extends LocalActivityManagerFragment {
 
 	private void listListTab() {
 		if (mTabHost != null) {
-			addTab(TAG_LIST_REPORT, R.drawable.list, ListReportActivity.class);
+			addTab(TAG_LIST_CHECKIN, R.drawable.list, ListReportActivity.class);
 
 		}
 	}
 
 	private void listMapTab() {
 		if (mTabHost != null) {
-			addTab(TAG_MAP_REPORT, R.drawable.map, ReportMapActivity.class);
+			addTab(TAG_MAP_CHECKIN, R.drawable.map, CheckinMapActivity.class);
 		}
 	}
 
@@ -59,8 +59,8 @@ public class ReportTabFragment extends LocalActivityManagerFragment {
 		tabHost.addTab(spec);
 	}
 
-	static ReportTabFragment newInstance() {
-		ReportTabFragment f = new ReportTabFragment();
+	static CheckinTabFragment newInstance() {
+		CheckinTabFragment f = new CheckinTabFragment();
 
 		return f;
 	}

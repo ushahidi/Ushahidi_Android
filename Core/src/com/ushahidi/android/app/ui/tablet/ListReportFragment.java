@@ -26,6 +26,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -101,6 +102,8 @@ public class ListReportFragment
 
 	private ListPendingReportAdapter pendingReportAdapter;
 
+	public Context context;
+
 	public ListReportFragment() {
 		super(ListReportView.class, ListReportAdapter.class,
 				R.layout.list_report, R.menu.list_report, android.R.id.list);
@@ -119,6 +122,7 @@ public class ListReportFragment
 
 		mHandler = new Handler();
 		apiUtils = new ApiUtils(getActivity());
+		context = getActivity();
 		listView.setEmptyView(null);
 		fetchedReportAdapter = new ListFetchedReportAdapter(getActivity());
 		pendingReportAdapter = new ListPendingReportAdapter(getActivity());
@@ -208,7 +212,7 @@ public class ListReportFragment
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		if(new RefreshReports(getActivity()).cancel(true)) {
+		if (new RefreshReports(getActivity()).cancel(true)) {
 			refreshState = false;
 			updateRefreshStatus();
 		}
@@ -359,10 +363,10 @@ public class ListReportFragment
 
 	}
 
-	private void showDropDownNav() {
+	public void showDropDownNav() {
 		showCategories();
-		new AlertDialog.Builder(getActivity())
-				.setTitle(getActivity().getString(R.string.prompt_mesg))
+		new AlertDialog.Builder(context)
+				.setTitle(context.getString(R.string.prompt_mesg))
 				.setAdapter(spinnerArrayAdapter,
 						new DialogInterface.OnClickListener() {
 
@@ -394,7 +398,7 @@ public class ListReportFragment
 	}
 
 	public void showCategories() {
-		spinnerArrayAdapter = new CategorySpinnerAdater(getActivity());
+		spinnerArrayAdapter = new CategorySpinnerAdater(context);
 		spinnerArrayAdapter.refresh();
 	}
 
@@ -503,7 +507,7 @@ public class ListReportFragment
 				mParams.put("person_first", Preferences.firstname);
 				mParams.put("person_last", Preferences.lastname);
 				mParams.put("person_email", Preferences.email);
-				
+
 				// load filenames
 				mParams.put("filename", new UploadPhotoAdapter(getActivity())
 						.pendingPhotos((int) report.getId()));
@@ -616,7 +620,7 @@ public class ListReportFragment
 			try {
 				// check if there is internet
 				if (apiUtils.isConnected()) {
-					log("URL: "+Preferences.domain);
+					log("URL: " + Preferences.domain);
 					// upload pending reports.
 					if (!pendingReportAdapter.isEmpty()) {
 						uploadPendingReports();
@@ -641,7 +645,7 @@ public class ListReportFragment
 				e.printStackTrace();
 				return false;
 			}
-			
+
 		}
 
 		@Override

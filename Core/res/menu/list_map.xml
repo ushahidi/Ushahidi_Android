@@ -16,16 +16,16 @@
         android:id="@+id/add"
         android:icon="@drawable/add"
         android:orderInCategory="1"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/add_map">
         <menu>
             <item
                 android:id="@+id/menu_add"
-                android:showAsAction="always"
+                android:showAsAction="ifRoom"
                 android:title="@string/add_map_by_url"/>
             <item
                 android:id="@+id/menu_find"
-                android:showAsAction="always"
+                android:showAsAction="ifRoom"
                 android:title="@string/find_maps_around_me"/>
         </menu>
     </item>
@@ -33,7 +33,7 @@
         android:id="@+id/clear_map"
         android:orderInCategory="2"
         android:showAsAction="never"
-        android:title="@string/clear_all"/>
+        android:title="@string/clear_all_map"/>
     <item
         android:id="@+id/app_settings"
         android:orderInCategory="3"

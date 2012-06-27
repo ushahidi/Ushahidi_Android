@@ -7,11 +7,12 @@ import com.ushahidi.android.app.R;
 
 public class ListReportActivity extends FragmentActivity {
     
+	ListReportFragment reportFragment;
     @Override
     public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      setContentView(R.layout.list_report_tab); 
       
-      setContentView(R.layout.list_report_tab);                          
     }
     
 }

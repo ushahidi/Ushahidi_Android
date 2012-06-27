@@ -358,8 +358,6 @@ public class ListMapActivity extends
 	private void fetchReports(int id) {
 		if (id != 0) {
 			listMapModel.activateDeployment(ListMapActivity.this, id);
-			// registerReceiver(broadcastReceiver, new IntentFilter(
-			// / SyncServices.SYNC_SERVICES_ACTION));
 			dialog.show();
 			fetchReports = new Intent(this, FetchReports.class);
 			startService(fetchReports);
@@ -597,7 +595,6 @@ public class ListMapActivity extends
 
 			adapter.refresh();
 			view.mProgressBar.setVisibility(View.GONE);
-			// view.displayEmptyListText();
 		}
 
 	}

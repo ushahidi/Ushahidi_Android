@@ -76,10 +76,10 @@ public class ReportsHttpClient extends MainHttpClient {
 		uriBuilder.append("&by=all");
 		uriBuilder.append("&limit=" + Preferences.totalReports);
 		uriBuilder.append("&resp=json");
-
+		
 		try {
 			response = GetURL(uriBuilder.toString());
-
+			
 			if (response == null) {
 				// Network is down
 				return 100;

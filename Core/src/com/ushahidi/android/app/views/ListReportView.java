@@ -38,6 +38,7 @@ public class ListReportView extends View {
 		super(activity);
 		emptyText = (TextView) activity.findViewById(android.R.id.empty);
 		footerText = (TextView) activity.findViewById(R.id.footer_text);
+		footerText.setText(activity.getString(R.string.all_categories));
 	}
 
 	public ArrayAdapter<String> getArrayAdapter() {

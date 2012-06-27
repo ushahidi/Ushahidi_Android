@@ -155,7 +155,9 @@ public class AddReportActivity extends
 		view.gallery.setAdapter(pendingPhoto);
 		view.gallery.setOnItemClickListener(this);
 		view.mSwitcher.setFactory(this);
-		this.id = getIntent().getExtras().getInt("id", 0);
+		if (getIntent().getExtras() != null) {
+			this.id = getIntent().getExtras().getInt("id", 0);
+		}
 		// edit existing report
 		if (id > 0) {
 

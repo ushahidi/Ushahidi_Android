@@ -18,33 +18,33 @@
 
     <!-- toolbar -->
 
-    <LinearLayout style="@style/ActionBarTitleContainer" >
+    <LinearLayout
+        android:id="@+id/title_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:paddingTop="10dip"
+        android:orientation="horizontal" >
 
         <TextView
             android:id="@+id/list_report_title"
             style="@style/ActionBarTitleText"
             android:gravity="center" />
 
-        <ImageView style="@style/ActionBarTitleSeparator" />
-
         <ImageButton
             android:id="@+id/filter_by_category"
             style="@style/ActionBarTitle"
-            android:src="@android:drawable/arrow_down_float" />
+            android:src="@drawable/expand_dark" />
 
-        <ImageView style="@style/ActionBarTitleSeparator" />
-        
         <ImageButton
             android:id="@+id/add_report_btn"
             style="@style/ActionBarTitle"
-            android:src="@drawable/button_add" />
-
-        <ImageView style="@style/ActionBarTitleSeparator" />
+            android:src="@drawable/add_dark" />
 
         <ImageButton
             android:id="@+id/refresh_report_btn"
             style="@style/ActionBarTitle"
-            android:src="@drawable/button_refresh" />
+            android:src="@drawable/refresh_dark" />
 
         <ProgressBar
             android:id="@+id/title_refresh_progress"
@@ -52,22 +52,22 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <ImageView style="@style/ActionBarSeparator" />
-    
-        <TextView
-            android:id="@+id/footer_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dip"
-            android:textColor="@color/title_color" />
+    <TextView
+        android:id="@+id/footer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dip"
+        android:paddingBottom="20dip"
+        android:textColor="@color/title_color" />
     <!-- List incidents -->
 
     <ListView
         android:id="@android:id/list"
+        android:paddingLeft="20dip"
+        android:paddingRight="20dip"
         style="@style/ListView" />
 
     <!-- Here is the view to show if the list is emtpy -->
-
     <TextView
         android:id="@android:id/empty"
         style="@style/TextView.Empty"

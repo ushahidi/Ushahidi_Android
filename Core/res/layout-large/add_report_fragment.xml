@@ -13,12 +13,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
-    android:orientation="vertical"
-     >
-    <EditText
-        android:id="@+id/filter_report"
-        style="@style/EditText.Search"
-        android:hint="@string/search_reports" />
+    android:background="@color/background_color" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="200dip"
+        android:paddingRight="200dip">
+
+        <fragment
+            android:id="@+id/list_map_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            class="com.ushahidi.android.app.ui.tablet.AddReportFragment"
+            android:background="@drawable/layout_background" />
+    </LinearLayout>
 
 </LinearLayout>

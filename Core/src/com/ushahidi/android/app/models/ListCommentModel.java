@@ -99,7 +99,7 @@ public class ListCommentModel extends Comment {
 		return comments;
 	}
 
-	public List<ListCommentModel> getCommentsByCheckintId(int checkinId) {
+	public List<ListCommentModel> getCommentsByCheckinId(int checkinId) {
 		final List<ListCommentModel> comments = new ArrayList<ListCommentModel>();
 		mCommentModel = new ArrayList<Comment>();
 		mCommentModel = Database.mCommentDao.fetchCheckinComment(checkinId);

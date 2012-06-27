@@ -121,7 +121,7 @@ public class CommentAdapter extends BaseListAdapter<ListCommentModel> {
 		mListCommentModel = new ListCommentModel();
 		final boolean loaded = mListCommentModel.loadCheckinComment(checkinId);
 		if (loaded) {
-			items = mListCommentModel.getCommentsByCheckintId(checkinId);
+			items = mListCommentModel.getCommentsByCheckinId(checkinId);
 			this.setItems(items);
 		}
 	}

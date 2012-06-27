@@ -243,6 +243,18 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
+         <!-- View Reports -->
+        <activity
+            android:name=".ui.tablet.AddReportFragmentActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/reports" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <!-- Launch View Reports -->
         <activity

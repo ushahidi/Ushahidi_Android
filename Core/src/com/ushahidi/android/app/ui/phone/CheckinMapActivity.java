@@ -11,7 +11,7 @@ public class CheckinMapActivity extends FragmentMapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.report_map);
+		setContentView(R.layout.checkin_map);
 	}
 
 	@Override

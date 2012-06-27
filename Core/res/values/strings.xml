@@ -436,4 +436,5 @@
     <string name="valid_email_address">Please enter a valid email address</string>
     <string name="enter_comment">Please enter a comment and it should be 3 characters or more long.</string>
     <string name="could_not_fetch_comment">Could not fetch comment</string>
+    <string name="clear_all_map">Clear All Map</string>
 </resources>

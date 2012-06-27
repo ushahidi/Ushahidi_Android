@@ -14,30 +14,37 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/background_color"
+    android:padding="10dip"
     android:orientation="vertical" >
 
     <!-- toolbar -->
 
-    <LinearLayout style="@style/ActionBarTitleContainer" >
+    <LinearLayout android:id="@+id/title_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:paddingBottom="10dip"
+        android:orientation="horizontal" >
 
         <TextView
             android:id="@+id/list_report_title"
             style="@style/ActionBarTitleText"
             android:gravity="center" />
 
-        <ImageView style="@style/ActionBarTitleSeparator" />
+        <ImageButton
+            android:id="@+id/filter_by_category"
+            style="@style/ActionBarTitle"
+            android:src="@drawable/expand_dark" />
 
         <ImageButton
             android:id="@+id/add_report_btn"
             style="@style/ActionBarTitle"
-            android:src="@drawable/button_add" />
-
-        <ImageView style="@style/ActionBarTitleSeparator" />
+            android:src="@drawable/add_dark" />
 
         <ImageButton
             android:id="@+id/refresh_report_btn"
             style="@style/ActionBarTitle"
-            android:src="@drawable/button_refresh" />
+            android:src="@drawable/refresh_dark" />
 
         <ProgressBar
             android:id="@+id/title_refresh_progress"
@@ -45,13 +52,19 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <ImageView style="@style/ActionBarSeparator" />
-
+    <LinearLayout android:id="@+id/title_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/map_rounded_corner_bg"
+        android:padding="10dip"
+        android:orientation="horizontal" >
+        
     <fragment
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/map_fragment"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         class="com.ushahidi.android.app.ui.tablet.MapFragment" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -82,23 +82,15 @@ public class ListMapFragment extends
 
 	private int mapId = 0;
 
+	private int sId = 0;
+
 	private ListMapModel mListMapModel;
 
-	// private ListMapTabletAdapter mListMapAdapter;
-
-	private boolean edit = true;
-
-	private boolean refreshState = false;
-
-	private ImageButton addMap = null;
-
-	private ImageButton refreshMap = null;
+	public boolean edit = true;
 
 	private String filter;
 
 	private ListMapFragmentListener listener = null;
-
-	private ViewGroup mRootView;
 
 	private ApiUtils apiUtils;
 
@@ -125,7 +117,6 @@ public class ListMapFragment extends
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
-		// mListMapAdapter = new ListMapTabletAdapter(getActivity());
 		mListMapModel = new ListMapModel();
 		apiUtils = new ApiUtils(getActivity());
 		this.dialog = new ProgressDialog(getActivity());
@@ -173,8 +164,8 @@ public class ListMapFragment extends
 	@Override
 	public void onResume() {
 		super.onResume();
-		getActivity().registerReceiver(broadcastReceiver, new IntentFilter(
-				SyncServices.SYNC_SERVICES_ACTION));
+		getActivity().registerReceiver(broadcastReceiver,
+				new IntentFilter(SyncServices.SYNC_SERVICES_ACTION));
 		mHandler.post(fetchMapList);
 	}
 
@@ -189,14 +180,14 @@ public class ListMapFragment extends
 		super.onDestroy();
 		stopLocating();
 	}
-	
+
 	public void onPause() {
-        super.onPause();
-        try {
-        	getActivity().unregisterReceiver(broadcastReceiver);
+		super.onPause();
+		try {
+			getActivity().unregisterReceiver(broadcastReceiver);
 		} catch (IllegalArgumentException e) {
 		}
-        
+
 	}
 
 	public void setListMapListener(ListMapFragmentListener listener) {
@@ -392,22 +383,15 @@ public class ListMapFragment extends
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		l.setItemChecked(position, true);
 
-		final int sId = adapter.getItem(position).getId();
+		sId = adapter.getItem(position).getId();
 
 		if (isMapActive(sId)) {
 			if (listener != null) {
 				listener.onMapSelected(sId);
 			}
 		} else {
-			FetchMapReportTask fetchMapReportTask = new FetchMapReportTask(
-					getActivity());
-			fetchMapReportTask.id = sId;
-			fetchMapReportTask.execute((String) null);
-			if (fetchMapReportTask.getStatus() == android.os.AsyncTask.Status.FINISHED) {
-				if (listener != null) {
-					listener.onMapSelected(sId);
-				}
-			}
+
+			fetchReports(sId);
 		}
 
 	}
@@ -426,53 +410,6 @@ public class ListMapFragment extends
 			return true;
 		}
 		return false;
-
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		mRootView = (ViewGroup) inflater.inflate(R.layout.list_map, null);
-		addMap = (ImageButton) mRootView
-				.findViewById(R.id.list_map_toolbar_add);
-		refreshMap = (ImageButton) mRootView
-				.findViewById(R.id.list_map_refresh_btn);
-
-		if (addMap != null) {
-			addMap.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					edit = false;
-					createDialog(DIALOG_ADD_DEPLOYMENT);
-				}
-
-			});
-		}
-
-		if (refreshMap != null) {
-			refreshMap.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					createDialog(DIALOG_DISTANCE);
-				}
-
-			});
-		}
-
-		return mRootView;
-	}
-
-	private void updateRefreshStatus() {
-		if (mRootView != null) {
-			if (addMap != null) {
-				mRootView.findViewById(R.id.list_map_refresh_btn)
-						.setVisibility(refreshState ? View.GONE : View.VISIBLE);
-				mRootView.findViewById(R.id.list_map_refresh_progress)
-						.setVisibility(refreshState ? View.VISIBLE : View.GONE);
-			}
-		}
 
 	}
 
@@ -504,8 +441,8 @@ public class ListMapFragment extends
 
 		// delete checkins data
 		new ListCheckinModel().deleteCheckin();
-		
-		//delete comment data
+
+		// delete comment data
 		new ListCommentModel().deleteComments();
 
 		// delete pending photos
@@ -519,7 +456,7 @@ public class ListMapFragment extends
 	 * Create an alert dialog
 	 */
 
-	protected void createDialog(int d) {
+	public void createDialog(int d) {
 		switch (d) {
 
 		case DIALOG_SHOW_MESSAGE:
@@ -543,9 +480,7 @@ public class ListMapFragment extends
 			builder.setSingleChoiceItems(items, Preferences.selectedDistance,
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int item) {
-
 							distance = items[item];
-
 							setDeviceLocation();
 							Preferences.selectedDistance = item;
 							// save prefrences
@@ -594,10 +529,12 @@ public class ListMapFragment extends
 			if (edit) {
 				final List<ListMapModel> listMap = mListMapModel.loadMapById(
 						mId, mapId);
-				addMapView.setMapName(listMap.get(0).getName());
-				addMapView.setMapDescription(listMap.get(0).getDesc());
-				addMapView.setMapUrl(listMap.get(0).getUrl());
-				addMapView.setMapId(listMap.get(0).getId());
+				if (listMap.size() > 0) {
+					addMapView.setMapName(listMap.get(0).getName());
+					addMapView.setMapDescription(listMap.get(0).getDesc());
+					addMapView.setMapUrl(listMap.get(0).getUrl());
+					addMapView.setMapId(listMap.get(0).getId());
+				}
 			}
 
 			final AlertDialog.Builder addBuilder = new AlertDialog.Builder(
@@ -658,7 +595,6 @@ public class ListMapFragment extends
 		public LoadMapTask(Activity activity) {
 			super(activity, R.string.loading_);
 			// switch to a progress animation
-			refreshState = true;
 			maps = new MapsHttpClient(activity);
 		}
 
@@ -666,8 +602,7 @@ public class ListMapFragment extends
 		protected void onPreExecute() {
 			super.onPreExecute();
 			dialog.cancel();
-			refreshState = true;
-			updateRefreshStatus();
+			
 		}
 
 		@Override
@@ -692,10 +627,7 @@ public class ListMapFragment extends
 				toastShort(R.string.deployment_fetched_successful);
 			}
 			adapter.refresh();
-			// mListMapView.mListView.setAdapter(mListMapAdapter);
-			// mListMapView.displayEmptyListText();
-			refreshState = false;
-			updateRefreshStatus();
+			
 		}
 
 	}
@@ -789,9 +721,9 @@ public class ListMapFragment extends
 			if (success) {
 				if (Preferences.isCheckinEnabled == 1) {
 					toastLong(R.string.checkin_is_enabled);
-					goToCheckins();
-				} else {
-					goToReports();
+				}
+				if (listener != null) {
+					listener.onMapSelected(sId);
 				}
 
 			} else {
@@ -885,8 +817,10 @@ public class ListMapFragment extends
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent != null) {
+				
 				int status = intent.getIntExtra("status", 113);
-				getActivity().unregisterReceiver(broadcastReceiver);
+				log("Status: "+status);
+				getActivity().stopService(fetchReports);
 				dialog.cancel();
 
 				if (status == 0) {

@@ -69,8 +69,7 @@ public class ListReportCommentActivity extends
 
 	public void onResume() {
 		super.onResume();
-		
-		adapter.refreshCheckinComment(reportId);
+		adapter.refresh(reportId);
 	}
 
 	public void onPause() {
