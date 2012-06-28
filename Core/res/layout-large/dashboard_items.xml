@@ -14,25 +14,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/layout_background"
+    android:baselineAligned="false"
     android:orientation="horizontal" >
 
-    <LinearLayout
-        android:layout_width="0px"
+    <fragment
+        android:id="@+id/list_map_fragment"
+        android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="30"
-        android:paddingRight="2dip" >
-
-        <fragment
-            android:id="@+id/list_map_fragment"
-            android:layout_width="0px"
-            android:layout_height="match_parent"
-            android:layout_weight="30"
-            class="com.ushahidi.android.app.ui.tablet.ListMapFragment" />
-    </LinearLayout>
+        class="com.ushahidi.android.app.ui.tablet.ListMapFragment"
+        android:paddingRight="2dip" />
 
     <FrameLayout
         android:id="@+id/show_fragment"
-        android:layout_width="0px"
+        android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="60" >
     </FrameLayout>

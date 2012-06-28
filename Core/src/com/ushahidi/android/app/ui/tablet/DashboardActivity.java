@@ -120,7 +120,7 @@ public class DashboardActivity extends FragmentMapActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.list_report, menu);
+		getMenuInflater().inflate(R.menu.dashboard, menu);
 		return true;
 
 	}

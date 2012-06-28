@@ -37,11 +37,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.ListPopupWindow;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
@@ -55,7 +52,6 @@ import com.ushahidi.android.app.services.FetchCheckins;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.ui.phone.AddCheckinActivity;
 import com.ushahidi.android.app.ui.phone.ViewCheckinActivity;
-import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ListCheckinView;
 
 /**
@@ -63,9 +59,7 @@ import com.ushahidi.android.app.views.ListCheckinView;
  */
 public class ListCheckinFragment
 		extends
-		BaseSectionListFragment<ListCheckinView, ListCheckinModel, ListCheckinAdapter>
-		implements PopupWindow.OnDismissListener,
-		AdapterView.OnItemClickListener {
+		BaseSectionListFragment<ListCheckinView, ListCheckinModel, ListCheckinAdapter> {
 
 	private ListFetchedCheckinAdapter fetchedAdapter;
 
@@ -94,8 +88,6 @@ public class ListCheckinFragment
 	private ImageButton refreshCheckin = null;
 
 	private ImageButton filterCheckin = null;
-
-	private ListPopupWindow mListPopupWindow;
 
 	public ListCheckinFragment() {
 		super(ListCheckinView.class, ListCheckinAdapter.class,
@@ -205,7 +197,7 @@ public class ListCheckinFragment
 
 				@Override
 				public void onClick(View v) {
-					showUsersList();
+					showDropDownNav();
 				}
 			});
 		}
@@ -255,7 +247,7 @@ public class ListCheckinFragment
 			launchAddCheckin(0);
 			return true;
 		} else if (item.getItemId() == R.id.menu_filter_by_users) {
-			showUsersList();
+			showDropDownNav();
 			return true;
 		} else if (item.getItemId() == android.R.id.home) {
 			getActivity().finish();
@@ -377,14 +369,6 @@ public class ListCheckinFragment
 		}
 	};
 
-	private void showUsersList() {
-		if (Util.isHoneycomb()) {
-			showListWindowPopup();
-		} else {
-			showDropDownNav();
-		}
-	}
-
 	private void showDropDownNav() {
 		showUsers();
 
@@ -418,18 +402,6 @@ public class ListCheckinFragment
 								dialog.dismiss();
 							}
 						}).create().show();
-	}
-
-	private void showListWindowPopup() {
-		showUsers();
-		mListPopupWindow = new ListPopupWindow(getActivity());
-		mListPopupWindow.setAdapter(spinnerArrayAdapter);
-		mListPopupWindow.setModal(true);
-		mListPopupWindow.setContentWidth(200);
-		mListPopupWindow.setAnchorView(filterCheckin);
-		mListPopupWindow.setOnItemClickListener(ListCheckinFragment.this);
-		mListPopupWindow.show();
-		mListPopupWindow.setOnDismissListener(ListCheckinFragment.this);
 	}
 
 	@Override
@@ -511,39 +483,4 @@ public class ListCheckinFragment
 		}
 	};
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.widget.PopupWindow.OnDismissListener#onDismiss()
-	 */
-	@Override
-	public void onDismiss() {
-		mListPopupWindow = null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget
-	 * .AdapterView, android.view.View, int, long)
-	 */
-	@Override
-	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-		filterUserId = spinnerArrayAdapter.getTag(position).getUserId();
-
-		final String all = spinnerArrayAdapter.getTag(position).getUsername();
-		view.footerText.setText(all);
-
-		if ((all != null) && (!TextUtils.isEmpty(all))
-				&& (all != getActivity().getString(R.string.all_users))) {
-
-			refreshCheckinByUserList();
-		} else {
-			refreshCheckinList();
-		}
-		if (mListPopupWindow != null) {
-			mListPopupWindow.dismiss();
-		}
-	}
 }

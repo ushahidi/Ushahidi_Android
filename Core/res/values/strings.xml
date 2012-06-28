@@ -31,7 +31,7 @@
     <string name="btn_save">Save</string>
     <string name="btn_find">Find me</string>
     <string name="btn_reset">Reset</string>
-    <string name="btn_ok">Ok</string>
+    <string name="btn_ok">OK</string>
     <string name="btn_add_photo">Add Photo</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_send">Send</string>
@@ -133,7 +133,7 @@
     <string name="no_categories">Could not fetch categories.</string>
     <string name="reports_successfully_fetched">Reports successfully fetched.</string>
     <!-- Add location screen -->
-    <string name="find_location">Finding you...</string>
+    <string name="find_location">Finding you&#8230;</string>
     <string name="location_disabled">Location Detection Disabled</string>
     <string name="location_reenable">Would you like to visit Location &amp; Security settings to re-enable location detection?</string>
     <string name="location_not_found">A location can not currently be determined. Enable
@@ -152,7 +152,7 @@
     <string name="report_photo">Photo</string>
     <string name="status_no">No</string>
     <string name="status_yes">Yes</string>
-    <string name="please_wait">Please wait...</string>
+    <string name="please_wait">Please wait&#8230;</string>
     <string name="fetching_new_reports">Fetching new reports</string>
     <string name="choose_method">Choose Method</string>
     <string name="how_to_select_pic">Please choose how you would like to get the
@@ -165,7 +165,7 @@
     <string name="file_system_error">File System Error</string>
     <string name="file_system_error_msg">File System Error, please ensure your save path is
 		correct!</string>
-    <string name="read_more">Read more...</string>
+    <string name="read_more">Read more&#8230;</string>
 
     <!-- Tab -->
     <string name="tab_item_report_list">List</string>
@@ -183,8 +183,8 @@
     <string name="checkin_selected_photo">Selected photo</string>
     <string name="view_checkins">View Check Ins</string>
     <string name="checkin_progress_title">Working</string>
-    <string name="checkin_in_progress">Sending Check-in...</string>
-    <string name="checkin_progress_message">Getting location data...</string>
+    <string name="checkin_in_progress">Sending Check-in&#8230;</string>
+    <string name="checkin_progress_message">Getting location data&#8230;</string>
     <string name="checkin_contact">Contact Info</string>
     <string name="checkin_success_toast">Check in successful</string>
     <string name="checkin_error_toast">Error encountered during check in</string>
@@ -211,7 +211,7 @@
     <!-- Deployment search -->
     <string name="search_label">Deployments </string>
     <!-- The hint text that appears in the search box. -->
-    <string name="search_hint">Type here to filter the list below...</string>
+    <string name="search_hint">Type here to filter the list below&#8230;</string>
     <string name="deployment_fetched_successful">Deployments successfully fetched</string>
     <string name="could_not_fetch_data">Couldn\'t fetch new deployments due to network
 		error.</string>
@@ -225,10 +225,10 @@
         <item quantity="other">%1$d results for \"%2$s\": </item>
     </plurals>
     <!-- pull to refresh list -->
-    <string name="pull_to_refresh_pull_label">Pull to refresh...</string>
-    <string name="pull_to_refresh_release_label">Release to refresh...</string>
-    <string name="pull_to_refresh_refreshing_label">Loading...</string>
-    <string name="pull_to_refresh_tap_label">Tap to refresh...</string>
+    <string name="pull_to_refresh_pull_label">Pull to refresh&#8230;</string>
+    <string name="pull_to_refresh_release_label">Release to refresh&#8230;</string>
+    <string name="pull_to_refresh_refreshing_label">Loading&#8230;</string>
+    <string name="pull_to_refresh_tap_label">Tap to refresh&#8230;</string>
 
     <!-- sharing -->
     <string name="share_template">		Check out<xliff:g id="title">%1$s</xliff:g>		at<xliff:g id="reporturl">%2$s</xliff:g></string>
@@ -247,7 +247,7 @@
     <string name="confirm_clear">Are you sure you want to clear everything?</string>
     <string name="items_cleared">Everything was successfully cleared</string>
     <string name="no_items_cleared">No items to clear</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading&#8230;</string>
     <string name="deploymet_url">Deployment URL</string>
     <string name="add_deployment">Add Deployment</string>
     <string name="delete">Delete</string>
@@ -255,7 +255,7 @@
     <string name="deployment_deleted_failed">Failed to delete</string>
     <string name="fix_error">Please make sure a name and a valid URL have been
 		entered.</string>
-    <string name="sending_report_in_progress">Sending report...</string>
+    <string name="sending_report_in_progress">Sending report&#8230;</string>
     <string name="ushahidi_setup_title">Ushahidi Setup</string>
     <string name="ushahidi_setup_blub">Setup an ushahidi deployment.</string>
     <string name="recent_reports">Recent Reports</string>
@@ -308,11 +308,11 @@
 
     <!-- New Strings for V3 -->
     <string name="load">Load</string>
-    <string name="loading_">Loading...</string>
+    <string name="loading_">Loading&#8230;</string>
     <string name="loaded">Loaded</string>
     <string name="not_loaded">Not Loaded</string>
     <string name="save">Save</string>
-    <string name="saving_">Saving...</string>
+    <string name="saving_">Saving&#8230;</string>
     <string name="saved">Saved</string>
     <string name="not_saved">Not Saved</string>
     <string name="unsaved_changes">Unsaved Changes</string>
@@ -349,7 +349,7 @@
     <string name="categories">Categories</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="error_occured">Error occurred while fetching </string>
     <string name="photos">Photos</string>
     <string name="news">News</string>
@@ -392,8 +392,8 @@
     <string name="clear">Clear</string>
     <string name="cleared">Cleared</string>
     <string name="not_cleared">Not cleared</string>
-    <string name="search_reports">Search reports...</string>
-    <string name="search_maps">Search maps...</string>
+    <string name="search_reports">Search reports&#8230;</string>
+    <string name="search_maps">Search maps&#8230;</string>
     <string name="pending_upload">Pending Upload</string>
     <string name="fetched">Fetched</string>
     <string name="required_fields">Required Fields</string>
@@ -423,18 +423,19 @@
     <string name="add_checkin">Add Checkin</string>
     <string name="users">Users</string>
     <string name="checkin_is_enabled">Checkin is enabled</string>
-    <string name="search_checkins">Search Checkins...</string>
+    <string name="search_checkins">Search Checkins&#8230;</string>
     <string name="delete_checkins">Delete checkins</string>
     <string name="personal_information">Personal information</string>
     <string name="add_map_by_url">Add Map By URL</string>
     <string name="find_maps_around_me">Find Maps Around Me</string>
     <string name="add_map">Add Map</string>
-    <string name="finding_map">Finding map...</string>
-    <string name="uploading">Uploading...</string>
+    <string name="finding_map">Finding map&#8230;</string>
+    <string name="uploading">Uploading&#8230;</string>
     <string name="full_name">Full name</string>
     <string name="enter_full_name">Please enter a full name</string>
     <string name="valid_email_address">Please enter a valid email address</string>
     <string name="enter_comment">Please enter a comment and it should be 3 characters or more long.</string>
     <string name="could_not_fetch_comment">Could not fetch comment</string>
     <string name="clear_all_map">Clear All Map</string>
+    <string name="refresh">Refresh</string>
 </resources>

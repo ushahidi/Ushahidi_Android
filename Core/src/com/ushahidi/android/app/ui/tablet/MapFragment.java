@@ -112,10 +112,6 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 			map.setSatellite(true);
 			return true;
 
-		} else if (item.getItemId() == R.id.menu_traffic) {
-			map.setTraffic(true);
-			return true;
-
 		} else if (item.getItemId() == R.id.filter_by) {
 
 			showDropDownNav();

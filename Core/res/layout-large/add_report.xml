@@ -10,225 +10,223 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/LinearLayout.Vertical.Full"
-    android:background="@color/background_color" >
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-        <!-- Parent layout starts -->
+    <!-- Parent layout starts -->
+
+    <LinearLayout
+        style="@style/LinearLayout.Vertical.Full"
+        android:background="@color/background_color"
+        android:padding="10dip" >
+
+        <!-- Title layout begins -->
 
         <LinearLayout
-            style="@style/LinearLayout.Vertical.Full"
-            android:padding="10dip" >
+            style="@style/LinearLayout.Vertical.Wrap"
+            android:paddingBottom="10dp" >
 
-            <!-- Title layout begins -->
+            <TextView
+                android:id="@+id/lbl_title"
+                style="@style/TextView.Label"
+                android:text="@string/title" />
 
-            <LinearLayout
-                style="@style/LinearLayout.Vertical.Wrap"
-                android:paddingBottom="10px" >
-
-                <TextView
-                    android:id="@+id/lbl_title"
-                    style="@style/TextView.Label"
-                    android:text="@string/title" />
-
-                <EditText
-                    android:id="@+id/incident_title"
-                    style="@style/EditText.Title" />
-            </LinearLayout>
-            <!-- Title layout ends. -->
+            <EditText
+                android:id="@+id/incident_title"
+                style="@style/EditText.Title"
+                android:hint="@string/empty_report_title" />
+        </LinearLayout>
+        <!-- Title layout ends. -->
 
 
-            <!-- Description layout starts -->
+        <!-- Description layout starts -->
 
-            <LinearLayout
-                style="@style/LinearLayout.Vertical"
-                android:paddingBottom="10px" >
+        <LinearLayout
+            style="@style/LinearLayout.Vertical"
+            android:paddingBottom="10dp" >
 
-                <TextView
-                    android:id="@+id/lbl_incidents_dec"
-                    style="@style/TextView.Label"
-                    android:text="@string/description" />
+            <TextView
+                android:id="@+id/lbl_incidents_dec"
+                style="@style/TextView.Label"
+                android:text="@string/description" />
 
-                <EditText
-                    android:id="@+id/incident_desc"
-                    style="@style/EditText.Multiline" />
-            </LinearLayout>
-            <!-- Description layout ends. -->
-
-
-            <!-- Categories layout starts -->
-
-            <LinearLayout
-                style="@style/LinearLayout.Vertical"
-                android:paddingBottom="10px" >
-
-                <TextView
-                    android:id="@+id/lbl_date"
-                    style="@style/TextView.Label"
-                    android:text="@string/category" />
-
-                <Button
-                    android:id="@+id/add_category"
-                    style="@style/Button.Select"
-                    android:text="@string/incident_add_category" />
-            </LinearLayout>
-            <!-- Categories layout ends. -->
+            <EditText
+                android:id="@+id/incident_desc"
+                style="@style/EditText.Multiline"
+                android:hint="@string/empty_report_description" />
+        </LinearLayout>
+        <!-- Description layout ends. -->
 
 
-            <!-- Date layout starts. -->
+        <!-- Categories layout starts -->
 
-            <LinearLayout
-                style="@style/LinearLayout.Vertical"
-                android:paddingBottom="10px" >
+        <LinearLayout
+            style="@style/LinearLayout.Vertical"
+            android:paddingBottom="10dp" >
 
-                <TextView
-                    android:id="@+id/lbl_date"
-                    style="@style/TextView.Label"
-                    android:text="@string/date_and_time" />
+            <TextView
+                android:id="@+id/lbl_date"
+                style="@style/TextView.Label"
+                android:text="@string/category" />
 
-                <LinearLayout style="@style/LinearLayout.Horizontal" >
-
-                    <Button
-                        android:id="@+id/pick_date"
-                        style="@style/Button.Select"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/incident_date" />
-
-                    <Button
-                        android:id="@+id/pick_time"
-                        style="@style/Button.Select"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/incident_time" />
-                </LinearLayout>
-            </LinearLayout>
-            <!-- Date layout ends. -->
+            <Button
+                android:id="@+id/add_category"
+                style="@style/Button.Select"
+                android:text="@string/incident_add_category" />
+        </LinearLayout>
+        <!-- Categories layout ends. -->
 
 
-            <!-- Location layout starts. -->
+        <!-- Date layout starts. -->
 
-            <LinearLayout
-                style="@style/LinearLayout.Vertical"
-                android:paddingBottom="10px" >
+        <LinearLayout
+            style="@style/LinearLayout.Vertical"
+            android:paddingBottom="10dp" >
 
-                <TextView
-                    android:id="@+id/incident_loc"
-                    style="@style/TextView.Label"
-                    android:text="@string/location" />
-
-                <!-- location name -->
-
-                <EditText
-                    android:id="@+id/incident_location"
-                    style="@style/EditText.CapWords"
-                    android:autoText="true"
-                    android:hint="@string/hint_location"
-                    android:paddingBottom="2dip" />
-                
-                <com.google.android.maps.MapView
-                    android:id="@+id/location_map"
-                    style="@style/MapView.Location" />
-
-                <LinearLayout
-                    style="@style/LinearLayout.Horizontal"
-                    android:paddingTop="5dp" >
-
-                    <EditText
-                        android:id="@+id/incident_latitude"
-                        style="@style/EditText.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="@string/incident_latitude"
-                        android:inputType="numberDecimal|numberSigned" />
-
-                    <EditText
-                        android:id="@+id/incident_longitude"
-                        style="@style/EditText.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="@string/incident_longitude"
-                        android:inputType="numberDecimal|numberSigned" />
-                </LinearLayout>
-            </LinearLayout>
-            <!-- Location layout ends. -->
-
-
-            <!-- Photo layout starts. -->
-
-            <LinearLayout
-                style="@style/LinearLayout.Vertical"
-                android:paddingBottom="5dp" >
-
-                <TextView
-                    style="@style/TextView.Label"
-                    android:text="@string/photos" />
-
-                <Button
-                    android:id="@+id/btnPicture"
-                    style="@style/Button.Select"
-                    android:text="@string/btn_add_photo" />
-
-                <LinearLayout
-                    style="@style/LinearLayout.Horizontal"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp" >
-
-                    <Gallery
-                        android:id="@+id/gallery"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:longClickable="true"
-                        android:spacing="10dp" />
-                </LinearLayout>
-
-                <LinearLayout style="@style/LinearLayout.Horizontal" >
-
-                    <ImageSwitcher
-                        android:id="@+id/sel_image_switcher"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </LinearLayout>
-            <!-- Photo layout ends. -->
-
-
-            <!-- News layout starts. -->
-
-            <LinearLayout
-                style="@style/LinearLayout.Vertical"
-                android:paddingBottom="10px" >
-
-                <TextView
-                    style="@style/TextView.Label"
-                    android:text="@string/news" />
-
-                <EditText
-                    android:id="@+id/report_news"
-                    style="@style/EditText.URL"
-                    android:hint="@string/enter_news_url" />
-            </LinearLayout>
-            <!-- News layout ends. -->
-
-
-            <!-- Delete layout starts. -->
+            <TextView
+                android:id="@+id/lbl_date_time"
+                style="@style/TextView.Label"
+                android:text="@string/date_and_time" />
 
             <LinearLayout style="@style/LinearLayout.Horizontal" >
 
                 <Button
-                    android:id="@+id/delete_report"
-                    style="@style/Button.Delete" />
+                    android:id="@+id/pick_date"
+                    style="@style/Button.Select"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/incident_date" />
+
+                <Button
+                    android:id="@+id/pick_time"
+                    style="@style/Button.Select"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/incident_time" />
             </LinearLayout>
-            <!-- Delete layout ends. -->
-
         </LinearLayout>
-        <!-- Parent layout ends. -->
-    </ScrollView>
+        <!-- Date layout ends. -->
 
-</LinearLayout>
+
+        <!-- Location layout starts. -->
+
+        <LinearLayout
+            style="@style/LinearLayout.Vertical"
+            android:paddingBottom="10dp" >
+
+            <TextView
+                android:id="@+id/incident_loc"
+                style="@style/TextView.Label"
+                android:text="@string/location" />
+
+            <!-- location name -->
+
+            <EditText
+                android:id="@+id/incident_location"
+                style="@style/EditText.CapWords"
+                android:hint="@string/hint_location"
+                android:paddingBottom="2dip" />
+
+            <com.google.android.maps.MapView
+                android:id="@+id/location_map"
+                style="@style/MapView.Location" />
+
+            <LinearLayout
+                style="@style/LinearLayout.Horizontal"
+                android:paddingTop="5dp" >
+
+                <EditText
+                    android:id="@+id/incident_latitude"
+                    style="@style/EditText.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/incident_latitude"
+                    android:inputType="numberDecimal|numberSigned" />
+
+                <EditText
+                    android:id="@+id/incident_longitude"
+                    style="@style/EditText.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/incident_longitude"
+                    android:inputType="numberDecimal|numberSigned" />
+            </LinearLayout>
+        </LinearLayout>
+        <!-- Location layout ends. -->
+
+
+        <!-- Photo layout starts. -->
+
+        <LinearLayout
+            style="@style/LinearLayout.Vertical"
+            android:paddingBottom="5dp" >
+
+            <TextView
+                style="@style/TextView.Label"
+                android:text="@string/photos" />
+
+            <Button
+                android:id="@+id/btnPicture"
+                style="@style/Button.Select"
+                android:text="@string/btn_add_photo" />
+
+            <LinearLayout
+                style="@style/LinearLayout.Horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp" >
+
+                <Gallery
+                    android:id="@+id/gallery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:longClickable="true"
+                    android:spacing="10dp" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/LinearLayout.Horizontal" >
+
+                <ImageSwitcher
+                    android:id="@+id/sel_image_switcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+        <!-- Photo layout ends. -->
+
+
+        <!-- News layout starts. -->
+
+        <LinearLayout
+            style="@style/LinearLayout.Vertical"
+            android:paddingBottom="10dp" >
+
+            <TextView
+                style="@style/TextView.Label"
+                android:text="@string/news" />
+
+            <EditText
+                android:id="@+id/report_news"
+                style="@style/EditText.URL"
+                android:hint="@string/enter_news_url" />
+        </LinearLayout>
+        <!-- News layout ends. -->
+
+
+        <!-- Delete layout starts. -->
+
+        <LinearLayout style="@style/LinearLayout.Horizontal" >
+
+            <Button
+                android:id="@+id/delete_report"
+                style="@style/Button.Delete" />
+        </LinearLayout>
+        <!-- Delete layout ends. -->
+
+    </LinearLayout>
+    <!-- Parent layout ends. -->
+
+</ScrollView>
