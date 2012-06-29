@@ -10,50 +10,44 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/LinearLayout.Vertical.Full"
-    android:background="@color/background_color" >
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-        <LinearLayout
-            style="@style/LinearLayout.Vertical.Full"
-            android:padding="10px" >
+    <LinearLayout
+        style="@style/LinearLayout.Vertical.Full"
+        android:background="@color/background_color"
+        android:padding="10dp" >
 
-            <!-- checkin message -->
+        <!-- checkin message -->
 
-            <LinearLayout style="@style/LinearLayout.Vertical.Wrap" >
+        <TextView
+            android:id="@+id/comment_full_name_lbl"
+            style="@style/TextView.Label"
+            android:text="@string/full_name" />
 
-                <TextView
-                    android:id="@+id/comment_full_name_lbl"
-                    style="@style/TextView.Label"
-                    android:text="@string/full_name" />
+        <EditText
+            android:id="@+id/comment_full_name"
+            style="@style/EditText.Name" />
 
-                <EditText
-                    android:id="@+id/comment_full_name"
-                    style="@style/EditText.Name" />
+        <TextView
+            android:id="@+id/comment_email_lbl"
+            style="@style/TextView.Label"
+            android:text="@string/txt_email" />
 
-                <TextView
-                    android:id="@+id/comment_email_lbl"
-                    style="@style/TextView.Label"
-                    android:text="@string/txt_email" />
+        <EditText
+            android:id="@+id/comment_email"
+            style="@style/EditText.Email" />
 
-                <EditText
-                    android:id="@+id/comment_email"
-                    style="@style/EditText.Email" />
+        <TextView
+            android:id="@+id/comment_message_lbl"
+            style="@style/TextView.Label"
+            android:text="@string/comment" />
 
-                <TextView
-                    android:id="@+id/comment_message_lbl"
-                    style="@style/TextView.Label"
-                    android:text="@string/comment" />
+        <EditText
+            android:id="@+id/comment_message"
+            style="@style/EditText.Multiline" />
+    </LinearLayout>
 
-                <EditText
-                    android:id="@+id/comment_message"
-                    style="@style/EditText.Multiline" />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-
-</LinearLayout>
+</ScrollView>

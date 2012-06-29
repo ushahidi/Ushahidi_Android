@@ -27,9 +27,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
-        android:layout_weight="1"
         android:gravity="center_vertical|center_horizontal"
         android:padding="5dip"
-        android:src="@drawable/menu_arrow" />
+        android:src="@drawable/arrow" />
 
 </RelativeLayout>

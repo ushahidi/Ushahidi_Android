@@ -12,7 +12,6 @@
         android:layout_alignParentLeft="true"
         android:layout_gravity="center"
         android:layout_toLeftOf="@+id/map_arrow"
-        android:capitalize="characters"
         android:ellipsize="end"
         android:focusable="false"
         android:lines="1"
@@ -27,7 +26,6 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/map_list_name"
         android:layout_toLeftOf="@+id/map_arrow"
-        android:capitalize="sentences"
         android:ellipsize="end"
         android:focusable="false"
         android:textColor="@color/date_color" />
@@ -49,7 +47,6 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/map_list_url"
         android:layout_toLeftOf="@+id/map_arrow"
-        android:capitalize="sentences"
         android:focusable="false"
         android:lines="1"
         android:textColor="@color/date_color"
@@ -61,7 +58,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
-        android:layout_weight="1"
         android:gravity="center_vertical|center_horizontal"
         android:padding="5dip" />
 

@@ -8,7 +8,7 @@
     <ViewAnimator
         android:id="@+id/view_report_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <LinearLayout style="@style/LinearLayout.Vertical" >
@@ -23,7 +23,6 @@
             <LinearLayout
                 android:id="@+id/title_layout"
                 style="@style/LinearLayout.Vertical"
-                android:layout_below="@+id/report_title"
                 android:background="@color/table_odd_row_color" >
 
                 <TextView
@@ -38,12 +37,10 @@
             <TextView
                 android:id="@+id/report_status"
                 style="@style/TextView.Label"
-                android:layout_below="@+id/title_layout"
                 android:text="@string/report_verified" />
 
             <LinearLayout
                 style="@style/LinearLayout.Vertical"
-                android:layout_below="@+id/report_status"
                 android:background="@color/table_odd_row_color" >
 
                 <TextView
@@ -58,18 +55,15 @@
             <TextView
                 android:id="@+id/report_description"
                 style="@style/TextView.Label"
-                android:layout_below="@+id/status"
                 android:text="@string/report_desc" />
 
             <LinearLayout
                 style="@style/LinearLayout.Vertical"
-                android:layout_below="@+id/report_status"
                 android:background="@color/table_odd_row_color" >
 
                 <TextView
                     android:id="@+id/desc"
-                    style="@style/TextView.Description"
-                    android:layout_below="@+id/report_description" />
+                    style="@style/TextView.Description" />
             </LinearLayout>
             <!-- Description ends -->
 
@@ -79,18 +73,15 @@
             <TextView
                 android:id="@+id/report_category"
                 style="@style/TextView.Label"
-                android:layout_below="@+id/desc"
                 android:text="@string/report_category" />
 
             <LinearLayout
                 style="@style/LinearLayout.Vertical"
-                android:layout_below="@+id/report_status"
                 android:background="@color/table_odd_row_color" >
 
                 <TextView
                     android:id="@+id/category"
-                    style="@style/TextView.Title"
-                    android:layout_below="@+id/report_category" />
+                    style="@style/TextView.Title" />
             </LinearLayout>
 
             <!-- Category ends -->
@@ -101,18 +92,15 @@
             <TextView
                 android:id="@+id/report_date"
                 style="@style/TextView.Label"
-                android:layout_below="@+id/category"
                 android:text="@string/report_date" />
 
             <LinearLayout
                 style="@style/LinearLayout.Vertical"
-                android:layout_below="@+id/report_status"
                 android:background="@color/table_odd_row_color" >
 
                 <TextView
                     android:id="@+id/date"
-                    style="@style/TextView.Title"
-                    android:layout_below="@+id/report_date" />
+                    style="@style/TextView.Title" />
             </LinearLayout>
 
             <!-- Date ends -->
@@ -123,17 +111,13 @@
             <TextView
                 android:id="@+id/report_loc"
                 style="@style/TextView.Label"
-                android:layout_below="@+id/date"
                 android:text="@string/report_location" />
 
-            <LinearLayout
-                style="@style/LinearLayout.Vertical"
-                android:layout_below="@+id/report_status" >
+            <LinearLayout style="@style/LinearLayout.Vertical" >
 
                 <TextView
                     android:id="@+id/location"
-                    style="@style/TextView.Title"
-                    android:layout_below="@+id/report_loc" />
+                    style="@style/TextView.Title" />
             </LinearLayout>
             <!-- Location ends -->
 
@@ -144,7 +128,7 @@
                 android:id="@+id/top_items_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/location"
+                
                 android:background="@color/table_odd_row_color"
                 android:orientation="vertical"
                 android:padding="10dip" >
@@ -153,7 +137,7 @@
                     android:id="@+id/loc_map"
                     android:layout_width="match_parent"
                     android:layout_height="300dip"
-                    android:layout_below="@+id/location"
+                    
                     android:layout_gravity="center"
                     android:apiKey="@string/google_map_api_key"
                     android:clickable="true"
@@ -170,7 +154,7 @@
                 android:id="@+id/report_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/top_items_layout"
+                
                 android:padding="10dip"
                 android:text="@string/photos"
                 android:textColor="@color/title_color"
@@ -180,7 +164,7 @@
                 android:id="@+id/list_photo_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/report_photo"
+                
                 android:background="@color/table_odd_row_color"
                 android:orientation="vertical" >
 
@@ -209,7 +193,7 @@
                 android:id="@+id/report_news"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/list_photo_item"
+                
                 android:padding="10dip"
                 android:text="@string/news"
                 android:textColor="@color/title_color"
@@ -219,7 +203,7 @@
                 android:id="@+id/list_news_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/report_news"
+                
                 android:background="@color/table_odd_row_color"
                 android:orientation="vertical" >
 
@@ -248,7 +232,7 @@
                 android:id="@+id/report_video"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/list_news_item"
+                
                 android:padding="10dip"
                 android:text="@string/video"
                 android:textColor="@color/title_color"
@@ -257,7 +241,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/report_video"
+                
                 android:background="@color/table_odd_row_color"
                 android:orientation="vertical" >
 
@@ -277,14 +261,15 @@
                     android:textColor="@color/black_color" />
             </LinearLayout>
             <!-- Video ends -->
-            
+
+
             <!-- Comment starts -->
 
             <TextView
                 android:id="@+id/report_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/video_report"
+               
                 android:padding="10dip"
                 android:text="@string/comments"
                 android:textColor="@color/title_color"
@@ -293,7 +278,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/report_comment"
+                
                 android:background="@color/table_odd_row_color"
                 android:orientation="vertical" >
 

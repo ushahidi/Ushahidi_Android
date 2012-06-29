@@ -10,139 +10,134 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/LinearLayout.Vertical.Full"
-    android:background="@color/background_color" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+    <LinearLayout
+        style="@style/LinearLayout.Vertical.Full"
+        android:background="@color/background_color"
+        android:padding="10dp" >
 
-        <LinearLayout
-            style="@style/LinearLayout.Vertical.Full"
-            android:padding="10px" >
+        <!-- checkin message -->
 
-            <!-- checkin message -->
+        <LinearLayout style="@style/LinearLayout.Vertical.Wrap" >
 
-            <LinearLayout style="@style/LinearLayout.Vertical.Wrap" >
+            <TextView
+                android:id="@+id/checkin_message_label"
+                style="@style/TextView.Label"
+                android:text="@string/checkin_message" />
 
-                <TextView
-                    android:id="@+id/checkin_message_label"
-                    style="@style/TextView.Label"
-                    android:text="@string/checkin_message" />
+            <EditText
+                android:id="@+id/checkin_message_text"
+                style="@style/EditText.Multiline"
+                android:hint="@string/checkin_enter_msg_hint" />
+        </LinearLayout>
 
-                <EditText
-                    android:id="@+id/checkin_message_text"
-                    style="@style/EditText.Multiline"
-                    android:hint="@string/checkin_enter_msg_hint" />
+        <!-- location -->
+
+        <LinearLayout style="@style/LinearLayout.Vertical" >
+
+            <TextView
+                style="@style/TextView.Label"
+                android:text="@string/report_location" />
+
+            <com.google.android.maps.MapView
+                android:id="@+id/checkin_location_map"
+                style="@style/MapView.Location" />
+
+            <TextView
+                android:id="@+id/latlon"
+                style="@style/TextView.Label"
+                android:gravity="center_horizontal"
+                android:paddingBottom="20dp" />
+        </LinearLayout>
+
+        <!-- selected photo -->
+
+        <LinearLayout style="@style/LinearLayout.Vertical" >
+
+            <TextView
+                style="@style/TextView.Label"
+                android:text="@string/checkin_photo" />
+
+            <Button
+                android:id="@+id/checkin_photo_button"
+                style="@style/Button.Select"
+                android:text="@string/btn_add_photo" />
+
+            <LinearLayout
+                style="@style/LinearLayout.Horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp" >
+
+                <Gallery
+                    android:id="@+id/checkin_gallery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:longClickable="true"
+                    android:spacing="10dp" />
             </LinearLayout>
-
-            <!-- location -->
-
-            <LinearLayout style="@style/LinearLayout.Vertical" >
-
-                <TextView
-                    style="@style/TextView.Label"
-                    android:text="@string/report_location" />
-
-                <com.google.android.maps.MapView
-                    android:id="@+id/checkin_location_map"
-                    style="@style/MapView.Location"
-                    android:layout_below="@+id/checkin_location" />
-
-                <TextView
-                    android:id="@+id/latlon"
-                    style="@style/TextView.Label"
-                    android:gravity="center_horizontal"
-                    android:paddingBottom="20px" />
-            </LinearLayout>
-
-            <!-- selected photo -->
-
-            <LinearLayout style="@style/LinearLayout.Vertical" >
-
-                <TextView
-                    style="@style/TextView.Label"
-                    android:text="@string/checkin_photo" />
-
-                <Button
-                    android:id="@+id/checkin_photo_button"
-                    style="@style/Button.Select"
-                    android:text="@string/btn_add_photo" />
-
-                <LinearLayout
-                    style="@style/LinearLayout.Horizontal"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp" >
-
-                    <Gallery
-                        android:id="@+id/checkin_gallery"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:longClickable="true"
-                        android:spacing="10dp" />
-                </LinearLayout>
-
-                <LinearLayout style="@style/LinearLayout.Horizontal" >
-
-                    <ImageSwitcher
-                        android:id="@+id/checkin_image_switcher"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- personal information -->
-
-            <LinearLayout style="@style/LinearLayout.Vertical" >
-
-                <TextView
-                    android:id="@+id/personal_information"
-                    style="@style/TextView.Label"
-                    android:text="@string/personal_information" />
-
-                <TextView
-                    android:id="@+id/checkin_lbl_firstname"
-                    style="@style/TextView.Label"
-                    android:text="@string/txt_first_name" />
-
-                <EditText
-                    android:id="@+id/checkin_firstname"
-                    style="@style/EditText.Name"
-                    android:hint="@string/checkin_enter_firstname_hint" />
-
-                <TextView
-                    android:id="@+id/checkin_lbl_lastname"
-                    style="@style/TextView.Label"
-                    android:text="@string/txt_last_name" />
-
-                <EditText
-                    android:id="@+id/checkin_lastname"
-                    style="@style/EditText.Name"
-                    android:hint="@string/checkin_enter_lastname_hint" />
-
-                <TextView
-                    android:id="@+id/txt_lbl_email"
-                    style="@style/TextView.Label"
-                    android:text="@string/txt_email" />
-
-                <EditText
-                    android:id="@+id/checkin_email"
-                    style="@style/EditText.Email"
-                    android:hint="@string/checkin_enter_email_hint" />
-            </LinearLayout>
-
-            <!-- Delete layout starts. -->
 
             <LinearLayout style="@style/LinearLayout.Horizontal" >
 
-                <Button
-                    android:id="@+id/delete_checkin"
-                    style="@style/Button.Delete" />
+                <ImageSwitcher
+                    android:id="@+id/checkin_image_switcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
-            <!-- Delete layout ends. -->
-
         </LinearLayout>
-    </ScrollView>
 
-</LinearLayout>
+        <!-- personal information -->
+
+        <LinearLayout style="@style/LinearLayout.Vertical" >
+
+            <TextView
+                android:id="@+id/personal_information"
+                style="@style/TextView.Label"
+                android:text="@string/personal_information" />
+
+            <TextView
+                android:id="@+id/checkin_lbl_firstname"
+                style="@style/TextView.Label"
+                android:text="@string/txt_first_name" />
+
+            <EditText
+                android:id="@+id/checkin_firstname"
+                style="@style/EditText.Name"
+                android:hint="@string/checkin_enter_firstname_hint" />
+
+            <TextView
+                android:id="@+id/checkin_lbl_lastname"
+                style="@style/TextView.Label"
+                android:text="@string/txt_last_name" />
+
+            <EditText
+                android:id="@+id/checkin_lastname"
+                style="@style/EditText.Name"
+                android:hint="@string/checkin_enter_lastname_hint" />
+
+            <TextView
+                android:id="@+id/txt_lbl_email"
+                style="@style/TextView.Label"
+                android:text="@string/txt_email" />
+
+            <EditText
+                android:id="@+id/checkin_email"
+                style="@style/EditText.Email"
+                android:hint="@string/checkin_enter_email_hint" />
+        </LinearLayout>
+
+        <!-- Delete layout starts. -->
+
+        <LinearLayout style="@style/LinearLayout.Horizontal" >
+
+            <Button
+                android:id="@+id/delete_checkin"
+                style="@style/Button.Delete" />
+        </LinearLayout>
+        <!-- Delete layout ends. -->
+
+    </LinearLayout>
+
+</ScrollView>

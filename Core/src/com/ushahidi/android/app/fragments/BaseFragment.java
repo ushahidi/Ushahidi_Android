@@ -26,13 +26,12 @@ public class BaseFragment extends Fragment {
      * @param menu menu resource id
      */
     protected BaseFragment(int menu) {
-
         this.menu = menu;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    	super.onCreate(savedInstanceState);
         log("onCreate");
 
         setHasOptionsMenu(true);
