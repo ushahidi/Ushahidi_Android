@@ -48,11 +48,11 @@ public class CheckinMapBallonOverlayView<Item extends OverlayItem> extends
 	}
 
 	public static void viewCheckins(final int id, final int filterUserId) {
-		launchViewReport(id, filterUserId);
+		launchViewCheckin(id, filterUserId);
 
 		readMore.setOnClickListener(new OnClickListener() {
 			public void onClick(android.view.View view) {
-				launchViewReport(id, filterUserId);
+				launchViewCheckin(id, filterUserId);
 			}
 		});
 
@@ -67,7 +67,7 @@ public class CheckinMapBallonOverlayView<Item extends OverlayItem> extends
 
 	}
 
-	private static void launchViewReport(int position, final int filterUserId) {
+	private static void launchViewCheckin(int position, final int filterUserId) {
 		Intent i = new Intent(mActivity, ViewCheckinActivity.class);
 		i.putExtra("id", position);
 		if (filterUserId > 0) {

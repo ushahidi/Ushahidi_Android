@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.ushahidi.android.app.MainApplication;
@@ -45,6 +47,14 @@ public class BaseFragment extends Fragment {
         }
 
     }
+    
+    @Override
+	public android.view.View onCreateView(LayoutInflater inflater,
+			ViewGroup container, Bundle savedInstanceState) {
+		android.view.View root = null;
+		
+		return root;
+	}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

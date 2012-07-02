@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- dimensions for upload photo preview -->
     <dimen name="preview_photo_width">75dp</dimen>
     <dimen name="preview_photo_height">75dp</dimen>
