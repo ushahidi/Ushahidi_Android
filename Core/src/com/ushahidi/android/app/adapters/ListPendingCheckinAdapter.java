@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.entities.Checkin;
 import com.ushahidi.android.app.models.ListCheckinModel;
+import com.ushahidi.android.app.util.ImageViewWorker;
 
 public class ListPendingCheckinAdapter extends
 		BaseListAdapter<ListCheckinModel> implements Filterable {
@@ -104,7 +105,14 @@ public class ListPendingCheckinAdapter extends
 			row.setTag(widgets);
 		}
 
-		widgets.thumbnail.setImageDrawable(items.get(position).getThumbnail());
+		if (getItem(position).getThumbnail() == null) {
+
+			widgets.thumbnail.setImageResource(R.drawable.report_icon);
+					
+		} else {
+			getPhoto(getItem(position).getThumbnail(), widgets.thumbnail);
+
+		}
 
 		widgets.title.setText(items.get(position).getUsername());
 		widgets.date.setText(items.get(position).getDate());
@@ -112,6 +120,13 @@ public class ListPendingCheckinAdapter extends
 		widgets.arrow.setImageDrawable(context.getResources().getDrawable(
 				R.drawable.arrow));
 		return row;
+	}
+	
+	public void getPhoto(String fileName, ImageView imageView) {
+		ImageViewWorker imageWorker = new ImageViewWorker(context);
+		imageWorker.setImageFadeIn(true);
+		imageWorker.loadImage(fileName, imageView, true, 0);
+	
 	}
 
 	// Implements fitering pattern for the list items.

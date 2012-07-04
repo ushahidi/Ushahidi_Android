@@ -87,7 +87,7 @@
 
     <!--GOOGLE MAPS API-->
     <!--Ushahidi original key  -->
-    <string name="google_map_api_key_dev">02cv5Q8Rob0DjTbALxI3B9TpCf4SDUK6--VtGlQ</string> 
-    <string name="google_map_api_key">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string>
+    <string name="google_map_api_key">02cv5Q8Rob0DjTbALxI3B9TpCf4SDUK6--VtGlQ</string> 
+    <string name="google_map_api_key_pro">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string>
 	
 </resources>

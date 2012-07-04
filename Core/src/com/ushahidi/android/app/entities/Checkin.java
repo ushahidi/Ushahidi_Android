@@ -22,8 +22,6 @@ package com.ushahidi.android.app.entities;
 
 import com.ushahidi.android.app.models.Model;
 
-import android.graphics.drawable.Drawable;
-
 /**
  * @author eyedol
  */
@@ -49,7 +47,7 @@ public class Checkin extends Model implements IDbEntity {
 
 	private String locationLongitude;
 
-	private Drawable thumbnail;
+	private String thumbnail;
 
 	/*
 	 * (non-Javadoc)
@@ -135,11 +133,11 @@ public class Checkin extends Model implements IDbEntity {
 		this.locationLongitude = locationLongitude;
 	}
 
-	public void setThumbnail(Drawable thumbnail) {
+	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
 	}
 
-	public Drawable getThumbnail() {
+	public String getThumbnail() {
 		return this.thumbnail;
 	}
 

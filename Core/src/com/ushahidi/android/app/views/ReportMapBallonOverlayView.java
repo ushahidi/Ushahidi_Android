@@ -12,6 +12,7 @@ import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.ReportMapOverlayItem;
 import com.ushahidi.android.app.ui.phone.ViewReportActivity;
+import com.ushahidi.android.app.util.ImageViewWorker;
 
 public class ReportMapBallonOverlayView<Item extends OverlayItem> extends
 		BalloonOverlayView<ReportMapOverlayItem> {
@@ -63,7 +64,8 @@ public class ReportMapBallonOverlayView<Item extends OverlayItem> extends
 
 		title.setText(item.getTitle());
 		snippet.setText(item.getSnippet());
-		image.setImageDrawable(item.getImage());
+		getPhoto(item.getImage(), image);
+		//image.setImageDrawable(item.getImage());
 
 	}
 
@@ -81,6 +83,17 @@ public class ReportMapBallonOverlayView<Item extends OverlayItem> extends
 		mActivity.startActivityForResult(i, 0);
 		mActivity
 				.overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+
+	}
+	
+	private void getPhoto(String fileName, ImageView imageView) {
+		ImageViewWorker imageWorker = new ImageViewWorker(mActivity);
+		imageWorker.setImageFadeIn(true);
+		imageWorker.loadImage(fileName, imageView, true, 0);
+		/*
+		 * return ImageManager.getDrawables(context, fileName,
+		 * Util.getScreenWidth(context));
+		 */
 
 	}
 

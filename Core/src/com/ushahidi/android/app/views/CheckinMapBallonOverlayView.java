@@ -12,6 +12,7 @@ import com.google.android.maps.OverlayItem;
 import com.ushahidi.android.app.CheckinMapOverlayItem;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.ui.phone.ViewCheckinActivity;
+import com.ushahidi.android.app.util.ImageViewWorker;
 
 public class CheckinMapBallonOverlayView<Item extends OverlayItem> extends
 		BalloonOverlayView<CheckinMapOverlayItem> {
@@ -63,8 +64,7 @@ public class CheckinMapBallonOverlayView<Item extends OverlayItem> extends
 
 		title.setText(item.getTitle());
 		snippet.setText(item.getSnippet());
-		image.setImageDrawable(item.getImage());
-
+		getPhoto(item.getImage(), image);
 	}
 
 	private static void launchViewCheckin(int position, final int filterUserId) {
@@ -78,6 +78,17 @@ public class CheckinMapBallonOverlayView<Item extends OverlayItem> extends
 		mActivity.startActivityForResult(i, 0);
 		mActivity
 				.overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+
+	}
+	
+	private void getPhoto(String fileName, ImageView imageView) {
+		ImageViewWorker imageWorker = new ImageViewWorker(mActivity);
+		imageWorker.setImageFadeIn(true);
+		imageWorker.loadImage(fileName, imageView, true, 0);
+		/*
+		 * return ImageManager.getDrawables(context, fileName,
+		 * Util.getScreenWidth(context));
+		 */
 
 	}
 

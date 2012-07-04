@@ -181,9 +181,10 @@ public class ListPhotoModel extends Model {
 		return 0;
 	}
 
-	public Drawable getImage(Context context, String path) {
-		return ImageManager.getDrawables(context, path,
-				Util.getScreenWidth(context));
+	public String getImage(Context context, String path) {
+		return path;
+		//return ImageManager.getDrawables(context, path,
+			//	Util.getScreenWidth(context));
 	}
 
 	@Override

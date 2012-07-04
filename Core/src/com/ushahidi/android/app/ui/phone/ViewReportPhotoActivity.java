@@ -30,6 +30,7 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageSwitcher;
 import android.widget.ViewSwitcher;
 
 import com.ushahidi.android.app.R;
@@ -37,6 +38,9 @@ import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.activities.BaseViewActivity;
 import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.models.ListPhotoModel;
+import com.ushahidi.android.app.util.ImageSwitchWorker;
+import com.ushahidi.android.app.util.ImageViewWorker;
+import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ReportPhotoView;
 
 /**
@@ -106,8 +110,9 @@ public class ViewReportPhotoActivity extends
 		if (photos != null) {
 			position++;
 			if (!(position > (photos.size() - 1))) {
-				view.imageSwitcher.setImageDrawable(photo.getImage(this, photos
-						.get(position).getPhoto()));
+				setImage(view.imageSwitcher);
+				//view.imageSwitcher.setImageDrawable(photo.getImage(this, photos
+					//.get(position).getPhoto()));
 				view.goNext();
 				int page = position;
 				this.setTitle(page + 1);
@@ -122,9 +127,9 @@ public class ViewReportPhotoActivity extends
 		if (photos != null) {
 			position--;
 			if ((position < (photos.size() - 1)) && (position != -1)) {
-
-				view.imageSwitcher.setImageDrawable(photo.getImage(this, photos
-						.get(position).getPhoto()));
+				setImage(view.imageSwitcher);
+				//view.imageSwitcher.setImageDrawable(photo.getImage(this, photos
+					//	.get(position).getPhoto()));
 				view.goPrevious();
 
 				int page = position;
@@ -151,8 +156,9 @@ public class ViewReportPhotoActivity extends
 		gestureDetector = new GestureDetector(new GestureDetectorListener());
 		if (photos != null && photos.size() > 0) {
 			fileName = photos.get(position).getPhoto();
-			view.imageSwitcher.setImageDrawable(photo.getImage(this, photos
-					.get(position).getPhoto()));
+			setImage(view.imageSwitcher);
+			//view.imageSwitcher.setImageDrawable(photo.getImage(this, photos
+				//	.get(position).getPhoto()));
 
 			int page = position;
 			this.setTitle(page + 1);
@@ -240,6 +246,12 @@ public class ViewReportPhotoActivity extends
 			}
 			return false;
 		}
+	}
+	
+	private void setImage(ImageSwitcher imageSwitcher) {
+		ImageSwitchWorker imageWorker = new ImageSwitchWorker(this);
+		imageWorker.setImageFadeIn(true);
+		imageWorker.loadImage(fileName, imageSwitcher, true, 0);
 	}
 
 }

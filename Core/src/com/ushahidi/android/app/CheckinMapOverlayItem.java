@@ -7,25 +7,25 @@ import com.google.android.maps.OverlayItem;
 
 public class CheckinMapOverlayItem extends OverlayItem {
 
-	protected Drawable mImage;
+	protected String mImage;
 
 	protected long mId;
 
 	protected int  mFilterUserId;
 
 	public CheckinMapOverlayItem(GeoPoint point, String title, String snippet,
-			Drawable image, long id, int filterUserId) {
+			String image, long id, int filterUserId) {
 		super(point, title, snippet);
 		this.mImage = image;
 		this.mId = id;
 		this. mFilterUserId = filterUserId;
 	}
 
-	public Drawable getImage() {
+	public String getImage() {
 		return mImage;
 	}
 
-	public void setImage(Drawable image) {
+	public void setImage(String image) {
 		this.mImage = image;
 	}
 

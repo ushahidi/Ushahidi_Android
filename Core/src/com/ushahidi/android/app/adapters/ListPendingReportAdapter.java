@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.entities.Category;
 import com.ushahidi.android.app.models.ListReportModel;
+import com.ushahidi.android.app.util.ImageViewWorker;
 import com.ushahidi.android.app.util.Util;
 
 public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
@@ -31,7 +32,7 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 			this.date = (TextView) view.findViewById(R.id.report_date);
 			this.iLocation = (TextView) view.findViewById(R.id.report_location);
 			this.categories = (TextView) view
-					.findViewById(R.id.report_categories);	
+					.findViewById(R.id.report_categories);
 			this.status = (TextView) view.findViewById(R.id.report_status);
 			this.arrow = (ImageView) view.findViewById(R.id.report_arrow);
 		}
@@ -62,7 +63,7 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 
 	public ListPendingReportAdapter(Context context) {
 		super(context);
-	
+
 		colors = new int[] { R.drawable.odd_row_rounded_corners,
 				R.drawable.even_row_rounded_corners };
 	}
@@ -77,7 +78,7 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 		}
 
 	}
-	
+
 	public List<ListReportModel> pendingReports() {
 		mListReportModel = new ListReportModel();
 		final boolean loaded = mListReportModel.loadPendingReports();
@@ -114,7 +115,7 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 		}
 		return categories.toString();
 	}
-	
+
 	public String fetchCategoriesId(int reportId) {
 		mListReportModel = new ListReportModel();
 		StringBuilder categories = new StringBuilder();
@@ -147,17 +148,22 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 			row.setTag(widgets);
 		}
 
-		widgets.thumbnail.setImageDrawable(getItem(position).getThumbnail());
-		widgets.title.setText(getItem(position)
-				.getTitle());
+		if (getItem(position).getThumbnail() == null) {
+			widgets.thumbnail.setImageResource(R.drawable.report_icon);
+		} else {
+			getPhoto(getItem(position).getThumbnail(), widgets.thumbnail);
+
+		}
+		
+		widgets.title.setText(getItem(position).getTitle());
 		widgets.date.setText(getItem(position).getDate());
 		widgets.description.setText(Util.capitalizeString(getItem(position)
 				.getDesc()));
 
 		// FIXME: do this properly.
-		widgets.categories.setText(Util
-				.capitalizeString(Util.limitString(fetchCategories((int) getItem(position).getId()), 100)));
-		
+		widgets.categories.setText(Util.capitalizeString(Util.limitString(
+				fetchCategories((int) getItem(position).getId()), 100)));
+
 		widgets.iLocation.setText(Util.capitalizeString(getItem(position)
 				.getLocation()));
 		// change the status color
@@ -177,6 +183,17 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 		widgets.arrow.setImageDrawable(getItem(position).getArrow());
 
 		return row;
+	}
+
+	public void getPhoto(String fileName, ImageView imageView) {
+		ImageViewWorker imageWorker = new ImageViewWorker(context);
+		imageWorker.setImageFadeIn(true);
+		imageWorker.loadImage(fileName, imageView, true, 0);
+		/*
+		 * return ImageManager.getDrawables(context, fileName,
+		 * Util.getScreenWidth(context));
+		 */
+
 	}
 
 	// Implements fitering pattern for the list items.

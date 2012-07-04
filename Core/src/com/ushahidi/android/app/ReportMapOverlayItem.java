@@ -7,25 +7,25 @@ import com.google.android.maps.OverlayItem;
 
 public class ReportMapOverlayItem extends OverlayItem {
 
-	protected Drawable mImage;
+	protected String mImage;
 
 	protected long mId;
 
 	protected String mFilterCategory;
 
 	public ReportMapOverlayItem(GeoPoint point, String title, String snippet,
-			Drawable image, long id, String filterCategory) {
+			String image, long id, String filterCategory) {
 		super(point, title, snippet);
 		this.mImage = image;
 		this.mId = id;
 		this.mFilterCategory = filterCategory;
 	}
 
-	public Drawable getImage() {
+	public String getImage() {
 		return mImage;
 	}
 
-	public void setImage(Drawable image) {
+	public void setImage(String image) {
 		this.mImage = image;
 	}
 

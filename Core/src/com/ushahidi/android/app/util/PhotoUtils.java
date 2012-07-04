@@ -129,10 +129,13 @@ public class PhotoUtils {
 						.getColumnIndex(columns[0]));
 				int orientation = cursor.getInt(cursor
 						.getColumnIndex(columns[1]));
-				Bitmap original = BitmapFactory.decodeFile(filePath);
-				if (original != null) {
-					Bitmap scaled = scaleBitmap(original);
-					original.recycle();
+
+				final BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inJustDecodeBounds = true;
+				BitmapFactory.decodeFile(filePath, options);
+
+				if (options != null) {
+					Bitmap scaled = scaleBitmap(options, filePath);
 					if (orientation == 0
 							&& scaled.getWidth() < scaled.getHeight()) {
 						Log.i("XXX", String.format(
@@ -160,15 +163,17 @@ public class PhotoUtils {
 
 	public static Bitmap getCameraPhoto(Activity activity, Uri uri) {
 		if (uri != null) {
-			Bitmap original = BitmapFactory.decodeFile(uri.getPath());
-			if (original != null) {
-				Log.i("XXX", String.format("ORIGINAL %dx%d",
-						original.getWidth(), original.getHeight()));
-				Bitmap scaled = scaleBitmap(original);
+			final BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			BitmapFactory.decodeFile(uri.getPath(), options);
+
+			if (options != null) {
+				Log.i("XXX", String.format("ORIGINAL %dx%d", options.outWidth,
+						options.outHeight));
+				Bitmap scaled = scaleBitmap(options, uri.getPath());
 				if (scaled != null) {
 					Log.i("XXX", String.format("SCALED %dx%d",
 							scaled.getWidth(), scaled.getHeight()));
-					original.recycle();
 					if (getScreenOrientation(activity) == Configuration.ORIENTATION_PORTRAIT
 							&& scaled.getWidth() > scaled.getHeight()) {
 						Bitmap rotated = rotatePhoto(scaled, 90);
@@ -177,7 +182,7 @@ public class PhotoUtils {
 					}
 					return scaled;
 				}
-				return original;
+				// return original;
 			}
 		}
 		return null;
@@ -206,31 +211,41 @@ public class PhotoUtils {
 				bitmap.getHeight(), matrix, true);
 	}
 
-	public static Bitmap scaleBitmap(Bitmap original) {
-		if (original != null) {
-			float ratio = (float) original.getHeight()
-					/ (float) original.getWidth();
+	public static synchronized Bitmap scaleBitmap(BitmapFactory.Options options,
+			String filePath) {
+
+		BitmapFactory.decodeFile(filePath, options);
+
+		if (options != null) {
+			float ratio = (float) options.outHeight / (float) options.outWidth;
 			int width = Preferences.photoWidth > 0 ? Preferences.photoWidth
 					: 500;
 			Log.i(CLASS_TAG, "Scaling image to " + width + " x " + ratio);
-			Bitmap scaled = Bitmap.createScaledBitmap(original, width,
-					(int) (width * ratio), true);
-			original.recycle();
-			return scaled;
+			options.inSampleSize = calculateInSampleSize(options, width,
+					(int) (width * ratio));
+			options.inJustDecodeBounds = false;
+			return BitmapFactory.decodeFile(filePath);
+
 		}
 		return null;
 	}
 
-	public static Bitmap scaleBitmapByWidth(Bitmap original, int width) {
-		if (original != null) {
-			float ratio = (float) original.getHeight()
-					/ (float) original.getWidth();
+	public static synchronized Bitmap scaleBitmapByWidth(BitmapFactory.Options options,
+			int width, String filePath) {
+		// check dimensions
+
+		if (options != null) {
+			float ratio = (float) options.outHeight / (float) options.outWidth;
+			// int w = Preferences.photoWidth > 0 ? Preferences.photoWidth :
+			// 500;
+			Log.i(CLASS_TAG, "Scaling image to " + width + " x " + ratio);
 			int w = width > 0 ? width : 500;
-			Log.i(CLASS_TAG, "Scaling image to " + w + " x " + ratio);
-			Bitmap scaled = Bitmap.createScaledBitmap(original, w,
-					(int) (w * ratio), true);
-			original.recycle();
-			return scaled;
+			// calculate inSampleSize
+			options.inSampleSize = calculateInSampleSize(options, w,
+					(int) (w * ratio));
+			options.inJustDecodeBounds = false;
+			return BitmapFactory.decodeFile(filePath);
+
 		}
 		return null;
 	}
@@ -305,6 +320,41 @@ public class PhotoUtils {
 		canvas.drawBitmap(input, 0, 0, paint);
 
 		return output;
+	}
+
+	private static int calculateInSampleSize(BitmapFactory.Options options,
+			int reqWidth, int reqHeight) {
+
+		// raw height and weight of image
+		final int width = options.outWidth;
+		final int height = options.outHeight;
+		int inSampleSize = 1;
+		Log.i("XXX", String.format("ORIGINAL %dx%d", reqWidth, reqHeight));
+		if (height > reqHeight || width > reqWidth) {
+			if (width > height) {
+				inSampleSize = Math.round((float) height / (float) reqHeight);
+			} else {
+				inSampleSize = Math.round((float) width / (float) reqWidth);
+			}
+
+			// This offers some additional logic in case the image has a strange
+			// aspect ratio. For example, a panorama may have a much larger
+			// width than height. In these cases the total pixels might still
+			// end up being too large to fit comfortably in memory, so we should
+			// be more aggressive with sample down the image (=larger
+			// inSampleSize).
+
+			final float totalPixels = width * height;
+
+			// Anything more than 2x the requested pixels we'll sample down
+			// further.
+			final float totalReqPixelsCap = reqWidth * reqHeight * 2;
+
+			while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
+				inSampleSize++;
+			}
+		}
+		return inSampleSize;
 	}
 
 }

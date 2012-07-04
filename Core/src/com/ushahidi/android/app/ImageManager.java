@@ -28,10 +28,13 @@ import java.io.IOException;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
+import android.util.Log;
 
 import com.ushahidi.android.app.net.MainHttpClient;
 import com.ushahidi.android.app.util.PhotoUtils;
@@ -45,13 +48,30 @@ public class ImageManager {
 
 	public static Drawable getDrawables(Context context, String fileName) {
 
-		Bitmap original = BitmapFactory.decodeFile(getPhotoPath(context)
-				+ fileName);
-		if (original != null) {
-			// scale image
-			Bitmap scaled = PhotoUtils.scaleBitmap(original);
-			return new FastBitmapDrawable(scaled);
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
 
+		if (options != null) {
+			// scale image
+			Bitmap scaled = PhotoUtils.scaleBitmap(options,
+					getPhotoPath(context) + fileName);
+			return new FastBitmapDrawable(scaled);
+		}
+		return null;
+
+	}
+
+	public static Bitmap getBitmaps(Context context, String fileName) {
+
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
+		Log.i("ImageManager","Bitmaps "+getPhotoPath(context) + fileName);
+		if (options != null) {
+			// scale image
+			return PhotoUtils.scaleBitmap(options, getPhotoPath(context)
+					+ fileName);
 		}
 		return null;
 
@@ -66,52 +86,79 @@ public class ImageManager {
 	 */
 	public static Drawable getDrawables2(Context context, String pathfileName) {
 
-		Bitmap original = BitmapFactory.decodeFile(getPhotoPath(context, "/"
-				+ pathfileName));
-		if (original != null) {
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(
+				getPhotoPath(context)
+						+ getPhotoPath(context, "/" + pathfileName), options);
+
+		if (options != null) {
 			// scale image
-			Bitmap scaled = PhotoUtils.scaleBitmap(original);
+			Bitmap scaled = PhotoUtils.scaleBitmap(options,
+					getPhotoPath(context, "/" + pathfileName));
 			return new FastBitmapDrawable(scaled);
 
 		}
 		return null;
-
 	}
 
 	public static Drawable getDrawables(Context context, String fileName,
 			int width) {
-		Bitmap original = BitmapFactory.decodeFile(getPhotoPath(context)
-				+ fileName);
-		if (original != null) {
+
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
+
+		if (options != null) {
 			// scale image
-			Bitmap scaled = PhotoUtils.scaleBitmapByWidth(original, width);
+			Bitmap scaled = PhotoUtils.scaleBitmapByWidth(options, width,
+					getPhotoPath(context) + fileName);
 			return new FastBitmapDrawable(scaled);
 
+		}
+		return null;
+	}
+
+	public static Bitmap getBitmaps(Context context, String fileName, int width) {
+
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		Log.i("ImageManager","Bitmaps "+getPhotoPath(context) + fileName);
+		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
+
+		if (options != null) {
+			// scale image
+			return PhotoUtils.scaleBitmapByWidth(options, width,
+					getPhotoPath(context) + fileName);
 		}
 		return null;
 	}
 
 	public static Drawable getPendingDrawables(Context context, String fileName) {
 
-		Bitmap original = BitmapFactory.decodeFile(getPendingPhotoPath(context)
-				+ fileName);
-		if (original != null) {
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
+
+		if (options != null) {
 			// scale image
-			Bitmap scaled = PhotoUtils.scaleBitmap(original);
+			Bitmap scaled = PhotoUtils.scaleBitmap(options, fileName);
 			return new FastBitmapDrawable(scaled);
 
 		}
 		return null;
-
 	}
 
 	public static Drawable getPendingDrawables(Context context,
 			String fileName, int width) {
-		Bitmap original = BitmapFactory.decodeFile(getPendingPhotoPath(context)
-				+ fileName);
-		if (original != null) {
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
+
+		if (options != null) {
 			// scale image
-			Bitmap scaled = PhotoUtils.scaleBitmapByWidth(original, width);
+			Bitmap scaled = PhotoUtils.scaleBitmapByWidth(options, width,
+					fileName);
 			return new FastBitmapDrawable(scaled);
 
 		}
@@ -127,6 +174,17 @@ public class ImageManager {
 			Bitmap scaled = PhotoUtils.scaleThumbnail(original);
 			return new BitmapDrawable(scaled);
 
+		}
+		return null;
+	}
+	
+	public static Bitmap getBitmapThumbnails(Context context, String fileName) {
+		// get image
+		Bitmap original = BitmapFactory.decodeFile(getPhotoPath(context)
+				+ fileName);
+		if (original != null) {
+			// scale image
+			return PhotoUtils.scaleThumbnail(original);
 		}
 		return null;
 	}
@@ -179,11 +237,24 @@ public class ImageManager {
 		}
 
 	}
+	
+	public static Bitmap drawableToBitmap (Drawable drawable) {
+	    if (drawable instanceof BitmapDrawable) {
+	        return ((BitmapDrawable)drawable).getBitmap();
+	    }
+
+	    Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Config.ARGB_8888);
+	    Canvas canvas = new Canvas(bitmap); 
+	    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+	    drawable.draw(canvas);
+
+	    return bitmap;
+	}
 
 	public static String getSavedPhotoPath(Context context, String folder) {
 		// create photo directory if it doesn't exist
 		File path = new File(Environment.getExternalStorageDirectory(),
-				String.format("%s%s%s", context.getPackageName(), "/", folder) );
+				String.format("%s%s%s", context.getPackageName(), "/", folder));
 		if (!path.exists()) {
 			// create path if it doesn't exist
 			if (createDirectory(context)) {
@@ -271,7 +342,7 @@ public class ImageManager {
 			deleteFiles(path);
 		}
 	}
-	
+
 	public static void deletePendingImages(Context context) {
 		if (isExternalStoragePresent()) {
 			File path = new File(Environment.getExternalStorageDirectory(),

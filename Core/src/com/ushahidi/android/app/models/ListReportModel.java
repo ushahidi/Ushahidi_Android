@@ -28,7 +28,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 
-import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IMediaSchema;
@@ -57,7 +56,7 @@ public class ListReportModel extends Model {
 
 	private String status;
 
-	private Drawable thumbnail;
+	private String thumbnail;
 
 	private Drawable arrow;
 
@@ -75,11 +74,11 @@ public class ListReportModel extends Model {
 
 	private String longitude;
 
-	public void setThumbnail(Drawable thumbnail) {
+	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
 	}
 
-	public Drawable getThumbnail() {
+	public String getThumbnail() {
 		return this.thumbnail;
 	}
 
@@ -241,7 +240,7 @@ public class ListReportModel extends Model {
 
 	public List<ListReportModel> getReports(Context context) {
 		reportModel = new ArrayList<ListReportModel>();
-		Drawable d = null;
+		String d = null;
 		if (mReports != null && mReports.size() > 0) {
 			for (Report item : mReports) {
 				ListReportModel listReportModel = new ListReportModel();
@@ -267,23 +266,17 @@ public class ListReportModel extends Model {
 						R.drawable.arrow));
 				listReportModel.setCategories(item.getCategories());
 				listReportModel.setMedia(item.getMedia());
-				
+
 				if (item.getReportId() == 0) {
 					// get pending reports images
-					d = getImage(context, item.getDbId());
+					d = getImage(item.getDbId());
 
 				} else {
 					// get fetched reports images
-					d = getImage(context, item.getReportId());
+					d = getImage(item.getReportId());
 				}
+				listReportModel.setThumbnail(d);
 
-				if (d != null) {
-
-					listReportModel.setThumbnail(d);
-				} else {
-					listReportModel.setThumbnail(context.getResources()
-							.getDrawable(R.drawable.report_icon));
-				}
 				reportModel.add(listReportModel);
 			}
 
@@ -301,66 +294,71 @@ public class ListReportModel extends Model {
 		return Database.mCategoryDao.fetchCategoryByReportId(reportId);
 	}
 
-	private Drawable getImage(Context context, int reportId) {
-		
+	private String getImage(int reportId) {
+
 		List<Media> sMedia = Database.mMediaDao.fetchMedia(
 				IMediaSchema.REPORT_ID, reportId, IMediaSchema.IMAGE, 1);
 		if (sMedia != null && sMedia.size() > 0) {
-			return ImageManager.getThumbnails(context, sMedia.get(0).getLink());
+			return sMedia.get(0).getLink();
+			// return ImageManager.getThumbnails(context,
+			// sMedia.get(0).getLink());
 
 		}
-		return context.getResources().getDrawable(R.drawable.report_icon);
+		// return context.getResources().getDrawable(R.drawable.report_icon);
+		return null;
 	}
 
 	/**
 	 * Deletes all fetched reports.
 	 * 
-	 * @param reportId The id of the report to be deleted.
+	 * @param reportId
+	 *            The id of the report to be deleted.
 	 * 
 	 * @return boolean
 	 */
 	public boolean deleteAllFetchedReport(int reportId) {
-		
+
 		// delete fetched reports
-		if(Database.mReportDao.deleteReportById(reportId) )  {
-			Log.i("ListReportModel","Report deleted");
+		if (Database.mReportDao.deleteReportById(reportId)) {
+			Log.i("ListReportModel", "Report deleted");
 		}
 
 		// delete categories
-		if( Database.mReportCategoryDao.deleteReportCategoryByReportId(reportId) ) {
-			Log.i("Report","Report deleted");
+		if (Database.mReportCategoryDao
+				.deleteReportCategoryByReportId(reportId)) {
+			Log.i("Report", "Report deleted");
 		}
-		
-		if( Database.mCategoryDao.deleteAllCategories() ) {
-			Log.i("Category: ","Category deleted");
+
+		if (Database.mCategoryDao.deleteAllCategories()) {
+			Log.i("Category: ", "Category deleted");
 		}
 
 		// delete media
-		if(Database.mMediaDao.deleteReportPhoto(reportId) ) {
-			Log.i("Media","Media deleted");
+		if (Database.mMediaDao.deleteReportPhoto(reportId)) {
+			Log.i("Media", "Media deleted");
 		}
 		return true;
 	}
-	
+
 	public boolean deleteReport() {
 		// delete fetched reports
-				if(Database.mReportDao.deleteAllReport())  {
-					Log.i("ListReportModel","Report deleted");
-				}
+		if (Database.mReportDao.deleteAllReport()) {
+			Log.i("ListReportModel", "Report deleted");
+		}
 
-				// delete categories
-				if( Database.mReportCategoryDao.deleteAllReportCategory()) {
-					Log.i("Report","Report deleted");
-				}
-				
-				if( Database.mCategoryDao.deleteAllCategories() ) {
-					Log.i("Category: ","Category deleted");
-				}
+		// delete categories
+		if (Database.mReportCategoryDao.deleteAllReportCategory()) {
+			Log.i("Report", "Report deleted");
+		}
 
-				// delete media
-				if(Database.mMediaDao.deleteAllMedia()) {
-					Log.i("Media","Media deleted");
-				}
-				return true;
+		if (Database.mCategoryDao.deleteAllCategories()) {
+			Log.i("Category: ", "Category deleted");
+		}
+
+		// delete media
+		if (Database.mMediaDao.deleteAllMedia()) {
+			Log.i("Media", "Media deleted");
+		}
+		return true;
 	}
 }

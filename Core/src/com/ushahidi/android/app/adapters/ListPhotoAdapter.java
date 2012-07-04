@@ -33,6 +33,7 @@ import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.models.ListPhotoModel;
+import com.ushahidi.android.app.util.ImageViewWorker;
 import com.ushahidi.android.app.util.Util;
 
 /**
@@ -84,7 +85,11 @@ public class ListPhotoAdapter extends BaseListAdapter<Photo> {
 
 		// FIXME: only show the first item for now. In the future only get one
 		// item
-		widgets.photo.setImageDrawable(getPhoto(getItem(position).getPhoto()));
+		//widgets.photo.setImageDrawable(getPhoto(getItem(position).getPhoto()));
+		//set image 0262109717 -- 
+		// TransID: 912070302503 -- to # 0267123407
+		getPhoto(getItem(position).getPhoto(), widgets.photo);
+		//widgets.photo.setImageBitmap(bm);
 		widgets.total.setText(context.getResources().getQuantityString(
 				R.plurals.no_of_images, totalPhotos, totalPhotos));
 		return row;
@@ -122,9 +127,12 @@ public class ListPhotoAdapter extends BaseListAdapter<Photo> {
 		}
 	}
 
-	public Drawable getPhoto(String fileName) {
-		return ImageManager.getDrawables(context, fileName,
-				Util.getScreenWidth(context));
+	public void getPhoto(String fileName, ImageView imageView) {
+		ImageViewWorker imageWorker = new ImageViewWorker(context);
+		imageWorker.setImageFadeIn(true);
+		imageWorker.loadImage(fileName, imageView, true, 0);
+		/*return ImageManager.getDrawables(context, fileName,
+				Util.getScreenWidth(context));*/
 
 	}
 

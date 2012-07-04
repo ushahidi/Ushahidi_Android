@@ -17,15 +17,14 @@
     android:layout_height="wrap_content"
     android:padding="5dip" >
 
-    <com.ushahidi.android.app.helpers.RoundedCornerImageView
+    <ImageView
         android:id="@+id/report_thumbnail"
         android:layout_width="75dip"
         android:layout_height="75dip"
         android:layout_alignParentLeft="true"
         android:adjustViewBounds="true"
-        app:cornerRadius="5dip"
-        android:paddingRight="5dip"
-        android:paddingLeft="5dip" />
+        android:paddingLeft="5dip"
+        android:paddingRight="5dip" />
 
     <TextView
         android:id="@+id/report_title"
@@ -34,8 +33,8 @@
         android:layout_toLeftOf="@+id/report_arrow"
         android:layout_toRightOf="@+id/report_thumbnail"
         android:ellipsize="end"
-        android:padding="3dip"
         android:lines="1"
+        android:padding="3dip"
         android:textColor="@color/date_color"
         android:textStyle="bold" />
 
@@ -47,9 +46,9 @@
         android:layout_toLeftOf="@+id/report_arrow"
         android:layout_toRightOf="@+id/report_thumbnail"
         android:ellipsize="end"
-        android:padding="3dip"
         android:lines="1"
-        android:textColor="@color/date_color"/>
+        android:padding="3dip"
+        android:textColor="@color/date_color" />
 
     <TextView
         android:id="@+id/report_location"
@@ -76,9 +75,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/report_location"
         android:layout_toRightOf="@+id/report_thumbnail"
-        android:padding="5dip"
         android:ellipsize="end"
         android:lines="1"
+        android:padding="5dip"
         android:textColor="@color/date_color" />
 
     <TextView
@@ -87,8 +86,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/report_location"
-        android:textStyle="bold"
-        android:padding="5dip"/>
+        android:padding="5dip"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/report_arrow"

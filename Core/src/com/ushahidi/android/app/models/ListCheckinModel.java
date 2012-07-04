@@ -24,10 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IMediaSchema;
@@ -80,7 +78,7 @@ public class ListCheckinModel extends Checkin {
 
 	public List<ListCheckinModel> getCheckins(Context context) {
 		final List<ListCheckinModel> checkins = new ArrayList<ListCheckinModel>();
-		Drawable d = null;
+		String d = null;
 
 		if (mCheckins != null && mCheckins.size() > 0) {
 			for (Checkin item : mCheckins) {
@@ -106,28 +104,22 @@ public class ListCheckinModel extends Checkin {
 					d = getImage(context, item.getCheckinId());
 				}
 
-				if (d != null) {
-
-					listCheckin.setThumbnail(d);
-				} else {
-					listCheckin.setThumbnail(context.getResources()
-							.getDrawable(R.drawable.report_icon));
-				}
-
+				listCheckin.setThumbnail(d);
+				
 				checkins.add(listCheckin);
 			}
 		}
 		return checkins;
 	}
 
-	private Drawable getImage(Context context, int checkinId) {
+	private String getImage(Context context, int checkinId) {
 
 		List<Media> sMedia = Database.mMediaDao.fetchMedia(
 				IMediaSchema.CHECKIN_ID, checkinId, IMediaSchema.IMAGE, 1);
 		if (sMedia != null && sMedia.size() > 0) {
-			return ImageManager.getThumbnails(context, sMedia.get(0).getLink());
+			return sMedia.get(0).getLink();
 		}
-		return context.getResources().getDrawable(R.drawable.report_icon);
+		return null;
 	}
 
 	private String getUsername(Context context, int userId) {
