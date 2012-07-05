@@ -128,7 +128,6 @@
                 android:id="@+id/top_items_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                
                 android:background="@color/table_odd_row_color"
                 android:orientation="vertical"
                 android:padding="10dip" >
@@ -137,7 +136,6 @@
                     android:id="@+id/loc_map"
                     android:layout_width="match_parent"
                     android:layout_height="300dip"
-                    
                     android:layout_gravity="center"
                     android:apiKey="@string/google_map_api_key"
                     android:clickable="true"
@@ -154,7 +152,6 @@
                 android:id="@+id/report_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                
                 android:padding="10dip"
                 android:text="@string/photos"
                 android:textColor="@color/title_color"
@@ -164,16 +161,31 @@
                 android:id="@+id/list_photo_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                
                 android:background="@color/table_odd_row_color"
                 android:orientation="vertical" >
 
-                <ListView
-                    android:id="@+id/list_photos"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:listSelector="@color/table_selected_row_color"
-                    android:scrollbars="none" />
+                    android:layout_height="wrap_content" >
+
+                    <ImageView
+                        android:id="@+id/list_report_photo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:adjustViewBounds="true" />
+
+                    <!-- This will hold the total number of images -->
+
+                    <TextView
+                        android:id="@+id/photo_total"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:gravity="center"
+                        android:padding="10dip"
+                        android:textColor="@color/white_color" />
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/empty_list_for_photos"
@@ -193,7 +205,6 @@
                 android:id="@+id/report_news"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                
                 android:padding="10dip"
                 android:text="@string/news"
                 android:textColor="@color/title_color"
@@ -203,7 +214,6 @@
                 android:id="@+id/list_news_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                
                 android:background="@color/table_odd_row_color"
                 android:orientation="vertical" >
 
@@ -232,7 +242,6 @@
                 android:id="@+id/report_video"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                
                 android:padding="10dip"
                 android:text="@string/video"
                 android:textColor="@color/title_color"
@@ -241,7 +250,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                
                 android:background="@color/table_odd_row_color"
                 android:orientation="vertical" >
 
@@ -269,7 +277,6 @@
                 android:id="@+id/report_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-               
                 android:padding="10dip"
                 android:text="@string/comments"
                 android:textColor="@color/title_color"
@@ -278,7 +285,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                
                 android:background="@color/table_odd_row_color"
                 android:orientation="vertical" >
 

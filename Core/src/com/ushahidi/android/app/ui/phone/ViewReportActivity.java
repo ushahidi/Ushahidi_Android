@@ -30,6 +30,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -62,7 +63,7 @@ public class ViewReportActivity extends
 	private int reportId;
 
 	private String reportTitle;
-	
+
 	private Intent fetchReportComments;
 
 	public ViewReportActivity() {
@@ -83,7 +84,7 @@ public class ViewReportActivity extends
 		} else {
 			reports.load();
 		}
-		
+
 		initReport(this.position);
 		fetchComments();
 
@@ -92,11 +93,11 @@ public class ViewReportActivity extends
 	@Override
 	public void onResume() {
 		super.onResume();
-		registerReceiver(fetchBroadcastReceiver,
-				new IntentFilter(SyncServices.FETCH_REPORT_COMMENTS_SERVICES_ACTION));
+		registerReceiver(fetchBroadcastReceiver, new IntentFilter(
+				SyncServices.FETCH_REPORT_COMMENTS_SERVICES_ACTION));
 		stopLocating();
 	}
-	
+
 	public void onPause() {
 		super.onPause();
 		try {
@@ -104,11 +105,11 @@ public class ViewReportActivity extends
 		} catch (IllegalArgumentException e) {
 		}
 	}
-	
+
 	private void fetchComments() {
-		registerReceiver(fetchBroadcastReceiver,
-				new IntentFilter(SyncServices.FETCH_REPORT_COMMENTS_SERVICES_ACTION));
-		
+		registerReceiver(fetchBroadcastReceiver, new IntentFilter(
+				SyncServices.FETCH_REPORT_COMMENTS_SERVICES_ACTION));
+
 		fetchReportComments = new Intent(this, FetchReportsComments.class);
 		fetchReportComments.putExtra("reportid", reportId);
 		startService(fetchReportComments);
@@ -182,20 +183,18 @@ public class ViewReportActivity extends
 			view.setListPhotos((int) reportId);
 			view.setListVideos((int) reportId);
 			view.setListComments(reportId);
-			view.getListPhotos().setOnItemClickListener(
-					new OnItemClickListener() {
+			view.getListPhotos().setOnClickListener(new OnClickListener() {
 
-						public void onItemClick(AdapterView<?> parent, View v,
-								int position, long id) {
-							Intent i = new Intent(ViewReportActivity.this,
-									ViewReportPhotoActivity.class);
-							i.putExtra("reportid", reportId);
-							i.putExtra("position", position);
-							startActivityForResult(i, 0);
-							overridePendingTransition(R.anim.home_enter,
-									R.anim.home_exit);
-						}
-					});
+				public void onClick(View v) {
+					Intent i = new Intent(ViewReportActivity.this,
+							ViewReportPhotoActivity.class);
+					i.putExtra("reportid", reportId);
+					i.putExtra("position", 0);
+					startActivityForResult(i, 0);
+					overridePendingTransition(R.anim.home_enter,
+							R.anim.home_exit);
+				}
+			});
 			view.getListNews().setOnItemClickListener(
 					new OnItemClickListener() {
 
@@ -225,7 +224,7 @@ public class ViewReportActivity extends
 									R.anim.home_exit);
 						}
 					});
-			
+
 			view.getListComments().setOnItemClickListener(
 					new OnItemClickListener() {
 
@@ -298,7 +297,7 @@ public class ViewReportActivity extends
 	protected void locationChanged(double latitude, double longitude) {
 
 	}
-	
+
 	private BroadcastReceiver fetchBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {

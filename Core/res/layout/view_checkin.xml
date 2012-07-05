@@ -24,147 +24,167 @@
         android:orientation="vertical" >
 
         <LinearLayout style="@style/LinearLayout.Vertical" >
-        <!-- Title starts -->
 
-        <TextView
-            style="@style/TextView.Label"
-            android:text="@string/report_title" />
-
-        <LinearLayout
-            android:id="@+id/top_items_layout"
-            style="@style/LinearLayout.Vertical"
-            android:background="@color/table_odd_row_color" >
+            <!-- Title starts -->
 
             <TextView
-                android:id="@+id/checkin_title"
-                style="@style/TextView.Value" />
-        </LinearLayout>
-        <!-- Title ends -->
+                style="@style/TextView.Label"
+                android:text="@string/report_title" />
+
+            <LinearLayout
+                android:id="@+id/top_items_layout"
+                style="@style/LinearLayout.Vertical"
+                android:background="@color/table_odd_row_color" >
+
+                <TextView
+                    android:id="@+id/checkin_title"
+                    style="@style/TextView.Value" />
+            </LinearLayout>
+            <!-- Title ends -->
 
 
-        <!-- Description starts -->
-
-        <TextView
-            android:id="@+id/checkin_desc"
-            style="@style/TextView.Label"
-            android:text="@string/report_desc" />
-
-        <LinearLayout
-            style="@style/LinearLayout.Vertical"
-            android:background="@color/table_odd_row_color" >
-
-            <!-- Main content area. -->
+            <!-- Description starts -->
 
             <TextView
-                android:id="@+id/checkin_description"
-                style="@style/TextView.Description" />
-        </LinearLayout>
-        <!-- Description ends -->
+                android:id="@+id/checkin_desc"
+                style="@style/TextView.Label"
+                android:text="@string/report_desc" />
+
+            <LinearLayout
+                style="@style/LinearLayout.Vertical"
+                android:background="@color/table_odd_row_color" >
+
+                <!-- Main content area. -->
+
+                <TextView
+                    android:id="@+id/checkin_description"
+                    style="@style/TextView.Description" />
+            </LinearLayout>
+            <!-- Description ends -->
 
 
-        <!-- Date starts -->
-
-        <TextView
-            style="@style/TextView.Label"
-            android:text="@string/report_date" />
-
-        <LinearLayout
-            android:id="@+id/date_layout"
-            style="@style/LinearLayout.Vertical"
-            android:background="@color/table_odd_row_color" >
+            <!-- Date starts -->
 
             <TextView
-                android:id="@+id/checkin_date"
-                style="@style/TextView.Value" />
-        </LinearLayout>
-        <!-- Date ends -->
+                style="@style/TextView.Label"
+                android:text="@string/report_date" />
+
+            <LinearLayout
+                android:id="@+id/date_layout"
+                style="@style/LinearLayout.Vertical"
+                android:background="@color/table_odd_row_color" >
+
+                <TextView
+                    android:id="@+id/checkin_date"
+                    style="@style/TextView.Value" />
+            </LinearLayout>
+            <!-- Date ends -->
 
 
-        <!-- Location starts -->
+            <!-- Location starts -->
 
-        <TextView
-            android:id="@+id/checking_loc"
-            style="@style/TextView.Label"
-            android:text="@string/report_location" />
+            <TextView
+                android:id="@+id/checking_loc"
+                style="@style/TextView.Label"
+                android:text="@string/report_location" />
 
-        <!-- Location ends -->
-
-
-        <!-- Map starts -->
-
-        <LinearLayout
-            style="@style/LinearLayout.Vertical"
-            android:background="@color/table_odd_row_color" >
-
-            <com.google.android.maps.MapView
-                android:id="@+id/checkin_loc_map"
-                android:layout_width="match_parent"
-                android:layout_height="300dip"
-                android:apiKey="@string/google_map_api_key"
-                android:clickable="true"
-                android:enabled="true" />
-        </LinearLayout> <!-- Map ends -->
+            <!-- Location ends -->
 
 
-        <!-- Photo starts -->
+            <!-- Map starts -->
 
-        <TextView
-            android:id="@+id/checkin_photo"
-            style="@style/TextView.Label"
-            android:text="@string/report_photo" />
+            <LinearLayout
+                style="@style/LinearLayout.Vertical"
+                android:background="@color/table_odd_row_color" >
 
-        <LinearLayout
-            android:id="@+id/img_layout"
-            style="@style/LinearLayout.Vertical"
-            android:background="@color/table_odd_row_color" >
+                <com.google.android.maps.MapView
+                    android:id="@+id/checkin_loc_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dip"
+                    android:apiKey="@string/google_map_api_key"
+                    android:clickable="true"
+                    android:enabled="true" />
+            </LinearLayout> <!-- Map ends -->
 
-            <ListView
-                android:id="@+id/list_checkin_photos"
+
+            <!-- Photo starts -->
+
+            <TextView
+                android:id="@+id/checkin_photo"
+                style="@style/TextView.Label"
+                android:text="@string/report_photo" />
+
+            <LinearLayout
+                android:id="@+id/img_layout"
+                style="@style/LinearLayout.Vertical"
+                android:background="@color/table_odd_row_color" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <ImageView
+                        android:id="@+id/list_report_photo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:adjustViewBounds="true" />
+
+                    <!-- This will hold the total number of images -->
+
+                    <TextView
+                        android:id="@+id/photo_total"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:gravity="center"
+                        android:padding="10dip"
+                        android:textColor="@color/white_color" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/checkin_empty_photo_list"
+                    style="@style/TextView.Empty"
+                    android:padding="10dip"
+                    android:text="@string/no_photos"
+                    android:gravity="left"
+                    android:visibility="gone"
+                    android:textColor="@color/black_color" />
+            </LinearLayout> <!-- Photo ends -->
+
+
+            <!-- Comment starts -->
+
+            <TextView
+                android:id="@+id/report_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:listSelector="@color/table_selected_row_color"
-                android:scrollbars="none" />
-
-            <TextView
-                android:id="@+id/checkin_empty_photo_list"
-                style="@style/TextView.Empty"
                 android:padding="10dip"
-                android:text="@string/no_photos"
-                android:textColor="@color/black_color" />
-        </LinearLayout> <!-- Photo ends -->
+                android:text="@string/comments"
+                android:textColor="@color/title_color"
+                android:textStyle="bold" />
 
+            <LinearLayout
+                style="@style/LinearLayout.Vertical"
+                android:background="@color/table_odd_row_color" >
 
-        <!-- Comment starts -->
+                <ListView
+                    android:id="@+id/list_comments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:listSelector="@color/table_selected_row_color"
+                    android:scrollbars="none" />
 
-        <TextView
-            android:id="@+id/report_comment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dip"
-            android:text="@string/comments"
-            android:textColor="@color/title_color"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            style="@style/LinearLayout.Vertical"
-            android:background="@color/table_odd_row_color" >
-
-            <ListView
-                android:id="@+id/list_comments"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:listSelector="@color/table_selected_row_color"
-                android:scrollbars="none" />
-
-            <TextView
-                android:id="@+id/empty_list_for_comment"
-                style="@style/TextView.Empty"
-                android:padding="10dip"
-                android:text="@string/no_comments"
-                android:textColor="@color/black_color" />
+                <TextView
+                    android:id="@+id/empty_list_for_comment"
+                    style="@style/TextView.Empty"
+                    android:padding="10dip"
+                    android:text="@string/no_comments"
+                    android:gravity="left"
+                    android:textColor="@color/black_color" />
+            </LinearLayout>
+            <!-- Comment ends -->
         </LinearLayout>
-        <!-- Comment ends -->
-    </LinearLayout>
     </ViewAnimator>
 
 </ScrollView>

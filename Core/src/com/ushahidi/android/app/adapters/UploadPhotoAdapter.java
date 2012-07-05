@@ -78,7 +78,6 @@ public class UploadPhotoAdapter extends BaseListAdapter<Photo> {
 
 		widgets.photo.setImageDrawable(getPhoto(getItem(position).getPhoto()));
 
-		// widgets.photo.setBackgroundResource(imageBackgroundColor());
 		return row;
 
 	}

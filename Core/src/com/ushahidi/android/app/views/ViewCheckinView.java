@@ -19,12 +19,15 @@
  **/
 package com.ushahidi.android.app.views;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
@@ -33,6 +36,9 @@ import com.google.android.maps.MapView;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListCommentAdapter;
 import com.ushahidi.android.app.adapters.ListPhotoAdapter;
+import com.ushahidi.android.app.entities.Photo;
+import com.ushahidi.android.app.models.ListPhotoModel;
+import com.ushahidi.android.app.util.ImageViewWorker;
 
 /**
  * @author eyedol
@@ -45,7 +51,7 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 	public TextView date;
 	public ViewAnimator viewCheckinRoot;
 	public LayoutInflater inflater;
-	public ListView listPhotos;
+	
 	public ListView listComments;
 	public TextView listPhotosEmptyView;
 	private TextView listCommentEmptyView;
@@ -53,6 +59,9 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 	public ListCommentAdapter commentAdapter;
 	public MapView mapView;
 	private Context context;
+
+	public ImageView photo;
+	public TextView total;
 
 	public ViewCheckinView(Activity activity) {
 		super(activity);
@@ -68,17 +77,15 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 
 		date = (TextView) activity.findViewById(R.id.checkin_date);
 
-		photoAdapter = new ListPhotoAdapter(activity);
-		
-		commentAdapter = new ListCommentAdapter(context);
-		
-		listPhotos = (ListView) activity.findViewById(R.id.list_checkin_photos);
+		this.photo = (ImageView) activity.findViewById(R.id.list_report_photo);
+		this.total = (TextView) activity.findViewById(R.id.photo_total);
+
 		listPhotosEmptyView = (TextView) activity
 				.findViewById(R.id.checkin_empty_photo_list);
 
-		if (this.listPhotosEmptyView != null) {
-			this.listPhotos.setEmptyView(listPhotosEmptyView);
-		}
+		photoAdapter = new ListPhotoAdapter(activity);
+
+		commentAdapter = new ListCommentAdapter(context);
 
 		listComments = (ListView) activity.findViewById(R.id.list_comments);
 		listCommentEmptyView = (TextView) activity
@@ -122,15 +129,28 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 	}
 
 	public void setListPhotos(int checkinId) {
-		if (listPhotos != null) {
-			ListPhotoAdapter adapter = new ListPhotoAdapter(context);
-			adapter.refreshCheckinPhotos(checkinId);
-			listPhotos.setAdapter(adapter);
+		if (photo != null) {
+			ListPhotoModel mListPhotoModel = new ListPhotoModel();
+			final boolean loaded = mListPhotoModel.loadCheckinPhoto(checkinId);
+			int totalPhotos = mListPhotoModel.totalReportPhoto();
+			if (loaded) {
+				final List<Photo> items = mListPhotoModel.getPhotos();
+				if (items.size() > 0) {
+					getPhoto(items.get(0).getPhoto(), photo);
+					total.setText(context.getResources().getQuantityString(
+							R.plurals.no_of_images, totalPhotos, totalPhotos));
+				} else {
+					photo.setVisibility(View.GONE);
+					total.setVisibility(View.GONE);
+					listPhotosEmptyView.setVisibility(View.VISIBLE);
+				}
+			}
 		}
+
 	}
 
 	public void setListComments(int checkinId) {
-		if (listPhotos != null) {
+		if (listComments != null) {
 			commentAdapter.refreshCheckinComment(checkinId);
 			listComments.setAdapter(commentAdapter);
 		}
@@ -140,8 +160,8 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 		return this.listComments;
 	}
 
-	public ListView getListPhotos() {
-		return this.listPhotos;
+	public ImageView getListPhotos() {
+		return this.photo;
 	}
 
 	public void goNext() {
@@ -155,6 +175,12 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 		Animation out = AnimationUtils.loadAnimation(context,
 				R.anim.slide_left_in);
 		viewCheckinRoot.startAnimation(out);
+	}
+
+	public void getPhoto(String fileName, ImageView imageView) {
+		ImageViewWorker imageWorker = new ImageViewWorker(context);
+		imageWorker.setImageFadeIn(true);
+		imageWorker.loadImage(fileName, imageView, true, 0);
 	}
 
 }

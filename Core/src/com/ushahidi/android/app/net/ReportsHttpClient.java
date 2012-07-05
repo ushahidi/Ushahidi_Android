@@ -76,10 +76,10 @@ public class ReportsHttpClient extends MainHttpClient {
 		uriBuilder.append("&by=all");
 		uriBuilder.append("&limit=" + Preferences.totalReports);
 		uriBuilder.append("&resp=json");
-		
+
 		try {
 			response = GetURL(uriBuilder.toString());
-			
+
 			if (response == null) {
 				// Network is down
 				return 100;
@@ -176,20 +176,23 @@ public class ReportsHttpClient extends MainHttpClient {
 						"person_email",
 						new StringBody(params.get("person_email"), Charset
 								.forName("UTF-8")));
-				
+
 				if (params.get("filename") != null) {
-					
+
 					if (!TextUtils.isEmpty(params.get("filename"))) {
 						String filenames[] = params.get("filename").split(",");
-						log("filenames "+filenames[0]);
-						for (int i = 0; i > filenames.length; i++) {
-							File file = new File(ImageManager.getPhotoPath(
-									context, filenames[i]));
-							log("Photos: "+ new File(ImageManager.getPhotoPath(
-									context, filenames[i])));
-							if (file.exists()) {
-								entity.addPart("incident_photo[]",
-										new FileBody(file));
+						log("filenames "
+								+ ImageManager.getPhotoPath(context,
+										filenames[0]));
+						for (int i = 0; i < filenames.length; i++) {
+							if (ImageManager
+									.getPhotoPath(context, filenames[i]) != null) {
+								File file = new File(ImageManager.getPhotoPath(
+										context, filenames[i]));
+								if (file.exists()) {
+									entity.addPart("incident_photo[]",
+											new FileBody(file));
+								}
 							}
 						}
 					}
@@ -223,6 +226,10 @@ public class ReportsHttpClient extends MainHttpClient {
 		} catch (IllegalArgumentException ex) {
 			log("IllegalArgumentException", ex);
 			// invalid URI
+			return false;
+		} catch (ConnectTimeoutException ex) {
+			//connection timeout
+			log("ConnectionTimeoutException");
 			return false;
 		} catch (IOException e) {
 			log("IOException", e);

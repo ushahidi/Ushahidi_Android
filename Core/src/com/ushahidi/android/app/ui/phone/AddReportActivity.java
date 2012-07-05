@@ -685,14 +685,18 @@ public class AddReportActivity extends
 				for (String s : mVectorCategories) {
 					try {
 						// @inoran fix
-						list.setItemChecked(
-								mCategoryLength - Integer.parseInt(s), true);
+						if (list != null) {
+							list.setItemChecked(
+									mCategoryLength - Integer.parseInt(s), true);
+						}
 					} catch (NumberFormatException e) {
 						log("NumberFormatException", e);
 					}
 				}
 			} else {
-				list.clearChoices();
+				if (list != null) {
+					list.clearChoices();
+				}
 			}
 
 			break;

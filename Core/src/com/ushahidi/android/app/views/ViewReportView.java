@@ -20,6 +20,8 @@
 
 package com.ushahidi.android.app.views;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -27,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
@@ -37,6 +40,9 @@ import com.ushahidi.android.app.adapters.ListCommentAdapter;
 import com.ushahidi.android.app.adapters.ListNewsAdapter;
 import com.ushahidi.android.app.adapters.ListPhotoAdapter;
 import com.ushahidi.android.app.adapters.ListVideoAdapter;
+import com.ushahidi.android.app.entities.Photo;
+import com.ushahidi.android.app.models.ListPhotoModel;
+import com.ushahidi.android.app.util.ImageViewWorker;
 
 /**
  * @author eyedol
@@ -83,6 +89,9 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	public ListCommentAdapter commentAdapter;
 	private LayoutInflater inflater;
 
+	public ImageView photo;
+	public TextView total;
+
 	public ViewReportView(Activity activity) {
 		super(activity);
 		this.context = activity;
@@ -113,13 +122,10 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 			listNews.setEmptyView(listNewsEmptyView);
 		}
 
-		listPhotos = (ListView) activity.findViewById(R.id.list_photos);
+		this.photo = (ImageView) activity.findViewById(R.id.list_report_photo);
+		this.total = (TextView) activity.findViewById(R.id.photo_total);
 		listPhotosEmptyView = (TextView) activity
 				.findViewById(R.id.empty_list_for_photos);
-
-		if (listPhotosEmptyView != null) {
-			listPhotos.setEmptyView(listPhotosEmptyView);
-		}
 
 		listVideos = (ListView) activity.findViewById(R.id.list_video);
 		listVideoEmptyView = (TextView) activity
@@ -134,7 +140,6 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		if (listCommentEmptyView != null) {
 			listComments.setEmptyView(listCommentEmptyView);
 		}
-		
 
 	}
 
@@ -155,7 +160,6 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 			listNews.setEmptyView(listNewsEmptyView);
 		}
 
-		listPhotos = (ListView) activity.findViewById(R.id.list_photos);
 		listPhotosEmptyView = (TextView) activity
 				.findViewById(R.id.empty_list_for_photos);
 
@@ -169,14 +173,14 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		if (listVideoEmptyView != null) {
 			listVideos.setEmptyView(listVideoEmptyView);
 		}
-		
+
 		listComments = (ListView) activity.findViewById(R.id.list_comments);
 		listCommentEmptyView = (TextView) activity
 				.findViewById(R.id.empty_list_for_comment);
 		if (listCommentEmptyView != null) {
 			listComments.setEmptyView(listCommentEmptyView);
 		}
-		
+
 	}
 
 	public View filterReport() {
@@ -251,17 +255,29 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	}
 
 	public void setListPhotos(int reportId) {
-		if (listPhotos != null) {
-			ListPhotoAdapter adapter = new ListPhotoAdapter(context);
-			adapter.refresh(reportId);
-			listPhotos.setAdapter(adapter);
+		if (photo != null) {
+			ListPhotoModel mListPhotoModel = new ListPhotoModel();
+			final boolean loaded = mListPhotoModel.load(reportId);
+			int totalPhotos = mListPhotoModel.totalReportPhoto();
+			if (loaded) {
+				final List<Photo> items = mListPhotoModel.getPhotos();
+				if (items.size() > 0) {
+					getPhoto(items.get(0).getPhoto(), photo);
+					total.setText(context.getResources().getQuantityString(
+							R.plurals.no_of_images, totalPhotos, totalPhotos));
+				} else {
+					photo.setVisibility(View.GONE);
+					total.setVisibility(View.GONE);
+					listPhotosEmptyView.setVisibility(View.VISIBLE);
+				}
+			}
 		}
 	}
 
-	public ListView getListPhotos() {
-		return this.listPhotos;
+	public ImageView getListPhotos() {
+		return this.photo;
 	}
-	
+
 	public void setListComments(int reportId) {
 		if (listComments != null) {
 			commentAdapter.refresh(reportId);
@@ -296,6 +312,12 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		Animation out = AnimationUtils.loadAnimation(context,
 				R.anim.slide_left_in);
 		viewReportRoot.startAnimation(out);
+	}
+
+	public void getPhoto(String fileName, ImageView imageView) {
+		ImageViewWorker imageWorker = new ImageViewWorker(context);
+		imageWorker.setImageFadeIn(true);
+		imageWorker.loadImage(fileName, imageView, true, 0);
 	}
 
 }

@@ -56,7 +56,7 @@ public class ImageManager {
 			// scale image
 			Bitmap scaled = PhotoUtils.scaleBitmap(options,
 					getPhotoPath(context) + fileName);
-			return new FastBitmapDrawable(scaled);
+			return new BitmapDrawable(scaled);
 		}
 		return null;
 
@@ -96,7 +96,7 @@ public class ImageManager {
 			// scale image
 			Bitmap scaled = PhotoUtils.scaleBitmap(options,
 					getPhotoPath(context, "/" + pathfileName));
-			return new FastBitmapDrawable(scaled);
+			return new BitmapDrawable(scaled);
 
 		}
 		return null;
@@ -113,7 +113,7 @@ public class ImageManager {
 			// scale image
 			Bitmap scaled = PhotoUtils.scaleBitmapByWidth(options, width,
 					getPhotoPath(context) + fileName);
-			return new FastBitmapDrawable(scaled);
+			return new BitmapDrawable(scaled);
 
 		}
 		return null;
@@ -143,7 +143,7 @@ public class ImageManager {
 		if (options != null) {
 			// scale image
 			Bitmap scaled = PhotoUtils.scaleBitmap(options, fileName);
-			return new FastBitmapDrawable(scaled);
+			return new BitmapDrawable(scaled);
 
 		}
 		return null;
@@ -159,7 +159,7 @@ public class ImageManager {
 			// scale image
 			Bitmap scaled = PhotoUtils.scaleBitmapByWidth(options, width,
 					fileName);
-			return new FastBitmapDrawable(scaled);
+			return new BitmapDrawable(scaled);
 
 		}
 		return null;
@@ -270,7 +270,14 @@ public class ImageManager {
 	}
 
 	public static String getPhotoPath(Context context, String pathfileName) {
-		return getSavedPhotoPath(context, pathfileName);
+		File path = new File(Environment.getExternalStorageDirectory(),
+				String.format("%s%s%s", context.getPackageName(), "/", pathfileName));
+		
+		if (!path.exists()) {
+			return null;
+		}
+
+		return path.getAbsolutePath();
 	}
 
 	public static String getPendingPhotoPath(Context context) {

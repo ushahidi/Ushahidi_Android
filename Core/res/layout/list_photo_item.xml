@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
         />
     
     <!-- This will hold the total number of images -->

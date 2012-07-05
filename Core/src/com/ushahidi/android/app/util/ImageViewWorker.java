@@ -60,7 +60,6 @@ public class ImageViewWorker {
 		imageView.setImageDrawable(asyncDrawable);
 		task.fullScale = fullScale;
 		task.width = width;
-		//task.imageView = imageView;
 		task.execute(data);
 
 	}
@@ -133,7 +132,6 @@ public class ImageViewWorker {
 	private class BitmapWorkerTask extends AsyncTask<Object, Void, Bitmap> {
 		private Object data;
 		private final WeakReference<ImageView> imageViewReference;
-		protected ImageView imageView;
 		protected int width;
 		protected boolean fullScale = false;
 
@@ -209,6 +207,7 @@ public class ImageViewWorker {
 					new Drawable[] {
 							new ColorDrawable(android.R.color.transparent),
 							new BitmapDrawable(context.getResources(), bitmap) });
+			
 			// Set background to loading bitmap
 			imageView.setBackgroundDrawable(new BitmapDrawable(context
 					.getResources(), loadingBitmap));

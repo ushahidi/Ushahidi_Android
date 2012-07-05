@@ -29,6 +29,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -163,20 +164,20 @@ public class ViewCheckinActivity extends
 				view.setDate(listCheckin.get(position).getDate());
 				view.setListPhotos((int) checkinId);
 				view.setListComments(checkinId);
-				view.getListPhotos().setOnItemClickListener(
-						new OnItemClickListener() {
+				view.getListPhotos().setOnClickListener(
+						new OnClickListener() {
 
-							public void onItemClick(AdapterView<?> parent,
-									View v, int pos, long id) {
+							public void onClick(View v) {
 								Intent i = new Intent(ViewCheckinActivity.this,
 										ViewReportPhotoActivity.class);
 								i.putExtra("reportid", checkinId);
-								i.putExtra("position", pos);
+								i.putExtra("position", 0);
 								startActivityForResult(i, 0);
 								overridePendingTransition(R.anim.home_enter,
 										R.anim.home_exit);
 							}
 						});
+						
 
 				view.setListComments((int) checkinId);
 				view.getListComments().setOnItemClickListener(
@@ -242,7 +243,6 @@ public class ViewCheckinActivity extends
 			if (intent != null) {
 
 				int status = intent.getIntExtra("status", 4);
-				view.dialog.cancel();
 				if (status == 4) {
 					toastLong(R.string.internet_connection);
 				} else if (status == 110) {
