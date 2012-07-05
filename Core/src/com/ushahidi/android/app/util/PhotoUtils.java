@@ -224,7 +224,7 @@ public class PhotoUtils {
 			options.inSampleSize = calculateInSampleSize(options, width,
 					(int) (width * ratio));
 			options.inJustDecodeBounds = false;
-			return BitmapFactory.decodeFile(filePath);
+			return BitmapFactory.decodeFile(filePath, options);
 
 		}
 		return null;
