@@ -20,7 +20,6 @@
 package com.ushahidi.android.app.services;
 
 import android.content.Intent;
-import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.models.ListCheckinModel;
@@ -30,6 +29,7 @@ import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.util.ApiUtils;
+import com.ushahidi.android.app.util.Util;
 
 /**
  * @author eyedol
@@ -71,7 +71,7 @@ public class FetchReports extends SyncServices {
 	@Override
 	protected void executeTask(Intent intent) {
 
-		Log.i(CLASS_TAG, "executeTask() executing this task");
+		new Util().log("executeTask() executing this task");
 		clearCachedData();
 		if (!new ApiUtils(this).isCheckinEnabled()) {
 
@@ -81,9 +81,7 @@ public class FetchReports extends SyncServices {
 			status = new ReportsHttpClient(this).getAllReportFromWeb();
 
 		} else {
-			// TODO process checkin if there is one
 			status = new CheckinHttpClient(this).getAllCheckinFromWeb();
-			Log.i("FetchReports: ","Gosh "+status);
 		}
 
 		statusIntent.putExtra("status", status);

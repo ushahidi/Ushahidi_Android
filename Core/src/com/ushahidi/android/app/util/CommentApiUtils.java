@@ -28,9 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Comment;
 
@@ -48,11 +46,11 @@ public class CommentApiUtils {
 
 	public CommentApiUtils(String jsonString) {
 		processingResult = true;
-		log("JSONString: " + jsonString);
+		new Util().log("JSONString: " + jsonString);
 		try {
 			jsonObject = new JSONObject(jsonString);
 		} catch (JSONException e) {
-			log("JSONException", e);
+			new Util().log("JSONException", e);
 			processingResult = false;
 		}
 	}
@@ -74,7 +72,7 @@ public class CommentApiUtils {
 	}
 
 	public List<Comment> getCommentsList(Context context) {
-		log("Save comments");
+		new Util().log("Save comments");
 		if (processingResult) {
 			List<Comment> commentList = new ArrayList<Comment>();
 			JSONArray commentArray = getCommentsArray();
@@ -100,7 +98,7 @@ public class CommentApiUtils {
 								.getString("comment_description"));
 
 					} catch (JSONException e) {
-						log("JSONException", e);
+						new Util().log("JSONException", e);
 						processingResult = false;
 						return null;
 					}
@@ -115,7 +113,7 @@ public class CommentApiUtils {
 	}
 
 	public List<Comment> getCheckinCommentsList(Context context) {
-		log("Save comments");
+		new Util().log("Save comments");
 		if (processingResult) {
 			List<Comment> commentList = new ArrayList<Comment>();
 			JSONArray commentArray = getCommentsArray();
@@ -141,7 +139,7 @@ public class CommentApiUtils {
 								.getString("comment_description"));
 
 					} catch (JSONException e) {
-						log("JSONException", e);
+						new Util().log("JSONException", e);
 						processingResult = false;
 						return null;
 					}
@@ -186,13 +184,4 @@ public class CommentApiUtils {
 		return false;
 	}
 
-	private void log(String message) {
-		if (MainApplication.LOGGING_MODE)
-			Log.i(getClass().getName(), message);
-	}
-
-	private void log(String message, Exception ex) {
-		if (MainApplication.LOGGING_MODE)
-			Log.e(getClass().getName(), message, ex);
-	}
 }

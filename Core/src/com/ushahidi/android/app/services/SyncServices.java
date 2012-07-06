@@ -2,9 +2,6 @@
 package com.ushahidi.android.app.services;
 
 
-import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.util.Util;
-
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.content.ComponentName;
@@ -13,7 +10,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
-import android.util.Log;
+
+import com.ushahidi.android.app.Preferences;
+import com.ushahidi.android.app.util.Util;
 
 
 public abstract class SyncServices extends IntentService {
@@ -89,7 +88,7 @@ public abstract class SyncServices extends IntentService {
      */
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.i(CLASS_TAG, "onHandleIntent(): running service");
+    	new Util().log( "onHandleIntent(): running service");
         try {
 
             boolean isConnected = Util.isConnected(this);

@@ -28,7 +28,6 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
@@ -165,7 +164,7 @@ public class UploadCheckins extends SyncServices {
 	@Override
 	protected void executeTask(Intent intent) {
 
-		Log.i(CLASS_TAG, "executeTask() executing this task");
+		new Util().log("executeTask() executing this task");
 		if (intent != null) {
 			Bundle bundle = intent.getExtras();
 

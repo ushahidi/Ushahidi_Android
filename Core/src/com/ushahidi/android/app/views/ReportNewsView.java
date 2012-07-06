@@ -22,7 +22,6 @@ package com.ushahidi.android.app.views;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebSettings;
@@ -122,9 +121,6 @@ public class ReportNewsView extends View {
 		public void onReceivedError(WebView view, int errorCode,
 				String description, String failingUrl) {
 
-			// TODO move this the appropriate method
-			Log.e(ReportVideoView.class.getSimpleName(), "Error " + errorCode
-					+ ": " + description);
 			Toast.makeText(view.getContext(),
 					"Error " + errorCode + ": " + description,
 					Toast.LENGTH_LONG).show();

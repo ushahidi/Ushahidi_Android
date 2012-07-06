@@ -29,10 +29,8 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
-import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Checkin;
@@ -57,7 +55,7 @@ public class CheckinApiUtils {
 		try {
 			jsonObject = new JSONObject(jsonString);
 		} catch (JSONException e) {
-			log("JSONException", e);
+			new Util().log("JSONException", e);
 			processingResult = false;
 		}
 	}
@@ -117,7 +115,7 @@ public class CheckinApiUtils {
 	}
 
 	public List<Checkin> getCheckinsList(Context context) {
-		log("Save report");
+		new Util().log("Save report");
 		if (processingResult) {
 			List<Checkin> checkinList = new ArrayList<Checkin>();
 			JSONArray checkinsArray = getCheckinsArray();
@@ -194,12 +192,12 @@ public class CheckinApiUtils {
 										}
 									}
 								} catch (JSONException exc) {
-									log("JSONException", exc);
+									new Util().log("JSONException", exc);
 								}
 							}
 						}
 					} catch (JSONException e) {
-						log("JSONException", e);
+						new Util().log("JSONException", e);
 						processingResult = false;
 						return null;
 					}
@@ -233,7 +231,7 @@ public class CheckinApiUtils {
 	}
 
 	private void saveMedia(int mediaId, int checkinId, int type, String link) {
-		log("downloading... " + link + " CheckinId: " + checkinId);
+		new Util().log("downloading... " + link + " CheckinId: " + checkinId);
 		Media media = new Media();
 		media.setMediaId(mediaId);
 		media.setCheckinId(checkinId);
@@ -247,19 +245,10 @@ public class CheckinApiUtils {
 	}
 
 	private void saveImages(String linkUrl, String fileName, Context context) {
-		log("Save Images: " + linkUrl + " FileName: " + fileName);
+		new Util().log("Save Images: " + linkUrl + " FileName: " + fileName);
 		if (!TextUtils.isEmpty(linkUrl)) {
 			ImageManager.downloadImage(linkUrl, fileName, context);
 		}
 	}
 
-	private void log(String message) {
-		if (MainApplication.LOGGING_MODE)
-			Log.i(getClass().getName(), message);
-	}
-
-	private void log(String message, Exception ex) {
-		if (MainApplication.LOGGING_MODE)
-			Log.e(getClass().getName(), message, ex);
-	}
 }

@@ -181,7 +181,6 @@ public class ApiUtils extends MainHttpClient {
 	 *         data, 8 - api disabled, 9 - no task found, 10 - json is wrong
 	 */
 	public static int extractPayloadJSON(String json_data) {
-		Log.d(CLASS_TAG, "extractPayloadJSON(): " + json_data);
 		try {
 			jsonObject = new JSONObject(json_data);
 			final String errorCode = jsonObject.getJSONObject("error")
@@ -218,7 +217,7 @@ public class ApiUtils extends MainHttpClient {
 				if (statusCode == 200) {
 					
 					jsonString = GetText(response);
-					Log.i("Update domain ","Update "+jsonString);
+					log(String.format("%s %s ", "Update domain",jsonString ));
 					JSONObject jsonObject = new JSONObject(jsonString);
 					String changedDomain = jsonObject.getJSONObject("payload")
 							.getString("domain");
@@ -232,9 +231,9 @@ public class ApiUtils extends MainHttpClient {
 			}
 
 		} catch (IOException e) {
-			Log.e(CLASS_TAG, e.toString());
+			log(CLASS_TAG,e);
 		} catch (JSONException e) {
-			Log.e(CLASS_TAG, e.toString());
+			log(CLASS_TAG, e);
 		}
 	}
 

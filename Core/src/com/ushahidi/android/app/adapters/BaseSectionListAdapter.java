@@ -24,7 +24,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,7 @@ import android.widget.SectionIndexer;
 
 import com.commonsware.cwac.sacklist.SackOfViewsAdapter;
 import com.ushahidi.android.app.models.Model;
+import com.ushahidi.android.app.util.Util;
 
 /**
  * Credits:
@@ -425,14 +425,14 @@ public abstract class BaseSectionListAdapter<M extends Model> extends
 	public abstract void refresh();
 
 	protected void log(String message) {
-		Log.i(getClass().getName(), message);
+		new Util().log(message);
 	}
 
 	protected void log(String format, Object... args) {
-		Log.i(getClass().getName(), String.format(format, args));
+		new Util().log( String.format(format, args));	
 	}
 
 	protected void log(String message, Exception ex) {
-		Log.e(getClass().getName(), message, ex);
+		new Util().log(message, ex);
 	}
 }

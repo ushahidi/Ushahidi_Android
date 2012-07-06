@@ -30,7 +30,6 @@ import android.support.v4.app.ActionBar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,10 +40,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.util.Objects;
+import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.View;
 
 /**
@@ -280,18 +279,15 @@ public abstract class BaseActivity<V extends View> extends FragmentActivity {
 	}
 
 	protected void log(String message) {
-		if (MainApplication.LOGGING_MODE)
-			Log.i(getClass().getName(), message);
+		new Util().log(message);
 	}
 
 	protected void log(String format, Object... args) {
-		if (MainApplication.LOGGING_MODE)
-			Log.i(getClass().getName(), String.format(format, args));
+		new Util().log( String.format(format, args));	
 	}
 
 	protected void log(String message, Exception ex) {
-		if (MainApplication.LOGGING_MODE)
-			Log.e(getClass().getName(), message, ex);
+		new Util().log(message, ex);
 	}
 
 	protected void toastLong(String message) {

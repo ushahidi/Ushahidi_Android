@@ -57,6 +57,7 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.net.MainGeocoder;
 
 /**
@@ -573,5 +574,20 @@ public class Util {
 	 */
 	public static boolean hasExternalCacheDir() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
+	}
+	
+	public void log(String message) {
+		if (MainApplication.LOGGING_MODE)
+			Log.i(getClass().getName(), message);
+	}
+
+	public void log(String format, Object... args) {
+		if (MainApplication.LOGGING_MODE)
+			Log.i(getClass().getName(), String.format(format, args));
+	}
+
+	public void log(String message, Exception ex) {
+		if (MainApplication.LOGGING_MODE)
+			Log.e(getClass().getName(), message, ex);
 	}
 }

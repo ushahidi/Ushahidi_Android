@@ -27,7 +27,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.Menu;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.ViewGroup;
@@ -35,12 +34,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.BaseSectionListAdapter;
 import com.ushahidi.android.app.models.Model;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.util.Objects;
+import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.View;
 
 /**
@@ -212,18 +211,15 @@ public abstract class BaseSectionListFragment<V extends View, M extends Model, L
 	}
 
 	protected void log(String message) {
-		if (MainApplication.LOGGING_MODE)
-			Log.i(getClass().getName(), message);
+			new Util().log(message);
 	}
 
 	protected void log(String format, Object... args) {
-		if (MainApplication.LOGGING_MODE)
-			Log.i(getClass().getName(), String.format(format, args));
+		new Util().log( String.format(format, args));	
 	}
 
 	protected void log(String message, Exception ex) {
-		if (MainApplication.LOGGING_MODE)
-			Log.e(getClass().getName(), message, ex);
+		new Util().log(message, ex);
 	}
 
 	protected void toastLong(String message) {

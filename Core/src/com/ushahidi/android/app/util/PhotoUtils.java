@@ -99,7 +99,7 @@ public class PhotoUtils {
 	}
 
 	public static String getPhotoPath(Activity activity) {
-		Log.d(CLASS_TAG, "getPhotoPath");
+		new Util().log( "getPhotoPath");
 		File path = new File(Environment.getExternalStorageDirectory(),
 				activity.getPackageName() + PENDING);
 		return path.exists() ? path.getAbsolutePath() : null;
@@ -107,7 +107,7 @@ public class PhotoUtils {
 	}
 
 	public static boolean imageExist(String filename, Activity activity) {
-		Log.d(CLASS_TAG, "imageExist(): " + filename);
+		new Util().log( "%s %s ","imageExist(): " ,filename);
 		File path = new File(filename);
 		if (!path.exists()) {
 			Log.d(CLASS_TAG, "image does not exist");
@@ -138,20 +138,20 @@ public class PhotoUtils {
 					Bitmap scaled = scaleBitmap(options, filePath);
 					if (orientation == 0
 							&& scaled.getWidth() < scaled.getHeight()) {
-						Log.i("XXX", String.format(
+						new Util().log(String.format(
 								"FILE:%s ORIENTATION: LANDSCAPE", filePath));
 						Bitmap rotated = rotatePhoto(scaled, -90);
 						scaled.recycle();
 						return rotated;
 					} else if (orientation == 90
 							&& scaled.getWidth() > scaled.getHeight()) {
-						Log.i("XXX", String.format(
+						new Util().log(String.format(
 								"FILE:%s ORIENTATION: PORTRAIT", filePath));
 						Bitmap rotated = rotatePhoto(scaled, 90);
 						scaled.recycle();
 						return rotated;
 					} else {
-						Log.i("XXX", String.format("FILE:%s ORIENTATION: %d",
+						new Util().log(String.format("FILE:%s ORIENTATION: %d",
 								filePath, orientation));
 					}
 					return scaled;
@@ -168,11 +168,11 @@ public class PhotoUtils {
 			BitmapFactory.decodeFile(uri.getPath(), options);
 
 			if (options != null) {
-				Log.i("XXX", String.format("ORIGINAL %dx%d", options.outWidth,
+				new Util().log(String.format("ORIGINAL %dx%d", options.outWidth,
 						options.outHeight));
 				Bitmap scaled = scaleBitmap(options, uri.getPath());
 				if (scaled != null) {
-					Log.i("XXX", String.format("SCALED %dx%d",
+					new Util().log(String.format("SCALED %dx%d",
 							scaled.getWidth(), scaled.getHeight()));
 					if (getScreenOrientation(activity) == Configuration.ORIENTATION_PORTRAIT
 							&& scaled.getWidth() > scaled.getHeight()) {
@@ -182,7 +182,6 @@ public class PhotoUtils {
 					}
 					return scaled;
 				}
-				// return original;
 			}
 		}
 		return null;
@@ -220,7 +219,7 @@ public class PhotoUtils {
 			float ratio = (float) options.outHeight / (float) options.outWidth;
 			int width = Preferences.photoWidth > 0 ? Preferences.photoWidth
 					: 500;
-			Log.i(CLASS_TAG, "Scaling image to " + width + " x " + ratio);
+			new Util().log( "Scaling image to " + width + " x " + ratio);
 			options.inSampleSize = calculateInSampleSize(options, width,
 					(int) (width * ratio));
 			options.inJustDecodeBounds = false;
@@ -236,15 +235,14 @@ public class PhotoUtils {
 
 		if (options != null) {
 			float ratio = (float) options.outHeight / (float) options.outWidth;
-			// int w = Preferences.photoWidth > 0 ? Preferences.photoWidth :
-			// 500;
-			Log.i(CLASS_TAG, "Scaling image to " + width + " x " + ratio);
+	
+			new Util().log("Scaling image to " + width + " x " + ratio);
 			int w = width > 0 ? width : 500;
 			// calculate inSampleSize
 			options.inSampleSize = calculateInSampleSize(options, w,
 					(int) (w * ratio));
 			options.inJustDecodeBounds = false;
-			return BitmapFactory.decodeFile(filePath);
+			return BitmapFactory.decodeFile(filePath,options);
 
 		}
 		return null;

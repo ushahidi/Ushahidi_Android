@@ -25,7 +25,6 @@ import java.util.List;
 
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
@@ -133,7 +132,7 @@ public class FetchCheckins extends SyncServices {
 	protected void executeTask(Intent intent) {
 		fetchedAdapter = new ListFetchedCheckinAdapter(this);
 		pendingAdapter = new ListPendingCheckinAdapter(this);
-		Log.i(CLASS_TAG, "executeTask() executing this task");
+		new Util().log("executeTask() executing this task");
 		// check if there is internet
 		if (new ApiUtils(this).isConnected()) {
 

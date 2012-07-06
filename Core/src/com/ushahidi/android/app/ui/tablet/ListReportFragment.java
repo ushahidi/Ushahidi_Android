@@ -614,7 +614,6 @@ public class ListReportFragment
 			try {
 				// check if there is internet
 				if (apiUtils.isConnected()) {
-					log("URL: " + Preferences.domain);
 					// upload pending reports.
 					if (!pendingReportAdapter.isEmpty()) {
 						uploadPendingReports();
@@ -645,7 +644,6 @@ public class ListReportFragment
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if (result) {
-				log("fetching ");
 				if (status == 4) {
 					toastLong(R.string.internet_connection);
 				} else if (status == 110) {
@@ -653,7 +651,6 @@ public class ListReportFragment
 				} else if (status == 100) {
 					toastLong(R.string.could_not_fetch_reports);
 				} else if (status == 0) {
-					log("successfully fetched");
 					refreshReportLists();
 					showCategories();
 				}

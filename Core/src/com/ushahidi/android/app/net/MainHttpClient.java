@@ -43,6 +43,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.params.ConnManagerPNames;
 import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -62,8 +63,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
+import com.ushahidi.android.app.util.Util;
 
 public class MainHttpClient {
 
@@ -146,9 +147,8 @@ public class MainHttpClient {
 				HttpResponse response = httpClient.execute(httpget);
 
 				return response;
-
-			} catch (final Exception e) {
-				// TODO Auto-generated catch block
+			
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
@@ -425,18 +425,15 @@ public class MainHttpClient {
 	}
 
 	protected void log(String message) {
-		if (MainApplication.LOGGING_MODE)
-			Log.i(getClass().getName(), message);
+		new Util().log(message);
 	}
 
 	protected void log(String format, Object... args) {
-		if (MainApplication.LOGGING_MODE)
-			Log.i(getClass().getName(), String.format(format, args));
+		new Util().log( String.format(format, args));	
 	}
 
 	protected void log(String message, Exception ex) {
-		if (MainApplication.LOGGING_MODE)
-			Log.e(getClass().getName(), message, ex);
+		new Util().log(message, ex);
 	}
 
 }

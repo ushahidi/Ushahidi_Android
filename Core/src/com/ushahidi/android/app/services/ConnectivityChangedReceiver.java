@@ -43,8 +43,6 @@ public class ConnectivityChangedReceiver extends BroadcastReceiver {
         			PackageManager.COMPONENT_ENABLED_STATE_DEFAULT,
         			PackageManager.DONT_KILL_APP);
 
-        	//TODO:: send offline reports
-               
         }
     }
 }

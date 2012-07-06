@@ -5,13 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.ushahidi.android.app.MainApplication;
+import com.ushahidi.android.app.util.Util;
 
 public class BaseFragment extends Fragment {
 
@@ -67,18 +66,15 @@ public class BaseFragment extends Fragment {
     }
 
     protected void log(String message) {
-        if (MainApplication.LOGGING_MODE)
-            Log.i(getClass().getName(), message);
+		new Util().log(message);
     }
 
     protected void log(String format, Object... args) {
-        if (MainApplication.LOGGING_MODE)
-            Log.i(getClass().getName(), String.format(format, args));
+    	new Util().log( String.format(format, args));	
     }
 
     protected void log(String message, Exception ex) {
-        if (MainApplication.LOGGING_MODE)
-            Log.e(getClass().getName(), message, ex);
+    	new Util().log(message, ex);
     }
 
     protected void toastLong(String message) {

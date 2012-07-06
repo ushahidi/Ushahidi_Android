@@ -21,7 +21,6 @@
 package com.ushahidi.android.app.activities;
 
 import android.app.Activity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -30,7 +29,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.Menu;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
@@ -40,6 +38,7 @@ import com.ushahidi.android.app.MapUserLocation;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.util.Objects;
+import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.View;
 
 /**
@@ -205,15 +204,15 @@ public abstract class BaseMapActivity<V extends View> extends
 	}
 
 	protected void log(String message) {
-		Log.i(getClass().getName(), message);
+		new Util().log(message);
 	}
 
 	protected void log(String format, Object... args) {
-		Log.i(getClass().getName(), String.format(format, args));
+		new Util().log( String.format(format, args));	
 	}
 
 	protected void log(String message, Exception ex) {
-		Log.e(getClass().getName(), message, ex);
+		new Util().log(message, ex);
 	}
 
 	protected void toastLong(String message) {

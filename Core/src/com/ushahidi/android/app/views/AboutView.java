@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.util.Util;
 
 public class AboutView extends com.ushahidi.android.app.views.View {
 
@@ -29,7 +29,7 @@ public class AboutView extends com.ushahidi.android.app.views.View {
 					activity.getPackageName(), 0).versionName);
 			version.setText(sBuilder.toString());
 		} catch (NameNotFoundException e) {
-			Log.e("About", "NameNotFoundException", e);
+			new Util().log("About",e);
 			version.setText("");
 		}
 
@@ -55,7 +55,7 @@ public class AboutView extends com.ushahidi.android.app.views.View {
 			version.setText(context.getPackageManager().getPackageInfo(
 					context.getPackageName(), 0).versionName);
 		} catch (NameNotFoundException e) {
-			Log.e("About", "NameNotFoundException", e);
+			new Util().log("About",  e);
 			version.setText("");
 		}
 

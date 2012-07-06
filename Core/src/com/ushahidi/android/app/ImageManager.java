@@ -34,7 +34,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
-import android.util.Log;
 
 import com.ushahidi.android.app.net.MainHttpClient;
 import com.ushahidi.android.app.util.PhotoUtils;
@@ -67,7 +66,6 @@ public class ImageManager {
 		final BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
-		Log.i("ImageManager","Bitmaps "+getPhotoPath(context) + fileName);
 		if (options != null) {
 			// scale image
 			return PhotoUtils.scaleBitmap(options, getPhotoPath(context)
@@ -123,7 +121,7 @@ public class ImageManager {
 
 		final BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
-		Log.i("ImageManager","Bitmaps "+getPhotoPath(context) + fileName);
+		
 		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
 
 		if (options != null) {

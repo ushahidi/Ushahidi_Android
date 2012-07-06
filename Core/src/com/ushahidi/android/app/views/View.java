@@ -23,11 +23,11 @@ package com.ushahidi.android.app.views;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-import com.ushahidi.android.app.R;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.util.Log;
+
+import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.util.Util;
 
 /**
  * Base class for Views
@@ -68,11 +68,9 @@ public abstract class View {
 									.findViewById(widgetAnnotation.value()));
 						}
 					} catch (IllegalArgumentException e) {
-						Log.e(getClass().getSimpleName(),
-								"IllegalArgumentException", e);
+						new Util().log("IllegalArgumentException", e);
 					} catch (IllegalAccessException e) {
-						Log.e(getClass().getSimpleName(),
-								"IllegalAccessException", e);
+						new Util().log("IllegalAccessException", e);
 					}
 				}
 			}
@@ -103,11 +101,10 @@ public abstract class View {
 									view.findViewById(widgetAnnotation.value()));
 						}
 					} catch (IllegalArgumentException e) {
-						Log.e(getClass().getSimpleName(),
-								"IllegalArgumentException", e);
+						new Util().log("IllegalArgumentException", e);
 					} catch (IllegalAccessException e) {
-						Log.e(getClass().getSimpleName(),
-								"IllegalAccessException", e);
+						new Util().log("IllegalAccessException", e);
+						
 					}
 				}
 			}

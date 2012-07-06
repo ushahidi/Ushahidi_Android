@@ -26,7 +26,6 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.util.Log;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.database.Database;
@@ -300,11 +299,7 @@ public class ListReportModel extends Model {
 				IMediaSchema.REPORT_ID, reportId, IMediaSchema.IMAGE, 1);
 		if (sMedia != null && sMedia.size() > 0) {
 			return sMedia.get(0).getLink();
-			// return ImageManager.getThumbnails(context,
-			// sMedia.get(0).getLink());
-
 		}
-		// return context.getResources().getDrawable(R.drawable.report_icon);
 		return null;
 	}
 
@@ -320,22 +315,22 @@ public class ListReportModel extends Model {
 
 		// delete fetched reports
 		if (Database.mReportDao.deleteReportById(reportId)) {
-			Log.i("ListReportModel", "Report deleted");
+			new Util().log("All fetched report deleted");
 		}
 
 		// delete categories
 		if (Database.mReportCategoryDao
 				.deleteReportCategoryByReportId(reportId)) {
-			Log.i("Report", "Report deleted");
+			new Util().log("All fetched report categories deleted");
 		}
 
 		if (Database.mCategoryDao.deleteAllCategories()) {
-			Log.i("Category: ", "Category deleted");
+			new Util().log("Category deleted");
 		}
 
 		// delete media
 		if (Database.mMediaDao.deleteReportPhoto(reportId)) {
-			Log.i("Media", "Media deleted");
+			new Util().log("Media deleted");
 		}
 		return true;
 	}
@@ -343,21 +338,21 @@ public class ListReportModel extends Model {
 	public boolean deleteReport() {
 		// delete fetched reports
 		if (Database.mReportDao.deleteAllReport()) {
-			Log.i("ListReportModel", "Report deleted");
+			new Util().log("Report deleted");
 		}
 
 		// delete categories
 		if (Database.mReportCategoryDao.deleteAllReportCategory()) {
-			Log.i("Report", "Report deleted");
+			new Util().log("Report categories deleted");
 		}
 
 		if (Database.mCategoryDao.deleteAllCategories()) {
-			Log.i("Category: ", "Category deleted");
+			new Util().log( "Category deleted");
 		}
 
 		// delete media
 		if (Database.mMediaDao.deleteAllMedia()) {
-			Log.i("Media", "Media deleted");
+			new Util().log("Media deleted");
 		}
 		return true;
 	}

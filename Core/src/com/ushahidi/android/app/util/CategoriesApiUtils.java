@@ -27,9 +27,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
-import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Category;
 
@@ -48,7 +45,7 @@ public class CategoriesApiUtils {
 		try {
 			jsonObject = new JSONObject(jsonString);
 		} catch (JSONException e) {
-			log("JSONException", e);
+			new Util().log("JSONException", e);
 			processingResult = false;
 		}
 	}
@@ -57,7 +54,7 @@ public class CategoriesApiUtils {
 		try {
 			return jsonObject.getJSONObject("payload");
 		} catch (JSONException e) {
-			log("JSONException", e);
+			new Util().log("JSONException", e);
 			return new JSONObject();
 		}
 	}
@@ -66,13 +63,13 @@ public class CategoriesApiUtils {
 		try {
 			return getCategoryPayloadObj().getJSONArray("categories");
 		} catch (JSONException e) {
-			log("JSONException", e);
+			new Util().log("JSONException", e);
 			return new JSONArray();
 		}
 	}
 
 	public boolean getCategoriesList() {
-		log("Save report");
+		new Util().log("Save report");
 		if (processingResult) {
 			List<Category> listCategory = new ArrayList<Category>();
 			JSONArray categoriesArr = getCategoriesArr();
@@ -115,7 +112,7 @@ public class CategoriesApiUtils {
 						}
 
 					} catch (JSONException e) {
-						log("JSONException", e);
+						new Util().log("JSONException", e);
 						processingResult = false;
 						return false;
 					}
@@ -136,16 +133,6 @@ public class CategoriesApiUtils {
 			return Database.mCategoryDao.addCategories(categories);
 		}
 		return false;
-	}
-
-	private void log(String message) {
-		if (MainApplication.LOGGING_MODE)
-			Log.i(getClass().getName(), message);
-	}
-
-	private void log(String message, Exception ex) {
-		if (MainApplication.LOGGING_MODE)
-			Log.e(getClass().getName(), message, ex);
 	}
 
 }

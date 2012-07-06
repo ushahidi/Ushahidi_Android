@@ -21,8 +21,6 @@ package com.ushahidi.android.app.util;
 
 import java.lang.ref.WeakReference;
 
-import com.ushahidi.android.app.ImageManager;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -31,9 +29,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.ImageSwitcher;
 
+import com.ushahidi.android.app.ImageManager;
+
+//TODO:: switching uisng the ImageView passed via the constructor in the async extended class
 public class ImageSwitchWorker {
 
 	private static final int FADE_IN_TIME = 200;
@@ -134,10 +134,7 @@ public class ImageSwitchWorker {
 			}
 
 			if (bitmap != null && imageSwitcher != null) {
-				Log.i("ImageSwitchWorker","Images set");
 				setImageBitmap(imageSwitcher, bitmap);
-			}else {
-				Log.i("ImageSwitchWorker","Images set");
 			}
 		}
 

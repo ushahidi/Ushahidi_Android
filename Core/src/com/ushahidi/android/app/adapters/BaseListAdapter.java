@@ -24,11 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
 
 import com.ushahidi.android.app.models.Model;
+import com.ushahidi.android.app.util.Util;
 
 /**
  * BaseListAdapter
@@ -94,15 +94,15 @@ public abstract class BaseListAdapter<M extends Model> extends BaseAdapter {
     public abstract void refresh();
 
     protected void log(String message) {
-        Log.i(getClass().getName(), message);
+		new Util().log(message);
     }
 
-    protected void log(String format, Object...args) {
-        Log.i(getClass().getName(), String.format(format, args));
+    protected void log(String format, Object... args) {
+    	new Util().log( String.format(format, args));	
     }
 
     protected void log(String message, Exception ex) {
-        Log.e(getClass().getName(), message, ex);
+    	new Util().log(message, ex);
     }
 
 }
