@@ -1,0 +1,95 @@
+<resources>
+    <!-- DEPLOYMENT INFORMATION -->
+    <string name="app_name">交通出行互动平台</string>
+    <string name="deployment_url">http://114.251.208.133/ushahidi/</string>
+    <string name="team_url">http://114.251.208.133/ushahidi/</string>
+    <string name="media_url"/>
+    <string name="twitter_url"/>
+    <string name="facebook_url"/>
+    <string name="contact_url"/>
+    
+    <!-- DEPLOYMENT PROVIDER AUTHORITIES. USUALLY PACKAGE NAME AND CLASS NAME Eg. com.ushahidi.android.app.data.deploymentprovider -->
+    <string name="provider_authorities"/>
+    
+    <!-- NAMESPACE  -->
+    <string name="rounded_corner">http://schemas.android.com/apk/res/com.ushahidi.android.app</string>
+    
+	<!-- ICON IMAGES -->
+    <drawable name="app_icon">@drawable/icon</drawable>
+    <drawable name="logo_icon">@drawable/logo</drawable>
+    <drawable name="report_icon">@drawable/report</drawable>
+    <drawable name="actionbar_icon">@drawable/icon</drawable>
+    <drawable name="notification_icon">@drawable/notification</drawable>
+
+	<!-- BACKROUND IMAGES -->
+    <drawable name="splash_background">@drawable/splash</drawable>
+    <drawable name="dashboard_background">@drawable/dashboard</drawable>
+    <drawable name="about_background">@drawable/about</drawable>
+    <drawable name="actionbar_background">@drawable/actionbar</drawable>
+
+	<!-- COLOR CODES -->
+    <color name="title_color">#414e6e</color>
+    <color name="date_color">#262321</color>
+    <color name="report_table">#e1f0f3</color>
+    <color name="header_color">#7b8297</color>
+    <color name="background_color">#e1f0f3</color>
+    <color name="thick_background_color">#c4e2ed</color>
+
+    <color name="white_color">#FFFFFF</color>
+    <color name="verified_color">#25991C</color>
+    <color name="black_color">#000000</color>
+    <color name="gray_color">#736F6E</color>
+
+    <color name="title_background">#453727</color>
+    <color name="title_separator">#000000</color>
+    <color name="title_text">#ffffff</color>
+    <color name="title_text_alt">#ea5e20</color>
+    <color name="icon_title">#89221b</color>
+
+    <color name="foreground2">#ff7081a3</color>
+    <color name="background1">#ffffff</color>
+    <color name="background2">#ffd5ddeb</color>
+    <color name="background3">#ffe3e8f1</color>
+
+    <color name="list_view_date">#414e6e</color>
+    <color name="table_background">#e1f0f3</color>
+    <color name="table_odd_row_color">#c4e2ed</color>
+    <color name="table_even_row_color">#d4edf2</color>
+    <color name="table_selected_row_color">#ea5e20</color>
+    <color name="table_header_color">#7b8297</color>
+
+    <color name="verified_text_color">#414e6e</color>
+    <color name="unverified_text_color">#ea5e20</color>
+
+    <color name="tab_selected_color">#7b8297</color>
+    <color name="tab_unselected_color">#c4e2ed</color>
+
+	<!-- TEXT SIZE -->
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_large">22sp</dimen>
+    <dimen name="top_padding">10dip</dimen>
+
+	<!-- ACTIONBAR SIZE -->
+    <dimen name="actionbar_height">45dip</dimen>
+    <dimen name="actionbar_button_height">30dip</dimen>
+    <dimen name="bottom_actionbar_height">65dip</dimen>
+
+    <!-- DEPLOYMENT TEXT -->
+    <string name="about_text">北京“交通出行互动平台”手机软件介绍
+        “交通出行互动平台”是北京市交通发展研究中心在世界银行支
+        持下开发的信息交互平台,主要以Ushahidi现有的平台为基础,结合
+        北京城市交通管理和发展的实际需要,服务于市民日常交通出行。
+        该平台主要收集和共享市民交通出行需求和意见,通过多种渠
+        道广泛获取的个人出行信息、出行意愿和地理空间位置等。市民能
+        够通过登录网站、发电子邮件、微博以及使用智能手机软件等方式
+        随时随地发布交通信息,并分享他人提供的信息资源。同时,平台
+        收集的数据为城市交通管理和政策分析提供可靠依据和科学参考。
+        该手机应用软件主要用于向平台发布最新的交通信息,软件支
+        持文字描述、图片和视频上传,并可以通过手机内置的GPS设备自
+        动定位并将地理位置标注在电子地图上。
+        欢迎朋友们使用这个全新的信息平台,发布您的出行信息,并
+        提出宝贵意见。让我们将这个交通信息互动平台越做越好,创造更
+        加便捷和高效的北京交通环境!
+	</string>
+</resources>
