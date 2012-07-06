@@ -54,6 +54,7 @@ public class CheckinMapBallonOverlayView<Item extends OverlayItem> extends
 		readMore.setOnClickListener(new OnClickListener() {
 			public void onClick(android.view.View view) {
 				launchViewCheckin(id, filterUserId);
+				
 			}
 		});
 
@@ -64,7 +65,14 @@ public class CheckinMapBallonOverlayView<Item extends OverlayItem> extends
 
 		title.setText(item.getTitle());
 		snippet.setText(item.getSnippet());
-		getPhoto(item.getImage(), image);
+		if (item.getImage() == null) {
+
+			image.setImageResource(R.drawable.report_icon);
+					
+		} else {
+			getPhoto(item.getImage(), image);
+
+		}
 	}
 
 	private static void launchViewCheckin(int position, final int filterUserId) {
@@ -85,11 +93,6 @@ public class CheckinMapBallonOverlayView<Item extends OverlayItem> extends
 		ImageViewWorker imageWorker = new ImageViewWorker(mActivity);
 		imageWorker.setImageFadeIn(true);
 		imageWorker.loadImage(fileName, imageView, true, 0);
-		/*
-		 * return ImageManager.getDrawables(context, fileName,
-		 * Util.getScreenWidth(context));
-		 */
-
 	}
 
 }

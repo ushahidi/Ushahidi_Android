@@ -46,7 +46,7 @@ public class ReportMapItemizedOverlay<Item extends OverlayItem> extends
 	protected boolean onBalloonTap(int index, ReportMapOverlayItem item) {
 
 		ReportMapBallonOverlayView.viewReports(index, item.getFilterCategory());
-
+		hideBalloon();
 		return true;
 	}
 

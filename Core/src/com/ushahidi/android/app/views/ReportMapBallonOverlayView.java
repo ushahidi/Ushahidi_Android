@@ -65,8 +65,16 @@ public class ReportMapBallonOverlayView<Item extends OverlayItem> extends
 		title.setText(item.getTitle());
 		snippet.setText(item.getSnippet());
 		getPhoto(item.getImage(), image);
-		//image.setImageDrawable(item.getImage());
+		
+		if (item.getImage() == null) {
 
+			image.setImageResource(R.drawable.report_icon);
+					
+		} else {
+			getPhoto(item.getImage(), image);
+
+		}
+		
 	}
 
 	private static void launchViewReport(int position,
@@ -90,11 +98,6 @@ public class ReportMapBallonOverlayView<Item extends OverlayItem> extends
 		ImageViewWorker imageWorker = new ImageViewWorker(mActivity);
 		imageWorker.setImageFadeIn(true);
 		imageWorker.loadImage(fileName, imageView, true, 0);
-		/*
-		 * return ImageManager.getDrawables(context, fileName,
-		 * Util.getScreenWidth(context));
-		 */
-
 	}
 
 }
