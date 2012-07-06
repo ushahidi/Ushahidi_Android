@@ -43,7 +43,7 @@
     <string name="title">Title</string>
     <string name="date">Date</string>
     <string name="photo">Photo</string>
-    <string name="please_wait">Please wait#8230;</string>
+    <string name="please_wait">Please wait...</string>
     <string name="choose_method">Choose Method</string>
     <string name="how_to_select_pic">Please choose how you would like to get the
         picture.</string>
@@ -55,7 +55,7 @@
     <string name="file_system_error">File System Error</string>
     <string name="file_system_error_msg">File System Error, please ensure your save path is
         correct!</string>
-    <string name="read_more">Read more#8230;</string>
+    <string name="read_more">Read more...</string>
 
     <!-- Checkin Strings -->
     <string name="checkin_message">Message</string>
@@ -67,7 +67,7 @@
     <string name="checkin_enter_email_hint">Enter email</string>
 
     <!-- The hint text that appears in the search box. -->
-    <string name="search_hint">Type here to filter the list below#8230;</string>
+    <string name="search_hint">Type here to filter the list below...</string>
     <string name="maps_fetched_successful">Maps successfully fetched</string>
     <string name="could_not_fetch_data">Couldn\'t fetch new maps due to network
         error.</string>
@@ -76,10 +76,10 @@
     <string name="found_maps">Found maps</string>
 
     <!-- pull to refresh list -->
-    <string name="pull_to_refresh_pull_label">Pull to refresh#8230;</string>
-    <string name="pull_to_refresh_release_label">Release to refresh#8230;</string>
-    <string name="pull_to_refresh_refreshing_label">Loading#8230;</string>
-    <string name="pull_to_refresh_tap_label">Tap to refresh#8230;</string>
+    <string name="pull_to_refresh_pull_label">Pull to refresh...</string>
+    <string name="pull_to_refresh_release_label">Release to refresh...</string>
+    <string name="pull_to_refresh_refreshing_label">Loading...</string>
+    <string name="pull_to_refresh_tap_label">Tap to refresh...</string>
 
     <!-- sharing -->
     <string name="share_template">Check out<xliff:g id="title">%1$s</xliff:g>     at<xliff:g id="reporturl">%2$s</xliff:g></string>
@@ -93,7 +93,6 @@
     <string name="confirm_clear">Are you sure you want to clear everything?</string>
     <string name="items_cleared">Everything was successfully cleared</string>
     <string name="no_items_cleared">No items to clear</string>
-    <string name="loading">Loading#8230;</string>
     <string name="fix_error">Please make sure a name and a valid URL have been
         entered.</string>
     <string name="recent_reports">Recent Reports</string>
@@ -122,11 +121,11 @@
     <!-- new strings -->
     <string name="app_name">Ushahidi</string>
     <string name="load">Load</string>
-    <string name="loading_">Loading#8230;</string>
+    <string name="loading_">Loading...</string>
     <string name="loaded">Loaded</string>
     <string name="not_loaded">Not Loaded</string>
     <string name="save">Save</string>
-    <string name="saving_">Saving#8230;</string>
+    <string name="saving_">Saving...</string>
     <string name="saved">Saved</string>
     <string name="not_saved">Not Saved</string>
     <string name="unsaved_changes">Unsaved Changes</string>
@@ -203,8 +202,8 @@
     <string name="clear">Clear</string>
     <string name="cleared">Cleared</string>
     <string name="not_cleared">Not cleared</string>
-    <string name="search_reports">Search reports#8230;</string>
-    <string name="search_maps">Search maps#8230;</string>
+    <string name="search_reports">Search reports...</string>
+    <string name="search_maps">Search maps...</string>
     <string name="pending_upload">Pending Upload</string>
     <string name="fetched">Fetched</string>
     <string name="required_fields">Required Fields</string>
@@ -234,14 +233,14 @@
     <string name="add_checkin">Add Checkin</string>
     <string name="users">Users</string>
     <string name="checkin_is_enabled">Checkin is enabled</string>
-    <string name="search_checkins">Search Checkins#8230;</string>
+    <string name="search_checkins">Search Checkins...</string>
     <string name="delete_checkins">Delete checkins</string>
     <string name="personal_information">Personal information</string>
     <string name="add_map_by_url">Add Map By URL</string>
     <string name="find_maps_around_me">Find Maps Around Me</string>
     <string name="add_map">Add Map</string>
-    <string name="finding_map">Finding map#8230;</string>
-    <string name="uploading">Uploading#8230;</string>
+    <string name="finding_map">Finding map...</string>
+    <string name="uploading">Uploading...</string>
     <string name="full_name">Full name</string>
     <string name="enter_full_name">Please enter a full name</string>
     <string name="valid_email_address">Please enter a valid email address</string>
@@ -272,8 +271,7 @@
     <string name="hint_phonenumber">For send report only.</string>
     <string name="total_reports">Number of reports</string>
     <string name="hint_total_reports">The total number of reports to fetch from
-        the
-        selected deployment.</string>
+        the selected deployment.</string>
     <string name="no_reports">There are no reports to be shown</string>
 
 </resources>
