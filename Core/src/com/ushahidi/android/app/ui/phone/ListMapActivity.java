@@ -445,14 +445,14 @@ public class ListMapActivity extends
 			clearBuilder
 					.setMessage(getString(R.string.confirm_clear))
 					.setCancelable(false)
-					.setPositiveButton(getString(R.string.status_yes),
+					.setPositiveButton(getString(R.string.yes),
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									mHandler.post(deleteAllMaps);
 								}
 							})
-					.setNegativeButton(getString(R.string.status_no),
+					.setNegativeButton(getString(R.string.no),
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
@@ -487,14 +487,14 @@ public class ListMapActivity extends
 			addBuilder
 					.setTitle(R.string.enter_map_details)
 					.setView(textEntryView)
-					.setNegativeButton(R.string.btn_cancel,
+					.setNegativeButton(R.string.cancel,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int whichButton) {
 									dialog.cancel();
 								}
 							})
-					.setPositiveButton(R.string.btn_ok,
+					.setPositiveButton(R.string.ok,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int whichButton) {
@@ -590,7 +590,7 @@ public class ListMapActivity extends
 				toastShort(R.string.could_not_fetch_data);
 			} else {
 
-				toastShort(R.string.deployment_fetched_successful);
+				toastShort(R.string.maps_fetched_successful);
 			}
 
 			adapter.refresh();

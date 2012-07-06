@@ -74,7 +74,7 @@
             <Button
                 android:id="@+id/add_category"
                 style="@style/Button.Select"
-                android:text="@string/incident_add_category" />
+                android:text="@string/select_category" />
         </LinearLayout>
         <!-- Categories layout ends. -->
 
@@ -97,14 +97,14 @@
                     style="@style/Button.Select"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/incident_date" />
+                    android:text="@string/change_date" />
 
                 <Button
                     android:id="@+id/pick_time"
                     style="@style/Button.Select"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/incident_time" />
+                    android:text="@string/change_time" />
             </LinearLayout>
         </LinearLayout>
         <!-- Date layout ends. -->
@@ -143,7 +143,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="@string/incident_latitude"
+                    android:hint="@string/latitude"
                     android:inputType="numberDecimal|numberSigned" />
 
                 <EditText
@@ -152,7 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="@string/incident_longitude"
+                    android:hint="@string/longitude"
                     android:inputType="numberDecimal|numberSigned" />
             </LinearLayout>
         </LinearLayout>
@@ -172,7 +172,7 @@
             <Button
                 android:id="@+id/btnPicture"
                 style="@style/Button.Select"
-                android:text="@string/btn_add_photo" />
+                android:text="@string/add_photo" />
 
             <LinearLayout
                 style="@style/LinearLayout.Horizontal"

@@ -255,8 +255,8 @@ public class ListReportModel extends Model {
 								item.getReportDate(),
 								"MMMM dd, yyyy 'at' hh:mm:ss aaa"));
 				final String status = Util.toInt(item.getVerified()) == 0 ? context
-						.getString(R.string.report_unverified) : context
-						.getString(R.string.report_verified);
+						.getString(R.string.unverified) : context
+						.getString(R.string.verified);
 				listReportModel.setStatus(Util.capitalizeString(status));
 				listReportModel.setLocation(Util.capitalizeString(item
 						.getLocationName()));

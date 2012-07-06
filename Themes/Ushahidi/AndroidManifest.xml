@@ -53,9 +53,9 @@
         <!-- Settings -->
         <activity
             android:name=".Settings"
-            android:theme="@android:style/Theme.Black.NoTitleBar"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:label="@string/app_settings" >
+            android:label="@string/settings"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -67,7 +67,7 @@
         <activity
             android:name=".ui.phone.AboutActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:label="@string/ushahidi_about" >
+            android:label="@string/about" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -79,8 +79,8 @@
         <activity
             android:name=".ui.phone.AddReportActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:windowSoftInputMode="stateHidden"
-            android:label="@string/add_report" >
+            android:label="@string/add_report"
+            android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -106,7 +106,7 @@
         <activity
             android:name=".ui.phone.AddCheckinActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:label="@string/checkin_btn" >
+            android:label="@string/checkin" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -132,7 +132,7 @@
         <activity
             android:name=".ui.tablet.ListReportFragmentActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:label="@string/view_incident" >
+            android:label="@string/reports" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -149,12 +149,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
+
         <!-- List Checkins -->
         <activity
             android:name=".ui.tablet.ListCheckinFragmentActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:label="@string/view_incident" >
+            android:label="@string/checkins" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -217,7 +217,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
+
         <!-- checkin tab -->
         <activity
             android:name=".ui.phone.CheckinTabActivity"
@@ -242,8 +242,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
-         <!-- View Reports -->
+
+        <!-- View Reports -->
         <activity
             android:name=".ui.tablet.AddReportFragmentActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
@@ -314,7 +314,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.SplashScreenActivity"
+        <activity
+            android:name=".activities.SplashScreenActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -331,7 +332,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".ui.phone.CheckinMapActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation" >
@@ -341,30 +341,30 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".ui.phone.ListCheckinCommentActivity"
-            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation" >
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/comments" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".ui.phone.ListReportCommentActivity"
-            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation" >
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/comments" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".ui.phone.AddCommentActivity"
-            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation" >
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/comments" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -373,11 +373,12 @@
         </activity>
 
         <!-- New Fragment Activities Ends -->
-        
+
+
         <!-- Services -->
         <service android:name=".services.UploadCheckins" />
-        <service android:name=".services.FetchCheckinsComments"/>
-        <service android:name=".services.FetchReportsComments"/>
+        <service android:name=".services.FetchCheckinsComments" />
+        <service android:name=".services.FetchReportsComments" />
         <service android:name=".services.UploadComments" />
         <service android:name=".services.FetchReports" />
         <service android:name=".services.FetchCheckins" />
@@ -394,8 +395,8 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        
-         <!-- connectivity changed -->
+
+        <!-- connectivity changed -->
         <receiver
             android:name=".services.ConnectivityChangedReceiver"
             enabled="false" >
@@ -403,7 +404,6 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        
     </application>
 
 </manifest>

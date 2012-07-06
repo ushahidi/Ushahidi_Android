@@ -469,7 +469,7 @@ public class AddReportActivity extends
 			AlertDialog dialog = (new AlertDialog.Builder(this)).create();
 			dialog.setTitle(getString(R.string.network_error));
 			dialog.setMessage(getString(R.string.network_error_msg));
-			dialog.setButton2(getString(R.string.btn_ok),
+			dialog.setButton2(getString(R.string.ok),
 					new Dialog.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
@@ -482,7 +482,7 @@ public class AddReportActivity extends
 			AlertDialog dialog = (new AlertDialog.Builder(this)).create();
 			dialog.setTitle(getString(R.string.network_error));
 			dialog.setMessage(getString(R.string.file_system_error_msg));
-			dialog.setButton2(getString(R.string.btn_ok),
+			dialog.setButton2(getString(R.string.ok),
 					new Dialog.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
@@ -507,7 +507,7 @@ public class AddReportActivity extends
 							dialog.dismiss();
 						}
 					});
-			dialog.setButton2(getString(R.string.btn_cancel),
+			dialog.setButton2(getString(R.string.cancel),
 					new Dialog.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
@@ -533,7 +533,7 @@ public class AddReportActivity extends
 		case DIALOG_MULTIPLE_CATEGORY: {
 			if (showCategories() != null) {
 				return new AlertDialog.Builder(this)
-						.setTitle(R.string.add_categories)
+						.setTitle(R.string.choose_categories)
 						.setMultiChoiceItems(
 								showCategories(),
 								setCheckedCategories(),
@@ -556,7 +556,7 @@ public class AddReportActivity extends
 										setSelectedCategories(mVectorCategories);
 									}
 								})
-						.setPositiveButton(R.string.btn_ok,
+						.setPositiveButton(R.string.ok,
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int whichButton) {
@@ -751,8 +751,8 @@ public class AddReportActivity extends
 					"yyy-MM-dd kk:mm:ss", Locale.US);
 			mDateToSubmit = submitFormat.format(date);
 		} else {
-			view.mPickDate.setText(R.string.incident_date);
-			view.mPickTime.setText(R.string.incident_time);
+			view.mPickDate.setText(R.string.change_date);
+			view.mPickTime.setText(R.string.change_time);
 			mDateToSubmit = null;
 		}
 	}
@@ -783,8 +783,8 @@ public class AddReportActivity extends
 							"yyy-MM-dd kk:mm:ss", Locale.US);
 					mDateToSubmit = submitFormat.format(date);
 				} else {
-					view.mPickDate.setText(R.string.incident_date);
-					view.mPickTime.setText(R.string.incident_time);
+					view.mPickDate.setText(R.string.change_date);
+					view.mPickTime.setText(R.string.change_time);
 					mDateToSubmit = null;
 				}
 
@@ -821,7 +821,7 @@ public class AddReportActivity extends
 		showCategories();
 
 		// clear
-		view.mBtnAddCategory.setText(R.string.incident_add_category);
+		view.mBtnAddCategory.setText(R.string.select_category);
 		if (aSelectedCategories.size() > 0) {
 			StringBuilder categories = new StringBuilder();
 			for (String category : aSelectedCategories) {
@@ -836,7 +836,7 @@ public class AddReportActivity extends
 			if (!TextUtils.isEmpty(categories.toString())) {
 				view.mBtnAddCategory.setText(categories.toString());
 			} else {
-				view.mBtnAddCategory.setText(R.string.incident_add_category);
+				view.mBtnAddCategory.setText(R.string.select_category);
 			}
 		}
 	}

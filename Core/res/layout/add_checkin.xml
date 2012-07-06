@@ -40,7 +40,7 @@
 
             <TextView
                 style="@style/TextView.Label"
-                android:text="@string/report_location" />
+                android:text="@string/location" />
 
             <com.google.android.maps.MapView
                 android:id="@+id/checkin_location_map"
@@ -59,12 +59,12 @@
 
             <TextView
                 style="@style/TextView.Label"
-                android:text="@string/checkin_photo" />
+                android:text="@string/photo" />
 
             <Button
                 android:id="@+id/checkin_photo_button"
                 style="@style/Button.Select"
-                android:text="@string/btn_add_photo" />
+                android:text="@string/add_photo" />
 
             <LinearLayout
                 style="@style/LinearLayout.Horizontal"

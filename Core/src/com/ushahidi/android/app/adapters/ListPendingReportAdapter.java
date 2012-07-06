@@ -169,7 +169,7 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 		// change the status color
 
 		if (getItem(position).getStatus().equalsIgnoreCase(
-				context.getString(R.string.report_verified))) {
+				context.getString(R.string.verified))) {
 			widgets.status.setTextColor(context.getResources().getColor(
 					R.color.verified_text_color)); // green
 		} else {

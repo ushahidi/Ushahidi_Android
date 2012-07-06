@@ -12,7 +12,7 @@
 easier way to do it so I'm going to leave this code in here temporarily. I know it will be useful in
 the near future.  -->
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
-	android:label="@string/search_label" android:searchSettingsDescription="@string/settings_description"
+	android:label="@string/maps" android:searchSettingsDescription="@string/found_maps"
 	android:hint="@string/search_hint"
 	android:searchSuggestAuthority="com.ushahidi.android.app.data.deploymentprovider"
 	android:searchSuggestIntentAction="android.intent.action.VIEW"

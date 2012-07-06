@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
+<!--
   Copyright (c) 2010 Ushahidi Inc
   All rights reserved
   Contact: team@ushahidi.com
@@ -16,18 +16,17 @@
  
   If you have questions regarding the use of this file, please contact
   Ushahidi developers at team@ushahidi.com. 
- -->
-<PreferenceScreen
-  xmlns:android="http://schemas.android.com/apk/res/android">
-       
-<com.ushahidi.android.app.DialogPreference
-	android:key="clear_cache_preference"
-   	android:title="@string/txt_clear_cache"
-   	android:dialogTitle="@string/txt_clear_cache"
-   	android:dialogMessage="@string/txt_confirm_clear_cache"
-   	android:summary="@string/hint_clear_cache"
-   	android:positiveButtonText="@string/btn_ok"
-   	android:negativeButtonText="@string/btn_cancel" />
-   	
-     <com.ushahidi.android.app.ui.SeekBarPreference android:summary="@string/photo_resize_summary" android:max="1024" android:dialogMessage=" Resized image width" android:title="@string/photo_resize_title" android:dialogTitle="@string/photo_resize_title" android:defaultValue="200" android:key="photo_size_preference" android:text=" pixels"/>
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <com.ushahidi.android.app.ui.SeekBarPreference
+        android:defaultValue="200"
+        android:dialogMessage=" Resized image width"
+        android:dialogTitle="@string/photo_resize_title"
+        android:key="photo_size_preference"
+        android:max="1024"
+        android:summary="@string/photo_resize_summary"
+        android:text=" pixels"
+        android:title="@string/photo_resize_title" />
+
 </PreferenceScreen>

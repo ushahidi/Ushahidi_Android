@@ -18,7 +18,7 @@
             <TextView
                 android:id="@+id/report_title"
                 style="@style/TextView.Label"
-                android:text="@string/report_title" />
+                android:text="@string/title" />
 
             <LinearLayout
                 android:id="@+id/title_layout"
@@ -37,7 +37,7 @@
             <TextView
                 android:id="@+id/report_status"
                 style="@style/TextView.Label"
-                android:text="@string/report_verified" />
+                android:text="@string/verified" />
 
             <LinearLayout
                 style="@style/LinearLayout.Vertical"
@@ -55,7 +55,7 @@
             <TextView
                 android:id="@+id/report_description"
                 style="@style/TextView.Label"
-                android:text="@string/report_desc" />
+                android:text="@string/description" />
 
             <LinearLayout
                 style="@style/LinearLayout.Vertical"
@@ -73,7 +73,7 @@
             <TextView
                 android:id="@+id/report_category"
                 style="@style/TextView.Label"
-                android:text="@string/report_category" />
+                android:text="@string/category" />
 
             <LinearLayout
                 style="@style/LinearLayout.Vertical"
@@ -92,7 +92,7 @@
             <TextView
                 android:id="@+id/report_date"
                 style="@style/TextView.Label"
-                android:text="@string/report_date" />
+                android:text="@string/date" />
 
             <LinearLayout
                 style="@style/LinearLayout.Vertical"
@@ -111,7 +111,7 @@
             <TextView
                 android:id="@+id/report_loc"
                 style="@style/TextView.Label"
-                android:text="@string/report_location" />
+                android:text="@string/location" />
 
             <LinearLayout style="@style/LinearLayout.Vertical" >
 

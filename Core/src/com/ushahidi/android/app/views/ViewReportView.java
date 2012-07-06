@@ -229,7 +229,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	}
 
 	public void setStatus(String status) {
-		final String s = status == context.getString(R.string.report_verified) ? context
+		final String s = status == context.getString(R.string.verified) ? context
 				.getString(R.string.yes) : context.getString(R.string.no);
 		this.status.setText(s);
 	}

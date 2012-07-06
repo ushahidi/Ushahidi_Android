@@ -29,7 +29,7 @@
 
             <TextView
                 style="@style/TextView.Label"
-                android:text="@string/report_title" />
+                android:text="@string/title" />
 
             <LinearLayout
                 android:id="@+id/top_items_layout"
@@ -48,7 +48,7 @@
             <TextView
                 android:id="@+id/checkin_desc"
                 style="@style/TextView.Label"
-                android:text="@string/report_desc" />
+                android:text="@string/description" />
 
             <LinearLayout
                 style="@style/LinearLayout.Vertical"
@@ -67,7 +67,7 @@
 
             <TextView
                 style="@style/TextView.Label"
-                android:text="@string/report_date" />
+                android:text="@string/date" />
 
             <LinearLayout
                 android:id="@+id/date_layout"
@@ -86,7 +86,7 @@
             <TextView
                 android:id="@+id/checking_loc"
                 style="@style/TextView.Label"
-                android:text="@string/report_location" />
+                android:text="@string/location" />
 
             <!-- Location ends -->
 
@@ -112,7 +112,7 @@
             <TextView
                 android:id="@+id/checkin_photo"
                 style="@style/TextView.Label"
-                android:text="@string/report_photo" />
+                android:text="@string/photo" />
 
             <LinearLayout
                 android:id="@+id/img_layout"
