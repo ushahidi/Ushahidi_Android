@@ -12,20 +12,10 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="txt_first_name">First name</string>
-    <string name="hint_first_name">For attribution when submitting a report
-        (optional).</string>
-    <string name="txt_last_name">Last name</string>
-    <string name="hint_last_name">Also for attribution when submitting a report
-        (optional).</string>
-    <string name="txt_email">E-mail address</string>
-    <string name="hint_email">For contact purposes only.</string>
     <string name="txt_phonenumber">Mobile phone number</string>
     <string name="hint_phonenumber">For send report only.</string>
     <string name="total_reports">Number of reports</string>
-    <string name="hint_total_reports">The total number of reports to fetch from
-        the
-        selected deployment.</string>
+    <string name="hint_total_reports">The total number of reports to fetch from the selected deployment.</string>
     <string name="no_reports">There are no reports to be shown</string>
 
     <!-- about screen -->
@@ -69,8 +59,7 @@
     <!-- The hint text that appears in the search box. -->
     <string name="search_hint">Type here to filter the list below...</string>
     <string name="maps_fetched_successful">Maps successfully fetched</string>
-    <string name="could_not_fetch_data">Couldn\'t fetch new maps due to network
-        error.</string>
+    <string name="could_not_fetch_data">Couldn\'t fetch new maps due to network error.</string>
 
     <!-- The description that will show up in the search settings for this source. -->
     <string name="found_maps">Found maps</string>
@@ -82,7 +71,7 @@
     <string name="pull_to_refresh_tap_label">Tap to refresh...</string>
 
     <!-- sharing -->
-    <string name="share_template">Check out<xliff:g id="title">%1$s</xliff:g>     at<xliff:g id="reporturl">%2$s</xliff:g></string>
+    <string name="share_template">Check out<xliff:g id="title">%1$s</xliff:g> at<xliff:g id="reporturl">%2$s</xliff:g></string>
     <string name="title_share">Share using</string>
     <string name="select_distance">Select distance in km</string>
     <!-- photos -->
@@ -246,17 +235,17 @@
     <string name="valid_email_address">Please enter a valid email address</string>
     <string name="enter_comment">Please enter a comment and it should be 3 characters or more long.</string>
     <string name="could_not_fetch_comment">Could not fetch comment</string>
-    <string name="clear_all_map">Clear All Map</string>
+    <string name="clear_all_map">Clear all map</string>
     <string name="refresh">Refresh</string>
     <string name="no_checkin">No Checkin</string>
     <string name="add_photo">Add Photo</string>
     <string name="select_category">Select Category</string>
-    <string name="change_date">Change Date</string>
+    <string name="change_date">Change date</string>
     <string name="change_time">Change time</string>
-    <string name="prompt_mesg">Choose A Category to Filter</string>
+    <string name="prompt_mesg">Choose a category to filter</string>
     <string name="invalid_email_address">An invalid email address was entered</string>
-    <string name="choose_categories">Choose Categories</string>
-    <string name="location_disabled">Location Detection Disabled</string>
+    <string name="choose_categories">Choose categories</string>
+    <string name="location_disabled">Location detection disabled</string>
     <string name="location_reenable">Would you like to visit Location &amp; Security settings to re-enable location detection?</string>
     <string name="basic_settings">Basic settings</string>
     <string name="txt_first_name">First name</string>
@@ -273,5 +262,4 @@
     <string name="hint_total_reports">The total number of reports to fetch from
         the selected deployment.</string>
     <string name="no_reports">There are no reports to be shown</string>
-
 </resources>

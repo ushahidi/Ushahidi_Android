@@ -46,7 +46,7 @@ public class CheckinMapItemizedOverlay<Item extends OverlayItem> extends
 	protected boolean onBalloonTap(int index, CheckinMapOverlayItem item) {
 
 		CheckinMapBallonOverlayView.viewCheckins(index, item.getFilterUserId());
-
+		hideBalloon();
 		return true;
 	}
 
