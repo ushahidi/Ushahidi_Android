@@ -645,6 +645,7 @@ public class AddCheckinActivity extends
 		public void onReceive(Context context, Intent intent) {
 			if (intent != null) {
 				int status = intent.getIntExtra("status", 3);
+				stopService(uploadCheckins);
 				try {
 					unregisterReceiver(uploadBroadcastReceiver);
 				} catch (IllegalArgumentException e) {

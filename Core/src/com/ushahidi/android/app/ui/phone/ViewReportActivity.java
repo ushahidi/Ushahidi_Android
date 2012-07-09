@@ -304,6 +304,7 @@ public class ViewReportActivity extends
 			if (intent != null) {
 
 				int status = intent.getIntExtra("status", 4);
+				stopService(fetchReportComments);
 				view.dialog.cancel();
 				if (status == 4) {
 					toastLong(R.string.internet_connection);

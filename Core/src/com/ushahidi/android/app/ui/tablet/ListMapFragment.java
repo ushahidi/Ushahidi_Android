@@ -264,8 +264,6 @@ public class ListMapFragment extends
 
 	public void refreshMapLists() {
 		adapter.refresh();
-		// mListMapView.mListView.setAdapter(mListMapAdapter);
-		// mListMapView.displayEmptyListText();
 	}
 
 	// Context Menu Stuff

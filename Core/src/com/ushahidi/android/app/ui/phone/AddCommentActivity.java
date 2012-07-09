@@ -238,6 +238,7 @@ public class AddCommentActivity extends
 		public void onReceive(Context context, Intent intent) {
 			if (intent != null) {
 				int status = intent.getIntExtra("status", 3);
+				stopService(uploadComment);
 				try {
 					unregisterReceiver(uploadBroadcastReceiver);
 				} catch (IllegalArgumentException e) {

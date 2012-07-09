@@ -461,8 +461,10 @@ public class ListCheckinFragment
 			if (intent != null) {
 
 				int status = intent.getIntExtra("status", 4);
+				getActivity().stopService(fetchCheckins);
 				refreshState = false;
 				updateRefreshStatus();
+
 				if (status == 4) {
 					toastLong(R.string.internet_connection);
 				} else if (status == 110) {
@@ -479,6 +481,7 @@ public class ListCheckinFragment
 			try {
 				getActivity().unregisterReceiver(fetchBroadcastReceiver);
 			} catch (IllegalArgumentException e) {
+				log("IllegalArgumentException", e);
 			}
 		}
 	};

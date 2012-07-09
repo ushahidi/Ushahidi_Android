@@ -243,6 +243,7 @@ public class ViewCheckinActivity extends
 			if (intent != null) {
 
 				int status = intent.getIntExtra("status", 4);
+				stopService(fetchCheckinComments);
 				if (status == 4) {
 					toastLong(R.string.internet_connection);
 				} else if (status == 110) {

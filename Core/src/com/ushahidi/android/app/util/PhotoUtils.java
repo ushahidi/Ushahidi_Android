@@ -323,11 +323,11 @@ public class PhotoUtils {
 	private static int calculateInSampleSize(BitmapFactory.Options options,
 			int reqWidth, int reqHeight) {
 
-		// raw height and weight of image
+		// raw height and weight of an image
 		final int width = options.outWidth;
 		final int height = options.outHeight;
 		int inSampleSize = 1;
-		Log.i("XXX", String.format("ORIGINAL %dx%d", reqWidth, reqHeight));
+		new Util().log(String.format("ORIGINAL %dx%d", reqWidth, reqHeight));
 		if (height > reqHeight || width > reqWidth) {
 			if (width > height) {
 				inSampleSize = Math.round((float) height / (float) reqHeight);

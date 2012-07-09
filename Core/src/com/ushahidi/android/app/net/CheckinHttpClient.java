@@ -192,8 +192,8 @@ public class CheckinHttpClient extends MainHttpClient {
 					InputStream serverInput = respEntity.getContent();
 					if(serverInput !=null) {
 						//TODO:: get the status confirmation code to work
-						int status = ApiUtils
-							.extractPayloadJSON(GetText(serverInput));
+						//int status = ApiUtils
+						//.extractPayloadJSON(GetText(serverInput));
 						
 						return true;
 					}

@@ -215,7 +215,6 @@ public class CheckinApiUtils {
 		List<Checkin> checkins = getCheckinsList(context);
 
 		if (checkins != null) {
-
 			return Database.mCheckin.addCheckins(checkins);
 		}
 

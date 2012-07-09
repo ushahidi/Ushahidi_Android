@@ -154,6 +154,7 @@ public class ListReportCommentActivity extends
 			if (intent != null) {
 
 				int status = intent.getIntExtra("status", 4);
+				stopService(fetchReportComments);
 				view.dialog.cancel();
 				if (status == 4) {
 					toastLong(R.string.internet_connection);
@@ -163,8 +164,6 @@ public class ListReportCommentActivity extends
 					toastLong(R.string.could_not_fetch_comment);
 				} else if (status == 0) {
 					log("successfully fetched comments");
-					// refreshCheckinList();
-					// showUsers();
 				}
 			}
 
