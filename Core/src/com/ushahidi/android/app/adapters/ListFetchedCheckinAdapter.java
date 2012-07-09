@@ -104,7 +104,6 @@ public class ListFetchedCheckinAdapter extends
 		}
 
 		if (getItem(position).getThumbnail() == null) {
-
 			widgets.thumbnail.setImageResource(R.drawable.report_icon);
 
 		} else {

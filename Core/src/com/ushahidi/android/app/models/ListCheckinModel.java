@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.database.Database;
@@ -113,17 +112,17 @@ public class ListCheckinModel extends Checkin {
 	}
 
 	private String getImage(Context context, int checkinId) {
-
 		List<Media> sMedia = Database.mMediaDao.fetchMedia(
 				IMediaSchema.CHECKIN_ID, checkinId, IMediaSchema.IMAGE, 1);
 		if (sMedia != null && sMedia.size() > 0) {
+			
 			return sMedia.get(0).getLink();
 		}
 		return null;
 	}
 
 	private String getUsername(Context context, int userId) {
-		Log.i("ListCheckinModel","User Id "+userId);
+		new Util().log("ListCheckinModel","User Id "+userId);
 		List<User> sUser = Database.mUserDao.fetchUsersById(userId);
 		if (sUser != null && sUser.size() > 0) {
 			return sUser.get(0).getUsername();
@@ -142,16 +141,16 @@ public class ListCheckinModel extends Checkin {
 		
 		// delete fetched reports
 		if(Database.mCheckin.deleteAllCheckins() )  {
-			Log.i("ListCheckinModel","Checkin deleted");
+			new Util().log("ListCheckinModel","Checkin deleted");
 		}
 		
 		if( Database.mUserDao.deleteAllUsers() ) {
-			Log.i("Users: ","Users deleted");
+			new Util().log("Users: ","Users deleted");
 		}
 
 		// delete media
 		if(Database.mMediaDao.deleteCheckinPhoto(checkinId) ) {
-			Log.i("Media","Media deleted");
+			new Util().log("Media","Media deleted");
 		}
 		return true;
 	}
@@ -160,16 +159,16 @@ public boolean deleteCheckin() {
 		
 		// delete fetched reports
 		if(Database.mCheckin.deleteAllCheckins() )  {
-			Log.i("ListCheckinModel","Checkin deleted");
+			new Util().log("ListCheckinModel","Checkin deleted");
 		}
 		
 		if( Database.mUserDao.deleteAllUsers() ) {
-			Log.i("Users: ","Users deleted");
+			new Util().log("Users: ","Users deleted");
 		}
 
 		// delete media
 		if(Database.mMediaDao.deleteAllMedia() ) {
-			Log.i("Media","Media deleted");
+			new Util().log("Media","Media deleted");
 		}
 		return true;
 	}
