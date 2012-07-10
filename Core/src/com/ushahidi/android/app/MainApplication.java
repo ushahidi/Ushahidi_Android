@@ -37,7 +37,7 @@ public class MainApplication extends Application {
 
     public static Application app = null;
 
-    public static boolean LOGGING_MODE = false;
+    public static boolean LOGGING_MODE = true;
 
     @Override
     public void onCreate() {
