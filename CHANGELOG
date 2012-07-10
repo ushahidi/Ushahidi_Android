@@ -1,3 +1,12 @@
+3.0.0
+Features:
+  * Much faster when loading images.
+  * Added the ability to view media attached to reports.
+  * Added the ability to view and add comments to reports.
+  * Replaced dashboard with map listing.
+  * Removed unnecessary setting options.
+  * Restructured the code base.
+
 2.9.3:
 Bug:
   * Fixed report uploading problem
