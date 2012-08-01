@@ -77,6 +77,8 @@ public class AddCheckinActivity extends
 	private UploadPhotoAdapter pendingPhoto;
 
 	private String mErrorMessage;
+	
+	private final String PENDING_FOLDER = "pending/";
 
 	private String photoName;
 
@@ -198,7 +200,7 @@ public class AddCheckinActivity extends
 				return true;
 			} else {
 
-				// editing existing report
+				// edit existing report
 				if (ImageManager.deletePendingPhoto(this, "/"
 						+ pendingPhoto.getItem(position).getPhoto())) {
 
@@ -357,7 +359,7 @@ public class AddCheckinActivity extends
 					id += 1;
 					Photo photo = new Photo();
 					photo.setDbId(id);
-					photo.setPhoto("pending/" + file.getName());
+					photo.setPhoto(PENDING_FOLDER + file.getName());
 					pendingPhoto.addItem(photo);
 				}
 			}
