@@ -291,6 +291,7 @@ public class AddReportActivity extends
 		boolean required = false;
 		// @inoran
 		// validate the title field
+		mErrorMessage = "";
 		if (TextUtils.isEmpty(view.mIncidentTitle.getText())) {
 			mErrorMessage = getString(R.string.title) + "\n";
 			required = true;
