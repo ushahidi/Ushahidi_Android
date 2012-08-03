@@ -623,6 +623,7 @@ public class AddReportActivity extends
 			dialog.setButton2(getString(R.string.yes),
 					new Dialog.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
+							new DiscardTask(AddReportActivity.this).execute((String)null);
 							finish();
 							dialog.dismiss();
 						}
@@ -1064,6 +1065,34 @@ public class AddReportActivity extends
 				this, pendingPhoto.getItem(position).getPhoto(),
 				Util.getScreenWidth(this)));
 
+	}
+
+	/**
+	 * Delete any existing photo in the pending folder
+	 */
+	private void deleteExistingPhoto() {
+		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
+		if (pendingPhotos != null && pendingPhotos.length > 0) {
+			for (File file : pendingPhotos) {
+				if (file.exists()) {
+
+					file.delete();
+				}
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ushahidi.android.app.activities.BaseEditMapActivity#onDiscardChanges
+	 * ()
+	 */
+	@Override
+	protected boolean onDiscardChanges() {
+		deleteExistingPhoto();
+		return true;
 	}
 
 }

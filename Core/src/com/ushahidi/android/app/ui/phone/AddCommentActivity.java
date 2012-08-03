@@ -260,4 +260,13 @@ public class AddCommentActivity extends
 		}
 	};
 
+	/* (non-Javadoc)
+	 * @see com.ushahidi.android.app.activities.BaseEditActivity#onDiscardChanges()
+	 */
+	@Override
+	protected boolean onDiscardChanges() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

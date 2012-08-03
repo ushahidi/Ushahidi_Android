@@ -83,6 +83,7 @@ public abstract class BaseEditActivity<V extends View, M extends Model> extends
 				.setNeutralButton(getText(R.string.discard),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
+								new DiscardTask(BaseEditActivity.this).execute((String) null);
 								finish();
 							}
 						})
@@ -100,6 +101,8 @@ public abstract class BaseEditActivity<V extends View, M extends Model> extends
 	 * @return returns true if successful
 	 */
 	protected abstract boolean onSaveChanges();
+
+	protected abstract boolean onDiscardChanges();
 
 	/**
 	 * Background progress task for saving Model
@@ -122,6 +125,28 @@ public abstract class BaseEditActivity<V extends View, M extends Model> extends
 				activity.finish();
 			} else {
 				toastLong(R.string.not_saved);
+			}
+		}
+	}
+
+	/**
+	 * Background progress task for saving Model
+	 */
+	protected class DiscardTask extends ProgressTask {
+		public DiscardTask(Activity activity) {
+			super(activity, R.string.discard);
+		}
+
+		@Override
+		protected Boolean doInBackground(String... args) {
+			return onDiscardChanges();
+		}
+
+		@Override
+		protected void onPostExecute(Boolean success) {
+			super.onPostExecute(success);
+			if (success) {
+				activity.finish();
 			}
 		}
 	}

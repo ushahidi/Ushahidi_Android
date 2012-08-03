@@ -79,6 +79,7 @@ public abstract class BaseEditMapActivity<V extends View, M extends Model>
 				.setNeutralButton(getText(R.string.discard),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
+								new DiscardTask(BaseEditMapActivity.this).execute((String)null);
 								finish();
 							}
 						})
@@ -106,6 +107,8 @@ public abstract class BaseEditMapActivity<V extends View, M extends Model>
 	 * @return returns true if successful
 	 */
 	protected abstract boolean onSaveChanges();
+	
+	protected abstract boolean onDiscardChanges();
 
 	/**
 	 * Background progress task for saving a report as a task
@@ -128,6 +131,28 @@ public abstract class BaseEditMapActivity<V extends View, M extends Model>
 				activity.finish();
 			} else {
 				toastLong(R.string.not_saved);
+			}
+		}
+	}
+	
+	/**
+	 * Background progress task for saving Model
+	 */
+	protected class DiscardTask extends ProgressTask {
+		public DiscardTask(Activity activity) {
+			super(activity, R.string.discard);
+		}
+
+		@Override
+		protected Boolean doInBackground(String... args) {
+			return onDiscardChanges();
+		}
+
+		@Override
+		protected void onPostExecute(Boolean success) {
+			super.onPostExecute(success);
+			if (success) {
+				activity.finish();
 			}
 		}
 	}

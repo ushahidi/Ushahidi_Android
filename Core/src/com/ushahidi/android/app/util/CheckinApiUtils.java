@@ -118,6 +118,7 @@ public class CheckinApiUtils {
 		new Util().log("Save report");
 		if (processingResult) {
 			List<Checkin> checkinList = new ArrayList<Checkin>();
+			ArrayList<User> checkinsUsersList = new ArrayList<User>();
 			JSONArray checkinsArray = getCheckinsArray();
 			int id = 0;
 			if (checkinsArray != null && checkinsArray.length() > 0) {
@@ -136,8 +137,24 @@ public class CheckinApiUtils {
 								.getString("date"));
 						currentCheckin.setMessage(checkinsArray
 								.getJSONObject(i).getString("msg"));
-						currentCheckin.setUserId(checkinsArray.getJSONObject(i)
-								.getInt("user"));
+						if (checkinsArray.getJSONObject(i).isNull("user")) {
+							currentCheckin.setUsername(checkinsArray
+									.getJSONObject(i).getString("name"));
+						} else {
+							currentCheckin.setUserId(checkinsArray
+									.getJSONObject(i).getJSONObject("user")
+									.getInt("id"));
+							//add users
+							User users = new User();
+							users.setUserId(checkinsArray.getJSONObject(i)
+									.getJSONObject("user").getInt("id"));
+							users.setUsername(checkinsArray.getJSONObject(i)
+									.getJSONObject("user").getString("name"));
+							users.setColor(checkinsArray.getJSONObject(i)
+									.getJSONObject("user").getString("color"));
+							checkinsUsersList.add(users);
+							saveUsers(checkinsUsersList);
+						}
 
 						// retrieve media.
 						if (!checkinsArray.getJSONObject(i).isNull("media")) {
@@ -223,6 +240,13 @@ public class CheckinApiUtils {
 
 	public boolean saveUsers() {
 		List<User> users = getCheckinsUsersList();
+		if (users != null && users.size() > 0) {
+			return Database.mUserDao.addUser(users);
+		}
+		return false;
+	}
+	
+	public boolean saveUsers(List<User> users) {
 		if (users != null && users.size() > 0) {
 			return Database.mUserDao.addUser(users);
 		}

@@ -77,7 +77,7 @@ public class AddCheckinActivity extends
 	private UploadPhotoAdapter pendingPhoto;
 
 	private String mErrorMessage;
-	
+
 	private final String PENDING_FOLDER = "pending/";
 
 	private String photoName;
@@ -119,9 +119,8 @@ public class AddCheckinActivity extends
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		pendingPhoto = new UploadPhotoAdapter(this);
 		this.id = getIntent().getExtras().getInt("id", 0);
-		
+
 		mapController = view.mMapView.getController();
 		view.mPickPhoto.setOnClickListener(this);
 		pendingPhoto = new UploadPhotoAdapter(this);
@@ -250,7 +249,6 @@ public class AddCheckinActivity extends
 		} else if (mError) {
 			showDialog(DIALOG_SHOW_MESSAGE);
 		} else {
-			// new UploadTask(this).execute((String) null);
 			addCheckins();
 		}
 
@@ -292,13 +290,16 @@ public class AddCheckinActivity extends
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
+
 			showDialog();
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_send_checkin) {
+
 			validateCheckins();
 			return true;
 		} else if (item.getItemId() == R.id.menu_cancel_checkin) {
+
 			showDialog(DIALOG_SHOW_PROMPT);
 			return true;
 		}
@@ -310,6 +311,8 @@ public class AddCheckinActivity extends
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
+			// delete any existing photo in the pending folder
+			// deleteExistingPhoto();
 			if (requestCode == REQUEST_CODE_CAMERA) {
 
 				Uri uri = PhotoUtils.getPhotoUri(photoName, this);
@@ -319,6 +322,7 @@ public class AddCheckinActivity extends
 						bitmap.getWidth(), bitmap.getHeight()));
 
 			} else if (requestCode == REQUEST_CODE_IMAGE) {
+
 				Bitmap bitmap = PhotoUtils
 						.getGalleryPhoto(this, data.getData());
 				PhotoUtils.savePhoto(this, bitmap, photoName);
@@ -356,11 +360,28 @@ public class AddCheckinActivity extends
 			int id = 0;
 			for (File file : pendingPhotos) {
 				if (file.exists()) {
+
 					id += 1;
 					Photo photo = new Photo();
 					photo.setDbId(id);
 					photo.setPhoto(PENDING_FOLDER + file.getName());
 					pendingPhoto.addItem(photo);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Delete any existing photo in the pending folder
+	 */
+	private void deleteExistingPhoto() {
+		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
+		if (pendingPhotos != null && pendingPhotos.length > 0) {
+			for (File file : pendingPhotos) {
+				if (file != null) {
+					if (file.exists()) {
+						file.delete();
+					}
 				}
 			}
 		}
@@ -390,7 +411,7 @@ public class AddCheckinActivity extends
 		checkin.setPending(1);
 		checkin.setMessage(view.mCheckinMessageText.getText().toString());
 		checkin.setLocationLatitude(String.valueOf(this.latitude));
-		checkin.setLocationLongitude(String.valueOf(this.longitude));
+		checkin.setLocationLongitude	(String.valueOf(this.longitude));
 		checkin.setDate((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
 				.format(new Date()));
 		// set location to unknown so to save failed checkin to a database.
@@ -462,6 +483,7 @@ public class AddCheckinActivity extends
 			dialog.setButton(getString(R.string.gallery_option),
 					new Dialog.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
+							deleteExistingPhoto();
 							Intent intent = new Intent();
 							intent.setAction(Intent.ACTION_PICK);
 							intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -478,6 +500,7 @@ public class AddCheckinActivity extends
 			dialog.setButton3(getString(R.string.camera_option),
 					new Dialog.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
+							deleteExistingPhoto();
 							Intent intent = new Intent(
 									android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 							intent.putExtra(MediaStore.EXTRA_OUTPUT, PhotoUtils
@@ -536,6 +559,9 @@ public class AddCheckinActivity extends
 			dialog.setButton2(getString(R.string.yes),
 					new Dialog.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
+							// delete any existing photo in the pending folder
+							new DiscardTask(AddCheckinActivity.this)
+									.execute((String) null);
 							finish();
 							dialog.dismiss();
 						}
@@ -667,4 +693,17 @@ public class AddCheckinActivity extends
 
 		}
 	};
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ushahidi.android.app.activities.BaseEditMapActivity#onDiscardChanges
+	 * ()
+	 */
+	@Override
+	protected boolean onDiscardChanges() {
+		deleteExistingPhoto();
+		return true;
+	}
 }
