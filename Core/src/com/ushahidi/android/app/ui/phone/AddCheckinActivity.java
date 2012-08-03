@@ -311,8 +311,7 @@ public class AddCheckinActivity extends
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
-			// delete any existing photo in the pending folder
-			// deleteExistingPhoto();
+
 			if (requestCode == REQUEST_CODE_CAMERA) {
 
 				Uri uri = PhotoUtils.getPhotoUri(photoName, this);
@@ -411,7 +410,7 @@ public class AddCheckinActivity extends
 		checkin.setPending(1);
 		checkin.setMessage(view.mCheckinMessageText.getText().toString());
 		checkin.setLocationLatitude(String.valueOf(this.latitude));
-		checkin.setLocationLongitude	(String.valueOf(this.longitude));
+		checkin.setLocationLongitude(String.valueOf(this.longitude));
 		checkin.setDate((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
 				.format(new Date()));
 		// set location to unknown so to save failed checkin to a database.
