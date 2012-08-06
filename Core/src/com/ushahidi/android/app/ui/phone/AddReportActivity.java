@@ -709,7 +709,7 @@ public class AddReportActivity extends
 	// fetch categories
 	public String[] showCategories() {
 		ListReportModel mListReportModel = new ListReportModel();
-		List<Category> listCategories = mListReportModel.getCategories(this);
+		List<Category> listCategories = mListReportModel.getAllCategories();
 		if (listCategories != null && listCategories.size() > 0) {
 			int categoryCount = listCategories.size();
 			int categoryAmount = 0;
@@ -725,7 +725,7 @@ public class AddReportActivity extends
 			mCategoryLength = categories.length;
 
 			int i = 0;
-			for (Category category : mListReportModel.getCategories(this)) {
+			for (Category category : mListReportModel.getAllCategories()) {
 
 				categories[i] = category.getCategoryTitle();
 				mCategoriesTitle.put(String.valueOf(category.getCategoryId()),
@@ -853,7 +853,7 @@ public class AddReportActivity extends
 		if (mVectorCategories != null && mVectorCategories.size() > 0) {
 			ListReportModel mListReportModel = new ListReportModel();
 			List<Category> listCategories = mListReportModel
-					.getCategories(this);
+					.getAllCategories();
 			if (listCategories != null && listCategories.size() > 0) {
 				int categoryCount = listCategories.size();
 				int categoryAmount = 0;
@@ -867,7 +867,7 @@ public class AddReportActivity extends
 				mCategoryLength = categories.length;
 
 				int i = 0;
-				for (Category category : mListReportModel.getCategories(this)) {
+				for (Category category : mListReportModel.getAllCategories()) {
 
 					if (mVectorCategories.contains(String.valueOf(category
 							.getCategoryId()))) {

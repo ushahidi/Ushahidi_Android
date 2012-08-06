@@ -37,47 +37,6 @@ import com.ushahidi.android.app.util.Util;
 
 public class Database {
 
-	/**
-	 * Group of constants that specify the different columns in the offline
-	 * incident table and there corresponding column indexes
-	 */
-	public static final int ADD_INCIDENT_ID_INDEX = 0;
-
-	public static final int ADD_INCIDENT_TITLE_INDEX = 1;
-
-	public static final int ADD_INCIDENT_DESC_INDEX = 2;
-
-	public static final int ADD_INCIDENT_DATE_INDEX = 3;
-
-	public static final int ADD_INCIDENT_HOUR_INDEX = 4;
-
-	public static final int ADD_INCIDENT_MINUTE_INDEX = 5;
-
-	public static final int ADD_INCIDENT_AMPM_INDEX = 6;
-
-	public static final int ADD_INCIDENT_CATEGORIES_INDEX = 7;
-
-	public static final int INCIDENT_LOC_NAME_INDEX = 8;
-
-	public static final int INCIDENT_LOC_LATITUDE_INDEX = 9;
-
-	public static final int INCIDENT_LOC_LONGITUDE_INDEX = 10;
-
-	public static final int ADD_INCIDENT_PHOTO_INDEX = 11;
-
-	public static final int ADD_INCIDENT_VIDEO_INDEX = 12;
-
-	public static final int ADD_INCIDENT_NEWS_INDEX = 13;
-
-	public static final int ADD_PERSON_FIRST_INDEX = 14;
-
-	public static final int ADD_PERSON_LAST_INDEX = 15;
-
-	public static final int ADD_PERSON_EMAIL_INDEX = 16;
-
-	/**
-     */
-
 	private static final String TAG = "UshahidiDatabase";
 
 	private DatabaseHelper mDbHelper;
@@ -86,11 +45,7 @@ public class Database {
 
 	public static final String DATABASE_NAME = "ushahidi_db";
 
-	private static final int DATABASE_VERSION = 16;
-
-	// NOTE: the incident ID is used as the row ID.
-	// Furthermore, if a row already exists, an insert will replace
-	// the old row upon conflict.
+	private static final int DATABASE_VERSION = 17;
 
 	private final Context mContext;
 
@@ -109,8 +64,8 @@ public class Database {
 	public static CheckinDao mCheckin; // checkins
 
 	public static UserDao mUserDao; // user
-	
-	public static CommentDao mCommentDao; //comment
+
+	public static CommentDao mCommentDao; // comment
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		DatabaseHelper(Context context) {
@@ -125,7 +80,7 @@ public class Database {
 				// create map aka deployment table
 				db.execSQL(IMapSchema.MAP_TABLE_CREATE);
 			}
-			
+
 			// create default map
 			// TODO:: check if default map is set.
 			db.execSQL(IMapSchema.DEFAULT_MAP_CREATE);
@@ -147,6 +102,7 @@ public class Database {
 			List<String> checkinsColums;
 			List<String> usersColumns;
 			List<String> deploymentColumns;
+			List<String> categoriesColumns;
 			try {
 				// upgrade incident table
 				Log.i("Upgrading", "Upgrading incidents table");
@@ -163,6 +119,10 @@ public class Database {
 
 				// upgrade add incident table
 				Log.i("Upgrading", "Upgrading offline incidents table");
+				// drop the offline report table. It's no longer in use
+				db.execSQL("DROP TABLE IF EXISTS "
+						+ IOfflineReportSchema.OFFLINE_REPORT_TABLE);
+
 				db.execSQL(IOfflineReportSchema.OFFLINE_REPORT_TABLE_CREATE);
 				addIncidentColumns = Database.getColumns(db,
 						IOfflineReportSchema.OFFLINE_REPORT_TABLE);
@@ -224,6 +184,22 @@ public class Database {
 				db.execSQL("DROP TABLE IF EXISTS temp_"
 						+ IUserSchema.USER_TABLE);
 
+				// upgrade categories table
+				db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
+				categoriesColumns = Database.getColumns(db,
+						ICategorySchema.TABLE);
+				db.execSQL("ALTER TABLE " + ICategorySchema.TABLE
+						+ " RENAME TO temp_" + ICategorySchema.TABLE);
+				db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
+				usersColumns.retainAll(Database.getColumns(db,
+						ICategorySchema.TABLE));
+				String categoriesCols = Database.join(categoriesColumns, ",");
+				db.execSQL(String.format(
+						"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
+						ICategorySchema.TABLE, categoriesCols, categoriesCols,
+						ICategorySchema.TABLE));
+				db.execSQL("DROP TABLE IF EXISTS temp_" + ICategorySchema.TABLE);
+
 				// upgrade deployment table
 				deploymentColumns = Database.getColumns(db, IMapSchema.TABLE);
 				db.execSQL("ALTER TABLE " + IMapSchema.TABLE
@@ -243,10 +219,10 @@ public class Database {
 
 				db.execSQL("DROP TABLE IF EXISTS temp_" + IMapSchema.TABLE);
 
-				//create missing tables
-				db.execSQL(IReportCategorySchema.REPORT_CATEGORY_TABLE_CREATE); 
+				// create missing tables
+				db.execSQL(IReportCategorySchema.REPORT_CATEGORY_TABLE_CREATE);
 				db.execSQL(ICommentSchema.COMMENT_TABLE_CREATE);
-				
+
 				onCreate(db);
 			} catch (SQLException e) {
 				e.printStackTrace();

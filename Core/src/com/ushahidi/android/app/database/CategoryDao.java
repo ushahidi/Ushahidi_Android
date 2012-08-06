@@ -18,14 +18,19 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 
 	private ContentValues initialValues;
 
+	private static final String SORT_ORDER = POSITION+" ASC";
+
+	private static final String GROUP_BY = null;
+
 	public CategoryDao(SQLiteDatabase db) {
 		super(db);
 	}
 
 	@Override
 	public List<Category> fetchAllCategories() {
-		final String sortOrder = POSITION + " DESC";
-		cursor = super.query(TABLE, COLUMNS, null, null, sortOrder);
+		cursor = super.query(TABLE, COLUMNS, null, null, GROUP_BY, null,
+				SORT_ORDER, null);
+
 		listCategory = new ArrayList<Category>();
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -41,10 +46,40 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 
 	@Override
 	public List<Category> fetchAllCategoryTitles() {
-		final String sortOrder = POSITION + " DESC";
-		final String columns[] = { ID,CATEGORY_ID, TITLE, COLOR, POSITION };
+
+		final String columns[] = { ID, CATEGORY_ID, TITLE, COLOR, POSITION,
+				PARENT_ID };
+		final String selection = PARENT_ID +" = ?";
 		listCategory = new ArrayList<Category>();
-		cursor = super.query(TABLE, columns, null, null, sortOrder);
+
+		cursor = super.query(TABLE, columns, selection, new String[]{String.valueOf(0)}, GROUP_BY, null,
+				SORT_ORDER, null);
+
+		if (cursor != null) {
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+
+				Category category = cursorToEntity(cursor);
+
+				listCategory.add(category);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+
+		return listCategory;
+
+	}
+	
+	public List<Category> fetchChildrenCategories(int parentId) {
+
+		final String columns[] = { ID, CATEGORY_ID, TITLE, COLOR, POSITION,
+				PARENT_ID };
+		final String selection = PARENT_ID +" = ?";
+		listCategory = new ArrayList<Category>();
+		
+		cursor = super.query(TABLE, columns, selection, new String[]{String.valueOf(parentId)}, GROUP_BY, null,
+				SORT_ORDER, null);
 
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -64,18 +99,15 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 
 	@Override
 	public List<Category> fetchCategoryByReportId(int reportId) {
-		
-		final String sortOrder = POSITION + " DESC";
 
-		final String sql = "SELECT *"
-				+ " FROM " + TABLE + " category INNER JOIN "
-				+ IReportCategorySchema.TABLE
+		final String sql = "SELECT *" + " FROM " + TABLE
+				+ " category INNER JOIN " + IReportCategorySchema.TABLE
 				+ " categories ON category." + CATEGORY_ID + " = categories."
 				+ IReportCategorySchema.CATEGORY_ID + " WHERE categories."
-				+ IReportCategorySchema.REPORT_ID + " =? "+" ORDER BY  "
-				+ sortOrder;
+				+ IReportCategorySchema.REPORT_ID + " =? " + " GROUP BY "
+				+ PARENT_ID + " ORDER BY  " + POSITION + " DESC";
 		listCategory = new ArrayList<Category>();
-		cursor = super.rawQuery(sql, new String[]{String.valueOf(reportId)});
+		cursor = super.rawQuery(sql, new String[] { String.valueOf(reportId) });
 
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -142,16 +174,22 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 		int positionIndex;
 		int descriptionIndex;
 		int categoryIdIndex;
+		int parentIdIndex;
 
 		if (cursor != null) {
 			if (cursor.getColumnIndex(ID) != -1) {
 				idIndex = cursor.getColumnIndexOrThrow(ID);
 				category.setDbId(cursor.getInt(idIndex));
 			}
-			
+
 			if (cursor.getColumnIndex(CATEGORY_ID) != -1) {
 				categoryIdIndex = cursor.getColumnIndexOrThrow(CATEGORY_ID);
 				category.setCategoryId(cursor.getInt(categoryIdIndex));
+			}
+
+			if (cursor.getColumnIndex(PARENT_ID) != -1) {
+				parentIdIndex = cursor.getColumnIndexOrThrow(PARENT_ID);
+				category.setParentId(cursor.getInt(parentIdIndex));
 			}
 
 			if (cursor.getColumnIndex(TITLE) != -1) {
@@ -183,6 +221,7 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 	private void setContentValue(Category category) {
 		initialValues = new ContentValues();
 		initialValues.put(CATEGORY_ID, category.getCategoryId());
+		initialValues.put(PARENT_ID, category.getParentId());
 		initialValues.put(TITLE, category.getCategoryTitle());
 		initialValues.put(DESCRIPTION, category.getCategoryDescription());
 		initialValues.put(COLOR, category.getCategoryColor());

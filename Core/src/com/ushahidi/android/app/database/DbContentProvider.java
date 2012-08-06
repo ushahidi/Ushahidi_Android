@@ -44,6 +44,11 @@ public abstract class DbContentProvider {
        
         return mDb.query(tableName, columns, selection, selectionArgs, null, null, sortOrder, limit);
     }
+    
+    public Cursor query(String tableName, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy,String limit) {
+       
+        return mDb.query(tableName, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+    }
 
     public int update(String tableName, ContentValues values, String selection,
             String[] selectionArgs) {

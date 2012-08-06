@@ -26,6 +26,8 @@ public interface ICategorySchema {
 
 	public static final String CATEGORY_ID = "category_id";
 
+	public static final String PARENT_ID = "parent_id";
+
 	public static final String TITLE = "category_title";
 
 	public static final String DESCRIPTION = "category_desc";
@@ -46,12 +48,13 @@ public interface ICategorySchema {
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ CATEGORY_ID
 			+ " INTEGER , "
+			+ PARENT_ID
+			+ " INTEGER , "
 			+ TITLE
 			+ " TEXT NOT NULL, "
 			+ DESCRIPTION
 			+ " TEXT, "
 			+ COLOR
 			+ " TEXT, "
-			+ POSITION
-			+ " INTEGER " + ")";
+			+ POSITION + " INTEGER " + ")";
 }

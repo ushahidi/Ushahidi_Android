@@ -89,6 +89,13 @@ public class CategoriesApiUtils {
 						}
 
 						if (!categoriesArr.getJSONObject(i)
+								.getJSONObject("category").isNull("parent_id")) {
+							category.setParentId(categoriesArr.getJSONObject(i)
+									.getJSONObject("category")
+									.getInt("parent_id"));
+						}
+
+						if (!categoriesArr.getJSONObject(i)
 								.getJSONObject("category")
 								.isNull("description")) {
 							category.setCategoryDescription(categoriesArr
@@ -127,9 +134,9 @@ public class CategoriesApiUtils {
 	}
 
 	private boolean saveCategories(List<Category> categories) {
-		
+
 		if (categories != null && categories.size() > 0) {
-			
+
 			return Database.mCategoryDao.addCategories(categories);
 		}
 		return false;

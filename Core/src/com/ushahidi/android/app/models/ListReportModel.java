@@ -283,9 +283,18 @@ public class ListReportModel extends Model {
 		return reportModel;
 	}
 
-	public List<Category> getCategories(Context context) {
+	public List<Category> getParentCategories() {
 		return Database.mCategoryDao.fetchAllCategoryTitles();
 
+	}
+	
+	public List<Category> getAllCategories() {
+		return Database.mCategoryDao.fetchAllCategories();
+
+	}
+	
+	public List<Category> getChildrenCategories(int parentId) {
+		return Database.mCategoryDao.fetchChildrenCategories(parentId);
 	}
 
 	public List<Category> getCategoriesByReportId(int reportId) {

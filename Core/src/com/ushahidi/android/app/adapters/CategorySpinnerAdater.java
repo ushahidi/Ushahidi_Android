@@ -26,6 +26,7 @@ import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
@@ -64,6 +65,8 @@ public class CategorySpinnerAdater extends BaseArrayAdapter<Category> {
 			widget.title = (TextView) convertView
 					.findViewById(R.id.category_title);
 			widget.color = (TextView) convertView.findViewById(R.id.cat_color);
+			widget.root = (LinearLayout)convertView.findViewById(R.id.root_layout);
+			
 			convertView.setTag(widget);
 		} else {
 			widget = (Widgets) convertView.getTag();
@@ -75,6 +78,7 @@ public class CategorySpinnerAdater extends BaseArrayAdapter<Category> {
 
 		// check if color is set
 		if (getTag(position).getCategoryColor() != null) {
+
 			if (TextUtils.isEmpty(getTag(position).getCategoryColor().trim())) {
 				try {
 					widget.color.setBackgroundColor(Color
@@ -98,6 +102,7 @@ public class CategorySpinnerAdater extends BaseArrayAdapter<Category> {
 	class Widgets {
 		TextView title;
 		TextView color;
+		LinearLayout root;
 	}
 
 	/*
@@ -108,7 +113,7 @@ public class CategorySpinnerAdater extends BaseArrayAdapter<Category> {
 	@Override
 	public void refresh() {
 		ListReportModel mListReportModel = new ListReportModel();
-		List<Category> listCategories = mListReportModel.getCategories(context);
+		List<Category> listCategories = mListReportModel.getParentCategories();
 
 		if (listCategories != null && listCategories.size() > 0) {
 			// This is to make room for all categories label
@@ -117,10 +122,21 @@ public class CategorySpinnerAdater extends BaseArrayAdapter<Category> {
 			cat.setCategoryPosition(0);
 			cat.setDbId(0);
 			cat.setCategoryId(0);
+			cat.setParentId(0);
 			cat.setCategoryColor("000000");
 			add(cat.getCategoryTitle(), cat);
-			for (Category category : mListReportModel.getCategories(context)) {
+			for (Category category : listCategories) {
 				add(category.getCategoryTitle(), category);
+				// add child categories
+				List<Category> listChildrenCategories = mListReportModel
+						.getChildrenCategories(category.getCategoryId());
+				if (listChildrenCategories != null
+						&& listChildrenCategories.size() > 0) {
+					for (Category childrenCategories : listChildrenCategories) {
+						add(childrenCategories.getCategoryTitle(),
+								childrenCategories);
+					}
+				}
 			}
 		}
 
