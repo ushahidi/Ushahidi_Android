@@ -1,7 +1,12 @@
 3.0.1
-Features:
+Features: 
+  * Added Hierarchical support categories
+  
 
 Bug:
+  * Fixed force close on certain devices.
+  * Fixed actionbar menu consistency issue.
+  * Fixed crashes when doing multiple photo uploads when checkin is enabled.
 
 3.0.0
 Features:
