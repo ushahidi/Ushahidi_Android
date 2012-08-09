@@ -10,7 +10,7 @@
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com.
 -->
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- style actionbar selectable items -->
     <style name="Theme.Ushahidi" parent="Theme.Sherlock">
@@ -198,24 +198,23 @@
 
     <style name="TextView.FilterBy">
         <item name="android:layout_alignParentTop">true</item>
-        <item name="android:background">@color/table_selected_row_color</item>
         <item name="android:paddingBottom">2dip</item>
         <item name="android:paddingLeft">5dip</item>
         <item name="android:paddingTop">2dip</item>
-        <item name="android:textColor">@color/title_color</item>
+        <item name="android:textColor">@color/filter_by_text_color</item>
     </style>
 
     <style name="TextView.Title">
         <item name="android:textSize">16sp</item>
         <item name="android:padding">10dp</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/black_color</item>
+        <item name="android:textColor">@color/text_value_color</item>
     </style>
 
     <style name="TextView.Description">
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/black_color</item>
+        <item name="android:textColor">@color/text_value_color</item>
         <item name="android:padding">10dp</item>
     </style>
 
@@ -223,7 +222,7 @@
         <item name="android:textSize">16sp</item>
         <item name="android:padding">10dp</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/black_color</item>
+        <item name="android:textColor">@color/text_value_color</item>
     </style>
 
     <style name="TextView.Empty">
@@ -232,6 +231,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:textColor">@color/text_value_color</item>
     </style>
 
     <style name="ListBarProgressIndicator" parent="@android:style/Widget.ProgressBar">

@@ -16,21 +16,30 @@
     android:background="@color/background_color"
     android:padding="10dp" >
 
-    <TextView
-        android:id="@+id/checkin_filter_by"
-        style="@style/TextView.FilterBy"
-        android:text="@string/all_users" />
-    
+    <LinearLayout
+        android:id="@+id/filter_by_layout"
+        style="@style/LinearLayout.Horizontal"
+        android:background="@color/filter_by_background_color"
+        android:paddingBottom="10dip" >
+
+        <TextView
+            android:id="@+id/checkin_filter_by"
+            style="@style/TextView.FilterBy"
+            android:padding="10dip"
+            android:text="@string/all_users" />
+    </LinearLayout>
     <!-- List checkins -->
+
     <ListView
         android:id="@android:id/list"
         style="@style/ListView"
-        android:layout_below="@id/checkin_filter_by" />
+        android:layout_below="@id/filter_by_layout" />
 
     <!-- Here is the view to show if the list is emtpy -->
+
     <TextView
         android:id="@android:id/empty"
         style="@style/TextView.Empty"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </RelativeLayout>

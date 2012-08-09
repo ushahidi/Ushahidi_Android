@@ -1,8 +1,8 @@
 <resources>
 
     <!-- DEPLOYMENT INFORMATION -->
-    <string name="app_title">Ushahidi</string>
-    <string name="deployment_url" />
+    <string name="app_name">OffTheBus</string>
+    <string name="deployment_url">http://offthebus.ushahidi.com</string>
     <string name="team_url">http://ushahidi.com/about-us/team</string>
     <string name="media_url">http://www.ushahidi.com</string>
     <string name="twitter_url">http://twitter.com/ushahidi</string>
@@ -28,14 +28,18 @@
     <drawable name="actionbar_background">@drawable/actionbar</drawable>
 
     <!-- COLOR CODES -->
-    <color name="title_color">#7C2811</color>
+    <color name="title_color">#000000</color>
     <color name="date_color">#262321</color>
     <color name="report_table">#f6f6ee</color>
     <color name="header_color">#3E51BC</color>
-    <color name="background_color">#ede7d1</color>
+    <color name="background_color">#f1f1f1</color>
     <color name="thick_background_color">#DDD0A3</color>
     <color name="button_background_color">#ffffff</color>
     <color name="button_stroke_color">#cac7c0</color>
+     <!-- Report listing screen -->
+    <color name="filter_by_text_color">#ffffff</color>
+    <color name="filter_by_background_color">#9f0000</color>
+    
     <color name="white_color">#FFFFFF</color>
     <color name="verified_color">#25991C</color>
     <color name="black_color">#000000</color>
@@ -45,24 +49,25 @@
     <color name="title_text">#ffffff</color>
     <color name="title_text_alt">#bf2b05</color>
     <color name="icon_title">#89221b</color>
-    <color name="foreground2">#ff7081a3</color>
-    <color name="background1">#ffffff</color>
-    <color name="background2">#ffd5ddeb</color>
-    <color name="background3">#ffe3e8f1</color>
     <color name="list_view_date">#90544a</color>
     <color name="table_background">#f6f6ee</color>
-    <color name="table_odd_row_color">#f2eddc</color>
-    <color name="table_even_row_color">#efdbad</color>
-    <color name="table_selected_row_color">#e6ddbe</color>
+    <color name="table_odd_row_color">#ffffff</color>
+    <color name="table_even_row_color">#f1f1f1</color>
+    <color name="table_selected_row_color">#9f0000</color>
     <color name="table_header_color">#e6ddbe</color>
     <color name="verified_text_color">#99CC99</color>
     <color name="unverified_text_color">#CC6666</color>
-    <color name="tab_background">#1a1a1a</color>
-    <color name="tab_selected_color">#8A1F03</color>
-    <color name="tab_unselected_color">#404041</color>
+    <color name="tab_selected_color">#3f4250</color>
+    <color name="tab_unselected_color">#4b4e5b</color>
     <color name="list_divider_color">#e0e0e0</color>
     <color name="overlay_text_color">#aa000000</color>
-    <color name="selectable_color">#7C2811</color>
+    <color name="tab_background">#3f4250</color>
+    <color name="selectable_color">#4b4e5b</color>
+    <color name="text_value_color">#AAAAAA</color>
+    
+    <color name="tab_medium">#3F4250</color>
+    <color name="tab_dark">#000000</color>
+    <color name="tab_transparent">#10ffffff</color>
 
     <!-- TEXT SIZE -->
     <dimen name="text_size_small">14sp</dimen>

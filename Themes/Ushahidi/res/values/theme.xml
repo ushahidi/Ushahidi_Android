@@ -37,6 +37,12 @@
     <color name="button_background_color">#ffffff</color>
     <color name="button_stroke_color">#cac7c0</color>
     <color name="white_color">#FFFFFF</color>
+    
+     <!-- Report listing screen -->
+    <color name="filter_by_text_color">#7C2811</color>
+    <color name="filter_by_background_color">#9f0000</color> <!-- Report listing screen -->
+    <color name="filter_by_text_color">#7C2811</color>
+    
     <color name="verified_color">#25991C</color>
     <color name="black_color">#000000</color>
     <color name="gray_color">#736F6E</color>
@@ -63,6 +69,11 @@
     <color name="list_divider_color">#e0e0e0</color>
     <color name="overlay_text_color">#aa000000</color>
     <color name="selectable_color">#7C2811</color>
+    <color name="text_value_color">#000000</color>
+    
+    <color name="tab_medium">#2B2B2B</color>
+    <color name="tab_dark">#000000</color>
+    <color name="tab_transparent">#10ffffff</color>
 
     <!-- TEXT SIZE -->
     <dimen name="text_size_small">14sp</dimen>
