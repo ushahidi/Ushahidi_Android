@@ -12,8 +12,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ushahidi.android.app"
-    android:versionCode="26"
-    android:versionName="3.0.1" >
+    android:versionCode="27"
+    android:versionName="3.0.2" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
