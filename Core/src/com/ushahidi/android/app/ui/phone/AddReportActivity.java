@@ -370,8 +370,8 @@ public class AddReportActivity extends
 
 		report.setTitle(view.mIncidentTitle.getText().toString());
 		report.setDescription(view.mIncidentDesc.getText().toString());
-		report.setLatitude(view.mLongitude.getText().toString());
-		report.setLongitude(view.mLatitude.getText().toString());
+		report.setLatitude(view.mLatitude.getText().toString());
+		report.setLongitude(view.mLongitude.getText().toString());
 		report.setLocationName(view.mIncidentLocation.getText().toString());
 		report.setReportDate(mDateToSubmit);
 		report.setMode(String.valueOf(0));
