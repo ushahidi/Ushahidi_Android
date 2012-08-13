@@ -42,6 +42,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.ListCheckinAdapter;
 import com.ushahidi.android.app.adapters.ListFetchedCheckinAdapter;
 import com.ushahidi.android.app.adapters.ListPendingCheckinAdapter;
@@ -50,6 +51,7 @@ import com.ushahidi.android.app.fragments.BaseSectionListFragment;
 import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.services.FetchCheckins;
 import com.ushahidi.android.app.services.SyncServices;
+import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.ui.phone.AddCheckinActivity;
 import com.ushahidi.android.app.ui.phone.ViewCheckinActivity;
 import com.ushahidi.android.app.views.ListCheckinView;
@@ -252,7 +254,16 @@ public class ListCheckinFragment
 		} else if (item.getItemId() == android.R.id.home) {
 			getActivity().finish();
 			return true;
+		}else if (item.getItemId() == R.id.app_settings) {
+			startActivity(new Intent(getActivity(), Settings.class));
+
+			return true;
+		} else if (item.getItemId() == R.id.app_about) {
+			startActivity(new Intent(getActivity(), AboutActivity.class));
+
+			return true;
 		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 

@@ -39,9 +39,8 @@
     <color name="white_color">#FFFFFF</color>
     
      <!-- Report listing screen -->
-    <color name="filter_by_text_color">#7C2811</color>
+    <color name="filter_by_text_color">#FFFFFF</color>
     <color name="filter_by_background_color">#9f0000</color> <!-- Report listing screen -->
-    <color name="filter_by_text_color">#7C2811</color>
     
     <color name="verified_color">#25991C</color>
     <color name="black_color">#000000</color>

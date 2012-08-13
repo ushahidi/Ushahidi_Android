@@ -30,5 +30,16 @@
         android:orderInCategory="2"
         android:showAsAction="ifRoom"
         android:title="@string/add_checkin"/>
+    
+    <item
+        android:id="@+id/app_settings"
+        android:orderInCategory="3"
+        android:showAsAction="ifRoom"
+        android:title="@string/settings"/>
+    <item
+        android:id="@+id/app_about"
+        android:orderInCategory="4"
+        android:showAsAction="ifRoom"
+        android:title="@string/about"/>
 
 </menu>
