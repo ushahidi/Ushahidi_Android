@@ -19,7 +19,7 @@
         android:id="@+id/filter_by_layout"
         style="@style/LinearLayout.Horizontal"
         android:background="@color/filter_by_background_color"
-        android:paddingBottom="10dip" >
+         >
 
         <TextView
             android:id="@+id/footer_text"
