@@ -1,6 +1,15 @@
+3.0.2
+Features:
+  * Added Android-16 as a target. So now Jelly Bean devices can install this app.
+  * Changed the background color for filter by text to red and changed text color to white.
+  * Improved whitel labeling experience by add more options for customization.
+
+Bug:
+  * Fix lat/lon reverse issue. See #69.
+
 3.0.1
 Features: 
-  * Added Hierarchical support categories
+  * Added Hierarchical support categories.
   
 
 Bug:
