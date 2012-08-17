@@ -32,17 +32,20 @@
     <item
         android:id="@+id/clear_map"
         android:orderInCategory="2"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/discard"
         android:title="@string/clear_all_map"/>
     <item
         android:id="@+id/app_settings"
         android:orderInCategory="3"
         android:showAsAction="ifRoom"
+        android:icon="@drawable/settings"
         android:title="@string/settings"/>
     <item
         android:id="@+id/app_about"
         android:orderInCategory="4"
         android:showAsAction="ifRoom"
+        android:icon="@drawable/about"
         android:title="@string/about"/>
 
 </menu>
