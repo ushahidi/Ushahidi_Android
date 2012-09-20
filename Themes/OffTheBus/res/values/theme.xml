@@ -1,7 +1,7 @@
 <resources>
 
     <!-- DEPLOYMENT INFORMATION -->
-    <string name="app_name">OffTheBus</string>
+    <string name="app_name">Huff Post On The Ground</string>
     <string name="deployment_url">http://offthebus.ushahidi.com</string>
     <string name="team_url">http://ushahidi.com/about-us/team</string>
     <string name="media_url">http://www.ushahidi.com</string>
@@ -24,8 +24,8 @@
     <!-- BACKROUND IMAGES -->
     <drawable name="splash_background">@drawable/splash</drawable>
     <drawable name="dashboard_background">@drawable/dashboard</drawable>
-    <drawable name="about_background">@drawable/about</drawable>
-    <drawable name="actionbar_background">@drawable/actionbar</drawable>
+    <drawable name="about_background">@null</drawable>
+    <drawable name="actionbar_background">@color/about_bottom_buttons_background</drawable>
 
     <!-- COLOR CODES -->
     <color name="title_color">#000000</color>
@@ -36,9 +36,11 @@
     <color name="thick_background_color">#DDD0A3</color>
     <color name="button_background_color">#ffffff</color>
     <color name="button_stroke_color">#cac7c0</color>
+    <color name="about_bottom_buttons_background">#014e8d</color>
+    
      <!-- Report listing screen -->
     <color name="filter_by_text_color">#ffffff</color>
-    <color name="filter_by_background_color">#9f0000</color>
+    <color name="filter_by_background_color">#2087cb</color>
     
     <color name="white_color">#FFFFFF</color>
     <color name="verified_color">#25991C</color>
@@ -50,9 +52,9 @@
     <color name="title_text_alt">#bf2b05</color>
     <color name="icon_title">#89221b</color>
     <color name="list_view_date">#90544a</color>
-    <color name="table_background">#f6f6ee</color>
+    <color name="table_background">#f2f6ee</color>
     <color name="table_odd_row_color">#ffffff</color>
-    <color name="table_even_row_color">#f1f1f1</color>
+    <color name="table_even_row_color">#f2f2f2</color>
     <color name="table_selected_row_color">#9f0000</color>
     <color name="table_header_color">#e6ddbe</color>
     <color name="verified_text_color">#99CC99</color>
@@ -62,7 +64,7 @@
     <color name="list_divider_color">#e0e0e0</color>
     <color name="overlay_text_color">#aa000000</color>
     <color name="tab_background">#3f4250</color>
-    <color name="selectable_color">#4b4e5b</color>
+    <color name="selectable_color">#014e8d</color>
     <color name="text_value_color">#AAAAAA</color>
     
     <color name="tab_medium">#3F4250</color>
