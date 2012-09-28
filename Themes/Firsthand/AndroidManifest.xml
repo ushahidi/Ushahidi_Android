@@ -11,7 +11,7 @@
 	at team@ushahidi.com.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.offthebuss.android.app"
+    package="com.firsthand.android.app"
     android:versionCode="28"
     android:versionName="3.0.3" >
 

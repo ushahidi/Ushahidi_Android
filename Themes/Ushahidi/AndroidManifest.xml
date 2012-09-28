@@ -383,19 +383,6 @@
         <service android:name=".services.FetchReports" />
         <service android:name=".services.FetchCheckins" />
 
-        <!--
-             Receiver waits for connectivity change so offline messages can be 
-			sent
-        -->
-        <receiver
-            android:name=".OfflineIncidentSendReceiver"
-            android:enabled="true"
-            android:priority="0" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
         <!-- connectivity changed -->
         <receiver
             android:name=".services.ConnectivityChangedReceiver"
