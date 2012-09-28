@@ -3,11 +3,11 @@
     <!-- DEPLOYMENT INFORMATION -->
     <string name="app_name">Firsthand</string>
     <string name="deployment_url">http://offthebus.ushahidi.com</string>
-    <string name="team_url">http://ushahidi.com/about-us/team</string>
-    <string name="media_url">http://www.ushahidi.com</string>
-    <string name="twitter_url">http://twitter.com/ushahidi</string>
-    <string name="facebook_url">http://www.facebook.com/ushahidi</string>
-    <string name="contact_url">http://ushahidi.com/contact-us</string>
+    <string name="media_url">http://huffingtonpost.com/news/firsthand</string>
+    <string name="twitter_url">http://twitter.com/hpfirsthand</string>
+    <string name="facebook_url">http://www.facebook.com/hpfirsthand</string>
+    <string name="team_url"/>
+    <string name="contact_url"/>
 
     <!-- DEPLOYMENT PROVIDER AUTHORITIES. USUALLY PACKAGE NAME AND CLASS NAME Eg. com.ushahidi.android.app.data.deploymentprovider -->
     <string name="provider_authorities">com.ushahidi.android.app.data.deploymentprovider</string>
@@ -84,10 +84,13 @@
     
 
     <!-- DEPLOYMENT TEXT -->
-    <string name="about_text">Ushahidi is a non-profit tech company that develops
-		free and open source software for information collection,
-		visualization and interactive mapping. We built the Ushahidi platform
-		as a tool to easily crowdsource information using multiple channels,
-		including SMS, email, Twitter and the web.</string>
+    <string name="about_text">The HuffPost Firsthand Campaign Tracker is an experiment to map the tenor of 2012 American election campaign ads.
+With your help, we can discover where and how frequently positive and negative ads are broadcast in the US, and together, look for trends and patterns.\n\n
+
+You can navigate the campaign ad reports in the dashboard, and starting in September 2012, download our iPhone and Android apps to submit a report.\n\n
+
+Firsthand is a Huffington Post initiative for readers to connect to each other by reporting the issues that matter to their community in the 2012 American election cycle. Contributors report on local political events and ways that the campaigns are affecting their towns.\n\n  
+
+Ushahidi is a non-profit tech company that specializes in developing free and open source software for information collection, visualization, and interactive mapping.</string>
 
 </resources>
