@@ -1,7 +1,7 @@
 <resources>
 
     <!-- DEPLOYMENT INFORMATION -->
-    <string name="app_name">Huff Post On The Ground</string>
+    <string name="app_name">Firsthand</string>
     <string name="deployment_url">http://offthebus.ushahidi.com</string>
     <string name="team_url">http://ushahidi.com/about-us/team</string>
     <string name="media_url">http://www.ushahidi.com</string>
