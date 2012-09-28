@@ -1,12 +1,12 @@
 <resources>
     <!-- DEPLOYMENT INFORMATION -->
     <string name="app_name">Iccm</string>
-    <string name="deployment_url">https://iccm2011.crowdmap.com</string>
+    <string name="deployment_url">https://iccm2012.crowdmap.com</string>
     <string name="team_url"/>
     <string name="media_url"/>
     <string name="twitter_url"/>
     <string name="facebook_url"/>
-    <string name="contact_url">https://iccm2011.crowdmap.com</string>
+    <string name="contact_url">https://iccm2012.crowdmap.com</string>
 
 	<!-- ICON IMAGES -->
     <drawable name="app_icon">@drawable/icon</drawable>
