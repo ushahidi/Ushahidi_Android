@@ -2,7 +2,7 @@
 
     <!-- DEPLOYMENT INFORMATION -->
     <string name="app_name">Firsthand</string>
-    <string name="deployment_url">http://offthebus.ushahidi.com</string>
+    <string name="deployment_url">http://firsthand.huffingtonpost.com</string>
     <string name="media_url">http://huffingtonpost.com/news/firsthand</string>
     <string name="twitter_url">http://twitter.com/hpfirsthand</string>
     <string name="facebook_url">http://www.facebook.com/hpfirsthand</string>
@@ -84,13 +84,9 @@
     
 
     <!-- DEPLOYMENT TEXT -->
-    <string name="about_text">The HuffPost Firsthand Campaign Tracker is an experiment to map the tenor of 2012 American election campaign ads.
-With your help, we can discover where and how frequently positive and negative ads are broadcast in the US, and together, look for trends and patterns.\n\n
-
-You can navigate the campaign ad reports in the dashboard, and starting in September 2012, download our iPhone and Android apps to submit a report.\n\n
-
-Firsthand is a Huffington Post initiative for readers to connect to each other by reporting the issues that matter to their community in the 2012 American election cycle. Contributors report on local political events and ways that the campaigns are affecting their towns.\n\n  
-
+    <string name="about_text">Firsthand is a project from the Huffington post to hear your stories about what is happening where you live.\n\n
+Every month, with your input, we will focus on a particular challenge and invite you to show us through photos, a few sentences, or video how the issue affects you.\n\n
+Only by gathering all of our stories together can we reflect the true state of our communities.\n\n
 Ushahidi is a non-profit tech company that specializes in developing free and open source software for information collection, visualization, and interactive mapping.</string>
 
 </resources>
