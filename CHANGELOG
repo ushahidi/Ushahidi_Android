@@ -1,4 +1,7 @@
 3.0.3
+Bug:
+ * Fix crashes with change in internet connectivity on the device
+
 
 3.0.2
 Features:
