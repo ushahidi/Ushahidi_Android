@@ -23,6 +23,7 @@ package com.ushahidi.android.app.ui.tablet;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -490,7 +491,8 @@ public class ListReportFragment
 
 				// dates
 				dates = Util.formatDate("MMMM dd, yyyy 'at' hh:mm:ss aaa",
-						report.getDate(), "MM/dd/yyyy hh:mm a").split(" ");
+						report.getDate(), "MM/dd/yyyy hh:mm a", 
+						null, Locale.US).split(" ");
 
 				time = dates[1].split(":");
 				mParams.put("incident_date", dates[0]);

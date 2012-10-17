@@ -28,6 +28,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
 import java.util.Vector;
@@ -192,7 +193,10 @@ public class Util {
 		}
 		return buf.toString();
 	}
-
+	public static String formatDate(String dateFormat, String date,
+			String toFormat){
+		return formatDate(dateFormat, date, toFormat, null, null);
+	}
 	/**
 	 * Format date into more readable format.
 	 * 
@@ -201,16 +205,20 @@ public class Util {
 	 * @return String
 	 */
 	public static String formatDate(String dateFormat, String date,
-			String toFormat) {
+			String toFormat, Locale fromLocale, Locale toLocale) {
 
 		String formatted = "";
 
-		DateFormat formatter = new SimpleDateFormat(dateFormat);
+		DateFormat formatter = fromLocale == null?
+				new SimpleDateFormat(dateFormat):
+				new SimpleDateFormat(dateFormat, fromLocale);
 		try {
 			Date dateStr = formatter.parse(date);
 			formatted = formatter.format(dateStr);
 			Date formatDate = formatter.parse(formatted);
-			formatter = new SimpleDateFormat(toFormat);
+			formatter = toLocale == null ?
+					new SimpleDateFormat(toFormat):
+					new SimpleDateFormat(toFormat, toLocale);
 			formatted = formatter.format(formatDate);
 
 		} catch (ParseException e) {
