@@ -12,8 +12,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ushahidi.android.app"
-    android:versionCode="28"
-    android:versionName="3.0.3" >
+    android:versionCode="29"
+    android:versionName="3.0.4" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -34,12 +34,6 @@
     <uses-sdk
         android:minSdkVersion="7"
         android:targetSdkVersion="16" />
-
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:smallScreens="true" />
 
     <application
         android:name=".MainApplication"
