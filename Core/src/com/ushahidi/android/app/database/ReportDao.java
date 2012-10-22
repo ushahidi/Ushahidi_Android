@@ -176,10 +176,10 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	}
 	public List<Report> fetchPendingReportByCategoryId(int categoryId, int pendingType) {
 		final String sortOrder = INCIDENT_TITLE + " DESC";
-		final String sql = "SELECT * FROM " + INCIDENTS_TABLE
+		final String sql = "SELECT reports.* FROM " + INCIDENTS_TABLE
 				+ " reports INNER JOIN " + IReportCategorySchema.TABLE
 				+ " cats ON reports." + ID + " = cats."
-				+ IReportCategorySchema.ID + " WHERE cats."
+				+ IReportCategorySchema.REPORT_ID + " WHERE cats."
 				+ IReportCategorySchema.CATEGORY_ID + " =? AND "
 				+ INCIDENT_PENDING + "=? " + "ORDER BY  " + sortOrder;
 		final String selectionArgs[] = { String.valueOf(categoryId),
