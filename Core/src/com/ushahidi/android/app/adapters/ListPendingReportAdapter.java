@@ -61,17 +61,22 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 
 	private List<ListReportModel> items;
 
-	public ListPendingReportAdapter(Context context) {
-		super(context);
+	private int mPendingType;
 
+	public ListPendingReportAdapter(Context context, int pendingType) {
+		super(context);
+		mPendingType = pendingType;
 		colors = new int[] { R.drawable.odd_row_rounded_corners,
 				R.drawable.even_row_rounded_corners };
 	}
 
+	public ListPendingReportAdapter(Context context){
+		this(context, 1);
+	}
 	@Override
 	public void refresh() {
 		mListReportModel = new ListReportModel();
-		final boolean loaded = mListReportModel.loadPendingReports();
+		final boolean loaded = mListReportModel.loadPendingReports(mPendingType);
 		if (loaded) {
 			items = mListReportModel.getReports(context);
 			this.setItems(items);
@@ -81,7 +86,7 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 
 	public List<ListReportModel> pendingReports() {
 		mListReportModel = new ListReportModel();
-		final boolean loaded = mListReportModel.loadPendingReports();
+		final boolean loaded = mListReportModel.loadPendingReports(mPendingType);
 		if (loaded) {
 			return mListReportModel.getReports(context);
 		}
@@ -91,7 +96,7 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 	public void refresh(int categoryId) {
 		mListReportModel = new ListReportModel();
 		final boolean loaded = mListReportModel
-				.loadPendingReportsByCategory(categoryId);
+				.loadPendingReportsByCategory(categoryId, mPendingType);
 		if (loaded) {
 			items = mListReportModel.getReports(context);
 			this.setItems(items);
@@ -177,9 +182,14 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 					R.color.unverified_text_color)); // red
 		}
 
-		widgets.status.setText(Util.capitalizeString(getItem(position)
+		switch(mPendingType){
+		case 2:
+			widgets.status.setText(R.string.opengeosms);
+			break;
+		default:
+			widgets.status.setText(Util.capitalizeString(getItem(position)
 				.getStatus()));
-
+		}
 		widgets.arrow.setImageDrawable(getItem(position).getArrow());
 
 		return row;

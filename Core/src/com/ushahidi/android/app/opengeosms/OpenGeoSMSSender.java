@@ -1,13 +1,18 @@
 package com.ushahidi.android.app.opengeosms;
 
-import java.util.ArrayList;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import android.util.Log;
+import java.util.Locale;
+
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.SmsManager;
+import android.util.Log;
+
+import com.ushahidi.android.app.entities.Report;
+import com.ushahidi.android.app.util.Util;
 
 /**
  * @inoran
@@ -25,8 +30,38 @@ public class OpenGeoSMSSender {
 	private final String piFilterSent = "OPENGEOSMS_SENT";
 	private Context mContext;
 	private ArrayList<PendingIntent> smsSentPIList;
-    
-    
+    public OpenGeoSMSSender(Context c){
+    	mContext = c;
+    }
+    public boolean sendOpenGeosmsReport(String address, String url, Report report){
+    	String date = Util.formatDate(
+			"yyy-MM-dd kk:mm:ss", 
+			report.getReportDate(), 
+			"MM/dd/yyyy hh:mm a",
+			Locale.US, Locale.US
+		).toLowerCase();
+    	String payload = String.format(
+    		"%s#%s@%s\n%s\n%s",
+    		report.getTitle(),
+    		report.getCategories(),
+    		date,
+    		report.getLocationName(),
+    		report.getDescription()
+    	);    			
+    	String smsMsg = composedOpenGeoSMS(url, report.getLatitude(), report.getLongitude(), payload);
+    	SmsManager smsManager = SmsManager.getDefault();
+   	 	smsMsgList = smsManager.divideMessage(smsMsg);
+   	 	smsSentPIList = getSMSSentPendingIntents(smsMsgList) ;
+   	 	
+   		try{
+    		smsManager.sendMultipartTextMessage(address, null, smsMsgList, smsSentPIList, null);
+    		
+   		} catch (IllegalArgumentException ex) {
+   			Log.e(CLASS_TAG, ex.toString());
+   			return false;
+   		}
+    	return true;
+    }
     
     /**
      * Send Open GeoSMS to server
@@ -55,20 +90,19 @@ public class OpenGeoSMSSender {
      * caifangye@itri.org.tw
      *  
      */
-	public int SendOpenGeoSMS(String reciver, String url, String lat, String lng, HashMap<String, String> payloadParams, Context appContext)throws IOException {
+	public int sendOpenGeoSMS(String reciver, String url, String lat, String lng, HashMap<String, String> payloadParams)throws IOException {
 		
 		Log.d(CLASS_TAG, "sendOpenGeoSMS(): Using Open GeoSMS to send report to server");
 
-		mContext = appContext;
 		phonenum = reciver;
 		
-		latitude = SetDecimalPalce(lat, 6);
-		longitude = SetDecimalPalce(lng, 6);
+		latitude = setDecimalPalce(lat, 6);
+		longitude = setDecimalPalce(lng, 6);
 		
-		SetPayload(payloadParams);
+		setPayload(payloadParams);
 		
 		//SetPayLoad success
-		smsMsg = ComposedOpenGeoSMS(url, latitude , longitude, payload);
+		smsMsg = composedOpenGeoSMS(url, latitude , longitude, payload);
    		SmsManager smsManager = SmsManager.getDefault();
    	 	smsMsgList = smsManager.divideMessage(smsMsg);
    	 	smsSentPIList = getSMSSentPendingIntents(smsMsgList) ;
@@ -84,7 +118,7 @@ public class OpenGeoSMSSender {
 	}
 	
 
-	private String SetDecimalPalce(String locationStr, int length){
+	private String setDecimalPalce(String locationStr, int length){
 		
 		int decimalPlace = locationStr.indexOf("."); 
 		if(decimalPlace != -1){
@@ -112,7 +146,7 @@ public class OpenGeoSMSSender {
 	 * person_email	
 	 * 
      */
-    private static String SetPayload(HashMap<String, String> payloadParams){
+    private static String setPayload(HashMap<String, String> payloadParams){
     	
     	String locationName = "";
     	String title = "";
@@ -157,7 +191,7 @@ public class OpenGeoSMSSender {
     * Schema://domain/?FirstParameter&RestParameters&GeoSMS=OP
     * Payload
     */
-    private static String ComposedOpenGeoSMS(String url, String lat, String lng, String payload){
+    private static String composedOpenGeoSMS(String url, String lat, String lng, String payload){
         String firstParam = "q=";
         final String postfix = "GeoSMS";
         
