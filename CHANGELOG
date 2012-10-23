@@ -1,6 +1,10 @@
+3.0.4
+Feature:
+ * Removed restrictions to telephony hardware so the app shows up for devices without the telephony hardware. 
+
 3.0.3
 Bug:
- * Fix crashes with change in internet connectivity on the device
+ * Fixed crashes with change in internet connectivity on the device
 
 
 3.0.2
