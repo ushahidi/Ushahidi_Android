@@ -211,7 +211,10 @@ public class ListReportModel extends Model {
 	}
 
 	public boolean loadPendingReports() {
-		mReports = Database.mReportDao.fetchAllPendingReports();
+		return loadPendingReports(1);
+	}
+	public boolean loadPendingReports(int pendingType) {
+		mReports = Database.mReportDao.fetchAllPendingReports(pendingType);
 		if (mReports != null) {
 			return true;
 		}
@@ -219,9 +222,12 @@ public class ListReportModel extends Model {
 	}
 
 	public boolean loadPendingReportsByCategory(int categoryId) {
+		return loadPendingReportsByCategory(categoryId, 1);
+	}
+	public boolean loadPendingReportsByCategory(int categoryId, int pendingType) {
 
 		mReports = Database.mReportDao
-				.fetchPendingReportByCategoryId(categoryId);
+				.fetchPendingReportByCategoryId(categoryId, pendingType);
 		if (mReports != null) {
 			return true;
 		}

@@ -44,10 +44,12 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 	@Override
 	public List<Report> fetchAllPendingReports() {
-
+		return fetchAllPendingReports(1);
+	}
+	public List<Report> fetchAllPendingReports(int pendingType) {
 		final String sortOrder = INCIDENT_DATE + " DESC";
 		final String selection = INCIDENT_PENDING + " =?";
-		final String selectionArgs[] = { String.valueOf(1) };
+		final String selectionArgs[] = { String.valueOf(pendingType) };
 		listReport = new ArrayList<Report>();
 		cursor = super.query(INCIDENTS_TABLE, null, selection, selectionArgs,
 				sortOrder);
@@ -114,9 +116,13 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	}
 
 	@Override
-	public int fetchPendingReportIdByDate(String date) {
+	public int fetchPendingReportIdByDate(String date){
+		return fetchPendingReportIdByDate(date, 1);
+	}
+	public int fetchPendingReportIdByDate(String date, int pendingType) {
+	
 		final String sortOrder = ID + " DESC";
-		final String selectionArgs[] = { date, String.valueOf(1) };
+		final String selectionArgs[] = { date, String.valueOf(pendingType) };
 
 		final String selection = INCIDENT_DATE + " =? AND " + INCIDENT_PENDING
 				+ " =? ";
@@ -166,15 +172,18 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 	@Override
 	public List<Report> fetchPendingReportByCategoryId(int categoryId) {
+		return fetchPendingReportByCategoryId(categoryId, 1);
+	}
+	public List<Report> fetchPendingReportByCategoryId(int categoryId, int pendingType) {
 		final String sortOrder = INCIDENT_TITLE + " DESC";
-		final String sql = "SELECT * FROM " + INCIDENTS_TABLE
+		final String sql = "SELECT reports.* FROM " + INCIDENTS_TABLE
 				+ " reports INNER JOIN " + IReportCategorySchema.TABLE
 				+ " cats ON reports." + ID + " = cats."
-				+ IReportCategorySchema.ID + " WHERE cats."
+				+ IReportCategorySchema.REPORT_ID + " WHERE cats."
 				+ IReportCategorySchema.CATEGORY_ID + " =? AND "
 				+ INCIDENT_PENDING + "=? " + "ORDER BY  " + sortOrder;
 		final String selectionArgs[] = { String.valueOf(categoryId),
-				String.valueOf(1) };
+				String.valueOf(pendingType) };
 		listReport = new ArrayList<Report>();
 
 		cursor = super.rawQuery(sql, selectionArgs);

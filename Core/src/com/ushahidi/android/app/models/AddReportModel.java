@@ -43,7 +43,7 @@ public class AddReportModel extends Model {
 		// add pending reports
 		status = Database.mReportDao.addReport(report);
 		int id = Database.mReportDao.fetchPendingReportIdByDate(report
-				.getReportDate());
+				.getReportDate(), report.getPending());
 
 		// add category
 		if (status) {

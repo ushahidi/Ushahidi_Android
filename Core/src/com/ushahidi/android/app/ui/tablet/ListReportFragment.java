@@ -21,6 +21,7 @@
 package com.ushahidi.android.app.ui.tablet;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +40,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -47,6 +50,7 @@ import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
+import com.ushahidi.android.app.adapters.BaseListAdapter;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.adapters.ListPendingReportAdapter;
@@ -104,6 +108,12 @@ public class ListReportFragment
 
 	private ListPendingReportAdapter pendingReportAdapter;
 
+	private ListPendingReportAdapter openGeoSmsReportAdapter;
+
+	private List<? extends BaseListAdapter<ListReportModel>> mReportAdapters;
+
+	private List<View> mSecitonHeaderViews;
+
 	public ListReportFragment() {
 		super(ListReportView.class, ListReportAdapter.class,
 				R.layout.list_report, R.menu.list_report, android.R.id.list);
@@ -123,8 +133,19 @@ public class ListReportFragment
 		mHandler = new Handler();
 		apiUtils = new ApiUtils(getActivity());
 		listView.setEmptyView(null);
+		openGeoSmsReportAdapter = new ListPendingReportAdapter(getActivity(), 2);
 		fetchedReportAdapter = new ListFetchedReportAdapter(getActivity());
 		pendingReportAdapter = new ListPendingReportAdapter(getActivity());
+		mReportAdapters = Arrays.asList(
+			openGeoSmsReportAdapter,
+			pendingReportAdapter,
+			fetchedReportAdapter
+		);
+		mSecitonHeaderViews = Arrays.asList(
+			pendingHeader(2),
+			pendingHeader(),
+			fetchedHeader()
+		);
 		if (savedInstanceState != null) {
 			// Restore last state for checked position.
 			mPositionChecked = savedInstanceState.getInt("curChoice", 0);
@@ -132,11 +153,16 @@ public class ListReportFragment
 		}
 
 	}
-
-	private View pendingHeader() {
+	private View pendingHeader(){
+		return pendingHeader(1);
+	}
+	private View pendingHeader(int pendingType) {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		ViewGroup viewGroup = (ViewGroup) inflater.inflate(
-				R.layout.list_pending_header, getListView(), false);
+				pendingType==2?
+					R.layout.list_opengeosms_header:
+					R.layout.list_pending_header, 
+				getListView(), false);
 		return viewGroup;
 	}
 
@@ -217,21 +243,30 @@ public class ListReportFragment
 		}
 	}
 
+	private int getItemCount(ListAdapter a){
+		if ( a.isEmpty() ){
+			return 0;
+		}
+		return a.getCount() + (mHasSectionHeaders?1:0);
+	}
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		l.setItemChecked(position, true);
-		if (fetchedReportAdapter == adapter.getAdapter(position - 1)) {
-
-			int itemAt = (adapter.getCount() - position);
-
-			launchViewReport((fetchedReportAdapter.getCount() - itemAt) - 1);
-		} else if (pendingReportAdapter == adapter.getAdapter(position - 1)) {
-
-			int itemPosition = pendingReportAdapter.getCount() - position;
-			int itemAt = (pendingReportAdapter.getCount() - itemPosition) - 1;
-			launchAddReport((int) pendingReportAdapter.getItem(itemAt - 1)
-					.getId());
-
+		for(ListAdapter a: mReportAdapters){
+			int count = getItemCount(a);
+			if ( position > count){
+				position -= count;
+				continue;
+			}
+			position -= mHasSectionHeaders?2:1;
+			if ( a.equals(openGeoSmsReportAdapter)){
+				
+			}else if ( a.equals(pendingReportAdapter)){
+				launchAddReport( (int) pendingReportAdapter.getItem(position).getId());
+			}else{
+				launchViewReport(position);
+			}
+			break;
 		}
 
 	}
@@ -308,39 +343,42 @@ public class ListReportFragment
 			}
 		}
 	};
-
-	private void refreshReportLists() {
-
-		pendingReportAdapter.refresh();
-		fetchedReportAdapter.refresh();
+	private boolean mHasSectionHeaders;
+	private void setupAdapter(){
+		int nonEmptyAdapters = 0;
+		for(ListAdapter a: mReportAdapters){
+			if ( !a.isEmpty() ){
+				nonEmptyAdapters++;
+			}
+		}
+		mHasSectionHeaders = nonEmptyAdapters > 1;
 		adapter = new ListReportAdapter(getActivity());
-		if (!pendingReportAdapter.isEmpty()) {
-			adapter.addView(pendingHeader());
-			adapter.addAdapter(pendingReportAdapter);
-			// add fetched report
-			adapter.addView(fetchedHeader());
-			adapter.addAdapter(fetchedReportAdapter);
-		} else {
-			adapter.addAdapter(fetchedReportAdapter);
+		for(ListAdapter a: mReportAdapters){
+			if ( a.isEmpty()){
+				continue;
+			}
+			if(mHasSectionHeaders){
+				adapter.addView(mSecitonHeaderViews.get(mReportAdapters.indexOf(a)));
+			}
+			adapter.addAdapter(a);
 		}
 		listView.setAdapter(adapter);
 	}
+	private void refreshReportLists() {
+
+		
+		openGeoSmsReportAdapter.refresh();
+		pendingReportAdapter.refresh();			
+		fetchedReportAdapter.refresh();
+		setupAdapter();
+		
+	}
 
 	private void filterReportList() {
-		fetchedReportAdapter.getFilter().filter(filterTitle);
+		openGeoSmsReportAdapter.getFilter().filter(filterTitle);
 		pendingReportAdapter.getFilter().filter(filterTitle);
-		adapter = new ListReportAdapter(getActivity());
-		if (!pendingReportAdapter.isEmpty()) {
-			adapter.addView(pendingHeader());
-			adapter.addAdapter(pendingReportAdapter);
-			// add fetched report
-			adapter.addView(fetchedHeader());
-			adapter.addAdapter(fetchedReportAdapter);
-		} else {
-			adapter.addAdapter(fetchedReportAdapter);
-		}
-		listView.setAdapter(adapter);
-
+		fetchedReportAdapter.getFilter().filter(filterTitle);
+		setupAdapter();
 	}
 
 	private void executeUploadTask() {
@@ -350,19 +388,10 @@ public class ListReportFragment
 	}
 
 	private void reportByCategoryList() {
+		openGeoSmsReportAdapter.refresh(filterCategory);
 		fetchedReportAdapter.refresh(filterCategory);
 		pendingReportAdapter.refresh(filterCategory);
-		adapter = new ListReportAdapter(getActivity());
-		if (!pendingReportAdapter.isEmpty()) {
-			adapter.addView(pendingHeader());
-			adapter.addAdapter(pendingReportAdapter);
-			// add fetched report
-			adapter.addView(fetchedHeader());
-			adapter.addAdapter(fetchedReportAdapter);
-		} else {
-			adapter.addAdapter(fetchedReportAdapter);
-		}
-		listView.setAdapter(adapter);
+		setupAdapter();
 
 	}
 

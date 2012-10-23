@@ -38,6 +38,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
@@ -55,6 +56,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -72,6 +74,7 @@ import com.ushahidi.android.app.entities.Report;
 import com.ushahidi.android.app.entities.ReportCategory;
 import com.ushahidi.android.app.models.AddReportModel;
 import com.ushahidi.android.app.models.ListReportModel;
+import com.ushahidi.android.app.opengeosms.OpenGeoSMSSender;
 import com.ushahidi.android.app.tasks.GeocoderTask;
 import com.ushahidi.android.app.util.PhotoUtils;
 import com.ushahidi.android.app.util.Util;
@@ -82,7 +85,8 @@ import com.ushahidi.android.app.views.AddReportView;
  */
 public class AddReportActivity extends
 		BaseEditMapActivity<AddReportView, AddReportModel> implements
-		OnClickListener, ViewSwitcher.ViewFactory, OnItemClickListener {
+		OnClickListener, ViewSwitcher.ViewFactory, OnItemClickListener, 
+		DialogInterface.OnClickListener{
 
 	private ReverseGeocoderTask reverseGeocoderTask;
 
@@ -172,6 +176,7 @@ public class AddReportActivity extends
 		}
 
 		registerForContextMenu(view.gallery);
+		createOpenGeoSmsDialogs();
 	}
 
 	@Override
@@ -351,10 +356,56 @@ public class AddReportActivity extends
 			showDialog(DIALOG_SHOW_REQUIRED);
 		} else if (mError) {
 			showDialog(DIALOG_SHOW_MESSAGE);
-		} else {
-			new SaveTask(this).execute((String) null);
-
+		} else {			
+			mDlgSendMethod.show();
 		}
+	}
+	private AlertDialog mDlgSendMethod;
+	private boolean mIsOpenGeoSms;
+	private AlertDialog mDlgOpenGeoSmsAddress;
+	private String mOpenGeoSmsAddress;
+	@Override
+	public void onClick(DialogInterface dialog, int which) {		
+		
+		if ( dialog.equals(mDlgSendMethod)){
+			mIsOpenGeoSms=which==0?false:true;
+			if ( mIsOpenGeoSms){
+				mDlgOpenGeoSmsAddress.show();
+			}else{
+				new SaveTask(this).execute();
+			}
+			return;
+		}else if (dialog.equals(mDlgOpenGeoSmsAddress)){
+			EditText edt = (EditText) mDlgOpenGeoSmsAddress.findViewById(android.R.id.text1);
+			mOpenGeoSmsAddress = edt.getText().toString();
+			new SaveTask(this).execute();
+			return;
+		}
+		
+		
+	}
+	
+	private void createOpenGeoSmsDialogs(){
+		Resources r = getResources();
+		
+		mDlgSendMethod = new AlertDialog.Builder(this)			
+			.setItems(
+				new String[]{
+					r.getString(R.string.internet), 
+					r.getString(R.string.opengeosms)
+				},
+				this
+			)
+			.setTitle(R.string.send_report_dlg_title)			
+			.create();
+		
+		EditText edt = new EditText(this);
+		edt.setId(android.R.id.text1);
+		mDlgOpenGeoSmsAddress = new AlertDialog.Builder(this)
+			.setView(edt)
+			.setTitle(R.string.send_ogs_dlg_title)
+			.setPositiveButton(R.string.send, this)
+			.create();
 	}
 
 	/**
@@ -363,6 +414,9 @@ public class AddReportActivity extends
 	 * @author henryaddo
 	 */
 	private boolean addReport() {
+		
+		
+		
 		log("Adding new reports to");
 		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
 
@@ -376,8 +430,25 @@ public class AddReportActivity extends
 		report.setReportDate(mDateToSubmit);
 		report.setMode(String.valueOf(0));
 		report.setVerified(String.valueOf(0));
-		report.setPending(1);
-
+		
+		int pending;
+		if ( mIsOpenGeoSms ){
+			StringBuilder cats = new StringBuilder();
+			for(String cat: mVectorCategories){
+				cats.append(",");
+				cats.append(cat);
+			}
+			report.setCategories(cats.substring(1));
+			new OpenGeoSMSSender(this)
+				.sendOpenGeosmsReport(mOpenGeoSmsAddress, "http://maps.google.com", report);
+			if ( pendingPhoto.isEmpty()){
+				return true;
+			}
+			pending = 2;
+		}else{
+			pending = 1;
+		}
+		report.setPending(pending);
 		if (id == 0) {
 			// Add a new pending report
 			if (model.addPendingReport(report, mVectorCategories,
@@ -1094,5 +1165,9 @@ public class AddReportActivity extends
 		deleteExistingPhoto();
 		return true;
 	}
+
+	
+
+	
 
 }
