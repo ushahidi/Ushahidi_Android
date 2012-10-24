@@ -66,11 +66,12 @@ public class ListFetchedReportAdapter extends BaseListAdapter<ListReportModel>
 
 		colors = new int[] { R.drawable.odd_row_rounded_corners,
 				R.drawable.even_row_rounded_corners };
+		mListReportModel = new ListReportModel();
 	}
 
 	@Override
 	public void refresh() {
-		mListReportModel = new ListReportModel();
+		
 		final boolean loaded = mListReportModel.load();
 		if (loaded) {
 			items = mListReportModel.getReports(context);
@@ -85,7 +86,6 @@ public class ListFetchedReportAdapter extends BaseListAdapter<ListReportModel>
 	 * @return List<ListReportModel>
 	 */
 	public List<ListReportModel> fetchedReports() {
-		mListReportModel = new ListReportModel();
 		final boolean loaded = mListReportModel.load();
 		if (loaded) {
 			return mListReportModel.getReports(context);
@@ -95,7 +95,6 @@ public class ListFetchedReportAdapter extends BaseListAdapter<ListReportModel>
 	}
 
 	public void refresh(int categoryId) {
-		mListReportModel = new ListReportModel();
 		final boolean loaded = mListReportModel
 				.loadReportByCategory(categoryId);
 		if (loaded) {
@@ -105,7 +104,6 @@ public class ListFetchedReportAdapter extends BaseListAdapter<ListReportModel>
 	}
 
 	public String fetchCategories(int reportId) {
-		mListReportModel = new ListReportModel();
 		StringBuilder categories = new StringBuilder();
 		for (Category category : mListReportModel
 				.getCategoriesByReportId(reportId)) {
