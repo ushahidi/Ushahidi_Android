@@ -253,8 +253,10 @@
     </style>
 
     <style name="EditText" parent="@android:style/Widget.EditText">
+        <item name="android:cursorVisible">true</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_drawable</item>
         <item name="android:textSize">16sp</item>
         <item name="android:padding">10sp</item>
         <item name="android:textColor">@color/black_color</item>
