@@ -787,8 +787,7 @@ public class ListMapActivity extends
 					errorMessage = getString(R.string.internet_connection);
 					createDialog(DIALOG_SHOW_MESSAGE);
 				} else if (status == 99) {
-					errorMessage = getString(R.string.failed);
-					createDialog(DIALOG_SHOW_MESSAGE);
+					toastLong(R.string.no_reports);
 				} else if (status == 112) {
 					errorMessage = getString(R.string.network_error);
 					createDialog(DIALOG_SHOW_MESSAGE);

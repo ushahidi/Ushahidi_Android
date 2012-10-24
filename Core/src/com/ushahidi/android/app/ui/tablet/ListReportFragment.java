@@ -490,9 +490,10 @@ public class ListReportFragment
 				mParams.put("incident_description", report.getDesc());
 
 				// dates
-				dates = Util.formatDate("MMMM dd, yyyy 'at' hh:mm:ss aaa",
-						report.getDate(), "MM/dd/yyyy hh:mm a", 
-						null, Locale.US).split(" ");
+				dates = Util
+						.formatDate("MMMM dd, yyyy 'at' hh:mm:ss aaa",
+								report.getDate(), "MM/dd/yyyy hh:mm a", null,
+								Locale.US).split(" ");
 
 				time = dates[1].split(":");
 				mParams.put("incident_date", dates[0]);
