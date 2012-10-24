@@ -1,0 +1,17 @@
+    This is at least a partial credits-file of people that have
+    contributed to the SMSSync project.  It is sorted by last name and
+    formatted to allow easy grepping. The fields are: name (N), email (E), web-address
+    (W), description (D), and country (C).
+    Thanks,
+
+Maintain by Henry Addo aka eyedol
+
+P.S. This file was inspired by Linux credits-file
+
+----------
+
+N: GeoThings
+W: http://geothings.tw
+D: Added OpenGeo SMS support to Ushahidi Android and provided fixes to the core library.
+C: Taiwan
+
