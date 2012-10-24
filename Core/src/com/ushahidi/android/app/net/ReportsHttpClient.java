@@ -209,6 +209,7 @@ public class ReportsHttpClient extends MainHttpClient {
 				HttpEntity respEntity = response.getEntity();
 				if (respEntity != null) {
 					InputStream serverInput = respEntity.getContent();
+				
 					int status = ApiUtils
 							.extractPayloadJSON(GetText(serverInput));
 					if (status == 0) {
@@ -231,6 +232,8 @@ public class ReportsHttpClient extends MainHttpClient {
 			//connection timeout
 			log("ConnectionTimeoutException");
 			return false;
+		}catch(SocketTimeoutException ex) {
+			log("SocketTimeoutException");
 		} catch (IOException e) {
 			log("IOException", e);
 			// timeout

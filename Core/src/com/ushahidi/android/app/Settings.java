@@ -161,7 +161,7 @@ public class Settings extends PreferenceActivity implements
 		 * platform.
 		 */
 
-		// Photo resize seekbar
+		// GeneratePhotoFilename resize seekbar
 		basicPrefCat.addPreference(photoSizePref);
 
 		return root;

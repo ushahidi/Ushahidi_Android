@@ -62,6 +62,7 @@ import android.widget.TimePicker;
 import android.widget.ViewSwitcher;
 
 import com.ushahidi.android.app.ImageManager;
+import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseEditMapActivity;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
@@ -271,6 +272,10 @@ public class AddReportActivity extends
 		if (button.getId() == R.id.btnPicture) {
 			// get a file name for the photo to be uploaded
 			photoName = Util.getDateTime() + ".jpg";
+			
+			//keep a copy of the filename for later reuse
+			Preferences.fileName = photoName;
+			Preferences.saveSettings(AddReportActivity.this);
 			showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
 
 		} else if (button.getId() == R.id.add_category) {
@@ -363,7 +368,7 @@ public class AddReportActivity extends
 	 * @author henryaddo
 	 */
 	private boolean addReport() {
-		log("Adding new reports to");
+		log("Adding new reports");
 		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
 
 		Report report = new Report();
@@ -927,8 +932,11 @@ public class AddReportActivity extends
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
+			//get the saved file name
+			Preferences.loadSettings(AddReportActivity.this);
+			photoName = Preferences.fileName;
 			if (requestCode == REQUEST_CODE_CAMERA) {
-
+				
 				Uri uri = PhotoUtils.getPhotoUri(photoName, this);
 				Bitmap bitmap = PhotoUtils.getCameraPhoto(this, uri);
 				PhotoUtils.savePhoto(this, bitmap, photoName);
@@ -936,6 +944,7 @@ public class AddReportActivity extends
 						bitmap.getWidth(), bitmap.getHeight()));
 
 			} else if (requestCode == REQUEST_CODE_IMAGE) {
+				
 				Bitmap bitmap = PhotoUtils
 						.getGalleryPhoto(this, data.getData());
 				PhotoUtils.savePhoto(this, bitmap, photoName);

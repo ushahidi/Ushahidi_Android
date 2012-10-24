@@ -99,7 +99,7 @@ public class PhotoUtils {
 	}
 
 	public static String getPhotoPath(Activity activity) {
-		new Util().log( "getPhotoPath");
+		new Util().log("getPhotoPath");
 		File path = new File(Environment.getExternalStorageDirectory(),
 				activity.getPackageName() + PENDING);
 		return path.exists() ? path.getAbsolutePath() : null;
@@ -107,7 +107,7 @@ public class PhotoUtils {
 	}
 
 	public static boolean imageExist(String filename, Activity activity) {
-		new Util().log( "%s %s ","imageExist(): " ,filename);
+		new Util().log("%s %s ", "imageExist(): ", filename);
 		File path = new File(filename);
 		if (!path.exists()) {
 			Log.d(CLASS_TAG, "image does not exist");
@@ -168,8 +168,8 @@ public class PhotoUtils {
 			BitmapFactory.decodeFile(uri.getPath(), options);
 
 			if (options != null) {
-				new Util().log(String.format("ORIGINAL %dx%d", options.outWidth,
-						options.outHeight));
+				new Util().log(String.format("ORIGINAL %dx%d",
+						options.outWidth, options.outHeight));
 				Bitmap scaled = scaleBitmap(options, uri.getPath());
 				if (scaled != null) {
 					new Util().log(String.format("SCALED %dx%d",
@@ -210,8 +210,8 @@ public class PhotoUtils {
 				bitmap.getHeight(), matrix, true);
 	}
 
-	public static synchronized Bitmap scaleBitmap(BitmapFactory.Options options,
-			String filePath) {
+	public static synchronized Bitmap scaleBitmap(
+			BitmapFactory.Options options, String filePath) {
 
 		BitmapFactory.decodeFile(filePath, options);
 
@@ -219,7 +219,7 @@ public class PhotoUtils {
 			float ratio = (float) options.outHeight / (float) options.outWidth;
 			int width = Preferences.photoWidth > 0 ? Preferences.photoWidth
 					: 500;
-			new Util().log( "Scaling image to " + width + " x " + ratio);
+			new Util().log("Scaling image to " + width + " x " + ratio);
 			options.inSampleSize = calculateInSampleSize(options, width,
 					(int) (width * ratio));
 			options.inJustDecodeBounds = false;
@@ -229,20 +229,20 @@ public class PhotoUtils {
 		return null;
 	}
 
-	public static synchronized Bitmap scaleBitmapByWidth(BitmapFactory.Options options,
-			int width, String filePath) {
+	public static synchronized Bitmap scaleBitmapByWidth(
+			BitmapFactory.Options options, int width, String filePath) {
 		// check dimensions
 
 		if (options != null) {
 			float ratio = (float) options.outHeight / (float) options.outWidth;
-	
+
 			new Util().log("Scaling image to " + width + " x " + ratio);
 			int w = width > 0 ? width : 500;
 			// calculate inSampleSize
 			options.inSampleSize = calculateInSampleSize(options, w,
 					(int) (w * ratio));
 			options.inJustDecodeBounds = false;
-			return BitmapFactory.decodeFile(filePath,options);
+			return BitmapFactory.decodeFile(filePath, options);
 
 		}
 		return null;

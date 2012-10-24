@@ -80,6 +80,7 @@ public class Preferences {
 		savePath = settings.getString("savePath", path);
 
 		domain = settings.getString("Domain", Preferences.domain);
+		fileName = settings.getString("FileName", "");
 		firstname = settings.getString("Firstname", "");
 		lastname = settings.getString("Lastname", "");
 		email = settings.getString("Email", "");
@@ -113,6 +114,7 @@ public class Preferences {
 		settings = context.getSharedPreferences(PREFS_NAME, 0);
 		editor = settings.edit();
 		editor.putString("Domain", domain);
+		editor.putString("FileName", fileName);
 		editor.putInt("CheckinEnabled", isCheckinEnabled);
 		editor.putInt("ActiveDeployment", activeDeployment);
 		editor.putString("ActiveMapName", activeMapName);
