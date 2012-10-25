@@ -56,11 +56,11 @@ public class ListFetchedCheckinAdapter extends
 
 		colors = new int[] { R.drawable.odd_row_rounded_corners,
 				R.drawable.even_row_rounded_corners };
+		mListCheckinModel = new ListCheckinModel();
 	}
 
 	@Override
 	public void refresh() {
-		mListCheckinModel = new ListCheckinModel();
 		final boolean loaded = mListCheckinModel.load();
 		if (loaded) {
 			items = mListCheckinModel.getCheckins(context);
@@ -71,7 +71,6 @@ public class ListFetchedCheckinAdapter extends
 
 	public void refresh(int userId) {
 
-		mListCheckinModel = new ListCheckinModel();
 		final boolean loaded = mListCheckinModel.loadCheckinByUser(userId);
 		if (loaded) {
 			items = mListCheckinModel.getCheckins(context);
@@ -81,7 +80,6 @@ public class ListFetchedCheckinAdapter extends
 	}
 
 	public List<ListCheckinModel> fetchedCheckins() {
-		mListCheckinModel = new ListCheckinModel();
 		final boolean loaded = mListCheckinModel.load();
 		if (loaded) {
 			return mListCheckinModel.getCheckins(context);

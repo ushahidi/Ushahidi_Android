@@ -66,11 +66,12 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 
 		colors = new int[] { R.drawable.odd_row_rounded_corners,
 				R.drawable.even_row_rounded_corners };
+		mListReportModel = new ListReportModel();
 	}
 
 	@Override
 	public void refresh() {
-		mListReportModel = new ListReportModel();
+		
 		final boolean loaded = mListReportModel.loadPendingReports();
 		if (loaded) {
 			items = mListReportModel.getReports(context);
@@ -80,7 +81,6 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 	}
 
 	public List<ListReportModel> pendingReports() {
-		mListReportModel = new ListReportModel();
 		final boolean loaded = mListReportModel.loadPendingReports();
 		if (loaded) {
 			return mListReportModel.getReports(context);
@@ -89,7 +89,6 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 	}
 
 	public void refresh(int categoryId) {
-		mListReportModel = new ListReportModel();
 		final boolean loaded = mListReportModel
 				.loadPendingReportsByCategory(categoryId);
 		if (loaded) {
@@ -99,7 +98,6 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 	}
 
 	public String fetchCategories(int reportId) {
-		mListReportModel = new ListReportModel();
 		StringBuilder categories = new StringBuilder();
 		for (Category category : mListReportModel
 				.getCategoriesByReportId(reportId)) {
@@ -117,7 +115,6 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 	}
 
 	public String fetchCategoriesId(int reportId) {
-		mListReportModel = new ListReportModel();
 		StringBuilder categories = new StringBuilder();
 		for (Category category : mListReportModel
 				.getCategoriesByReportId(reportId)) {
@@ -189,11 +186,7 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 		ImageViewWorker imageWorker = new ImageViewWorker(context);
 		imageWorker.setImageFadeIn(true);
 		imageWorker.loadImage(fileName, imageView, true, 0);
-		/*
-		 * return ImageManager.getDrawables(context, fileName,
-		 * Util.getScreenWidth(context));
-		 */
-
+	
 	}
 
 	// Implements fitering pattern for the list items.

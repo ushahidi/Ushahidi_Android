@@ -55,11 +55,12 @@ public class ListPendingCheckinAdapter extends
 
 		colors = new int[] { R.drawable.odd_row_rounded_corners,
 				R.drawable.even_row_rounded_corners };
+		mListCheckinModel = new ListCheckinModel();
 	}
 
 	@Override
 	public void refresh() {
-		mListCheckinModel = new ListCheckinModel();
+		
 		final boolean loaded = mListCheckinModel.loadPendingCheckin();
 
 		if (loaded) {
@@ -70,8 +71,7 @@ public class ListPendingCheckinAdapter extends
 	}
 
 	public void refresh(int userId) {
-		mListCheckinModel = new ListCheckinModel();
-		
+	
 		final boolean loaded = mListCheckinModel
 				.loadPendingCheckinByUser(userId);
 
@@ -83,7 +83,6 @@ public class ListPendingCheckinAdapter extends
 	}
 	
 	public List<ListCheckinModel> pendingCheckin() {
-		mListCheckinModel = new ListCheckinModel();
 		final boolean loaded = mListCheckinModel.loadPendingCheckin();
 		if (loaded) {
 			return mListCheckinModel.getCheckins(context);
