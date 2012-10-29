@@ -38,6 +38,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
@@ -66,6 +67,9 @@ import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseEditMapActivity;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
+import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.database.IOpenGeoSmsSchema;
+import com.ushahidi.android.app.database.OpenGeoSmsDao;
 import com.ushahidi.android.app.entities.Category;
 import com.ushahidi.android.app.entities.Media;
 import com.ushahidi.android.app.entities.Photo;
@@ -83,7 +87,8 @@ import com.ushahidi.android.app.views.AddReportView;
  */
 public class AddReportActivity extends
 		BaseEditMapActivity<AddReportView, AddReportModel> implements
-		OnClickListener, ViewSwitcher.ViewFactory, OnItemClickListener {
+		OnClickListener, ViewSwitcher.ViewFactory, OnItemClickListener,
+		DialogInterface.OnClickListener {
 
 	private ReverseGeocoderTask reverseGeocoderTask;
 
@@ -159,6 +164,7 @@ public class AddReportActivity extends
 		if (getIntent().getExtras() != null) {
 			this.id = getIntent().getExtras().getInt("id", 0);
 		}
+		mOgsDao = Database.mOpenGeoSmsDao;
 		// edit existing report
 		if (id > 0) {
 
@@ -173,6 +179,8 @@ public class AddReportActivity extends
 		}
 
 		registerForContextMenu(view.gallery);
+		createSendMethodDialog();
+
 	}
 
 	@Override
@@ -291,6 +299,12 @@ public class AddReportActivity extends
 	}
 
 	private void validateReports() {
+		// STATE_SENT means no change in report fields
+		// only the list of photos can be changed
+		if ( !mIsReportEditable){
+			onClick(mDlgSendMethod, 1);
+			return;
+		}
 		// Dipo Fix
 		mError = false;
 		boolean required = false;
@@ -357,11 +371,33 @@ public class AddReportActivity extends
 		} else if (mError) {
 			showDialog(DIALOG_SHOW_MESSAGE);
 		} else {
-			new SaveTask(this).execute((String) null);
-
+			if ( Preferences.canReceiveOpenGeoSms() ){
+				mDlgSendMethod.show();
+			}else{
+				onClick(mDlgSendMethod, 1);
+			}
 		}
 	}
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		mSendOpenGeoSms = which==1;
+		new SaveTask(this).execute((String) null);
+	}
+	private boolean mSendOpenGeoSms = false;
+	private AlertDialog mDlgSendMethod;
 
+	private void createSendMethodDialog(){
+		Resources r = getResources();
+		String[] items = new String[]{
+			r.getString(R.string.internet),
+			r.getString(R.string.opengeosms)
+		};
+		mDlgSendMethod = new AlertDialog.Builder(this)
+			.setItems(items, this)
+			.setTitle(R.string.send_report_dlg_title)
+			.create();
+	}
+	private OpenGeoSmsDao mOgsDao;
 	/**
 	 * Post to local database
 	 * 
@@ -390,7 +426,9 @@ public class AddReportActivity extends
 				// move saved photos
 				log("Moving photos to fetched folder");
 				ImageManager.movePendingPhotos(this);
-				return true;
+				id=report.getDbId();
+			}else{
+				return false;
 			}
 		} else {
 			// Update exisiting report
@@ -403,11 +441,16 @@ public class AddReportActivity extends
 				// move saved photos
 				log("Moving photos to fetched folder");
 				ImageManager.movePendingPhotos(this);
-				return true;
+			}else{
+				return false;
 			}
 		}
-
-		return false;
+		if ( mSendOpenGeoSms ){
+			mOgsDao.addReport(id);
+		}else{
+			mOgsDao.deleteReport(id);
+		}
+		return true;
 
 	}
 
@@ -448,7 +491,32 @@ public class AddReportActivity extends
 		if (newsMedia != null && newsMedia.size() > 0) {
 			view.mNews.setText(newsMedia.get(0).getLink());
 		}
+
+		mIsReportEditable = mOgsDao.getReportState(id) != IOpenGeoSmsSchema.STATE_SENT;
+
+		if(!mIsReportEditable ){
+			View views[] = new View[]{
+					view.mBtnAddCategory,
+					view.mIncidentDesc,
+					view.mIncidentLocation,
+					view.mIncidentTitle,
+					view.mLatitude,
+					view.mLongitude,
+					view.mPickDate,
+					view.mPickTime
+			};
+			for(View v: views){
+				v.setEnabled(false);
+			}
+			updateMarker(
+				Double.parseDouble(report.getLatitude()),
+				Double.parseDouble(report.getLongitude()),
+				true
+				);
+		}
 	}
+
+	private boolean mIsReportEditable=true;
 
 	private void deleteReport() {
 		// make sure it's an existing report
@@ -962,6 +1030,9 @@ public class AddReportActivity extends
 
 	@Override
 	protected void locationChanged(double latitude, double longitude) {
+		if ( !mIsReportEditable){
+			return;
+		}
 		updateMarker(latitude, longitude, true);
 		if (!view.mLatitude.hasFocus() && !view.mLongitude.hasFocus()) {
 			view.mLatitude.setText(String.valueOf(latitude));

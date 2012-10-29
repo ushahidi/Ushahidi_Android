@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -138,49 +139,22 @@ public class ReportsHttpClient extends MainHttpClient {
 
 			if (params != null) {
 
-				entity.addPart("task", new StringBody(params.get("task")));
-				entity.addPart(
-						"incident_title",
-						new StringBody(params.get("incident_title"), Charset
-								.forName("UTF-8")));
-				entity.addPart("incident_description",
-						new StringBody(params.get("incident_description"),
-								Charset.forName("UTF-8")));
-				entity.addPart("incident_date",
-						new StringBody(params.get("incident_date")));
-				entity.addPart("incident_hour",
-						new StringBody(params.get("incident_hour")));
-				entity.addPart("incident_minute",
-						new StringBody(params.get("incident_minute")));
-				entity.addPart("incident_ampm",
-						new StringBody(params.get("incident_ampm")));
-				entity.addPart("incident_category",
-						new StringBody(params.get("incident_category")));
-				entity.addPart("latitude",
-						new StringBody(params.get("latitude")));
-				entity.addPart("longitude",
-						new StringBody(params.get("longitude")));
-				entity.addPart(
-						"location_name",
-						new StringBody(params.get("location_name"), Charset
-								.forName("UTF-8")));
-				entity.addPart(
-						"person_first",
-						new StringBody(params.get("person_first"), Charset
-								.forName("UTF-8")));
-				entity.addPart(
-						"person_last",
-						new StringBody(params.get("person_last"), Charset
-								.forName("UTF-8")));
-				entity.addPart(
-						"person_email",
-						new StringBody(params.get("person_email"), Charset
-								.forName("UTF-8")));
+				for(Entry<String, String> en: params.entrySet()){
+					String key = en.getKey();
+					if ( key == null || "".equals(key)){
+						continue;
+					}
+					String val = en.getValue();
+					if( !"filename".equals(key)){
+						entity.addPart(
+								key,
+								new StringBody(val, Charset.forName("UTF-8"))
+						);
+						continue;
+					}
 
-				if (params.get("filename") != null) {
-
-					if (!TextUtils.isEmpty(params.get("filename"))) {
-						String filenames[] = params.get("filename").split(",");
+					if (!TextUtils.isEmpty(val)) {
+						String filenames[] = val.split(",");
 						log("filenames "
 								+ ImageManager.getPhotoPath(context,
 										filenames[0]));

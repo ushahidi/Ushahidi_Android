@@ -22,6 +22,7 @@ package com.ushahidi.android.app.services;
 import android.content.Intent;
 
 import com.ushahidi.android.app.ImageManager;
+import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListReportModel;
@@ -66,6 +67,9 @@ public class FetchReports extends SyncServices {
 
 		// delete pending photos
 		ImageManager.deletePendingImages(this);
+
+		// delete Open GeoSMS reports
+		Database.mOpenGeoSmsDao.deleteReports();
 	}
 
 	@Override

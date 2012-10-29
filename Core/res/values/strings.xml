@@ -249,4 +249,8 @@
     <string name="total_reports">Number of reports</string>
     <string name="hint_total_reports">The total number of reports to fetch from the selected deployment.</string>
     <string name="no_reports">There are no reports to be shown</string>
+    <string name="send_report_dlg_title">Send Report</string>
+    <string name="internet">Internet</string>
+    <string name="opengeosms">Open GeoSMS</string>
+    <string name="pending">Pending</string>
 </resources>
