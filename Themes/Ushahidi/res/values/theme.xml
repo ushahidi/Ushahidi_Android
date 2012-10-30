@@ -24,7 +24,7 @@
     <!-- BACKROUND IMAGES -->
     <drawable name="splash_background">@drawable/splash</drawable>
     <drawable name="dashboard_background">@drawable/dashboard</drawable>
-    <drawable name="about_background">@drawable/about_background</drawable>
+    <drawable name="about_background">@drawable/skyline</drawable>
     <drawable name="actionbar_background">@drawable/actionbar</drawable>
 
     <!-- COLOR CODES -->
