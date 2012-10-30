@@ -103,9 +103,9 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 		final String sql = "SELECT *" + " FROM " + TABLE
 				+ " category INNER JOIN " + IReportCategorySchema.TABLE
 				+ " categories ON category." + CATEGORY_ID + " = categories."
-				+ IReportCategorySchema.CATEGORY_ID + " WHERE categories."
-				+ IReportCategorySchema.REPORT_ID + " =? " + " GROUP BY "
-				+ PARENT_ID + " ORDER BY  " + POSITION + " DESC";
+				+ IReportCategorySchema.CATEGORY_ID + " AND categories."
+				+ IReportCategorySchema.REPORT_ID + " =? "
+				+ " ORDER BY  category." + CATEGORY_ID + " ASC";
 		listCategory = new ArrayList<Category>();
 		cursor = super.rawQuery(sql, new String[] { String.valueOf(reportId) });
 
