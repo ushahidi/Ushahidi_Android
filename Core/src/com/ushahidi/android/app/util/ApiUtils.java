@@ -192,7 +192,27 @@ public class ApiUtils extends MainHttpClient {
 		}
 
 	}
-
+	private String httpGet(String url){
+		try {
+			HttpResponse r = GetURL(url);
+			if ( r == null){
+				return null;
+			}
+			int stat = r.getStatusLine().getStatusCode();
+			// non 200 status code might have content to consume too
+			// will cause subsequent call to hang if not consumed
+			String ret = GetText(r);
+			if (  stat != 200){
+				return null;
+			}
+			return ret;
+		} catch (IOException e) {
+			return null;
+		}
+	}
+	private String trimVersion(String s){
+		return s.replaceAll("[^0-9.]", "");
+	}
 	/**
 	 * Check if an ushahidi deployment has changed it's HTTP protocol to HTTPS
 	 * or not. Then update if it has.
@@ -218,12 +238,17 @@ public class ApiUtils extends MainHttpClient {
 					
 					jsonString = GetText(response);
 					log(String.format("%s %s ", "Update domain",jsonString ));
-					JSONObject jsonObject = new JSONObject(jsonString);
-					String changedDomain = jsonObject.getJSONObject("payload")
-							.getString("domain");
+					JSONObject payload = new JSONObject(jsonString).getJSONObject("payload");
 
-					Preferences.domain = changedDomain;
+					Preferences.domain = payload.getString("domain");
 
+					String ogsVer = httpGet(Preferences.domain + "/opengeosms/version");
+					Preferences.ogsPluginVersion = ogsVer == null?
+								"":
+								trimVersion(ogsVer);
+
+					Preferences.phonenumber = payload.has("sms")?
+						payload.getString("sms"):"";
 					// save changes
 					Preferences.saveSettings(context);
 

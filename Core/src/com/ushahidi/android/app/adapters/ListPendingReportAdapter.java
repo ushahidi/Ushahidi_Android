@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.database.IOpenGeoSmsSchema;
 import com.ushahidi.android.app.entities.Category;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.util.ImageViewWorker;
@@ -173,9 +175,24 @@ public class ListPendingReportAdapter extends BaseListAdapter<ListReportModel>
 			widgets.status.setTextColor(context.getResources().getColor(
 					R.color.unverified_text_color)); // red
 		}
-
-		widgets.status.setText(Util.capitalizeString(getItem(position)
-				.getStatus()));
+		String status;
+		switch(Database.mOpenGeoSmsDao.getReportState(getItem(position).getId())){
+		case IOpenGeoSmsSchema.STATE_PENDING:
+			status =
+				context.getResources().getString(R.string.pending) + " " +
+				context.getResources().getString(R.string.opengeosms);
+			break;
+		case IOpenGeoSmsSchema.STATE_SENT:
+			status =
+				context.getResources().getString(R.string.pending) + " " +
+				context.getResources().getString(R.string.photos);
+			break;
+		default:
+			status = Util.capitalizeString(getItem(position)
+					.getStatus());
+			break;
+		}
+		widgets.status.setText(status);
 
 		widgets.arrow.setImageDrawable(getItem(position).getArrow());
 

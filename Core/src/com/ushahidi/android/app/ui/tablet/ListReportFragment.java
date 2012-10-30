@@ -52,6 +52,9 @@ import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.adapters.ListPendingReportAdapter;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
+import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.database.IOpenGeoSmsSchema;
+import com.ushahidi.android.app.database.OpenGeoSmsDao;
 import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.fragments.BaseSectionListFragment;
 import com.ushahidi.android.app.models.AddReportModel;
@@ -59,6 +62,7 @@ import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
+import com.ushahidi.android.app.opengeosms.OpenGeoSMSSender;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
@@ -473,17 +477,92 @@ public class ListReportFragment
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 	}
+	private boolean sendOpenGeoSms(ListReportModel r){
+		return new OpenGeoSMSSender(getActivity())
+		.sendReport(
+				Preferences.phonenumber,
+				Preferences.openGeoSmsUrl,
+				r
+				);
+	}
 
+	private boolean sendOpenGeoSmsReport(ListReportModel r, int state){
+		long id = r.getId();
+		OpenGeoSmsDao dao = Database.mOpenGeoSmsDao;
+		switch(state){
+		case IOpenGeoSmsSchema.STATE_PENDING:
+			if ( sendOpenGeoSms(r) ){
+				String photos = new UploadPhotoAdapter(getActivity()).pendingPhotos((int) id);
+				if ( photos != null && !"".equals(photos)){
+					dao.setReportState(id, IOpenGeoSmsSchema.STATE_SENT);
+				}else{
+					deletePendingReport((int) id);
+					dao.deleteReport(id);
+				}
+				return true;
+			}else{
+				return false;
+			}
+		case IOpenGeoSmsSchema.STATE_SENT:
+			String photos = new UploadPhotoAdapter(getActivity()).pendingPhotos((int) id);
+			if ( photos != null && !"".equals(photos)){
+
+				String url = Preferences.domain + "opengeosms/attach";
+				String m = OpenGeoSMSSender.createReport(
+						Preferences.openGeoSmsUrl,
+						r
+						);
+				String filename = new UploadPhotoAdapter(getActivity()).pendingPhotos((int) id);
+
+				HashMap<String,String> params = new HashMap<String,String>();
+				params.put("m", m);
+				params.put("filename", filename);
+
+				ReportsHttpClient c = new ReportsHttpClient(getActivity());
+
+				try {
+					if( !c.PostFileUpload(url, params) ){
+						return false;
+					}
+				} catch (IOException e) {
+					return false;
+				}
+			}
+			deletePendingReport((int) id);
+			dao.deleteReport(id);
+			return true;
+		}
+		return false;
+	}
+	private List<ListReportModel> mPendingReports;
+	private void preparePendingReports(){
+		mPendingReports = pendingReportAdapter.pendingReports();
+		if (mPendingReports != null) {
+			for (ListReportModel report : mPendingReports) {
+				long rid = report.getId();
+				String categories = pendingReportAdapter
+						.fetchCategoriesId((int) rid);
+				report.setCategories(categories);
+			}
+		}
+	}
 	private boolean uploadPendingReports() {
 
-		List<ListReportModel> items = pendingReportAdapter.pendingReports();
-		String categories;
+		boolean retVal = true;
 		String dates[];
 		String time[];
 		StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
 		urlBuilder.append("/api");
-		if (items != null) {
-			for (ListReportModel report : items) {
+		if (mPendingReports != null) {
+			for (ListReportModel report : mPendingReports) {
+				long rid = report.getId();
+				int state = Database.mOpenGeoSmsDao.getReportState(rid);
+				if (state != IOpenGeoSmsSchema.STATE_NOT_OPENGEOSMS ){
+					if ( !sendOpenGeoSmsReport(report, state)){
+						retVal = false;
+					}
+					continue;
+				}
 				HashMap<String, String> mParams = new HashMap<String, String>();
 				mParams.put("task", "report");
 				mParams.put("incident_title", report.getTitle());
@@ -501,11 +580,7 @@ public class ListReportFragment
 				mParams.put("incident_minute", time[1]);
 				mParams.put("incident_ampm", dates[2].toLowerCase());
 
-				// fetch categories
-				categories = pendingReportAdapter
-						.fetchCategoriesId((int) report.getId());
-				mParams.put("incident_category", categories);
-
+				mParams.put("incident_category", report.getCategories());
 				mParams.put("latitude", report.getLatitude());
 				mParams.put("longitude", report.getLongitude());
 				mParams.put("location_name", report.getLocation());
@@ -519,19 +594,18 @@ public class ListReportFragment
 
 				// upload
 				try {
-					if (new ReportsHttpClient(getActivity()).PostFileUpload(
+					if (!new ReportsHttpClient(getActivity()).PostFileUpload(
 							urlBuilder.toString(), mParams)) {
 						deletePendingReport((int) report.getId());
-						return true;
+						retVal = false;
 					}
-					return false;
 				} catch (IOException e) {
-					return false;
+					retVal = false;
 				}
 
 			}
 		}
-		return false;
+		return retVal;
 	}
 
 	private void deletePendingReport(int reportId) {
@@ -579,6 +653,13 @@ public class ListReportFragment
 		}
 
 		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			preparePendingReports();
+		}
+
+
+		@Override
 		protected Boolean doInBackground(String... args) {
 
 			// delete pending reports
@@ -591,11 +672,11 @@ public class ListReportFragment
 			super.onPostExecute(success);
 			if (success) {
 				toastLong(R.string.uploaded);
-				refreshReportLists();
-				showCategories();
 			} else {
 				toastLong(R.string.failed);
 			}
+			refreshReportLists();
+			showCategories();
 		}
 	}
 

@@ -67,7 +67,9 @@ public class Preferences {
 	public static String username = "";
 	public static String password = "";
 
-	public static String phonenumber;
+	public static String phonenumber = "";
+	public static String ogsPluginVersion = "";
+	public static String openGeoSmsUrl = "http://maps.google.com/";
 
 	public static void loadSettings(Context context) {
 		final SharedPreferences settings = context.getSharedPreferences(
@@ -103,11 +105,23 @@ public class Preferences {
 
 		// @inoran
 		phonenumber = settings.getString("Phonenumber", "");
-
+		ogsPluginVersion = settings.getString("OgsPluginVersion", "");
 		// make sure folder exists
 		final File dir = new File(Preferences.savePath);
 		dir.mkdirs();
 
+	}
+
+	private static boolean hasValue(String s){
+		return s != null && !"".equals(s);
+	}
+
+	private static boolean hasPhoneNumber(){
+		return hasValue(phonenumber);
+	}
+
+	public static boolean canReceiveOpenGeoSms(){
+		return hasValue(ogsPluginVersion) && hasPhoneNumber();
 	}
 
 	public static void saveSettings(Context context) {
@@ -122,6 +136,8 @@ public class Preferences {
 		editor.putString("DeploymentLongitude", deploymentLongitude);
 		editor.putInt("AppRunsFirstTime", appRunsFirstTime);
 		editor.putInt("SelectedDistance", selectedDistance);
+		editor.putString("Phonenumber", phonenumber);
+		editor.putString("OgsPluginVersion", ogsPluginVersion);
 		editor.commit();
 	}
 }

@@ -67,6 +67,8 @@ public class Database {
 
 	public static CommentDao mCommentDao; // comment
 
+	public static OpenGeoSmsDao mOpenGeoSmsDao;
+
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		DatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -90,7 +92,7 @@ public class Database {
 			db.execSQL(ICheckinSchema.CHECKINS_TABLE_CREATE);
 			db.execSQL(IOfflineReportSchema.OFFLINE_REPORT_TABLE_CREATE);
 			db.execSQL(ICommentSchema.COMMENT_TABLE_CREATE);
-
+			db.execSQL(IOpenGeoSmsSchema.OPENGEOSMS_TABLE_CREATE);
 		}
 
 		@Override
@@ -341,6 +343,7 @@ public class Database {
 		mCheckin = new CheckinDao(mDb);
 		mUserDao = new UserDao(mDb);
 		mCommentDao = new CommentDao(mDb);
+		mOpenGeoSmsDao = new OpenGeoSmsDao(mDb);
 		return this;
 	}
 
