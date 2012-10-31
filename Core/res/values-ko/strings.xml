@@ -1,0 +1,226 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="txt_phonenumber">휴대폰 번호</string>
+  <string name="hint_phonenumber">리포트를 보내는 목적으로만 사용해주세요.</string>
+  <string name="total_reports">리포트 개수</string>
+  <string name="hint_total_reports">선택한 배치에서 가져온 리포트 총 개수.</string>
+  <string name="no_reports">더이상 보여줄 리포트가 없습니다.</string>
+  <!--about screen-->
+  <string name="ushahidi_url">ushahidi.com</string>
+  <string name="internet_connection">네트워크 에러입니다. 인터넷 연결을 확인해주세요.</string>
+  <string name="empty_report_title">리포트 제목을 입력해주세요.</string>
+  <string name="empty_report_description">리포트 내용을 입력해주세요.</string>
+  <string name="empty_report_location">위치명 필드입니다.</string>
+  <string name="empty_report_categories">하나 이상의 카테고리를 선택해주세요.</string>
+  <string name="hint_location">위치를 입력해주세요.</string>
+  <string name="could_not_fetch_reports">리포트를 불러올 수 없습니다.</string>
+  <!--Add location screen-->
+  <string name="title">제목</string>
+  <string name="date">날짜</string>
+  <string name="photo">사진</string>
+  <string name="please_wait">잠시만 기다려주세요...</string>
+  <string name="choose_method">방법선택</string>
+  <string name="how_to_select_pic">어떻게 사진을 얻을 지 선택해주세요.</string>
+  <string name="camera_option">카메라</string>
+  <string name="gallery_option">갤러리</string>
+  <string name="network_error">네트워크 에러</string>
+  <string name="network_error_msg">네트워크 에러입니다. 인터넷 연결을 확인해주세요.</string>
+  <string name="file_system_error">파일 시스템 에러</string>
+  <string name="file_system_error_msg">파일 시스템 에러, 저장 경로가 맞는지 확인해주세요.</string>
+  <string name="read_more">더보기</string>
+  <!--Checkin Strings-->
+  <string name="checkin_message">메시지</string>
+  <string name="checkin_enter_msg_hint">메시지 입력</string>
+  <string name="checkin_empty_message">체크인 메시지를 입력해주세요.</string>
+  <string name="could_not_fetch_checkin">체크인을 불러올 수 없습니다.</string>
+  <string name="checkin_enter_firstname_hint">이름을 입력해주세요</string>
+  <string name="checkin_enter_lastname_hint">성을 입력해주세요</string>
+  <string name="checkin_enter_email_hint">이메일을 입력해주세요</string>
+  <!--The hint text that appears in the search box.-->
+  <string name="search_hint">아래의 목록을 필터링 하려면 여기에 입력해주세요....</string>
+  <string name="maps_fetched_successful">지도를 불러오기 성공</string>
+  <string name="could_not_fetch_data">네트워크 에러로 새로운 지도를 가져올 수 없습니다.</string>
+  <!--The description that will show up in the search settings for this source.-->
+  <string name="found_maps">찾은 지도</string>
+  <!--pull to refresh list-->
+  <string name="pull_to_refresh_pull_label">새로고침 당기기...</string>
+  <string name="pull_to_refresh_release_label">놓으면 새로고침됩니다...</string>
+  <string name="pull_to_refresh_refreshing_label">읽는 중.....</string>
+  <string name="pull_to_refresh_tap_label">새로고침을 구르세요......</string>
+  <!--sharing-->
+  <string name="title_share">다음을 사용하여 공유</string>
+  <string name="select_distance">거리를 선택해주세요.</string>
+  <!--photos-->
+  <string name="preview_photo">사진\%\</string>
+  <!--deployments-->
+  <string name="clear_all">전체 삭제</string>
+  <string name="confirm_clear">정말 모든 걸 삭제하길 원하시나요?</string>
+  <string name="items_cleared">성공적으로 삭제되었습니다.</string>
+  <string name="no_items_cleared">삭제할 아이템이 없습니다.</string>
+  <string name="fix_error">이름과 유효한 URL을 입력했는지 확인해주세요.</string>
+  <string name="recent_reports">최근 리포트</string>
+  <string name="minutes">분</string>
+  <string name="team">팀</string>
+  <string name="twitter">트위터</string>
+  <string name="contact">연락처</string>
+  <string name="media">미디어</string>
+  <string name="facebook">페이스북</string>
+  <!--Photo resize preferences-->
+  <string name="photo_resize_title">사진설정</string>
+  <string name="photo_resize_summary">이미지 크기조정 가로길이</string>
+  <string name="photo_size_pixels">픽셀</string>
+  <!--DEFAULT USHAHIDI DEPLOYMENT TO USE. DON'T REMOVE THIS LINE. RATHER EDIT THE VALUE-->
+  <string name="default_deployment"/>
+  <!--empty latitude-->
+  <string name="invalid_latitude">위도입력이 잘못되었습닏. 예. 3.4958585</string>
+  <string name="invalid_longitude">경도입력이 잘못되었습니다. 예. -3.4958585</string>
+  <!--Open GeoSMS-->
+  <string name="less_report_title">제목 필드는 3자이상 200자 미만이어야 합니다.</string>
+  <string name="less_report_location">위치명은 최소 3자이상이어야 합니다.</string>
+  <!--new strings-->
+  <string name="app_name">우샤히디</string>
+  <string name="load">읽어오기</string>
+  <string name="loading_">읽어오는 중...</string>
+  <string name="loaded">읽어오기 완료</string>
+  <string name="not_loaded">읽어오기 실패</string>
+  <string name="save">저장</string>
+  <string name="saving_">저장중</string>
+  <string name="saved">저장완료</string>
+  <string name="not_saved">저장되지 않음</string>
+  <string name="unsaved_changes">저장되지 않은 변경사항</string>
+  <string name="no_items">아이템이 없습니다</string>
+  <string name="discard">반려</string>
+  <string name="cancel">취소</string>
+  <string name="menu_refresh">새로고침</string>
+  <string name="menu_search">검색</string>
+  <string name="menu_share">공유</string>
+  <string name="example_label">라벨예시</string>
+  <string name="settings">설정</string>
+  <string name="about">About </string>
+  <string name="synchronize">동기화</string>
+  <string name="maps">지도</string>
+  <string name="map">지도</string>
+  <string name="default_location">기본 위치</string>
+  <string name="add_a_photo">사진 추가</string>
+  <string name="choose_categories">카테고리 선택</string>
+  <string name="enter_map_details">지도상세정보 입력</string>
+  <string name="checkin">체크인</string>
+  <string name="checkins">체크인</string>
+  <string name="report">리포트</string>
+  <string name="reports">리포트</string>
+  <string name="add_report">리포트 추가</string>
+  <string name="splash_screen">로딩이미지</string>
+  <string name="would_you_like_to_save_your_changes_">변경 사항을 저장하시겠습니까?</string>
+  <string name="edit">수정</string>
+  <string name="enter_description">설명 입력</string>
+  <string name="enter_name">이름입력</string>
+  <string name="enter_url">URL입력</string>
+  <string name="map_deleted">지도삭제</string>
+  <string name="map_deleted_failed">지도 열기 실패</string>
+  <string name="admin">관리자</string>
+  <string name="categories">카테고리</string>
+  <string name="yes">Yes</string>
+  <string name="no">No</string>
+  <string name="ok">OK</string>
+  <string name="error_occured">가져오는 동안 오류가 발생했습니다.</string>
+  <string name="photos">사진</string>
+  <string name="news">뉴스</string>
+  <string name="video">비디오</string>
+  <string name="audio">오디오</string>
+  <string name="no_news">뉴스없음</string>
+  <string name="no_video">비디오없음</string>
+  <string name="no_photos">사진없음</string>
+  <string name="no_comments">댓글 없음</string>
+  <string name="all_categories">모든 카테고리</string>
+  <plurals name="no_of_images">
+    <item quantity="other">%d 이미지</item>
+  </plurals>
+  <plurals name="no_of_news">
+    <item quantity="other">%d 뉴스</item>
+  </plurals>
+  <plurals name="no_of_videos">
+    <item quantity="other">%d 비디오</item>
+  </plurals>
+  <plurals name="no_of_comments">
+    <item quantity="other">%d 댓글</item>
+  </plurals>
+  <string name="previous">이전</string>
+  <string name="next">다음</string>
+  <string name="comment">댓글</string>
+  <string name="comments">댓글</string>
+  <string name="share">공유</string>
+  <string name="traffic">트래픽</string>
+  <string name="satellite">위성</string>
+  <string name="normal">일반</string>
+  <string name="clear">삭제</string>
+  <string name="cleared">삭제되었습니다.</string>
+  <string name="not_cleared">삭제되지 않았습니다.</string>
+  <string name="search_reports">리포트를 찾고 있습니다...</string>
+  <string name="search_maps">지도를 찾고 있습니다...</string>
+  <string name="pending_upload">업로드 보류</string>
+  <string name="fetched">불러옴</string>
+  <string name="required_fields">필수필드</string>
+  <string name="title">제목</string>
+  <string name="category">카테고리</string>
+  <string name="location">위치</string>
+  <string name="description">상세내용</string>
+  <string name="latitude">위도</string>
+  <string name="longitude">경도</string>
+  <string name="date_and_time">날짜와 시간</string>
+  <string name="enter_news_url">뉴스 URL 입력</string>
+  <string name="unsaved_changes">저장되지 않은 변경사항</string>
+  <string name="want_to_cancel">정말 취소하길 원하세요?</string>
+  <string name="added">추가완료</string>
+  <string name="uploaded">업로드완료</string>
+  <string name="update">업데이트</string>
+  <string name="delete">삭제</string>
+  <string name="verified">확인완료</string>
+  <string name="unverified">미확인</string>
+  <string name="remove">삭제</string>
+  <string name="delete_report">삭제된 리포트</string>
+  <string name="want_to_delete">정말 삭제하길 원하세요?</string>
+  <string name="failed">실패</string>
+  <string name="connection_timeout">연결시간</string>
+  <string name="unknown">알수없음</string>
+  <string name="all_users">모든 사용자</string>
+  <string name="add_checkin">체크인추가</string>
+  <string name="users">사용자</string>
+  <string name="checkin_is_enabled">체크인 사용중</string>
+  <string name="search_checkins">체크인 찾는 중...</string>
+  <string name="delete_checkins">체크인 삭제</string>
+  <string name="personal_information">개인정보</string>
+  <string name="add_map_by_url">URL로 맵 추가</string>
+  <string name="find_maps_around_me">내 주위 지도찾기</string>
+  <string name="add_map">지도추가</string>
+  <string name="finding_map">지도 찾는 중...</string>
+  <string name="uploading">업로드중...</string>
+  <string name="full_name">이름</string>
+  <string name="enter_full_name">이름을 모두 입력해주세요.</string>
+  <string name="valid_email_address">유효한 이메일을 입력해주세요.</string>
+  <string name="enter_comment">3자 이상의 댓글을 입력해주세요.</string>
+  <string name="could_not_fetch_comment">댓글을 불러올 수 없습니다</string>
+  <string name="clear_all_map">모든 지도 지우기</string>
+  <string name="refresh">새로고침</string>
+  <string name="no_checkin">체크인 없음</string>
+  <string name="add_photo">사진 추가</string>
+  <string name="select_category">카테고리 선택</string>
+  <string name="change_date">날짜 변경</string>
+  <string name="change_time">시간 변경</string>
+  <string name="prompt_mesg">필터할 카테고리를 선택하세요</string>
+  <string name="invalid_email_address">입력한 이메일주소가 유효하지 않습니다</string>
+  <string name="choose_categories">카테고리 선택</string>
+  <string name="location_disabled">위치 찾기가 사용이 중단되었습니다.</string>
+  <string name="location_reenable">해당 위치에 방문하길 원할 경우,  보안설정에서 위치 탐색을 실행으로 설정해주세요.</string>
+  <string name="basic_settings">기본설정</string>
+  <string name="txt_first_name">이름</string>
+  <string name="hint_first_name">리포트 제출 시 속성 (옵션)</string>
+  <string name="txt_last_name">성</string>
+  <string name="hint_last_name">리포트 제출 시 속성 (옵션)</string>
+  <string name="txt_email">E-mail 주소</string>
+  <string name="hint_email">연락 목적으로만 사용해주세요.</string>
+  <string name="txt_phonenumber">휴대폰 번호</string>
+  <string name="hint_phonenumber">리포트를 보내는 목적으로만 사용해주세요.</string>
+  <string name="total_reports">리포트 개수</string>
+  <string name="hint_total_reports">선택한 배치에서 가져온 리포트 총 개수.</string>
+  <string name="no_reports">더이상 보여줄 리포트가 없습니다.</string>
+</resources>
