@@ -135,6 +135,7 @@ public class AddCommentActivity extends
 
 	private void validateComment() {
 
+		mError = false;
 		boolean required = false;
 
 		// validate email field

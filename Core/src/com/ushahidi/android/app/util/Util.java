@@ -53,6 +53,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
@@ -328,12 +329,12 @@ public class Util {
 	 * @return boolean
 	 */
 	public static boolean validateEmail(String emailAddress) {
-		if (!emailAddress.equals("")) {
+		if (!TextUtils.isEmpty(emailAddress)) {
 			pattern = Pattern.compile(VALID_EMAIL_PATTERN);
 			matcher = pattern.matcher(emailAddress);
 			return matcher.matches();
 		}
-		return true;
+		return false;
 	}
 
 	/**
