@@ -30,10 +30,18 @@ public class OpenGeoSmsDao implements IOpenGeoSmsDao, IOpenGeoSmsSchema{
 			null
 		);
 		if ( c.getCount() < 1 ){
+			
+			//free resources
+			c.close();
 			return STATE_NOT_OPENGEOSMS;
 		}
 		c.moveToFirst();
-		return c.getInt(0);
+		final int reportState = c.getInt(0);
+		
+		//free resources
+		c.close();
+		
+		return reportState;
 	}
 	private static final String WHERE=REPORT_ID+"=?";
 	@Override
