@@ -302,7 +302,7 @@ public class AddReportActivity extends
 		// STATE_SENT means no change in report fields
 		// only the list of photos can be changed
 		if ( !mIsReportEditable){
-			onClick(mDlgSendMethod, 1);
+			onClick(mDlgSendMethod, 0);
 			return;
 		}
 		// Dipo Fix
@@ -374,7 +374,7 @@ public class AddReportActivity extends
 			if ( Preferences.canReceiveOpenGeoSms() ){
 				mDlgSendMethod.show();
 			}else{
-				onClick(mDlgSendMethod, 1);
+				onClick(mDlgSendMethod, 0);
 			}
 		}
 	}
