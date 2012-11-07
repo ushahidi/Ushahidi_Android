@@ -302,7 +302,7 @@ public class AddReportActivity extends
 		// STATE_SENT means no change in report fields
 		// only the list of photos can be changed
 		if ( !mIsReportEditable){
-			onClick(mDlgSendMethod, 0);
+			onClick(mDlgSendMethod, 1);
 			return;
 		}
 		// Dipo Fix
@@ -481,6 +481,7 @@ public class AddReportActivity extends
 			mVectorCategories
 					.add(String.valueOf(reportCategory.getCategoryId()));
 		}
+		
 		setSelectedCategories(mVectorCategories);
 
 		// set the photos
