@@ -374,7 +374,7 @@ public class AddReportActivity extends
 			if ( Preferences.canReceiveOpenGeoSms() ){
 				mDlgSendMethod.show();
 			}else{
-				onClick(mDlgSendMethod, 1);
+				onClick(mDlgSendMethod, 0);
 			}
 		}
 	}
