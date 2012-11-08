@@ -13,13 +13,17 @@ public class GsonHelper {
 
 	private static Gson mGson = new Gson();
 
-	public static <T> T fromStream(InputStream s, Class<T> cls){
-		return mGson
-				.fromJson(
-						new JsonReader(new InputStreamReader(s)), cls);
+	public static <T> T fromString(String s, Class<T> cls) {
+		return mGson.fromJson(s, cls);
+	}
+
+	public static <T> T fromStream(InputStream s, Class<T> cls) {
+		return mGson.fromJson(new JsonReader(new InputStreamReader(s)), cls);
 
 	}
-	public static <T> T fromUrl(String url, Class<T> cls) throws MalformedURLException, IOException{
+
+	public static <T> T fromUrl(String url, Class<T> cls)
+			throws MalformedURLException, IOException {
 		return fromStream(new URL(url).openStream(), cls);
 	}
 
