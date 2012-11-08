@@ -1,7 +1,16 @@
-3.0.4
+3.1.4
 Feature:
+ * Support for OpenGeoSMS
  * Removed restrictions to telephony hardware so the app shows up for devices without the telephony hardware. 
+ * Add Korean translation
+ * Add German translation
 
+Bug:
+ * Fix issue with consistencies with input field character case.
+ * Fix report upload occassional failure.
+ * Fix crashes with comments.
+
+    
 3.0.3
 Bug:
  * Fixed crashes with change in internet connectivity on the device
