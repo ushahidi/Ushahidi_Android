@@ -35,7 +35,7 @@
 
             <EditText
                 android:id="@+id/incident_title"
-                style="@style/EditText.Title"
+                style="@style/EditText.CapWords"
                 android:hint="@string/empty_report_title" />
         </LinearLayout>
         <!-- Title layout ends. -->

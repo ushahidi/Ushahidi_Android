@@ -481,6 +481,7 @@ public class AddReportActivity extends
 			mVectorCategories
 					.add(String.valueOf(reportCategory.getCategoryId()));
 		}
+		
 		setSelectedCategories(mVectorCategories);
 
 		// set the photos

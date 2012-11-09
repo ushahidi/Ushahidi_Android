@@ -45,7 +45,7 @@ public class Database {
 
 	public static final String DATABASE_NAME = "ushahidi_db";
 
-	private static final int DATABASE_VERSION = 17;
+	private static final int DATABASE_VERSION = 18;
 
 	private final Context mContext;
 
@@ -224,6 +224,7 @@ public class Database {
 				// create missing tables
 				db.execSQL(IReportCategorySchema.REPORT_CATEGORY_TABLE_CREATE);
 				db.execSQL(ICommentSchema.COMMENT_TABLE_CREATE);
+				db.execSQL(IOpenGeoSmsSchema.OPENGEOSMS_TABLE_CREATE);
 
 				onCreate(db);
 			} catch (SQLException e) {

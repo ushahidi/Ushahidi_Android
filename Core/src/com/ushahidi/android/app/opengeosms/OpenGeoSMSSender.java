@@ -60,11 +60,15 @@ public class OpenGeoSMSSender {
 				mSem.release();
 				return;
 			}
-			mPendingIntents.remove(mPendingIntents.size() - 1);
-			if (mPendingIntents.isEmpty()) {
-				mRecvRetVal = true;
-				context.unregisterReceiver(this);
-				mSem.release();
+
+			// Fix for a potential null object here
+			if (mPendingIntents != null) {
+				mPendingIntents.remove(mPendingIntents.size() - 1);
+				if (mPendingIntents.isEmpty()) {
+					mRecvRetVal = true;
+					context.unregisterReceiver(this);
+					mSem.release();
+				}
 			}
 		}
 
