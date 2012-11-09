@@ -20,115 +20,34 @@
 
 package com.ushahidi.android.app.util;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Category;
+import com.ushahidi.android.app.json.GsonHelper;
+import com.ushahidi.android.app.json.UshahidiApiCategories;
 
 /**
  * @author eyedol
  */
 public class CategoriesApiUtils {
 
-	private JSONObject jsonObject;
+	private UshahidiApiCategories mApiCategories;
 
 	private boolean processingResult;
 
 	public CategoriesApiUtils(String jsonString) {
 		processingResult = true;
+		mApiCategories = GsonHelper.fromString(jsonString,
+				UshahidiApiCategories.class);
 
-		try {
-			jsonObject = new JSONObject(jsonString);
-		} catch (JSONException e) {
-			new Util().log("JSONException", e);
-			processingResult = false;
-		}
-	}
-
-	private JSONObject getCategoryPayloadObj() {
-		try {
-			return jsonObject.getJSONObject("payload");
-		} catch (JSONException e) {
-			new Util().log("JSONException", e);
-			return new JSONObject();
-		}
-	}
-
-	private JSONArray getCategoriesArr() {
-		try {
-			return getCategoryPayloadObj().getJSONArray("categories");
-		} catch (JSONException e) {
-			new Util().log("JSONException", e);
-			return new JSONArray();
-		}
 	}
 
 	public boolean getCategoriesList() {
 		new Util().log("Save report");
 		if (processingResult) {
-			List<Category> listCategory = new ArrayList<Category>();
-			JSONArray categoriesArr = getCategoriesArr();
-			int id = 0;
-			if (categoriesArr != null) {
-				for (int i = 0; i < categoriesArr.length(); i++) {
-					Category category = new Category();
-					try {
-						id = categoriesArr.getJSONObject(i)
-								.getJSONObject("category").getInt("id");
-						category.setCategoryId(id);
-						if (!categoriesArr.getJSONObject(i)
-								.getJSONObject("category").isNull("color")) {
-							category.setCategoryColor(categoriesArr
-									.getJSONObject(i).getJSONObject("category")
-									.getString("color"));
-						}
+			return saveCategories(mApiCategories.getCategories());
 
-						if (!categoriesArr.getJSONObject(i)
-								.getJSONObject("category").isNull("parent_id")) {
-							category.setParentId(categoriesArr.getJSONObject(i)
-									.getJSONObject("category")
-									.getInt("parent_id"));
-						}
-
-						if (!categoriesArr.getJSONObject(i)
-								.getJSONObject("category")
-								.isNull("description")) {
-							category.setCategoryDescription(categoriesArr
-									.getJSONObject(i).getJSONObject("category")
-									.getString("description"));
-						}
-
-						if (!categoriesArr.getJSONObject(i)
-								.getJSONObject("category").isNull("title")) {
-
-							category.setCategoryTitle(categoriesArr
-									.getJSONObject(i).getJSONObject("category")
-									.getString("title"));
-						}
-
-						if (!categoriesArr.getJSONObject(i)
-								.getJSONObject("category").isNull("position")) {
-							category.setCategoryPosition(categoriesArr
-									.getJSONObject(i).getJSONObject("category")
-									.getInt("position"));
-						}
-
-					} catch (JSONException e) {
-						new Util().log("JSONException", e);
-						processingResult = false;
-						return false;
-					}
-					listCategory.add(category);
-
-				}
-
-				return saveCategories(listCategory);
-			}
 		}
 		return false;
 	}

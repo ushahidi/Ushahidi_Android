@@ -20,22 +20,29 @@
 
 package com.ushahidi.android.app.entities;
 
+import com.google.gson.annotations.SerializedName;
 import com.ushahidi.android.app.models.Model;
 
 public class Category extends Model implements IDbEntity {
 
-	private int id;
-
+	/*
+	 * the transient modifier prevents Gson from deserializing the id field this
+	 * avoids collision with de-serializing categoryId shouldn't affect anything
+	 * unless this class is passed to the Java serialization subsystem in that
+	 * case we must write an ExclusionStrategy class for this
+	 */
+	private transient int id;
+	@SerializedName("title")
 	private String categoryTitle = "";
-
+	@SerializedName("description")
 	private String categoryDescription = "";
-
+	@SerializedName("color")
 	private String categoryColor = "";
-
+	@SerializedName("position")
 	private int categoryPosition = 0;
-
+	@SerializedName("parent_id")
 	private int parentId = 0;
-
+	@SerializedName("id")
 	private int categoryId = 0;
 
 	public String getCategoryTitle() {
