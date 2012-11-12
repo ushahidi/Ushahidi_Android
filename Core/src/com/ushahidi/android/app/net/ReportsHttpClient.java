@@ -22,7 +22,6 @@ package com.ushahidi.android.app.net;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
@@ -42,6 +41,8 @@ import android.text.TextUtils;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
+import com.ushahidi.android.app.json.GsonHelper;
+import com.ushahidi.android.app.json.UshahidiApiResponse;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.ReportsApiUtils;
 
@@ -182,14 +183,8 @@ public class ReportsHttpClient extends MainHttpClient {
 
 				HttpEntity respEntity = response.getEntity();
 				if (respEntity != null) {
-					InputStream serverInput = respEntity.getContent();
-				
-					int status = ApiUtils
-							.extractPayloadJSON(GetText(serverInput));
-					if (status == 0) {
-						return true;
-					}
-					return false;
+					UshahidiApiResponse resp = GsonHelper.fromStream(respEntity.getContent(), UshahidiApiResponse.class);				
+					return resp.getErrorCode() == 0;
 				}
 			}
 

@@ -34,6 +34,8 @@ import android.util.Log;
 
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.json.GsonHelper;
+import com.ushahidi.android.app.json.UshahidiApiVersion;
 import com.ushahidi.android.app.net.MainHttpClient;
 
 /**
@@ -223,41 +225,30 @@ public class ApiUtils extends MainHttpClient {
 	public void updateDomain() {
 
 		Preferences.loadSettings(context);
-		
+
 		StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
 		uriBuilder.append("/api?task=version");
 		uriBuilder.append("&resp=json");
 
 		try {
-			response = GetURL(uriBuilder.toString());
-			if (response != null) {
+			UshahidiApiVersion ver = GsonHelper.fromUrl(uriBuilder.toString(),
+					UshahidiApiVersion.class);
 
-				final int statusCode = response.getStatusLine().getStatusCode();
+			String domain = ver.getDomain();
+			log(String.format("%s %s ", "Update domain", domain));
 
-				if (statusCode == 200) {
-					
-					jsonString = GetText(response);
-					log(String.format("%s %s ", "Update domain",jsonString ));
-					JSONObject payload = new JSONObject(jsonString).getJSONObject("payload");
+			Preferences.domain = domain;
 
-					Preferences.domain = payload.getString("domain");
+			String ogsVer = httpGet(Preferences.domain + "/opengeosms/version");
+			Preferences.ogsPluginVersion = ogsVer == null ? ""
+					: trimVersion(ogsVer);
 
-					String ogsVer = httpGet(Preferences.domain + "/opengeosms/version");
-					Preferences.ogsPluginVersion = ogsVer == null?
-								"":
-								trimVersion(ogsVer);
-
-					Preferences.phonenumber = payload.has("sms")?
-						payload.getString("sms"):"";
-					// save changes
-					Preferences.saveSettings(context);
-
-				}
-			}
+			String sms = ver.getSms();
+			Preferences.phonenumber = sms != null ? sms : "";
+			// save changes
+			Preferences.saveSettings(context);
 
 		} catch (IOException e) {
-			log(CLASS_TAG,e);
-		} catch (JSONException e) {
 			log(CLASS_TAG, e);
 		}
 	}
