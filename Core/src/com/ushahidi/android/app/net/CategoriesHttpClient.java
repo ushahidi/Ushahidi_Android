@@ -49,60 +49,18 @@ public class CategoriesHttpClient extends MainHttpClient {
 	}
 
 	public int getCategoriesFromWeb() {
-		HttpResponse response;
-		String categoriesResponse = "";
 
 		// get the right domain to work with
 		apiUtils.updateDomain();
-		StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
-		uriBuilder.append("/api?task=categories");
-		uriBuilder.append("&resp=json");
-		try {
-			response = GetURL(uriBuilder.toString());
 
-			if (response == null) {
-				// Network is down
-				return 100;
-			}
-
-			final int statusCode = response.getStatusLine().getStatusCode();
-
-			if (statusCode == 200) {
-
-				categoriesResponse = GetText(response);
-				
-				CategoriesApiUtils categoriesApiUtils = new CategoriesApiUtils(
-						categoriesResponse);
-				if (categoriesApiUtils.getCategoriesList()) {
-					Preferences.categoriesResponse = categoriesResponse;
-					return 0;
-				}
-
-				// bad json string
-				return 99;
-			} else {
-				// network down?
-				return 100;
-			}
-		} catch (SocketTimeoutException e) {
-			log("SocketTimeoutException e", e);
-			return 110;
-		} catch (ConnectTimeoutException e) {
-			log("ConnectTimeoutException", e);
-			return 110;
-		} catch (MalformedURLException ex) {
-			log("PostFileUpload(): MalformedURLException", ex);
-			// connection refused
-			return 111;
-		} catch (IllegalArgumentException ex) {
-			log("IllegalArgumentException", ex);
-			// invalid URI
-			return 120;
-		} catch (IOException e) {
-			log("IOException", e);
-			// There is no default deployment
-			return 112;
+		CategoriesApiUtils categoriesApiUtils = new CategoriesApiUtils();
+		if (categoriesApiUtils.getCategoriesList()) {
+			// Preferences.categoriesResponse = categoriesResponse;
+			return 0;
 		}
+
+		// bad json string
+		return 99;
 
 	}
 }

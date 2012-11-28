@@ -20,33 +20,43 @@
 
 package com.ushahidi.android.app.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Category;
-import com.ushahidi.android.app.json.GsonHelper;
-import com.ushahidi.android.app.json.UshahidiApiCategories;
+import com.ushahidi.android.app.net.UshahidiClient;
+import com.ushahidi.java.sdk.api.tasks.CategoriesTask;
 
 /**
  * @author eyedol
  */
 public class CategoriesApiUtils {
 
-	private UshahidiApiCategories mApiCategories;
+	private CategoriesTask task;
 
 	private boolean processingResult;
 
-	public CategoriesApiUtils(String jsonString) {
+	private List<Category> categories;
+
+	public CategoriesApiUtils() {
 		processingResult = true;
-		mApiCategories = GsonHelper.fromString(jsonString,
-				UshahidiApiCategories.class);
+		categories = new ArrayList<Category>();
+		task = UshahidiClient.ushahidiApi.factory.createCategoriesTask();
+		task.setSocketTimeout(UshahidiClient.socketTimeout);
+		task.setConnectionTimeout(UshahidiClient.connectionTimeout);
 
 	}
 
 	public boolean getCategoriesList() {
-		new Util().log("Save report");
+		new Util().log("Save categories list");
 		if (processingResult) {
-			return saveCategories(mApiCategories.getCategories());
+			for (com.ushahidi.java.sdk.api.Category cat : task.all()) {
+				Category category = new Category();
+				category.addCategory(cat);
+				categories.add(category);
+			}
+			return saveCategories(categories);
 
 		}
 		return false;
