@@ -20,6 +20,8 @@
 
 package com.ushahidi.android.app.entities;
 
+import java.util.Date;
+
 public class Report implements IDbEntity {
 
 	private int id;
@@ -28,17 +30,17 @@ public class Report implements IDbEntity {
 
 	private String description;
 
-	private String date;
+	private Date date;
 
-	private String mode;
+	private int mode;
 
-	private String verified;
+	private int verified;
 
 	private String locationname;
 
-	private String latitude;
+	private double latitude;
 
-	private String longitude;
+	private double longitude;
 
 	private String categories;
 
@@ -54,21 +56,16 @@ public class Report implements IDbEntity {
 
 	}
 
-	public Report(String title, String description, String reportdate,
-			String mode, String verified, String locationame, String latitude,
-			String longitude, String categories, String media, String image) {
-		this.title = title;
-		this.description = description;
-		this.date = reportdate;
-		this.mode = mode;
-		this.verified = verified;
-		this.locationname = locationame;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.categories = categories;
-		this.media = media;
-		this.image = image;
-
+	public void addReport(com.ushahidi.java.sdk.api.Incident i) {
+		this.title = i.getTitle();
+		this.description = i.getDescription();
+		this.date = i.getDate();
+		this.mode = i.getMode();
+		this.verified = i.getVerified();
+		this.locationname = i.getLocationName();
+		this.latitude = i.getLatitude();
+		this.longitude = i.getLongitude();
+		this.reportId = i.getId();
 	}
 
 	@Override
@@ -92,27 +89,27 @@ public class Report implements IDbEntity {
 		this.description = description;
 	}
 
-	public String getReportDate() {
+	public Date getReportDate() {
 		return date;
 	}
 
-	public void setReportDate(String reportdate) {
+	public void setReportDate(Date reportdate) {
 		this.date = reportdate;
 	}
 
-	public String getMode() {
+	public int getMode() {
 		return mode;
 	}
 
-	public void setMode(String mode) {
+	public void setMode(int mode) {
 		this.mode = mode;
 	}
 
-	public String getVerified() {
+	public int getVerified() {
 		return verified;
 	}
 
-	public void setVerified(String verified) {
+	public void setVerified(int verified) {
 		this.verified = verified;
 	}
 
@@ -124,19 +121,19 @@ public class Report implements IDbEntity {
 		this.locationname = locationname;
 	}
 
-	public String getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(String longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
-	public String getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(String latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 

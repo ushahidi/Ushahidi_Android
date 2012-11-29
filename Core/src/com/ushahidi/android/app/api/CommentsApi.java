@@ -65,6 +65,7 @@ public class CommentsApi {
 					comments.add(comment);
 				}
 			} catch (UshahidiException e) {
+				processingResult = false;
 				e.printStackTrace();
 			}
 		}
@@ -91,6 +92,7 @@ public class CommentsApi {
 					comments.add(comment);
 				}
 			} catch (UshahidiException e) {
+				processingResult = false;
 				e.printStackTrace();
 			}
 		}
