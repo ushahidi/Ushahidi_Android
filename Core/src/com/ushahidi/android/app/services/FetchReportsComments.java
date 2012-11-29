@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.ushahidi.android.app.api.CommentsApi;
-import com.ushahidi.android.app.net.CommentHttpClient;
 
 /**
  * @author eyedol
