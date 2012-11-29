@@ -24,7 +24,6 @@ import java.util.List;
 
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Comment;
-import com.ushahidi.android.app.net.UshahidiClient;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.java.sdk.UshahidiException;
 import com.ushahidi.java.sdk.api.CommentFields;
@@ -46,7 +45,7 @@ public class CommentsApi {
 	public CommentsApi() {
 		processingResult = true;
 		comments = new ArrayList<Comment>();
-		task = UshahidiClient.ushahidiApi.factory.createCommentTask();
+		task = Ushahidi.ushahidiApi.factory.createCommentTask();
 	}
 
 	/**
