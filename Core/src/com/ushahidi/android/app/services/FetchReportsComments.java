@@ -22,6 +22,7 @@ package com.ushahidi.android.app.services;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.ushahidi.android.app.api.CommentsApi;
 import com.ushahidi.android.app.net.CommentHttpClient;
 
 /**
@@ -45,7 +46,7 @@ public class FetchReportsComments extends SyncServices {
 	private void fetchReportComments(Bundle bundle) {
 		if (bundle != null) {
 			int reportid = bundle.getInt("reportid");
-			status = new CommentHttpClient().getReportComments(reportid);
+			status = new CommentsApi().saveComments(reportid) ? 0 : 99;
 		}
 	}
 

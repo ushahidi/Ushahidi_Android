@@ -35,7 +35,7 @@ public class CommentHttpClient {
 		commentApiUtils = new CommentApiUtils();
 	}
 
-	public int getReportComments(int reportId) {
+	public int getReportComment(int reportId) {
 
 		if (commentApiUtils.saveComments(reportId)) {
 			return 0; // return success
@@ -43,7 +43,7 @@ public class CommentHttpClient {
 		return 99;
 	}
 
-	public Response submitComment(CommentFields comment) {
+	public Response submitCommen(CommentFields comment) {
 		return commentApiUtils.submit(comment);
 	}
 

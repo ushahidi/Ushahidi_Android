@@ -23,7 +23,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.ushahidi.android.app.net.CommentHttpClient;
+import com.ushahidi.android.app.api.CommentsApi;
 import com.ushahidi.java.sdk.api.Comment;
 import com.ushahidi.java.sdk.api.CommentFields;
 import com.ushahidi.java.sdk.api.json.Response;
@@ -48,7 +48,7 @@ public class UploadComments extends SyncServices {
 	private int addComments(Bundle bundle) {
 
 		CommentFields comment = new CommentFields();
-		CommentHttpClient commentHttpClient = new CommentHttpClient();
+		CommentsApi commentApi = new CommentsApi();
 		if (bundle != null) {
 			Comment c = new Comment();
 			c.setAuthor(bundle.getString("comment_author"));
@@ -56,9 +56,9 @@ public class UploadComments extends SyncServices {
 			c.setReportId(bundle.getInt("report_id"));
 			comment.fill(c);
 			comment.setEmail(bundle.getString("comment_email"));
-			Response response = commentHttpClient.submitComment(comment);
+			Response response = commentApi.submit(comment);
 			if (response.getErrorCode() == 0) {
-				commentHttpClient.getReportComments(bundle.getInt("report_id"));
+				commentApi.saveComments(bundle.getInt("report_id"));
 			}
 
 		}
