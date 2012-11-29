@@ -27,11 +27,11 @@ import com.ushahidi.android.app.ReportMapItemizedOverlay;
 import com.ushahidi.android.app.ReportMapOverlayItem;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
+import com.ushahidi.android.app.api.CategoriesApi;
 import com.ushahidi.android.app.entities.Photo;
 import com.ushahidi.android.app.fragments.BaseFragment;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.models.ListReportModel;
-import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
@@ -385,8 +385,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 
 					// fetch categories -- assuming everything will go just
 					// right!
-					new CategoriesHttpClient(getActivity())
-							.getCategoriesFromWeb();
+					new CategoriesApi().getCategoriesList();
 
 					status = new ReportsHttpClient(getActivity())
 							.getAllReportFromWeb();

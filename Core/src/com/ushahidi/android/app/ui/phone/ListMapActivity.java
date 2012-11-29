@@ -54,11 +54,11 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.BaseListActivity;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
+import com.ushahidi.android.app.api.CategoriesApi;
 import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.models.ListReportModel;
-import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.net.MapsHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
@@ -623,8 +623,7 @@ public class ListMapActivity extends
 					if (!new ApiUtils(ListMapActivity.this).isCheckinEnabled()) {
 
 						// fetch categories
-						new CategoriesHttpClient(ListMapActivity.this)
-								.getCategoriesFromWeb();
+						new CategoriesApi().getCategoriesList();
 
 						// fetch reports
 						status = new ReportsHttpClient(ListMapActivity.this)

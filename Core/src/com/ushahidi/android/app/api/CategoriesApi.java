@@ -17,32 +17,34 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
-
-package com.ushahidi.android.app.util;
+package com.ushahidi.android.app.api;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Category;
-import com.ushahidi.android.app.net.UshahidiClient;
+import com.ushahidi.android.app.util.Util;
 import com.ushahidi.java.sdk.api.tasks.CategoriesTask;
 
 /**
+ * Handles all the Ushahidi categories task API
+ * 
  * @author eyedol
+ * 
  */
-public class CategoriesApiUtils {
-
+public class CategoriesApi {
+	
 	private CategoriesTask task;
 
 	private boolean processingResult;
 
 	private List<Category> categories;
 
-	public CategoriesApiUtils() {
+	public CategoriesApi() {
 		processingResult = true;
 		categories = new ArrayList<Category>();
-		task = UshahidiClient.ushahidiApi.factory.createCategoriesTask();
+		task = Ushahidi.ushahidiApi.factory.createCategoriesTask();
 	}
 
 	public boolean getCategoriesList() {
@@ -67,5 +69,4 @@ public class CategoriesApiUtils {
 		}
 		return false;
 	}
-
 }

@@ -52,6 +52,7 @@ import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.adapters.ListPendingReportAdapter;
 import com.ushahidi.android.app.adapters.ListReportAdapter;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
+import com.ushahidi.android.app.api.CategoriesApi;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IOpenGeoSmsSchema;
 import com.ushahidi.android.app.database.OpenGeoSmsDao;
@@ -60,7 +61,6 @@ import com.ushahidi.android.app.fragments.BaseSectionListFragment;
 import com.ushahidi.android.app.models.AddReportModel;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.models.ListReportModel;
-import com.ushahidi.android.app.net.CategoriesHttpClient;
 import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.opengeosms.OpenGeoSMSSender;
 import com.ushahidi.android.app.tasks.ProgressTask;
@@ -716,10 +716,8 @@ public class ListReportFragment
 					deleteFetchedReport();
 
 					// fetch categories -- assuming everything will go just
-					// right!
-					new CategoriesHttpClient(getActivity())
-							.getCategoriesFromWeb();
-
+					new CategoriesApi().getCategoriesList();
+					
 					status = new ReportsHttpClient(getActivity())
 							.getAllReportFromWeb();
 					return true;
