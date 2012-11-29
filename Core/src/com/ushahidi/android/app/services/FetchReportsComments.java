@@ -45,7 +45,7 @@ public class FetchReportsComments extends SyncServices {
 	private void fetchReportComments(Bundle bundle) {
 		if (bundle != null) {
 			int reportid = bundle.getInt("reportid");
-			status = new CommentHttpClient(this).getReportComments(reportid);
+			status = new CommentHttpClient().getReportComments(reportid);
 		}
 	}
 

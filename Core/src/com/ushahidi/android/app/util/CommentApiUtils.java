@@ -23,14 +23,13 @@ package com.ushahidi.android.app.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
-
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Comment;
+import com.ushahidi.android.app.net.UshahidiClient;
+import com.ushahidi.java.sdk.UshahidiException;
+import com.ushahidi.java.sdk.api.CommentFields;
+import com.ushahidi.java.sdk.api.json.Response;
+import com.ushahidi.java.sdk.api.tasks.CommentsTask;
 
 /**
  * Handle processing of the JSON string as returned from the HTTP request. Main
@@ -40,122 +39,70 @@ import com.ushahidi.android.app.entities.Comment;
  */
 public class CommentApiUtils {
 
-	private JSONObject jsonObject;
-
 	private boolean processingResult;
 
-	public CommentApiUtils(String jsonString) {
+	private List<Comment> comments;
+
+	private CommentsTask task;
+
+	public CommentApiUtils() {
 		processingResult = true;
-		new Util().log("JSONString: " + jsonString);
-		try {
-			jsonObject = new JSONObject(jsonString);
-		} catch (JSONException e) {
-			new Util().log("JSONException", e);
-			processingResult = false;
-		}
+		comments = new ArrayList<Comment>();
+		task = UshahidiClient.ushahidiApi.factory.createCommentTask();
 	}
 
-	private JSONObject getCommentsObject() {
-		try {
-			return jsonObject.getJSONObject("payload");
-		} catch (JSONException e) {
-			return new JSONObject();
-		}
-	}
-
-	private JSONArray getCommentsArray() {
-		try {
-			return getCommentsObject().getJSONArray("comments");
-		} catch (JSONException e) {
-			return new JSONArray();
-		}
-	}
-
-	public List<Comment> getCommentsList(Context context) {
+	/**
+	 * Save reports comment
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public List<Comment> getCommentsList(int reportId) {
 		new Util().log("Save comments");
 		if (processingResult) {
-			List<Comment> commentList = new ArrayList<Comment>();
-			JSONArray commentArray = getCommentsArray();
-			int id = 0;
-			if (commentArray != null && commentArray.length() > 0) {
-				for (int i = 0; i < commentArray.length(); i++) {
-					Comment currentComment = new Comment();
-					try {
-						id = commentArray.getJSONObject(i)
-								.getJSONObject("comment").getInt("id");
-						currentComment.setCommentId(id);
-						currentComment.setReportId(commentArray
-								.getJSONObject(i).getJSONObject("comment")
-								.getInt("incident_id"));
-						currentComment.setCommentAuthor(commentArray
-								.getJSONObject(i).getJSONObject("comment")
-								.getString("comment_author"));
-						currentComment.setCommentDate(commentArray
-								.getJSONObject(i).getJSONObject("comment")
-								.getString("comment_date"));
-						currentComment.setCommentDescription(commentArray
-								.getJSONObject(i).getJSONObject("comment")
-								.getString("comment_description"));
-
-					} catch (JSONException e) {
-						new Util().log("JSONException", e);
-						processingResult = false;
-						return null;
-					}
-					commentList.add(currentComment);
+			try {
+				for (com.ushahidi.java.sdk.api.Comment c : task
+						.reportId(reportId)) {
+					Comment comment = new Comment();
+					comment.addComment(c);
+					comments.add(comment);
 				}
-
-				return commentList;
+			} catch (UshahidiException e) {
+				e.printStackTrace();
 			}
-
 		}
-		return null;
+		return comments;
+
 	}
 
-	public List<Comment> getCheckinCommentsList(Context context) {
+	/**
+	 * Submit a comment to an existing report.
+	 * 
+	 * @return The response from the server.
+	 */
+	public Response submit(CommentFields comment) {
+		return task.submit(comment);
+	}
+
+	public List<Comment> getCheckinCommentsList() {
 		new Util().log("Save comments");
 		if (processingResult) {
-			List<Comment> commentList = new ArrayList<Comment>();
-			JSONArray commentArray = getCommentsArray();
-			int id = 0;
-			if (commentArray != null && commentArray.length() > 0) {
-				for (int i = 0; i < commentArray.length(); i++) {
-					Comment currentComment = new Comment();
-					try {
-						id = commentArray.getJSONObject(i)
-								.getJSONObject("comment").getInt("id");
-						currentComment.setCommentId(id);
-						currentComment.setCheckinId(commentArray
-								.getJSONObject(i).getJSONObject("comment")
-								.getInt("checkin_id"));
-						currentComment.setCommentAuthor(commentArray
-								.getJSONObject(i).getJSONObject("comment")
-								.getString("comment_author"));
-						currentComment.setCommentDate(commentArray
-								.getJSONObject(i).getJSONObject("comment")
-								.getString("comment_date"));
-						currentComment.setCommentDescription(commentArray
-								.getJSONObject(i).getJSONObject("comment")
-								.getString("comment_description"));
-
-					} catch (JSONException e) {
-						new Util().log("JSONException", e);
-						processingResult = false;
-						return null;
-					}
-					commentList.add(currentComment);
+			try {
+				for (com.ushahidi.java.sdk.api.Comment c : task.all()) {
+					Comment comment = new Comment();
+					comment.addComment(c);
+					comments.add(comment);
 				}
-
-				return commentList;
+			} catch (UshahidiException e) {
+				e.printStackTrace();
 			}
-
 		}
-		return null;
+		return comments;
 	}
 
-	// Save checkins into database
-	public boolean saveComments(Context context) {
-		List<Comment> comments = getCommentsList(context);
+	// Save report comments into database
+	public boolean saveComments(int reportId) {
+		List<Comment> comments = getCommentsList(reportId);
 
 		if (comments != null && comments.size() > 0) {
 			// remove existing comments
@@ -169,9 +116,9 @@ public class CommentApiUtils {
 		return false;
 	}
 
-	// Save checkins into database
-	public boolean saveCheckinsComments(Context context) {
-		List<Comment> comments = getCheckinCommentsList(context);
+	// Save checkins comments into database
+	public boolean saveCheckinsComments() {
+		List<Comment> comments = getCheckinCommentsList();
 		if (comments != null && comments.size() > 0) {
 			// remove existing comments
 			for (Comment comment : comments) {

@@ -20,6 +20,7 @@
 package com.ushahidi.android.app.entities;
 
 import com.ushahidi.android.app.models.Model;
+import com.ushahidi.android.app.util.Util;
 
 /**
  * @author eyedol
@@ -39,6 +40,18 @@ public class Comment extends Model implements IDbEntity {
 	private String commentDescription;
 
 	private String commentDate;
+
+	public void addComment(com.ushahidi.java.sdk.api.Comment comment) {
+		// get the date pattern
+
+		this.setCommentAuthor(comment.getAuthor());
+		this.setCheckinId(comment.getCheckinId());
+		this.setCommentDate(Util.datePattern("yyyy-MM-dd HH:mm:ss",
+				comment.getDate()));
+		this.setCommentDescription(comment.getDescription());
+		this.setCommentId(comment.getId());
+		this.setReportId(comment.getReportId());
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -91,24 +104,26 @@ public class Comment extends Model implements IDbEntity {
 	public void setCommentAuthor(String commentAuthor) {
 		this.commentAuthor = commentAuthor;
 	}
-	
+
 	public String getCommentDescription() {
 		return this.commentDescription;
 	}
-	
+
 	public void setCommentDescription(String commentDescription) {
 		this.commentDescription = commentDescription;
 	}
-	
+
 	public String getCommentDate() {
 		return this.commentDate;
 	}
-	
-	public void setCommentDate(String commentDate){
+
+	public void setCommentDate(String commentDate) {
 		this.commentDate = commentDate;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ushahidi.android.app.models.Model#load()
 	 */
 	@Override
@@ -117,7 +132,9 @@ public class Comment extends Model implements IDbEntity {
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ushahidi.android.app.models.Model#save()
 	 */
 	@Override

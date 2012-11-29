@@ -20,16 +20,8 @@
 
 package com.ushahidi.android.app.net;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.conn.ConnectTimeoutException;
-
 import android.content.Context;
 
-import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.CategoriesApiUtils;
 

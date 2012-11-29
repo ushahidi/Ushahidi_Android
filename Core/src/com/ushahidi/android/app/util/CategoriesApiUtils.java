@@ -43,9 +43,6 @@ public class CategoriesApiUtils {
 		processingResult = true;
 		categories = new ArrayList<Category>();
 		task = UshahidiClient.ushahidiApi.factory.createCategoriesTask();
-		task.setSocketTimeout(UshahidiClient.socketTimeout);
-		task.setConnectionTimeout(UshahidiClient.connectionTimeout);
-
 	}
 
 	public boolean getCategoriesList() {

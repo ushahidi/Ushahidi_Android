@@ -22,8 +22,6 @@ package com.ushahidi.android.app.services;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.ushahidi.android.app.net.CommentHttpClient;
-
 /**
  * @author eyedol
  * 
@@ -42,18 +40,12 @@ public class FetchCheckinsComments extends SyncServices {
 		statusIntent = new Intent(FETCH_CHECKIN_COMMENTS_SERVICES_ACTION);
 	}
 
-	private void fetchCheckinComments(Bundle bundle) {
-		if (bundle != null) {
-			int checkinid = bundle.getInt("checkinid");
-			status = new CommentHttpClient(this).getCheckinComments(checkinid);
-		}
-	}
 
 	@Override
 	protected void executeTask(Intent intent) {
 		if (intent != null) {
 			Bundle bundle = intent.getExtras();
-			fetchCheckinComments(bundle);
+			//fetchCheckinComments(bundle);
 		}
 		statusIntent.putExtra("status", status);
 		sendBroadcast(statusIntent);

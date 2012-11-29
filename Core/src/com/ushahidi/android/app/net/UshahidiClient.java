@@ -21,6 +21,8 @@ package com.ushahidi.android.app.net;
 
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.java.sdk.UshahidiApi;
+import com.ushahidi.java.sdk.net.PasswordAuthentication;
+import com.ushahidi.java.sdk.net.UshahidiHttpClient;
 
 /**
  * @author eyedol
@@ -36,7 +38,10 @@ public class UshahidiClient {
 
 	static {
 		ushahidiApi = new UshahidiApi(Preferences.domain);
-		connectionTimeout = 3000;
-		socketTimeout = 3000;
+		ushahidiApi.factory.client = new UshahidiHttpClient();
+		ushahidiApi.factory.client
+				.setAuthentication(new PasswordAuthentication("admin", "admin"));
+		ushahidiApi.factory.client.setConnectionTimeout(connectionTimeout);
+		ushahidiApi.factory.client.setSocketTimeout(socketTimeout);
 	}
 }

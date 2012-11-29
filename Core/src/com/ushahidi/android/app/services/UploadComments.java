@@ -19,15 +19,14 @@
  **/
 package com.ushahidi.android.app.services;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.net.CommentHttpClient;
+import com.ushahidi.java.sdk.api.Comment;
+import com.ushahidi.java.sdk.api.CommentFields;
+import com.ushahidi.java.sdk.api.json.Response;
 
 /**
  * @author eyedol
@@ -48,46 +47,20 @@ public class UploadComments extends SyncServices {
 
 	private int addComments(Bundle bundle) {
 
-		final StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
-		urlBuilder.append("/api");
-		final HashMap<String, String> mParams = new HashMap<String, String>();
-
+		CommentFields comment = new CommentFields();
+		CommentHttpClient commentHttpClient = new CommentHttpClient();
 		if (bundle != null) {
-			if (bundle.getInt("report_id") > 0) {
-
-				mParams.put("incident_id",
-						String.valueOf(bundle.getInt("report_id")));
+			Comment c = new Comment();
+			c.setAuthor(bundle.getString("comment_author"));
+			c.setDescription(bundle.getString("comment_description"));
+			c.setReportId(bundle.getInt("report_id"));
+			comment.fill(c);
+			comment.setEmail(bundle.getString("comment_email"));
+			Response response = commentHttpClient.submitComment(comment);
+			if (response.getErrorCode() == 0) {
+				commentHttpClient.getReportComments(bundle.getInt("report_id"));
 			}
 
-			if (bundle.getInt("checkin_id") > 0) {
-				Log.i("Comment ", "ID " + bundle.getInt("checkin_id"));
-				mParams.put("checkin_id",
-						String.valueOf(bundle.getInt("checkin_id")));
-			}
-
-			mParams.put("comment_author", bundle.getString("comment_author"));
-			mParams.put("comment_description",
-					bundle.getString("comment_description"));
-			mParams.put("comment_email", bundle.getString("comment_email"));
-
-			try {
-				if (new CommentHttpClient(this).PostFileUpload(
-						urlBuilder.toString(), mParams)) {
-					// fetch comments
-					if (bundle.getInt("report_id") > 0) {
-						new CommentHttpClient(this).getReportComments(bundle
-								.getInt("report_id"));
-					}
-					if (bundle.getInt("checkin_id") > 0) {
-						new CommentHttpClient(this).getCheckinComments(bundle
-								.getInt("checkin_id"));
-					}
-					return 0;
-				}
-				return 1;
-			} catch (IOException e) {
-				return 2;
-			}
 		}
 		return 1;
 	}

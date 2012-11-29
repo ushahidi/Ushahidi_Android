@@ -194,10 +194,17 @@ public class Util {
 		}
 		return buf.toString();
 	}
+	
 	public static String formatDate(String dateFormat, String date,
 			String toFormat){
 		return formatDate(dateFormat, date, toFormat, null, null);
 	}
+	
+	public static String datePattern(String dateFormat, Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
+		return sdf.format(date);
+	}
+	
 	/**
 	 * Format date into more readable format.
 	 * 
