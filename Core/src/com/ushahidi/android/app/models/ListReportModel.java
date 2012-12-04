@@ -69,9 +69,9 @@ public class ListReportModel extends Model {
 
 	private String categories;
 
-	private String latitude;
+	private double latitude;
 
-	private String longitude;
+	private double longitude;
 
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
@@ -162,19 +162,19 @@ public class ListReportModel extends Model {
 		return this.id;
 	}
 
-	public void setLatitude(String latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
-	public String getLatitude() {
+	public double getLatitude() {
 		return this.latitude;
 	}
 
-	public void setLongitude(String longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
-	public String getLongitude() {
+	public double getLongitude() {
 		return this.longitude;
 	}
 
@@ -253,7 +253,7 @@ public class ListReportModel extends Model {
 						.formatDate("yyyy-MM-dd HH:mm:ss",
 								item.getReportDate(),
 								"MMMM dd, yyyy 'at' hh:mm:ss aaa"));
-				final String status = Util.toInt(item.getVerified()) == 0 ? context
+				final String status = item.getVerified() == 0 ? context
 						.getString(R.string.unverified) : context
 						.getString(R.string.verified);
 				listReportModel.setStatus(Util.capitalizeString(status));

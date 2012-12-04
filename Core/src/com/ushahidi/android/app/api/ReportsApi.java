@@ -36,8 +36,12 @@ import com.ushahidi.android.app.entities.ReportCategory;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.java.sdk.UshahidiException;
 import com.ushahidi.java.sdk.api.Category;
-import com.ushahidi.java.sdk.api.json.Reports;
+import com.ushahidi.java.sdk.api.Incidents;
+import com.ushahidi.java.sdk.api.ReportFields;
+import com.ushahidi.java.sdk.api.json.Response;
 import com.ushahidi.java.sdk.api.tasks.IncidentsTask;
+import com.ushahidi.java.sdk.api.tasks.ReportTask;
+import com.ushahidi.java.sdk.net.content.Body;
 
 /**
  * Handles Reports API task
@@ -45,41 +49,42 @@ import com.ushahidi.java.sdk.api.tasks.IncidentsTask;
  * @author eyedol
  * 
  */
-public class ReportsApi {
+public class ReportsApi extends Ushahidi {
 
 	private IncidentsTask task;
+	private ReportTask reportTask;
 	private List<Report> reports;
 	private boolean processingResult;
 
-	ReportsApi() {
+	public ReportsApi() {
 		processingResult = true;
 		reports = new ArrayList<Report>();
-		task = Ushahidi.ushahidiApi.factory.createReportsTask();
+		task = factory.createIncidentsTask();
 		task.limit = Integer.valueOf(Preferences.totalReports);
+		reportTask = factory.createReportTask();
 	}
 
 	private List<Report> getReportList(Context context) {
 		log("Save report");
 		if (processingResult) {
 			try {
-				List<Reports.Payload.Incidents> incidents = task.all();
+
+				List<Incidents> incidents = task.all();
 				if (incidents != null && incidents.size() > 0) {
-					for (Reports.Payload.Incidents i : incidents) {
+					for (Incidents i : incidents) {
 						Report report = new Report();
 						report.addReport(i.incident);
 						reports.add(report);
 						// save categories
-						if ((i.getCategories() != null)
-								&& (!i.getCategories().isEmpty())) {
-							for (Category c : i.getCategories()) {
+						if ((i.categories != null) && (!i.categories.isEmpty())) {
+							for (Category c : i.categories) {
 								saveCategories(c.getId(), i.incident.getId());
 							}
 						}
 
 						// save media
-						if ((i.getMedia() != null) && (!i.getMedia().isEmpty())) {
-							for (com.ushahidi.java.sdk.api.Media m : i
-									.getMedia()) {
+						if ((i.media != null) && (!i.media.isEmpty())) {
+							for (com.ushahidi.java.sdk.api.Media m : i.media) {
 
 								// find photos, it's type is 1
 								if (m.getType() == 1) {
@@ -132,6 +137,23 @@ public class ReportsApi {
 
 		return false;
 	}
+
+	public Response submitReport(ReportFields report) {
+		return reportTask.submit(report);
+	}
+
+	public boolean upload(String url, Body body) {
+		final String response = task.getClient().sendMultipartPostRequest(url,
+				body);
+		return response != null ? true : false;
+	}
+
+	/**
+	 * Save details of categorie
+	 * 
+	 * @param categoryId
+	 * @param reportId
+	 */
 
 	private void saveCategories(int categoryId, int reportId) {
 

@@ -23,12 +23,12 @@ import android.content.Intent;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.api.CategoriesApi;
+import com.ushahidi.android.app.api.ReportsApi;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.net.CheckinHttpClient;
-import com.ushahidi.android.app.net.ReportsHttpClient;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
@@ -82,7 +82,7 @@ public class FetchReports extends SyncServices {
 			// fetch categories
 			new CategoriesApi().getCategoriesList();
 			// fetch reportsx
-			status = new ReportsHttpClient(this).getAllReportFromWeb();
+			status = new ReportsApi().saveReports(this) ? 0 : 99; 
 
 		} else {
 			status = new CheckinHttpClient(this).getAllCheckinFromWeb();

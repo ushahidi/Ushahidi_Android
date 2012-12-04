@@ -348,7 +348,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 			if (cursor.getColumnIndex(INCIDENT_VERIFIED) != -1) {
 				verifiedIndex = cursor.getColumnIndexOrThrow(INCIDENT_VERIFIED);
-				report.setVerified(cursor.getString(verifiedIndex));
+				report.setVerified(cursor.getInt(verifiedIndex));
 			}
 
 			if (cursor.getColumnIndex(INCIDENT_LOC_NAME) != -1) {
@@ -374,13 +374,13 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 			if (cursor.getColumnIndex(INCIDENT_LOC_LATITUDE) != -1) {
 				latitudeIndex = cursor
 						.getColumnIndexOrThrow(INCIDENT_LOC_LATITUDE);
-				report.setLatitude(cursor.getString(latitudeIndex));
+				report.setLatitude(cursor.getDouble(latitudeIndex));
 			}
 
 			if (cursor.getColumnIndex(INCIDENT_LOC_LONGITUDE) != -1) {
 				longitudeIndex = cursor
 						.getColumnIndexOrThrow(INCIDENT_LOC_LONGITUDE);
-				report.setLongitude(cursor.getString(longitudeIndex));
+				report.setLongitude(cursor.getDouble(longitudeIndex));
 			}
 		}
 

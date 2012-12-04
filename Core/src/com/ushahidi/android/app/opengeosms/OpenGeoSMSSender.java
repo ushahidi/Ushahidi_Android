@@ -37,8 +37,8 @@ public class OpenGeoSMSSender {
 				report.getCategories(), date, report.getLocation(),
 				report.getDesc());
 
-		return composeOpenGeoSMS(url, report.getLatitude(),
-				report.getLongitude(), payload);
+		return composeOpenGeoSMS(url, String.valueOf(report.getLatitude()),
+				String.valueOf(report.getLongitude()), payload);
 	}
 
 	private class Receiver extends BroadcastReceiver {

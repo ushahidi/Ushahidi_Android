@@ -20,7 +20,7 @@
 package com.ushahidi.android.app.api;
 
 import com.ushahidi.android.app.Preferences;
-import com.ushahidi.java.sdk.UshahidiApi;
+import com.ushahidi.java.sdk.api.tasks.UshahidiApiTaskFactory;
 import com.ushahidi.java.sdk.net.PasswordAuthentication;
 import com.ushahidi.java.sdk.net.UshahidiHttpClient;
 
@@ -30,22 +30,23 @@ import com.ushahidi.java.sdk.net.UshahidiHttpClient;
  * @author eyedol
  * 
  */
-public class Ushahidi {
+public abstract class Ushahidi {
 
-	public static UshahidiApi ushahidiApi;
+	protected UshahidiApiTaskFactory factory;
 
-	public static int connectionTimeout;
+	public int connectionTimeout = 30000;
 
-	public static int socketTimeout;
+	public int socketTimeout = 30000;
 
-	static {
+	public Ushahidi() {
+		factory = UshahidiApiTaskFactory.newInstance(Preferences.domain);
+	}
 
-		ushahidiApi = new UshahidiApi(Preferences.domain);
-		ushahidiApi.factory.client = new UshahidiHttpClient();
-		ushahidiApi.factory.client
-				.setAuthentication(new PasswordAuthentication("admin", "admin"));
-		ushahidiApi.factory.client.setConnectionTimeout(connectionTimeout);
-		ushahidiApi.factory.client.setSocketTimeout(socketTimeout);
-
+	public void init() {
+		factory.client = new UshahidiHttpClient();
+		factory.client.setAuthentication(new PasswordAuthentication("admin",
+				"admin"));
+		factory.client.setConnectionTimeout(connectionTimeout);
+		factory.client.setSocketTimeout(socketTimeout);
 	}
 }

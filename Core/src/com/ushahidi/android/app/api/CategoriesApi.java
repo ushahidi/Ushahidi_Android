@@ -33,7 +33,7 @@ import com.ushahidi.java.sdk.api.tasks.CategoriesTask;
  * @author eyedol
  * 
  */
-public class CategoriesApi {
+public class CategoriesApi extends Ushahidi {
 	
 	private CategoriesTask task;
 
@@ -42,9 +42,10 @@ public class CategoriesApi {
 	private List<Category> categories;
 
 	public CategoriesApi() {
+		super.init();
 		processingResult = true;
 		categories = new ArrayList<Category>();
-		task = Ushahidi.ushahidiApi.factory.createCategoriesTask();
+		task = factory.createCategoriesTask();
 	}
 
 	public boolean getCategoriesList() {

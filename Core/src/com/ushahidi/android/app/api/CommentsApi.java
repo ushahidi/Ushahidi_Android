@@ -34,7 +34,7 @@ import com.ushahidi.java.sdk.api.tasks.CommentsTask;
  * @author eyedol
  * 
  */
-public class CommentsApi {
+public class CommentsApi extends Ushahidi {
 
 	private boolean processingResult;
 
@@ -45,7 +45,7 @@ public class CommentsApi {
 	public CommentsApi() {
 		processingResult = true;
 		comments = new ArrayList<Comment>();
-		task = Ushahidi.ushahidiApi.factory.createCommentTask();
+		task = factory.createCommentTask();
 	}
 
 	/**

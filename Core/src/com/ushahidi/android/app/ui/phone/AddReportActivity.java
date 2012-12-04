@@ -280,8 +280,8 @@ public class AddReportActivity extends
 		if (button.getId() == R.id.btnPicture) {
 			// get a file name for the photo to be uploaded
 			photoName = Util.getDateTime() + ".jpg";
-			
-			//keep a copy of the filename for later reuse
+
+			// keep a copy of the filename for later reuse
 			Preferences.fileName = photoName;
 			Preferences.saveSettings(AddReportActivity.this);
 			showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
@@ -301,7 +301,7 @@ public class AddReportActivity extends
 	private void validateReports() {
 		// STATE_SENT means no change in report fields
 		// only the list of photos can be changed
-		if ( !mIsReportEditable){
+		if (!mIsReportEditable) {
 			onClick(mDlgSendMethod, 1);
 			return;
 		}
@@ -371,33 +371,33 @@ public class AddReportActivity extends
 		} else if (mError) {
 			showDialog(DIALOG_SHOW_MESSAGE);
 		} else {
-			if ( Preferences.canReceiveOpenGeoSms() ){
+			if (Preferences.canReceiveOpenGeoSms()) {
 				mDlgSendMethod.show();
-			}else{
+			} else {
 				onClick(mDlgSendMethod, 0);
 			}
 		}
 	}
+
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		mSendOpenGeoSms = which==1;
+		mSendOpenGeoSms = which == 1;
 		new SaveTask(this).execute((String) null);
 	}
+
 	private boolean mSendOpenGeoSms = false;
 	private AlertDialog mDlgSendMethod;
 
-	private void createSendMethodDialog(){
+	private void createSendMethodDialog() {
 		Resources r = getResources();
-		String[] items = new String[]{
-			r.getString(R.string.internet),
-			r.getString(R.string.opengeosms)
-		};
-		mDlgSendMethod = new AlertDialog.Builder(this)
-			.setItems(items, this)
-			.setTitle(R.string.send_report_dlg_title)
-			.create();
+		String[] items = new String[] { r.getString(R.string.internet),
+				r.getString(R.string.opengeosms) };
+		mDlgSendMethod = new AlertDialog.Builder(this).setItems(items, this)
+				.setTitle(R.string.send_report_dlg_title).create();
 	}
+
 	private OpenGeoSmsDao mOgsDao;
+
 	/**
 	 * Post to local database
 	 * 
@@ -411,12 +411,13 @@ public class AddReportActivity extends
 
 		report.setTitle(view.mIncidentTitle.getText().toString());
 		report.setDescription(view.mIncidentDesc.getText().toString());
-		report.setLatitude(view.mLatitude.getText().toString());
-		report.setLongitude(view.mLongitude.getText().toString());
+		report.setLatitude(Double.valueOf(view.mLatitude.getText().toString()));
+		report.setLongitude(Double
+				.valueOf(view.mLongitude.getText().toString()));
 		report.setLocationName(view.mIncidentLocation.getText().toString());
 		report.setReportDate(mDateToSubmit);
-		report.setMode(String.valueOf(0));
-		report.setVerified(String.valueOf(0));
+		report.setMode(0);
+		report.setVerified(0);
 		report.setPending(1);
 
 		if (id == 0) {
@@ -426,8 +427,8 @@ public class AddReportActivity extends
 				// move saved photos
 				log("Moving photos to fetched folder");
 				ImageManager.movePendingPhotos(this);
-				id=report.getDbId();
-			}else{
+				id = report.getDbId();
+			} else {
 				return false;
 			}
 		} else {
@@ -441,13 +442,13 @@ public class AddReportActivity extends
 				// move saved photos
 				log("Moving photos to fetched folder");
 				ImageManager.movePendingPhotos(this);
-			}else{
+			} else {
 				return false;
 			}
 		}
-		if ( mSendOpenGeoSms ){
+		if (mSendOpenGeoSms) {
 			mOgsDao.addReport(id);
-		}else{
+		} else {
 			mOgsDao.deleteReport(id);
 		}
 		return true;
@@ -466,8 +467,8 @@ public class AddReportActivity extends
 		if (report != null) {
 			view.mIncidentTitle.setText(report.getTitle());
 			view.mIncidentDesc.setText(report.getDescription());
-			view.mLongitude.setText(report.getLongitude());
-			view.mLatitude.setText(report.getLatitude());
+			view.mLongitude.setText(String.valueOf(report.getLongitude()));
+			view.mLatitude.setText(String.valueOf(report.getLatitude()));
 			view.mIncidentLocation.setText(report.getLocationName());
 
 			// set date and time
@@ -481,7 +482,7 @@ public class AddReportActivity extends
 			mVectorCategories
 					.add(String.valueOf(reportCategory.getCategoryId()));
 		}
-		
+
 		setSelectedCategories(mVectorCategories);
 
 		// set the photos
@@ -495,29 +496,19 @@ public class AddReportActivity extends
 
 		mIsReportEditable = mOgsDao.getReportState(id) != IOpenGeoSmsSchema.STATE_SENT;
 
-		if(!mIsReportEditable ){
-			View views[] = new View[]{
-					view.mBtnAddCategory,
-					view.mIncidentDesc,
-					view.mIncidentLocation,
-					view.mIncidentTitle,
-					view.mLatitude,
-					view.mLongitude,
-					view.mPickDate,
-					view.mPickTime
-			};
-			for(View v: views){
+		if (!mIsReportEditable) {
+			View views[] = new View[] { view.mBtnAddCategory,
+					view.mIncidentDesc, view.mIncidentLocation,
+					view.mIncidentTitle, view.mLatitude, view.mLongitude,
+					view.mPickDate, view.mPickTime };
+			for (View v : views) {
 				v.setEnabled(false);
 			}
-			updateMarker(
-				Double.parseDouble(report.getLatitude()),
-				Double.parseDouble(report.getLongitude()),
-				true
-				);
+			updateMarker(report.getLatitude(), report.getLongitude(), true);
 		}
 	}
 
-	private boolean mIsReportEditable=true;
+	private boolean mIsReportEditable = true;
 
 	private void deleteReport() {
 		// make sure it's an existing report
@@ -697,7 +688,8 @@ public class AddReportActivity extends
 			dialog.setButton2(getString(R.string.yes),
 					new Dialog.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
-							new DiscardTask(AddReportActivity.this).execute((String)null);
+							new DiscardTask(AddReportActivity.this)
+									.execute((String) null);
 							finish();
 							dialog.dismiss();
 						}
@@ -926,8 +918,7 @@ public class AddReportActivity extends
 		// FIXME: Look into making this more efficient
 		if (mVectorCategories != null && mVectorCategories.size() > 0) {
 			ListReportModel mListReportModel = new ListReportModel();
-			List<Category> listCategories = mListReportModel
-					.getAllCategories();
+			List<Category> listCategories = mListReportModel.getAllCategories();
 			if (listCategories != null && listCategories.size() > 0) {
 				int categoryCount = listCategories.size();
 				int categoryAmount = 0;
@@ -1001,11 +992,11 @@ public class AddReportActivity extends
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
-			//get the saved file name
+			// get the saved file name
 			Preferences.loadSettings(AddReportActivity.this);
 			photoName = Preferences.fileName;
 			if (requestCode == REQUEST_CODE_CAMERA) {
-				
+
 				Uri uri = PhotoUtils.getPhotoUri(photoName, this);
 				Bitmap bitmap = PhotoUtils.getCameraPhoto(this, uri);
 				PhotoUtils.savePhoto(this, bitmap, photoName);
@@ -1013,7 +1004,7 @@ public class AddReportActivity extends
 						bitmap.getWidth(), bitmap.getHeight()));
 
 			} else if (requestCode == REQUEST_CODE_IMAGE) {
-				
+
 				Bitmap bitmap = PhotoUtils
 						.getGalleryPhoto(this, data.getData());
 				PhotoUtils.savePhoto(this, bitmap, photoName);
@@ -1031,7 +1022,7 @@ public class AddReportActivity extends
 
 	@Override
 	protected void locationChanged(double latitude, double longitude) {
-		if ( !mIsReportEditable){
+		if (!mIsReportEditable) {
 			return;
 		}
 		updateMarker(latitude, longitude, true);

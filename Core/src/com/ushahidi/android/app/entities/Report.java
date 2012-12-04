@@ -20,7 +20,7 @@
 
 package com.ushahidi.android.app.entities;
 
-import java.util.Date;
+import com.ushahidi.android.app.util.Util;
 
 public class Report implements IDbEntity {
 
@@ -30,7 +30,7 @@ public class Report implements IDbEntity {
 
 	private String description;
 
-	private Date date;
+	private String date;
 
 	private int mode;
 
@@ -49,7 +49,7 @@ public class Report implements IDbEntity {
 	private String image;
 
 	private int reportId = 0;
-	
+
 	private int pending = 0;
 
 	public Report() {
@@ -59,7 +59,7 @@ public class Report implements IDbEntity {
 	public void addReport(com.ushahidi.java.sdk.api.Incident i) {
 		this.title = i.getTitle();
 		this.description = i.getDescription();
-		this.date = i.getDate();
+		this.date = Util.datePattern("yyyy-MM-dd HH:mm:ss", i.getDate());
 		this.mode = i.getMode();
 		this.verified = i.getVerified();
 		this.locationname = i.getLocationName();
@@ -89,11 +89,11 @@ public class Report implements IDbEntity {
 		this.description = description;
 	}
 
-	public Date getReportDate() {
+	public String getReportDate() {
 		return date;
 	}
 
-	public void setReportDate(Date reportdate) {
+	public void setReportDate(String reportdate) {
 		this.date = reportdate;
 	}
 
@@ -173,7 +173,7 @@ public class Report implements IDbEntity {
 	public int getReportId() {
 		return this.reportId;
 	}
-	
+
 	public void setPending(int pending) {
 		this.pending = pending;
 	}

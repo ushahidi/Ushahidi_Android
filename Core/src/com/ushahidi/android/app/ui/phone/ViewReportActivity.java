@@ -240,9 +240,8 @@ public class ViewReportActivity extends
 						}
 					});
 
-			centerLocationWithMarker(getPoint(
-					Double.parseDouble(report.get(position).getLatitude()),
-					Double.parseDouble(report.get(position).getLongitude())));
+			centerLocationWithMarker(getPoint(report.get(position)
+					.getLatitude(), report.get(position).getLongitude()));
 			view.mapView.setBuiltInZoomControls(false);
 			int page = position;
 			this.setTitle(page + 1);
