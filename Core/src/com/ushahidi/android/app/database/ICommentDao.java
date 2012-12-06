@@ -22,7 +22,6 @@ package com.ushahidi.android.app.database;
 import java.util.List;
 
 import com.ushahidi.android.app.entities.Comment;
-import com.ushahidi.android.app.entities.Media;
 
 /**
  * @author eyedol

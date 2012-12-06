@@ -76,15 +76,17 @@ public class ReportsApi extends Ushahidi {
 						report.addReport(i.incident);
 						reports.add(report);
 						// save categories
-						if ((i.categories != null) && (!i.categories.isEmpty())) {
-							for (Category c : i.categories) {
+						if ((i.getCategories() != null)
+								&& (i.getCategories().size() > 0)) {
+							for (Category c : i.getCategories()) {
 								saveCategories(c.getId(), i.incident.getId());
 							}
 						}
 
 						// save media
 						if ((i.media != null) && (!i.media.isEmpty())) {
-							for (com.ushahidi.java.sdk.api.Media m : i.media) {
+							for (com.ushahidi.java.sdk.api.Media m : i
+									.getMedia()) {
 
 								// find photos, it's type is 1
 								if (m.getType() == 1) {
