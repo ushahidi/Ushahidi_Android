@@ -22,7 +22,7 @@ package com.ushahidi.android.app.entities;
 
 import com.ushahidi.android.app.models.Model;
 
-public class Category extends Model implements IDbEntity {
+public class CategoryEntity extends Model implements IDbEntity {
 
 	private transient int id;
 	private String categoryTitle = "";
@@ -104,23 +104,4 @@ public class Category extends Model implements IDbEntity {
 		return this.parentId;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ushahidi.android.app.models.Model#load()
-	 */
-	@Override
-	public boolean load() {
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ushahidi.android.app.models.Model#save()
-	 */
-	@Override
-	public boolean save() {
-		return false;
-	}
 }

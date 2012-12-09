@@ -7,14 +7,14 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ushahidi.android.app.entities.Category;
+import com.ushahidi.android.app.entities.CategoryEntity;
 
 public class CategoryDao extends DbContentProvider implements ICategoryDao,
 		ICategorySchema {
 
 	private Cursor cursor;
 
-	private List<Category> listCategory;
+	private List<CategoryEntity> listCategory;
 
 	private ContentValues initialValues;
 
@@ -27,15 +27,15 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 	}
 
 	@Override
-	public List<Category> fetchAllCategories() {
+	public List<CategoryEntity> fetchAllCategories() {
 		cursor = super.query(TABLE, COLUMNS, null, null, GROUP_BY, null,
 				SORT_ORDER, null);
 
-		listCategory = new ArrayList<Category>();
+		listCategory = new ArrayList<CategoryEntity>();
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Category category = cursorToEntity(cursor);
+				CategoryEntity category = cursorToEntity(cursor);
 				listCategory.add(category);
 				cursor.moveToNext();
 			}
@@ -45,12 +45,12 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 	}
 
 	@Override
-	public List<Category> fetchAllCategoryTitles() {
+	public List<CategoryEntity> fetchAllCategoryTitles() {
 
 		final String columns[] = { ID, CATEGORY_ID, TITLE, COLOR, POSITION,
 				PARENT_ID };
 		final String selection = PARENT_ID +" = ?";
-		listCategory = new ArrayList<Category>();
+		listCategory = new ArrayList<CategoryEntity>();
 
 		cursor = super.query(TABLE, columns, selection, new String[]{String.valueOf(0)}, GROUP_BY, null,
 				SORT_ORDER, null);
@@ -59,7 +59,7 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 
-				Category category = cursorToEntity(cursor);
+				CategoryEntity category = cursorToEntity(cursor);
 
 				listCategory.add(category);
 				cursor.moveToNext();
@@ -71,12 +71,12 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 
 	}
 	
-	public List<Category> fetchChildrenCategories(int parentId) {
+	public List<CategoryEntity> fetchChildrenCategories(int parentId) {
 
 		final String columns[] = { ID, CATEGORY_ID, TITLE, COLOR, POSITION,
 				PARENT_ID };
 		final String selection = PARENT_ID +" = ?";
-		listCategory = new ArrayList<Category>();
+		listCategory = new ArrayList<CategoryEntity>();
 		
 		cursor = super.query(TABLE, columns, selection, new String[]{String.valueOf(parentId)}, GROUP_BY, null,
 				SORT_ORDER, null);
@@ -85,7 +85,7 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 
-				Category category = cursorToEntity(cursor);
+				CategoryEntity category = cursorToEntity(cursor);
 
 				listCategory.add(category);
 				cursor.moveToNext();
@@ -98,7 +98,7 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 	}
 
 	@Override
-	public List<Category> fetchCategoryByReportId(int reportId) {
+	public List<CategoryEntity> fetchCategoryByReportId(int reportId) {
 
 		final String sql = "SELECT *" + " FROM " + TABLE
 				+ " category INNER JOIN " + IReportCategorySchema.TABLE
@@ -106,14 +106,14 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 				+ IReportCategorySchema.CATEGORY_ID + " AND categories."
 				+ IReportCategorySchema.REPORT_ID + " =? "
 				+ " ORDER BY  category." + CATEGORY_ID + " ASC";
-		listCategory = new ArrayList<Category>();
+		listCategory = new ArrayList<CategoryEntity>();
 		cursor = super.rawQuery(sql, new String[] { String.valueOf(reportId) });
 
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 
-				Category category = cursorToEntity(cursor);
+				CategoryEntity category = cursorToEntity(cursor);
 
 				listCategory.add(category);
 				cursor.moveToNext();
@@ -141,18 +141,18 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 	}
 
 	@Override
-	public boolean addCategory(Category category) {
+	public boolean addCategory(CategoryEntity category) {
 		// set values
 		setContentValue(category);
 		return super.insert(TABLE, getContentValue()) > 0;
 	}
 
 	@Override
-	public boolean addCategories(List<Category> categories) {
+	public boolean addCategories(List<CategoryEntity> categories) {
 		try {
 			mDb.beginTransaction();
 
-			for (Category category : categories) {
+			for (CategoryEntity category : categories) {
 
 				addCategory(category);
 			}
@@ -166,8 +166,8 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Category cursorToEntity(Cursor cursor) {
-		Category category = new Category();
+	protected CategoryEntity cursorToEntity(Cursor cursor) {
+		CategoryEntity category = new CategoryEntity();
 		int titleIndex;
 		int idIndex;
 		int colorIndex;
@@ -218,7 +218,7 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 		return category;
 	}
 
-	private void setContentValue(Category category) {
+	private void setContentValue(CategoryEntity category) {
 		initialValues = new ContentValues();
 		initialValues.put(CATEGORY_ID, category.getCategoryId());
 		initialValues.put(PARENT_ID, category.getParentId());

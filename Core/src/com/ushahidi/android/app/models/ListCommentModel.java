@@ -25,15 +25,15 @@ import java.util.List;
 import android.util.Log;
 
 import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.entities.Comment;
+import com.ushahidi.android.app.entities.CommentEntity;
 
 /**
  * @author eyedol
  * 
  */
-public class ListCommentModel extends Comment {
+public class ListCommentModel extends CommentEntity {
 
-	private List<Comment> mCommentModel;
+	private List<CommentEntity> mCommentModel;
 
 	public boolean load(int reportId) {
 		mCommentModel = Database.mCommentDao.fetchReportComment(reportId);
@@ -79,11 +79,11 @@ public class ListCommentModel extends Comment {
 
 	public List<ListCommentModel> getCommentsByReportId(int reportId) {
 		final List<ListCommentModel> comments = new ArrayList<ListCommentModel>();
-		mCommentModel = new ArrayList<Comment>();
+		mCommentModel = new ArrayList<CommentEntity>();
 		mCommentModel = Database.mCommentDao.fetchReportComment(reportId);
 		if (mCommentModel != null && mCommentModel.size() > 0) {
 
-			for (Comment item : mCommentModel) {
+			for (CommentEntity item : mCommentModel) {
 				ListCommentModel comment = new ListCommentModel();
 				comment.setDbId(item.getDbId());
 				comment.setCommentAuthor(item.getCommentAuthor());
@@ -101,11 +101,11 @@ public class ListCommentModel extends Comment {
 
 	public List<ListCommentModel> getCommentsByCheckinId(int checkinId) {
 		final List<ListCommentModel> comments = new ArrayList<ListCommentModel>();
-		mCommentModel = new ArrayList<Comment>();
+		mCommentModel = new ArrayList<CommentEntity>();
 		mCommentModel = Database.mCommentDao.fetchCheckinComment(checkinId);
 		if (mCommentModel != null && mCommentModel.size() > 0) {
 
-			for (Comment item : mCommentModel) {
+			for (CommentEntity item : mCommentModel) {
 				ListCommentModel comment = new ListCommentModel();
 				comment.setDbId(item.getDbId());
 				comment.setCommentAuthor(item.getCommentAuthor());
@@ -120,28 +120,13 @@ public class ListCommentModel extends Comment {
 
 		return comments;
 	}
-	
+
 	public boolean deleteComments() {
-		if( Database.mCommentDao.deleteAllComment() ) {
-			Log.i("ListCommentModel","Comment deleted");
+		if (Database.mCommentDao.deleteAllComment()) {
+			Log.i("ListCommentModel", "Comment deleted");
 			return true;
 		}
-		Log.i("ListCommentModel","Comment deletetion failed!");
-		return false;
-	}
-
-	@Override
-	public boolean load() {
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ushahidi.android.app.models.Model#save()
-	 */
-	@Override
-	public boolean save() {
+		Log.i("ListCommentModel", "Comment deletetion failed!");
 		return false;
 	}
 

@@ -25,9 +25,9 @@ import java.util.Vector;
 
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IMediaSchema;
-import com.ushahidi.android.app.entities.Media;
-import com.ushahidi.android.app.entities.Photo;
-import com.ushahidi.android.app.entities.Report;
+import com.ushahidi.android.app.entities.MediaEntity;
+import com.ushahidi.android.app.entities.PhotoEntity;
+import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.entities.ReportCategory;
 import com.ushahidi.android.app.util.Util;
 
@@ -37,13 +37,13 @@ import com.ushahidi.android.app.util.Util;
  */
 public class AddReportModel extends Model {
 
-	public boolean addPendingReport(Report report, Vector<String> category,
+	public boolean addPendingReport(ReportEntity report, Vector<String> category,
 			File[] pendingPhotos, String news) {
 		boolean status;
 		// add pending reports
 		status = Database.mReportDao.addReport(report);
 		int id = Database.mReportDao.fetchPendingReportIdByDate(report
-				.getReportDate());
+				.getIncident().getDate().toString());
 		report.setDbId(id);
 		// add category
 		if (status) {
@@ -62,7 +62,7 @@ public class AddReportModel extends Model {
 			if (pendingPhotos != null && pendingPhotos.length > 0) {
 				for (File file : pendingPhotos) {
 					if (file.exists()) {
-						Media media = new Media();
+						MediaEntity media = new MediaEntity();
 						media.setMediaId(0);
 						media.setLink(file.getName());
 
@@ -78,7 +78,7 @@ public class AddReportModel extends Model {
 			// add news
 			if (news != null && news.length() > 0) {
 
-				Media media = new Media();
+				MediaEntity media = new MediaEntity();
 				media.setMediaId(0);
 				media.setLink(news);
 				// get report ID;
@@ -91,8 +91,8 @@ public class AddReportModel extends Model {
 		return status;
 	}
 
-	public boolean updatePendingReport(int reportId, Report report,
-			Vector<String> category, List<Photo> pendingPhotos, String news) {
+	public boolean updatePendingReport(int reportId, ReportEntity report,
+			Vector<String> category, List<PhotoEntity> pendingPhotos, String news) {
 		boolean status;
 		// update pending reports
 		status = Database.mReportDao.updatePendingReport(reportId, report);
@@ -119,8 +119,8 @@ public class AddReportModel extends Model {
 			if (pendingPhotos != null && pendingPhotos.size() > 0) {
 				// delete existing photo
 				Database.mMediaDao.deleteReportPhoto(reportId);
-				for (Photo photo : pendingPhotos) {
-					Media media = new Media();
+				for (PhotoEntity photo : pendingPhotos) {
+					MediaEntity media = new MediaEntity();
 					media.setMediaId(0);
 					// FIXME:: this is nasty.
 					String sections[] = photo.getPhoto().split("/");
@@ -138,7 +138,7 @@ public class AddReportModel extends Model {
 			if (news != null && news.length() > 0) {
 				// delete existing news item
 				Database.mMediaDao.deleteReportNews(reportId);
-				Media media = new Media();
+				MediaEntity media = new MediaEntity();
 				media.setMediaId(0);
 				media.setLink(news);
 				// get report ID;
@@ -151,7 +151,7 @@ public class AddReportModel extends Model {
 		return status;
 	}
 
-	public Report fetchPendingReportById(int reportId) {
+	public ReportEntity fetchPendingReportById(int reportId) {
 		return Database.mReportDao.fetchPendingReportIdById(reportId);
 	}
 
@@ -160,7 +160,7 @@ public class AddReportModel extends Model {
 				.fetchReportCategoryByReportId(reportId);
 	}
 
-	public List<Media> fetchReportNews(int reportId) {
+	public List<MediaEntity> fetchReportNews(int reportId) {
 		return Database.mMediaDao.fetchReportNews(reportId);
 	}
 
@@ -174,15 +174,5 @@ public class AddReportModel extends Model {
 		// delete media
 		Database.mMediaDao.deleteMediaByReportId(reportId);
 		return true;
-	}
-
-	@Override
-	public boolean load() {
-		return false;
-	}
-
-	@Override
-	public boolean save() {
-		return false;
 	}
 }

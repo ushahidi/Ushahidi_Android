@@ -70,10 +70,10 @@ import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IOpenGeoSmsSchema;
 import com.ushahidi.android.app.database.OpenGeoSmsDao;
-import com.ushahidi.android.app.entities.Category;
-import com.ushahidi.android.app.entities.Media;
-import com.ushahidi.android.app.entities.Photo;
-import com.ushahidi.android.app.entities.Report;
+import com.ushahidi.android.app.entities.CategoryEntity;
+import com.ushahidi.android.app.entities.MediaEntity;
+import com.ushahidi.android.app.entities.PhotoEntity;
+import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.entities.ReportCategory;
 import com.ushahidi.android.app.models.AddReportModel;
 import com.ushahidi.android.app.models.ListReportModel;
@@ -407,7 +407,7 @@ public class AddReportActivity extends
 		log("Adding new reports");
 		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
 
-		Report report = new Report();
+		ReportEntity report = new ReportEntity();
 
 		report.setTitle(view.mIncidentTitle.getText().toString());
 		report.setDescription(view.mIncidentDesc.getText().toString());
@@ -433,7 +433,7 @@ public class AddReportActivity extends
 			}
 		} else {
 			// Update exisiting report
-			List<Photo> photos = new ArrayList<Photo>();
+			List<PhotoEntity> photos = new ArrayList<PhotoEntity>();
 			for (int i = 0; i < pendingPhoto.getCount(); i++) {
 				photos.add(pendingPhoto.getItem(i));
 			}
@@ -463,7 +463,7 @@ public class AddReportActivity extends
 	private void setSavedReport(int reportId) {
 
 		// set text part of reports
-		Report report = model.fetchPendingReportById(reportId);
+		ReportEntity report = model.fetchPendingReportById(reportId);
 		if (report != null) {
 			view.mIncidentTitle.setText(report.getTitle());
 			view.mIncidentDesc.setText(report.getDescription());
@@ -489,7 +489,7 @@ public class AddReportActivity extends
 		pendingPhoto.refresh(id);
 
 		// set news
-		List<Media> newsMedia = model.fetchReportNews(reportId);
+		List<MediaEntity> newsMedia = model.fetchReportNews(reportId);
 		if (newsMedia != null && newsMedia.size() > 0) {
 			view.mNews.setText(newsMedia.get(0).getLink());
 		}
@@ -775,7 +775,7 @@ public class AddReportActivity extends
 	// fetch categories
 	public String[] showCategories() {
 		ListReportModel mListReportModel = new ListReportModel();
-		List<Category> listCategories = mListReportModel.getAllCategories();
+		List<CategoryEntity> listCategories = mListReportModel.getAllCategories();
 		if (listCategories != null && listCategories.size() > 0) {
 			int categoryCount = listCategories.size();
 			int categoryAmount = 0;
@@ -791,7 +791,7 @@ public class AddReportActivity extends
 			mCategoryLength = categories.length;
 
 			int i = 0;
-			for (Category category : mListReportModel.getAllCategories()) {
+			for (CategoryEntity category : mListReportModel.getAllCategories()) {
 
 				categories[i] = category.getCategoryTitle();
 				mCategoriesTitle.put(String.valueOf(category.getCategoryId()),
@@ -918,7 +918,7 @@ public class AddReportActivity extends
 		// FIXME: Look into making this more efficient
 		if (mVectorCategories != null && mVectorCategories.size() > 0) {
 			ListReportModel mListReportModel = new ListReportModel();
-			List<Category> listCategories = mListReportModel.getAllCategories();
+			List<CategoryEntity> listCategories = mListReportModel.getAllCategories();
 			if (listCategories != null && listCategories.size() > 0) {
 				int categoryCount = listCategories.size();
 				int categoryAmount = 0;
@@ -932,7 +932,7 @@ public class AddReportActivity extends
 				mCategoryLength = categories.length;
 
 				int i = 0;
-				for (Category category : mListReportModel.getAllCategories()) {
+				for (CategoryEntity category : mListReportModel.getAllCategories()) {
 
 					if (mVectorCategories.contains(String.valueOf(category
 							.getCategoryId()))) {
@@ -961,7 +961,7 @@ public class AddReportActivity extends
 			for (File file : pendingPhotos) {
 				if (file.exists()) {
 					id += 1;
-					Photo photo = new Photo();
+					PhotoEntity photo = new PhotoEntity();
 					photo.setDbId(id);
 					photo.setPhoto("pending/" + file.getName());
 					pendingPhoto.addItem(photo);

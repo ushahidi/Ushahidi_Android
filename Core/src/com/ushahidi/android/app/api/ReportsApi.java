@@ -30,8 +30,8 @@ import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.entities.Media;
-import com.ushahidi.android.app.entities.Report;
+import com.ushahidi.android.app.entities.MediaEntity;
+import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.entities.ReportCategory;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.java.sdk.UshahidiException;
@@ -53,18 +53,18 @@ public class ReportsApi extends Ushahidi {
 
 	private IncidentsTask task;
 	private ReportTask reportTask;
-	private List<Report> reports;
+	private List<ReportEntity> reports;
 	private boolean processingResult;
 
 	public ReportsApi() {
 		processingResult = true;
-		reports = new ArrayList<Report>();
+		reports = new ArrayList<ReportEntity>();
 		task = factory.createIncidentsTask();
 		task.limit = Integer.valueOf(Preferences.totalReports);
 		reportTask = factory.createReportTask();
 	}
 
-	private List<Report> getReportList(Context context) {
+	private List<ReportEntity> getReportList(Context context) {
 		log("Save report");
 		if (processingResult) {
 			try {
@@ -72,8 +72,8 @@ public class ReportsApi extends Ushahidi {
 				List<Incidents> incidents = task.all();
 				if (incidents != null && incidents.size() > 0) {
 					for (Incidents i : incidents) {
-						Report report = new Report();
-						report.addReport(i.incident);
+						ReportEntity report = new ReportEntity();
+						report.setIncident(i.incident);
 						reports.add(report);
 						// save categories
 						if ((i.getCategories() != null)
@@ -130,7 +130,7 @@ public class ReportsApi extends Ushahidi {
 
 	// Save report into database
 	public boolean saveReports(Context context) {
-		List<Report> reports = getReportList(context);
+		List<ReportEntity> reports = getReportList(context);
 
 		if (reports != null) {
 
@@ -171,12 +171,12 @@ public class ReportsApi extends Ushahidi {
 
 	private void saveMedia(int mediaId, int reportId, int type, String link) {
 		log("downloading... " + link + " ReportId: " + reportId);
-		Media media = new Media();
+		MediaEntity media = new MediaEntity();
 		media.setMediaId(mediaId);
 		media.setReportId(reportId);
 		media.setType(type);
 		media.setLink(link);
-		List<Media> sMedia = new ArrayList<Media>();
+		List<MediaEntity> sMedia = new ArrayList<MediaEntity>();
 		sMedia.add(media);
 
 		// save new data

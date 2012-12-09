@@ -26,8 +26,8 @@ import java.util.List;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IMediaSchema;
 import com.ushahidi.android.app.entities.Checkin;
-import com.ushahidi.android.app.entities.Media;
-import com.ushahidi.android.app.entities.Photo;
+import com.ushahidi.android.app.entities.MediaEntity;
+import com.ushahidi.android.app.entities.PhotoEntity;
 
 public class AddCheckinModel extends Model {
 
@@ -42,7 +42,7 @@ public class AddCheckinModel extends Model {
 		if (pendingPhotos != null && pendingPhotos.length > 0) {
 			for (File file : pendingPhotos) {
 				if (file.exists()) {
-					Media media = new Media();
+					MediaEntity media = new MediaEntity();
 					media.setMediaId(0);
 					media.setLink(file.getName());
 
@@ -59,7 +59,7 @@ public class AddCheckinModel extends Model {
 	}
 
 	public boolean updatePendingCheckin(int checkinId, Checkin checkin,
-			List<Photo> pendingPhotos) {
+			List<PhotoEntity> pendingPhotos) {
 		boolean status;
 		// update pending reports
 		status = Database.mCheckin.updatePendingCheckin(checkinId, checkin);
@@ -68,8 +68,8 @@ public class AddCheckinModel extends Model {
 		if (pendingPhotos != null && pendingPhotos.size() > 0) {
 			// delete existing photo
 			Database.mMediaDao.deleteReportPhoto(checkinId);
-			for (Photo photo : pendingPhotos) {
-				Media media = new Media();
+			for (PhotoEntity photo : pendingPhotos) {
+				MediaEntity media = new MediaEntity();
 				media.setMediaId(0);
 				// FIXME:: this is nasty.
 				String sections[] = photo.getPhoto().split("/");
@@ -99,13 +99,11 @@ public class AddCheckinModel extends Model {
 		return Database.mCheckin.fetchPendingCheckinById(checkinId);
 	}
 
-	@Override
 	public boolean load() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
 	public boolean save() {
 		// TODO Auto-generated method stub
 		return false;

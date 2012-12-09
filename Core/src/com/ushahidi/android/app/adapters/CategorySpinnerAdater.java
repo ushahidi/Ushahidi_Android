@@ -30,14 +30,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.entities.Category;
+import com.ushahidi.android.app.entities.CategoryEntity;
 import com.ushahidi.android.app.models.ListReportModel;
 
 /**
  * @author eyedol
  * 
  */
-public class CategorySpinnerAdater extends BaseArrayAdapter<Category> {
+public class CategorySpinnerAdater extends BaseArrayAdapter<CategoryEntity> {
 
 	private static final String DEFAULT_COLOR = "#000000";
 
@@ -113,11 +113,11 @@ public class CategorySpinnerAdater extends BaseArrayAdapter<Category> {
 	@Override
 	public void refresh() {
 		ListReportModel mListReportModel = new ListReportModel();
-		List<Category> listCategories = mListReportModel.getParentCategories();
+		List<CategoryEntity> listCategories = mListReportModel.getParentCategories();
 
 		if (listCategories != null && listCategories.size() > 0) {
 			// This is to make room for all categories label
-			Category cat = new Category();
+			CategoryEntity cat = new CategoryEntity();
 			cat.setCategoryTitle(context.getString(R.string.all_categories));
 			cat.setCategoryPosition(0);
 			cat.setDbId(0);
@@ -125,14 +125,14 @@ public class CategorySpinnerAdater extends BaseArrayAdapter<Category> {
 			cat.setParentId(0);
 			cat.setCategoryColor("000000");
 			add(cat.getCategoryTitle(), cat);
-			for (Category category : listCategories) {
+			for (CategoryEntity category : listCategories) {
 				add(category.getCategoryTitle(), category);
 				// add child categories
-				List<Category> listChildrenCategories = mListReportModel
+				List<CategoryEntity> listChildrenCategories = mListReportModel
 						.getChildrenCategories(category.getCategoryId());
 				if (listChildrenCategories != null
 						&& listChildrenCategories.size() > 0) {
-					for (Category childrenCategories : listChildrenCategories) {
+					for (CategoryEntity childrenCategories : listChildrenCategories) {
 						add(childrenCategories.getCategoryTitle(),
 								childrenCategories);
 					}

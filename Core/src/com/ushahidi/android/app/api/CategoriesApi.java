@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.entities.Category;
+import com.ushahidi.android.app.entities.CategoryEntity;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.java.sdk.api.tasks.CategoriesTask;
 
@@ -39,12 +39,12 @@ public class CategoriesApi extends Ushahidi {
 
 	private boolean processingResult;
 
-	private List<Category> categories;
+	private List<CategoryEntity> categories;
 
 	public CategoriesApi() {
 		super.init();
 		processingResult = true;
-		categories = new ArrayList<Category>();
+		categories = new ArrayList<CategoryEntity>();
 		task = factory.createCategoriesTask();
 	}
 
@@ -52,7 +52,7 @@ public class CategoriesApi extends Ushahidi {
 		new Util().log("Save categories list");
 		if (processingResult) {
 			for (com.ushahidi.java.sdk.api.Category cat : task.all()) {
-				Category category = new Category();
+				CategoryEntity category = new CategoryEntity();
 				category.addCategory(cat);
 				categories.add(category);
 			}
@@ -62,7 +62,7 @@ public class CategoriesApi extends Ushahidi {
 		return false;
 	}
 
-	private boolean saveCategories(List<Category> categories) {
+	private boolean saveCategories(List<CategoryEntity> categories) {
 
 		if (categories != null && categories.size() > 0) {
 

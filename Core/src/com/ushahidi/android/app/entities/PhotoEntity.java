@@ -25,7 +25,7 @@ import com.ushahidi.android.app.models.Model;
  * @author eyedol
  * 
  */
-public class Photo extends Model implements IDbEntity {
+public class PhotoEntity extends Model implements IDbEntity {
 
 	private int id;
 
@@ -48,23 +48,6 @@ public class Photo extends Model implements IDbEntity {
 
 	public void setPhoto(String photo) {
 		this.photo = photo;
-	}
-
-	@Override
-	public boolean load() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ushahidi.android.app.models.Model#save()
-	 */
-	@Override
-	public boolean save() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

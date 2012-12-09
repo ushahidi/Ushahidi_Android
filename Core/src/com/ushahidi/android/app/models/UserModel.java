@@ -22,7 +22,7 @@ package com.ushahidi.android.app.models;
 import java.util.List;
 
 import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.entities.User;
+import com.ushahidi.android.app.entities.UserEntity;
 
 /**
  * @author eyedol
@@ -32,7 +32,7 @@ import com.ushahidi.android.app.entities.User;
  */
 public class UserModel<users> extends Model {
 
-	public List<User> users;
+	public List<UserEntity> users;
 	
 	@Override
 	public boolean load() {

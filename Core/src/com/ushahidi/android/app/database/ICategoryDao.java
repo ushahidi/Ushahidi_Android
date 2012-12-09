@@ -22,17 +22,17 @@ package com.ushahidi.android.app.database;
 
 import java.util.List;
 
-import com.ushahidi.android.app.entities.Category;
+import com.ushahidi.android.app.entities.CategoryEntity;
 
 public interface ICategoryDao {
 
     //fetch all categories
-    public List<Category> fetchAllCategories();
+    public List<CategoryEntity> fetchAllCategories();
     
     
-    public List<Category> fetchAllCategoryTitles();
+    public List<CategoryEntity> fetchAllCategoryTitles();
     
-    public List<Category> fetchCategoryByReportId(int reportId);
+    public List<CategoryEntity> fetchCategoryByReportId(int reportId);
     
     //delete categories
     public boolean deleteAllCategories();
@@ -41,9 +41,9 @@ public interface ICategoryDao {
     public boolean deleteCategory(int id);
     
     //add category
-    public boolean addCategory(Category category);
+    public boolean addCategory(CategoryEntity category);
     
     //add categories
-    public boolean addCategories(List<Category> categories);
+    public boolean addCategories(List<CategoryEntity> categories);
     
 }

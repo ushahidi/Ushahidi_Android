@@ -27,6 +27,4 @@ package com.ushahidi.android.app.models;
  */
 public abstract class Model {
 
-    public abstract boolean load();
-    public abstract boolean save();
 }

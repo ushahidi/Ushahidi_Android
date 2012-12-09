@@ -21,7 +21,7 @@ package com.ushahidi.android.app.database;
 
 import java.util.List;
 
-import com.ushahidi.android.app.entities.Comment;
+import com.ushahidi.android.app.entities.CommentEntity;
 
 /**
  * @author eyedol
@@ -30,14 +30,14 @@ import com.ushahidi.android.app.entities.Comment;
 public interface ICommentDao {
 
 	// add
-	public boolean addComment(List<Comment> comment);
+	public boolean addComment(List<CommentEntity> comment);
 
-	public boolean addComment(Comment comment);
+	public boolean addComment(CommentEntity comment);
 
 	// select
-	public List<Comment> fetchCheckinComment(int checkinId);
+	public List<CommentEntity> fetchCheckinComment(int checkinId);
 
-	public List<Comment> fetchReportComment(int reportId);
+	public List<CommentEntity> fetchReportComment(int reportId);
 
 	// updates
 	public boolean updateCheckinByReportId(int reportId);

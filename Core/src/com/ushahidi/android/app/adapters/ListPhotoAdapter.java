@@ -29,18 +29,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.entities.Photo;
+import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.util.ImageViewWorker;
 
 /**
  * @author eyedol
  */
-public class ListPhotoAdapter extends BaseListAdapter<Photo> {
+public class ListPhotoAdapter extends BaseListAdapter<PhotoEntity> {
 
 	private ListPhotoModel mListPhotoModel;
 
-	private List<Photo> items;
+	private List<PhotoEntity> items;
 	
 	private int totalPhotos;
 

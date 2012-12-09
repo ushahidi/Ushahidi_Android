@@ -34,8 +34,8 @@ import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Checkin;
-import com.ushahidi.android.app.entities.Media;
-import com.ushahidi.android.app.entities.User;
+import com.ushahidi.android.app.entities.MediaEntity;
+import com.ushahidi.android.app.entities.UserEntity;
 
 /**
  * Handle processing of the JSON string as returned from the HTTP request. Main
@@ -84,13 +84,13 @@ public class CheckinApiUtils {
 		}
 	}
 
-	public ArrayList<User> getCheckinsUsersList() {
+	public ArrayList<UserEntity> getCheckinsUsersList() {
 		if (processingResult) {
-			ArrayList<User> checkinsUsersList = new ArrayList<User>();
+			ArrayList<UserEntity> checkinsUsersList = new ArrayList<UserEntity>();
 			JSONArray checkinsUsersArray = getCheckinsUsersArray();
 			if (checkinsUsersArray != null) {
 				for (int index = 0; index < checkinsUsersArray.length(); index++) {
-					User users = new User();
+					UserEntity users = new UserEntity();
 
 					try {
 						users.setUserId(checkinsUsersArray.getJSONObject(index)
@@ -118,7 +118,7 @@ public class CheckinApiUtils {
 		new Util().log("Save report");
 		if (processingResult) {
 			List<Checkin> checkinList = new ArrayList<Checkin>();
-			ArrayList<User> checkinsUsersList = new ArrayList<User>();
+			ArrayList<UserEntity> checkinsUsersList = new ArrayList<UserEntity>();
 			JSONArray checkinsArray = getCheckinsArray();
 			int id = 0;
 			if (checkinsArray != null && checkinsArray.length() > 0) {
@@ -145,7 +145,7 @@ public class CheckinApiUtils {
 									.getJSONObject(i).getJSONObject("user")
 									.getInt("id"));
 							//add users
-							User users = new User();
+							UserEntity users = new UserEntity();
 							users.setUserId(checkinsArray.getJSONObject(i)
 									.getJSONObject("user").getInt("id"));
 							users.setUsername(checkinsArray.getJSONObject(i)
@@ -239,14 +239,14 @@ public class CheckinApiUtils {
 	}
 
 	public boolean saveUsers() {
-		List<User> users = getCheckinsUsersList();
+		List<UserEntity> users = getCheckinsUsersList();
 		if (users != null && users.size() > 0) {
 			return Database.mUserDao.addUser(users);
 		}
 		return false;
 	}
 	
-	public boolean saveUsers(List<User> users) {
+	public boolean saveUsers(List<UserEntity> users) {
 		if (users != null && users.size() > 0) {
 			return Database.mUserDao.addUser(users);
 		}
@@ -255,12 +255,12 @@ public class CheckinApiUtils {
 
 	private void saveMedia(int mediaId, int checkinId, int type, String link) {
 		new Util().log("downloading... " + link + " CheckinId: " + checkinId);
-		Media media = new Media();
+		MediaEntity media = new MediaEntity();
 		media.setMediaId(mediaId);
 		media.setCheckinId(checkinId);
 		media.setType(type);
 		media.setLink(link);
-		List<Media> sMedia = new ArrayList<Media>();
+		List<MediaEntity> sMedia = new ArrayList<MediaEntity>();
 		sMedia.add(media);
 
 		// save new data

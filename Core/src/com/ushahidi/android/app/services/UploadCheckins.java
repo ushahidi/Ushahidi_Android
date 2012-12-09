@@ -34,7 +34,7 @@ import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.adapters.ListFetchedCheckinAdapter;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.entities.Checkin;
-import com.ushahidi.android.app.entities.Photo;
+import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.models.AddCheckinModel;
 import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.net.CheckinHttpClient;
@@ -88,7 +88,7 @@ public class UploadCheckins extends SyncServices {
 				} else {
 
 					// update an existing checkin.
-					List<Photo> photos = new ArrayList<Photo>();
+					List<PhotoEntity> photos = new ArrayList<PhotoEntity>();
 					for (int i = 0; i < pendingPhoto.getCount(); i++) {
 						photos.add(pendingPhoto.getItem(i));
 					}

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.entities.Media;
+import com.ushahidi.android.app.entities.MediaEntity;
 
 /**
  * @author eyedol
@@ -35,7 +35,7 @@ public class ListReportVideoModel extends Model {
 
 	private String video;
 
-	private List<Media> mMedia;
+	private List<MediaEntity> mMedia;
 
 	private List<ListReportVideoModel> mVideoModel;
 
@@ -90,7 +90,7 @@ public class ListReportVideoModel extends Model {
 		mVideoModel = new ArrayList<ListReportVideoModel>();
 		mMedia = Database.mMediaDao.fetchReportVideo(reportId);
 		if (mMedia != null && mMedia.size() > 0) {
-			for (Media item : mMedia) {
+			for (MediaEntity item : mMedia) {
 				ListReportVideoModel videoModel = new ListReportVideoModel();
 				videoModel.setId(item.getDbId());
 				videoModel.setVideo(item.getLink());

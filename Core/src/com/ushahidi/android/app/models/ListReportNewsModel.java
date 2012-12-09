@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.entities.Media;
+import com.ushahidi.android.app.entities.MediaEntity;
 
 /**
  * @author eyedol
@@ -37,7 +37,7 @@ public class ListReportNewsModel extends Model {
 
 	private String url;
 
-	private List<Media> mMedia;
+	private List<MediaEntity> mMedia;
 
 	private List<ListReportNewsModel> mNewsModel;
 
@@ -102,7 +102,7 @@ public class ListReportNewsModel extends Model {
 		mNewsModel = new ArrayList<ListReportNewsModel>();
 		mMedia = Database.mMediaDao.fetchReportNews(reportId);
 		if (mMedia != null && mMedia.size() > 0) {
-			for (Media item : mMedia) {
+			for (MediaEntity item : mMedia) {
 				ListReportNewsModel newsModel = new ListReportNewsModel();
 				newsModel.setId(item.getDbId());
 				newsModel.setTitle(item.getLink());

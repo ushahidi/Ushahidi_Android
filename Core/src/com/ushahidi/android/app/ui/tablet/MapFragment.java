@@ -29,7 +29,7 @@ import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.api.CategoriesApi;
 import com.ushahidi.android.app.api.ReportsApi;
-import com.ushahidi.android.app.entities.Photo;
+import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.fragments.BaseFragment;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.models.ListReportModel;
@@ -341,10 +341,10 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		for (ListReportModel report : items) {
 			if (new ListReportModel().deleteAllFetchedReport(report
 					.getReportId())) {
-				final List<Photo> photos = new ListPhotoModel()
+				final List<PhotoEntity> photos = new ListPhotoModel()
 						.getPhotosByReportId(report.getReportId());
 
-				for (Photo photo : photos) {
+				for (PhotoEntity photo : photos) {
 					ImageManager.deletePendingPhoto(getActivity(),
 							"/" + photo.getPhoto());
 				}

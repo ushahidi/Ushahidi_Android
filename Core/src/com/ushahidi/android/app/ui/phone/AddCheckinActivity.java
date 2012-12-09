@@ -55,7 +55,7 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseEditMapActivity;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.entities.Checkin;
-import com.ushahidi.android.app.entities.Photo;
+import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.models.AddCheckinModel;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.services.UploadCheckins;
@@ -361,7 +361,7 @@ public class AddCheckinActivity extends
 				if (file.exists()) {
 
 					id += 1;
-					Photo photo = new Photo();
+					PhotoEntity photo = new PhotoEntity();
 					photo.setDbId(id);
 					photo.setPhoto(PENDING_FOLDER + file.getName());
 					pendingPhoto.addItem(photo);

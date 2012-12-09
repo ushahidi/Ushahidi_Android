@@ -27,7 +27,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ushahidi.android.app.entities.Media;
+import com.ushahidi.android.app.entities.MediaEntity;
 
 /**
  * @author eyedol
@@ -37,7 +37,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 
 	private Cursor cursor;
 
-	private List<Media> listMedia;
+	private List<MediaEntity> listMedia;
 
 	private ContentValues initialValues;
 
@@ -50,8 +50,8 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 	}
 
 	@Override
-	public List<Media> fetchCheckinPhoto(int checkinId) {
-		listMedia = new ArrayList<Media>();
+	public List<MediaEntity> fetchCheckinPhoto(int checkinId) {
+		listMedia = new ArrayList<MediaEntity>();
 		final String selectionArgs[] = { String.valueOf(checkinId),
 				String.valueOf(IMAGE) };
 
@@ -61,7 +61,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Media media = cursorToEntity(cursor);
+				MediaEntity media = cursorToEntity(cursor);
 				listMedia.add(media);
 				cursor.moveToNext();
 			}
@@ -71,8 +71,8 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 	}
 
 	@Override
-	public List<Media> fetchReportPhoto(int reportId) {
-		listMedia = new ArrayList<Media>();
+	public List<MediaEntity> fetchReportPhoto(int reportId) {
+		listMedia = new ArrayList<MediaEntity>();
 
 		final String selection = REPORT_ID + " = " + reportId + " AND " + TYPE
 				+ " =" + IMAGE;
@@ -80,7 +80,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Media media = cursorToEntity(cursor);
+				MediaEntity media = cursorToEntity(cursor);
 				listMedia.add(media);
 				cursor.moveToNext();
 			}
@@ -90,8 +90,8 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 	}
 	
 	@Override
-	public List<Media> fetchPendingCheckinPhoto(int checkinId) {
-		listMedia = new ArrayList<Media>();
+	public List<MediaEntity> fetchPendingCheckinPhoto(int checkinId) {
+		listMedia = new ArrayList<MediaEntity>();
 
 		final String selection = CHECKIN_ID + " = " + checkinId + " AND " + TYPE
 				+ " =" + IMAGE;
@@ -99,7 +99,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Media media = cursorToEntity(cursor);
+				MediaEntity media = cursorToEntity(cursor);
 				listMedia.add(media);
 				cursor.moveToNext();
 			}
@@ -109,8 +109,8 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 	}
 
 	@Override
-	public List<Media> fetchPendingReportPhoto(int reportId) {
-		listMedia = new ArrayList<Media>();
+	public List<MediaEntity> fetchPendingReportPhoto(int reportId) {
+		listMedia = new ArrayList<MediaEntity>();
 
 		final String selection = REPORT_ID + " = " + reportId + " AND " + TYPE
 				+ " =" + IMAGE;
@@ -118,7 +118,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Media media = cursorToEntity(cursor);
+				MediaEntity media = cursorToEntity(cursor);
 				listMedia.add(media);
 				cursor.moveToNext();
 			}
@@ -128,8 +128,8 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 	}
 
 	@Override
-	public List<Media> fetchReportVideo(int reportId) {
-		listMedia = new ArrayList<Media>();
+	public List<MediaEntity> fetchReportVideo(int reportId) {
+		listMedia = new ArrayList<MediaEntity>();
 
 		final String selection = REPORT_ID + " = " + reportId + " AND " + TYPE
 				+ " =" + VIDEO;
@@ -137,7 +137,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Media media = cursorToEntity(cursor);
+				MediaEntity media = cursorToEntity(cursor);
 				listMedia.add(media);
 				cursor.moveToNext();
 			}
@@ -147,15 +147,15 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 	}
 
 	@Override
-	public List<Media> fetchReportAudio(int reportId) {
-		listMedia = new ArrayList<Media>();
+	public List<MediaEntity> fetchReportAudio(int reportId) {
+		listMedia = new ArrayList<MediaEntity>();
 		final String selection = REPORT_ID + " = " + reportId + " AND " + TYPE
 				+ " =" + AUDIO;
 		cursor = super.query(TABLE, MEDIA_COLUMNS, selection, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Media media = cursorToEntity(cursor);
+				MediaEntity media = cursorToEntity(cursor);
 				listMedia.add(media);
 				cursor.moveToNext();
 			}
@@ -165,8 +165,8 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 	}
 
 	@Override
-	public List<Media> fetchReportNews(int reportId) {
-		listMedia = new ArrayList<Media>();
+	public List<MediaEntity> fetchReportNews(int reportId) {
+		listMedia = new ArrayList<MediaEntity>();
 
 		final String selection = REPORT_ID + " = " + reportId + " AND " + TYPE
 				+ " =" + NEWS;
@@ -174,7 +174,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Media media = cursorToEntity(cursor);
+				MediaEntity media = cursorToEntity(cursor);
 				listMedia.add(media);
 				cursor.moveToNext();
 			}
@@ -184,9 +184,9 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 	}
 
 	@Override
-	public List<Media> fetchMedia(String itemType, int itemId, int mediaType,
+	public List<MediaEntity> fetchMedia(String itemType, int itemId, int mediaType,
 			int limit) {
-		listMedia = new ArrayList<Media>();
+		listMedia = new ArrayList<MediaEntity>();
 
 		final String selection = itemType + " =" + itemId + " AND " + TYPE
 				+ " =" + mediaType;
@@ -196,7 +196,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Media media = cursorToEntity(cursor);
+				MediaEntity media = cursorToEntity(cursor);
 				listMedia.add(media);
 				cursor.moveToNext();
 			}
@@ -272,11 +272,11 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 	 * @see com.ushahidi.android.app.database.IMediaDao#addMedia(java.util.List)
 	 */
 	@Override
-	public boolean addMedia(List<Media> sMedia) {
+	public boolean addMedia(List<MediaEntity> sMedia) {
 		try {
 			mDb.beginTransaction();
 
-			for (Media media : sMedia) {
+			for (MediaEntity media : sMedia) {
 
 				addMedia(media);
 			}
@@ -296,7 +296,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 	 * .app.entities.Media)
 	 */
 	@Override
-	public boolean addMedia(Media media) {
+	public boolean addMedia(MediaEntity media) {
 		// set values
 		setContentValue(media);
 		return super.insert(TABLE, getContentValue()) > 0;
@@ -311,8 +311,8 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Media cursorToEntity(Cursor cursor) {
-		Media media = new Media();
+	protected MediaEntity cursorToEntity(Cursor cursor) {
+		MediaEntity media = new MediaEntity();
 		int idIndex;
 		int reportIdIndex;
 		int checkinIdIndex;
@@ -349,7 +349,7 @@ public class MediaDao extends DbContentProvider implements IMediaDao,
 		return media;
 	}
 
-	private void setContentValue(Media media) {
+	private void setContentValue(MediaEntity media) {
 		initialValues = new ContentValues();
 		initialValues.put(MEDIA_ID, media.getMediaId());
 		initialValues.put(REPORT_ID, media.getReportId());

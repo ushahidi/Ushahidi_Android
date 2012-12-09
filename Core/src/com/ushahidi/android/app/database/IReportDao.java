@@ -22,7 +22,7 @@ package com.ushahidi.android.app.database;
 
 import java.util.List;
 
-import com.ushahidi.android.app.entities.Report;
+import com.ushahidi.android.app.entities.ReportEntity;
 
 /**
  * Define the methods for interacting with the report table. These methods needs
@@ -34,23 +34,23 @@ import com.ushahidi.android.app.entities.Report;
 public interface IReportDao {
 
 	// fetch all reports
-	public List<Report> fetchAllReports();
+	public List<ReportEntity> fetchAllReports();
 
 	// fetch all reports
-	public List<Report> fetchAllPendingReports();
+	public List<ReportEntity> fetchAllPendingReports();
 
 	// fetch reports by categories title: This is deprecated
-	public List<Report> fetchReportByCategory(String category);
+	public List<ReportEntity> fetchReportByCategory(String category);
 
-	public List<Report> fetchPendingReportByCategory(String category);
+	public List<ReportEntity> fetchPendingReportByCategory(String category);
 
 	// fetch reports by categories by id
-	public List<Report> fetchReportByCategoryId(int categoryId);
+	public List<ReportEntity> fetchReportByCategoryId(int categoryId);
 
-	public List<Report> fetchPendingReportByCategoryId(int categoryId);
+	public List<ReportEntity> fetchPendingReportByCategoryId(int categoryId);
 
 	// fetch reports by ID
-	public List<Report> fetchReportById(long id);
+	public List<ReportEntity> fetchReportById(long id);
 
 	// delete all report
 	public boolean deleteAllReport();
@@ -62,18 +62,18 @@ public interface IReportDao {
 	public boolean deletePendingReportById(int reportId);
 
 	// add reports
-	public boolean addReport(Report report);
+	public boolean addReport(ReportEntity report);
 
 	// add report
-	public boolean addReport(List<Report> report);
+	public boolean addReport(List<ReportEntity> report);
 
 	// fetch reports by categories title: This is deprecated
 	public int fetchPendingReportIdByDate(String date);
 
 	// fetch reports by categories title: This is deprecated
-	public Report fetchPendingReportIdById(int reportId);
+	public ReportEntity fetchPendingReportIdById(int reportId);
 
 	// add reports
-	public boolean updatePendingReport(int reportId, Report report);
+	public boolean updatePendingReport(int reportId, ReportEntity report);
 
 }

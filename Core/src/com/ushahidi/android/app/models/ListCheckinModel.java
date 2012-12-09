@@ -29,8 +29,8 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IMediaSchema;
 import com.ushahidi.android.app.entities.Checkin;
-import com.ushahidi.android.app.entities.Media;
-import com.ushahidi.android.app.entities.User;
+import com.ushahidi.android.app.entities.MediaEntity;
+import com.ushahidi.android.app.entities.UserEntity;
 import com.ushahidi.android.app.util.Util;
 
 /**
@@ -40,7 +40,6 @@ public class ListCheckinModel extends Checkin {
 
 	List<Checkin> mCheckins;
 
-	@Override
 	public boolean load() {
 		mCheckins = Database.mCheckin.fetchAllCheckins();
 		if (mCheckins != null) {
@@ -104,7 +103,7 @@ public class ListCheckinModel extends Checkin {
 				}
 
 				listCheckin.setThumbnail(d);
-				
+
 				checkins.add(listCheckin);
 			}
 		}
@@ -112,71 +111,66 @@ public class ListCheckinModel extends Checkin {
 	}
 
 	private String getImage(Context context, int checkinId) {
-		List<Media> sMedia = Database.mMediaDao.fetchMedia(
+		List<MediaEntity> sMedia = Database.mMediaDao.fetchMedia(
 				IMediaSchema.CHECKIN_ID, checkinId, IMediaSchema.IMAGE, 1);
 		if (sMedia != null && sMedia.size() > 0) {
-			
+
 			return sMedia.get(0).getLink();
 		}
 		return null;
 	}
 
 	private String getUsername(Context context, int userId) {
-		new Util().log("ListCheckinModel","User Id "+userId);
-		List<User> sUser = Database.mUserDao.fetchUsersById(userId);
+		new Util().log("ListCheckinModel", "User Id " + userId);
+		List<UserEntity> sUser = Database.mUserDao.fetchUsersById(userId);
 		if (sUser != null && sUser.size() > 0) {
 			return sUser.get(0).getUsername();
 		}
 		return context.getText(R.string.unknown).toString();
 	}
-	
+
 	/**
 	 * Deletes all fetched reports.
 	 * 
-	 * @param reportId The id of the report to be deleted.
+	 * @param reportId
+	 *            The id of the report to be deleted.
 	 * 
 	 * @return boolean
 	 */
 	public boolean deleteAllFetchedCheckin(int checkinId) {
-		
+
 		// delete fetched reports
-		if(Database.mCheckin.deleteAllCheckins() )  {
-			new Util().log("ListCheckinModel","Checkin deleted");
+		if (Database.mCheckin.deleteAllCheckins()) {
+			new Util().log("ListCheckinModel", "Checkin deleted");
 		}
-		
-		if( Database.mUserDao.deleteAllUsers() ) {
-			new Util().log("Users: ","Users deleted");
+
+		if (Database.mUserDao.deleteAllUsers()) {
+			new Util().log("Users: ", "Users deleted");
 		}
 
 		// delete media
-		if(Database.mMediaDao.deleteCheckinPhoto(checkinId) ) {
-			new Util().log("Media","Media deleted");
-		}
-		return true;
-	}
-	
-public boolean deleteCheckin() {
-		
-		// delete fetched reports
-		if(Database.mCheckin.deleteAllCheckins() )  {
-			new Util().log("ListCheckinModel","Checkin deleted");
-		}
-		
-		if( Database.mUserDao.deleteAllUsers() ) {
-			new Util().log("Users: ","Users deleted");
-		}
-
-		// delete media
-		if(Database.mMediaDao.deleteAllMedia() ) {
-			new Util().log("Media","Media deleted");
+		if (Database.mMediaDao.deleteCheckinPhoto(checkinId)) {
+			new Util().log("Media", "Media deleted");
 		}
 		return true;
 	}
 
-	@Override
-	public boolean save() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deleteCheckin() {
+
+		// delete fetched reports
+		if (Database.mCheckin.deleteAllCheckins()) {
+			new Util().log("ListCheckinModel", "Checkin deleted");
+		}
+
+		if (Database.mUserDao.deleteAllUsers()) {
+			new Util().log("Users: ", "Users deleted");
+		}
+
+		// delete media
+		if (Database.mMediaDao.deleteAllMedia()) {
+			new Util().log("Media", "Media deleted");
+		}
+		return true;
 	}
 
 }

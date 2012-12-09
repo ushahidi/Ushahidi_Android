@@ -29,7 +29,7 @@ import android.widget.ImageView;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.entities.Photo;
+import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.models.ListPhotoModel;
 
 /**
@@ -38,7 +38,7 @@ import com.ushahidi.android.app.models.ListPhotoModel;
  * @author eyedol
  * 
  */
-public class UploadPhotoAdapter extends BaseListAdapter<Photo> {
+public class UploadPhotoAdapter extends BaseListAdapter<PhotoEntity> {
 
 	class Widgets extends com.ushahidi.android.app.views.View {
 
@@ -53,7 +53,7 @@ public class UploadPhotoAdapter extends BaseListAdapter<Photo> {
 
 	private ListPhotoModel mListPhotoModel;
 
-	private List<Photo> items;
+	private List<PhotoEntity> items;
 
 	/**
 	 * @param context
@@ -104,7 +104,7 @@ public class UploadPhotoAdapter extends BaseListAdapter<Photo> {
 		mListPhotoModel = new ListPhotoModel();
 		items = mListPhotoModel.getPendingPhotosByReportId(reportId);
 		StringBuilder photos = new StringBuilder();
-		for (Photo photo : items) {
+		for (PhotoEntity photo : items) {
 			if (photo.getPhoto().length() > 0) {
 				photos.append(photo.getPhoto() + ",");
 			}
@@ -122,7 +122,7 @@ public class UploadPhotoAdapter extends BaseListAdapter<Photo> {
 		mListPhotoModel = new ListPhotoModel();
 		items = mListPhotoModel.getPendingPhotos(context);
 		StringBuilder photos = new StringBuilder();
-		for (Photo photo : items) {
+		for (PhotoEntity photo : items) {
 			if (photo.getPhoto().length() > 0) {
 				photos.append(photo.getPhoto() + ",");
 			}

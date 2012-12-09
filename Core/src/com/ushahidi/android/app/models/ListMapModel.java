@@ -145,7 +145,6 @@ public class ListMapModel extends Model {
 		mMaps = new ArrayList<Map>();
 	}
 
-	@Override
 	public boolean load() {
 		mMaps = Database.mMapDao.fetchAllMaps();
 		if (mMaps != null) {
@@ -177,7 +176,6 @@ public class ListMapModel extends Model {
 	}
 
 	// Save stuff fetch from
-	@Override
 	public boolean save() {
 		// TODO Auto-generated method stub
 		return false;

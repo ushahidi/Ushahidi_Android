@@ -29,14 +29,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.entities.User;
+import com.ushahidi.android.app.entities.UserEntity;
 import com.ushahidi.android.app.models.UserModel;
 
 /**
  * @author eyedol
  * 
  */
-public class UserSpinnerAdater extends BaseArrayAdapter<User> {
+public class UserSpinnerAdater extends BaseArrayAdapter<UserEntity> {
 
 	private static final String DEFAULT_COLOR = "#000000";
 
@@ -110,21 +110,21 @@ public class UserSpinnerAdater extends BaseArrayAdapter<User> {
 	 */
 	@Override
 	public void refresh() {
-		UserModel<User> mUserModel = new UserModel<User>();
-		List<User> listUsers;
+		UserModel<UserEntity> mUserModel = new UserModel<UserEntity>();
+		List<UserEntity> listUsers;
 		if (mUserModel.load()) {
 			listUsers = mUserModel.users;
 			if (listUsers != null && listUsers.size() > 0) {
 
 				// This is to make room for all users label
-				User sUser = new User();
+				UserEntity sUser = new UserEntity();
 				sUser.setUserId(0);
 				sUser.setDbId(0);
 				sUser.setUsername(context.getString(R.string.all_users));
 				sUser.setColor(DEFAULT_COLOR);
 				add(sUser.getUsername(), sUser);
 
-				for (User user : listUsers) {
+				for (UserEntity user : listUsers) {
 					add(user.getUsername(), user);
 				}
 			}

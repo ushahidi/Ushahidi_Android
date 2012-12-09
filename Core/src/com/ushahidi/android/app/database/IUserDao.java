@@ -22,22 +22,22 @@ package com.ushahidi.android.app.database;
 
 import java.util.List;
 
-import com.ushahidi.android.app.entities.User;
+import com.ushahidi.android.app.entities.UserEntity;
 
 /**
  * @author eyedol
  */
 public interface IUserDao {
 
-    public List<User> fetchUsersById(int userId);
+    public List<UserEntity> fetchUsersById(int userId);
     
-    public List<User> fetchUsers();
+    public List<UserEntity> fetchUsers();
     
     // add user
-    public boolean addUser(User user);
+    public boolean addUser(UserEntity user);
 
     // add users
-    public boolean addUser(List<User> user);
+    public boolean addUser(List<UserEntity> user);
 
     public boolean deleteAllUsers();
 }

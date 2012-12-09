@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.entities.Comment;
+import com.ushahidi.android.app.entities.CommentEntity;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.java.sdk.UshahidiException;
 import com.ushahidi.java.sdk.api.CommentFields;
@@ -38,13 +38,13 @@ public class CommentsApi extends Ushahidi {
 
 	private boolean processingResult;
 
-	private List<Comment> comments;
+	private List<CommentEntity> comments;
 
 	private CommentsTask task;
 
 	public CommentsApi() {
 		processingResult = true;
-		comments = new ArrayList<Comment>();
+		comments = new ArrayList<CommentEntity>();
 		task = factory.createCommentTask();
 	}
 
@@ -54,13 +54,13 @@ public class CommentsApi extends Ushahidi {
 	 * @param context
 	 * @return
 	 */
-	public List<Comment> getCommentsList(int reportId) {
+	public List<CommentEntity> getCommentsList(int reportId) {
 		new Util().log("Save comments");
 		if (processingResult) {
 			try {
 				for (com.ushahidi.java.sdk.api.Comment c : task
 						.reportId(reportId)) {
-					Comment comment = new Comment();
+					CommentEntity comment = new CommentEntity();
 					comment.addComment(c);
 					comments.add(comment);
 				}
@@ -82,12 +82,12 @@ public class CommentsApi extends Ushahidi {
 		return task.submit(comment);
 	}
 
-	public List<Comment> getCheckinCommentsList() {
+	public List<CommentEntity> getCheckinCommentsList() {
 		new Util().log("Save comments");
 		if (processingResult) {
 			try {
 				for (com.ushahidi.java.sdk.api.Comment c : task.all()) {
-					Comment comment = new Comment();
+					CommentEntity comment = new CommentEntity();
 					comment.addComment(c);
 					comments.add(comment);
 				}
@@ -101,11 +101,11 @@ public class CommentsApi extends Ushahidi {
 
 	// Save report comments into database
 	public boolean saveComments(int reportId) {
-		List<Comment> comments = getCommentsList(reportId);
+		List<CommentEntity> comments = getCommentsList(reportId);
 
 		if (comments != null && comments.size() > 0) {
 			// remove existing comments
-			for (Comment comment : comments) {
+			for (CommentEntity comment : comments) {
 				Database.mCommentDao.deleteCommentByReportId(comment
 						.getReportId());
 			}
@@ -117,10 +117,10 @@ public class CommentsApi extends Ushahidi {
 
 	// Save checkins comments into database
 	public boolean saveCheckinsComments() {
-		List<Comment> comments = getCheckinCommentsList();
+		List<CommentEntity> comments = getCheckinCommentsList();
 		if (comments != null && comments.size() > 0) {
 			// remove existing comments
-			for (Comment comment : comments) {
+			for (CommentEntity comment : comments) {
 				Database.mCommentDao.deleteCommentByCheckinId(comment
 						.getCheckinId());
 			}

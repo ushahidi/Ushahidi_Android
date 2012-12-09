@@ -26,7 +26,7 @@ import com.ushahidi.android.app.util.Util;
  * @author eyedol
  * 
  */
-public class Comment extends Model implements IDbEntity {
+public class CommentEntity extends Model implements IDbEntity {
 
 	private int id;
 
@@ -121,25 +121,4 @@ public class Comment extends Model implements IDbEntity {
 		this.commentDate = commentDate;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ushahidi.android.app.models.Model#load()
-	 */
-	@Override
-	public boolean load() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ushahidi.android.app.models.Model#save()
-	 */
-	@Override
-	public boolean save() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }

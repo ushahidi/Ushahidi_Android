@@ -21,6 +21,8 @@
 package com.ushahidi.android.app.ui.tablet;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -50,7 +52,7 @@ import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.adapters.ListPendingReportAdapter;
-import com.ushahidi.android.app.adapters.ListReportAdapter;
+import com.ushahidi.android.app.adapters.BaseListReportAdapter;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.api.CategoriesApi;
 import com.ushahidi.android.app.api.ReportsApi;
@@ -58,6 +60,7 @@ import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IOpenGeoSmsSchema;
 import com.ushahidi.android.app.database.OpenGeoSmsDao;
 import com.ushahidi.android.app.entities.Photo;
+import com.ushahidi.android.app.entities.Report;
 import com.ushahidi.android.app.fragments.BaseSectionListFragment;
 import com.ushahidi.android.app.models.AddReportModel;
 import com.ushahidi.android.app.models.ListPhotoModel;
@@ -70,15 +73,18 @@ import com.ushahidi.android.app.ui.phone.ViewReportActivity;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ListReportView;
+import com.ushahidi.java.sdk.api.Incident;
+import com.ushahidi.java.sdk.api.Person;
+import com.ushahidi.java.sdk.api.ReportFields;
+import com.ushahidi.java.sdk.api.json.Date;
 import com.ushahidi.java.sdk.net.content.Body;
 import com.ushahidi.java.sdk.net.content.FileBody;
 
 /**
  * @author eyedol
  */
-public class ListReportFragment
-		extends
-		BaseSectionListFragment<ListReportView, ListReportModel, ListReportAdapter> {
+public class ListReportFragment extends
+		BaseSectionListFragment<ListReportView, Report, BaseListReportAdapter> {
 
 	private int mPositionChecked = 0;
 
@@ -111,7 +117,7 @@ public class ListReportFragment
 	private ListPendingReportAdapter pendingReportAdapter;
 
 	public ListReportFragment() {
-		super(ListReportView.class, ListReportAdapter.class,
+		super(ListReportView.class, BaseListReportAdapter.class,
 				R.layout.list_report, R.menu.list_report, android.R.id.list);
 	}
 
@@ -319,7 +325,7 @@ public class ListReportFragment
 
 		pendingReportAdapter.refresh();
 		fetchedReportAdapter.refresh();
-		adapter = new ListReportAdapter(getActivity());
+		adapter = new BaseListReportAdapter(getActivity());
 		if (!pendingReportAdapter.isEmpty()) {
 			adapter.addView(pendingHeader());
 			adapter.addAdapter(pendingReportAdapter);
@@ -335,7 +341,7 @@ public class ListReportFragment
 	private void filterReportList() {
 		fetchedReportAdapter.getFilter().filter(filterTitle);
 		pendingReportAdapter.getFilter().filter(filterTitle);
-		adapter = new ListReportAdapter(getActivity());
+		adapter = new BaseListReportAdapter(getActivity());
 		if (!pendingReportAdapter.isEmpty()) {
 			adapter.addView(pendingHeader());
 			adapter.addAdapter(pendingReportAdapter);
@@ -358,7 +364,7 @@ public class ListReportFragment
 	private void reportByCategoryList() {
 		fetchedReportAdapter.refresh(filterCategory);
 		pendingReportAdapter.refresh(filterCategory);
-		adapter = new ListReportAdapter(getActivity());
+		adapter = new BaseListReportAdapter(getActivity());
 		if (!pendingReportAdapter.isEmpty()) {
 			adapter.addView(pendingHeader());
 			adapter.addAdapter(pendingReportAdapter);
@@ -534,16 +540,16 @@ public class ListReportFragment
 		return false;
 	}
 
-	private List<ListReportModel> mPendingReports;
+	private List<Report> mPendingReports;
 
 	private void preparePendingReports() {
 		mPendingReports = pendingReportAdapter.pendingReports();
 		if (mPendingReports != null) {
-			for (ListReportModel report : mPendingReports) {
-				long rid = report.getId();
+			for (Report report : mPendingReports) {
+				long rid = report.getIncident().getDbId();
 				String categories = pendingReportAdapter
 						.fetchCategoriesId((int) rid);
-				report.setCategories(categories);
+				// report.setCategories(categories); setCategories(categories);
 			}
 		}
 	}
@@ -551,13 +557,17 @@ public class ListReportFragment
 	private boolean uploadPendingReports() {
 
 		boolean retVal = true;
-		String dates[];
-		String time[];
 		StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
+		final SimpleDateFormat FORMATTER = new SimpleDateFormat(
+				"MM/dd/yyyy h m a", Locale.US);
+		ReportFields fields = new ReportFields();
+		Incident incident = new Incident();
+
 		urlBuilder.append("/api");
 		if (mPendingReports != null) {
-			for (ListReportModel report : mPendingReports) {
-				long rid = report.getId();
+			for (Report report : mPendingReports) {
+				long rid = report.getDbId();
+				;
 				int state = Database.mOpenGeoSmsDao.getReportState(rid);
 				if (state != IOpenGeoSmsSchema.STATE_NOT_OPENGEOSMS) {
 					if (!sendOpenGeoSmsReport(report, state)) {
@@ -565,22 +575,32 @@ public class ListReportFragment
 					}
 					continue;
 				}
+
+				// Set the incident details
+				incident.setTitle(report.getIncident().getTitle());
+				incident.setDescription(report.getIncident().getDescription());
+				try {
+					incident.setDate(report.getIncident().getDate());
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				incident.setLatitude(report.getIncident().getLatitude());
+				incident.setLongitude(report.getIncident().getLongitude());
+				incident.setLocationName(report.getIncident().getLocationName());
+				fields.fill(incident);
+
+				// Set person details
+				fields.setPerson(new Person(Preferences.firstname,
+						Preferences.lastname, Preferences.email));
+
+				// Add categories
+
+				fields.addCategory(report.getCategories());
+				// Add photos
 				HashMap<String, String> mParams = new HashMap<String, String>();
 				mParams.put("task", "report");
 				mParams.put("incident_title", report.getTitle());
 				mParams.put("incident_description", report.getDesc());
-
-				// dates
-				dates = Util
-						.formatDate("MMMM dd, yyyy 'at' hh:mm:ss aaa",
-								report.getDate(), "MM/dd/yyyy hh:mm a", null,
-								Locale.US).split(" ");
-
-				time = dates[1].split(":");
-				mParams.put("incident_date", dates[0]);
-				mParams.put("incident_hour", time[0]);
-				mParams.put("incident_minute", time[1]);
-				mParams.put("incident_ampm", dates[2].toLowerCase());
 
 				mParams.put("incident_category", report.getCategories());
 				mParams.put("latitude", String.valueOf(report.getLatitude()));
@@ -592,7 +612,7 @@ public class ListReportFragment
 
 				// load filenames
 				mParams.put("filename", new UploadPhotoAdapter(getActivity())
-						.pendingPhotos((int) report.getId()));
+						.pendingPhotos((int) report.getDbId()));
 
 				// upload
 				/*
@@ -712,7 +732,7 @@ public class ListReportFragment
 
 					// delete everything before updating with a new one
 					deleteFetchedReport();
-					
+
 					status = new ReportsApi().saveReports(getActivity()) ? 0
 							: 99;
 

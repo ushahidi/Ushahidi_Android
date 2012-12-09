@@ -22,7 +22,7 @@ package com.ushahidi.android.app.database;
 
 import java.util.List;
 
-import com.ushahidi.android.app.entities.Media;
+import com.ushahidi.android.app.entities.MediaEntity;
 
 /**
  * @author eyedol
@@ -30,22 +30,22 @@ import com.ushahidi.android.app.entities.Media;
 public interface IMediaDao {
 
 	// add
-	public boolean addMedia(List<Media> media);
+	public boolean addMedia(List<MediaEntity> media);
 
-	public boolean addMedia(Media media);
+	public boolean addMedia(MediaEntity media);
 
 	// select
-	public List<Media> fetchCheckinPhoto(int checkinId);
+	public List<MediaEntity> fetchCheckinPhoto(int checkinId);
 
-	public List<Media> fetchReportPhoto(int reportId);
+	public List<MediaEntity> fetchReportPhoto(int reportId);
 
-	public List<Media> fetchReportAudio(int reportId);
+	public List<MediaEntity> fetchReportAudio(int reportId);
 
-	public List<Media> fetchReportNews(int reportId);
+	public List<MediaEntity> fetchReportNews(int reportId);
 
-	public List<Media> fetchReportVideo(int reportId);
+	public List<MediaEntity> fetchReportVideo(int reportId);
 
-	public List<Media> fetchMedia(String itemType, int itemId, int mediaType,
+	public List<MediaEntity> fetchMedia(String itemType, int itemId, int mediaType,
 			int limit);
 
 	// delete
@@ -63,10 +63,10 @@ public interface IMediaDao {
 	public boolean updateMediaByCheckinId(int checkinId);
 
 	// fetch pending report's photo
-	public List<Media> fetchPendingReportPhoto(int reportId);
+	public List<MediaEntity> fetchPendingReportPhoto(int reportId);
 
 	// fetch pending checkin's photo
-	public List<Media> fetchPendingCheckinPhoto(int checkinId);
+	public List<MediaEntity> fetchPendingCheckinPhoto(int checkinId);
 
 	// update news
 	public boolean deleteReportNews(int reportId);

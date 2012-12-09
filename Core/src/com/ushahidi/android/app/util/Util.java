@@ -582,6 +582,10 @@ public class Util {
 		return ((ActivityManager) context
 				.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 	}
+	
+	public static String toLowerCase(String text) {
+		return text.toLowerCase(Locale.getDefault());
+	}
 
 	/**
 	 * Check if OS version has built-in external cache dir method.

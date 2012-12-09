@@ -36,7 +36,7 @@ import com.google.android.maps.MapView;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListCommentAdapter;
 import com.ushahidi.android.app.adapters.ListPhotoAdapter;
-import com.ushahidi.android.app.entities.Photo;
+import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.util.ImageViewWorker;
 
@@ -134,7 +134,7 @@ public class ViewCheckinView extends com.ushahidi.android.app.views.View {
 			final boolean loaded = mListPhotoModel.loadCheckinPhoto(checkinId);
 			int totalPhotos = mListPhotoModel.totalReportPhoto();
 			if (loaded) {
-				final List<Photo> items = mListPhotoModel.getPhotos();
+				final List<PhotoEntity> items = mListPhotoModel.getPhotos();
 				if (items.size() > 0) {
 					getPhoto(items.get(0).getPhoto(), photo);
 					total.setText(context.getResources().getQuantityString(

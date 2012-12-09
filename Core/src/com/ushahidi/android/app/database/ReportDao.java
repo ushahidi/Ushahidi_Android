@@ -27,14 +27,14 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ushahidi.android.app.entities.Report;
+import com.ushahidi.android.app.entities.ReportEntity;
 
 public class ReportDao extends DbContentProvider implements IReportDao,
 		IReportSchema {
 
 	private Cursor cursor;
 
-	private List<Report> listReport;
+	private List<ReportEntity> listReport;
 
 	private ContentValues initialValues;
 
@@ -43,19 +43,19 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	}
 
 	@Override
-	public List<Report> fetchAllPendingReports() {
+	public List<ReportEntity> fetchAllPendingReports() {
 
 		final String sortOrder = INCIDENT_DATE + " DESC";
 		final String selection = INCIDENT_PENDING + " =?";
 		final String selectionArgs[] = { String.valueOf(1) };
-		listReport = new ArrayList<Report>();
+		listReport = new ArrayList<ReportEntity>();
 		cursor = super.query(INCIDENTS_TABLE, null, selection, selectionArgs,
 				sortOrder);
 
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Report report = cursorToEntity(cursor);
+				ReportEntity report = cursorToEntity(cursor);
 				listReport.add(report);
 				cursor.moveToNext();
 			}
@@ -66,18 +66,18 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	}
 
 	@Override
-	public List<Report> fetchAllReports() {
+	public List<ReportEntity> fetchAllReports() {
 
 		final String sortOrder = INCIDENT_DATE + " DESC";
 		final String selection = INCIDENT_PENDING + " = ?";
 		final String selectionArgs[] = { String.valueOf(0) };
-		listReport = new ArrayList<Report>();
+		listReport = new ArrayList<ReportEntity>();
 		cursor = super.query(INCIDENTS_TABLE, null, selection, selectionArgs,
 				sortOrder);
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Report report = cursorToEntity(cursor);
+				ReportEntity report = cursorToEntity(cursor);
 				listReport.add(report);
 				cursor.moveToNext();
 			}
@@ -88,14 +88,14 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	}
 
 	@Override
-	public List<Report> fetchPendingReportByCategory(String category) {
+	public List<ReportEntity> fetchPendingReportByCategory(String category) {
 		final String sortOrder = INCIDENT_TITLE + " DESC";
 		final String selectionArgs[] = { category, String.valueOf(1) };
 
 		final String selection = INCIDENT_CATEGORIES + " LIKE ? AND "
 				+ INCIDENT_PENDING + " =? ";
 
-		listReport = new ArrayList<Report>();
+		listReport = new ArrayList<ReportEntity>();
 
 		cursor = super.query(INCIDENTS_TABLE, null, selection, selectionArgs,
 				sortOrder);
@@ -103,7 +103,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Report report = cursorToEntity(cursor);
+				ReportEntity report = cursorToEntity(cursor);
 				listReport.add(report);
 				cursor.moveToNext();
 			}
@@ -121,7 +121,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 		final String selection = INCIDENT_DATE + " =? AND " + INCIDENT_PENDING
 				+ " =? ";
 		int id = 0;
-		listReport = new ArrayList<Report>();
+		listReport = new ArrayList<ReportEntity>();
 
 		cursor = super.query(INCIDENTS_TABLE, null, selection, selectionArgs,
 				sortOrder);
@@ -129,7 +129,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Report report = cursorToEntity(cursor);
+				ReportEntity report = cursorToEntity(cursor);
 				id = report.getDbId();
 				cursor.moveToNext();
 			}
@@ -140,13 +140,13 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	}
 
 	@Override
-	public List<Report> fetchReportByCategory(String category) {
+	public List<ReportEntity> fetchReportByCategory(String category) {
 		final String sortOrder = INCIDENT_TITLE + " DESC";
 		final String selectionArgs[] = { category };
 
 		final String selection = INCIDENT_CATEGORIES + " LIKE ?";
 
-		listReport = new ArrayList<Report>();
+		listReport = new ArrayList<ReportEntity>();
 
 		cursor = super.query(INCIDENTS_TABLE, null, selection, selectionArgs,
 				sortOrder);
@@ -154,7 +154,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Report report = cursorToEntity(cursor);
+				ReportEntity report = cursorToEntity(cursor);
 				listReport.add(report);
 				cursor.moveToNext();
 			}
@@ -165,7 +165,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	}
 
 	@Override
-	public List<Report> fetchPendingReportByCategoryId(int categoryId) {
+	public List<ReportEntity> fetchPendingReportByCategoryId(int categoryId) {
 		final String sortOrder = INCIDENT_TITLE + " DESC";
 		final String sql = "SELECT reports.* FROM " + INCIDENTS_TABLE
 				+ " reports INNER JOIN " + IReportCategorySchema.TABLE
@@ -175,14 +175,14 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 				+ INCIDENT_PENDING + "=? " + "ORDER BY  " + sortOrder;
 		final String selectionArgs[] = { String.valueOf(categoryId),
 				String.valueOf(1) };
-		listReport = new ArrayList<Report>();
+		listReport = new ArrayList<ReportEntity>();
 
 		cursor = super.rawQuery(sql, selectionArgs);
 		if (cursor != null) {
 
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Report report = cursorToEntity(cursor);
+				ReportEntity report = cursorToEntity(cursor);
 				listReport.add(report);
 				cursor.moveToNext();
 			}
@@ -193,7 +193,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	}
 
 	@Override
-	public List<Report> fetchReportByCategoryId(int categoryId) {
+	public List<ReportEntity> fetchReportByCategoryId(int categoryId) {
 		final String sortOrder = INCIDENT_TITLE + " DESC";
 		final String sql = "SELECT * FROM " + INCIDENTS_TABLE
 				+ " reports INNER JOIN " + IReportCategorySchema.TABLE
@@ -204,14 +204,14 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 		final String selectionArgs[] = { String.valueOf(categoryId),
 				String.valueOf(0) };
 
-		listReport = new ArrayList<Report>();
+		listReport = new ArrayList<ReportEntity>();
 
 		cursor = super.rawQuery(sql, selectionArgs);
 		if (cursor != null) {
 
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Report report = cursorToEntity(cursor);
+				ReportEntity report = cursorToEntity(cursor);
 				listReport.add(report);
 				cursor.moveToNext();
 			}
@@ -222,14 +222,14 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	}
 
 	@Override
-	public List<Report> fetchReportById(long id) {
+	public List<ReportEntity> fetchReportById(long id) {
 		final String sortOrder = INCIDENT_TITLE;
 
 		final String selectionArgs[] = { String.valueOf(id) };
 
 		final String selection = INCIDENT_ID + " = ?";
 
-		listReport = new ArrayList<Report>();
+		listReport = new ArrayList<ReportEntity>();
 
 		cursor = super.query(INCIDENTS_TABLE, INCIDENTS_COLUMNS, selection,
 				selectionArgs, sortOrder);
@@ -237,7 +237,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Report report = cursorToEntity(cursor);
+				ReportEntity report = cursorToEntity(cursor);
 				listReport.add(report);
 				cursor.moveToNext();
 			}
@@ -248,13 +248,13 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	}
 
 	@Override
-	public Report fetchPendingReportIdById(int reportId) {
+	public ReportEntity fetchPendingReportIdById(int reportId) {
 		final String sortOrder = INCIDENT_DATE + " DESC";
 		final String selectionArgs[] = { String.valueOf(reportId),
 				String.valueOf(1) };
 
 		final String selection = ID + " =? AND " + INCIDENT_PENDING + " =? ";
-		Report report = new Report();
+		ReportEntity report = new ReportEntity();
 
 		cursor = super.query(INCIDENTS_TABLE, null, selection, selectionArgs,
 				sortOrder);
@@ -286,18 +286,18 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	}
 
 	@Override
-	public boolean addReport(Report report) {
+	public boolean addReport(ReportEntity report) {
 		// set values
 		setContentValue(report);
 		return super.insert(INCIDENTS_TABLE, getContentValue()) > 0;
 	}
 
 	@Override
-	public boolean addReport(List<Report> reports) {
+	public boolean addReport(List<ReportEntity> reports) {
 		try {
 			mDb.beginTransaction();
 
-			for (Report report : reports) {
+			for (ReportEntity report : reports) {
 
 				addReport(report);
 			}
@@ -311,8 +311,8 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Report cursorToEntity(Cursor cursor) {
-		Report report = new Report();
+	protected ReportEntity cursorToEntity(Cursor cursor) {
+		ReportEntity report = new ReportEntity();
 		int idIndex;
 		int reportIdIndex;
 		int titleIndex;
@@ -387,7 +387,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 		return report;
 	}
 
-	private void setContentValue(Report report) {
+	private void setContentValue(ReportEntity report) {
 		initialValues = new ContentValues();
 		initialValues.put(INCIDENT_ID, report.getReportId());
 		initialValues.put(INCIDENT_TITLE, report.getTitle());
@@ -414,7 +414,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	}
 
 	@Override
-	public boolean updatePendingReport(int reportId, Report report) {
+	public boolean updatePendingReport(int reportId, ReportEntity report) {
 		boolean status = false;
 		try {
 			mDb.beginTransaction();

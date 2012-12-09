@@ -148,15 +148,4 @@ public class Checkin extends Model implements IDbEntity {
 	public int getPending() {
 		return this.pending;
 	}
-
-	@Override
-	public boolean load() {
-
-		return false;
-	}
-
-	@Override
-	public boolean save() {
-		return false;
-	}
 }

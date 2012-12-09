@@ -26,7 +26,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ushahidi.android.app.entities.Comment;
+import com.ushahidi.android.app.entities.CommentEntity;
 
 /**
  * @author eyedol
@@ -37,7 +37,7 @@ public class CommentDao extends DbContentProvider implements ICommentDao,
 
 	private Cursor cursor;
 
-	private List<Comment> listComment;
+	private List<CommentEntity> listComment;
 
 	private ContentValues initialValues;
 
@@ -55,11 +55,11 @@ public class CommentDao extends DbContentProvider implements ICommentDao,
 	 * com.ushahidi.android.app.database.ICommentDao#addComment(java.util.List)
 	 */
 	@Override
-	public boolean addComment(List<Comment> comments) {
+	public boolean addComment(List<CommentEntity> comments) {
 		try {
 			mDb.beginTransaction();
 
-			for (Comment comment : comments) {
+			for (CommentEntity comment : comments) {
 
 				addComment(comment);
 			}
@@ -79,7 +79,7 @@ public class CommentDao extends DbContentProvider implements ICommentDao,
 	 * .android.app.entities.Comment)
 	 */
 	@Override
-	public boolean addComment(Comment comment) {
+	public boolean addComment(CommentEntity comment) {
 		// set values
 		setContentValue(comment);
 		return super.insert(TABLE, getContentValue()) > 0;
@@ -92,15 +92,15 @@ public class CommentDao extends DbContentProvider implements ICommentDao,
 	 * com.ushahidi.android.app.database.ICommentDao#fetchCheckinComment(int)
 	 */
 	@Override
-	public List<Comment> fetchCheckinComment(int checkinId) {
-		listComment = new ArrayList<Comment>();
+	public List<CommentEntity> fetchCheckinComment(int checkinId) {
+		listComment = new ArrayList<CommentEntity>();
 		final String sortOrder = COMMENT_DATE + " DESC";
 		final String selection = CHECKIN_ID + " = " + checkinId;
 		cursor = super.query(TABLE, COMMENT_COLUMN, selection, null, sortOrder);
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Comment comment = cursorToEntity(cursor);
+				CommentEntity comment = cursorToEntity(cursor);
 				listComment.add(comment);
 				cursor.moveToNext();
 			}
@@ -116,15 +116,15 @@ public class CommentDao extends DbContentProvider implements ICommentDao,
 	 * com.ushahidi.android.app.database.ICommentDao#fetchReportComment(int)
 	 */
 	@Override
-	public List<Comment> fetchReportComment(int reportId) {
-		listComment = new ArrayList<Comment>();
+	public List<CommentEntity> fetchReportComment(int reportId) {
+		listComment = new ArrayList<CommentEntity>();
 		final String sortOrder = COMMENT_DATE + " DESC";
 		final String selection = REPORT_ID + " = " + reportId;
 		cursor = super.query(TABLE, COMMENT_COLUMN, selection, null, sortOrder);
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				Comment comment = cursorToEntity(cursor);
+				CommentEntity comment = cursorToEntity(cursor);
 				listComment.add(comment);
 				cursor.moveToNext();
 			}
@@ -197,7 +197,7 @@ public class CommentDao extends DbContentProvider implements ICommentDao,
 		return super.delete(TABLE, selection, selectionArgs) > 0;
 	}
 
-	private void setContentValue(Comment comment) {
+	private void setContentValue(CommentEntity comment) {
 		initialValues = new ContentValues();
 		initialValues.put(COMMENT_ID, comment.getCommentId());
 		initialValues.put(REPORT_ID, comment.getReportId());
@@ -220,8 +220,8 @@ public class CommentDao extends DbContentProvider implements ICommentDao,
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Comment cursorToEntity(Cursor cursor) {
-		Comment comment = new Comment();
+	protected CommentEntity cursorToEntity(Cursor cursor) {
+		CommentEntity comment = new CommentEntity();
 		int idIndex;
 		int reportIdIndex;
 		int checkinIdIndex;

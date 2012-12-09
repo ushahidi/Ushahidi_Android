@@ -20,184 +20,30 @@
 
 package com.ushahidi.android.app.models;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-
-import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IMediaSchema;
-import com.ushahidi.android.app.entities.Category;
-import com.ushahidi.android.app.entities.Media;
-import com.ushahidi.android.app.entities.Report;
+import com.ushahidi.android.app.entities.CategoryEntity;
+import com.ushahidi.android.app.entities.MediaEntity;
+import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.util.Util;
 
 /**
  * @author eyedol
  */
-public class ListReportModel extends Model {
+public class ListReportModel extends ReportEntity {
 
-	public List<Report> mReports;
+	public List<ReportEntity> mReports;
 
 	public List<ListReportModel> reportModel;
 
-	// FIXME:: I need to fix this to use the report entity instead.
-	private long id;
-
-	private int reportId;
-
-	private String title;
-
-	private String date;
-
-	private String status;
-
-	private String thumbnail;
-
-	private Drawable arrow;
-
-	private Uri thumbnailUri;
-
-	private String description;
-
-	private String location;
-
-	private String media;
-
-	private String categories;
-
-	private double latitude;
-
-	private double longitude;
-
-	public void setThumbnail(String thumbnail) {
-		this.thumbnail = thumbnail;
-	}
-
-	public String getThumbnail() {
-		return this.thumbnail;
-	}
-
-	public void setThumbnailUri(Uri uri) {
-		this.thumbnailUri = uri;
-	}
-
-	public Uri getThumbnailUri() {
-		return this.thumbnailUri;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getTitle() {
-		return this.title;
-	}
-
-	public void setDate(String date) {
-
-		this.date = date;
-	}
-
-	public String getDate() {
-		return this.date;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getStatus() {
-		return this.status;
-	}
-
-	public void setDesc(String description) {
-		this.description = description;
-	}
-
-	public String getDesc() {
-		return this.description;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public String getLocation() {
-		return this.location;
-	}
-
-	public void setMedia(String media) {
-		this.media = media;
-	}
-
-	public String getMedia() {
-		return this.media;
-	}
-
-	public void setCategories(String categories) {
-		this.categories = categories;
-	}
-
-	public String getCategories() {
-		return this.categories;
-	}
-
-	public void setArrow(Drawable arrow) {
-		this.arrow = arrow;
-	}
-
-	public Drawable getArrow() {
-		return this.arrow;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public long getId() {
-		return this.id;
-	}
-
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
-
-	public double getLatitude() {
-		return this.latitude;
-	}
-
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
-	}
-
-	public double getLongitude() {
-		return this.longitude;
-	}
-
-	public void setReportId(int reportId) {
-		this.reportId = reportId;
-	}
-
-	public int getReportId() {
-		return this.reportId;
-	}
-
-	@Override
 	public boolean load() {
 		mReports = Database.mReportDao.fetchAllReports();
 
 		if (mReports != null) {
 			return true;
 		}
-		return false;
-	}
-
-	@Override
-	public boolean save() {
 		return false;
 	}
 
@@ -236,15 +82,22 @@ public class ListReportModel extends Model {
 		}
 		return false;
 	}
-
-	public List<ListReportModel> getReports(Context context) {
+	
+	public List<ReportEntity> getReports() {
+		return mReports;
+	}
+	
+	
+	
+	/*public List<ListReportModel> getReports(Context context) {
 		reportModel = new ArrayList<ListReportModel>();
 		String d = null;
 		if (mReports != null && mReports.size() > 0) {
+			
 			for (Report item : mReports) {
 				ListReportModel listReportModel = new ListReportModel();
-				listReportModel.setId(item.getDbId());
-				listReportModel.setReportId(item.getReportId());
+				listReportModel.setDbId(item.getDbId());
+				listReportModel.setReportId(item.getIncident().getId());
 				listReportModel
 						.setTitle(Util.capitalizeString(item.getTitle()));
 				listReportModel.setDesc(Util.capitalizeString(item
@@ -281,30 +134,30 @@ public class ListReportModel extends Model {
 
 		}
 		return reportModel;
-	}
+	}*/
 
-	public List<Category> getParentCategories() {
+	public List<CategoryEntity> getParentCategories() {
 		return Database.mCategoryDao.fetchAllCategoryTitles();
 
 	}
 	
-	public List<Category> getAllCategories() {
+	public List<CategoryEntity> getAllCategories() {
 		return Database.mCategoryDao.fetchAllCategories();
 
 	}
 	
-	public List<Category> getChildrenCategories(int parentId) {
+	public List<CategoryEntity> getChildrenCategories(int parentId) {
 		return Database.mCategoryDao.fetchChildrenCategories(parentId);
 	}
 
-	public List<Category> getCategoriesByReportId(int reportId) {
+	public List<CategoryEntity> getCategoriesByReportId(int reportId) {
 
 		return Database.mCategoryDao.fetchCategoryByReportId(reportId);
 	}
 
-	private String getImage(int reportId) {
+	public String getImage(int reportId) {
 
-		List<Media> sMedia = Database.mMediaDao.fetchMedia(
+		List<MediaEntity> sMedia = Database.mMediaDao.fetchMedia(
 				IMediaSchema.REPORT_ID, reportId, IMediaSchema.IMAGE, 1);
 		if (sMedia != null && sMedia.size() > 0) {
 			return sMedia.get(0).getLink();

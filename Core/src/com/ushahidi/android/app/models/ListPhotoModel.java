@@ -25,32 +25,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 
-import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.entities.Media;
-import com.ushahidi.android.app.entities.Photo;
+import com.ushahidi.android.app.entities.MediaEntity;
+import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.util.PhotoUtils;
-import com.ushahidi.android.app.util.Util;
 
 /**
  * @author eyedol
  */
 public class ListPhotoModel extends Model {
 
-	private List<Media> mMedia;
+	private List<MediaEntity> mMedia;
 
-	private List<Photo> mPhotoModel;
+	private List<PhotoEntity> mPhotoModel;
 
 	private static final String FETCHED = "fetched/";
 
 	private static final String PENDING = "pending/";
-
-	@Override
-	public boolean load() {
-		return false;
-	}
 
 	public boolean load(int reportId) {
 		mMedia = Database.mMediaDao.fetchReportPhoto(reportId);
@@ -68,11 +60,11 @@ public class ListPhotoModel extends Model {
 		return false;
 	}
 
-	public List<Photo> getPhotos() {
-		mPhotoModel = new ArrayList<Photo>();
+	public List<PhotoEntity> getPhotos() {
+		mPhotoModel = new ArrayList<PhotoEntity>();
 
 		if (mMedia != null && mMedia.size() > 0) {
-			Photo photo = new Photo();
+			PhotoEntity photo = new PhotoEntity();
 			photo.setDbId(mMedia.get(0).getDbId());
 			photo.setPhoto(mMedia.get(0).getLink());
 			mPhotoModel.add(photo);
@@ -82,15 +74,15 @@ public class ListPhotoModel extends Model {
 		return mPhotoModel;
 	}
 
-	public List<Photo> getPendingPhotos(Context context) {
-		mPhotoModel = new ArrayList<Photo>();
+	public List<PhotoEntity> getPendingPhotos(Context context) {
+		mPhotoModel = new ArrayList<PhotoEntity>();
 		File[] pendingPhotos = PhotoUtils.getPendingPhotos(context);
 		if (pendingPhotos != null && pendingPhotos.length > 0) {
 			int id = 0;
 			for (File file : pendingPhotos) {
 				if (file.exists()) {
 					id += 1;
-					Photo photo = new Photo();
+					PhotoEntity photo = new PhotoEntity();
 					photo.setDbId(id);
 					photo.setPhoto(PENDING + file.getName());
 					mPhotoModel.add(photo);
@@ -102,14 +94,14 @@ public class ListPhotoModel extends Model {
 		return mPhotoModel;
 	}
 
-	public List<Photo> getPhotosByReportId(int reportId) {
+	public List<PhotoEntity> getPhotosByReportId(int reportId) {
 
-		mPhotoModel = new ArrayList<Photo>();
+		mPhotoModel = new ArrayList<PhotoEntity>();
 		mMedia = Database.mMediaDao.fetchReportPhoto(reportId);
 		if (mMedia != null && mMedia.size() > 0) {
 
-			for (Media item : mMedia) {
-				Photo photo = new Photo();
+			for (MediaEntity item : mMedia) {
+				PhotoEntity photo = new PhotoEntity();
 				photo.setDbId(item.getDbId());
 				photo.setPhoto(item.getLink());
 				mPhotoModel.add(photo);
@@ -120,14 +112,14 @@ public class ListPhotoModel extends Model {
 		return mPhotoModel;
 	}
 
-	public List<Photo> getPhotosByCheckinId(int checkinId) {
+	public List<PhotoEntity> getPhotosByCheckinId(int checkinId) {
 
-		mPhotoModel = new ArrayList<Photo>();
+		mPhotoModel = new ArrayList<PhotoEntity>();
 		mMedia = Database.mMediaDao.fetchCheckinPhoto(checkinId);
 		if (mMedia != null && mMedia.size() > 0) {
 
-			for (Media item : mMedia) {
-				Photo photo = new Photo();
+			for (MediaEntity item : mMedia) {
+				PhotoEntity photo = new PhotoEntity();
 				photo.setDbId(item.getDbId());
 				photo.setPhoto(item.getLink());
 				mPhotoModel.add(photo);
@@ -138,14 +130,14 @@ public class ListPhotoModel extends Model {
 		return mPhotoModel;
 	}
 
-	public List<Photo> getPendingPhotosByReportId(int reportId) {
+	public List<PhotoEntity> getPendingPhotosByReportId(int reportId) {
 
-		mPhotoModel = new ArrayList<Photo>();
+		mPhotoModel = new ArrayList<PhotoEntity>();
 		mMedia = Database.mMediaDao.fetchPendingReportPhoto(reportId);
 		if (mMedia != null && mMedia.size() > 0) {
 
-			for (Media item : mMedia) {
-				Photo photo = new Photo();
+			for (MediaEntity item : mMedia) {
+				PhotoEntity photo = new PhotoEntity();
 				photo.setDbId(item.getDbId());
 				photo.setPhoto(FETCHED + item.getLink());
 				mPhotoModel.add(photo);
@@ -156,14 +148,14 @@ public class ListPhotoModel extends Model {
 		return mPhotoModel;
 	}
 
-	public List<Photo> getPendingPhotosByCheckinId(int checkinId) {
+	public List<PhotoEntity> getPendingPhotosByCheckinId(int checkinId) {
 
-		mPhotoModel = new ArrayList<Photo>();
+		mPhotoModel = new ArrayList<PhotoEntity>();
 		mMedia = Database.mMediaDao.fetchPendingCheckinPhoto(checkinId);
 		if (mMedia != null && mMedia.size() > 0) {
 
-			for (Media item : mMedia) {
-				Photo photo = new Photo();
+			for (MediaEntity item : mMedia) {
+				PhotoEntity photo = new PhotoEntity();
 				photo.setDbId(item.getDbId());
 				photo.setPhoto(FETCHED + item.getLink());
 				mPhotoModel.add(photo);
@@ -183,13 +175,6 @@ public class ListPhotoModel extends Model {
 
 	public String getImage(Context context, String path) {
 		return path;
-		//return ImageManager.getDrawables(context, path,
-			//	Util.getScreenWidth(context));
-	}
-
-	@Override
-	public boolean save() {
-		return false;
 	}
 
 }

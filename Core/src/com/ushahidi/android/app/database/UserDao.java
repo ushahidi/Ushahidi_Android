@@ -27,7 +27,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ushahidi.android.app.entities.User;
+import com.ushahidi.android.app.entities.UserEntity;
 
 /**
  * @author eyedol
@@ -36,7 +36,7 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
 
 	private Cursor cursor;
 
-	private List<User> listUser;
+	private List<UserEntity> listUser;
 
 	private ContentValues initialValues;
 
@@ -53,12 +53,12 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
 	 * @see com.ushahidi.android.app.database.IUserDao#fetchUsersById(int)
 	 */
 	@Override
-	public List<User> fetchUsersById(int userId) {
+	public List<UserEntity> fetchUsersById(int userId) {
 		final String selectionArgs[] = { String.valueOf(userId) };
 
 		final String selection = USER_ID + " = ?";
 
-		listUser = new ArrayList<User>();
+		listUser = new ArrayList<UserEntity>();
 
 		cursor = super.query(USER_TABLE, USER_COLUMNS, selection,
 				selectionArgs, USER_NAME);
@@ -66,7 +66,7 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				User user = cursorToEntity(cursor);
+				UserEntity user = cursorToEntity(cursor);
 				listUser.add(user);
 				cursor.moveToNext();
 			}
@@ -77,9 +77,9 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
 	}
 
 	@Override
-	public List<User> fetchUsers() {
+	public List<UserEntity> fetchUsers() {
 
-		listUser = new ArrayList<User>();
+		listUser = new ArrayList<UserEntity>();
 
 		cursor = super.query(USER_TABLE, USER_COLUMNS, null,
 				null, ID);
@@ -87,7 +87,7 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
 		if (cursor != null) {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				User user = cursorToEntity(cursor);
+				UserEntity user = cursorToEntity(cursor);
 				listUser.add(user);
 				cursor.moveToNext();
 			}
@@ -105,7 +105,7 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
 	 * .app.entities.User)
 	 */
 	@Override
-	public boolean addUser(User user) {
+	public boolean addUser(UserEntity user) {
 		// set values
 		setContentValue(user);
 		return super.insert(USER_TABLE, getContentValue()) > 0;
@@ -117,11 +117,11 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
 	 * @see com.ushahidi.android.app.database.IUserDao#addUser(java.util.List)
 	 */
 	@Override
-	public boolean addUser(List<User> users) {
+	public boolean addUser(List<UserEntity> users) {
 		try {
 			mDb.beginTransaction();
 
-			for (User user : users) {
+			for (UserEntity user : users) {
 
 				addUser(user);
 			}
@@ -152,9 +152,9 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected User cursorToEntity(Cursor cursor) {
+	protected UserEntity cursorToEntity(Cursor cursor) {
 
-		User user = new User();
+		UserEntity user = new UserEntity();
 
 		int idIndex;
 		int userIdIndex;
@@ -185,7 +185,7 @@ public class UserDao extends DbContentProvider implements IUserSchema, IUserDao 
 		return user;
 	}
 
-	private void setContentValue(User user) {
+	private void setContentValue(UserEntity user) {
 		initialValues = new ContentValues();
 		initialValues.put(USER_ID, user.getUserId());
 		initialValues.put(USER_NAME, user.getUsername());

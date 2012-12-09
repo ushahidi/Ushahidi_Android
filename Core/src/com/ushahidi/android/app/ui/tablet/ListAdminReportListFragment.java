@@ -27,7 +27,7 @@ import android.widget.AdapterView;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
-import com.ushahidi.android.app.adapters.ListReportAdapter;
+import com.ushahidi.android.app.adapters.BaseListReportAdapter;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.ProgressTask;

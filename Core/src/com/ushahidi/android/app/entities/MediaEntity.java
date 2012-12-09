@@ -23,7 +23,7 @@ package com.ushahidi.android.app.entities;
 /**
  * @author eyedol
  */
-public class Media implements IDbEntity {
+public class MediaEntity implements IDbEntity {
 
 	private int id;
 
