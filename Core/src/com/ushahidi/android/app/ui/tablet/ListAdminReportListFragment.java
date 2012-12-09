@@ -27,17 +27,17 @@ import android.widget.AdapterView;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
-import com.ushahidi.android.app.adapters.BaseListReportAdapter;
+import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.fragments.BaseListFragment;
-import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.views.ListReportView;
 
 /**
  * @author eyedol
  */
-public class ListAdminReportListFragment extends
-		BaseListFragment<ListReportView, ListReportModel, ListFetchedReportAdapter> {
+public class ListAdminReportListFragment
+		extends
+		BaseListFragment<ListReportView, ReportEntity, ListFetchedReportAdapter> {
 
 	public ListAdminReportListFragment() {
 		super(ListReportView.class, ListFetchedReportAdapter.class,
@@ -48,26 +48,16 @@ public class ListAdminReportListFragment extends
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		// Example of progress queue for executing asynctasks
-		// which will execute TaskOne, then TaskTwo
-		/*
-		 * new ProgressQueue( new TaskOne(this), new TaskTwo(this) ).execute();
-		 */
 	}
 
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
-		// toastShort("onItemClick %d", position);
 	}
 
-	/**
-	 * Example of a ProgressTask
-	 */
 	class TaskOne extends ProgressTask {
 
 		public TaskOne(FragmentActivity activity) {
 			super(activity, R.string.loading_);
-			// pass custom loading message to super call
 		}
 
 		@Override
@@ -81,14 +71,10 @@ public class ListAdminReportListFragment extends
 		}
 	}
 
-	/**
-	 * Another example of a ProgressTask
-	 */
 	class TaskTwo extends ProgressTask {
 
 		public TaskTwo(FragmentActivity activity) {
 			super(activity, R.string.loading_);
-			// pass custom loading message to super call
 		}
 
 		@Override
@@ -104,16 +90,11 @@ public class ListAdminReportListFragment extends
 
 	@Override
 	protected void onLoaded(boolean success) {
-		// TODO Auto-generated method stub
 
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ushahidi.android.app.fragments.BaseListFragment#headerView()
-	 */
 	@Override
 	protected View headerView() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

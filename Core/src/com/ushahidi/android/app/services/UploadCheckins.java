@@ -27,7 +27,6 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;

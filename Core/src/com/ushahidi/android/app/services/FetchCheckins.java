@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.content.Intent;
-import android.text.TextUtils;
 
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;

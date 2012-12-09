@@ -30,6 +30,7 @@ import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.api.CategoriesApi;
 import com.ushahidi.android.app.api.ReportsApi;
 import com.ushahidi.android.app.entities.PhotoEntity;
+import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.fragments.BaseFragment;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.models.ListReportModel;
@@ -44,7 +45,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 
 	private ListReportModel mListReportModel;
 
-	List<ListReportModel> mReportModel;
+	private List<ReportEntity> mReportModel;
 
 	private ReportMapItemizedOverlay<ReportMapOverlayItem> itemOverlay;
 
@@ -77,7 +78,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		super.onActivityCreated(savedInstanceState);
 		mListReportModel = new ListReportModel();
 		mListReportModel.load();
-		mReportModel = mListReportModel.getReports(getActivity());
+		mReportModel = mListReportModel.getReports();
 		showCategories();
 		mHandler = new Handler();
 		apiUtils = new ApiUtils(getActivity());
@@ -179,7 +180,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 				final boolean loaded = mListReportModel
 						.loadReportByCategory(filterCategory);
 				if (loaded) {
-					mReportModel = mListReportModel.getReports(getActivity());
+					mReportModel = mListReportModel.getReports();
 					populateMap();
 				}
 			} catch (Exception e) {
@@ -195,7 +196,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		public void run() {
 			try {
 				mListReportModel.load();
-				mReportModel = mListReportModel.getReports(getActivity());
+				mReportModel = mListReportModel.getReports();
 				populateMap();
 				showCategories();
 			} catch (Exception e) {
@@ -278,10 +279,10 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 			mHandler.post(mMarkersOnMap);
 		}
 	}
-	
+
 	public void onDestroy() {
 		super.onDestroy();
-		if(new RefreshReports(getActivity()).cancel(true)) {
+		if (new RefreshReports(getActivity()).cancel(true)) {
 			refreshState = false;
 			updateRefreshStatus();
 		}
@@ -308,20 +309,21 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		itemOverlay = new ReportMapItemizedOverlay<ReportMapOverlayItem>(
 				marker, map, getActivity());
 		if (mReportModel != null) {
-			for (ListReportModel reportModel : mReportModel) {
-				itemOverlay.addOverlay(new ReportMapOverlayItem(getPoint(
-						Double.valueOf(reportModel.getLatitude()),
-						Double.valueOf(reportModel.getLongitude())),
-						reportModel.getTitle(), Util.limitString(
-								reportModel.getDesc(), 30), reportModel
-								.getThumbnail(), reportModel.getId(), ""));
+			for (ReportEntity reportEntity : mReportModel) {
+				itemOverlay.addOverlay(new ReportMapOverlayItem(getPoint(Double
+						.valueOf(reportEntity.getIncident().getLatitude()),
+						Double.valueOf(reportEntity.getIncident()
+								.getLongitude())), reportEntity.getIncident()
+						.getTitle(), Util.limitString(reportEntity
+						.getIncident().getDescription(), 30), reportEntity
+						.getThumbnail(), reportEntity.getDbId(), ""));
 			}
 		}
 		map.getOverlays().clear();
 		if (itemOverlay.size() > 0) {
 			map.getController().animateTo(itemOverlay.getCenter());
-			map.getController().zoomToSpan(itemOverlay.getLatSpanE6()+50,
-					itemOverlay.getLonSpanE6() +50);
+			map.getController().zoomToSpan(itemOverlay.getLatSpanE6() + 50,
+					itemOverlay.getLonSpanE6() + 50);
 			map.getOverlays().add(itemOverlay);
 		}
 
@@ -336,13 +338,13 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 	}
 
 	private void deleteFetchedReport() {
-		final List<ListReportModel> items = new ListFetchedReportAdapter(
+		final List<ReportEntity> items = new ListFetchedReportAdapter(
 				getActivity()).fetchedReports();
-		for (ListReportModel report : items) {
+		for (ReportEntity report : items) {
 			if (new ListReportModel().deleteAllFetchedReport(report
-					.getReportId())) {
+					.getIncident().getId())) {
 				final List<PhotoEntity> photos = new ListPhotoModel()
-						.getPhotosByReportId(report.getReportId());
+						.getPhotosByReportId(report.getIncident().getId());
 
 				for (PhotoEntity photo : photos) {
 					ImageManager.deletePendingPhoto(getActivity(),
@@ -387,7 +389,9 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 					// right!
 					new CategoriesApi().getCategoriesList();
 
-					status = new ReportsApi().saveReports(getActivity()) ? 0 : 99; ;
+					status = new ReportsApi().saveReports(getActivity()) ? 0
+							: 99;
+					;
 				}
 
 				Thread.sleep(1000);
@@ -410,7 +414,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 					toastLong(R.string.could_not_fetch_reports);
 				} else if (status == 0) {
 					log("successfully fetched");
-					mReportModel = mListReportModel.getReports(getActivity());
+					mReportModel = mListReportModel.getReports();
 					populateMap();
 					showCategories();
 
