@@ -21,6 +21,7 @@
 package com.ushahidi.android.app.entities;
 
 import com.ushahidi.android.app.models.Model;
+import com.ushahidi.java.sdk.api.Category;
 
 public class CategoryEntity extends Model implements IDbEntity {
 
@@ -32,7 +33,7 @@ public class CategoryEntity extends Model implements IDbEntity {
 	private int parentId = 0;
 	private int categoryId = 0;
 
-	public void addCategory(com.ushahidi.java.sdk.api.Category category) {
+	public void addCategory(Category category) {
 		this.setCategoryId(category.getId());
 		this.setCategoryColor(category.getColor());
 		this.setCategoryDescription(category.getDescription());

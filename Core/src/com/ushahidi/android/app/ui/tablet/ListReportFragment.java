@@ -21,11 +21,7 @@
 package com.ushahidi.android.app.ui.tablet;
 
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -49,18 +45,18 @@ import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
+import com.ushahidi.android.app.adapters.BaseListReportAdapter;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.adapters.ListPendingReportAdapter;
-import com.ushahidi.android.app.adapters.BaseListReportAdapter;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.api.CategoriesApi;
 import com.ushahidi.android.app.api.ReportsApi;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IOpenGeoSmsSchema;
 import com.ushahidi.android.app.database.OpenGeoSmsDao;
-import com.ushahidi.android.app.entities.Photo;
-import com.ushahidi.android.app.entities.Report;
+import com.ushahidi.android.app.entities.PhotoEntity;
+import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.fragments.BaseSectionListFragment;
 import com.ushahidi.android.app.models.AddReportModel;
 import com.ushahidi.android.app.models.ListPhotoModel;
@@ -71,20 +67,20 @@ import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
 import com.ushahidi.android.app.ui.phone.ViewReportActivity;
 import com.ushahidi.android.app.util.ApiUtils;
-import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ListReportView;
 import com.ushahidi.java.sdk.api.Incident;
 import com.ushahidi.java.sdk.api.Person;
 import com.ushahidi.java.sdk.api.ReportFields;
-import com.ushahidi.java.sdk.api.json.Date;
+import com.ushahidi.java.sdk.api.json.Response;
 import com.ushahidi.java.sdk.net.content.Body;
 import com.ushahidi.java.sdk.net.content.FileBody;
 
 /**
  * @author eyedol
  */
-public class ListReportFragment extends
-		BaseSectionListFragment<ListReportView, Report, BaseListReportAdapter> {
+public class ListReportFragment
+		extends
+		BaseSectionListFragment<ListReportView, ReportEntity, BaseListReportAdapter> {
 
 	private int mPositionChecked = 0;
 
@@ -242,7 +238,7 @@ public class ListReportFragment extends
 			int itemPosition = pendingReportAdapter.getCount() - position;
 			int itemAt = (pendingReportAdapter.getCount() - itemPosition) - 1;
 			launchAddReport((int) pendingReportAdapter.getItem(itemAt - 1)
-					.getId());
+					.getIncident().getId());
 
 		}
 
@@ -486,20 +482,20 @@ public class ListReportFragment extends
 		super.onActivityResult(requestCode, resultCode, intent);
 	}
 
-	private boolean sendOpenGeoSms(ListReportModel r) {
+	private boolean sendOpenGeoSms(ReportEntity r) {
 		return new OpenGeoSMSSender(getActivity()).sendReport(
 				Preferences.phonenumber, Preferences.openGeoSmsUrl, r);
 	}
 
-	private boolean sendOpenGeoSmsReport(ListReportModel r, int state) {
-		long id = r.getId();
+	private boolean sendOpenGeoSmsReport(ReportEntity r, int state) {
+		long id = r.getDbId();
 		OpenGeoSmsDao dao = Database.mOpenGeoSmsDao;
 		switch (state) {
 		case IOpenGeoSmsSchema.STATE_PENDING:
 			if (sendOpenGeoSms(r)) {
-				String photos = new UploadPhotoAdapter(getActivity())
+				List<File> photos = new UploadPhotoAdapter(getActivity())
 						.pendingPhotos((int) id);
-				if (photos != null && !"".equals(photos)) {
+				if ((photos != null) && (photos.size() > 0)) {
 					dao.setReportState(id, IOpenGeoSmsSchema.STATE_SENT);
 				} else {
 					deletePendingReport((int) id);
@@ -510,22 +506,19 @@ public class ListReportFragment extends
 				return false;
 			}
 		case IOpenGeoSmsSchema.STATE_SENT:
-			String photos = new UploadPhotoAdapter(getActivity())
+			List<File> photos = new UploadPhotoAdapter(getActivity())
 					.pendingPhotos((int) id);
-			if (photos != null && !"".equals(photos)) {
+			if ((photos != null) && (photos.size() > 0)) {
 
 				String url = Preferences.domain + "opengeosms/attach";
 				String m = OpenGeoSMSSender.createReport(
 						Preferences.openGeoSmsUrl, r);
-				String filename = new UploadPhotoAdapter(getActivity())
-						.pendingPhotos((int) id);
 
-				HashMap<String, String> params = new HashMap<String, String>();
-				params.put("m", m);
-				params.put("filename", filename);
 				Body body = new Body();
 				body.addField("m", m);
-				body.addField("filename", new FileBody(new File(filename)));
+				for (File file : photos) {
+					body.addField("filename", new FileBody(file));
+				}
 
 				ReportsApi report = new ReportsApi();
 				if (!report.upload(url, body)) {
@@ -540,16 +533,16 @@ public class ListReportFragment extends
 		return false;
 	}
 
-	private List<Report> mPendingReports;
+	private List<ReportEntity> mPendingReports;
 
 	private void preparePendingReports() {
 		mPendingReports = pendingReportAdapter.pendingReports();
 		if (mPendingReports != null) {
-			for (Report report : mPendingReports) {
-				long rid = report.getIncident().getDbId();
-				String categories = pendingReportAdapter
-						.fetchCategoriesId((int) rid);
-				// report.setCategories(categories); setCategories(categories);
+			for (ReportEntity report : mPendingReports) {
+				long rid = report.getDbId();
+
+				report.setCategories(pendingReportAdapter
+						.fetchCategoriesId((int) rid));
 			}
 		}
 	}
@@ -557,15 +550,12 @@ public class ListReportFragment extends
 	private boolean uploadPendingReports() {
 
 		boolean retVal = true;
-		StringBuilder urlBuilder = new StringBuilder(Preferences.domain);
-		final SimpleDateFormat FORMATTER = new SimpleDateFormat(
-				"MM/dd/yyyy h m a", Locale.US);
+
 		ReportFields fields = new ReportFields();
 		Incident incident = new Incident();
-
-		urlBuilder.append("/api");
+		ReportsApi reportApi = new ReportsApi();
 		if (mPendingReports != null) {
-			for (Report report : mPendingReports) {
+			for (ReportEntity report : mPendingReports) {
 				long rid = report.getDbId();
 				;
 				int state = Database.mOpenGeoSmsDao.getReportState(rid);
@@ -579,11 +569,8 @@ public class ListReportFragment extends
 				// Set the incident details
 				incident.setTitle(report.getIncident().getTitle());
 				incident.setDescription(report.getIncident().getDescription());
-				try {
-					incident.setDate(report.getIncident().getDate());
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
+				incident.setDate(report.getIncident().getDate());
+
 				incident.setLatitude(report.getIncident().getLatitude());
 				incident.setLongitude(report.getIncident().getLongitude());
 				incident.setLocationName(report.getIncident().getLocationName());
@@ -594,35 +581,19 @@ public class ListReportFragment extends
 						Preferences.lastname, Preferences.email));
 
 				// Add categories
-
 				fields.addCategory(report.getCategories());
+
 				// Add photos
-				HashMap<String, String> mParams = new HashMap<String, String>();
-				mParams.put("task", "report");
-				mParams.put("incident_title", report.getTitle());
-				mParams.put("incident_description", report.getDesc());
-
-				mParams.put("incident_category", report.getCategories());
-				mParams.put("latitude", String.valueOf(report.getLatitude()));
-				mParams.put("longitude", String.valueOf(report.getLongitude()));
-				mParams.put("location_name", report.getLocation());
-				mParams.put("person_first", Preferences.firstname);
-				mParams.put("person_last", Preferences.lastname);
-				mParams.put("person_email", Preferences.email);
-
-				// load filenames
-				mParams.put("filename", new UploadPhotoAdapter(getActivity())
+				fields.addPhotos(new UploadPhotoAdapter(getActivity())
 						.pendingPhotos((int) report.getDbId()));
 
 				// upload
-				/*
-				 * try { //TODO do file upload if (new
-				 * ReportsHttpClient(getActivity()).PostFileUpload(
-				 * urlBuilder.toString(), mParams)) { deletePendingReport((int)
-				 * report.getId()); } else { retVal = false; } } catch
-				 * (IOException e) { retVal = false; }
-				 */
-
+				Response response = reportApi.submitReport(fields);
+				if (response.getErrorCode() == 0) {
+					deletePendingReport((int) report.getDbId());
+				} else {
+					retVal = false;
+				}
 			}
 		}
 		return retVal;
@@ -646,15 +617,14 @@ public class ListReportFragment extends
 	}
 
 	private void deleteFetchedReport() {
-		final List<ListReportModel> items = fetchedReportAdapter
-				.fetchedReports();
-		for (ListReportModel report : items) {
+		final List<ReportEntity> items = fetchedReportAdapter.fetchedReports();
+		for (ReportEntity report : items) {
 			if (new ListReportModel().deleteAllFetchedReport(report
-					.getReportId())) {
-				final List<Photo> photos = new ListPhotoModel()
-						.getPhotosByReportId(report.getReportId());
+					.getIncident().getId())) {
+				final List<PhotoEntity> photos = new ListPhotoModel()
+						.getPhotosByReportId(report.getIncident().getId());
 
-				for (Photo photo : photos) {
+				for (PhotoEntity photo : photos) {
 					ImageManager.deletePendingPhoto(getActivity(),
 							"/" + photo.getPhoto());
 				}

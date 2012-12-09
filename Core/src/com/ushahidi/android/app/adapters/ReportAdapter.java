@@ -41,8 +41,8 @@ import com.ushahidi.android.app.util.Util;
  * @author eyedol
  * 
  */
-public abstract class ReportAdapter extends BaseListAdapter<ReportEntity> implements
-		Filterable {
+public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
+		implements Filterable {
 
 	class Widgets extends com.ushahidi.android.app.views.View {
 
@@ -180,11 +180,9 @@ public abstract class ReportAdapter extends BaseListAdapter<ReportEntity> implem
 	}
 
 	private String status(int position) {
-		final String s = getItem(position).getIncident().getVerified() == 0 ? context
-				.getString(R.string.unverified) : context
-				.getString(R.string.verified);
+		return Util.setVerificationStatus(getItem(position).getIncident()
+				.getVerified(), context);
 
-		return Util.capitalizeString(s);
 	}
 
 	// Implements fitering pattern for the list items.

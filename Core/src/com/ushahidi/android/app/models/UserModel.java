@@ -21,7 +21,6 @@ package com.ushahidi.android.app.models;
 
 import java.util.List;
 
-import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.UserEntity;
 
 /**
@@ -33,17 +32,5 @@ import com.ushahidi.android.app.entities.UserEntity;
 public class UserModel<users> extends Model {
 
 	public List<UserEntity> users;
-	
-	@Override
-	public boolean load() {
-		users = Database.mUserDao.fetchUsers();
-		return true;
-	}
-
-	@Override
-	public boolean save() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 }

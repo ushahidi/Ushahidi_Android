@@ -112,8 +112,8 @@ public class UploadCheckins extends SyncServices {
 		pendingPhoto = new UploadPhotoAdapter(this);
 		if (bundle != null) {
 
-			final String photo = new UploadPhotoAdapter(this)
-					.pendingCheckinPhotos();
+		/*	final String photo = new UploadPhotoAdapter(this)
+					.pendingCheckinPhotos();*/
 
 			mParams.put("task", "checkin");
 			mParams.put("action", "ci");
@@ -126,9 +126,9 @@ public class UploadCheckins extends SyncServices {
 			mParams.put("email", bundle.getString("email"));
 
 			// load filenames
-			if (!TextUtils.isEmpty(photo)) {
+			/*if (!TextUtils.isEmpty(photo)) {
 				mParams.put("filename", photo);
-			}
+			}*/
 			// upload
 			try {
 				if (new CheckinHttpClient(this).PostFileUpload(

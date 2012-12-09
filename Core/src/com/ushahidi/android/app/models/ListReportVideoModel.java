@@ -55,16 +55,6 @@ public class ListReportVideoModel extends Model {
 		this.video = video;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ushahidi.android.app.models.Model#load(android.content.Context)
-	 */
-	@Override
-	public boolean load() {
-		return false;
-	}
-
 	public boolean load(int reportId) {
 		mMedia = Database.mMediaDao.fetchReportVideo(reportId);
 		if (mMedia != null) {
@@ -106,17 +96,6 @@ public class ListReportVideoModel extends Model {
 			return mMedia.size();
 		}
 		return 0;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ushahidi.android.app.models.Model#save(android.content.Context)
-	 */
-	@Override
-	public boolean save() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

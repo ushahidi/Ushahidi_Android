@@ -81,6 +81,7 @@ import com.ushahidi.android.app.tasks.GeocoderTask;
 import com.ushahidi.android.app.util.PhotoUtils;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.AddReportView;
+import com.ushahidi.java.sdk.api.Incident;
 
 /**
  * @author eyedol
@@ -408,16 +409,17 @@ public class AddReportActivity extends
 		File[] pendingPhotos = PhotoUtils.getPendingPhotos(this);
 
 		ReportEntity report = new ReportEntity();
-
-		report.setTitle(view.mIncidentTitle.getText().toString());
-		report.setDescription(view.mIncidentDesc.getText().toString());
-		report.setLatitude(Double.valueOf(view.mLatitude.getText().toString()));
-		report.setLongitude(Double
-				.valueOf(view.mLongitude.getText().toString()));
-		report.setLocationName(view.mIncidentLocation.getText().toString());
-		report.setReportDate(mDateToSubmit);
-		report.setMode(0);
-		report.setVerified(0);
+		Incident incident = new Incident();
+		incident.setTitle(view.mIncidentTitle.getText().toString());
+		incident.setDescription(view.mIncidentDesc.getText().toString());
+		incident.setMode(0);
+		incident.setLocationName(view.mIncidentLocation.getText().toString());
+		incident.setVerified(0);
+		incident.setLatitude(Double
+				.valueOf(view.mLatitude.getText().toString()));
+		incident.setLongitude(Double.valueOf(view.mLongitude.getText()
+				.toString()));
+		report.setIncident(incident);
 		report.setPending(1);
 
 		if (id == 0) {
@@ -465,14 +467,17 @@ public class AddReportActivity extends
 		// set text part of reports
 		ReportEntity report = model.fetchPendingReportById(reportId);
 		if (report != null) {
-			view.mIncidentTitle.setText(report.getTitle());
-			view.mIncidentDesc.setText(report.getDescription());
-			view.mLongitude.setText(String.valueOf(report.getLongitude()));
-			view.mLatitude.setText(String.valueOf(report.getLatitude()));
-			view.mIncidentLocation.setText(report.getLocationName());
+			view.mIncidentTitle.setText(report.getIncident().getTitle());
+			view.mIncidentDesc.setText(report.getIncident().getDescription());
+			view.mLongitude.setText(String.valueOf(report.getIncident()
+					.getLongitude()));
+			view.mLatitude.setText(String.valueOf(report.getIncident()
+					.getLatitude()));
+			view.mIncidentLocation.setText(report.getIncident()
+					.getLocationName());
 
 			// set date and time
-			setDateAndTime(report.getReportDate());
+			setDateAndTime(report.getIncident().getDate().toString());
 		}
 
 		// set Categories.
@@ -504,7 +509,8 @@ public class AddReportActivity extends
 			for (View v : views) {
 				v.setEnabled(false);
 			}
-			updateMarker(report.getLatitude(), report.getLongitude(), true);
+			updateMarker(report.getIncident().getLatitude(), report
+					.getIncident().getLongitude(), true);
 		}
 	}
 
@@ -775,7 +781,8 @@ public class AddReportActivity extends
 	// fetch categories
 	public String[] showCategories() {
 		ListReportModel mListReportModel = new ListReportModel();
-		List<CategoryEntity> listCategories = mListReportModel.getAllCategories();
+		List<CategoryEntity> listCategories = mListReportModel
+				.getAllCategories();
 		if (listCategories != null && listCategories.size() > 0) {
 			int categoryCount = listCategories.size();
 			int categoryAmount = 0;
@@ -918,7 +925,8 @@ public class AddReportActivity extends
 		// FIXME: Look into making this more efficient
 		if (mVectorCategories != null && mVectorCategories.size() > 0) {
 			ListReportModel mListReportModel = new ListReportModel();
-			List<CategoryEntity> listCategories = mListReportModel.getAllCategories();
+			List<CategoryEntity> listCategories = mListReportModel
+					.getAllCategories();
 			if (listCategories != null && listCategories.size() > 0) {
 				int categoryCount = listCategories.size();
 				int categoryAmount = 0;
@@ -932,7 +940,8 @@ public class AddReportActivity extends
 				mCategoryLength = categories.length;
 
 				int i = 0;
-				for (CategoryEntity category : mListReportModel.getAllCategories()) {
+				for (CategoryEntity category : mListReportModel
+						.getAllCategories()) {
 
 					if (mVectorCategories.contains(String.valueOf(category
 							.getCategoryId()))) {

@@ -20,12 +20,19 @@
 
 package com.ushahidi.android.app.entities;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import android.graphics.drawable.Drawable;
 
 import com.ushahidi.android.app.models.Model;
+import com.ushahidi.java.sdk.api.Category;
+import com.ushahidi.java.sdk.api.Comment;
 import com.ushahidi.java.sdk.api.Incident;
+import com.ushahidi.java.sdk.api.Media;
 
 public class ReportEntity extends Model implements IDbEntity {
 
@@ -39,25 +46,25 @@ public class ReportEntity extends Model implements IDbEntity {
 
 	private Incident incident;
 
-	private List<MediaEntity> media;
+	private List<Media> media;
 
-	private List<CommentEntity> comments;
+	private List<Comment> comments;
 
-	private List<CategoryEntity> categories;
+	private List<Category> categories;
 
 	public void setIncident(Incident incident) {
 		this.incident = incident;
 	}
 
-	public void setMedia(List<MediaEntity> media) {
+	public void setMedia(List<Media> media) {
 		this.media = media;
 	}
 
-	public void setComments(List<CommentEntity> comments) {
+	public void setComments(List<Comment> comments) {
 		this.comments = comments;
 	}
 
-	public void setCategories(List<com.ushahidi.CategoryEntity> categories) {
+	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
 
@@ -67,6 +74,14 @@ public class ReportEntity extends Model implements IDbEntity {
 
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
+	}
+
+	public void setArrow(Drawable arrow) {
+		this.arrow = arrow;
+	}
+
+	public Drawable getArrow() {
+		return this.arrow;
 	}
 
 	public String getThumbnail() {
@@ -81,15 +96,15 @@ public class ReportEntity extends Model implements IDbEntity {
 		return this.incident;
 	}
 
-	public List<MediaEntity> getMedia() {
+	public List<Media> getMedia() {
 		return media;
 	}
 
-	public List<CommentEntity> getComments() {
+	public List<Comment> getComments() {
 		return comments;
 	}
 
-	public List<CategoryEntity> getCategories() {
+	public List<Category> getCategories() {
 		return this.categories;
 	}
 

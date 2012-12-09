@@ -32,7 +32,7 @@ import com.ushahidi.android.app.util.Util;
 /**
  * @author eyedol
  */
-public class ListReportModel extends ReportEntity {
+public class ListReportModel{
 
 	public List<ReportEntity> mReports;
 

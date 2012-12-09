@@ -14,7 +14,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.telephony.SmsManager;
 
-import com.ushahidi.android.app.models.ListReportModel;
+import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.util.Util;
 
 /**
@@ -28,17 +28,20 @@ public class OpenGeoSMSSender {
 		mContext = c;
 	}
 
-	public static String createReport(String url, ListReportModel report) {
-		String date = Util.formatDate("MMMM dd, yyyy 'at' hh:mm:ss aaa",
-				report.getDate(), "MM/dd/yyyy hh:mm a", null, Locale.US)
-				.toLowerCase();
+	public static String createReport(String url, ReportEntity report) {
+		String date = Util.toLowerCase(Util.formatDate(
+				"MMMM dd, yyyy 'at' hh:mm:ss aaa", Util.datePattern(
+						"MMMM dd, yyyy 'at' hh:mm:ss aaa", report.getIncident()
+								.getDate()), "MM/dd/yyyy hh:mm a", null,
+				Locale.US));
 
-		String payload = String.format("%s#%s@%s\n%s\n%s", report.getTitle(),
-				report.getCategories(), date, report.getLocation(),
-				report.getDesc());
+		String payload = String.format("%s#%s@%s\n%s\n%s", report.getIncident()
+				.getTitle(), report.getCategories(), date, report.getIncident()
+				.getLocationName(), report.getIncident().getDescription());
 
-		return composeOpenGeoSMS(url, String.valueOf(report.getLatitude()),
-				String.valueOf(report.getLongitude()), payload);
+		return composeOpenGeoSMS(url,
+				String.valueOf(report.getIncident().getLatitude()),
+				String.valueOf(report.getIncident().getLongitude()), payload);
 	}
 
 	private class Receiver extends BroadcastReceiver {
@@ -74,7 +77,7 @@ public class OpenGeoSMSSender {
 
 	}
 
-	public boolean sendReport(String address, String url, ListReportModel report) {
+	public boolean sendReport(String address, String url, ReportEntity report) {
 
 		String smsMsg = createReport(url, report);
 		SmsManager smsManager = SmsManager.getDefault();

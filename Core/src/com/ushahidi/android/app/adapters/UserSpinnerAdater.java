@@ -112,23 +112,23 @@ public class UserSpinnerAdater extends BaseArrayAdapter<UserEntity> {
 	public void refresh() {
 		UserModel<UserEntity> mUserModel = new UserModel<UserEntity>();
 		List<UserEntity> listUsers;
-		if (mUserModel.load()) {
-			listUsers = mUserModel.users;
-			if (listUsers != null && listUsers.size() > 0) {
+		// if (mUserModel.load()) {
+		listUsers = mUserModel.users;
+		if (listUsers != null && listUsers.size() > 0) {
 
-				// This is to make room for all users label
-				UserEntity sUser = new UserEntity();
-				sUser.setUserId(0);
-				sUser.setDbId(0);
-				sUser.setUsername(context.getString(R.string.all_users));
-				sUser.setColor(DEFAULT_COLOR);
-				add(sUser.getUsername(), sUser);
+			// This is to make room for all users label
+			UserEntity sUser = new UserEntity();
+			sUser.setUserId(0);
+			sUser.setDbId(0);
+			sUser.setUsername(context.getString(R.string.all_users));
+			sUser.setColor(DEFAULT_COLOR);
+			add(sUser.getUsername(), sUser);
 
-				for (UserEntity user : listUsers) {
-					add(user.getUsername(), user);
-				}
+			for (UserEntity user : listUsers) {
+				add(user.getUsername(), user);
 			}
 		}
+		// }
 
 	}
 

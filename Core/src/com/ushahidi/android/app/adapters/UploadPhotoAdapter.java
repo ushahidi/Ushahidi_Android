@@ -19,6 +19,8 @@
  **/
 package com.ushahidi.android.app.adapters;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -100,40 +102,27 @@ public class UploadPhotoAdapter extends BaseListAdapter<PhotoEntity> {
 
 	}
 
-	public String pendingPhotos(int reportId) {
+	public List<File> pendingPhotos(int reportId) {
 		mListPhotoModel = new ListPhotoModel();
 		items = mListPhotoModel.getPendingPhotosByReportId(reportId);
-		StringBuilder photos = new StringBuilder();
-		for (PhotoEntity photo : items) {
-			if (photo.getPhoto().length() > 0) {
-				photos.append(photo.getPhoto() + ",");
-			}
-
-		}
-
-		// delete the last |
-		if (photos.length() > 0) {
-			photos.deleteCharAt(photos.length() - 1);
-		}
-		return photos.toString();
+		return getPhotos(items);
 	}
-	
-	public String pendingCheckinPhotos() {
+
+	private List<File> getPhotos(List<PhotoEntity> photoEntities) {
+		List<File> photos = new ArrayList<File>();
+		for (PhotoEntity photo : photoEntities) {
+			photos.add(new File(ImageManager.getPhotoPath(context,
+					photo.getPhoto())));
+
+		}
+
+		return photos;
+	}
+
+	public List<File> pendingCheckinPhotos() {
 		mListPhotoModel = new ListPhotoModel();
 		items = mListPhotoModel.getPendingPhotos(context);
-		StringBuilder photos = new StringBuilder();
-		for (PhotoEntity photo : items) {
-			if (photo.getPhoto().length() > 0) {
-				photos.append(photo.getPhoto() + ",");
-			}
-
-		}
-
-		// delete the last |
-		if (photos.length() > 0) {
-			photos.deleteCharAt(photos.length() - 1);
-		}
-		return photos.toString();
+		return getPhotos(items);
 	}
 
 	private Drawable getPhoto(String fileName) {

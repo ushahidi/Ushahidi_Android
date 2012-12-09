@@ -77,13 +77,13 @@ public class FetchCheckins extends SyncServices {
 				mParams.put("firstname", Preferences.firstname);
 				mParams.put("lastname", Preferences.lastname);
 				mParams.put("email", Preferences.email);
-				final String photo = new UploadPhotoAdapter(this)
-						.pendingPhotos((int) checkin.getCheckinId());
+			//	final String photo = new UploadPhotoAdapter(this)
+				//		.pendingPhotos((int) checkin.getCheckinId());
 
 				// load filenames
-				if (!TextUtils.isEmpty(photo)) {
-					mParams.put("filename", photo);
-				}
+				//if (!TextUtils.isEmpty(photo)) {
+				//	mParams.put("filename", photo);
+				//}
 				// upload
 				try {
 					if (new CheckinHttpClient(this).PostFileUpload(

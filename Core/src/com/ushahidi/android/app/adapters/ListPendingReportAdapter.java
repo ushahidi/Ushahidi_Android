@@ -1,11 +1,13 @@
 package com.ushahidi.android.app.adapters;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 
 import com.ushahidi.android.app.entities.CategoryEntity;
 import com.ushahidi.android.app.entities.ReportEntity;
+import com.ushahidi.java.sdk.api.Category;
 
 public class ListPendingReportAdapter extends ReportAdapter {
 
@@ -41,20 +43,19 @@ public class ListPendingReportAdapter extends ReportAdapter {
 		}
 	}
 
-	public String fetchCategoriesId(int reportId) {
-		StringBuilder categories = new StringBuilder();
+	public List<Category> fetchCategoriesId(int reportId) {
+		List<Category> categories = new ArrayList<Category>();
+		Category c = new Category();
 		for (CategoryEntity category : mListReportModel
 				.getCategoriesByReportId(reportId)) {
-			if (category.getCategoryTitle().length() > 0) {
-				categories.append(category.getCategoryId() + ",");
-			}
+			c.setId(category.getCategoryId());
+			categories.add(c);
+			
 
 		}
 
 		// delete the last ,
-		if (categories.length() > 0) {
-			categories.deleteCharAt(categories.length() - 1);
-		}
-		return categories.toString();
+		
+		return categories;
 	}
 }

@@ -38,10 +38,12 @@ import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseMapViewActivity;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
+import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.models.ViewReportModel;
 import com.ushahidi.android.app.services.FetchReportsComments;
 import com.ushahidi.android.app.services.SyncServices;
+import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ViewReportView;
 
 /**
@@ -52,7 +54,7 @@ public class ViewReportActivity extends
 
 	private ListReportModel reports;
 
-	private List<ListReportModel> report;
+	private List<ReportEntity> report;
 
 	private ListFetchedReportAdapter reportAdapter;
 
@@ -166,19 +168,22 @@ public class ViewReportActivity extends
 	}
 
 	private void initReport(int position) {
-		report = reports.getReports(this);
+		report = reports.getReports();
 
 		if (report != null) {
-			reportId = (int) report.get(position).getReportId();
+			reportId = (int) report.get(position).getIncident().getId();
 
-			reportTitle = report.get(position).getTitle();
+			reportTitle = report.get(position).getIncident().getTitle();
 
-			view.setBody(report.get(position).getDesc());
+			view.setBody(report.get(position).getIncident().getDescription());
 			view.setCategory(fetchCategories(reportId));
-			view.setLocation(report.get(position).getLocation());
-			view.setDate(report.get(position).getDate());
-			view.setTitle(report.get(position).getTitle());
-			view.setStatus(report.get(position).getStatus());
+			view.setLocation(report.get(position).getIncident()
+					.getLocationName());
+			view.setDate(report.get(position).getIncident().getDate()
+					.toString());
+			view.setTitle(reportTitle);
+			view.setStatus(Util.setVerificationStatus(report.get(position)
+					.getIncident().getVerified(), this));
 			view.setListNews((int) reportId);
 			view.setListPhotos((int) reportId);
 			view.setListVideos((int) reportId);
@@ -241,7 +246,8 @@ public class ViewReportActivity extends
 					});
 
 			centerLocationWithMarker(getPoint(report.get(position)
-					.getLatitude(), report.get(position).getLongitude()));
+					.getIncident().getLatitude(), report.get(position)
+					.getIncident().getLongitude()));
 			view.mapView.setBuiltInZoomControls(false);
 			int page = position;
 			this.setTitle(page + 1);

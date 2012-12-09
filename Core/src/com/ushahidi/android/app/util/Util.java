@@ -60,6 +60,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.ushahidi.android.app.MainApplication;
+import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.net.MainGeocoder;
 
 /**
@@ -194,17 +195,17 @@ public class Util {
 		}
 		return buf.toString();
 	}
-	
+
 	public static String formatDate(String dateFormat, String date,
-			String toFormat){
+			String toFormat) {
 		return formatDate(dateFormat, date, toFormat, null, null);
 	}
-	
+
 	public static String datePattern(String dateFormat, Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
 		return sdf.format(date);
 	}
-	
+
 	/**
 	 * Format date into more readable format.
 	 * 
@@ -217,16 +218,14 @@ public class Util {
 
 		String formatted = "";
 
-		DateFormat formatter = fromLocale == null?
-				new SimpleDateFormat(dateFormat):
-				new SimpleDateFormat(dateFormat, fromLocale);
+		DateFormat formatter = fromLocale == null ? new SimpleDateFormat(
+				dateFormat) : new SimpleDateFormat(dateFormat, fromLocale);
 		try {
 			Date dateStr = formatter.parse(date);
 			formatted = formatter.format(dateStr);
 			Date formatDate = formatter.parse(formatted);
-			formatter = toLocale == null ?
-					new SimpleDateFormat(toFormat):
-					new SimpleDateFormat(toFormat, toLocale);
+			formatter = toLocale == null ? new SimpleDateFormat(toFormat)
+					: new SimpleDateFormat(toFormat, toLocale);
 			formatted = formatter.format(formatDate);
 
 		} catch (ParseException e) {
@@ -234,6 +233,18 @@ public class Util {
 			e.printStackTrace();
 		}
 		return formatted;
+	}
+
+	public static Date formatDate(String date) {
+		final SimpleDateFormat FORMATTER = new SimpleDateFormat(
+				"MM/dd/yyyy h m a", Locale.US);
+		try {
+			return FORMATTER.parse(date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -582,9 +593,33 @@ public class Util {
 		return ((ActivityManager) context
 				.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 	}
-	
+
+	/**
+	 * Convert a given string to a lower case based on the default locate set on
+	 * the device.
+	 * 
+	 * @param text
+	 * @return
+	 */
 	public static String toLowerCase(String text) {
 		return text.toLowerCase(Locale.getDefault());
+	}
+
+	/**
+	 * Sets the reports verification status.
+	 * 
+	 * @param verify
+	 *            verify status code.
+	 * 
+	 * @return The verification name
+	 */
+	public static String setVerificationStatus(int verify, Context context) {
+
+		final String s = verify == 0 ? context.getString(R.string.unverified)
+				: context.getString(R.string.verified);
+
+		return Util.capitalizeString(s);
+
 	}
 
 	/**
@@ -595,7 +630,7 @@ public class Util {
 	public static boolean hasExternalCacheDir() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
 	}
-	
+
 	public void log(String message) {
 		if (MainApplication.LOGGING_MODE)
 			Log.i(getClass().getName(), message);

@@ -28,6 +28,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.ushahidi.android.app.entities.ReportEntity;
+import com.ushahidi.android.app.util.Util;
+import com.ushahidi.java.sdk.api.Incident;
 
 public class ReportDao extends DbContentProvider implements IReportDao,
 		IReportSchema {
@@ -312,7 +314,8 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	@SuppressWarnings("unchecked")
 	@Override
 	protected ReportEntity cursorToEntity(Cursor cursor) {
-		ReportEntity report = new ReportEntity();
+		ReportEntity r= new ReportEntity();
+		Incident report = new Incident();
 		int idIndex;
 		int reportIdIndex;
 		int titleIndex;
@@ -320,20 +323,18 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 		int verifiedIndex;
 		int locationIndex;
 		int descIndex;
-		int mediaIndex;
-		int imageIndex;
 		int longitudeIndex;
 		int latitudeIndex;
 
 		if (cursor != null) {
 			if (cursor.getColumnIndex(ID) != -1) {
 				idIndex = cursor.getColumnIndexOrThrow(ID);
-				report.setDbId(cursor.getInt(idIndex));
+				r.setDbId(cursor.getInt(idIndex));
 			}
 
 			if (cursor.getColumnIndex(INCIDENT_ID) != -1) {
 				reportIdIndex = cursor.getColumnIndexOrThrow(INCIDENT_ID);
-				report.setReportId(cursor.getInt(reportIdIndex));
+				report.setId(cursor.getInt(reportIdIndex));
 			}
 
 			if (cursor.getColumnIndex(INCIDENT_TITLE) != -1) {
@@ -343,7 +344,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 			if (cursor.getColumnIndex(INCIDENT_DATE) != -1) {
 				dateIndex = cursor.getColumnIndexOrThrow(INCIDENT_DATE);
-				report.setReportDate(cursor.getString(dateIndex));
+				report.setDate(Util.formatDate(cursor.getString(dateIndex)));
 			}
 
 			if (cursor.getColumnIndex(INCIDENT_VERIFIED) != -1) {
@@ -361,16 +362,6 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 				report.setDescription(cursor.getString(descIndex));
 			}
 
-			if (cursor.getColumnIndex(INCIDENT_MEDIA) != -1) {
-				mediaIndex = cursor.getColumnIndexOrThrow(INCIDENT_MEDIA);
-				report.setMedia(cursor.getString(mediaIndex));
-			}
-
-			if (cursor.getColumnIndex(INCIDENT_IMAGE) != -1) {
-				imageIndex = cursor.getColumnIndexOrThrow(INCIDENT_IMAGE);
-				report.setImage(cursor.getString(imageIndex));
-			}
-
 			if (cursor.getColumnIndex(INCIDENT_LOC_LATITUDE) != -1) {
 				latitudeIndex = cursor
 						.getColumnIndexOrThrow(INCIDENT_LOC_LATITUDE);
@@ -382,22 +373,24 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 						.getColumnIndexOrThrow(INCIDENT_LOC_LONGITUDE);
 				report.setLongitude(cursor.getDouble(longitudeIndex));
 			}
+			r.setIncident(report);
 		}
 
-		return report;
+		
+		return r;
 	}
 
 	private void setContentValue(ReportEntity report) {
 		initialValues = new ContentValues();
-		initialValues.put(INCIDENT_ID, report.getReportId());
-		initialValues.put(INCIDENT_TITLE, report.getTitle());
-		initialValues.put(INCIDENT_DESC, report.getDescription());
-		initialValues.put(INCIDENT_DATE, report.getReportDate());
-		initialValues.put(INCIDENT_MODE, report.getMode());
-		initialValues.put(INCIDENT_VERIFIED, report.getVerified());
-		initialValues.put(INCIDENT_LOC_NAME, report.getLocationName());
-		initialValues.put(INCIDENT_LOC_LATITUDE, report.getLatitude());
-		initialValues.put(INCIDENT_LOC_LONGITUDE, report.getLongitude());
+		initialValues.put(INCIDENT_ID, report.getIncident().getId());
+		initialValues.put(INCIDENT_TITLE, report.getIncident().getTitle());
+		initialValues.put(INCIDENT_DESC, report.getIncident().getDescription());
+		initialValues.put(INCIDENT_DATE, report.getIncident().getDate().toString());
+		initialValues.put(INCIDENT_MODE, report.getIncident().getMode());
+		initialValues.put(INCIDENT_VERIFIED, report.getIncident().getVerified());
+		initialValues.put(INCIDENT_LOC_NAME, report.getIncident().getLocationName());
+		initialValues.put(INCIDENT_LOC_LATITUDE, report.getIncident().getLatitude());
+		initialValues.put(INCIDENT_LOC_LONGITUDE, report.getIncident().getLongitude());
 		initialValues.put(INCIDENT_PENDING, report.getPending());
 	}
 
