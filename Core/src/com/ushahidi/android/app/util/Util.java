@@ -244,7 +244,7 @@ public class Util {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return new Date();
 	}
 
 	/**
@@ -601,8 +601,10 @@ public class Util {
 	 * @param text
 	 * @return
 	 */
-	public static String toLowerCase(String text) {
-		return text.toLowerCase(Locale.getDefault());
+	public static String toLowerCase(String text, Context context) {
+
+		return text
+				.toLowerCase(context.getResources().getConfiguration().locale);
 	}
 
 	/**

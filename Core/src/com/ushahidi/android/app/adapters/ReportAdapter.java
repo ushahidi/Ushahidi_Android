@@ -200,16 +200,16 @@ public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
 			results.count = items.size();
 
 			if (constraint != null && constraint.toString().length() > 0) {
-				constraint = Util.toLowerCase(constraint.toString());
+				constraint = Util.toLowerCase(constraint.toString(), context);
 				ArrayList<ReportEntity> filteredItems = new ArrayList<ReportEntity>();
 				ArrayList<ReportEntity> itemsHolder = new ArrayList<ReportEntity>();
 				itemsHolder.addAll(items);
 				for (ReportEntity report : itemsHolder) {
-					if (Util.toLowerCase(report.getIncident().getTitle())
-							.contains(constraint)
+					if (Util.toLowerCase(report.getIncident().getTitle(),
+							context).contains(constraint)
 							|| Util.toLowerCase(
-									report.getIncident().getLocationName())
-									.contains(constraint)) {
+									report.getIncident().getLocationName(),
+									context).contains(constraint)) {
 						filteredItems.add(report);
 					}
 				}

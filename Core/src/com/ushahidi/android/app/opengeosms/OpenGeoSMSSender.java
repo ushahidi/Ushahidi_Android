@@ -22,7 +22,7 @@ import com.ushahidi.android.app.util.Util;
  */
 public class OpenGeoSMSSender {
 
-	private Context mContext;
+	private static Context mContext;
 
 	public OpenGeoSMSSender(Context c) {
 		mContext = c;
@@ -33,7 +33,7 @@ public class OpenGeoSMSSender {
 				"MMMM dd, yyyy 'at' hh:mm:ss aaa", Util.datePattern(
 						"MMMM dd, yyyy 'at' hh:mm:ss aaa", report.getIncident()
 								.getDate()), "MM/dd/yyyy hh:mm a", null,
-				Locale.US));
+				Locale.US),mContext);
 
 		String payload = String.format("%s#%s@%s\n%s\n%s", report.getIncident()
 				.getTitle(), report.getCategories(), date, report.getIncident()

@@ -201,7 +201,7 @@ public class ListReportFragment
 
 		if (filterCategory == 0) {
 			refreshReportLists();
-			showCategories();
+			//showCategories();
 
 		} else {
 			reportByCategoryList();
