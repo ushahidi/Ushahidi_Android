@@ -87,55 +87,6 @@ public class ListReportModel{
 		return mReports;
 	}
 	
-	
-	
-	/*public List<ListReportModel> getReports(Context context) {
-		reportModel = new ArrayList<ListReportModel>();
-		String d = null;
-		if (mReports != null && mReports.size() > 0) {
-			
-			for (Report item : mReports) {
-				ListReportModel listReportModel = new ListReportModel();
-				listReportModel.setDbId(item.getDbId());
-				listReportModel.setReportId(item.getIncident().getId());
-				listReportModel
-						.setTitle(Util.capitalizeString(item.getTitle()));
-				listReportModel.setDesc(Util.capitalizeString(item
-						.getDescription()));
-				listReportModel.setDate(Util
-						.formatDate("yyyy-MM-dd HH:mm:ss",
-								item.getReportDate(),
-								"MMMM dd, yyyy 'at' hh:mm:ss aaa"));
-				final String status = item.getVerified() == 0 ? context
-						.getString(R.string.unverified) : context
-						.getString(R.string.verified);
-				listReportModel.setStatus(Util.capitalizeString(status));
-				listReportModel.setLocation(Util.capitalizeString(item
-						.getLocationName()));
-				listReportModel.setLatitude(item.getLatitude());
-				listReportModel.setLongitude(item.getLongitude());
-				listReportModel.setArrow(context.getResources().getDrawable(
-						R.drawable.arrow));
-				listReportModel.setCategories(item.getCategories());
-				listReportModel.setMedia(item.getMedia());
-
-				if (item.getReportId() == 0) {
-					// get pending reports images
-					d = getImage(item.getDbId());
-
-				} else {
-					// get fetched reports images
-					d = getImage(item.getReportId());
-				}
-				listReportModel.setThumbnail(d);
-
-				reportModel.add(listReportModel);
-			}
-
-		}
-		return reportModel;
-	}*/
-
 	public List<CategoryEntity> getParentCategories() {
 		return Database.mCategoryDao.fetchAllCategoryTitles();
 
