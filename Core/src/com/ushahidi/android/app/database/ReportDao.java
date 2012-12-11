@@ -433,12 +433,12 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 		return status;
 	}
 	
-	private String getDate(Date d ) {
+	public String getDate(Date d ) {
 		
 		return FORMATTER.format(d);
 	}
 	
-	private Date setDate(String date) {
+	public Date setDate(String date) {
 		try {
 			return FORMATTER.parse(date);
 		} catch (ParseException e) {
