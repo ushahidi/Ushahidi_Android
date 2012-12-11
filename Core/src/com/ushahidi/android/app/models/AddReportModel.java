@@ -27,9 +27,8 @@ import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IMediaSchema;
 import com.ushahidi.android.app.entities.MediaEntity;
 import com.ushahidi.android.app.entities.PhotoEntity;
-import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.entities.ReportCategory;
-import com.ushahidi.android.app.util.Util;
+import com.ushahidi.android.app.entities.ReportEntity;
 
 /**
  * @author eyedol
@@ -37,7 +36,7 @@ import com.ushahidi.android.app.util.Util;
  */
 public class AddReportModel extends Model {
 
-	public boolean addPendingReport(ReportEntity report, Vector<String> category,
+	public boolean addPendingReport(ReportEntity report, Vector<Integer> category,
 			File[] pendingPhotos, String news) {
 		boolean status;
 		// add pending reports
@@ -48,9 +47,9 @@ public class AddReportModel extends Model {
 		// add category
 		if (status) {
 			if (category != null && category.size() > 0) {
-				for (String cat : category) {
+				for (Integer cat : category) {
 					ReportCategory reportCategory = new ReportCategory();
-					reportCategory.setCategoryId(Util.toInt(cat));
+					reportCategory.setCategoryId(cat);
 					reportCategory.setReportId(id);
 					Database.mReportCategoryDao
 							.addReportCategory(reportCategory);
@@ -92,7 +91,7 @@ public class AddReportModel extends Model {
 	}
 
 	public boolean updatePendingReport(int reportId, ReportEntity report,
-			Vector<String> category, List<PhotoEntity> pendingPhotos, String news) {
+			Vector<Integer> category, List<PhotoEntity> pendingPhotos, String news) {
 		boolean status;
 		// update pending reports
 		status = Database.mReportDao.updatePendingReport(reportId, report);
@@ -104,9 +103,9 @@ public class AddReportModel extends Model {
 				Database.mReportCategoryDao
 						.deleteReportCategoryByReportId(reportId);
 
-				for (String cat : category) {
+				for (Integer cat : category) {
 					ReportCategory reportCategory = new ReportCategory();
-					reportCategory.setCategoryId(Util.toInt(cat));
+					reportCategory.setCategoryId(cat);
 					reportCategory.setReportId(reportId);
 					Database.mReportCategoryDao
 							.addReportCategory(reportCategory);

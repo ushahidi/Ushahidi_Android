@@ -125,9 +125,9 @@ public class AddReportActivity extends
 
 	private int mCategoryLength;
 
-	private Vector<String> mVectorCategories = new Vector<String>();
+	private Vector<Integer> mVectorCategories = new Vector<Integer>();
 
-	private Vector<String> mCategoriesId = new Vector<String>();
+	private Vector<Integer> mCategoriesId = new Vector<Integer>();
 
 	private HashMap<String, String> mCategoriesTitle = new HashMap<String, String>();
 
@@ -490,7 +490,7 @@ public class AddReportActivity extends
 		for (ReportCategory reportCategory : model
 				.fetchReportCategories(reportId)) {
 			mVectorCategories
-					.add(String.valueOf(reportCategory.getCategoryId()));
+					.add(reportCategory.getCategoryId());
 		}
 
 		setSelectedCategories(mVectorCategories);
@@ -761,12 +761,12 @@ public class AddReportActivity extends
 			// selected, then uncheck
 			// selected categories
 			if (mVectorCategories.size() > 0) {
-				for (String s : mVectorCategories) {
+				for (Integer s : mVectorCategories) {
 					try {
 						// @inoran fix
 						if (list != null) {
 							list.setItemChecked(
-									mCategoryLength - Integer.parseInt(s), true);
+									mCategoryLength - s, true);
 						}
 					} catch (NumberFormatException e) {
 						log("NumberFormatException", e);
@@ -808,7 +808,7 @@ public class AddReportActivity extends
 				categories[i] = category.getCategoryTitle();
 				mCategoriesTitle.put(String.valueOf(category.getCategoryId()),
 						category.getCategoryTitle());
-				mCategoriesId.add(String.valueOf(category.getCategoryId()));
+				mCategoriesId.add(category.getCategoryId());
 				i++;
 			}
 			return categories;
@@ -883,7 +883,7 @@ public class AddReportActivity extends
 	 * 
 	 * @param aSelectedCategories
 	 */
-	private void setSelectedCategories(Vector<String> aSelectedCategories) {
+	private void setSelectedCategories(Vector<Integer> aSelectedCategories) {
 		// initilaize categories
 		showCategories();
 
@@ -891,12 +891,12 @@ public class AddReportActivity extends
 		view.mBtnAddCategory.setText(R.string.select_category);
 		if (aSelectedCategories.size() > 0) {
 			StringBuilder categories = new StringBuilder();
-			for (String category : aSelectedCategories) {
+			for (Integer category : aSelectedCategories) {
 				if (categories.length() > 0) {
 					categories.append(", ");
 				}
-				if (!TextUtils.isEmpty(category)) {
-					categories.append(mCategoriesTitle.get(category));
+				if (category > 0) {
+					categories.append(mCategoriesTitle.get(String.valueOf(category)));
 				}
 			}
 

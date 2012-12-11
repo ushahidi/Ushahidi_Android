@@ -201,7 +201,7 @@ public class ListReportFragment
 
 		if (filterCategory == 0) {
 			refreshReportLists();
-			//showCategories();
+			// showCategories();
 
 		} else {
 			reportByCategoryList();
@@ -584,8 +584,10 @@ public class ListReportFragment
 				fields.addCategory(report.getCategories());
 
 				// Add photos
-				fields.addPhotos(new UploadPhotoAdapter(getActivity())
-						.pendingPhotos((int) report.getDbId()));
+				List<File> photos = new UploadPhotoAdapter(getActivity())
+						.pendingPhotos((int) report.getDbId());
+				if (photos != null && photos.size() > 0)
+					fields.addPhotos();
 
 				// upload
 				Response response = reportApi.submitReport(fields);
