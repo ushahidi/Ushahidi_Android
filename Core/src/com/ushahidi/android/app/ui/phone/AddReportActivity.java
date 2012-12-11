@@ -119,7 +119,9 @@ public class AddReportActivity extends
 
 	private Calendar mCalendar;
 
-	private String mDateToSubmit = "";
+	//private String mDateToSubmit = "";
+	
+	private Date date = null;
 
 	private int mCategoryLength;
 
@@ -419,8 +421,11 @@ public class AddReportActivity extends
 				.valueOf(view.mLatitude.getText().toString()));
 		incident.setLongitude(Double.valueOf(view.mLongitude.getText()
 				.toString()));
+		
+		incident.setDate(date);
 		report.setIncident(incident);
 		report.setPending(1);
+	
 
 		if (id == 0) {
 			// Add a new pending report
@@ -434,7 +439,7 @@ public class AddReportActivity extends
 				return false;
 			}
 		} else {
-			// Update exisiting report
+			// Update existing report
 			List<PhotoEntity> photos = new ArrayList<PhotoEntity>();
 			for (int i = 0; i < pendingPhoto.getCount(); i++) {
 				photos.add(pendingPhoto.getItem(i));
@@ -812,23 +817,18 @@ public class AddReportActivity extends
 	}
 
 	private void updateDisplay() {
-		Date date = mCalendar.getTime();
+		date = mCalendar.getTime();
 		if (date != null) {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy",Locale.US);
 			view.mPickDate.setText(dateFormat.format(date));
 
-			SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+			SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a",Locale.US);
 			view.mPickTime.setText(timeFormat.format(date));
 
-			// Because the API doesn't support dates in diff Locale mode, force
-			// it to show time in US
-			SimpleDateFormat submitFormat = new SimpleDateFormat(
-					"yyy-MM-dd kk:mm:ss", Locale.US);
-			mDateToSubmit = submitFormat.format(date);
 		} else {
 			view.mPickDate.setText(R.string.change_date);
 			view.mPickTime.setText(R.string.change_time);
-			mDateToSubmit = null;
+			date = null;
 		}
 	}
 
@@ -837,30 +837,22 @@ public class AddReportActivity extends
 		if (dateTime != null && !(TextUtils.isEmpty(dateTime))) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat(
 					"yyy-MM-dd kk:mm:ss", Locale.US);
-			Date date;
 			try {
 
 				date = dateFormat.parse(dateTime);
 
 				if (date != null) {
 					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-							"MMMM dd, yyyy");
+							"MMMM dd, yyyy", Locale.US);
 					view.mPickDate.setText(simpleDateFormat.format(date));
 
-					SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+					SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a",Locale.US);
 					view.mPickTime.setText(timeFormat.format(date));
 
-					// Because the API doesn't support dates in diff Locale
-					// mode,
-					// force
-					// it to show time in US
-					SimpleDateFormat submitFormat = new SimpleDateFormat(
-							"yyy-MM-dd kk:mm:ss", Locale.US);
-					mDateToSubmit = submitFormat.format(date);
 				} else {
 					view.mPickDate.setText(R.string.change_date);
 					view.mPickTime.setText(R.string.change_time);
-					mDateToSubmit = null;
+					date = null;
 				}
 
 			} catch (ParseException e) {

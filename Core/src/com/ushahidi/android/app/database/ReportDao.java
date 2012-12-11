@@ -20,15 +20,18 @@
 
 package com.ushahidi.android.app.database;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.ushahidi.android.app.entities.ReportEntity;
-import com.ushahidi.android.app.util.Util;
 import com.ushahidi.java.sdk.api.Incident;
 
 public class ReportDao extends DbContentProvider implements IReportDao,
@@ -39,6 +42,9 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	private List<ReportEntity> listReport;
 
 	private ContentValues initialValues;
+	
+	private final SimpleDateFormat FORMATTER = new SimpleDateFormat(
+			"MM/dd/yyyy h m a", Locale.US);
 
 	public ReportDao(SQLiteDatabase db) {
 		super(db);
@@ -344,7 +350,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 			if (cursor.getColumnIndex(INCIDENT_DATE) != -1) {
 				dateIndex = cursor.getColumnIndexOrThrow(INCIDENT_DATE);
-				report.setDate(Util.formatDate(cursor.getString(dateIndex)));
+				report.setDate(setDate(cursor.getString(dateIndex)));
 			}
 
 			if (cursor.getColumnIndex(INCIDENT_VERIFIED) != -1) {
@@ -385,7 +391,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 		initialValues.put(INCIDENT_ID, report.getIncident().getId());
 		initialValues.put(INCIDENT_TITLE, report.getIncident().getTitle());
 		initialValues.put(INCIDENT_DESC, report.getIncident().getDescription());
-		initialValues.put(INCIDENT_DATE, report.getIncident().getDate().toString());
+		initialValues.put(INCIDENT_DATE, getDate(report.getIncident().getDate()));
 		initialValues.put(INCIDENT_MODE, report.getIncident().getMode());
 		initialValues.put(INCIDENT_VERIFIED, report.getIncident().getVerified());
 		initialValues.put(INCIDENT_LOC_NAME, report.getIncident().getLocationName());
@@ -425,5 +431,19 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 			mDb.endTransaction();
 		}
 		return status;
+	}
+	
+	private String getDate(Date d ) {
+		
+		return FORMATTER.format(d);
+	}
+	
+	private Date setDate(String date) {
+		try {
+			return FORMATTER.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return new Date();
 	}
 }

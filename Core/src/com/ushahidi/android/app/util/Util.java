@@ -236,12 +236,12 @@ public class Util {
 	}
 
 	public static Date formatDate(String date) {
-		String s = Util.datePattern("yyyy-MM-dd HH:mm:ss", new Date(date));
+		
 		final SimpleDateFormat PARSER = new SimpleDateFormat(
 				"yyyy-MM-dd HH:mm:ss", Locale.US);
 		try {
 			return new com.ushahidi.java.sdk.api.json.Date(
-					PARSER.parse(s));
+					PARSER.parse(date));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
