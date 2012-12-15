@@ -57,18 +57,16 @@ public class ReportsApi extends Ushahidi {
 	private boolean processingResult;
 
 	public ReportsApi() {
-		processingResult = true;
-		reports = new ArrayList<ReportEntity>();
 		task = factory.createIncidentsTask();
 		task.limit = Integer.valueOf(Preferences.totalReports);
-		reportTask = factory.createReportTask();
+		processingResult = true;
+		reports = new ArrayList<ReportEntity>();
 	}
 
 	private List<ReportEntity> getReportList(Context context) {
 		log("Save report");
 		if (processingResult) {
 			try {
-
 				List<Incidents> incidents = task.all();
 				if (incidents != null && incidents.size() > 0) {
 					for (Incidents i : incidents) {
@@ -84,36 +82,39 @@ public class ReportsApi extends Ushahidi {
 						}
 
 						// save media
-						if ((i.media != null) && (!i.media.isEmpty())) {
+						if ((i.getMedia() != null) && (!i.getMedia().isEmpty())) {
 							for (com.ushahidi.java.sdk.api.Media m : i
 									.getMedia()) {
 
 								// find photos, it's type is 1
-								if (m.getType() == 1) {
-									final String fileName = Util.getDateTime()
-											+ ".jpg";
+								if (m != null) {
+									if (m.getType() == 1) {
+										final String fileName = Util
+												.getDateTime() + ".jpg";
 
-									// save details of photo to database
-									saveMedia(m.getId(), i.incident.getId(),
-											m.getType(), fileName);
+										// save details of photo to database
+										saveMedia(m.getId(),
+												i.incident.getId(),
+												m.getType(), fileName);
 
-									// save photo to a file
-									if (m.getLink().startsWith("http")) {
-										saveImages(m.getLink(), fileName,
-												context);
+										// save photo to a file
+										if (m.getLink().startsWith("http")) {
+											saveImages(m.getLink(), fileName,
+													context);
+										} else {
+											final String link = Preferences.domain
+													+ "/media/uploads/"
+													+ m.getLink();
+
+											saveImages(link, fileName, context);
+										}
+
 									} else {
-										final String link = Preferences.domain
-												+ "/media/uploads/"
-												+ m.getLink();
-
-										saveImages(link, fileName, context);
+										// other media type to database
+										saveMedia(m.getId(),
+												(int) i.incident.getId(),
+												m.getType(), m.getLink());
 									}
-
-								} else {
-									// other media type to database
-									saveMedia(m.getId(),
-											(int) i.incident.getId(),
-											m.getType(), m.getLink());
 								}
 							}
 						}
@@ -141,6 +142,7 @@ public class ReportsApi extends Ushahidi {
 	}
 
 	public Response submitReport(ReportFields report) {
+		reportTask = factory.createReportTask();
 		return reportTask.submit(report);
 	}
 

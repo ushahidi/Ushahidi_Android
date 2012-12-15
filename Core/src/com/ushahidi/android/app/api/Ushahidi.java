@@ -40,9 +40,6 @@ public abstract class Ushahidi {
 
 	public Ushahidi() {
 		factory = UshahidiApiTaskFactory.newInstance(Preferences.domain);
-	}
-
-	public void init() {
 		factory.client = new UshahidiHttpClient();
 		factory.client.setAuthentication(new PasswordAuthentication("admin",
 				"admin"));
