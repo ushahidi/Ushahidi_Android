@@ -6,15 +6,6 @@ gen/
 .settings
 .DS_Store
 Ushahidi/libs/
-*/local.properties
-*/secure.properties
-*/ushahidi-key.keystore
-Themes/Uchaguzi/secure.properties
-Themes/Uchaguzi/ushahidi-key.keystore
-Themes/Ushahidi/secure.properties
-Themes/Ushahidi/ushahidi-key.keystore
-Themes/Firsthand/ushahidi-key.keystore
-Themes/Firsthand/secure.properties
 Libraries/abs/local.properties
 Libraries/abs/proguard-project.txt
 Libraries/cwacmerge/local.properties
