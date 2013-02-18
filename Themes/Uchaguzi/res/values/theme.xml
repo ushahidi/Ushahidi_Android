@@ -3,9 +3,9 @@
     <!-- DEPLOYMENT INFORMATION -->
     <string name="app_name">Uchaguzi</string>
     <string name="deployment_url">https://uchaguzi.co.ke</string>
-    <string name="media_url">http://uchaguzi.co.ke</string>
-    <string name="twitter_url">http://twitter.com/uchaguzi</string>
-    <string name="facebook_url">http://www.facebook.com/uchaguzi</string>
+    <string name="media_url">https://uchaguzi.co.ke</string>
+    <string name="twitter_url">https://twitter.com/uchaguzi</string>
+    <string name="facebook_url">http://www.facebook.com/UchaguziKenya2013</string>
     <string name="team_url"/>
     <string name="contact_url"/>
 
