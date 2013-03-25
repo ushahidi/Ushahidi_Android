@@ -598,7 +598,8 @@ public class ListReportFragment
 					if (new ReportsHttpClient(getActivity()).PostFileUpload(
 							urlBuilder.toString(), mParams)) {
 						deletePendingReport((int) report.getId());
-						retVal = true;
+					} else {
+						retVal = false;
 					}
 				} catch (IOException e) {
 					retVal = false;

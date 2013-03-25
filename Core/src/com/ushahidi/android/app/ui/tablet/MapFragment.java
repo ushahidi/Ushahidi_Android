@@ -278,10 +278,10 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 			mHandler.post(mMarkersOnMap);
 		}
 	}
-	
+
 	public void onDestroy() {
 		super.onDestroy();
-		if(new RefreshReports(getActivity()).cancel(true)) {
+		if (new RefreshReports(getActivity()).cancel(true)) {
 			refreshState = false;
 			updateRefreshStatus();
 		}
@@ -309,19 +309,33 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 				marker, map, getActivity());
 		if (mReportModel != null) {
 			for (ListReportModel reportModel : mReportModel) {
+				log("latitude: " + reportModel.getLatitude());
+				double latitude = 0.0;
+				double longitude = 0.0;
+				try {
+					latitude = Double.valueOf(reportModel.getLatitude());
+				} catch (NumberFormatException e) {
+					latitude = 0.0;
+				}
+				
+				try {
+					longitude = Double
+							.valueOf(reportModel.getLongitude());
+				}catch(NumberFormatException e ) {
+					longitude = 0.0;
+				}
+				
 				itemOverlay.addOverlay(new ReportMapOverlayItem(getPoint(
-						Double.valueOf(reportModel.getLatitude()),
-						Double.valueOf(reportModel.getLongitude())),
-						reportModel.getTitle(), Util.limitString(
-								reportModel.getDesc(), 30), reportModel
-								.getThumbnail(), reportModel.getId(), ""));
+						latitude, longitude), reportModel.getTitle(), Util
+						.limitString(reportModel.getDesc(), 30), reportModel
+						.getThumbnail(), reportModel.getId(), ""));
 			}
 		}
 		map.getOverlays().clear();
 		if (itemOverlay.size() > 0) {
 			map.getController().animateTo(itemOverlay.getCenter());
-			map.getController().zoomToSpan(itemOverlay.getLatSpanE6()+50,
-					itemOverlay.getLonSpanE6() +50);
+			map.getController().zoomToSpan(itemOverlay.getLatSpanE6() + 50,
+					itemOverlay.getLonSpanE6() + 50);
 			map.getOverlays().add(itemOverlay);
 		}
 

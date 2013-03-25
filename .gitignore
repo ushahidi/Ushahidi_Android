@@ -9,6 +9,8 @@ Ushahidi/libs/
 */local.properties
 */secure.properties
 */ushahidi-key.keystore
+/Themes/*/secure.properties
+/Themes/*/ushahidi-key.keystore
 Libraries/abs/local.properties
 Libraries/abs/proguard-project.txt
 Libraries/cwacmerge/local.properties
