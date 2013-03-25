@@ -1,3 +1,7 @@
+3.1.5
+Bug:
+* Fix crashes when there are null values for latitude and longitude
+
 3.1.4
 Feature:
  * Support for OpenGeoSMS
