@@ -3,17 +3,15 @@
  */
 package com.ushahidi.android.app.ui.phone.test;
 
-import com.ushahidi.android.app.ui.phone.AddReportActivity;
 
 /**
  * @author eyedol
  *
  */
-public class AddReportActivityTest extends
-		ActivityInstrumentationTestCase2<AddReportActivity> {
+public class AddReportActivityTest {
 
 	public AddReportActivityTest() {
-		super(AddReportActivity.class);
+		//TODO:: implement testing for adding a new report
 	}
 
 }

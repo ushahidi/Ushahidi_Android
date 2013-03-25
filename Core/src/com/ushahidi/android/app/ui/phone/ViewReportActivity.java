@@ -239,10 +239,15 @@ public class ViewReportActivity extends
 									R.anim.home_exit);
 						}
 					});
-
-			centerLocationWithMarker(getPoint(
-					Double.parseDouble(report.get(position).getLatitude()),
-					Double.parseDouble(report.get(position).getLongitude())));
+			
+			try {
+				centerLocationWithMarker(getPoint(
+						Double.parseDouble(report.get(position).getLatitude()),
+						Double.parseDouble(report.get(position).getLongitude())));
+			}catch(NumberFormatException e){
+				
+			}
+		
 			view.mapView.setBuiltInZoomControls(false);
 			int page = position;
 			this.setTitle(page + 1);
