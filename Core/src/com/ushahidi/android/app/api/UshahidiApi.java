@@ -21,16 +21,15 @@ package com.ushahidi.android.app.api;
 
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.java.sdk.api.tasks.UshahidiApiTaskFactory;
-import com.ushahidi.java.sdk.net.PasswordAuthentication;
 import com.ushahidi.java.sdk.net.UshahidiHttpClient;
 
 /**
- * The gateway to the Ushahidi API
+ * Initializes the Ushahidi API
  * 
  * @author eyedol
  * 
  */
-public abstract class Ushahidi {
+public abstract class UshahidiApi {
 
 	protected UshahidiApiTaskFactory factory;
 
@@ -38,7 +37,7 @@ public abstract class Ushahidi {
 
 	public int socketTimeout = 30000;
 
-	public Ushahidi() {
+	public UshahidiApi() {
 		factory = UshahidiApiTaskFactory.newInstance(Preferences.domain);
 		factory.client = new UshahidiHttpClient();
 		factory.client.setConnectionTimeout(connectionTimeout);

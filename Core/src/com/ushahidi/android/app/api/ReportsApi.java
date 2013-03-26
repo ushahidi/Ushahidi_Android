@@ -49,7 +49,7 @@ import com.ushahidi.java.sdk.net.content.Body;
  * @author eyedol
  * 
  */
-public class ReportsApi extends Ushahidi {
+public class ReportsApi extends UshahidiApi {
 
 	private IncidentsTask task;
 	private ReportTask reportTask;

@@ -36,7 +36,7 @@ import com.ushahidi.java.sdk.api.tasks.CategoriesTask;
  * @author eyedol
  * 
  */
-public class CategoriesApi extends Ushahidi {
+public class CategoriesApi extends UshahidiApi {
 
 	private CategoriesTask task;
 
