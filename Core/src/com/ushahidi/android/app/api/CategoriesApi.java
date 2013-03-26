@@ -22,6 +22,8 @@ package com.ushahidi.android.app.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.CategoryEntity;
 import com.ushahidi.android.app.util.Util;
@@ -52,7 +54,6 @@ public class CategoriesApi extends Ushahidi {
 		new Util().log("Save categories list");
 		if (processingResult) {
 			List<Category> cats = task.all();
-			
 			if (cats != null) {
 				for (com.ushahidi.java.sdk.api.Category cat : cats) {
 					CategoryEntity category = new CategoryEntity();

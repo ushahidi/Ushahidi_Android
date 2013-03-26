@@ -1,0 +1,126 @@
+<resources>
+
+    <!-- DEPLOYMENT INFORMATION -->
+    <string name="app_name">Uchaguzi</string>
+    <string name="deployment_url">https://uchaguzi.co.ke</string>
+    <string name="media_url">https://uchaguzi.co.ke</string>
+    <string name="twitter_url">https://twitter.com/uchaguzi</string>
+    <string name="facebook_url">http://www.facebook.com/UchaguziKenya2013</string>
+    <string name="team_url"/>
+    <string name="contact_url"/>
+
+    <!-- DEPLOYMENT PROVIDER AUTHORITIES. USUALLY PACKAGE NAME AND CLASS NAME Eg. com.ushahidi.android.app.data.deploymentprovider -->
+    <string name="provider_authorities">com.ushahidi.android.app.data.deploymentprovider</string>
+
+    <!-- NAMESPACE  -->
+    <string name="rounded_corner">http://schemas.android.com/apk/res/com.ushahidi.android.app</string>
+    <!-- ICON IMAGES -->
+    <drawable name="app_icon">@drawable/icon</drawable>
+    <drawable name="logo_icon">@drawable/logo</drawable>
+    <drawable name="report_icon">@drawable/report</drawable>
+    <drawable name="actionbar_icon">@drawable/icon</drawable>
+    <drawable name="notification_icon">@drawable/notification</drawable>
+
+    <!-- BACKROUND IMAGES -->
+    <drawable name="splash_background">@drawable/splash</drawable>
+    <drawable name="dashboard_background">@drawable/dashboard</drawable>
+    <drawable name="about_background">@null</drawable>
+    <drawable name="actionbar_background">@color/about_bottom_buttons_background</drawable>
+
+    <!-- COLOR CODES -->
+    <color name="title_color">#000000</color>
+    <color name="date_color">#262321</color>
+    <color name="report_table">#f6f6ee</color>
+    <color name="header_color">#3E51BC</color>
+    
+    <!-- The general background color of the app -->
+    <color name="background_color">#d8ceca</color>
+    
+    <color name="thick_background_color">#DDD0A3</color>
+    <color name="button_background_color">#ffffff</color>
+    <color name="button_stroke_color">#cac7c0</color>
+    
+    <!-- Social media links at the about screen -->
+    <color name="about_bottom_buttons_background">#7b9276</color>
+    
+     <!-- Report Listing Screen -->
+     
+     <!-- The section which shows which category has been selected. By default 
+     it shows All Categories -->
+    <color name="filter_by_text_color">#ffffff</color>
+    <color name="filter_by_background_color">#7b9276</color>
+    
+    <!-- Report date -->
+    <color name="gray_color">#736F6E</color>
+    
+    <!-- Verified text -->
+    <color name="verified_text_color">#239e46</color>
+    
+    <!-- Unverified text -->
+    <color name="unverified_text_color">#be0027</color>
+    
+    <color name="white_color">#FFFFFF</color>
+    <color name="verified_color">#239e46</color>
+    <color name="black_color">#000000</color>
+    
+    <color name="title_background">#453727</color>
+    <color name="title_separator">#000000</color>
+    <color name="title_text">#ffffff</color>
+    <color name="title_text_alt">#bf2b05</color>
+    <color name="icon_title">#89221b</color>
+    <color name="list_view_date">#90544a</color>
+    
+    <!-- View Details Of A Report -->
+    <color name="table_background">#d8ceca</color>
+    
+    <color name="table_odd_row_color">#ffffff</color>
+    
+    <color name="table_even_row_color">#dec9c0</color>
+    
+    <!-- Hightlight color when an item in the list is selected -->
+    <color name="table_selected_row_color">#7b9276</color>
+    
+    <!-- The color that shows the different sections of the list view.
+    In this app we have Pending and Fetched sections -->
+    <color name="table_header_color">#e6ddbe</color>
+    
+    <!-- Tabs Colors -->
+    
+    <!-- The tab background color -->
+    <color name="tab_background">#3f4250</color>
+    
+    <!-- The tab selected background color -->
+    <color name="tab_selected_color">#7b9276</color>
+    
+    <!-- The unselected tab color -->
+    <color name="tab_unselected_color">#7b9276</color>
+    
+    <color name="list_divider_color">#e0e0e0</color>
+    <color name="overlay_text_color">#aa000000</color>
+    
+    <!-- The color for the border line under the tabs and the color for selected item -->
+    <color name="selectable_color">#239e46</color>
+    
+    <!-- The tab text color -->
+    <color name="text_value_color">#AAAAAA</color>
+    
+    <color name="tab_medium">#3F4250</color>
+    <color name="tab_dark">#000000</color>
+    <color name="tab_transparent">#10ffffff</color>
+
+    <!-- TEXT SIZE -->
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_large">22sp</dimen>
+    <dimen name="top_padding">10dip</dimen>
+
+    <!-- ACTIONBAR SIZE -->
+    <dimen name="actionbar_height">45dip</dimen>
+    <dimen name="actionbar_button_height">30dip</dimen>
+    <dimen name="bottom_actionbar_height">65dip</dimen>
+    
+
+    <!-- DEPLOYMENT TEXT -->
+    <string name="about_text"/>
+
+</resources>

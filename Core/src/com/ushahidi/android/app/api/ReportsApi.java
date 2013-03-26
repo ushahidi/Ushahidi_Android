@@ -31,8 +31,8 @@ import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.MediaEntity;
-import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.entities.ReportCategory;
+import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.java.sdk.UshahidiException;
 import com.ushahidi.java.sdk.api.Category;
@@ -68,6 +68,7 @@ public class ReportsApi extends Ushahidi {
 		if (processingResult) {
 			try {
 				List<Incidents> incidents = task.all();
+				Log.i("FetchingReports", incidents.toString());
 				if (incidents != null && incidents.size() > 0) {
 					for (Incidents i : incidents) {
 						ReportEntity report = new ReportEntity();

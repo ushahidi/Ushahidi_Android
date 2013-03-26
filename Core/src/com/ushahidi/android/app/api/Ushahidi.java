@@ -41,8 +41,6 @@ public abstract class Ushahidi {
 	public Ushahidi() {
 		factory = UshahidiApiTaskFactory.newInstance(Preferences.domain);
 		factory.client = new UshahidiHttpClient();
-		factory.client.setAuthentication(new PasswordAuthentication("admin",
-				"admin"));
 		factory.client.setConnectionTimeout(connectionTimeout);
 		factory.client.setSocketTimeout(socketTimeout);
 	}

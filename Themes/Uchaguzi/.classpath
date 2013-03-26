@@ -6,9 +6,9 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/HttpClient"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/HttpCore"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/HttpMime"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Core"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Core"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
