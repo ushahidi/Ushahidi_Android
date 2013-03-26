@@ -27,7 +27,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.ushahidi.android.app.ImageManager;
-import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.MediaEntity;
@@ -46,8 +45,6 @@ import com.ushahidi.java.sdk.net.content.Body;
 /**
  * Handles Reports API task
  * 
- * @author eyedol
- * 
  */
 public class ReportsApi extends UshahidiApi {
 
@@ -62,7 +59,14 @@ public class ReportsApi extends UshahidiApi {
 		processingResult = true;
 		reports = new ArrayList<ReportEntity>();
 	}
-
+	
+	/**
+	 * Fetch reports via the Ushahidi API
+	 * 
+	 * @param context The calling activity
+	 * 
+	 * @return The list of reports
+	 */
 	private List<ReportEntity> getReportList(Context context) {
 		log("Save report");
 		if (processingResult) {
@@ -130,15 +134,18 @@ public class ReportsApi extends UshahidiApi {
 		return reports;
 	}
 
-	// Save report into database
+	/**
+	 * Save fetched reports to the database
+	 * 
+	 * @param context The calling activity
+	 * 
+	 * @return boolean
+	 */
 	public boolean saveReports(Context context) {
 		List<ReportEntity> reports = getReportList(context);
 
-		if (reports != null) {
-
+		if (reports != null)
 			return Database.mReportDao.addReport(reports);
-		}
-
 		return false;
 	}
 
@@ -146,7 +153,8 @@ public class ReportsApi extends UshahidiApi {
 		reportTask = factory.createReportTask();
 		return reportTask.submit(report);
 	}
-
+	
+	
 	public boolean upload(String url, Body body) {
 		final String response = task.getClient().sendMultipartPostRequest(url,
 				body);
@@ -154,12 +162,13 @@ public class ReportsApi extends UshahidiApi {
 	}
 
 	/**
-	 * Save details of categorie
+	 * Save details of categories to the database
 	 * 
-	 * @param categoryId
-	 * @param reportId
+	 * @param categoryId The ID of the category
+	 * @param reportId The ID of the report
+	 * 
+	 * @return void
 	 */
-
 	private void saveCategories(int categoryId, int reportId) {
 
 		ReportCategory reportCategory = new ReportCategory();
@@ -171,7 +180,17 @@ public class ReportsApi extends UshahidiApi {
 		// save new data
 		Database.mReportCategoryDao.addReportCategories(reportCategories);
 	}
-
+	
+	/**
+	 * Save fetched media to the database
+	 * 
+	 * @param mediaId The ID of the media
+	 * @param reportId The report ID associated with the media
+	 * @param type The media type. 1 for image, 2 for news link, 3 for video link
+	 * @param link The URL of the media
+	 * 
+	 * @return void
+	 */
 	private void saveMedia(int mediaId, int reportId, int type, String link) {
 		log("downloading... " + link + " ReportId: " + reportId);
 		MediaEntity media = new MediaEntity();
@@ -185,7 +204,16 @@ public class ReportsApi extends UshahidiApi {
 		// save new data
 		Database.mMediaDao.addMedia(sMedia);
 	}
-
+	
+	/**
+	 * Download image from the web
+	 * 
+	 * @param linkUrl The URL of the image to be downloaded
+	 * @param fileName The file name to give to the donwloaded image
+	 * @param context The calling activity
+	 * 
+	 * @return void
+	 */
 	private void saveImages(String linkUrl, String fileName, Context context) {
 
 		if (!TextUtils.isEmpty(linkUrl)) {
@@ -193,13 +221,4 @@ public class ReportsApi extends UshahidiApi {
 		}
 	}
 
-	private void log(String message) {
-		if (MainApplication.LOGGING_MODE)
-			Log.i(getClass().getName(), message);
-	}
-
-	private void log(String message, Exception ex) {
-		if (MainApplication.LOGGING_MODE)
-			Log.e(getClass().getName(), message, ex);
-	}
 }

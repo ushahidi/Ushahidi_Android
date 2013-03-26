@@ -19,6 +19,9 @@
  **/
 package com.ushahidi.android.app.api;
 
+import android.util.Log;
+
+import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.java.sdk.api.tasks.UshahidiApiTaskFactory;
 import com.ushahidi.java.sdk.net.UshahidiHttpClient;
@@ -42,5 +45,15 @@ public abstract class UshahidiApi {
 		factory.client = new UshahidiHttpClient();
 		factory.client.setConnectionTimeout(connectionTimeout);
 		factory.client.setSocketTimeout(socketTimeout);
+	}
+
+	protected void log(String message) {
+		if (MainApplication.LOGGING_MODE)
+			Log.i(getClass().getName(), message);
+	}
+
+	protected void log(String message, Exception ex) {
+		if (MainApplication.LOGGING_MODE)
+			Log.e(getClass().getName(), message, ex);
 	}
 }

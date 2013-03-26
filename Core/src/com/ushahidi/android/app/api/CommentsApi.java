@@ -31,7 +31,8 @@ import com.ushahidi.java.sdk.api.json.Response;
 import com.ushahidi.java.sdk.api.tasks.CommentsTask;
 
 /**
- * @author eyedol
+ * 
+ * Handles all comments API related task
  * 
  */
 public class CommentsApi extends UshahidiApi {
@@ -49,9 +50,10 @@ public class CommentsApi extends UshahidiApi {
 	}
 
 	/**
-	 * Save reports comment
+	 * Fetch report's comments using the Ushahidi API
 	 * 
-	 * @param context
+	 * @param reportId
+	 *            The report ID
 	 * @return
 	 */
 	public List<CommentEntity> getCommentsList(int reportId) {
@@ -76,7 +78,7 @@ public class CommentsApi extends UshahidiApi {
 	/**
 	 * Submit a comment to an existing report.
 	 * 
-	 * @return The response from the server.
+	 * @return {@link Response} The response from the server.
 	 */
 	public Response submit(CommentFields comment) {
 		return task.submit(comment);
@@ -99,7 +101,13 @@ public class CommentsApi extends UshahidiApi {
 		return comments;
 	}
 
-	// Save report comments into database
+	/**
+	 * Save report comments into the database
+	 * 
+	 * @param reportId
+	 * 
+	 * @return boolean
+	 */
 	public boolean saveComments(int reportId) {
 		List<CommentEntity> comments = getCommentsList(reportId);
 
@@ -115,7 +123,11 @@ public class CommentsApi extends UshahidiApi {
 		return false;
 	}
 
-	// Save checkins comments into database
+	/**
+	 * Save checkins comments into database
+	 * 
+	 * @return boolean
+	 */
 	public boolean saveCheckinsComments() {
 		List<CommentEntity> comments = getCheckinCommentsList();
 		if (comments != null && comments.size() > 0) {
