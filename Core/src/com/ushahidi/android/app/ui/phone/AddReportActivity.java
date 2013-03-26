@@ -429,7 +429,6 @@ public class AddReportActivity extends
 
 		if (id == 0) {
 			// Add a new pending report
-			log("Cates: "+mVectorCategories.get(0));
 			if (model.addPendingReport(report, mVectorCategories,
 					pendingPhotos, view.mNews.getText().toString())) {
 				// move saved photos

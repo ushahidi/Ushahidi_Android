@@ -613,7 +613,6 @@ public class ListReportFragment
 					ImageManager.deletePendingPhoto(getActivity(), "/"
 							+ pendingPhoto.getItem(i).getPhoto());
 				}
-				// return to report listing page.
 			}
 		}
 	}
