@@ -19,117 +19,120 @@
  **/
 package com.ushahidi.android.app.entities;
 
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author eyedol
- *
+ * 
  */
-public class Map implements IDbEntity{
+public class Map implements IDbEntity {
 
-    private String name;
+	private String name;
 
-    private String desc;
+	@SerializedName("description")
+	private String desc;
 
-    private String url;
+	private String url;
 
-    private String date;
+	@SerializedName("discovery_date")
+	private String date;
 
-    private String lat;
+	@SerializedName("latitude")
+	private String lat;
 
-    private String lon;
+	@SerializedName("longitude")
+	private String lon;
 
-    private int catId;
+	@SerializedName("category_id")
+	private int catId;
 
-    private String active;
-    
-    private int mapId;
-    
-    private int id;
-    
-    @Override
-    public int getDbId() {
-        // TODO Auto-generated method stub
-        return id;
-    }
+	private String active;
 
-    @Override
-    public void setDbId(int id) {
-        this.id = id;
-        
-    }
-    
-    public String getActive() {
-        return this.active;
-    }
+	private int mapId;
 
-    public void setActive(String active) {
-        this.active = active;
-    }
+	private int id;
 
-    public String getDesc() {
-        return desc;
-    }
+	@Override
+	public int getDbId() {
+		// TODO Auto-generated method stub
+		return id;
+	}
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
+	@Override
+	public void setDbId(int id) {
+		this.id = id;
 
-    public String getDate() {
-        return date;
-    }
+	}
 
-    public void setDate(String date) {
-        this.date = date;
-    }
+	public String getActive() {
+		return this.active;
+	}
 
-    public String getLat() {
-        return lat;
-    }
+	public void setActive(String active) {
+		this.active = active;
+	}
 
-    public void setLat(String lat) {
-        this.lat = lat;
-    }
+	public String getDesc() {
+		return desc;
+	}
 
-    public String getLon() {
-        return lon;
-    }
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
 
-    public void setLon(String lon) {
-        this.lon = lon;
-    }
+	public String getDate() {
+		return date;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setDate(String date) {
+		this.date = date;
+	}
 
-    public String getName() {
-        return this.name;
-    }
+	public String getLat() {
+		return lat;
+	}
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
 
-    public String getUrl() {
-        return this.url;
-    }
+	public String getLon() {
+		return lon;
+	}
 
-    public void setCatId(int catId) {
+	public void setLon(String lon) {
+		this.lon = lon;
+	}
 
-        this.catId = catId;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public int getCatId() {
-        return this.catId;
-    }
-    
-    public void setMapId(int mapId) {
+	public String getName() {
+		return this.name;
+	}
 
-        this.mapId = mapId;
-    }
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
-    public int getMapId() {
-        return this.mapId;
-    }
+	public String getUrl() {
+		return this.url;
+	}
 
+	public void setCatId(int catId) {
+		this.catId = catId;
+	}
+
+	public int getCatId() {
+		return this.catId;
+	}
+
+	public void setMapId(int mapId) {
+		this.mapId = mapId;
+	}
+
+	public int getMapId() {
+		return this.mapId;
+	}
 }
