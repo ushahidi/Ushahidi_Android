@@ -45,13 +45,12 @@ public class MapSearchApi {
 
 	private List<Map> mMap;
 
-	public MapSearchApi(String distance, Location location) {
+	public MapSearchApi() {
 
 		client = new UshahidiHttpClient();
 		client.setRequestParameters("return_vars",
 				"name,latitude,longitude,description,url,category_id,discovery_date,id");
 		client.setRequestParameters("units", "km");
-		fetchMaps(distance, location);
 	}
 
 	/**

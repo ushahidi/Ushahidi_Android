@@ -29,10 +29,10 @@ import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
+import com.ushahidi.android.app.api.MapSearchApi;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.helpers.ActionModeHelper;
 import com.ushahidi.android.app.models.ListMapModel;
-import com.ushahidi.android.app.net.MapsHttpClient;
 import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.tasks.ProgressTask;
@@ -517,7 +517,7 @@ public class ListMapFragment extends
 
 		protected Boolean status;
 
-		private MapsHttpClient maps;
+		private MapSearchApi maps;
 
 		protected String distance;
 
@@ -525,8 +525,7 @@ public class ListMapFragment extends
 
 		public LoadMapTask(Activity activity) {
 			super(activity, R.string.loading_);
-			// switch to a progress animation
-			maps = new MapsHttpClient(activity);
+			maps = new MapSearchApi();
 		}
 
 		@Override

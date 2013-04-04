@@ -55,13 +55,13 @@ import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.BaseListActivity;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
 import com.ushahidi.android.app.api.CategoriesApi;
+import com.ushahidi.android.app.api.MapSearchApi;
 import com.ushahidi.android.app.api.ReportsApi;
 import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.net.CheckinHttpClient;
-import com.ushahidi.android.app.net.MapsHttpClient;
 import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.tasks.ProgressTask;
@@ -552,7 +552,7 @@ public class ListMapActivity extends
 
 		protected Context appContext;
 
-		private MapsHttpClient maps;
+		private MapSearchApi maps;
 
 		protected String distance;
 
@@ -561,7 +561,7 @@ public class ListMapActivity extends
 		public LoadMapTask(FragmentActivity activity) {
 			super(activity, R.string.loading_);
 			// switch to a progress animation
-			maps = new MapsHttpClient(ListMapActivity.this);
+			maps = new MapSearchApi();
 		}
 
 		@Override
@@ -626,7 +626,9 @@ public class ListMapActivity extends
 						new CategoriesApi().getCategoriesList();
 
 						// fetch reports
-						status = new ReportsApi().saveReports(ListMapActivity.this) ? 0 : 99; ;
+						status = new ReportsApi()
+								.saveReports(ListMapActivity.this) ? 0 : 99;
+						;
 						return false;
 					} else {
 
