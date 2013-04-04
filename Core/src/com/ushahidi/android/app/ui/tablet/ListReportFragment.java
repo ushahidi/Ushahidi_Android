@@ -577,8 +577,12 @@ public class ListReportFragment
 				fields.fill(incident);
 
 				// Set person details
-				fields.setPerson(new Person(Preferences.firstname,
-						Preferences.lastname, Preferences.email));
+				if ((!TextUtils.isEmpty(Preferences.fileName))
+						&& (!TextUtils.isEmpty(Preferences.lastname))
+						&& (!TextUtils.isEmpty(Preferences.email))) {
+					fields.setPerson(new Person(Preferences.firstname,
+							Preferences.lastname, Preferences.email));
+				}
 
 				// Add categories
 				fields.addCategory(report.getCategories());
@@ -587,9 +591,9 @@ public class ListReportFragment
 				List<File> photos = new UploadPhotoAdapter(getActivity())
 						.pendingPhotos((int) report.getDbId());
 				if (photos != null && photos.size() > 0)
-					fields.addPhotos();
+					fields.addPhotos(photos);
 
-				// upload
+				// Upload
 				Response response = reportApi.submitReport(fields);
 				if (response.getErrorCode() == 0) {
 					deletePendingReport((int) report.getDbId());
