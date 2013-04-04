@@ -30,7 +30,6 @@ import android.location.Location;
 
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Map;
-import com.ushahidi.java.sdk.api.tasks.BaseTask;
 import com.ushahidi.java.sdk.net.UshahidiHttpClient;
 
 /**
@@ -55,11 +54,22 @@ public class MapSearchApi {
 		fetchMaps(distance, location);
 	}
 
+	/**
+	 * Fetch for maps based on location and proximity - distance
+	 * 
+	 * @param distance
+	 *            The distance to use to search for the maps
+	 * 
+	 * @param location
+	 *            The current location of the user.
+	 * 
+	 * @return boolean
+	 */
 	public boolean fetchMaps(String distance, Location location) {
 
 		// current location
 		if (location != null) {
-
+			processingResult = true;
 			client.setRequestParameters("distance", distance);
 			client.setRequestParameters("lat",
 					String.valueOf(location.getLatitude()));
@@ -74,8 +84,7 @@ public class MapSearchApi {
 				Database.mMapDao.addMaps(mMap);
 				return true;
 			}
-			BaseTask.fromString(mapsJson, Map.class);
-
+			
 		}
 
 		return false;
@@ -113,7 +122,7 @@ public class MapSearchApi {
 								names.getString(i)).getString("url"));
 
 						// use deployment name if there is no deployment
-						// description
+						// description returned from the search
 						if (jsonObject.getJSONObject(names.getString(i))
 								.getString("description").equals("")) {
 							mapModel.setDesc(jsonObject.getJSONObject(
