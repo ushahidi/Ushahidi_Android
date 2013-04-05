@@ -56,7 +56,6 @@ import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
-import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
 public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
@@ -87,8 +86,6 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 
 	private boolean refreshState = false;
 
-	private ApiUtils apiUtils;
-
 	public MapFragment() {
 		super(R.menu.map_report);
 	}
@@ -101,7 +98,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		mReportModel = mListReportModel.getReports();
 		showCategories();
 		mHandler = new Handler();
-		apiUtils = new ApiUtils(getActivity());
+		
 		map = new MapView(getActivity(), getActivity().getString(
 				R.string.google_map_api_key));
 		Preferences.loadSettings(getActivity());
@@ -401,7 +398,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		protected Boolean doInBackground(String... strings) {
 			try {
 				// check if there is internet
-				if (apiUtils.isConnected()) {
+				if (Util.isConnected(getActivity())) {
 					// delete everything before updating with a new one
 					deleteFetchedReport();
 

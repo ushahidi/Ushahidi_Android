@@ -36,7 +36,6 @@ import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.services.SyncServices;
-import com.ushahidi.android.app.ui.phone.CheckinTabActivity;
 import com.ushahidi.android.app.ui.phone.ListMapActivity;
 import com.ushahidi.android.app.ui.phone.ReportTabActivity;
 import com.ushahidi.android.app.ui.tablet.DashboardActivity;
@@ -147,11 +146,8 @@ public class SplashScreenActivity extends FragmentActivity {
 						return true;
 					}
 				}
-				if (Preferences.isCheckinEnabled == 1) {
-					goToCheckins();
-				} else {
-					goToReports();
-				}
+
+				goToReports();
 				return true;
 			}
 		} catch (Exception ex) {
@@ -167,16 +163,7 @@ public class SplashScreenActivity extends FragmentActivity {
 		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		setResult(RESULT_OK);
 		finish();
-		
-	}
 
-	private void goToCheckins() {
-		Intent launchIntent;
-		launchIntent = new Intent(this, CheckinTabActivity.class);
-		startActivityForResult(launchIntent, 0);
-		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
-		setResult(RESULT_OK);
-		finish();
 	}
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -186,13 +173,10 @@ public class SplashScreenActivity extends FragmentActivity {
 				try {
 					unregisterReceiver(broadcastReceiver);
 				} catch (IllegalArgumentException e) {
+				
 				}
-
-				if (Preferences.isCheckinEnabled == 1) {
-					goToCheckins();
-				} else {
-					goToReports();
-				}
+				
+				goToReports();
 
 			}
 		}

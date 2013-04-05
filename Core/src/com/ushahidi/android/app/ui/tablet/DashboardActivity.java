@@ -18,7 +18,6 @@ import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
-import com.ushahidi.android.app.ui.phone.CheckinTabActivity;
 import com.ushahidi.android.app.ui.phone.ReportTabActivity;
 
 public class DashboardActivity extends FragmentMapActivity implements
@@ -31,8 +30,6 @@ public class DashboardActivity extends FragmentMapActivity implements
 	private ListMapFragment maps;
 
 	private ReportTabFragment reportTabFragment;
-
-	private CheckinTabFragment checkinTabFragment;
 
 	private static final int DIALOG_DISTANCE = 0;
 
@@ -68,16 +65,9 @@ public class DashboardActivity extends FragmentMapActivity implements
 			maps.enablePersistentSelection();
 			FragmentTransaction ft = getSupportFragmentManager()
 					.beginTransaction();
-			// checkin enabled
-			if (Preferences.isCheckinEnabled == 1) {
-				checkinTabFragment = new CheckinTabFragment();
-				ft.add(R.id.show_fragment, checkinTabFragment);
 
-			} else {
-				reportTabFragment = new ReportTabFragment();
-				ft.add(R.id.show_fragment, reportTabFragment);
-			}
-
+			reportTabFragment = new ReportTabFragment();
+			ft.add(R.id.show_fragment, reportTabFragment);
 			ft.setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
 			ft.commit();
 		} else if (f != null) {
@@ -91,29 +81,18 @@ public class DashboardActivity extends FragmentMapActivity implements
 		if (detailsInline) {
 			FragmentTransaction ft = getSupportFragmentManager()
 					.beginTransaction();
-			// checkin enabled
-			if (Preferences.isCheckinEnabled == 1) {
-				checkinTabFragment = new CheckinTabFragment();
-				ft.replace(R.id.show_fragment, checkinTabFragment);
 
-			} else {
-				reportTabFragment = new ReportTabFragment();
-				ft.replace(R.id.show_fragment, reportTabFragment);
-			}
-
+			reportTabFragment = new ReportTabFragment();
+			ft.replace(R.id.show_fragment, reportTabFragment);
 			ft.setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
 			ft.commit();
 
 		} else {
-			if (Preferences.isCheckinEnabled == 1) {
-				Intent i = new Intent(this, CheckinTabActivity.class);
-				startActivity(i);
-				overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
-			} else {
-				Intent i = new Intent(this, ReportTabActivity.class);
-				startActivity(i);
-				overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
-			}
+
+			Intent i = new Intent(this, ReportTabActivity.class);
+			startActivity(i);
+			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+
 		}
 
 	}

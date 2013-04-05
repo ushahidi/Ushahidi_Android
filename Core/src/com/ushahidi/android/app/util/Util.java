@@ -35,8 +35,6 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -61,7 +59,6 @@ import android.widget.Toast;
 
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.net.MainGeocoder;
 
 /**
  * This is a utility class that has common methods to be used by most clsses.
@@ -284,7 +281,7 @@ public class Util {
 	 * @apram json_data - the json data to be formatted.
 	 * @return String
 	 */
-	public static String getFromLocation(double latitude, double longitude,
+	/*public static String getFromLocation(double latitude, double longitude,
 			Context context) {
 		String json_data = "";
 		int status = 0;
@@ -323,7 +320,7 @@ public class Util {
 			return "";
 		}
 		return "";
-	}
+	}*/
 
 	/**
 	 * Show toast

@@ -61,11 +61,9 @@ import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.models.ListReportModel;
-import com.ushahidi.android.app.net.CheckinHttpClient;
 import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.tasks.ProgressTask;
-import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.views.AddMapView;
 import com.ushahidi.android.app.views.ListMapView;
 
@@ -343,11 +341,8 @@ public class ListMapActivity extends
 			int position, long id) {
 		final int sId = adapter.getItem(position).getId();
 		if (isMapActive(sId)) {
-			if (Preferences.isCheckinEnabled == 0) {
-				goToReports();
-			} else {
-				goToCheckins();
-			}
+			goToReports();
+
 		} else {
 
 			fetchReports(sId);
@@ -384,14 +379,6 @@ public class ListMapActivity extends
 	private void goToReports() {
 		Intent launchIntent;
 		launchIntent = new Intent(this, ReportTabActivity.class);
-		startActivityForResult(launchIntent, 0);
-		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
-		setResult(RESULT_OK);
-	}
-
-	private void goToCheckins() {
-		Intent launchIntent;
-		launchIntent = new Intent(this, CheckinTabActivity.class);
 		startActivityForResult(launchIntent, 0);
 		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		setResult(RESULT_OK);
@@ -620,23 +607,14 @@ public class ListMapActivity extends
 				if (id != 0) {
 					listMapModel.activateDeployment(ListMapActivity.this, id);
 					clearCachedData();
-					if (!new ApiUtils(ListMapActivity.this).isCheckinEnabled()) {
+					// fetch categories
+					new CategoriesApi().getCategoriesList();
 
-						// fetch categories
-						new CategoriesApi().getCategoriesList();
+					// fetch reports
+					status = new ReportsApi().saveReports(ListMapActivity.this) ? 0
+							: 99;
 
-						// fetch reports
-						status = new ReportsApi()
-								.saveReports(ListMapActivity.this) ? 0 : 99;
-						;
-						return false;
-					} else {
-
-						// TODO process checkin if there is one
-						status = new CheckinHttpClient(ListMapActivity.this)
-								.getAllCheckinFromWeb();
-						return true;
-					}
+					return true;
 
 				}
 
@@ -686,12 +664,7 @@ public class ListMapActivity extends
 		try {
 
 			if (success) {
-				if (Preferences.isCheckinEnabled == 1) {
-					toastLong(R.string.checkin_is_enabled);
-					goToCheckins();
-				} else {
-					goToReports();
-				}
+				goToReports();
 
 			} else {
 				toastLong(R.string.failed);

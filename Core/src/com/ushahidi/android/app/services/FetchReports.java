@@ -28,8 +28,6 @@ import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListReportModel;
-import com.ushahidi.android.app.net.CheckinHttpClient;
-import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
 /**
@@ -77,16 +75,10 @@ public class FetchReports extends SyncServices {
 
 		new Util().log("executeTask() executing this task");
 		clearCachedData();
-		if (!new ApiUtils(this).isCheckinEnabled()) {
-
-			// fetch categories
-			new CategoriesApi().getCategoriesList();
-			// fetch reportsx
-			status = new ReportsApi().saveReports(this) ? 0 : 99; 
-
-		} else {
-			status = new CheckinHttpClient(this).getAllCheckinFromWeb();
-		}
+		// fetch categories
+		new CategoriesApi().getCategoriesList();
+		// fetch reportsx
+		status = new ReportsApi().saveReports(this) ? 0 : 99;
 
 		statusIntent.putExtra("status", status);
 		sendBroadcast(statusIntent);

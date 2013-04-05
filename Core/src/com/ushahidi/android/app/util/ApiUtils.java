@@ -20,11 +20,9 @@
 
 package com.ushahidi.android.app.util;
 
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,16 +32,17 @@ import android.util.Log;
 
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.json.GsonHelper;
 import com.ushahidi.android.app.json.UshahidiApiVersion;
-import com.ushahidi.android.app.net.MainHttpClient;
+import com.ushahidi.java.sdk.UshahidiException;
+import com.ushahidi.java.sdk.api.tasks.BaseTask;
+import com.ushahidi.java.sdk.net.UshahidiHttpClient;
 
 /**
  * This is a Util class for an Ushahidi deployment API
  * 
  * @author eyedol
  */
-public class ApiUtils extends MainHttpClient {
+public class ApiUtils {
 
 	Context context;
 
@@ -51,8 +50,8 @@ public class ApiUtils extends MainHttpClient {
 	 * @param context
 	 */
 	public ApiUtils(Context context) {
-		super(context);
 		this.context = context;
+		client = new UshahidiHttpClient();
 	}
 
 	private static final String CLASS_TAG = Util.class.getSimpleName();
@@ -65,64 +64,7 @@ public class ApiUtils extends MainHttpClient {
 
 	private static JSONObject jsonObject;
 
-	private static HttpResponse response;
-
-	private static String jsonString;
-
-	public boolean checkForCheckin() {
-
-		Preferences.loadSettings(context);
-
-		updateDomain();
-
-		StringBuilder uriBuilder = new StringBuilder(Preferences.domain);
-		uriBuilder.append("/api?task=version");
-		uriBuilder.append("&resp=json");
-		
-		try {
-			response = GetURL(uriBuilder.toString());
-			
-			if (response == null) {
-				log("Dome "+Preferences.domain);
-				return false;
-			}
-
-			final int statusCode = response.getStatusLine().getStatusCode();
-			
-			if (statusCode == 200) {
-				jsonString = GetText(response);
-				log("jack "+jsonString+" domains "+Preferences.domain);
-				JSONObject jsonObject = new JSONObject(jsonString);
-				int checkinStatus = jsonObject.getJSONObject("payload").getInt(
-						"checkins");
-				log("Checkin status "+checkinStatus);
-				if (checkinStatus == 1) {
-					return true;
-				}
-				return false;
-			}
-			return false;
-		} catch (IOException e) {
-
-			return false;
-		} catch (JSONException e) {
-
-			return false;
-		}
-	}
-
-	public boolean isCheckinEnabled() {
-		final boolean checkinEnabled;
-		if (checkForCheckin()) {
-			Preferences.isCheckinEnabled = 1;
-			checkinEnabled = true;
-		} else {
-			Preferences.isCheckinEnabled = 0;
-			checkinEnabled = false;
-		}
-		Preferences.saveSettings(context);
-		return checkinEnabled;
-	}
+	private UshahidiHttpClient client;
 
 	public void clearAllReportData() {
 
@@ -194,27 +136,11 @@ public class ApiUtils extends MainHttpClient {
 		}
 
 	}
-	private String httpGet(String url){
-		try {
-			HttpResponse r = GetURL(url);
-			if ( r == null){
-				return null;
-			}
-			int stat = r.getStatusLine().getStatusCode();
-			// non 200 status code might have content to consume too
-			// will cause subsequent call to hang if not consumed
-			String ret = GetText(r);
-			if (  stat != 200){
-				return null;
-			}
-			return ret;
-		} catch (IOException e) {
-			return null;
-		}
-	}
-	private String trimVersion(String s){
+
+	private String trimVersion(String s) {
 		return s.replaceAll("[^0-9.]", "");
 	}
+
 	/**
 	 * Check if an ushahidi deployment has changed it's HTTP protocol to HTTPS
 	 * or not. Then update if it has.
@@ -231,25 +157,31 @@ public class ApiUtils extends MainHttpClient {
 		uriBuilder.append("&resp=json");
 
 		try {
-			UshahidiApiVersion ver = GsonHelper.fromUrl(uriBuilder.toString(),
-					UshahidiApiVersion.class);
+			if (client != null) {
+				String jsonString = client
+						.sendGetRequest(uriBuilder.toString());
+				UshahidiApiVersion ver = BaseTask.fromString(jsonString,
+						UshahidiApiVersion.class);
 
-			String domain = ver.getDomain();
-			log(String.format("%s %s ", "Update domain", domain));
+				String domain = ver.getDomain();
+				new Util()
+						.log(String.format("%s %s ", "Update domain", domain));
 
-			Preferences.domain = domain;
+				Preferences.domain = domain;
 
-			String ogsVer = httpGet(Preferences.domain + "/opengeosms/version");
-			Preferences.ogsPluginVersion = ogsVer == null ? ""
-					: trimVersion(ogsVer);
+				String ogsVer = client.sendGetRequest(Preferences.domain
+						+ "/opengeosms/version");
+				Preferences.ogsPluginVersion = ogsVer == null ? ""
+						: trimVersion(ogsVer);
 
-			String sms = ver.getSms();
-			Preferences.phonenumber = sms != null ? sms : "";
-			// save changes
-			Preferences.saveSettings(context);
+				String sms = ver.getSms();
+				Preferences.phonenumber = sms != null ? sms : "";
+				// save changes
+				Preferences.saveSettings(context);
+			}
 
-		} catch (IOException e) {
-			log(CLASS_TAG, e);
+		} catch (UshahidiException e) {
+			new Util().log(CLASS_TAG, e);
 		}
 	}
 

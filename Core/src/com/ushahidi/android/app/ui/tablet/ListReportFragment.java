@@ -66,7 +66,7 @@ import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
 import com.ushahidi.android.app.ui.phone.ViewReportActivity;
-import com.ushahidi.android.app.util.ApiUtils;
+import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ListReportView;
 import com.ushahidi.java.sdk.api.Incident;
 import com.ushahidi.java.sdk.api.Person;
@@ -106,8 +106,6 @@ public class ListReportFragment
 
 	private boolean refreshState = false;
 
-	private ApiUtils apiUtils;
-
 	private ListFetchedReportAdapter fetchedReportAdapter;
 
 	private ListPendingReportAdapter pendingReportAdapter;
@@ -129,7 +127,6 @@ public class ListReportFragment
 		setHasOptionsMenu(true);
 
 		mHandler = new Handler();
-		apiUtils = new ApiUtils(getActivity());
 		listView.setEmptyView(null);
 		fetchedReportAdapter = new ListFetchedReportAdapter(getActivity());
 		pendingReportAdapter = new ListPendingReportAdapter(getActivity());
@@ -703,7 +700,7 @@ public class ListReportFragment
 		protected Boolean doInBackground(String... strings) {
 			try {
 				// check if there is internet
-				if (apiUtils.isConnected()) {
+				if (Util.isConnected(getActivity())) {
 					// upload pending reports.
 					if (!pendingReportAdapter.isEmpty()) {
 						uploadPendingReports();
