@@ -595,8 +595,12 @@ public class ListReportFragment
 
 				// Upload
 				Response response = reportApi.submitReport(fields);
-				if (response.getErrorCode() == 0) {
-					deletePendingReport((int) report.getDbId());
+				if (response != null) {
+					if (response.getErrorCode() == 0) {
+						deletePendingReport((int) report.getDbId());
+					} else {
+						retVal = false;
+					}
 				} else {
 					retVal = false;
 				}

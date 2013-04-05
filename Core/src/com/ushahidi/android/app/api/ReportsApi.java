@@ -59,11 +59,12 @@ public class ReportsApi extends UshahidiApi {
 		processingResult = true;
 		reports = new ArrayList<ReportEntity>();
 	}
-	
+
 	/**
 	 * Fetch reports via the Ushahidi API
 	 * 
-	 * @param context The calling activity
+	 * @param context
+	 *            The calling activity
 	 * 
 	 * @return The list of reports
 	 */
@@ -137,7 +138,8 @@ public class ReportsApi extends UshahidiApi {
 	/**
 	 * Save fetched reports to the database
 	 * 
-	 * @param context The calling activity
+	 * @param context
+	 *            The calling activity
 	 * 
 	 * @return boolean
 	 */
@@ -151,10 +153,16 @@ public class ReportsApi extends UshahidiApi {
 
 	public Response submitReport(ReportFields report) {
 		reportTask = factory.createReportTask();
-		return reportTask.submit(report);
+
+		try {
+			return reportTask.submit(report);
+		} catch (UshahidiException e) {
+			e.getMessage();
+		}
+
+		return null;
 	}
-	
-	
+
 	public boolean upload(String url, Body body) {
 		final String response = task.getClient().sendMultipartPostRequest(url,
 				body);
@@ -164,8 +172,10 @@ public class ReportsApi extends UshahidiApi {
 	/**
 	 * Save details of categories to the database
 	 * 
-	 * @param categoryId The ID of the category
-	 * @param reportId The ID of the report
+	 * @param categoryId
+	 *            The ID of the category
+	 * @param reportId
+	 *            The ID of the report
 	 * 
 	 * @return void
 	 */
@@ -180,14 +190,18 @@ public class ReportsApi extends UshahidiApi {
 		// save new data
 		Database.mReportCategoryDao.addReportCategories(reportCategories);
 	}
-	
+
 	/**
 	 * Save fetched media to the database
 	 * 
-	 * @param mediaId The ID of the media
-	 * @param reportId The report ID associated with the media
-	 * @param type The media type. 1 for image, 2 for news link, 3 for video link
-	 * @param link The URL of the media
+	 * @param mediaId
+	 *            The ID of the media
+	 * @param reportId
+	 *            The report ID associated with the media
+	 * @param type
+	 *            The media type. 1 for image, 2 for news link, 3 for video link
+	 * @param link
+	 *            The URL of the media
 	 * 
 	 * @return void
 	 */
@@ -204,13 +218,16 @@ public class ReportsApi extends UshahidiApi {
 		// save new data
 		Database.mMediaDao.addMedia(sMedia);
 	}
-	
+
 	/**
 	 * Download image from the web
 	 * 
-	 * @param linkUrl The URL of the image to be downloaded
-	 * @param fileName The file name to give to the donwloaded image
-	 * @param context The calling activity
+	 * @param linkUrl
+	 *            The URL of the image to be downloaded
+	 * @param fileName
+	 *            The file name to give to the donwloaded image
+	 * @param context
+	 *            The calling activity
 	 * 
 	 * @return void
 	 */
