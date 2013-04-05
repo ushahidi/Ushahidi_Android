@@ -23,7 +23,6 @@ package com.ushahidi.android.app;
 import android.app.Application;
 
 import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.net.MainHttpClient;
 
 public class MainApplication extends Application {
 
@@ -32,8 +31,6 @@ public class MainApplication extends Application {
     public static ImageManager mImageManager;
 
     public static Database mDb;
-
-    public static MainHttpClient mApi;
 
     public static Application app = null;
 
@@ -46,8 +43,6 @@ public class MainApplication extends Application {
         mImageManager = new ImageManager();
         mDb = new Database(this);
         mDb.open();
-        mApi = new MainHttpClient(getApplicationContext());
-
     }
 
     @Override

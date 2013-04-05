@@ -20,11 +20,18 @@
 
 package com.ushahidi.android.app;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -35,7 +42,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 
-import com.ushahidi.android.app.net.MainHttpClient;
 import com.ushahidi.android.app.util.PhotoUtils;
 
 public class ImageManager {
@@ -44,6 +50,8 @@ public class ImageManager {
 	private static final String PHOTO = "/fetched";
 
 	private static final String PENDING = "/pending";
+
+	private static final int IO_BUFFER_SIZE = 512;
 
 	public static Drawable getDrawables(Context context, String fileName) {
 
@@ -121,7 +129,7 @@ public class ImageManager {
 
 		final BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
-		
+
 		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
 
 		if (options != null) {
@@ -175,7 +183,7 @@ public class ImageManager {
 		}
 		return null;
 	}
-	
+
 	public static Bitmap getBitmapThumbnails(Context context, String fileName) {
 		// get image
 		Bitmap original = BitmapFactory.decodeFile(getPhotoPath(context)
@@ -190,8 +198,76 @@ public class ImageManager {
 	protected static byte[] retrieveImageData(String imageUrl, Context context)
 			throws IOException {
 
-		MainHttpClient httpClient = new MainHttpClient(context);
-		return httpClient.fetchImage(imageUrl);
+		return fetchImage(imageUrl);
+	}
+
+	public static byte[] fetchImage(String address)
+			throws MalformedURLException, IOException {
+		InputStream in = null;
+		OutputStream out = null;
+
+		try {
+			in = new BufferedInputStream(new URL(address).openStream(),
+					IO_BUFFER_SIZE);
+
+			final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+			out = new BufferedOutputStream(dataStream, 4 * 1024);
+			copy(in, out);
+			out.flush();
+
+			// need to close stream before return statement
+			closeStream(in);
+			closeStream(out);
+
+			return dataStream.toByteArray();
+		} catch (IOException e) {
+			// android.util.Log.e("IO", "Could not load buddy icon: " + this,
+			// e);
+
+		} finally {
+			closeStream(in);
+			closeStream(out);
+
+		}
+		return null;
+
+	}
+
+	/**
+	 * Copy the content of the input stream into the output stream, using a
+	 * temporary byte array buffer whose size is defined by
+	 * {@link #IO_BUFFER_SIZE}.
+	 * 
+	 * @param in
+	 *            The input stream to copy from.
+	 * @param out
+	 *            The output stream to copy to.
+	 * @throws IOException
+	 *             If any error occurs during the copy.
+	 */
+	private static void copy(InputStream in, OutputStream out)
+			throws IOException {
+		byte[] b = new byte[4 * 1024];
+		int read;
+		while ((read = in.read(b)) != -1) {
+			out.write(b, 0, read);
+		}
+	}
+
+	/**
+	 * Closes the specified stream.
+	 * 
+	 * @param stream
+	 *            The stream to close.
+	 */
+	private static void closeStream(Closeable stream) {
+		if (stream != null) {
+			try {
+				stream.close();
+			} catch (IOException e) {
+				android.util.Log.e("IO", "Could not close stream", e);
+			}
+		}
 	}
 
 	public static void downloadImage(String imageUrl, String filename,
@@ -235,18 +311,19 @@ public class ImageManager {
 		}
 
 	}
-	
-	public static Bitmap drawableToBitmap (Drawable drawable) {
-	    if (drawable instanceof BitmapDrawable) {
-	        return ((BitmapDrawable)drawable).getBitmap();
-	    }
 
-	    Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Config.ARGB_8888);
-	    Canvas canvas = new Canvas(bitmap); 
-	    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-	    drawable.draw(canvas);
+	public static Bitmap drawableToBitmap(Drawable drawable) {
+		if (drawable instanceof BitmapDrawable) {
+			return ((BitmapDrawable) drawable).getBitmap();
+		}
 
-	    return bitmap;
+		Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+				drawable.getIntrinsicHeight(), Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+		drawable.draw(canvas);
+
+		return bitmap;
 	}
 
 	public static String getSavedPhotoPath(Context context, String folder) {
@@ -269,8 +346,9 @@ public class ImageManager {
 
 	public static String getPhotoPath(Context context, String pathfileName) {
 		File path = new File(Environment.getExternalStorageDirectory(),
-				String.format("%s%s%s", context.getPackageName(), "/", pathfileName));
-		
+				String.format("%s%s%s", context.getPackageName(), "/",
+						pathfileName));
+
 		if (!path.exists()) {
 			return null;
 		}
