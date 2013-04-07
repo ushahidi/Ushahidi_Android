@@ -25,10 +25,10 @@ import java.lang.reflect.InvocationTargetException;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.support.v4.view.Menu;
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -46,7 +46,7 @@ import com.ushahidi.android.app.views.View;
  * @author eyedol
  */
 public abstract class BaseSectionListFragment<V extends View, M extends Model, L extends BaseSectionListAdapter<M>>
-		extends ListFragment {
+		extends SherlockListFragment {
 
 	/**
 	 * ListView resource id

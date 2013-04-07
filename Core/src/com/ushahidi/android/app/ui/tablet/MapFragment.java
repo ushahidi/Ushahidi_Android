@@ -29,7 +29,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,7 +98,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		mReportModel = mListReportModel.getReports();
 		showCategories();
 		mHandler = new Handler();
-		
+
 		map = new MapView(getActivity(), getActivity().getString(
 				R.string.google_map_api_key));
 		Preferences.loadSettings(getActivity());

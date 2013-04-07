@@ -22,10 +22,10 @@ package com.ushahidi.android.app.activities;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.BaseListAdapter;
 import com.ushahidi.android.app.models.Model;
@@ -141,7 +141,7 @@ public abstract class BaseListActivity<V extends View, M extends Model, L extend
 	 * BaseListAdapter loads the data
 	 */
 	protected class LoadingTask extends ProgressTask {
-		public LoadingTask(FragmentActivity activity) {
+		public LoadingTask(SherlockActivity activity) {
 			super(activity, R.string.loading_);
 		}
 

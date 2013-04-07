@@ -23,10 +23,11 @@ package com.ushahidi.android.app.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.support.v4.view.Menu;
+
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -44,7 +45,7 @@ import com.ushahidi.android.app.views.View;
  * @author eyedol
  */
 public abstract class BaseListFragment<V extends View, M extends Model, L extends BaseListAdapter<M>>
-		extends ListFragment {
+		extends SherlockListFragment {
 
 	/**
 	 * ListView resource id
@@ -125,9 +126,11 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
 			if (emptyView != null) {
 				listView.setEmptyView(emptyView);
 			}
-			
-			view = Objects.createInstance(viewClass, Activity.class, getActivity());
-			adapter = Objects.createInstance(adapterClass, Context.class, getActivity());
+
+			view = Objects.createInstance(viewClass, Activity.class,
+					getActivity());
+			adapter = Objects.createInstance(adapterClass, Context.class,
+					getActivity());
 			listView.setAdapter(adapter);
 			listView.setFocusable(true);
 			listView.setFocusableInTouchMode(true);
@@ -160,7 +163,7 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
 	 *            true is successfully loaded
 	 */
 	protected abstract void onLoaded(boolean success);
-	
+
 	protected abstract android.view.View headerView();
 
 	@SuppressWarnings("unchecked")
@@ -212,7 +215,7 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
 	}
 
 	protected void log(String format, Object... args) {
-		new Util().log( String.format(format, args));	
+		new Util().log(String.format(format, args));
 	}
 
 	protected void log(String message, Exception ex) {

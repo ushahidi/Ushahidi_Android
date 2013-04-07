@@ -26,10 +26,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ActionBar;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,7 +49,7 @@ import com.ushahidi.android.app.views.View;
 /**
  * BaseActivity Add shared functionality that exists between all Activities
  */
-public abstract class BaseActivity<V extends View> extends FragmentActivity {
+public abstract class BaseActivity<V extends View> extends SherlockActivity {
 
 	/**
 	 * Layout resource id
@@ -160,7 +160,7 @@ public abstract class BaseActivity<V extends View> extends FragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (this.menu != 0) {
-			getMenuInflater().inflate(this.menu, menu);
+			getSupportMenuInflater().inflate(this.menu, menu);
 			return true;
 		}
 		return false;
@@ -196,8 +196,8 @@ public abstract class BaseActivity<V extends View> extends FragmentActivity {
 		// TODO: consider bringing in shortlink to session
 		Preferences.loadSettings(this);
 		final String reportUrl = Preferences.domain;
-		final String shareString = getString(R.string.share_template, " ",
-				" "+reportUrl);
+		final String shareString = getString(R.string.share_template, " ", " "
+				+ reportUrl);
 		final Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("image/jpg");
 		intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + path));
@@ -283,7 +283,7 @@ public abstract class BaseActivity<V extends View> extends FragmentActivity {
 	}
 
 	protected void log(String format, Object... args) {
-		new Util().log( String.format(format, args));	
+		new Util().log(String.format(format, args));
 	}
 
 	protected void log(String message, Exception ex) {

@@ -28,7 +28,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.Menu;
+import com.actionbarsherlock.view.Menu;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
