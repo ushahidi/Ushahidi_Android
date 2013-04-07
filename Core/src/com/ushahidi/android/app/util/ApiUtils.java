@@ -44,16 +44,6 @@ import com.ushahidi.java.sdk.net.UshahidiHttpClient;
  */
 public class ApiUtils {
 
-	Context context;
-
-	/**
-	 * @param context
-	 */
-	public ApiUtils(Context context) {
-		this.context = context;
-		client = new UshahidiHttpClient();
-	}
-
 	private static final String CLASS_TAG = Util.class.getSimpleName();
 
 	private static final String VALID_URL_PATTERN = "^(https?|ftp)://[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].+)?$";
@@ -64,7 +54,6 @@ public class ApiUtils {
 
 	private static JSONObject jsonObject;
 
-	private UshahidiHttpClient client;
 
 	public void clearAllReportData() {
 
@@ -137,7 +126,7 @@ public class ApiUtils {
 
 	}
 
-	private String trimVersion(String s) {
+	private static String trimVersion(String s) {
 		return s.replaceAll("[^0-9.]", "");
 	}
 
@@ -148,8 +137,9 @@ public class ApiUtils {
 	 * @param context
 	 *            - the calling activity.
 	 */
-	public void updateDomain() {
-
+	public static void updateDomain(Context context) {
+		
+		UshahidiHttpClient client = new UshahidiHttpClient();
 		Preferences.loadSettings(context);
 
 		StringBuilder uriBuilder = new StringBuilder(Preferences.domain);

@@ -589,7 +589,7 @@ public class ListMapActivity extends
 
 	/**
 	 * Load the map's report
-	 */
+	 *
 
 	class FetchMapReportTask extends ProgressTask {
 
@@ -609,7 +609,7 @@ public class ListMapActivity extends
 					listMapModel.activateDeployment(ListMapActivity.this, id);
 					
 					// update domain
-					new ApiUtils(dialog.getContext()).updateDomain();
+					ApiUtils.updateDomain(dialog.getContext());
 					clearCachedData();
 					// fetch categories
 					new CategoriesApi().getCategoriesList();
@@ -661,7 +661,7 @@ public class ListMapActivity extends
 				toastLong(R.string.failed);
 			}
 		}
-	}
+	}*/
 
 	@Override
 	protected void onLoaded(boolean success) {

@@ -68,7 +68,7 @@ public class CommentsApi extends UshahidiApi {
 				}
 			} catch (UshahidiException e) {
 				processingResult = false;
-				e.printStackTrace();
+				new Util().log("CommentsApi getCommentsList",e);
 			}
 		}
 		return comments;
@@ -81,24 +81,12 @@ public class CommentsApi extends UshahidiApi {
 	 * @return {@link Response} The response from the server.
 	 */
 	public Response submit(CommentFields comment) {
-		return task.submit(comment);
-	}
-
-	public List<CommentEntity> getCheckinCommentsList() {
-		new Util().log("Save comments");
-		if (processingResult) {
-			try {
-				for (com.ushahidi.java.sdk.api.Comment c : task.all()) {
-					CommentEntity comment = new CommentEntity();
-					comment.addComment(c);
-					comments.add(comment);
-				}
-			} catch (UshahidiException e) {
-				processingResult = false;
-				e.printStackTrace();
-			}
+		try {
+			return task.submit(comment);
+		}catch(UshahidiException e) {
+			new Util().log("CommentsApi Submit",e);
 		}
-		return comments;
+		return null;
 	}
 
 	/**
@@ -116,25 +104,6 @@ public class CommentsApi extends UshahidiApi {
 			for (CommentEntity comment : comments) {
 				Database.mCommentDao.deleteCommentByReportId(comment
 						.getReportId());
-			}
-			return Database.mCommentDao.addComment(comments);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Save checkins comments into database
-	 * 
-	 * @return boolean
-	 */
-	public boolean saveCheckinsComments() {
-		List<CommentEntity> comments = getCheckinCommentsList();
-		if (comments != null && comments.size() > 0) {
-			// remove existing comments
-			for (CommentEntity comment : comments) {
-				Database.mCommentDao.deleteCommentByCheckinId(comment
-						.getCheckinId());
 			}
 			return Database.mCommentDao.addComment(comments);
 		}

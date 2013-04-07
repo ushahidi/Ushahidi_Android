@@ -57,10 +57,11 @@ public class UploadComments extends SyncServices {
 			comment.fill(c);
 			comment.setEmail(bundle.getString("comment_email"));
 			Response response = commentApi.submit(comment);
-			if (response.getErrorCode() == 0) {
-				commentApi.saveComments(bundle.getInt("report_id"));
+			if (response != null) {
+				if (response.getErrorCode() == 0) {
+					commentApi.saveComments(bundle.getInt("report_id"));
+				}
 			}
-
 		}
 		return 1;
 	}
