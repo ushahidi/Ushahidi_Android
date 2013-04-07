@@ -28,6 +28,8 @@ public class AddMapView {
     private int mMapId;
 
     private ListMapModel mapModel;
+    
+    private android.view.View dialog;
 
     /**
      * Handles views for the add dialog box
@@ -39,7 +41,7 @@ public class AddMapView {
         mMapName = (EditText)dialogViews.findViewById(R.id.map_name);
         mMapDescription = (EditText)dialogViews.findViewById(R.id.map_description);
         mMapUrl = (EditText)dialogViews.findViewById(R.id.map_url);
-
+        this.dialog = dialogViews;
         mMapUrl.setOnTouchListener(new OnTouchListener() {
 
             public boolean onTouch(View v, MotionEvent event) {
@@ -97,7 +99,7 @@ public class AddMapView {
      */
     public boolean addMapDetails() {
         if ((ApiUtils.validateUshahidiInstance(getMapUrl())) && !(TextUtils.isEmpty(getMapName()))) {
-        	
+        	new ApiUtils(dialog.getContext()).updateDomain();
             Map map = new Map();
             map.setMapId(0);
             map.setCatId(0);

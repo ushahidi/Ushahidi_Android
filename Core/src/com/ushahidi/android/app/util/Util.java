@@ -35,8 +35,6 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -66,8 +64,6 @@ import com.ushahidi.android.app.R;
  * @author eyedol
  */
 public class Util {
-
-	private static JSONObject jsonObject;
 
 	private static NetworkInfo networkInfo;
 
