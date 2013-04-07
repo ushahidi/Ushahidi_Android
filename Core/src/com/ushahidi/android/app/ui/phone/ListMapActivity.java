@@ -64,6 +64,7 @@ import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.tasks.ProgressTask;
+import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.views.AddMapView;
 import com.ushahidi.android.app.views.ListMapView;
 
@@ -606,6 +607,9 @@ public class ListMapActivity extends
 			try {
 				if (id != 0) {
 					listMapModel.activateDeployment(ListMapActivity.this, id);
+					
+					// update domain
+					new ApiUtils(dialog.getContext()).updateDomain();
 					clearCachedData();
 					// fetch categories
 					new CategoriesApi().getCategoriesList();
