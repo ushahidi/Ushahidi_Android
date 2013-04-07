@@ -23,7 +23,6 @@ package com.ushahidi.android.app.ui.phone;
 import java.util.Date;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -54,9 +53,7 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.BaseListActivity;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
-import com.ushahidi.android.app.api.CategoriesApi;
 import com.ushahidi.android.app.api.MapSearchApi;
-import com.ushahidi.android.app.api.ReportsApi;
 import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListMapModel;
@@ -64,7 +61,6 @@ import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.tasks.ProgressTask;
-import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.views.AddMapView;
 import com.ushahidi.android.app.views.ListMapView;
 
@@ -586,82 +582,6 @@ public class ListMapActivity extends
 		}
 
 	}
-
-	/**
-	 * Load the map's report
-	 *
-
-	class FetchMapReportTask extends ProgressTask {
-
-		protected int id;
-
-		protected Integer status = 113;
-
-		public FetchMapReportTask(Activity activity) {
-			super(activity, R.string.please_wait);
-			// pass custom loading message to super call
-		}
-
-		@Override
-		protected Boolean doInBackground(String... strings) {
-			try {
-				if (id != 0) {
-					listMapModel.activateDeployment(ListMapActivity.this, id);
-					
-					// update domain
-					ApiUtils.updateDomain(dialog.getContext());
-					clearCachedData();
-					// fetch categories
-					new CategoriesApi().getCategoriesList();
-
-					// fetch reports
-					status = new ReportsApi().saveReports(ListMapActivity.this) ? 0
-							: 99;
-
-					return true;
-
-				}
-
-				Thread.sleep(1000);
-				return false;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				return false;
-			}
-
-		}
-
-		@Override
-		protected void onPostExecute(Boolean success) {
-			super.onPostExecute(success);
-			if (success) {
-				if (status != null) {
-					if (status == 0) {
-						onLoaded(success);
-					} else if (status == 100) {
-						errorMessage = getString(R.string.internet_connection);
-						createDialog(DIALOG_SHOW_MESSAGE);
-					} else if (status == 99) {
-						errorMessage = getString(R.string.failed);
-						createDialog(DIALOG_SHOW_MESSAGE);
-					} else if (status == 112) {
-						errorMessage = getString(R.string.network_error);
-						createDialog(DIALOG_SHOW_MESSAGE);
-					} else {
-						errorMessage = getString(R.string.error_occured);
-						createDialog(DIALOG_SHOW_MESSAGE);
-
-					}
-
-				} else {
-					toastLong(R.string.failed);
-				}
-
-			} else {
-				toastLong(R.string.failed);
-			}
-		}
-	}*/
 
 	@Override
 	protected void onLoaded(boolean success) {
