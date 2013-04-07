@@ -36,15 +36,15 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.View;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.Menu;
 import android.widget.AdapterView;
 
 import com.ushahidi.android.app.ImageManager;
