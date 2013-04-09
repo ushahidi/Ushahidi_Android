@@ -28,12 +28,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.google.android.gms.maps.SupportMapFragment;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseMapViewActivity;
@@ -78,6 +79,12 @@ public class ViewReportActivity extends
 		super.onCreate(savedInstanceState);
 
 		reports = new ListReportModel();
+		if (checkForGMap()) {
+			SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.loc_map);
+			view.mapView = mapFrag.getMap();
+		}
+
 		this.categoryId = getIntent().getExtras().getInt("category", 0);
 		this.position = getIntent().getExtras().getInt("id", 0);
 
@@ -248,7 +255,6 @@ public class ViewReportActivity extends
 			centerLocationWithMarker(getPoint(report.get(position)
 					.getIncident().getLatitude(), report.get(position)
 					.getIncident().getLongitude()));
-			view.mapView.setBuiltInZoomControls(false);
 			int page = position;
 			this.setTitle(page + 1);
 		}
@@ -285,11 +291,6 @@ public class ViewReportActivity extends
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-	}
-
-	@Override
-	protected boolean isRouteDisplayed() {
-		return false;
 	}
 
 	/*

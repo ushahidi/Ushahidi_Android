@@ -44,7 +44,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -62,6 +62,7 @@ import android.widget.ListView;
 import android.widget.TimePicker;
 import android.widget.ViewSwitcher;
 
+import com.google.android.gms.maps.SupportMapFragment;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
@@ -154,7 +155,12 @@ public class AddReportActivity extends
 		super.onCreate(savedInstanceState);
 		view.mLatitude.addTextChangedListener(latLonTextWatcher);
 		view.mLongitude.addTextChangedListener(latLonTextWatcher);
-		mapController = view.mapView.getController();
+		if (checkForGMap()) {
+			SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.loc_map);
+			view.map = mapFrag.getMap();
+		}
+		
 		view.mBtnPicture.setOnClickListener(this);
 		view.mBtnAddCategory.setOnClickListener(this);
 		view.mPickDate.setOnClickListener(this);
@@ -1103,10 +1109,6 @@ public class AddReportActivity extends
 		return addReport();
 	}
 
-	@Override
-	protected boolean isRouteDisplayed() {
-		return false;
-	}
 
 	/*
 	 * (non-Javadoc)

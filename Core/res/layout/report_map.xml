@@ -15,4 +15,4 @@
     android:id="@+id/map_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    class="com.ushahidi.android.app.fragments.MapFragment" />
+    class="com.google.android.gms.maps.SupportMapFragment" />

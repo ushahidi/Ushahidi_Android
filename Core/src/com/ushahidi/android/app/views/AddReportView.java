@@ -29,7 +29,7 @@ import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.maps.MapView;
+import com.google.android.gms.maps.GoogleMap;
 import com.ushahidi.android.app.R;
 
 /**
@@ -65,7 +65,7 @@ public class AddReportView extends View {
 	
 	public Button mDeleteReport;
 
-	public MapView mapView;
+	public GoogleMap map;
 
 	public Gallery gallery;
 
@@ -93,7 +93,7 @@ public class AddReportView extends View {
 				android.R.anim.fade_in));
 		mSwitcher.setOutAnimation(AnimationUtils.loadAnimation(activity,
 				android.R.anim.fade_out));
-		this.mapView = (MapView) activity.findViewById(R.id.location_map);
+		
 	}
 
 }

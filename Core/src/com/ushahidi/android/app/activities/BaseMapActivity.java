@@ -23,7 +23,6 @@ package com.ushahidi.android.app.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -34,7 +33,6 @@ import com.actionbarsherlock.view.Menu;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.ushahidi.android.app.MapMarker;
 import com.ushahidi.android.app.MapUserLocation;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
@@ -189,7 +187,7 @@ public abstract class BaseMapActivity<V extends View> extends MapUserLocation
 	}
 
 	protected void centerAtLocation(double latitude, double longitude, int zoom) {
-		
+		//TODO implement updateMarker with zoom in support
 	}
 
 	protected LatLng getPoint(double latitude, double longitude) {

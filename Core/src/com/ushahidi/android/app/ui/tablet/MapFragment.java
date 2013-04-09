@@ -38,8 +38,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapView;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
@@ -60,7 +58,7 @@ import com.ushahidi.android.app.util.Util;
 
 public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 
-	private MapView map = null;
+	private GoogleMap map = null;
 
 	private ListReportModel mListReportModel;
 

@@ -132,14 +132,12 @@
                 android:orientation="vertical"
                 android:padding="10dip" >
 
-                <com.google.android.maps.MapView
+                <fragment
                     android:id="@+id/loc_map"
                     android:layout_width="match_parent"
                     android:layout_height="300dip"
                     android:layout_gravity="center"
-                    android:apiKey="@string/google_map_api_key"
-                    android:clickable="true"
-                    android:enabled="true"
+                    class="com.google.android.gms.maps.SupportMapFragment"
                     android:gravity="center" />
             </LinearLayout>
 

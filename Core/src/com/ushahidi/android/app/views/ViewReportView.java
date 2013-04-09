@@ -34,7 +34,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
 
-import com.google.android.maps.MapView;
+import com.google.android.gms.maps.GoogleMap;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListCommentAdapter;
 import com.ushahidi.android.app.adapters.ListNewsAdapter;
@@ -69,7 +69,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
 	private TextView listCommentEmptyView;
 
-	public MapView mapView;
+	public GoogleMap mapView;
 
 	private ListView listNews;
 
@@ -101,7 +101,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		viewReportRoot = (ViewAnimator) activity
 				.findViewById(R.id.view_report_root);
 
-		mapView = (MapView) activity.findViewById(R.id.loc_map);
+		
+		
 		title = (TextView) activity.findViewById(R.id.title);
 		category = (TextView) activity.findViewById(R.id.category);
 		date = (TextView) activity.findViewById(R.id.date);
@@ -146,7 +147,6 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	public ViewReportView(ViewGroup activity, Context context) {
 		super(activity);
 		this.context = context;
-		mapView = (MapView) activity.findViewById(R.id.loc_map);
 		title = (TextView) activity.findViewById(R.id.title);
 		category = (TextView) activity.findViewById(R.id.category);
 		date = (TextView) activity.findViewById(R.id.date);
@@ -238,7 +238,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		return this.status.getText().toString();
 	}
 
-	public MapView getMapView() {
+	public GoogleMap getMapView() {
 		return this.mapView;
 	}
 
