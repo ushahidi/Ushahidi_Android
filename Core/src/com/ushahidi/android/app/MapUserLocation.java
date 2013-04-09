@@ -3,37 +3,40 @@ package com.ushahidi.android.app;
 import java.util.Date;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.support.v4.app.FragmentMapActivity;
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.ItemizedOverlay;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
 
-public abstract class MapUserLocation extends FragmentMapActivity implements
-		LocationListener {
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.ushahidi.android.app.util.Util;
+
+public abstract class MapUserLocation extends SherlockFragmentActivity
+		implements LocationListener {
 
 	protected static final int ONE_MINUTE = 60 * 1000;
 
 	protected static final int FIVE_MINUTES = 5 * ONE_MINUTE;
 
 	protected static final int ACCURACY_THRESHOLD = 30; // in meters
+	
+	protected static final String TAG_ERROR_DIALOG_FRAGMENT="errorDialog";
 
-	protected MapView mapView;
-
-	protected MapController mapController;
+	protected GoogleMap map;
 
 	protected LocationManager locationManager;
 
@@ -49,9 +52,8 @@ public abstract class MapUserLocation extends FragmentMapActivity implements
 	protected abstract void locationChanged(double latitude, double longitude);
 
 	/* Override this to set a custom marker */
-	protected UpdatableMarker createUpdatableMarker(Drawable marker,
-			GeoPoint point) {
-		return new MapMarker(marker, point);
+	protected UpdatableMarker createUpdatableMarker(LatLng point) {
+		return new MapMarker(point);
 	}
 
 	protected void setDeviceLocation() {
@@ -125,24 +127,25 @@ public abstract class MapUserLocation extends FragmentMapActivity implements
 		updateMarker(getPoint(latitude, longitude), center);
 	}
 
-	protected void updateMarker(GeoPoint point, boolean center) {
-		if (updatableMarker == null) {
-			Drawable marker = getResources().getDrawable(
-					R.drawable.map_marker_green);
+	protected void updateMarker(LatLng point, boolean center) {
+		if (map != null) {
+			if (updatableMarker == null) {
+				LatLngBounds bounds = new LatLngBounds.Builder()
+                .include(point).build();
+				CameraUpdate p = CameraUpdateFactory.newLatLngBounds(bounds, 50);
+				CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+				map.moveCamera(p);
+				map.animateCamera(zoom);
 
-			marker.setBounds(0, 0, marker.getIntrinsicWidth(),
-					marker.getIntrinsicHeight());
-			mapController.setZoom(14);
+				updatableMarker = createUpdatableMarker(point);
 
-			mapView.setBuiltInZoomControls(false);
-			updatableMarker = createUpdatableMarker(marker, point);
-			mapView.getOverlays().add((Overlay) updatableMarker);
-			
-		} else {
-			updatableMarker.update(point);
-		}
-		if (center) {
-			mapController.animateTo(point);
+			} else {
+				updatableMarker.update(point);
+			}
+			if (center) {
+				CameraUpdate c = CameraUpdateFactory.newLatLng(point);
+				map.moveCamera(c);
+			}
 		}
 
 	}
@@ -156,8 +159,8 @@ public abstract class MapUserLocation extends FragmentMapActivity implements
 	 *            Lingitude
 	 * @return GeoPoint
 	 */
-	protected GeoPoint getPoint(double latitude, double longitude) {
-		return (new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6)));
+	protected LatLng getPoint(double latitude, double longitude) {
+		return (new LatLng(latitude, longitude));
 	}
 
 	protected void setBestLocation(Location location1, Location location2) {
@@ -181,60 +184,89 @@ public abstract class MapUserLocation extends FragmentMapActivity implements
 			locationChanged(location2.getLatitude(), location2.getLongitude());
 		}
 	}
+	
+	/**
+	 * Check if Google Maps exist on the device
+	 * 
+	 * @return
+	 */
+	protected boolean checkForGMap() {
+	    int status=
+	        GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
-	private class MapMarker extends ItemizedOverlay<OverlayItem> implements
-			UpdatableMarker {
-		private OverlayItem myOverlayItem;
-		private long lastTouchTime = -1;
+	    if (status == ConnectionResult.SUCCESS) {
+	      return(true);
+	    }
+	    else if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
+	      ErrorDialogFragment.newInstance(status)
+	                         .show(getSupportFragmentManager(),
+	                               TAG_ERROR_DIALOG_FRAGMENT);
+	    }
+	    else {
+	    	Util.showToast(this, R.string.no_maps);
+	      finish();
+	    }
+	    
+	    return false;
+	  }
 
-		public MapMarker(Drawable defaultMarker, GeoPoint point) {
-			super(boundCenterBottom(defaultMarker));
+	  public static class ErrorDialogFragment extends DialogFragment {
+	    static final String ARG_STATUS="status";
+
+	    static ErrorDialogFragment newInstance(int status) {
+	      Bundle args=new Bundle();
+
+	      args.putInt(ARG_STATUS, status);
+
+	      ErrorDialogFragment result=new ErrorDialogFragment();
+
+	      result.setArguments(args);
+
+	      return(result);
+	    }
+
+	    @Override
+	    public Dialog onCreateDialog(Bundle savedInstanceState) {
+	      Bundle args=getArguments();
+
+	      return GooglePlayServicesUtil.getErrorDialog(args.getInt(ARG_STATUS),
+	                                                   getActivity(), 0);
+	    }
+
+	    @Override
+	    public void onDismiss(DialogInterface dlg) {
+	      if (getActivity() != null) {
+	        getActivity().finish();
+	      }
+	    }
+	  }
+
+	private class MapMarker implements UpdatableMarker {
+
+		public MapMarker(LatLng point) {
 			update(point);
 		}
 
-		public void update(GeoPoint point) {
-			myOverlayItem = new OverlayItem(point, " ", " ");
-			populate();
+		public void update(LatLng point) {
+			if (point != null)
+				map.addMarker(new MarkerOptions().position(point));
 		}
 
-		@Override
-		protected OverlayItem createItem(int i) {
-			return myOverlayItem;
-		}
-
-		@Override
-		public int size() {
-			return 1;
-		}
-
-		@Override
-		public boolean onTouchEvent(MotionEvent event, MapView mapView) {
-			final int action = event.getAction();
-			final int x = (int) event.getX();
-			final int y = (int) event.getY();
-			if (action == MotionEvent.ACTION_DOWN) {
-				long thisTime = System.currentTimeMillis();
-				if (thisTime - lastTouchTime < 250) {
-					lastTouchTime = -1;
-					GeoPoint geoPoint = mapView.getProjection().fromPixels(
-							(int) event.getX(), (int) event.getY());
-					double latitude = geoPoint.getLatitudeE6() / 1E6;
-					double longitude = geoPoint.getLongitudeE6() / 1E6;
-					Log.i(getClass().getSimpleName(), String.format(
-							"%d, %d >> %f, %f", x, y, latitude, longitude));
-					locationChanged(latitude, longitude);
-					return true;
-				} else {
-					lastTouchTime = thisTime;
-				}
-			}
-			return super.onTouchEvent(event, mapView);
-		}
-	}
-
-	@Override
-	protected boolean isRouteDisplayed() {
-		return false;
+		/*
+		 * @Override public boolean onTouchEvent(MotionEvent event, MapView
+		 * mapView) { final int action = event.getAction(); final int x = (int)
+		 * event.getX(); final int y = (int) event.getY(); if (action ==
+		 * MotionEvent.ACTION_DOWN) { long thisTime =
+		 * System.currentTimeMillis(); if (thisTime - lastTouchTime < 250) {
+		 * lastTouchTime = -1; GeoPoint geoPoint =
+		 * mapView.getProjection().fromPixels( (int) event.getX(), (int)
+		 * event.getY()); double latitude = geoPoint.getLatitudeE6() / 1E6;
+		 * double longitude = geoPoint.getLongitudeE6() / 1E6;
+		 * Log.i(getClass().getSimpleName(), String.format( "%d, %d >> %f, %f",
+		 * x, y, latitude, longitude)); locationChanged(latitude, longitude);
+		 * return true; } else { lastTouchTime = thisTime; } } return
+		 * super.onTouchEvent(event, mapView); }
+		 */
 	}
 
 	public void onLocationChanged(Location location) {
@@ -277,6 +309,6 @@ public abstract class MapUserLocation extends FragmentMapActivity implements
 	}
 
 	public abstract interface UpdatableMarker {
-		public abstract void update(GeoPoint point);
+		public abstract void update(LatLng point);
 	}
 }

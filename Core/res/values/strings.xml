@@ -253,4 +253,5 @@
     <string name="internet">Internet</string>
     <string name="opengeosms">Open GeoSMS</string>
     <string name="pending">Pending</string>
+    <string name="no_maps">Google Maps V2 not available!</string>
 </resources>

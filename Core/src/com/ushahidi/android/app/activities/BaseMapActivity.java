@@ -28,11 +28,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import com.actionbarsherlock.view.Menu;
 import android.widget.Toast;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapView;
+import com.actionbarsherlock.view.Menu;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.ushahidi.android.app.MapMarker;
 import com.ushahidi.android.app.MapUserLocation;
 import com.ushahidi.android.app.Preferences;
@@ -45,8 +46,8 @@ import com.ushahidi.android.app.views.View;
  * BaseMapActivity Add shared functionality that exists between all Map
  * Activities
  */
-public abstract class BaseMapActivity<V extends View> extends
-		MapUserLocation implements LocationListener {
+public abstract class BaseMapActivity<V extends View> extends MapUserLocation
+		implements LocationListener {
 
 	/**
 	 * Layout resource id
@@ -76,7 +77,7 @@ public abstract class BaseMapActivity<V extends View> extends
 	/**
 	 * MapView
 	 */
-	protected MapView mapView;
+	protected GoogleMap mapView;
 
 	/**
      *
@@ -107,11 +108,16 @@ public abstract class BaseMapActivity<V extends View> extends
 		super.onCreate(savedInstanceState);
 		if (layout != 0) {
 			setContentView(layout);
-			
+
 		}
 		if (mapViewId != 0) {
-			mapView = (MapView) findViewById(mapViewId);
-			super.mapView = mapView;
+			if (checkForGMap()) {
+				SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager()
+						.findFragmentById(mapViewId);
+
+				mapView = mapFrag.getMap();
+				super.map = mapView;
+			}
 		}
 		if (locationManager == null) {
 			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -133,14 +139,14 @@ public abstract class BaseMapActivity<V extends View> extends
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (this.menu != 0) {
-			getMenuInflater().inflate(this.menu, menu);
+			getSupportMenuInflater().inflate(this.menu, menu);
 			return true;
 		}
 		return false;
 	}
 
 	protected void shareText(String shareItem) {
-		
+
 		final Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/plain");
 		intent.putExtra(Intent.EXTRA_TEXT, shareItem);
@@ -170,37 +176,24 @@ public abstract class BaseMapActivity<V extends View> extends
 		getSupportActionBar().setTitle(title);
 	}
 
-	protected void placeMarker(int markerLatitude, int markerLongitude) {
-
-		Drawable marker = getResources().getDrawable(R.drawable.map_marker_red);
-
-		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
-				marker.getIntrinsicHeight());
-		mapView.getController().setZoom(14);
-
-		mapView.setBuiltInZoomControls(true);
-		mapView.getOverlays().add(
-				new MapMarker(marker, markerLatitude, markerLongitude));
+	protected void placeMarker(double latitude, double longitude) {
+		updateMarker(latitude, longitude,false);
 	}
 
-	protected void centerLocationWithMarker(GeoPoint centerGeoPoint) {
-		mapView.getController().animateTo(centerGeoPoint);
-		placeMarker(centerGeoPoint.getLatitudeE6(),
-				centerGeoPoint.getLongitudeE6());
+	protected void centerLocationWithMarker(LatLng centerGeoPoint) {
+		updateMarker(centerGeoPoint,true);
 	}
 
 	protected void centerAtLocation(double latitude, double longitude) {
-		mapView.getController().setCenter(getPoint(latitude, longitude));
+		updateMarker(latitude, longitude,true);
 	}
 
 	protected void centerAtLocation(double latitude, double longitude, int zoom) {
-		mapView.getController().setCenter(getPoint(latitude, longitude));
-		mapView.getController().setZoom(zoom);
+		
 	}
 
-	protected  GeoPoint getPoint(double latitude, double longitude) {
-		return new GeoPoint((int) (latitude * 1000000.0),
-				(int) (longitude * 1000000.0));
+	protected LatLng getPoint(double latitude, double longitude) {
+		return getPoint(latitude, longitude);
 	}
 
 	protected void log(String message) {
@@ -208,7 +201,7 @@ public abstract class BaseMapActivity<V extends View> extends
 	}
 
 	protected void log(String format, Object... args) {
-		new Util().log( String.format(format, args));	
+		new Util().log(String.format(format, args));
 	}
 
 	protected void log(String message, Exception ex) {
