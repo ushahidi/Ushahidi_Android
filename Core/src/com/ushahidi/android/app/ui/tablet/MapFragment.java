@@ -50,6 +50,7 @@ import com.ushahidi.android.app.api.CategoriesApi;
 import com.ushahidi.android.app.api.ReportsApi;
 import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.entities.ReportEntity;
+import com.ushahidi.android.app.fragments.BaseMapFragment;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.ProgressTask;
@@ -57,7 +58,7 @@ import com.ushahidi.android.app.ui.phone.AddReportActivity;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ViewReportView;
 
-public class MapFragment extends BaseMapActivity<ViewReportView> {
+public class MapFragment extends BaseMapFragment {
 
 	private GoogleMap map = null;
 
@@ -84,70 +85,61 @@ public class MapFragment extends BaseMapActivity<ViewReportView> {
 	private boolean refreshState = false;
 
 	public MapFragment() {
-		super(ViewReportView.class, R.layout.report_map, R.menu.map_report,
-				R.id.map_fragment);
+		super(R.menu.map_report);
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 		mListReportModel = new ListReportModel();
 		mListReportModel.load();
 		mReportModel = mListReportModel.getReports();
 		showCategories();
 		mHandler = new Handler();
 
-		if (checkForGMap()){
-		SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager()
-				.findFragmentById(mapViewId);
+		if (checkForGMap()) {
+			/*
+			 * SupportMapFragment mapFrag = (SupportMapFragment) getActivity()
+			 * .getSupportFragmentManager().findFragmentById(
+			 * R.id.map_fragment);
+			 */
 
-		map = mapFrag.getMap();
+			map = getMap();
 
-		Preferences.loadSettings(this);
-		if (mReportModel.size() > 0) {
-			// map.setClickable(true);
-			// map.setBuiltInZoomControls(true);
-			mHandler.post(mMarkersOnMap);
+			Preferences.loadSettings(getActivity());
+			if (mReportModel.size() > 0) {
+				// map.setClickable(true);
+				// map.setBuiltInZoomControls(true);
+				mHandler.post(mMarkersOnMap);
 
-		} else {
-			toastLong(R.string.no_reports);
+			} else {
+				toastLong(R.string.no_reports);
+			}
 		}
-		}
-		//((ViewGroup) getView()).addView(map);
+		// ((ViewGroup) getView()).addView(map.);
 		// }
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.menu_refresh) {
-			refresh = item;
-			new RefreshReports(this).execute((String) null);
-			return true;
-		} else if (item.getItemId() == R.id.menu_add) {
-			launchAddReport();
-			return true;
-		} else if (item.getItemId() == R.id.menu_normal) {
-			// map.setSatellite(false);
-			// map.setTraffic(false);
-			return true;
-		} else if (item.getItemId() == R.id.menu_satellite) {
-			// map.setSatellite(true);
-			return true;
-
-		} else if (item.getItemId() == R.id.filter_by) {
-
-			showDropDownNav();
-
-			return true;
-		} else if (item.getItemId() == android.R.id.home) {
-			finish();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+	/*
+	 * @Override public boolean onOptionsItemSelected(MenuItem item) { if
+	 * (item.getItemId() == R.id.menu_refresh) { refresh = item; new
+	 * RefreshReports(this).execute((String) null); return true; } else if
+	 * (item.getItemId() == R.id.menu_add) { launchAddReport(); return true; }
+	 * else if (item.getItemId() == R.id.menu_normal) { //
+	 * map.setSatellite(false); // map.setTraffic(false); return true; } else if
+	 * (item.getItemId() == R.id.menu_satellite) { // map.setSatellite(true);
+	 * return true;
+	 * 
+	 * } else if (item.getItemId() == R.id.filter_by) {
+	 * 
+	 * showDropDownNav();
+	 * 
+	 * return true; } else if (item.getItemId() == android.R.id.home) {
+	 * finish(); return true; } return super.onOptionsItemSelected(item); }
+	 */
 
 	protected View headerView() {
-		LayoutInflater inflater = getLayoutInflater();
+		LayoutInflater inflater = getActivity().getLayoutInflater();
 		ViewGroup viewGroup = (ViewGroup) inflater.inflate(
 				R.layout.map_view_header, null, false);
 		TextView textView = (TextView) viewGroup.findViewById(R.id.map_header);
@@ -155,10 +147,17 @@ public class MapFragment extends BaseMapActivity<ViewReportView> {
 		return viewGroup;
 	}
 
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+		return inflater.inflate(R.layout.report_map, null);
+	}
+
 	// FIXME:: look into how to put this in it own class
 	private void showDropDownNav() {
 		showCategories();
-		new AlertDialog.Builder(this)
+		new AlertDialog.Builder(getActivity())
 				.setTitle(getString(R.string.prompt_mesg))
 				.setAdapter(spinnerArrayAdapter,
 						new DialogInterface.OnClickListener() {
@@ -187,7 +186,7 @@ public class MapFragment extends BaseMapActivity<ViewReportView> {
 	}
 
 	public void showCategories() {
-		spinnerArrayAdapter = new CategorySpinnerAdater(this);
+		spinnerArrayAdapter = new CategorySpinnerAdater(getActivity());
 		spinnerArrayAdapter.refresh();
 	}
 
@@ -225,50 +224,38 @@ public class MapFragment extends BaseMapActivity<ViewReportView> {
 		}
 	};
 
-	/*@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		mRootView = (ViewGroup) inflater.inflate(R.layout.list_report, null);
-		addReport = (ImageButton) mRootView.findViewById(R.id.add_report_btn);
-		refreshReport = (ImageButton) mRootView
-				.findViewById(R.id.refresh_report_btn);
-		filterReport = (ImageButton) mRootView
-				.findViewById(R.id.filter_by_category);
-
-		if (addReport != null) {
-			addReport.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					launchAddReport();
-				}
-
-			});
-		}
-
-		if (refreshReport != null) {
-			refreshReport.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					new RefreshReports(MapFragment.this).execute((String) null);
-				}
-
-			});
-		}
-
-		if (filterReport != null) {
-			filterReport.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					showDropDownNav();
-				}
-			});
-		}
-
-		return mRootView;
-	}*/
+	/*
+	 * @Override public View onCreateView(LayoutInflater inflater, ViewGroup
+	 * container, Bundle savedInstanceState) { super.onCreateView(inflater,
+	 * container, savedInstanceState); mRootView = (ViewGroup)
+	 * inflater.inflate(R.layout.list_report, null); addReport = (ImageButton)
+	 * mRootView.findViewById(R.id.add_report_btn); refreshReport =
+	 * (ImageButton) mRootView .findViewById(R.id.refresh_report_btn);
+	 * filterReport = (ImageButton) mRootView
+	 * .findViewById(R.id.filter_by_category);
+	 * 
+	 * if (addReport != null) { addReport.setOnClickListener(new
+	 * OnClickListener() {
+	 * 
+	 * @Override public void onClick(View v) { launchAddReport(); }
+	 * 
+	 * }); }
+	 * 
+	 * if (refreshReport != null) { refreshReport.setOnClickListener(new
+	 * OnClickListener() {
+	 * 
+	 * @Override public void onClick(View v) { new
+	 * RefreshReports(getActivity()).execute((String) null); }
+	 * 
+	 * }); }
+	 * 
+	 * if (filterReport != null) { filterReport.setOnClickListener(new
+	 * OnClickListener() {
+	 * 
+	 * @Override public void onClick(View v) { showDropDownNav(); } }); }
+	 * 
+	 * return mRootView; }
+	 */
 
 	private void updateRefreshStatus() {
 		if (mRootView != null) {
@@ -292,21 +279,14 @@ public class MapFragment extends BaseMapActivity<ViewReportView> {
 	/**
 	 * Restart the receiving, when we are back on line.
 	 */
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (mReportModel.size() == 0) {
-			mHandler.post(mMarkersOnMap);
-		}
-	}
-
-	public void onDestroy() {
-		super.onDestroy();
-		if (new RefreshReports(this).cancel(true)) {
-			refreshState = false;
-			updateRefreshStatus();
-		}
-	}
+	/*
+	 * @Override public void onResume() { super.onResume(); if
+	 * (mReportModel.size() == 0) { mHandler.post(mMarkersOnMap); } }
+	 * 
+	 * public void onDestroy() { super.onDestroy(); if (new
+	 * RefreshReports(getActivity()).cancel(true)) { refreshState = false;
+	 * updateRefreshStatus(); } }
+	 */
 
 	// put this stuff in a seperate thread
 	final Runnable mMarkersOnMap = new Runnable() {
@@ -322,24 +302,25 @@ public class MapFragment extends BaseMapActivity<ViewReportView> {
 
 		if (mReportModel != null) {
 			for (ReportEntity reportEntity : mReportModel) {
-				placeMarker(Double.valueOf(reportEntity.getIncident()
+				updateMarker(Double.valueOf(reportEntity.getIncident()
 						.getLatitude()), Double.valueOf(reportEntity
-						.getIncident().getLongitude()));
+						.getIncident().getLongitude()), false);
 
 			}
 		}
 	}
 
 	public void launchAddReport() {
-		Intent i = new Intent(this, AddReportActivity.class);
+		Intent i = new Intent(getActivity(), AddReportActivity.class);
 		i.putExtra("id", 0);
 		startActivityForResult(i, 2);
-		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+		getActivity().overridePendingTransition(R.anim.home_enter,
+				R.anim.home_exit);
 	}
 
 	private void deleteFetchedReport() {
-		final List<ReportEntity> items = new ListFetchedReportAdapter(this)
-				.fetchedReports();
+		final List<ReportEntity> items = new ListFetchedReportAdapter(
+				getActivity()).fetchedReports();
 		for (ReportEntity report : items) {
 			if (new ListReportModel().deleteAllFetchedReport(report
 					.getIncident().getId())) {
@@ -347,7 +328,7 @@ public class MapFragment extends BaseMapActivity<ViewReportView> {
 						.getPhotosByReportId(report.getIncident().getId());
 
 				for (PhotoEntity photo : photos) {
-					ImageManager.deletePendingPhoto(this,
+					ImageManager.deletePendingPhoto(getActivity(),
 							"/" + photo.getPhoto());
 				}
 			}
@@ -381,7 +362,7 @@ public class MapFragment extends BaseMapActivity<ViewReportView> {
 		protected Boolean doInBackground(String... strings) {
 			try {
 				// check if there is internet
-				if (Util.isConnected(MapFragment.this)) {
+				if (Util.isConnected(getActivity())) {
 					// delete everything before updating with a new one
 					deleteFetchedReport();
 
@@ -389,7 +370,7 @@ public class MapFragment extends BaseMapActivity<ViewReportView> {
 					// right!
 					new CategoriesApi().getCategoriesList();
 
-					status = new ReportsApi().saveReports(MapFragment.this) ? 0
+					status = new ReportsApi().saveReports(getActivity()) ? 0
 							: 99;
 					;
 				}
@@ -423,15 +404,6 @@ public class MapFragment extends BaseMapActivity<ViewReportView> {
 			refreshState = false;
 			updateRefreshStatus();
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see com.ushahidi.android.app.MapUserLocation#locationChanged(double, double)
-	 */
-	@Override
-	protected void locationChanged(double latitude, double longitude) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
