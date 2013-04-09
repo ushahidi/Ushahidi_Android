@@ -23,10 +23,11 @@ package com.ushahidi.android.app.helpers;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.support.v4.app.ActionBar;
-import android.support.v4.app.ActionBar.Tab;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentMapActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -42,7 +43,7 @@ public class TabsAdapter extends FragmentPagerAdapter implements ViewPager.OnPag
 
     private final ArrayList<String> mTabs = new ArrayList<String>();
 
-    public TabsAdapter(FragmentMapActivity activity, ActionBar actionBar, ReportViewPager pager) {
+    public TabsAdapter(SherlockFragmentActivity activity, ActionBar actionBar, ReportViewPager pager) {
         super(activity.getSupportFragmentManager());
         mContext = activity;
         mActionBar = actionBar;

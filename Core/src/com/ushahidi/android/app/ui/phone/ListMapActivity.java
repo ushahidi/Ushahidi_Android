@@ -23,6 +23,7 @@ package com.ushahidi.android.app.ui.phone;
 import java.util.Date;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -35,18 +36,16 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.Menu;
+import android.view.View;
 import android.widget.AdapterView;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
@@ -270,7 +269,7 @@ public class ListMapActivity extends
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
-		new MenuInflater(this).inflate(R.menu.list_map_context, menu);
+		new android.view.MenuInflater(this).inflate(R.menu.list_map_context, menu);
 	}
 
 	@Override
@@ -542,7 +541,7 @@ public class ListMapActivity extends
 
 		protected Location location;
 
-		public LoadMapTask(FragmentActivity activity) {
+		public LoadMapTask(Activity activity) {
 			super(activity, R.string.loading_);
 			// switch to a progress animation
 			maps = new MapSearchApi();

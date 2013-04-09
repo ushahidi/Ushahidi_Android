@@ -1,12 +1,12 @@
 package com.ushahidi.android.app.ui.phone;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentMapActivity;
-import android.support.v4.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.ushahidi.android.app.R;
 
-public class ReportMapActivity extends FragmentMapActivity {
+public class ReportMapActivity extends SherlockFragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -22,12 +22,6 @@ public class ReportMapActivity extends FragmentMapActivity {
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

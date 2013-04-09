@@ -23,7 +23,7 @@ package com.ushahidi.android.app.ui.phone;
 import java.util.List;
 
 import android.os.Bundle;
-import android.support.v4.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseViewActivity;

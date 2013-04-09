@@ -24,7 +24,7 @@ import java.util.List;
 
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;

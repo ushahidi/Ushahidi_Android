@@ -29,7 +29,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import com.actionbarsherlock.view.MenuItem;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,33 +37,33 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.MenuItem;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.ReportMapItemizedOverlay;
-import com.ushahidi.android.app.ReportMapOverlayItem;
+import com.ushahidi.android.app.activities.BaseMapActivity;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.api.CategoriesApi;
 import com.ushahidi.android.app.api.ReportsApi;
 import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.entities.ReportEntity;
-import com.ushahidi.android.app.fragments.BaseFragment;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
 import com.ushahidi.android.app.util.Util;
+import com.ushahidi.android.app.views.ViewReportView;
 
-public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
+public class MapFragment extends BaseMapActivity<ViewReportView> {
 
 	private GoogleMap map = null;
 
 	private ListReportModel mListReportModel;
 
 	private List<ReportEntity> mReportModel;
-
-	private ReportMapItemizedOverlay<ReportMapOverlayItem> itemOverlay;
 
 	private Handler mHandler;
 
@@ -85,47 +84,54 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 	private boolean refreshState = false;
 
 	public MapFragment() {
-		super(R.menu.map_report);
+		super(ViewReportView.class, R.layout.report_map, R.menu.map_report,
+				R.id.map_fragment);
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		mListReportModel = new ListReportModel();
 		mListReportModel.load();
 		mReportModel = mListReportModel.getReports();
 		showCategories();
 		mHandler = new Handler();
 
-		map = new MapView(getActivity(), getActivity().getString(
-				R.string.google_map_api_key));
-		Preferences.loadSettings(getActivity());
+		if (checkForGMap()){
+		SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager()
+				.findFragmentById(mapViewId);
+
+		map = mapFrag.getMap();
+
+		Preferences.loadSettings(this);
 		if (mReportModel.size() > 0) {
-			map.setClickable(true);
-			map.setBuiltInZoomControls(true);
+			// map.setClickable(true);
+			// map.setBuiltInZoomControls(true);
 			mHandler.post(mMarkersOnMap);
 
 		} else {
 			toastLong(R.string.no_reports);
 		}
-		((ViewGroup) getView()).addView(map);
+		}
+		//((ViewGroup) getView()).addView(map);
+		// }
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_refresh) {
 			refresh = item;
-			new RefreshReports(getActivity()).execute((String) null);
+			new RefreshReports(this).execute((String) null);
 			return true;
 		} else if (item.getItemId() == R.id.menu_add) {
 			launchAddReport();
 			return true;
 		} else if (item.getItemId() == R.id.menu_normal) {
-			map.setSatellite(false);
-			map.setTraffic(false);
+			// map.setSatellite(false);
+			// map.setTraffic(false);
 			return true;
 		} else if (item.getItemId() == R.id.menu_satellite) {
-			map.setSatellite(true);
+			// map.setSatellite(true);
 			return true;
 
 		} else if (item.getItemId() == R.id.filter_by) {
@@ -134,14 +140,14 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 
 			return true;
 		} else if (item.getItemId() == android.R.id.home) {
-			getActivity().finish();
+			finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	protected View headerView() {
-		LayoutInflater inflater = getActivity().getLayoutInflater();
+		LayoutInflater inflater = getLayoutInflater();
 		ViewGroup viewGroup = (ViewGroup) inflater.inflate(
 				R.layout.map_view_header, null, false);
 		TextView textView = (TextView) viewGroup.findViewById(R.id.map_header);
@@ -152,8 +158,8 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 	// FIXME:: look into how to put this in it own class
 	private void showDropDownNav() {
 		showCategories();
-		new AlertDialog.Builder(getActivity())
-				.setTitle(getActivity().getString(R.string.prompt_mesg))
+		new AlertDialog.Builder(this)
+				.setTitle(getString(R.string.prompt_mesg))
 				.setAdapter(spinnerArrayAdapter,
 						new DialogInterface.OnClickListener() {
 
@@ -167,8 +173,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 										which).getCategoryTitle();
 								if ((all != null)
 										&& (!TextUtils.isEmpty(all))
-										&& (all != getActivity().getString(
-												R.string.all_categories))) {
+										&& (all != getString(R.string.all_categories))) {
 
 									mHandler.post(fetchReportListByCategory);
 
@@ -182,7 +187,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 	}
 
 	public void showCategories() {
-		spinnerArrayAdapter = new CategorySpinnerAdater(getActivity());
+		spinnerArrayAdapter = new CategorySpinnerAdater(this);
 		spinnerArrayAdapter.refresh();
 	}
 
@@ -220,7 +225,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		}
 	};
 
-	@Override
+	/*@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mRootView = (ViewGroup) inflater.inflate(R.layout.list_report, null);
@@ -246,7 +251,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 
 				@Override
 				public void onClick(View v) {
-					new RefreshReports(getActivity()).execute((String) null);
+					new RefreshReports(MapFragment.this).execute((String) null);
 				}
 
 			});
@@ -263,7 +268,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		}
 
 		return mRootView;
-	}
+	}*/
 
 	private void updateRefreshStatus() {
 		if (mRootView != null) {
@@ -297,7 +302,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 
 	public void onDestroy() {
 		super.onDestroy();
-		if (new RefreshReports(getActivity()).cancel(true)) {
+		if (new RefreshReports(this).cancel(true)) {
 			refreshState = false;
 			updateRefreshStatus();
 		}
@@ -310,51 +315,31 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		}
 	};
 
-	public GeoPoint getPoint(double lat, double lon) {
-		return (new GeoPoint((int) (lat * 1000000.0), (int) (lon * 1000000.0)));
-	}
-
 	/**
 	 * add marker to the map
 	 */
 	public void populateMap() {
-		Drawable marker = getResources().getDrawable(R.drawable.map_marker_red);
-		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
-				marker.getIntrinsicHeight());
-		itemOverlay = new ReportMapItemizedOverlay<ReportMapOverlayItem>(
-				marker, map, getActivity());
+
 		if (mReportModel != null) {
 			for (ReportEntity reportEntity : mReportModel) {
-				itemOverlay.addOverlay(new ReportMapOverlayItem(getPoint(Double
-						.valueOf(reportEntity.getIncident().getLatitude()),
-						Double.valueOf(reportEntity.getIncident()
-								.getLongitude())), reportEntity.getIncident()
-						.getTitle(), Util.limitString(reportEntity
-						.getIncident().getDescription(), 30), reportEntity
-						.getThumbnail(), reportEntity.getDbId(), ""));
+				placeMarker(Double.valueOf(reportEntity.getIncident()
+						.getLatitude()), Double.valueOf(reportEntity
+						.getIncident().getLongitude()));
+
 			}
 		}
-		map.getOverlays().clear();
-		if (itemOverlay.size() > 0) {
-			map.getController().animateTo(itemOverlay.getCenter());
-			map.getController().zoomToSpan(itemOverlay.getLatSpanE6() + 50,
-					itemOverlay.getLonSpanE6() + 50);
-			map.getOverlays().add(itemOverlay);
-		}
-
 	}
 
 	public void launchAddReport() {
-		Intent i = new Intent(getActivity(), AddReportActivity.class);
+		Intent i = new Intent(this, AddReportActivity.class);
 		i.putExtra("id", 0);
 		startActivityForResult(i, 2);
-		getActivity().overridePendingTransition(R.anim.home_enter,
-				R.anim.home_exit);
+		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 	}
 
 	private void deleteFetchedReport() {
-		final List<ReportEntity> items = new ListFetchedReportAdapter(
-				getActivity()).fetchedReports();
+		final List<ReportEntity> items = new ListFetchedReportAdapter(this)
+				.fetchedReports();
 		for (ReportEntity report : items) {
 			if (new ListReportModel().deleteAllFetchedReport(report
 					.getIncident().getId())) {
@@ -362,7 +347,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 						.getPhotosByReportId(report.getIncident().getId());
 
 				for (PhotoEntity photo : photos) {
-					ImageManager.deletePendingPhoto(getActivity(),
+					ImageManager.deletePendingPhoto(this,
 							"/" + photo.getPhoto());
 				}
 			}
@@ -396,7 +381,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 		protected Boolean doInBackground(String... strings) {
 			try {
 				// check if there is internet
-				if (Util.isConnected(getActivity())) {
+				if (Util.isConnected(MapFragment.this)) {
 					// delete everything before updating with a new one
 					deleteFetchedReport();
 
@@ -404,7 +389,7 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 					// right!
 					new CategoriesApi().getCategoriesList();
 
-					status = new ReportsApi().saveReports(getActivity()) ? 0
+					status = new ReportsApi().saveReports(MapFragment.this) ? 0
 							: 99;
 					;
 				}
@@ -438,6 +423,15 @@ public class MapFragment<ReportMapItemOverlay> extends BaseFragment {
 			refreshState = false;
 			updateRefreshStatus();
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.ushahidi.android.app.MapUserLocation#locationChanged(double, double)
+	 */
+	@Override
+	protected void locationChanged(double latitude, double longitude) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

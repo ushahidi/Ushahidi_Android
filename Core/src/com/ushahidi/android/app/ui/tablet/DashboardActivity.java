@@ -3,24 +3,24 @@ package com.ushahidi.android.app.ui.tablet;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentMapActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.ui.phone.ReportTabActivity;
 
-public class DashboardActivity extends FragmentMapActivity implements
+public class DashboardActivity extends SherlockFragmentActivity implements
 		ListMapFragmentListener, ActionBar.OnNavigationListener {
 
 	private boolean detailsInline = false;
@@ -99,7 +99,7 @@ public class DashboardActivity extends FragmentMapActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.dashboard, menu);
+		getSupportMenuInflater().inflate(R.menu.dashboard, menu);
 		return true;
 
 	}
@@ -153,11 +153,6 @@ public class DashboardActivity extends FragmentMapActivity implements
 			Log.e(getClass().getName(), message, ex);
 	}
 
-	@Override
-	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	/*
 	 * (non-Javadoc)

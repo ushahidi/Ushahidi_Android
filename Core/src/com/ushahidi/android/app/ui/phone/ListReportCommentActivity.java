@@ -24,7 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
