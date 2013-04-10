@@ -132,10 +132,10 @@ public abstract class MapUserLocation extends SherlockFragmentActivity
 			if (updatableMarker == null) {
 				LatLngBounds bounds = new LatLngBounds.Builder()
                 .include(point).build();
-				CameraUpdate p = CameraUpdateFactory.newLatLngBounds(bounds, 50);
-				CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
-				map.moveCamera(p);
-				map.animateCamera(zoom);
+				//CameraUpdate p = CameraUpdateFactory.newLatLngBounds(bounds, 50);
+				//CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+				//map.moveCamera(p);
+				//map.animateCamera(zoom);
 
 				updatableMarker = createUpdatableMarker(point);
 

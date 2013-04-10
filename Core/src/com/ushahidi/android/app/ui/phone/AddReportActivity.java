@@ -157,7 +157,7 @@ public class AddReportActivity extends
 		view.mLongitude.addTextChangedListener(latLonTextWatcher);
 		if (checkForGMap()) {
 			SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager()
-					.findFragmentById(R.id.loc_map);
+					.findFragmentById(R.id.location_map);
 			view.map = mapFrag.getMap();
 		}
 		

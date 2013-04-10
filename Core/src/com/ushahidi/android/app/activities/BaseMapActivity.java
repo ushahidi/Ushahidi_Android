@@ -190,7 +190,7 @@ public abstract class BaseMapActivity<V extends View> extends MapUserLocation
 		//TODO implement updateMarker with zoom in support
 	}
 
-	protected LatLng getPoint(double latitude, double longitude) {
+	protected LatLng getPoints(double latitude, double longitude) {
 		return getPoint(latitude, longitude);
 	}
 
