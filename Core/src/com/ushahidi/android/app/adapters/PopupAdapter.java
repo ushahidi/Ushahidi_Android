@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.model.Marker;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.util.ImageViewWorker;
 
 /**
  * @author eyedol
@@ -40,28 +41,48 @@ public class PopupAdapter implements InfoWindowAdapter {
 
 	protected TextView snippet;
 
-	protected static TextView readMore;
+	protected ImageView badge;
 
-	protected ImageView image;
-
-	PopupAdapter(LayoutInflater inflater) {
+	public PopupAdapter(LayoutInflater inflater) {
 		this.inflater = inflater;
 	}
 
 	@Override
 	public View getInfoContents(Marker marker) {
-		View v = inflater.inflate(R.layout.map_balloon_overlay, null);
-		// setup our fields
-		title = (TextView) v.findViewById(R.id.balloon_item_title);
-		snippet = (TextView) v.findViewById(R.id.balloon_item_snippet);
-		readMore = (TextView) v.findViewById(R.id.balloon_item_readmore);
-		image = (ImageView) v.findViewById(R.id.balloon_item_image);
+		View v = inflater.inflate(R.layout.infowindow_content, null);
+		render(marker, v);
 		return v;
+	}
+
+	private void render(Marker marker, View v) {
+		// setup our fields
+		title = (TextView) v.findViewById(R.id.title);
+		snippet = (TextView) v.findViewById(R.id.snippet);
+		badge = (ImageView) v.findViewById(R.id.badge);
+
+		title.setText(marker.getTitle());
+		snippet.setText(marker.getSnippet());
+
+		getPhoto("", badge, v);
 	}
 
 	@Override
 	public View getInfoWindow(Marker marker) {
-		return null;
+		View v = inflater.inflate(R.layout.infowindow, null);
+		render(marker,v);
+		return v;
 	}
 
+	/**
+	 * Set the photo
+	 * 
+	 * @param fileName
+	 * @param imageView
+	 * @param v
+	 */
+	private void getPhoto(String fileName, ImageView imageView, View v) {
+		ImageViewWorker imageWorker = new ImageViewWorker(v.getContext());
+		imageWorker.setImageFadeIn(true);
+		imageWorker.loadImage(fileName, imageView, true, 0);
+	}
 }

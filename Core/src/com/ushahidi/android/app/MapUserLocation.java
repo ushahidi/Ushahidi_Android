@@ -21,7 +21,6 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ushahidi.android.app.util.Util;
 
@@ -33,8 +32,10 @@ public abstract class MapUserLocation extends SherlockFragmentActivity
 	protected static final int FIVE_MINUTES = 5 * ONE_MINUTE;
 
 	protected static final int ACCURACY_THRESHOLD = 30; // in meters
+
+	protected static final String TAG_ERROR_DIALOG_FRAGMENT = "errorDialog";
 	
-	protected static final String TAG_ERROR_DIALOG_FRAGMENT="errorDialog";
+	protected static final int ZOOM = 15;
 
 	protected GoogleMap map;
 
@@ -43,6 +44,7 @@ public abstract class MapUserLocation extends SherlockFragmentActivity
 	protected UpdatableMarker updatableMarker;
 
 	protected Location currrentLocation;
+	
 
 	/*
 	 * Subclasses must implement a method which updates any relevant interface
@@ -129,13 +131,14 @@ public abstract class MapUserLocation extends SherlockFragmentActivity
 
 	protected void updateMarker(LatLng point, boolean center) {
 		if (map != null) {
+			
 			if (updatableMarker == null) {
-				/*LatLngBounds bounds = new LatLngBounds.Builder()
-                .include(point).build();*/
+				/*
+				 * LatLngBounds bounds = new LatLngBounds.Builder()
+				 * .include(point).build();
+				 */
 				CameraUpdate p = CameraUpdateFactory.newLatLng(point);
-				CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
 				map.moveCamera(p);
-				map.animateCamera(zoom);
 
 				updatableMarker = createUpdatableMarker(point);
 
@@ -146,8 +149,9 @@ public abstract class MapUserLocation extends SherlockFragmentActivity
 				CameraUpdate c = CameraUpdateFactory.newLatLng(point);
 				map.moveCamera(c);
 			}
-			CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+			CameraUpdate zoom = CameraUpdateFactory.zoomTo(ZOOM);
 			map.animateCamera(zoom);
+			map.getUiSettings().setZoomControlsEnabled(false);
 		}
 
 	}
@@ -186,62 +190,58 @@ public abstract class MapUserLocation extends SherlockFragmentActivity
 			locationChanged(location2.getLatitude(), location2.getLongitude());
 		}
 	}
-	
+
 	/**
 	 * Check if Google Maps exist on the device
 	 * 
 	 * @return
 	 */
 	protected boolean checkForGMap() {
-	    int status=
-	        GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+		int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
-	    if (status == ConnectionResult.SUCCESS) {
-	      return(true);
-	    }
-	    else if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
-	      ErrorDialogFragment.newInstance(status)
-	                         .show(getSupportFragmentManager(),
-	                               TAG_ERROR_DIALOG_FRAGMENT);
-	    }
-	    else {
-	    	Util.showToast(this, R.string.no_maps);
-	      finish();
-	    }
-	    
-	    return false;
-	  }
+		if (status == ConnectionResult.SUCCESS) {
+			return (true);
+		} else if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
+			ErrorDialogFragment.newInstance(status).show(
+					getSupportFragmentManager(), TAG_ERROR_DIALOG_FRAGMENT);
+		} else {
+			Util.showToast(this, R.string.no_maps);
+			finish();
+		}
 
-	  public static class ErrorDialogFragment extends DialogFragment {
-	    static final String ARG_STATUS="status";
+		return false;
+	}
 
-	    static ErrorDialogFragment newInstance(int status) {
-	      Bundle args=new Bundle();
+	public static class ErrorDialogFragment extends DialogFragment {
+		static final String ARG_STATUS = "status";
 
-	      args.putInt(ARG_STATUS, status);
+		static ErrorDialogFragment newInstance(int status) {
+			Bundle args = new Bundle();
 
-	      ErrorDialogFragment result=new ErrorDialogFragment();
+			args.putInt(ARG_STATUS, status);
 
-	      result.setArguments(args);
+			ErrorDialogFragment result = new ErrorDialogFragment();
 
-	      return(result);
-	    }
+			result.setArguments(args);
 
-	    @Override
-	    public Dialog onCreateDialog(Bundle savedInstanceState) {
-	      Bundle args=getArguments();
+			return (result);
+		}
 
-	      return GooglePlayServicesUtil.getErrorDialog(args.getInt(ARG_STATUS),
-	                                                   getActivity(), 0);
-	    }
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			Bundle args = getArguments();
 
-	    @Override
-	    public void onDismiss(DialogInterface dlg) {
-	      if (getActivity() != null) {
-	        getActivity().finish();
-	      }
-	    }
-	  }
+			return GooglePlayServicesUtil.getErrorDialog(
+					args.getInt(ARG_STATUS), getActivity(), 0);
+		}
+
+		@Override
+		public void onDismiss(DialogInterface dlg) {
+			if (getActivity() != null) {
+				getActivity().finish();
+			}
+		}
+	}
 
 	private class MapMarker implements UpdatableMarker {
 

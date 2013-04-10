@@ -23,21 +23,18 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.util.Util;
@@ -71,38 +68,23 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 		this.menu = menu;
 	}
 
-	/*@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if (this.menu != 0) {
-			inflater.inflate(this.menu, menu);
-		}
-
-	}*/
-
-	@Override
-	public android.view.View onCreateView(LayoutInflater inflater,
-			ViewGroup container, Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
-		android.view.View root = null;
-
-		return root;
-	}
-
-	/*@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return super.onOptionsItemSelected(item);
-	}*/
-
-	@Override
-	public boolean onContextItemSelected(android.view.MenuItem item) {
-		return super.onContextItemSelected(item);
-	}
-
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
-		
+
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		if (this.menu != 0) {
+			inflater.inflate(this.menu, menu);
+		}
+	}
+
+	@Override
+	public boolean onContextItemSelected(android.view.MenuItem item) {
+		return super.onContextItemSelected(item);
 	}
 
 	protected void updateMarker(double latitude, double longitude,
@@ -126,13 +108,8 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 	protected void updateMarker(LatLng point, boolean center) {
 		if (map != null) {
 			if (updatableMarker == null) {
-				LatLngBounds bounds = new LatLngBounds.Builder().include(point)
-						.build();
-				CameraUpdate p = CameraUpdateFactory
-						.newLatLngBounds(bounds, 50);
-				CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+				CameraUpdate p = CameraUpdateFactory.newLatLng(point);
 				map.moveCamera(p);
-				map.animateCamera(zoom);
 
 				updatableMarker = createUpdatableMarker(point);
 
@@ -143,6 +120,9 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 				CameraUpdate c = CameraUpdateFactory.newLatLng(point);
 				map.moveCamera(c);
 			}
+			CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+			map.animateCamera(zoom);
+			map.getUiSettings().setZoomControlsEnabled(false);
 		}
 
 	}
@@ -150,6 +130,14 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 	/* Override this to set a custom marker */
 	protected UpdatableMarker createUpdatableMarker(LatLng point) {
 		return new MapMarker(point);
+	}
+
+	protected void createMarker(double lat, double lng, String title,
+			String snippet) {
+		if (map != null) {
+			MapMarker marker = new MapMarker();
+			marker.addMarker(map, lat, lng, title, snippet);
+		}
 	}
 
 	/**
@@ -181,9 +169,25 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 			update(point);
 		}
 
+		public MapMarker() {
+		}
+
 		public void update(LatLng point) {
 			if (point != null)
 				map.addMarker(new MarkerOptions().position(point));
+		}
+
+		public void addMarker(GoogleMap map, double lat, double lng,
+				String title, String snippet) {
+			map.addMarker(new MarkerOptions().position(new LatLng(lat, lng))
+					.title(title).snippet(snippet));
+		}
+
+		public void addMarkerWithIcon(GoogleMap map, double lat, double lng,
+				String title, String snippet, String filename) {
+			map.addMarker(new MarkerOptions().position(new LatLng(lat, lng))
+					.title(title).snippet(snippet)
+					.icon(BitmapDescriptorFactory.fromPath(filename)));
 		}
 	}
 
@@ -220,8 +224,14 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 
 	public abstract interface UpdatableMarker {
 		public abstract void update(LatLng point);
+
+		public abstract void addMarker(GoogleMap map, double lat, double lng,
+				String title, String snippet);
+
+		public abstract void addMarkerWithIcon(GoogleMap map, double lat, double lng, String title,
+				String snippet, String filename);
 	}
-	
+
 	protected void log(String message) {
 		new Util().log(message);
 	}

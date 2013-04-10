@@ -26,26 +26,24 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.actionbarsherlock.view.MenuItem;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.model.Marker;
 import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.activities.BaseMapActivity;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
+import com.ushahidi.android.app.adapters.PopupAdapter;
 import com.ushahidi.android.app.api.CategoriesApi;
 import com.ushahidi.android.app.api.ReportsApi;
 import com.ushahidi.android.app.entities.PhotoEntity;
@@ -56,11 +54,9 @@ import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
 import com.ushahidi.android.app.util.Util;
-import com.ushahidi.android.app.views.ViewReportView;
 
-public class MapFragment extends BaseMapFragment {
-
-	private GoogleMap map = null;
+public class MapFragment extends BaseMapFragment implements
+		OnInfoWindowClickListener {
 
 	private ListReportModel mListReportModel;
 
@@ -98,45 +94,57 @@ public class MapFragment extends BaseMapFragment {
 		mHandler = new Handler();
 
 		if (checkForGMap()) {
-			/*
-			 * SupportMapFragment mapFrag = (SupportMapFragment) getActivity()
-			 * .getSupportFragmentManager().findFragmentById(
-			 * R.id.map_fragment);
-			 */
-
 			map = getMap();
 
 			Preferences.loadSettings(getActivity());
 			if (mReportModel.size() > 0) {
-				// map.setClickable(true);
-				// map.setBuiltInZoomControls(true);
 				mHandler.post(mMarkersOnMap);
 
 			} else {
 				toastLong(R.string.no_reports);
 			}
+			map.setInfoWindowAdapter(new PopupAdapter(
+					getLayoutInflater(savedInstanceState)));
+			map.setOnInfoWindowClickListener(this);
 		}
-		// ((ViewGroup) getView()).addView(map.);
-		// }
+
 	}
 
-	/*
-	 * @Override public boolean onOptionsItemSelected(MenuItem item) { if
-	 * (item.getItemId() == R.id.menu_refresh) { refresh = item; new
-	 * RefreshReports(this).execute((String) null); return true; } else if
-	 * (item.getItemId() == R.id.menu_add) { launchAddReport(); return true; }
-	 * else if (item.getItemId() == R.id.menu_normal) { //
-	 * map.setSatellite(false); // map.setTraffic(false); return true; } else if
-	 * (item.getItemId() == R.id.menu_satellite) { // map.setSatellite(true);
-	 * return true;
-	 * 
-	 * } else if (item.getItemId() == R.id.filter_by) {
-	 * 
-	 * showDropDownNav();
-	 * 
-	 * return true; } else if (item.getItemId() == android.R.id.home) {
-	 * finish(); return true; } return super.onOptionsItemSelected(item); }
-	 */
+	@Override
+	public void onInfoWindowClick(Marker marker) {
+		Util.showToast(getActivity(), R.string.all_categories);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_refresh) {
+			refresh = item;
+			new
+
+			RefreshReports(getActivity()).execute((String) null);
+			return true;
+		} else if (item.getItemId() == R.id.menu_add) {
+			launchAddReport();
+			return true;
+		} else if (item.getItemId() == R.id.menu_normal) { //
+			// map.setSatellite(false);
+			// map.setTraffic(false);
+			return true;
+		} else if (item.getItemId() == R.id.menu_satellite) { // map.setSatellite(true);
+			return true;
+
+		} else if (item.getItemId() == R.id.filter_by) {
+
+			showDropDownNav();
+
+			return true;
+		} else if (item.getItemId() == android.R.id.home) {
+			getActivity().finish();
+			return true;
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
 
 	protected View headerView() {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -145,13 +153,6 @@ public class MapFragment extends BaseMapFragment {
 		TextView textView = (TextView) viewGroup.findViewById(R.id.map_header);
 		textView.setText(R.string.all_categories);
 		return viewGroup;
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
-		return inflater.inflate(R.layout.report_map, null);
 	}
 
 	// FIXME:: look into how to put this in it own class
@@ -267,26 +268,33 @@ public class MapFragment extends BaseMapFragment {
 			}
 		}
 
-		if (refresh != null) {
-			if (refreshState)
-				refresh.setActionView(R.layout.indeterminate_progress_action);
-			else
-				refresh.setActionView(null);
-		}
+		/*
+		 * if (refresh != null) { if (refreshState)
+		 * refresh.setActionView(R.layout.indeterminate_progress_action); else
+		 * refresh.setActionView(null); }
+		 */
 
 	}
 
 	/**
 	 * Restart the receiving, when we are back on line.
 	 */
-	/*
-	 * @Override public void onResume() { super.onResume(); if
-	 * (mReportModel.size() == 0) { mHandler.post(mMarkersOnMap); } }
-	 * 
-	 * public void onDestroy() { super.onDestroy(); if (new
-	 * RefreshReports(getActivity()).cancel(true)) { refreshState = false;
-	 * updateRefreshStatus(); } }
-	 */
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (mReportModel.size() == 0) {
+			mHandler.post(mMarkersOnMap);
+		}
+	}
+
+	public void onDestroy() {
+		super.onDestroy();
+		if (new RefreshReports(getActivity()).cancel(true)) {
+			refreshState = false;
+			updateRefreshStatus();
+		}
+	}
 
 	// put this stuff in a seperate thread
 	final Runnable mMarkersOnMap = new Runnable() {
@@ -302,9 +310,25 @@ public class MapFragment extends BaseMapFragment {
 
 		if (mReportModel != null) {
 			for (ReportEntity reportEntity : mReportModel) {
-				updateMarker(Double.valueOf(reportEntity.getIncident()
-						.getLatitude()), Double.valueOf(reportEntity
-						.getIncident().getLongitude()), false);
+				double latitude = 0.0;
+				double longitude = 0.0;
+				try {
+					latitude = Double.valueOf(reportEntity.getIncident()
+							.getLatitude());
+				} catch (NumberFormatException e) {
+					latitude = 0.0;
+				}
+
+				try {
+					longitude = Double.valueOf(reportEntity.getIncident()
+							.getLongitude());
+				} catch (NumberFormatException e) {
+					longitude = 0.0;
+				}
+				final String description = Util.limitString(reportEntity
+						.getIncident().getDescription(), 30);
+				createMarker(latitude, longitude, reportEntity.getIncident()
+						.getTitle(), description);
 
 			}
 		}
@@ -372,7 +396,6 @@ public class MapFragment extends BaseMapFragment {
 
 					status = new ReportsApi().saveReports(getActivity()) ? 0
 							: 99;
-					;
 				}
 
 				Thread.sleep(1000);

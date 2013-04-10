@@ -169,11 +169,14 @@ public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
 	}
 
 	private String thumbnail(int position) {
-
+		
+		// Get pending report's image
 		if (getItem(position).getIncident().getId() == 0) {
 			return mListReportModel.getImage(getItem(position).getDbId());
 
 		}
+		
+		// Get fetched report's image
 		return mListReportModel.getImage(getItem(position).getIncident()
 				.getId());
 
