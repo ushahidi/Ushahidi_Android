@@ -23,6 +23,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.Toast;
@@ -140,6 +141,14 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 		}
 	}
 
+	protected void createMarker(double lat, double lng, String title,
+			String snippet, String fileName) {
+		if (map != null) {
+			MapMarker marker = new MapMarker();
+			marker.addMarkerWithIcon(map, lat, lng, title, snippet, fileName);
+		}
+	}
+
 	/**
 	 * Check if Google Maps exist on the device
 	 * 
@@ -185,9 +194,17 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 
 		public void addMarkerWithIcon(GoogleMap map, double lat, double lng,
 				String title, String snippet, String filename) {
-			map.addMarker(new MarkerOptions().position(new LatLng(lat, lng))
-					.title(title).snippet(snippet)
-					.icon(BitmapDescriptorFactory.fromPath(filename)));
+			if ((filename != null) && (!TextUtils.isEmpty(filename))) {
+				map.addMarker(new MarkerOptions()
+						.position(new LatLng(lat, lng)).title(title)
+						.snippet(snippet)
+						.icon(BitmapDescriptorFactory.fromPath(filename)));
+			} else {
+				map.addMarker(new MarkerOptions()
+						.position(new LatLng(lat, lng)).title(title)
+						.snippet(snippet));
+			}
+
 		}
 	}
 
@@ -228,8 +245,8 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 		public abstract void addMarker(GoogleMap map, double lat, double lng,
 				String title, String snippet);
 
-		public abstract void addMarkerWithIcon(GoogleMap map, double lat, double lng, String title,
-				String snippet, String filename);
+		public abstract void addMarkerWithIcon(GoogleMap map, double lat,
+				double lng, String title, String snippet, String filename);
 	}
 
 	protected void log(String message) {

@@ -327,8 +327,9 @@ public class MapFragment extends BaseMapFragment implements
 				}
 				final String description = Util.limitString(reportEntity
 						.getIncident().getDescription(), 30);
+
 				createMarker(latitude, longitude, reportEntity.getIncident()
-						.getTitle(), description);
+						.getTitle(), description, reportEntity.getThumbnail());
 
 			}
 		}

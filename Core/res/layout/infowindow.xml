@@ -3,26 +3,32 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/custom_info_bubble"
-    android:orientation="horizontal" >
+    android:minWidth="200dip"
+    android:orientation="horizontal"
+    android:paddingBottom="25dip"
+    android:paddingLeft="10dip"
+    android:paddingRight="10dip"
+    android:paddingTop="0dip" >
 
     <ImageView
         android:id="@+id/badge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dip"
+        android:layout_height="54dip"
         android:layout_marginRight="5dp"
-        android:adjustViewBounds="true">
+        android:adjustViewBounds="true"
+        android:src="@drawable/report_icon" >
     </ImageView>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingTop="10dip" >
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@android:color/primary_text_light"

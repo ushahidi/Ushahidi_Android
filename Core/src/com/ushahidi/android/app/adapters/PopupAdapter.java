@@ -19,6 +19,7 @@
  **/
 package com.ushahidi.android.app.adapters;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -69,7 +70,7 @@ public class PopupAdapter implements InfoWindowAdapter {
 	@Override
 	public View getInfoWindow(Marker marker) {
 		View v = inflater.inflate(R.layout.infowindow, null);
-		render(marker,v);
+		render(marker, v);
 		return v;
 	}
 
@@ -81,8 +82,10 @@ public class PopupAdapter implements InfoWindowAdapter {
 	 * @param v
 	 */
 	private void getPhoto(String fileName, ImageView imageView, View v) {
-		ImageViewWorker imageWorker = new ImageViewWorker(v.getContext());
-		imageWorker.setImageFadeIn(true);
-		imageWorker.loadImage(fileName, imageView, true, 0);
+		if ((fileName != null) && (!TextUtils.isEmpty(fileName))) {
+			ImageViewWorker imageWorker = new ImageViewWorker(v.getContext());
+			imageWorker.setImageFadeIn(true);
+			imageWorker.loadImage(fileName, imageView, true, 0);
+		}
 	}
 }
