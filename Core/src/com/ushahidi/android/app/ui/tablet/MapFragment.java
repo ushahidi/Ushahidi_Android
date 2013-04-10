@@ -112,7 +112,7 @@ public class MapFragment extends BaseMapFragment implements
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
-		Util.showToast(getActivity(), R.string.all_categories);
+		// TODO:: launch report view activity
 	}
 
 	@Override
@@ -126,11 +126,12 @@ public class MapFragment extends BaseMapFragment implements
 		} else if (item.getItemId() == R.id.menu_add) {
 			launchAddReport();
 			return true;
-		} else if (item.getItemId() == R.id.menu_normal) { //
+		} else if (item.getItemId() == R.id.menu_normal) { 
 			// map.setSatellite(false);
 			// map.setTraffic(false);
 			return true;
-		} else if (item.getItemId() == R.id.menu_satellite) { // map.setSatellite(true);
+		} else if (item.getItemId() == R.id.menu_satellite) { 
+			// map.setSatellite(true);
 			return true;
 
 		} else if (item.getItemId() == R.id.filter_by) {
