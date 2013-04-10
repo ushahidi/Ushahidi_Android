@@ -130,12 +130,12 @@ public abstract class MapUserLocation extends SherlockFragmentActivity
 	protected void updateMarker(LatLng point, boolean center) {
 		if (map != null) {
 			if (updatableMarker == null) {
-				LatLngBounds bounds = new LatLngBounds.Builder()
-                .include(point).build();
-				//CameraUpdate p = CameraUpdateFactory.newLatLngBounds(bounds, 50);
-				//CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
-				//map.moveCamera(p);
-				//map.animateCamera(zoom);
+				/*LatLngBounds bounds = new LatLngBounds.Builder()
+                .include(point).build();*/
+				CameraUpdate p = CameraUpdateFactory.newLatLng(point);
+				CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+				map.moveCamera(p);
+				map.animateCamera(zoom);
 
 				updatableMarker = createUpdatableMarker(point);
 
@@ -146,6 +146,8 @@ public abstract class MapUserLocation extends SherlockFragmentActivity
 				CameraUpdate c = CameraUpdateFactory.newLatLng(point);
 				map.moveCamera(c);
 			}
+			CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+			map.animateCamera(zoom);
 		}
 
 	}
