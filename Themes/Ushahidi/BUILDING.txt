@@ -6,8 +6,7 @@ But it should be easily adaptable to other setup.
 
 To use ant to build the project,
 
-1) You've read libs/README.txt' and have added the necessary
-   JARs in `Core/libs' directory to your build path.
+1) You've added the necessary JARs in `Core/libs' directory to your build path.
 
 2) Your project targets API level 7 or higher.
 
