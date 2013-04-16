@@ -399,7 +399,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCMm_TKMClnukKXP9DqoegNJbv-eNCZqQI" />
+            android:value="@string/google_map_api_key" />
     </application>
 
 </manifest>

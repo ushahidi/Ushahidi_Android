@@ -92,5 +92,10 @@
 		visualization and interactive mapping. We built the Ushahidi platform
 		as a tool to easily crowdsource information using multiple channels,
 		including SMS, email, Twitter and the web.</string>
+	 <!--GOOGLE MAPS API-->
+    <!--  Dev Key  -->
+    <string name="google_map_api_key">AIzaSyCMm_TKMClnukKXP9DqoegNJbv-eNCZqQI</string> 
+    <!-- Live Key -->
+    <string name="google_map_api_key_live">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string>
 
 </resources>
