@@ -59,7 +59,7 @@ In the **"/Themes/MyTheme/res/values/theme.xml"**, update the 'about_text' with 
 
 ## Contributing
 
-If you would like to contribute code to SMSSync you can do so through [GitHub][3] by forking the repository and sending a pull request. We will review your code. If everything with the pull request looks good, we will humbly merge your changes.
+If you would like to contribute code to SMSSync you can do so by forking the [repository][1] and sending a pull request. We will review your code. If everything with the pull request looks good, we will humbly merge your changes.
 
 ### Branch structure
 
