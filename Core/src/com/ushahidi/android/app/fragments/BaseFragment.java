@@ -17,21 +17,8 @@ public class BaseFragment extends SherlockFragment {
 	/**
 	 * Menu resource id
 	 */
-	protected final int menu;
+	protected int menu = 0;
 
-	/**
-	 * BaseActivity
-	 * 
-	 * @param view
-	 *            View class
-	 * @param layout
-	 *            layout resource id
-	 * @param menu
-	 *            menu resource id
-	 */
-	public BaseFragment(int menu) {
-		this.menu = menu;
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

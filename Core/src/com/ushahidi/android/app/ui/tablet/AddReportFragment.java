@@ -35,16 +35,16 @@ public class AddReportFragment extends BaseFragment{
 
 	/**
 	 * @param menu
-	 */
+	 *
 	public AddReportFragment() {
 		super(R.menu.add_report);
 		// TODO Auto-generated constructor stub
-	}
+	}*/
 	
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		this.menu = R.menu.add_report;
 	}
 
 	@Override
