@@ -57,8 +57,23 @@ In the **"/Themes/MyTheme/res/values/theme.xml"**, specify the 'app_title' and a
  
 In the **"/Themes/MyTheme/res/values/theme.xml"**, update the 'about_text' with a description of your deployment.
 
+## Contributing
+
+If you would like to contribute code to SMSSync you can do so through [GitHub][3] by forking the repository and sending a pull request. We will review your code. If everything with the pull request looks good, we will humbly merge your changes.
+
+### Branch structure
+
+The repository is made up of three main branches: **master (stable)**, **develop (ustable)** and **release (quite stable and a temporary branch)**.
+
+* **master** has the latest stable code, it's tags are released as [Ushahidi Android][1] on the Google playstore.
+* **develop** has the latest unstable code. It's codes are merge into master.
+* **release** is a branch of develop after feature freeze. mainly for fine tuning and testing to get the code stable for a release. The changes made here are finally merged into develop then develop is merged into master branch. After which a version tag is created for a release.
+
+
 ### How To Build The App ###
 
 To build any of the white-labled app, read the **BUILDING.txt** file in their 
 respective directory. It has all the information you need to successfully 
 build any of them. 
+
+[1]: https://github.com/ushahidi/Ushahidi_Android
