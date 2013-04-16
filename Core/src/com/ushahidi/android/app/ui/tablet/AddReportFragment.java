@@ -32,14 +32,6 @@ import com.ushahidi.android.app.fragments.BaseFragment;
  *
  */
 public class AddReportFragment extends BaseFragment{
-
-	/**
-	 * @param menu
-	 *
-	public AddReportFragment() {
-		super(R.menu.add_report);
-		// TODO Auto-generated constructor stub
-	}*/
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
