@@ -299,7 +299,7 @@ public class PhotoUtils {
 		paint.setColor(color);
 		canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
 
-		// draw rectangles over the corners we want to be square
+		// draw rectangles over the corners we want to be squared
 		if (squareTL) {
 			canvas.drawRect(0, 0, w / 2, h / 2, paint);
 		}

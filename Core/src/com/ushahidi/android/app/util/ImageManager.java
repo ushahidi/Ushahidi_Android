@@ -42,9 +42,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 
-
 /**
- * An Image Utility class 
+ * An Image Utility class
  * 
  */
 public class ImageManager {
@@ -56,122 +55,76 @@ public class ImageManager {
 
 	private static final int IO_BUFFER_SIZE = 512;
 
-	public static Drawable getDrawables(Context context, String fileName) {
-
+	private static BitmapFactory.Options getBitmapFactoryOptions(
+			Context context, String fileName) {
 		final BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
+		return options;
+	}
 
-		if (options != null) {
-			// scale image
-			Bitmap scaled = PhotoUtils.scaleBitmap(options,
-					getPhotoPath(context) + fileName);
-			return new BitmapDrawable(scaled);
-		}
-		return null;
+	public static Drawable getDrawables(Context context, String fileName) {
+
+		final BitmapFactory.Options options = getBitmapFactoryOptions(context,
+				fileName);
+		Bitmap scaled = PhotoUtils.scaleBitmap(options, getPhotoPath(context)
+				+ fileName);
+		return new BitmapDrawable(scaled);
 
 	}
 
 	public static Bitmap getBitmaps(Context context, String fileName) {
 
-		final BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
-		if (options != null) {
-			// scale image
-			return PhotoUtils.scaleBitmap(options, getPhotoPath(context)
-					+ fileName);
-		}
-		return null;
+		final BitmapFactory.Options options = getBitmapFactoryOptions(context,
+				fileName);
+		// scale image
+		return PhotoUtils
+				.scaleBitmap(options, getPhotoPath(context) + fileName);
 
-	}
-
-	/**
-	 * Rename this to something meaningful
-	 * 
-	 * @param context
-	 * @param fileName
-	 * @return
-	 */
-	public static Drawable getDrawables2(Context context, String pathfileName) {
-
-		final BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(
-				getPhotoPath(context)
-						+ getPhotoPath(context, "/" + pathfileName), options);
-
-		if (options != null) {
-			// scale image
-			Bitmap scaled = PhotoUtils.scaleBitmap(options,
-					getPhotoPath(context, "/" + pathfileName));
-			return new BitmapDrawable(scaled);
-
-		}
-		return null;
 	}
 
 	public static Drawable getDrawables(Context context, String fileName,
 			int width) {
 
-		final BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
+		final BitmapFactory.Options options = getBitmapFactoryOptions(context,
+				fileName);
+		// scale image
+		Bitmap scaled = PhotoUtils.scaleBitmapByWidth(options, width,
+				getPhotoPath(context) + fileName);
+		return new BitmapDrawable(scaled);
 
-		if (options != null) {
-			// scale image
-			Bitmap scaled = PhotoUtils.scaleBitmapByWidth(options, width,
-					getPhotoPath(context) + fileName);
-			return new BitmapDrawable(scaled);
-
-		}
-		return null;
 	}
 
 	public static Bitmap getBitmaps(Context context, String fileName, int width) {
 
-		final BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
+		final BitmapFactory.Options options = getBitmapFactoryOptions(context,
+				fileName);
 
-		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
+		return PhotoUtils.scaleBitmapByWidth(options, width,
+				getPhotoPath(context) + fileName);
 
-		if (options != null) {
-			// scale image
-			return PhotoUtils.scaleBitmapByWidth(options, width,
-					getPhotoPath(context) + fileName);
-		}
-		return null;
 	}
 
 	public static Drawable getPendingDrawables(Context context, String fileName) {
 
-		final BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
+		final BitmapFactory.Options options = getBitmapFactoryOptions(context,
+				fileName);
 
-		if (options != null) {
-			// scale image
-			Bitmap scaled = PhotoUtils.scaleBitmap(options, fileName);
-			return new BitmapDrawable(scaled);
+		// scale image
+		Bitmap scaled = PhotoUtils.scaleBitmap(options, fileName);
+		return new BitmapDrawable(scaled);
 
-		}
-		return null;
 	}
 
 	public static Drawable getPendingDrawables(Context context,
 			String fileName, int width) {
-		final BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
+		final BitmapFactory.Options options = getBitmapFactoryOptions(context,
+				fileName);
 
-		if (options != null) {
-			// scale image
-			Bitmap scaled = PhotoUtils.scaleBitmapByWidth(options, width,
-					fileName);
-			return new BitmapDrawable(scaled);
+		// scale image
+		Bitmap scaled = PhotoUtils.scaleBitmapByWidth(options, width, fileName);
+		return new BitmapDrawable(scaled);
 
-		}
-		return null;
 	}
 
 	public static Drawable getThumbnails(Context context, String fileName) {
