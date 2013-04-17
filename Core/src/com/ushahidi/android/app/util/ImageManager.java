@@ -69,7 +69,7 @@ public class ImageManager {
 				fileName);
 		Bitmap scaled = PhotoUtils.scaleBitmap(options, getPhotoPath(context)
 				+ fileName);
-		return new BitmapDrawable(scaled);
+		return new BitmapDrawable(context.getResources(), scaled);
 
 	}
 
@@ -91,7 +91,7 @@ public class ImageManager {
 		// scale image
 		Bitmap scaled = PhotoUtils.scaleBitmapByWidth(options, width,
 				getPhotoPath(context) + fileName);
-		return new BitmapDrawable(scaled);
+		return new BitmapDrawable(context.getResources(), scaled);
 
 	}
 
@@ -112,7 +112,7 @@ public class ImageManager {
 
 		// scale image
 		Bitmap scaled = PhotoUtils.scaleBitmap(options, fileName);
-		return new BitmapDrawable(scaled);
+		return new BitmapDrawable(context.getResources(), scaled);
 
 	}
 
@@ -123,7 +123,7 @@ public class ImageManager {
 
 		// scale image
 		Bitmap scaled = PhotoUtils.scaleBitmapByWidth(options, width, fileName);
-		return new BitmapDrawable(scaled);
+		return new BitmapDrawable(context.getResources(), scaled);
 
 	}
 
@@ -134,7 +134,7 @@ public class ImageManager {
 		if (original != null) {
 			// scale image
 			Bitmap scaled = PhotoUtils.scaleThumbnail(original);
-			return new BitmapDrawable(scaled);
+			return new BitmapDrawable(context.getResources(), scaled);
 
 		}
 		return null;
