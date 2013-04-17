@@ -38,7 +38,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.model.Marker;
-import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
@@ -53,6 +52,7 @@ import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
+import com.ushahidi.android.app.util.ImageManager;
 import com.ushahidi.android.app.util.Util;
 
 public class MapFragment extends BaseMapFragment implements

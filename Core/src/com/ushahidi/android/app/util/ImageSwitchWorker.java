@@ -31,7 +31,6 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.widget.ImageSwitcher;
 
-import com.ushahidi.android.app.ImageManager;
 
 //TODO:: switching uisng the ImageView passed via the constructor in the async extended class
 public class ImageSwitchWorker {

@@ -21,7 +21,6 @@ package com.ushahidi.android.app.services;
 
 import android.content.Intent;
 
-import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.api.CategoriesApi;
 import com.ushahidi.android.app.api.ReportsApi;
 import com.ushahidi.android.app.database.Database;
@@ -29,6 +28,7 @@ import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.util.ApiUtils;
+import com.ushahidi.android.app.util.ImageManager;
 import com.ushahidi.android.app.util.Util;
 
 /**

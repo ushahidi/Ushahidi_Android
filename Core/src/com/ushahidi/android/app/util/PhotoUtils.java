@@ -28,7 +28,6 @@ import com.ushahidi.android.app.util.PhotoUtils;
 
 import com.ushahidi.android.app.util.PhotoUtils;
 
-import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 
 import com.ushahidi.android.app.util.PhotoUtils;

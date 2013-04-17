@@ -30,7 +30,6 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Checkin;

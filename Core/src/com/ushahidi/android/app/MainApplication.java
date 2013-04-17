@@ -23,6 +23,7 @@ package com.ushahidi.android.app;
 import android.app.Application;
 
 import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.util.ImageManager;
 
 public class MainApplication extends Application {
 

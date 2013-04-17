@@ -29,10 +29,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.models.ListPhotoModel;
+import com.ushahidi.android.app.util.ImageManager;
 
 /**
  * This is the adapter for photos to be uploaded to the server.

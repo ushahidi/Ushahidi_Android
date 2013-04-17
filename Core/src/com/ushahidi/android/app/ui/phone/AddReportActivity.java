@@ -63,7 +63,6 @@ import android.widget.TimePicker;
 import android.widget.ViewSwitcher;
 
 import com.google.android.gms.maps.SupportMapFragment;
-import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseEditMapActivity;
@@ -79,6 +78,7 @@ import com.ushahidi.android.app.entities.ReportCategory;
 import com.ushahidi.android.app.models.AddReportModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.GeocoderTask;
+import com.ushahidi.android.app.util.ImageManager;
 import com.ushahidi.android.app.util.PhotoUtils;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.AddReportView;

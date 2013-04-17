@@ -18,7 +18,7 @@
  ** 
  **/
 
-package com.ushahidi.android.app;
+package com.ushahidi.android.app.util;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedInputStream;
@@ -42,8 +42,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 
-import com.ushahidi.android.app.util.PhotoUtils;
 
+/**
+ * An Image Utility class 
+ * 
+ */
 public class ImageManager {
 
 	// folder to save fetched photos.
@@ -195,13 +198,7 @@ public class ImageManager {
 		return null;
 	}
 
-	protected static byte[] retrieveImageData(String imageUrl, Context context)
-			throws IOException {
-
-		return fetchImage(imageUrl);
-	}
-
-	public static byte[] fetchImage(String address)
+	private static byte[] fetchImage(String address)
 			throws MalformedURLException, IOException {
 		InputStream in = null;
 		OutputStream out = null;
@@ -214,10 +211,6 @@ public class ImageManager {
 			out = new BufferedOutputStream(dataStream, 4 * 1024);
 			copy(in, out);
 			out.flush();
-
-			// need to close stream before return statement
-			closeStream(in);
-			closeStream(out);
 
 			return dataStream.toByteArray();
 		} catch (IOException e) {
@@ -273,7 +266,7 @@ public class ImageManager {
 	public static void downloadImage(String imageUrl, String filename,
 			Context context) {
 		try {
-			byte[] imageData = retrieveImageData(imageUrl, context);
+			byte[] imageData = fetchImage(imageUrl);
 			Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0,
 					imageData.length);
 			ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
@@ -361,10 +354,10 @@ public class ImageManager {
 	}
 
 	public static boolean deletePendingPhoto(Context context, String fileName) {
-		return deleteImage2(getSavedPhotoPath(context, fileName));
+		return deleteImage(getSavedPhotoPath(context, fileName));
 	}
 
-	public static boolean deleteImage2(String path) {
+	public static boolean deleteImage(String path) {
 		File f = new File(path);
 		if (f.exists()) {
 			f.delete();
@@ -373,11 +366,13 @@ public class ImageManager {
 		return false;
 	}
 
-	public static void deleteImage(String filename, String path) {
+	public static boolean deleteImage(String filename, String path) {
 		File f = new File(path, filename);
 		if (f.exists()) {
 			f.delete();
+			return true;
 		}
+		return false;
 	}
 
 	// make sure external storage is available

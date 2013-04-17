@@ -22,7 +22,6 @@ package com.ushahidi.android.app.util;
 import java.lang.ref.WeakReference;
 
 import com.ushahidi.android.app.BuildConfig;
-import com.ushahidi.android.app.ImageManager;
 
 import android.content.Context;
 import android.content.res.Resources;

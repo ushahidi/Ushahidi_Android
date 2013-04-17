@@ -46,7 +46,6 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.actionbarsherlock.view.MenuItem;
-import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
@@ -60,6 +59,7 @@ import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.tasks.ProgressTask;
+import com.ushahidi.android.app.util.ImageManager;
 import com.ushahidi.android.app.views.AddMapView;
 import com.ushahidi.android.app.views.ListMapView;
 

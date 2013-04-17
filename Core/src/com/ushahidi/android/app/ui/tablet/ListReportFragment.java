@@ -41,7 +41,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ushahidi.android.app.ImageManager;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
@@ -66,6 +65,7 @@ import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
 import com.ushahidi.android.app.ui.phone.ViewReportActivity;
+import com.ushahidi.android.app.util.ImageManager;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ListReportView;
 import com.ushahidi.java.sdk.api.Incident;
