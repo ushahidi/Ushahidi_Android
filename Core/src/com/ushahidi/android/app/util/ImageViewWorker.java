@@ -153,6 +153,7 @@ public class ImageViewWorker {
 				if ((fullScale) && (width == 0)) {
 					bitmap = ImageManager.getBitmaps(context, dataString);
 				} else {
+					
 					bitmap = ImageManager
 							.getBitmaps(context, dataString, width);
 				}

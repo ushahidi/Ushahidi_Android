@@ -56,8 +56,8 @@ public class PhotoUtils {
 	@SuppressWarnings("deprecation")
 	public static int getScreenOrientation(Activity context) {
 		Display display = context.getWindowManager().getDefaultDisplay();
-		
-		// The new API call requires API level 13 and above. suppressing this 
+
+		// The new API call requires API level 13 and above. suppressing this
 		// for now
 		if (display.getWidth() == display.getHeight()) {
 			return Configuration.ORIENTATION_UNDEFINED;
@@ -211,14 +211,16 @@ public class PhotoUtils {
 			BitmapFactory.Options options, String filePath) {
 
 		BitmapFactory.decodeFile(filePath, options);
-
+		
 		if (options != null) {
 			float ratio = (float) options.outHeight / (float) options.outWidth;
 			int width = Preferences.photoWidth > 0 ? Preferences.photoWidth
 					: 500;
 			new Util().log("Scaling image to " + width + " x " + ratio);
-			options.inSampleSize = calculateInSampleSize(options, width,
+			int inSample = calculateInSampleSize(options, width,
 					(int) (width * ratio));
+			new Util().log("InSampleSize " + inSample);
+			options.inSampleSize = inSample;
 			options.inJustDecodeBounds = false;
 			return BitmapFactory.decodeFile(filePath, options);
 
@@ -326,28 +328,18 @@ public class PhotoUtils {
 		int inSampleSize = 1;
 		new Util().log(String.format("ORIGINAL %dx%d", reqWidth, reqHeight));
 		if (height > reqHeight || width > reqWidth) {
-			if (width > height) {
-				inSampleSize = Math.round((float) height / (float) reqHeight);
-			} else {
-				inSampleSize = Math.round((float) width / (float) reqWidth);
-			}
 
-			// This offers some additional logic in case the image has a strange
-			// aspect ratio. For example, a panorama may have a much larger
-			// width than height. In these cases the total pixels might still
-			// end up being too large to fit comfortably in memory, so we should
-			// be more aggressive with sample down the image (=larger
-			// inSampleSize).
+			// Calculate ratios of height and width to requested height and
+			// width
+			final int heightRatio = Math.round((float) height
+					/ (float) reqHeight);
+			final int widthRatio = Math.round((float) width / (float) reqWidth);
 
-			final float totalPixels = width * height;
-
-			// Anything more than 2x the requested pixels we'll sample down
-			// further.
-			final float totalReqPixelsCap = reqWidth * reqHeight * 2;
-
-			while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
-				inSampleSize++;
-			}
+			// Choose the smallest ratio as inSampleSize value, this will
+			// guarantee
+			// a final image with both dimensions larger than or equal to the
+			// requested height and width.
+			inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
 		}
 		return inSampleSize;
 	}

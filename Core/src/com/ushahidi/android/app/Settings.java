@@ -77,7 +77,7 @@ public class Settings extends PreferenceActivity implements
 
 		photoSizePref = (SeekBarPreference) getPreferenceScreen()
 				.findPreference(PHOTO_SIZE_PREFERENCE);
-
+		photoSizePref.setMax(Util.getScreenWidth(this));
 		recentReports = getString(R.string.recent_reports);
 		totalReportsPref = new ListPreference(this);
 
@@ -153,13 +153,6 @@ public class Settings extends PreferenceActivity implements
 		phoneNumberPref.setTitle(R.string.txt_phonenumber);
 		phoneNumberPref.setSummary(R.string.hint_phonenumber);
 		phoneNumberPref.getEditText().setInputType(InputType.TYPE_CLASS_PHONE);
-
-		/**
-		 * Commenting out this code so it doesn't prompt users for opengeoSMS
-		 * basicPrefCat.addPreference(phoneNumberPref); TODO:// re-enable this
-		 * when I'm happy with opengeoSMS integration with the Ushahidi
-		 * platform.
-		 */
 
 		// GeneratePhotoFilename resize seekbar
 		basicPrefCat.addPreference(photoSizePref);

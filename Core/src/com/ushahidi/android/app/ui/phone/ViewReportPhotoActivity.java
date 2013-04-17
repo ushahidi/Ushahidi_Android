@@ -33,12 +33,14 @@ import android.widget.AdapterView;
 import android.widget.ImageSwitcher;
 import android.widget.ViewSwitcher;
 
+import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseViewActivity;
 import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.util.ImageManager;
 import com.ushahidi.android.app.util.ImageSwitchWorker;
+import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ReportPhotoView;
 
 /**
@@ -134,6 +136,7 @@ public class ViewReportPhotoActivity extends
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void initReport(int position) {
 
 		photos = photo.getPhotosByReportId(reportId);
@@ -240,9 +243,10 @@ public class ViewReportPhotoActivity extends
 	}
 	
 	private void setImage(ImageSwitcher imageSwitcher) {
+		Preferences.loadSettings(this);
 		ImageSwitchWorker imageWorker = new ImageSwitchWorker(this);
 		imageWorker.setImageFadeIn(true);
-		imageWorker.loadImage(fileName, imageSwitcher, true, 0);
+		imageWorker.loadImage(fileName, imageSwitcher, true, Util.getScreenWidth(this));
 	}
 
 }

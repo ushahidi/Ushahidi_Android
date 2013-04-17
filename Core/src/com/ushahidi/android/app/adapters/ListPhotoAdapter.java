@@ -83,8 +83,7 @@ public class ListPhotoAdapter extends BaseListAdapter<PhotoEntity> {
 		// FIXME: only show the first item for now. In the future only get one
 		// item
 		//widgets.photo.setImageDrawable(getPhoto(getItem(position).getPhoto()));
-		//set image 0262109717 -- 
-		// TransID: 912070302503 -- to # 0267123407
+		
 		getPhoto(getItem(position).getPhoto(), widgets.photo);
 		widgets.total.setText(context.getResources().getQuantityString(
 				R.plurals.no_of_images, totalPhotos, totalPhotos));
@@ -106,16 +105,6 @@ public class ListPhotoAdapter extends BaseListAdapter<PhotoEntity> {
 	public void refresh(int reportId) {
 		mListPhotoModel = new ListPhotoModel();
 		final boolean loaded = mListPhotoModel.load(reportId);
-		totalPhotos = mListPhotoModel.totalReportPhoto();
-		if (loaded) {
-			items = mListPhotoModel.getPhotos();
-			this.setItems(items);
-		}
-	}
-	
-	public void refreshCheckinPhotos(int checkinId) {
-		mListPhotoModel = new ListPhotoModel();
-		final boolean loaded = mListPhotoModel.loadCheckinPhoto(checkinId);
 		totalPhotos = mListPhotoModel.totalReportPhoto();
 		if (loaded) {
 			items = mListPhotoModel.getPhotos();

@@ -35,6 +35,7 @@ import android.widget.TextView;
 import android.widget.ViewAnimator;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListCommentAdapter;
 import com.ushahidi.android.app.adapters.ListNewsAdapter;
@@ -101,8 +102,6 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		viewReportRoot = (ViewAnimator) activity
 				.findViewById(R.id.view_report_root);
 
-		
-		
 		title = (TextView) activity.findViewById(R.id.title);
 		category = (TextView) activity.findViewById(R.id.category);
 		date = (TextView) activity.findViewById(R.id.date);
@@ -315,9 +314,11 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	}
 
 	public void getPhoto(String fileName, ImageView imageView) {
+		Preferences.loadSettings(context);
 		ImageViewWorker imageWorker = new ImageViewWorker(context);
 		imageWorker.setImageFadeIn(true);
-		imageWorker.loadImage(fileName, imageView, true, 0);
+		imageWorker
+				.loadImage(fileName, imageView, true, Preferences.photoWidth);
 	}
 
 }
