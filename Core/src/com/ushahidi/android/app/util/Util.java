@@ -55,6 +55,8 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.R;
 
@@ -599,6 +601,24 @@ public class Util {
 		return Util.capitalizeString(s);
 
 	}
+	
+	/**
+     * Calculates the center coordinate of a {@link LatLngBounds}.
+     * 
+     * @param bounds A {@link LatLngBounds} instance.
+     * @return the center coordinate of the given bounds.
+     */
+	public static LatLng getCenter(LatLngBounds bounds) {
+        double n = bounds.northeast.latitude;
+        double e = bounds.northeast.longitude;
+        double s = bounds.southwest.latitude;
+        double w = bounds.southwest.longitude;
+
+        double lat = ((n + s) / 2.0);
+        double lon = ((e + w) / 2.0);
+
+        return new LatLng(lat, lon);
+    }
 
 	/**
 	 * Check if OS version has built-in external cache dir method.

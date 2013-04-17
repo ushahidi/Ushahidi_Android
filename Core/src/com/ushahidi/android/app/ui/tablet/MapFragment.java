@@ -36,8 +36,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.ushahidi.android.app.OpenStreetMapTileProvider;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
@@ -105,6 +108,8 @@ public class MapFragment extends BaseMapFragment implements
 			}
 			map.setInfoWindowAdapter(new PopupAdapter(
 					getLayoutInflater(savedInstanceState)));
+			 map.setMapType(GoogleMap.MAP_TYPE_NONE);
+			map.addTileOverlay(new TileOverlayOptions().tileProvider(new OpenStreetMapTileProvider()));
 			map.setOnInfoWindowClickListener(this);
 		}
 
