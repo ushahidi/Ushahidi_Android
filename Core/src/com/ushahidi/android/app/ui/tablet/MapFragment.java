@@ -290,6 +290,7 @@ public class MapFragment extends BaseMapFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
+		Util.setMapTile(getActivity(), map);
 		if (mReportModel.size() == 0) {
 			mHandler.post(mMarkersOnMap);
 		}
