@@ -86,8 +86,6 @@ public class ReportNewsView extends View {
 
 	public void setWebView() {
 		WebSettings settings = webView.getSettings();
-		settings.setJavaScriptEnabled(true);
-		settings.setPluginsEnabled(true);
 		settings.setLightTouchEnabled(true);
 		webView.setWebViewClient(webClient);
 		webView.post(new Runnable() {

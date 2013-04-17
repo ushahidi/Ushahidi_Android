@@ -24,14 +24,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-import com.ushahidi.android.app.util.PhotoUtils;
-
-import com.ushahidi.android.app.util.PhotoUtils;
-
-import com.ushahidi.android.app.Preferences;
-
-import com.ushahidi.android.app.util.PhotoUtils;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -52,6 +44,8 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
 
+import com.ushahidi.android.app.Preferences;
+
 public class PhotoUtils {
 
 	private static final String CLASS_TAG = PhotoUtils.class.getCanonicalName();
@@ -59,10 +53,14 @@ public class PhotoUtils {
 	// folder to save pending photos.
 	private static final String PENDING = "/pending";
 
+	@SuppressWarnings("deprecation")
 	public static int getScreenOrientation(Activity context) {
 		Display display = context.getWindowManager().getDefaultDisplay();
+		
+		// The new API call requires API level 13 and above. suppressing this 
+		// for now
 		if (display.getWidth() == display.getHeight()) {
-			return Configuration.ORIENTATION_SQUARE;
+			return Configuration.ORIENTATION_UNDEFINED;
 		} else {
 			if (display.getWidth() < display.getHeight()) {
 				return Configuration.ORIENTATION_PORTRAIT;

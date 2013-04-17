@@ -31,7 +31,6 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.widget.ImageSwitcher;
 
-
 //TODO:: switching uisng the ImageView passed via the constructor in the async extended class
 public class ImageSwitchWorker {
 
@@ -47,8 +46,8 @@ public class ImageSwitchWorker {
 		this.context = context;
 	}
 
-	public void loadImage(Object data, ImageSwitcher imageSwitcher, boolean fullScale,
-			int width) {
+	public void loadImage(Object data, ImageSwitcher imageSwitcher,
+			boolean fullScale, int width) {
 		final BitmapWorkerTask task = new BitmapWorkerTask(imageSwitcher);
 		final AsyncDrawable asyncDrawable = new AsyncDrawable(
 				context.getResources(), loadingBitmap, task);
@@ -90,7 +89,8 @@ public class ImageSwitchWorker {
 		protected boolean fullScale = false;
 
 		public BitmapWorkerTask(ImageSwitcher imageSwitcher) {
-			imageSwitcherReference = new WeakReference<ImageSwitcher>(imageSwitcher);
+			imageSwitcherReference = new WeakReference<ImageSwitcher>(
+					imageSwitcher);
 		}
 
 		/**
@@ -101,6 +101,9 @@ public class ImageSwitchWorker {
 			data = params[0];
 			final String dataString = String.valueOf(data);
 			Bitmap bitmap = null;
+			
+			// initialize the image switcher
+			imageSwitcher = imageSwitcherReference.get();
 
 			// If the bitmap was not found in the cache and this task has not
 			// been cancelled by
@@ -146,6 +149,7 @@ public class ImageSwitchWorker {
 	 * @param ImageSwitcher
 	 * @param bitmap
 	 */
+	@SuppressWarnings("deprecation")
 	private void setImageBitmap(ImageSwitcher imageSwitcher, Bitmap bitmap) {
 		if (fadeIn) {
 			// Transition drawable with a transparent drwabale and the final
@@ -161,7 +165,8 @@ public class ImageSwitchWorker {
 			imageSwitcher.setImageDrawable(td);
 			td.startTransition(FADE_IN_TIME);
 		} else {
-			imageSwitcher.setImageDrawable(new BitmapDrawable(bitmap));
+			imageSwitcher.setImageDrawable(new BitmapDrawable(context
+					.getResources(), bitmap));
 		}
 	}
 }

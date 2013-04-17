@@ -84,9 +84,9 @@ public class ReportVideoView extends View {
 		setWebView();
 	}
 
+	@SuppressWarnings("deprecation")
 	public void setWebView() {
 		WebSettings settings = webView.getSettings();
-		settings.setJavaScriptEnabled(true);
 		settings.setPluginsEnabled(true);
 		settings.setLightTouchEnabled(true);
 		webView.setWebViewClient(webClient);

@@ -198,6 +198,7 @@ public class ImageViewWorker {
 	 * @param imageView
 	 * @param bitmap
 	 */
+	@SuppressWarnings("deprecation")
 	private void setImageBitmap(ImageView imageView, Bitmap bitmap) {
 		if (fadeIn) {
 			// Transition drawable with a transparent drwabale and the final

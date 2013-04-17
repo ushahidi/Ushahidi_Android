@@ -108,8 +108,8 @@ public class Util {
 	public static String capitalizeString(String text) {
 		if (text.length() == 0)
 			return text;
-		return text.substring(0, 1).toUpperCase()
-				+ text.substring(1).toLowerCase();
+		return text.substring(0, 1).toUpperCase(Locale.getDefault())
+				+ text.substring(1).toLowerCase(Locale.getDefault());
 	}
 
 	/**
@@ -212,12 +212,12 @@ public class Util {
 		String formatted = "";
 
 		DateFormat formatter = fromLocale == null ? new SimpleDateFormat(
-				dateFormat) : new SimpleDateFormat(dateFormat, fromLocale);
+				dateFormat) : new SimpleDateFormat(dateFormat,  Locale.getDefault());
 		try {
 			Date dateStr = formatter.parse(date);
 			formatted = formatter.format(dateStr);
 			Date formatDate = formatter.parse(formatted);
-			formatter = toLocale == null ? new SimpleDateFormat(toFormat)
+			formatter = toLocale == null ? new SimpleDateFormat(toFormat, Locale.getDefault())
 					: new SimpleDateFormat(toFormat, toLocale);
 			formatted = formatter.format(formatDate);
 
@@ -229,12 +229,11 @@ public class Util {
 	}
 
 	public static Date formatDate(String date) {
-		
+
 		final SimpleDateFormat PARSER = new SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss", Locale.US);
+				"yyyy-MM-dd HH:mm:ss",  Locale.getDefault());
 		try {
-			return new com.ushahidi.java.sdk.api.json.Date(
-					PARSER.parse(date));
+			return new com.ushahidi.java.sdk.api.json.Date(PARSER.parse(date));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -277,46 +276,27 @@ public class Util {
 	 * @apram json_data - the json data to be formatted.
 	 * @return String
 	 */
-	/*public static String getFromLocation(double latitude, double longitude,
-			Context context) {
-		String json_data = "";
-		int status = 0;
-		JSONArray jsonArray;
-		try {
-			if (Util.isConnected(context)) {
-				MainGeocoder geoCoder = new MainGeocoder(context);
-				json_data = geoCoder.reverseGeocode(latitude, longitude);
-			} else {
-				return "";
-			}
-			if (json_data != null) {
-				jsonObject = new JSONObject(json_data);
-
-				status = jsonObject.getJSONObject("Status").getInt("code");
-
-				if (status == 200) {
-					jsonArray = jsonObject.getJSONArray("Placemark");
-
-					return jsonArray.getJSONObject(0)
-							.getJSONObject("AddressDetails")
-							.getJSONObject("Country")
-							.getJSONObject("AdministrativeArea")
-							.getJSONObject("Locality")
-							.getString("LocalityName");
-
-				} else {
-					return "";
-				}
-			}
-
-		} catch (JSONException e) {
-			return "";
-			// e.printStackTrace();
-		} catch (IOException e) {
-			return "";
-		}
-		return "";
-	}*/
+	/*
+	 * public static String getFromLocation(double latitude, double longitude,
+	 * Context context) { String json_data = ""; int status = 0; JSONArray
+	 * jsonArray; try { if (Util.isConnected(context)) { MainGeocoder geoCoder =
+	 * new MainGeocoder(context); json_data = geoCoder.reverseGeocode(latitude,
+	 * longitude); } else { return ""; } if (json_data != null) { jsonObject =
+	 * new JSONObject(json_data);
+	 * 
+	 * status = jsonObject.getJSONObject("Status").getInt("code");
+	 * 
+	 * if (status == 200) { jsonArray = jsonObject.getJSONArray("Placemark");
+	 * 
+	 * return jsonArray.getJSONObject(0) .getJSONObject("AddressDetails")
+	 * .getJSONObject("Country") .getJSONObject("AdministrativeArea")
+	 * .getJSONObject("Locality") .getString("LocalityName");
+	 * 
+	 * } else { return ""; } }
+	 * 
+	 * } catch (JSONException e) { return ""; // e.printStackTrace(); } catch
+	 * (IOException e) { return ""; } return ""; }
+	 */
 
 	/**
 	 * Show toast
@@ -494,6 +474,7 @@ public class Util {
 		return isHoneycomb() && isTablet(context);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static int getScreenWidth(Context context) {
 		WindowManager wm = (WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE);
@@ -502,7 +483,7 @@ public class Util {
 	}
 
 	public static String getDateTime() {
-		DateFormat df = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
+		DateFormat df = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss", Locale.US);
 		df.setTimeZone(TimeZone.getTimeZone("GMT"));
 		return df.format(new Date());
 	}
