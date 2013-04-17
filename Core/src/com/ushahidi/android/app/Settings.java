@@ -46,6 +46,8 @@ public class Settings extends PreferenceActivity implements
 
 	private ListPreference totalReportsPref;
 
+	private ListPreference mapTileProviderPref;
+
 	private SeekBarPreference photoSizePref;
 
 	private SharedPreferences settings;
@@ -59,6 +61,8 @@ public class Settings extends PreferenceActivity implements
 	public static final String CHECKIN_PREFERENCE = "checkin_preference";
 
 	public static final String PHOTO_SIZE_PREFERENCE = "photo_size_preference";
+
+	public static final String MAP_TILE_PROVIDER_PREFERENCE = "map_tile_provider_preference";
 
 	private String recentReports = "";
 
@@ -80,6 +84,7 @@ public class Settings extends PreferenceActivity implements
 		photoSizePref.setMax(Util.getScreenWidth(this));
 		recentReports = getString(R.string.recent_reports);
 		totalReportsPref = new ListPreference(this);
+		mapTileProviderPref = new ListPreference(this);
 
 		new ListPreference(this);
 
@@ -111,6 +116,11 @@ public class Settings extends PreferenceActivity implements
 		CharSequence[] totalReportsValues = { "20", "40", "60", "80", "100",
 				"250", "500", "1000" };
 
+		CharSequence[] mapTileEntries = { "Google Tiles", "OSM Tiles ",
+				"Mapbox Tiles" };
+
+		CharSequence[] mapTileValues = { "google", "osm", "mapbox" };
+
 		totalReportsPref.setEntries(totalReportsEntries);
 		totalReportsPref.setEntryValues(totalReportsValues);
 		totalReportsPref.setDefaultValue(totalReportsValues[0]);
@@ -119,6 +129,16 @@ public class Settings extends PreferenceActivity implements
 		totalReportsPref.setTitle(R.string.total_reports);
 		totalReportsPref.setSummary(R.string.hint_total_reports);
 		basicPrefCat.addPreference(totalReportsPref);
+
+		// Map tile preference
+		mapTileProviderPref.setEntries(mapTileEntries);
+		mapTileProviderPref.setKey(MAP_TILE_PROVIDER_PREFERENCE);
+		mapTileProviderPref.setTitle(R.string.map_tiles);
+		mapTileProviderPref.setSummary(R.string.map_tiles_summary);
+		mapTileProviderPref.setDialogTitle(R.string.map_tiles);
+		mapTileProviderPref.setEntryValues(mapTileValues);
+		mapTileProviderPref.setDefaultValue(mapTileValues[0]);
+		basicPrefCat.addPreference(mapTileProviderPref);
 
 		// First name entry field
 		firstNamePref.setDialogTitle(R.string.txt_first_name);
@@ -166,13 +186,14 @@ public class Settings extends PreferenceActivity implements
 		editor = settings.edit();
 
 		String totalReports = totalReportsPref.getValue();
-
+		String  mapTiles = mapTileProviderPref.getValue();
 		editor.putString("Domain", Preferences.domain);
 		editor.putString("Firstname", firstNamePref.getText());
 		editor.putString("Lastname", lastNamePref.getText());
 		editor.putString("Email", emailAddressPref.getText());
 		editor.putString("Phonenumber", phoneNumberPref.getText());
 		editor.putString("TotalReports", totalReports);
+		editor.putString("MapTiles", mapTiles);
 		editor.putInt("CheckinEnabled", Preferences.isCheckinEnabled);
 		editor.putInt("PhotoWidth", photoSizePref.getProgress());
 		editor.commit();

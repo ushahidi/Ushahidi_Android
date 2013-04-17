@@ -6,21 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class Preferences {
-	public static boolean httpRunning = false;
-
-	public static boolean AutoFetch = false;
-
-	public static boolean vibrate = false;
-
-	public static boolean ringtone = false;
-
-	public static boolean flashLed = false;
-
-	public static int countries = 0;
-
-	public static int AutoUpdateDelay = 0;
-
-	public static final int NOTIFICATION_ID = 1;
+	
 
 	public static final String PREFS_NAME = "UshahidiService";
 
@@ -39,6 +25,8 @@ public class Preferences {
 	public static String email = "";
 
 	public static String totalReports = "";
+	
+	public static String mapTiles = "";
 
 	public static String fileName = "";
 
@@ -86,10 +74,9 @@ public class Preferences {
 		firstname = settings.getString("Firstname", "");
 		lastname = settings.getString("Lastname", "");
 		email = settings.getString("Email", "");
-		countries = settings.getInt("Countries", 0);
-		AutoUpdateDelay = settings.getInt("AutoUpdateDelay", 5);
-		AutoFetch = settings.getBoolean("AutoFetch", false);
+		
 		totalReports = settings.getString("TotalReports", "20");
+		mapTiles = settings.getString("MapTiles", "google");
 		isCheckinEnabled = settings.getInt("CheckinEnabled", isCheckinEnabled);
 		activeDeployment = settings.getInt("ActiveDeployment", 0);
 		activeMapName = settings.getString("ActiveMapName", "");
@@ -138,6 +125,7 @@ public class Preferences {
 		editor.putInt("SelectedDistance", selectedDistance);
 		editor.putString("Phonenumber", phonenumber);
 		editor.putString("OgsPluginVersion", ogsPluginVersion);
+		editor.putString("MapTiles", mapTiles);
 		editor.commit();
 	}
 }
