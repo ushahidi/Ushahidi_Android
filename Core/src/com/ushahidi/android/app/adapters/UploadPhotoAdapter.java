@@ -126,7 +126,7 @@ public class UploadPhotoAdapter extends BaseListAdapter<PhotoEntity> {
 	}
 
 	private Drawable getPhoto(String fileName) {
-		return ImageManager.getDrawables2(context, fileName);
+		return ImageManager.getDrawables(context, fileName);
 
 	}
 
