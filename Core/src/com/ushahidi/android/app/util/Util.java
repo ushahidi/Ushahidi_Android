@@ -55,9 +55,14 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.ushahidi.android.app.MainApplication;
+import com.ushahidi.android.app.MapBoxTileProvider;
+import com.ushahidi.android.app.OpenStreetMapTileProvider;
+import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 
 /**
@@ -214,13 +219,15 @@ public class Util {
 		String formatted = "";
 
 		DateFormat formatter = fromLocale == null ? new SimpleDateFormat(
-				dateFormat) : new SimpleDateFormat(dateFormat,  Locale.getDefault());
+				dateFormat) : new SimpleDateFormat(dateFormat,
+				Locale.getDefault());
 		try {
 			Date dateStr = formatter.parse(date);
 			formatted = formatter.format(dateStr);
 			Date formatDate = formatter.parse(formatted);
-			formatter = toLocale == null ? new SimpleDateFormat(toFormat, Locale.getDefault())
-					: new SimpleDateFormat(toFormat, toLocale);
+			formatter = toLocale == null ? new SimpleDateFormat(toFormat,
+					Locale.getDefault()) : new SimpleDateFormat(toFormat,
+					toLocale);
 			formatted = formatter.format(formatDate);
 
 		} catch (ParseException e) {
@@ -233,7 +240,7 @@ public class Util {
 	public static Date formatDate(String date) {
 
 		final SimpleDateFormat PARSER = new SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss",  Locale.getDefault());
+				"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 		try {
 			return new com.ushahidi.java.sdk.api.json.Date(PARSER.parse(date));
 		} catch (ParseException e) {
@@ -601,24 +608,51 @@ public class Util {
 		return Util.capitalizeString(s);
 
 	}
-	
+
 	/**
-     * Calculates the center coordinate of a {@link LatLngBounds}.
-     * 
-     * @param bounds A {@link LatLngBounds} instance.
-     * @return the center coordinate of the given bounds.
-     */
+	 * Calculates the center coordinate of a {@link LatLngBounds}.
+	 * 
+	 * @param bounds
+	 *            A {@link LatLngBounds} instance.
+	 * @return the center coordinate of the given bounds.
+	 */
 	public static LatLng getCenter(LatLngBounds bounds) {
-        double n = bounds.northeast.latitude;
-        double e = bounds.northeast.longitude;
-        double s = bounds.southwest.latitude;
-        double w = bounds.southwest.longitude;
+		double n = bounds.northeast.latitude;
+		double e = bounds.northeast.longitude;
+		double s = bounds.southwest.latitude;
+		double w = bounds.southwest.longitude;
 
-        double lat = ((n + s) / 2.0);
-        double lon = ((e + w) / 2.0);
+		double lat = ((n + s) / 2.0);
+		double lon = ((e + w) / 2.0);
 
-        return new LatLng(lat, lon);
-    }
+		return new LatLng(lat, lon);
+	}
+
+	/**
+	 * Sets which map tile to use
+	 * 
+	 * @param context
+	 *            The calling Activity
+	 * @param map
+	 *            The GoogleMap
+	 */
+	public static void setMapTile(Context context, GoogleMap map) {
+		// load preferences
+		Preferences.loadSettings(context);
+		final String mapTile = Preferences.mapTiles;
+		if (map != null) {
+			map.setMapType(GoogleMap.MAP_TYPE_NONE);
+			if (mapTile.equals("google")) {
+				map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+			} else if (mapTile.equals("osm")) {
+				map.addTileOverlay(new TileOverlayOptions()
+						.tileProvider(new OpenStreetMapTileProvider()));
+			} else {
+				map.addTileOverlay(new TileOverlayOptions()
+						.tileProvider(new MapBoxTileProvider()));
+			}
+		}
+	}
 
 	/**
 	 * Check if OS version has built-in external cache dir method.

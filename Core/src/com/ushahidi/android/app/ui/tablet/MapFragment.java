@@ -108,12 +108,13 @@ public class MapFragment extends BaseMapFragment implements
 			}
 			map.setInfoWindowAdapter(new PopupAdapter(
 					getLayoutInflater(savedInstanceState)));
-			 map.setMapType(GoogleMap.MAP_TYPE_NONE);
-			map.addTileOverlay(new TileOverlayOptions().tileProvider(new OpenStreetMapTileProvider()));
+			//set up map tile
+			Util.setMapTile(getActivity(), map);
 			map.setOnInfoWindowClickListener(this);
 		}
 
 	}
+	
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
