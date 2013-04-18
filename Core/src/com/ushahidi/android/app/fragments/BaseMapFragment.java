@@ -19,17 +19,13 @@
  **/
 package com.ushahidi.android.app.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -209,15 +205,15 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 					.title(title).snippet(snippet));
 		}
 
-		public void addMarkerWithIcon(GoogleMap map, double lat, double lng,
+		public void addMarkerWithIcon(GoogleMap gMap, double lat, double lng,
 				String title, String snippet, String filename) {
 			if ((filename != null) && (!TextUtils.isEmpty(filename))) {
-				map.addMarker(new MarkerOptions()
+				gMap.addMarker(new MarkerOptions()
 						.position(new LatLng(lat, lng)).title(title)
 						.snippet(snippet)
 						.icon(BitmapDescriptorFactory.fromPath(filename)));
 			} else {
-				map.addMarker(new MarkerOptions()
+				gMap.addMarker(new MarkerOptions()
 						.position(new LatLng(lat, lng)).title(title)
 						.snippet(snippet));
 			}

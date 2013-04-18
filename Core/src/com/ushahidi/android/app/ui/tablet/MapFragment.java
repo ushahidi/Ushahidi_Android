@@ -57,10 +57,12 @@ import com.ushahidi.android.app.api.ReportsApi;
 import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.fragments.BaseMapFragment;
+import com.ushahidi.android.app.fragments.BaseMapFragment.UpdatableMarker;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
+import com.ushahidi.android.app.ui.phone.ViewReportActivity;
 import com.ushahidi.android.app.util.ImageManager;
 import com.ushahidi.android.app.util.Util;
 
@@ -124,12 +126,34 @@ public class MapFragment extends BaseMapFragment implements
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
-		// TODO:: launch report view activity
+		if (mReportModel != null) {
+			final int position = Integer.valueOf(marker.getId()
+					.replace("m", "").trim());
+			launchViewReport(position, "");
+		}
+
+		if (marker.isInfoWindowShown())
+			marker.hideInfoWindow();
+	}
+
+	private void launchViewReport(int position, final String filterCategory) {
+		Intent i = new Intent(getActivity(), ViewReportActivity.class);
+		i.putExtra("id", position);
+		if (filterCategory != null
+				&& !filterCategory.equalsIgnoreCase(getActivity().getString(
+						R.string.all_categories))) {
+			i.putExtra("category", filterCategory);
+		} else {
+			i.putExtra("category", "");
+		}
+		getActivity().startActivityForResult(i, 0);
+		getActivity().overridePendingTransition(R.anim.home_enter,
+				R.anim.home_exit);
+
 	}
 
 	protected void setupMapCenter() {
 		if (map != null) {
-			final UpdatableMarker marker = createUpdatableMarker();
 			final View mapView = getView();
 			if (mapView != null) {
 				if (mapView.getViewTreeObserver().isAlive()) {
@@ -387,6 +411,8 @@ public class MapFragment extends BaseMapFragment implements
 	public void populateMap() {
 
 		if (mReportModel != null) {
+			UpdatableMarker marker = createUpdatableMarker();
+
 			for (ReportEntity reportEntity : mReportModel) {
 				double latitude = 0.0;
 				double longitude = 0.0;
@@ -405,9 +431,9 @@ public class MapFragment extends BaseMapFragment implements
 				}
 				final String description = Util.limitString(reportEntity
 						.getIncident().getDescription(), 30);
-
-				createMarker(latitude, longitude, reportEntity.getIncident()
-						.getTitle(), description, reportEntity.getThumbnail());
+				marker.addMarkerWithIcon(map, latitude, longitude, reportEntity
+						.getIncident().getTitle(), description, reportEntity
+						.getThumbnail());
 
 			}
 		}
