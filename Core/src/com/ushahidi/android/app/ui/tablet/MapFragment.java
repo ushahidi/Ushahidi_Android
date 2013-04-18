@@ -22,10 +22,12 @@ package com.ushahidi.android.app.ui.tablet;
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -33,11 +35,15 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.ushahidi.android.app.OpenStreetMapTileProvider;
@@ -100,7 +106,10 @@ public class MapFragment extends BaseMapFragment implements
 			map = getMap();
 
 			Preferences.loadSettings(getActivity());
+			// set up map tile
+			Util.setMapTile(getActivity(), map);
 			if (mReportModel.size() > 0) {
+				setupMapCenter();
 				mHandler.post(mMarkersOnMap);
 
 			} else {
@@ -108,17 +117,78 @@ public class MapFragment extends BaseMapFragment implements
 			}
 			map.setInfoWindowAdapter(new PopupAdapter(
 					getLayoutInflater(savedInstanceState)));
-			//set up map tile
-			Util.setMapTile(getActivity(), map);
 			map.setOnInfoWindowClickListener(this);
 		}
 
 	}
-	
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
 		// TODO:: launch report view activity
+	}
+
+	protected void setupMapCenter() {
+		if (map != null) {
+			final UpdatableMarker marker = createUpdatableMarker();
+			final View mapView = getView();
+			if (mapView != null) {
+				if (mapView.getViewTreeObserver().isAlive()) {
+					mapView.getViewTreeObserver().addOnGlobalLayoutListener(
+							new OnGlobalLayoutListener() {
+								@SuppressWarnings("deprecation")
+								// We use the new method when supported
+								@SuppressLint("NewApi")
+								// We check which build version we are using.
+								@Override
+								public void onGlobalLayout() {
+
+									LatLng latLng = getReportLatLng();
+
+									if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+										mapView.getViewTreeObserver()
+												.removeGlobalOnLayoutListener(
+														this);
+									} else {
+										mapView.getViewTreeObserver()
+												.removeOnGlobalLayoutListener(
+														this);
+									}
+									if (latLng != null)
+										map.moveCamera(CameraUpdateFactory
+												.newLatLng(latLng));
+
+								}
+							});
+				}
+			}
+		}
+	}
+
+	private LatLng getReportLatLng() {
+		if (mReportModel != null) {
+			LatLngBounds.Builder builder = new LatLngBounds.Builder();
+			for (ReportEntity reportEntity : mReportModel) {
+				double latitude = 0.0;
+				double longitude = 0.0;
+				try {
+					latitude = Double.valueOf(reportEntity.getIncident()
+							.getLatitude());
+				} catch (NumberFormatException e) {
+					latitude = 0.0;
+				}
+
+				try {
+					longitude = Double.valueOf(reportEntity.getIncident()
+							.getLongitude());
+				} catch (NumberFormatException e) {
+					longitude = 0.0;
+				}
+
+				builder.include(new LatLng(latitude, longitude));
+			}
+			return Util.getCenter(builder.build());
+		}
+		return null;
 	}
 
 	@Override
@@ -132,11 +202,11 @@ public class MapFragment extends BaseMapFragment implements
 		} else if (item.getItemId() == R.id.menu_add) {
 			launchAddReport();
 			return true;
-		} else if (item.getItemId() == R.id.menu_normal) { 
+		} else if (item.getItemId() == R.id.menu_normal) {
 			// map.setSatellite(false);
 			// map.setTraffic(false);
 			return true;
-		} else if (item.getItemId() == R.id.menu_satellite) { 
+		} else if (item.getItemId() == R.id.menu_satellite) {
 			// map.setSatellite(true);
 			return true;
 

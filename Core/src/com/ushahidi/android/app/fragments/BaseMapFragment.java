@@ -19,13 +19,17 @@
  **/
 package com.ushahidi.android.app.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -36,6 +40,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.util.Util;
@@ -132,6 +137,11 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 	protected UpdatableMarker createUpdatableMarker(LatLng point) {
 		return new MapMarker(point);
 	}
+	
+	/* Override this to set a custom marker */
+	protected UpdatableMarker createUpdatableMarker() {
+		return new MapMarker();
+	}
 
 	protected void createMarker(double lat, double lng, String title,
 			String snippet) {
@@ -179,6 +189,13 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 		}
 
 		public MapMarker() {
+		}
+
+		public LatLng getCenter(double lat, double lng) {
+			LatLngBounds bounds = new LatLngBounds.Builder().include(
+					new LatLng(lat, lng)).build();
+
+			return Util.getCenter(bounds);
 		}
 
 		public void update(LatLng point) {
@@ -247,6 +264,7 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 
 		public abstract void addMarkerWithIcon(GoogleMap map, double lat,
 				double lng, String title, String snippet, String filename);
+		public abstract LatLng getCenter(double lat, double lng);
 	}
 
 	protected void log(String message) {
