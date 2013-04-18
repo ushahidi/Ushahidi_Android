@@ -114,6 +114,11 @@ public abstract class BaseMapActivity<V extends View> extends MapUserLocation
 						.findFragmentById(mapViewId);
 
 				mapView = mapFrag.getMap();
+				
+				Preferences.loadSettings(this);
+				// set up map tile
+				Util.setMapTile(this, mapView);
+				
 				super.map = mapView;
 			}
 		}
@@ -127,6 +132,7 @@ public abstract class BaseMapActivity<V extends View> extends MapUserLocation
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Util.setMapTile(this, mapView);
 	}
 
 	@Override

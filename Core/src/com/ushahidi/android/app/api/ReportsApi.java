@@ -24,7 +24,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
