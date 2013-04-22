@@ -970,7 +970,7 @@ public class AddReportActivity extends
 					id += 1;
 					PhotoEntity photo = new PhotoEntity();
 					photo.setDbId(id);
-					photo.setPhoto("pending/" + file.getName());
+					photo.setPhoto(file.getName());
 					pendingPhoto.addItem(photo);
 				}
 			}

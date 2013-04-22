@@ -25,6 +25,7 @@ import java.util.List;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.CategoryEntity;
 import com.ushahidi.android.app.util.Util;
+import com.ushahidi.java.sdk.UshahidiException;
 import com.ushahidi.java.sdk.api.Category;
 import com.ushahidi.java.sdk.api.tasks.CategoriesTask;
 
@@ -56,16 +57,21 @@ public class CategoriesApi extends UshahidiApi {
 	public boolean getCategoriesList() {
 		new Util().log("Save categories list");
 		if (processingResult) {
-			List<Category> cats = task.all();
-			if (cats != null) {
-				for (com.ushahidi.java.sdk.api.Category cat : cats) {
-					CategoryEntity category = new CategoryEntity();
-					category.addCategory(cat);
-					categories.add(category);
+			try {
+				List<Category> cats = task.all();
+				if (cats != null) {
+					for (com.ushahidi.java.sdk.api.Category cat : cats) {
+						CategoryEntity category = new CategoryEntity();
+						category.addCategory(cat);
+						categories.add(category);
+					}
+					return saveCategories(categories);
 				}
-				return saveCategories(categories);
-			}
 
+			} catch (UshahidiException e) {
+				log("UshahidiException", e);
+				processingResult = false;
+			}
 		}
 		return false;
 	}

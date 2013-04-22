@@ -49,9 +49,9 @@ import android.os.Environment;
 public class ImageManager {
 
 	// folder to save fetched photos.
-	private static final String PHOTO = "/fetched";
+	public static final String PHOTO = "/fetched";
 
-	private static final String PENDING = "/pending";
+	public static final String PENDING = "/pending";
 
 	private static final int IO_BUFFER_SIZE = 512;
 
@@ -59,70 +59,68 @@ public class ImageManager {
 			Context context, String fileName) {
 		final BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(getPhotoPath(context) + fileName, options);
+		BitmapFactory.decodeFile(fileName, options);
 		return options;
 	}
 
 	public static Drawable getDrawables(Context context, String fileName) {
-
+		String file = getPhotoPath(context) + fileName;
 		final BitmapFactory.Options options = getBitmapFactoryOptions(context,
-				fileName);
-		Bitmap scaled = PhotoUtils.scaleBitmap(options, getPhotoPath(context)
-				+ fileName);
+				file);
+		Bitmap scaled = PhotoUtils.scaleBitmap(options, file);
 		return new BitmapDrawable(context.getResources(), scaled);
 
 	}
 
 	public static Bitmap getBitmaps(Context context, String fileName) {
-
+		String file = getPhotoPath(context) + fileName;
 		final BitmapFactory.Options options = getBitmapFactoryOptions(context,
-				fileName);
+				file);
 		// scale image
 		return PhotoUtils
-				.scaleBitmap(options, getPhotoPath(context) + fileName);
+				.scaleBitmap(options, file);
 
 	}
 
 	public static Drawable getDrawables(Context context, String fileName,
 			int width) {
-
+		String file = getPhotoPath(context) + fileName;
 		final BitmapFactory.Options options = getBitmapFactoryOptions(context,
-				fileName);
+				file);
 		// scale image
-		Bitmap scaled = PhotoUtils.scaleBitmapByWidth(options, width,
-				getPhotoPath(context) + fileName);
+		Bitmap scaled = PhotoUtils.scaleBitmapByWidth(options, width,file);
 		return new BitmapDrawable(context.getResources(), scaled);
 
 	}
 
 	public static Bitmap getBitmaps(Context context, String fileName, int width) {
-
+		String file = getPhotoPath(context) + fileName;
 		final BitmapFactory.Options options = getBitmapFactoryOptions(context,
-				fileName);
+				file);
 
-		return PhotoUtils.scaleBitmapByWidth(options, width,
-				getPhotoPath(context) + fileName);
+		return PhotoUtils.scaleBitmapByWidth(options, width,file);
 
 	}
 
 	public static Drawable getPendingDrawables(Context context, String fileName) {
-
+		String file = getPhotoPath(context, fileName);
 		final BitmapFactory.Options options = getBitmapFactoryOptions(context,
-				fileName);
-
+				file);
+		
 		// scale image
-		Bitmap scaled = PhotoUtils.scaleBitmap(options, fileName);
+		Bitmap scaled = PhotoUtils.scaleBitmap(options, file);
 		return new BitmapDrawable(context.getResources(), scaled);
 
 	}
 
 	public static Drawable getPendingDrawables(Context context,
 			String fileName, int width) {
+		String file = getPhotoPath(context, fileName);
 		final BitmapFactory.Options options = getBitmapFactoryOptions(context,
-				fileName);
+				file);
 
 		// scale image
-		Bitmap scaled = PhotoUtils.scaleBitmapByWidth(options, width, fileName);
+		Bitmap scaled = PhotoUtils.scaleBitmapByWidth(options, width, file);
 		return new BitmapDrawable(context.getResources(), scaled);
 
 	}
@@ -282,7 +280,7 @@ public class ImageManager {
 				return path.getAbsolutePath() + "/";
 			}
 		}
-
+		
 		return path.getAbsolutePath() + "/";
 	}
 

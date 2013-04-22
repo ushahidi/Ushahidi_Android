@@ -25,8 +25,8 @@ package com.ushahidi.android.app;
  * 
  */
 public class MapBoxTileProvider extends MapTileProvider {
-	// map identifers include mapbox.world-brigh ,mapbox.control-room, hiu.lsib-dark-labelled
-	private static final String TITLE_URL = "http://a.tiles.mapbox.com/v3/hiu.lsib-dark-labelled/%d/%d/%d.png";
+	// map identifiers include mapbox.world-brigh ,mapbox.control-room, hiu.lsib-dark-labelled, jcsanford.map-vita0cry
+	private static final String TITLE_URL = "http://a.tiles.mapbox.com/v3/jcsanford.map-vita0cry/%d/%d/%d.png";
 
 	public MapBoxTileProvider() {
 		super(256, 256, TITLE_URL);

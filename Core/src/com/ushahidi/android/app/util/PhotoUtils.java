@@ -50,9 +50,6 @@ public class PhotoUtils {
 
 	private static final String CLASS_TAG = PhotoUtils.class.getCanonicalName();
 
-	// folder to save pending photos.
-	private static final String PENDING = "/pending";
-
 	@SuppressWarnings("deprecation")
 	public static int getScreenOrientation(Activity context) {
 		Display display = context.getWindowManager().getDefaultDisplay();
@@ -81,14 +78,14 @@ public class PhotoUtils {
 
 	public static File pendingPhotosPath(Context context) {
 		File path = new File(Environment.getExternalStorageDirectory(),
-				context.getPackageName() + PENDING);
+				context.getPackageName() + ImageManager.PENDING);
 
 		return path;
 	}
 
 	public static Uri getPhotoUri(String filename, Activity activity) {
 		File path = new File(Environment.getExternalStorageDirectory(),
-				activity.getPackageName() + PENDING);
+				activity.getPackageName() + ImageManager.PENDING);
 		if (!path.exists() && path.mkdir()) {
 			return Uri.fromFile(new File(path, filename));
 		}
@@ -98,7 +95,7 @@ public class PhotoUtils {
 	public static String getPhotoPath(Activity activity) {
 		new Util().log("getPhotoPath");
 		File path = new File(Environment.getExternalStorageDirectory(),
-				activity.getPackageName() + PENDING);
+				activity.getPackageName() + ImageManager.PENDING);
 		return path.exists() ? path.getAbsolutePath() : null;
 
 	}

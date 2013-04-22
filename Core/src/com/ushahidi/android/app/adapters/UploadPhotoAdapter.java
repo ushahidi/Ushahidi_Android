@@ -119,15 +119,9 @@ public class UploadPhotoAdapter extends BaseListAdapter<PhotoEntity> {
 		return photos;
 	}
 
-	public List<File> pendingCheckinPhotos() {
-		mListPhotoModel = new ListPhotoModel();
-		items = mListPhotoModel.getPendingPhotos(context);
-		return getPhotos(items);
-	}
-
 	private Drawable getPhoto(String fileName) {
-		return ImageManager.getDrawables(context, fileName);
-
+		
+		return ImageManager.getPendingDrawables(context, fileName);
 	}
 
 }
