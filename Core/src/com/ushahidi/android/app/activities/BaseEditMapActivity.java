@@ -39,6 +39,10 @@ import com.ushahidi.android.app.views.View;
 public abstract class BaseEditMapActivity<V extends View, M extends Model>
 		extends BaseMapActivity<V> {
 
+	private SaveTask mSaveTask;
+
+	private DiscardTask mDiscardTask;
+
 	public BaseEditMapActivity(Class<V> view, int layout, int menu, int mapView) {
 		super(view, layout, menu, mapView);
 	}
@@ -61,6 +65,14 @@ public abstract class BaseEditMapActivity<V extends View, M extends Model>
 	@Override
 	protected void onPause() {
 		super.onPause();
+
+		if (mSaveTask != null) {
+			mSaveTask.cancel(true);
+		}
+
+		if (mDiscardTask != null) {
+			mDiscardTask.cancel(true);
+		}
 	}
 
 	protected void showDialog() {
@@ -72,14 +84,20 @@ public abstract class BaseEditMapActivity<V extends View, M extends Model>
 				.setPositiveButton(getText(R.string.save),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								new SaveTask(BaseEditMapActivity.this)
-										.execute((String) null);
+								if (mSaveTask == null) {
+									mSaveTask = new SaveTask(
+											BaseEditMapActivity.this);
+									mSaveTask.execute((String) null);
+								}
 							}
 						})
 				.setNeutralButton(getText(R.string.discard),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								new DiscardTask(BaseEditMapActivity.this).execute((String)null);
+								if(mDiscardTask == null) {
+									mDiscardTask = new DiscardTask(BaseEditMapActivity.this);
+									mDiscardTask.execute((String) null);
+								}		
 								finish();
 							}
 						})
@@ -107,7 +125,7 @@ public abstract class BaseEditMapActivity<V extends View, M extends Model>
 	 * @return returns true if successful
 	 */
 	protected abstract boolean onSaveChanges();
-	
+
 	protected abstract boolean onDiscardChanges();
 
 	/**
@@ -134,7 +152,7 @@ public abstract class BaseEditMapActivity<V extends View, M extends Model>
 			}
 		}
 	}
-	
+
 	/**
 	 * Background progress task for saving Model
 	 */

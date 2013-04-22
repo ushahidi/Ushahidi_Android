@@ -38,6 +38,10 @@ import com.ushahidi.android.app.views.View;
 public abstract class BaseEditActivity<V extends View, M extends Model> extends
 		BaseActivity<V> {
 
+	private SaveTask mSaveTask;
+
+	private DiscardTask mDiscardTask;
+
 	public BaseEditActivity(Class<V> view, int layout, int menu) {
 		super(view, layout, menu);
 	}
@@ -55,6 +59,13 @@ public abstract class BaseEditActivity<V extends View, M extends Model> extends
 	@Override
 	protected void onPause() {
 		super.onPause();
+		if (mSaveTask != null) {
+			mSaveTask.cancel(true);
+		}
+
+		if (mDiscardTask != null) {
+			mDiscardTask.cancel(true);
+		}
 	}
 
 	@Override
@@ -76,14 +87,22 @@ public abstract class BaseEditActivity<V extends View, M extends Model> extends
 				.setPositiveButton(getText(R.string.save),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								new SaveTask(BaseEditActivity.this)
-										.execute((String) null);
+								if (mSaveTask == null) {
+									mSaveTask = new SaveTask(
+											BaseEditActivity.this);
+									mSaveTask.execute((String) null);
+								}
+
 							}
 						})
 				.setNeutralButton(getText(R.string.discard),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								new DiscardTask(BaseEditActivity.this).execute((String) null);
+								if(mDiscardTask == null) {
+									mDiscardTask = new DiscardTask(BaseEditActivity.this);
+									mDiscardTask.execute((String) null);
+								}
+								
 								finish();
 							}
 						})

@@ -34,7 +34,7 @@
         android:required="false" />
     <!-- Enable this feature if you need autofocus <uses-feature android:name="android.hardware.camera.autofocus" /> -->
     <uses-sdk
-        android:minSdkVersion="7"
-        android:targetSdkVersion="16" />
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
 
 </manifest>
