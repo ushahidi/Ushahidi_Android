@@ -200,25 +200,15 @@
         </activity>
 
         <!-- Launch View Reports -->
-        <activity
-            android:name=".ui.phone.ViewReportActivity"
-            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:label="@string/reports" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         
         <activity
             android:name=".ui.phone.ViewReportSlideActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/reports" >
            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+               <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
@@ -257,7 +247,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <!-- activity
+        <activity
             android:name=".activities.SplashScreenActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
@@ -265,7 +255,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> -->
+        </activity>
         <activity
             android:name=".ui.phone.ReportMapActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation" >

@@ -50,7 +50,6 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.BaseListActivity;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
-import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.models.ListReportModel;
@@ -516,9 +515,6 @@ public class ListMapActivity extends
 	public void clearCachedData() {
 		// delete reports
 		new ListReportModel().deleteReport();
-
-		// delete checkins data
-		new ListCheckinModel().deleteCheckin();
 
 		// delete comment data
 		new ListCommentModel().deleteComments();

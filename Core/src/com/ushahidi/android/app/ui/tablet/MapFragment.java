@@ -40,13 +40,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.ushahidi.android.app.OpenStreetMapTileProvider;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
@@ -57,12 +54,11 @@ import com.ushahidi.android.app.api.ReportsApi;
 import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.fragments.BaseMapFragment;
-import com.ushahidi.android.app.fragments.BaseMapFragment.UpdatableMarker;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
-import com.ushahidi.android.app.ui.phone.ViewReportActivity;
+import com.ushahidi.android.app.ui.phone.ViewReportSlideActivity;
 import com.ushahidi.android.app.util.ImageManager;
 import com.ushahidi.android.app.util.Util;
 
@@ -137,7 +133,7 @@ public class MapFragment extends BaseMapFragment implements
 	}
 
 	private void launchViewReport(int position, final String filterCategory) {
-		Intent i = new Intent(getActivity(), ViewReportActivity.class);
+		Intent i = new Intent(getActivity(), ViewReportSlideActivity.class);
 		i.putExtra("id", position);
 		if (filterCategory != null
 				&& !filterCategory.equalsIgnoreCase(getActivity().getString(

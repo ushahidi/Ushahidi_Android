@@ -24,7 +24,6 @@ import android.content.Intent;
 import com.ushahidi.android.app.api.CategoriesApi;
 import com.ushahidi.android.app.api.ReportsApi;
 import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.util.ApiUtils;
@@ -54,9 +53,6 @@ public class FetchReports extends SyncServices {
 	public void clearCachedData() {
 		// delete reports
 		new ListReportModel().deleteReport();
-
-		// delete checkins data
-		new ListCheckinModel().deleteCheckin();
 
 		// delete comment data
 		new ListCommentModel().deleteComments();

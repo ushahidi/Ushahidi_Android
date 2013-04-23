@@ -81,6 +81,8 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 	 * The argument key for the page number this fragment represents.
 	 */
 	public static final String ARG_PAGE = "page";
+	
+	public static final String ARG_CAT_ID = "catid";
 
 	/**
 	 * The fragment's page number, which is set to the argument value for
@@ -95,8 +97,6 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 	private List<ReportEntity> mReport;
 
 	private ListFetchedReportAdapter mReportAdapter;
-
-	private int mPosition;
 
 	private int mCategoryId;
 
@@ -114,11 +114,13 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 	 * Factory method for this fragment class. Constructs a new fragment for the
 	 * given page number.
 	 */
-	public static ScreenSlidePageFragment create(int pageNumber) {
+	public static ScreenSlidePageFragment newInstance(int pageNumber, int categoryId) {
 		ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_PAGE, pageNumber);
+		args.putInt(ARG_CAT_ID, categoryId);
 		fragment.setArguments(args);
+		
 		return fragment;
 	}
 
@@ -141,6 +143,8 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mPageNumber = getArguments().getInt(ARG_PAGE);
+		mCategoryId = getArguments().getInt(ARG_CAT_ID);
+		mReports = new ListReportModel();
 
 	}
 
@@ -192,16 +196,13 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 			}
 		}
 
-		mCategoryId = getArguments().getInt("category", 0);
-		mPosition = getArguments().getInt("id", 0);
-
 		if (mCategoryId > 0) {
 			mReports.loadReportByCategory(mCategoryId);
 		} else {
 			mReports.load();
 		}
 
-		initReport(mPosition);
+		initReport(mPageNumber);
 		fetchComments();
 
 		// Set the title view to show the page number.
@@ -298,7 +299,7 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 			centerLocationWithMarker(mReport.get(position).getIncident()
 					.getLatitude(), mReport.get(position).getIncident()
 					.getLongitude());
-			int page = position;
+			//int page = position;
 			//this.setTitle(page + 1);
 		}
 	}
@@ -346,7 +347,7 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 
 				int status = intent.getIntExtra("status", 4);
 				getActivity().stopService(mFetchReportComments);
-				mView.dialog.cancel();
+				//mView.dialog.cancel();
 				if (status == 4) {
 					Util.showToast(getActivity(), R.string.internet_connection);
 				} else if (status == 110) {

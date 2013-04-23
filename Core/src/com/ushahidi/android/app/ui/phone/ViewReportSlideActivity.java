@@ -33,6 +33,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.helpers.ScreenSlidePageFragment;
+import com.ushahidi.android.app.models.ListReportModel;
 
 /**
  * @author eyedol
@@ -43,7 +44,7 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 	/**
 	 * The number of pages (wizard steps) to show in this demo.
 	 */
-	private static final int NUM_PAGES = 5;
+	private int NUM_PAGES = 0;
 
 	/**
 	 * The pager widget, which handles animation and allows swiping horizontally
@@ -58,19 +59,32 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 
 	private int mCategoryId;
 
-	private int mPosition;
+	private int mReportId;
 
 	private String mReportTitle;
+
+	private ListReportModel mReports;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_report_slide);
+		mReports = new ListReportModel();
+
+		this.mCategoryId = getIntent().getExtras().getInt("category", 0);
+		int pos = getIntent().getExtras().getInt("id", 0);
+		if (mCategoryId > 0) {
+			mReports.loadReportByCategory(mCategoryId);
+		} else {
+			mReports.load();
+		}
+
+		NUM_PAGES = mReports.getReports().size();
 
 		// Instantiate a ViewPager and a PagerAdapter.
 		mPager = (ViewPager) findViewById(R.id.report_pager);
 		mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-		
+
 		mPager.setAdapter(mPagerAdapter);
 		mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 			@Override
@@ -88,7 +102,8 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 		});
 
 		this.mCategoryId = getIntent().getExtras().getInt("category", 0);
-		this.mPosition = getIntent().getExtras().getInt("id", 0);
+
+		mPager.setCurrentItem(pos, true);
 	}
 
 	@Override
@@ -100,6 +115,7 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
 		if (item.getItemId() == android.R.id.home) {
 
 			finish();
@@ -121,11 +137,14 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_share) {
+
 			share();
 		} else if (item.getItemId() == R.id.menu_comment) {
+			mReportTitle = mReports.getReports().get(mPager.getCurrentItem())
+					.getIncident().getTitle();
 			Intent i = new Intent(this, AddCommentActivity.class);
 
-			i.putExtra("reportid", mReportId);
+			i.putExtra("reportid", mReportTitle);
 			startActivityForResult(i, 0);
 			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		}
@@ -134,6 +153,10 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 	}
 
 	private void share() {
+		mReportId = mReports.getReports().get(mPager.getCurrentItem())
+				.getDbId();
+		mReportTitle = new ListReportModel().getReports()
+				.get(mPager.getCurrentItem()).getIncident().getTitle();
 		final String reportUrl = Preferences.domain + "reports/view/"
 				+ mReportId;
 		final String shareString = getString(R.string.share_template, " "
@@ -164,7 +187,7 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 
 		@Override
 		public Fragment getItem(int position) {
-			return ScreenSlidePageFragment.create(position);
+			return ScreenSlidePageFragment.newInstance(position, mCategoryId);
 		}
 
 		@Override

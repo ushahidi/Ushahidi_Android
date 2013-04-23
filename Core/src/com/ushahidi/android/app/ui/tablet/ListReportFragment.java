@@ -29,7 +29,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import com.actionbarsherlock.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -41,6 +40,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
@@ -64,7 +64,7 @@ import com.ushahidi.android.app.opengeosms.OpenGeoSMSSender;
 import com.ushahidi.android.app.tasks.ProgressTask;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
-import com.ushahidi.android.app.ui.phone.ViewReportActivity;
+import com.ushahidi.android.app.ui.phone.ViewReportSlideActivity;
 import com.ushahidi.android.app.util.ImageManager;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ListReportView;
@@ -763,7 +763,7 @@ public class ListReportFragment
 	 *            The category id of the selected category.
 	 */
 	private void launchViewReport(int id) {
-		Intent i = new Intent(getActivity(), ViewReportActivity.class);
+		Intent i = new Intent(getActivity(), ViewReportSlideActivity.class);
 		i.putExtra("id", id);
 		if (filterCategory > 0) {
 			i.putExtra("category", filterCategory);
