@@ -3,7 +3,6 @@ package com.ushahidi.android.app.ui.tablet;
 import java.util.Date;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -16,7 +15,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import com.actionbarsherlock.view.MenuItem;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -25,17 +23,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
-import com.ushahidi.android.app.api.MapSearchApi;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.helpers.ActionModeHelper;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.services.SyncServices;
-import com.ushahidi.android.app.tasks.ProgressTask;
+import com.ushahidi.android.app.tasks.LoadMapTask;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.AddMapView;
@@ -84,6 +82,8 @@ public class ListMapFragment extends
 
 	private Intent fetchReports;
 
+	private LoadMapTask mDeploymentTask;
+
 	public ProgressDialog dialog;
 
 	public ListMapFragment() {
@@ -116,7 +116,7 @@ public class ListMapFragment extends
 
 			registerForContextMenu(listView);
 		}
-		log("Adapter count " + adapter.getCount());
+		
 		mHandler.post(fetchMapList);
 
 		if (savedInstanceState != null) {
@@ -170,7 +170,9 @@ public class ListMapFragment extends
 			getActivity().unregisterReceiver(broadcastReceiver);
 		} catch (IllegalArgumentException e) {
 		}
-
+		if (mDeploymentTask != null) {
+			mDeploymentTask.cancel(true);
+		}
 	}
 
 	public void setListMapListener(ListMapFragmentListener listener) {
@@ -510,58 +512,6 @@ public class ListMapFragment extends
 
 	}
 
-	/**
-	 * Load Map details from the web
-	 */
-	class LoadMapTask extends ProgressTask {
-
-		protected Boolean status;
-
-		private MapSearchApi maps;
-
-		protected String distance;
-
-		protected Location location;
-
-		public LoadMapTask(Activity activity) {
-			super(activity, R.string.loading_);
-			maps = new MapSearchApi();
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			dialog.cancel();
-
-		}
-
-		@Override
-		protected Boolean doInBackground(String... strings) {
-			try {
-				status = maps.fetchMaps(distance, location);
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-
-				e.printStackTrace();
-			}
-			return status;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			if (!result) {
-
-				toastShort(R.string.could_not_fetch_data);
-			} else {
-
-				toastShort(R.string.maps_fetched_successful);
-			}
-			adapter.refresh();
-
-		}
-
-	}
-
 	@Override
 	protected void onLoaded(boolean success) {
 		try {
@@ -632,10 +582,15 @@ public class ListMapFragment extends
 	public void onLocationChanged(Location loc) {
 		if (loc != null) {
 			location = loc;
-			LoadMapTask deploymentTask = new LoadMapTask(getActivity());
-			deploymentTask.location = location;
-			deploymentTask.distance = distance;
-			deploymentTask.execute();
+
+			if (mDeploymentTask == null) {
+				mDeploymentTask = new LoadMapTask(getActivity());
+				mDeploymentTask.location = location;
+				mDeploymentTask.distance = distance;
+				mDeploymentTask.adapter = adapter;
+				mDeploymentTask.execute();
+			}
+
 			stopLocating();
 		}
 

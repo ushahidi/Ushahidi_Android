@@ -23,7 +23,6 @@ package com.ushahidi.android.app.ui.phone;
 import java.util.Date;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -51,14 +50,13 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.BaseListActivity;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
-import com.ushahidi.android.app.api.MapSearchApi;
 import com.ushahidi.android.app.models.ListCheckinModel;
 import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.services.SyncServices;
-import com.ushahidi.android.app.tasks.ProgressTask;
+import com.ushahidi.android.app.tasks.LoadMapTask;
 import com.ushahidi.android.app.util.ImageManager;
 import com.ushahidi.android.app.views.AddMapView;
 import com.ushahidi.android.app.views.ListMapView;
@@ -102,6 +100,8 @@ public class ListMapActivity extends
 	private String errorMessage = "";
 
 	private Intent fetchReports;
+
+	private LoadMapTask mDeploymentTask;
 
 	public ProgressDialog dialog;
 
@@ -171,6 +171,9 @@ public class ListMapActivity extends
 		try {
 			unregisterReceiver(broadcastReceiver);
 		} catch (IllegalArgumentException e) {
+		}
+		if (mDeploymentTask != null) {
+			mDeploymentTask.cancel(true);
 		}
 
 	}
@@ -269,7 +272,8 @@ public class ListMapActivity extends
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
-		new android.view.MenuInflater(this).inflate(R.menu.list_map_context, menu);
+		new android.view.MenuInflater(this).inflate(R.menu.list_map_context,
+				menu);
 	}
 
 	@Override
@@ -526,62 +530,6 @@ public class ListMapActivity extends
 		ImageManager.deletePendingImages(this);
 	}
 
-	/**
-	 * Load Map details from the web
-	 */
-	class LoadMapTask extends ProgressTask {
-
-		protected Boolean status;
-
-		protected Context appContext;
-
-		private MapSearchApi maps;
-
-		protected String distance;
-
-		protected Location location;
-
-		public LoadMapTask(Activity activity) {
-			super(activity, R.string.loading_);
-			// switch to a progress animation
-			maps = new MapSearchApi();
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			dialog.cancel();
-		}
-
-		@Override
-		protected Boolean doInBackground(String... strings) {
-			try {
-				status = maps.fetchMaps(distance, location);
-
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-
-				e.printStackTrace();
-			}
-			return status;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			if (!result) {
-
-				toastShort(R.string.could_not_fetch_data);
-			} else {
-
-				toastShort(R.string.maps_fetched_successful);
-			}
-
-			adapter.refresh();
-			view.mProgressBar.setVisibility(View.GONE);
-		}
-
-	}
-
 	@Override
 	protected void onLoaded(boolean success) {
 		try {
@@ -646,11 +594,14 @@ public class ListMapActivity extends
 	public void onLocationChanged(Location loc) {
 		if (loc != null) {
 			location = loc;
-			LoadMapTask deploymentTask = new LoadMapTask(this);
-			deploymentTask.location = location;
-			deploymentTask.distance = distance;
-			deploymentTask.execute();
-			stopLocating();
+			if (mDeploymentTask == null) {
+				mDeploymentTask = new LoadMapTask(this);
+				mDeploymentTask.location = location;
+				mDeploymentTask.distance = distance;
+				mDeploymentTask.adapter = adapter;
+				mDeploymentTask.execute();
+				stopLocating();
+			}
 		}
 
 	}
