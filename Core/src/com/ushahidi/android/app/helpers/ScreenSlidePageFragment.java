@@ -50,8 +50,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
-import com.ushahidi.android.app.GMap;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.entities.ReportEntity;
@@ -104,8 +109,7 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 
 	private Intent mFetchReportComments;
 
-	private GMap mGMap;
-
+	private GoogleMap mMap;
 
 	/**
 	 * Factory method for this fragment class. Constructs a new fragment for the
@@ -145,7 +149,7 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 	public void onResume() {
 		mView.mMapView.onResume();
 		super.onResume();
-		
+
 		getActivity().registerReceiver(
 				fetchBroadcastReceiver,
 				new IntentFilter(
@@ -159,19 +163,19 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 		} catch (IllegalArgumentException e) {
 		}
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		mView.mMapView.onDestroy();
 		super.onDestroy();
-		
+
 	}
- 
+
 	@Override
 	public void onLowMemory() {
 		mView.mMapView.onLowMemory();
 		super.onLowMemory();
-		
+
 	}
 
 	private void fetchComments() {
@@ -196,21 +200,22 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 
 		mReports = new ListReportModel();
 		mView.mMapView.onCreate(savedInstanceState);
-		mGMap = new GMap(mView.mMapView.getMap());
-		if (new GMap(getActivity()).checkForGMaps()) {
-			if (mView.mMapView != null) {
-				mView.mMapView.onCreate(savedInstanceState);
-				mGMap = new GMap(mView.mMapView.getMap());
-			}
-
-		}
-
 		if (mCategoryId > 0) {
 			mReports.loadReportByCategory(mCategoryId);
 		} else {
 			mReports.load();
 		}
+		
+		// Get GoogleMap from MapView
+		mMap = mView.mMapView.getMap();
 
+		try {
+			MapsInitializer.initialize(getActivity());
+		} catch (GooglePlayServicesNotAvailableException e) {
+			e.printStackTrace();
+		}
+		
+		// Initialize views with report data. This also handles map initialization
 		initReport(mPageNumber);
 		fetchComments();
 
@@ -231,6 +236,15 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 		mReport = mReports.getReports();
 
 		if (mReport != null) {
+			CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(
+					mReport.get(position).getIncident().getLatitude(), mReport
+							.get(position).getIncident().getLongitude()));
+			CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+			mMap.getUiSettings().setMyLocationButtonEnabled(false);
+			mMap.moveCamera(center);
+			mMap.moveCamera(zoom);
+			addMarker(mMap, mReport.get(position).getIncident().getLatitude(),
+					mReport.get(position).getIncident().getLongitude());
 			mReportId = (int) mReport.get(position).getIncident().getId();
 
 			mReportTitle = mReport.get(position).getIncident().getTitle();
@@ -304,30 +318,11 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 									R.anim.home_enter, R.anim.home_exit);
 						}
 					});
-
-			centerLocationWithMarker(mReport.get(position).getIncident()
-					.getLatitude(), mReport.get(position).getIncident()
-					.getLongitude());
 		}
 	}
 
-	/**
-	 * Convert latitude and longitude to a GeoPoint
-	 * 
-	 * @param latitude
-	 *            Latitude
-	 * @param longitude
-	 *            Lingitude
-	 * @return GeoPoint
-	 */
-	private LatLng getPoint(double latitude, double longitude) {
-		return (new LatLng(latitude, longitude));
-	}
-
-	private void centerLocationWithMarker(double latitude, double longitude) {
-		if (mGMap != null)
-			mGMap.centerLocationWithMarker(getPoint(latitude, longitude));
-
+	private void addMarker(GoogleMap map, double lat, double lon) {
+		map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)));
 	}
 
 	/**

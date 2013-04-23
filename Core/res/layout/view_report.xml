@@ -137,10 +137,8 @@
             <com.google.android.gms.maps.MapView
                 android:id="@+id/loc_map"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollingCache="false" />
-
-       
+                android:layout_height="300dip"
+                android:layout_gravity="center" />
         </LinearLayout>
 
         <!-- Map ends -->

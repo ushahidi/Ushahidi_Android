@@ -146,6 +146,7 @@ public abstract class MapUserLocation extends SherlockFragmentActivity
 				CameraUpdate c = CameraUpdateFactory.newLatLng(point);
 				map.moveCamera(c);
 			}
+			
 			CameraUpdate zoom = CameraUpdateFactory.zoomTo(ZOOM);
 			map.animateCamera(zoom);
 			map.getUiSettings().setZoomControlsEnabled(false);
@@ -250,22 +251,6 @@ public abstract class MapUserLocation extends SherlockFragmentActivity
 			if (point != null)
 				map.addMarker(new MarkerOptions().position(point));
 		}
-
-		/*
-		 * @Override public boolean onTouchEvent(MotionEvent event, MapView
-		 * mapView) { final int action = event.getAction(); final int x = (int)
-		 * event.getX(); final int y = (int) event.getY(); if (action ==
-		 * MotionEvent.ACTION_DOWN) { long thisTime =
-		 * System.currentTimeMillis(); if (thisTime - lastTouchTime < 250) {
-		 * lastTouchTime = -1; GeoPoint geoPoint =
-		 * mapView.getProjection().fromPixels( (int) event.getX(), (int)
-		 * event.getY()); double latitude = geoPoint.getLatitudeE6() / 1E6;
-		 * double longitude = geoPoint.getLongitudeE6() / 1E6;
-		 * Log.i(getClass().getSimpleName(), String.format( "%d, %d >> %f, %f",
-		 * x, y, latitude, longitude)); locationChanged(latitude, longitude);
-		 * return true; } else { lastTouchTime = thisTime; } } return
-		 * super.onTouchEvent(event, mapView); }
-		 */
 	}
 
 	public void onLocationChanged(Location location) {
