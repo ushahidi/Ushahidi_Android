@@ -42,7 +42,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -51,7 +50,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.ushahidi.android.app.GMap;
 import com.ushahidi.android.app.R;
@@ -108,7 +106,6 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 
 	private GMap mGMap;
 
-	private SupportMapFragment fragment;
 
 	/**
 	 * Factory method for this fragment class. Constructs a new fragment for the
@@ -132,7 +129,7 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		setupMap();
+
 	}
 
 	@Override
@@ -144,20 +141,11 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 
 	}
 
-	public void setupMap() {
-		FragmentManager fm = getFragmentManager();
-		fragment = (SupportMapFragment) fm
-				.findFragmentById(R.id.map_fragment_layout);
-		if (fragment == null) {
-			fragment = SupportMapFragment.newInstance();
-			fm.beginTransaction().replace(R.id.map_fragment_layout, fragment)
-					.commit();
-		}
-	}
-
 	@Override
 	public void onResume() {
+		mView.mMapView.onResume();
 		super.onResume();
+		
 		getActivity().registerReceiver(
 				fetchBroadcastReceiver,
 				new IntentFilter(
@@ -170,6 +158,20 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 			getActivity().unregisterReceiver(fetchBroadcastReceiver);
 		} catch (IllegalArgumentException e) {
 		}
+	}
+	
+	@Override
+	public void onDestroy() {
+		mView.mMapView.onDestroy();
+		super.onDestroy();
+		
+	}
+ 
+	@Override
+	public void onLowMemory() {
+		mView.mMapView.onLowMemory();
+		super.onLowMemory();
+		
 	}
 
 	private void fetchComments() {
@@ -193,13 +195,14 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 		mView = new ViewReportView(rootView, getActivity());
 
 		mReports = new ListReportModel();
+		mView.mMapView.onCreate(savedInstanceState);
+		mGMap = new GMap(mView.mMapView.getMap());
 		if (new GMap(getActivity()).checkForGMaps()) {
-
-			if (fragment != null) {
-
-				mView.mapView = fragment.getMap();
-				mGMap = new GMap(mView.mapView);
+			if (mView.mMapView != null) {
+				mView.mMapView.onCreate(savedInstanceState);
+				mGMap = new GMap(mView.mMapView.getMap());
 			}
+
 		}
 
 		if (mCategoryId > 0) {
@@ -212,7 +215,7 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 		fetchComments();
 
 		// Set the title view to show the page number.
-		
+
 		mView.setPageIndicator(getString(R.string.title_template_step,
 				mPageNumber + 1, mReports.getReports().size()));
 
@@ -325,16 +328,6 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 		if (mGMap != null)
 			mGMap.centerLocationWithMarker(getPoint(latitude, longitude));
 
-	}
-
-	public void setTitle(int page) {
-		final StringBuilder title = new StringBuilder(String.valueOf(page));
-		title.append("/");
-		if (mReport != null)
-			title.append(mReport.size());
-
-		if (mGMap != null)
-			mGMap.setActionBarTitle(title.toString(), getSherlockActivity());
 	}
 
 	/**

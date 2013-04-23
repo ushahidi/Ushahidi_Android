@@ -127,12 +127,20 @@
         <!-- Map starts -->
 
         <LinearLayout
-            android:id="@+id/map_fragment_layout"
+            android:id="@+id/map_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/table_odd_row_color"
             android:orientation="vertical"
             android:padding="10dip" >
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/loc_map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollingCache="false" />
+
+       
         </LinearLayout>
 
         <!-- Map ends -->

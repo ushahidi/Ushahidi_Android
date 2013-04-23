@@ -32,6 +32,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.ListCommentAdapter;
@@ -68,7 +69,9 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	private TextView listVideoEmptyView;
 
 	private TextView listCommentEmptyView;
-
+	
+	public MapView mMapView;
+	
 	public GoogleMap mapView;
 
 	private ListView listNews;
@@ -101,6 +104,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		body = (TextView) activity.findViewById(R.id.desc);
 		status = (TextView) activity.findViewById(R.id.status);
 		mPageIndicator = (TextView) activity.findViewById(R.id.page_indicator);
+		mMapView = (MapView) activity.findViewById(R.id.loc_map);
 		listNews = (ListView) activity.findViewById(R.id.list_news);
 
 		photoAdapter = new ListPhotoAdapter(activity);
@@ -146,6 +150,7 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		body = (TextView) activity.findViewById(R.id.desc);
 		status = (TextView) activity.findViewById(R.id.status);
 		mPageIndicator = (TextView) activity.findViewById(R.id.page_indicator);
+		mMapView = (MapView) activity.findViewById(R.id.loc_map);
 		listNews = (ListView) activity.findViewById(R.id.list_news);
 		this.photo = (ImageView) activity.findViewById(R.id.list_report_photo);
 		this.total = (TextView) activity.findViewById(R.id.photo_total);
