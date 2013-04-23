@@ -153,6 +153,16 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		body = (TextView) activity.findViewById(R.id.desc);
 		status = (TextView) activity.findViewById(R.id.status);
 		listNews = (ListView) activity.findViewById(R.id.list_news);
+		this.photo = (ImageView) activity.findViewById(R.id.list_report_photo);
+		this.total = (TextView) activity.findViewById(R.id.photo_total);
+		listPhotosEmptyView = (TextView) activity
+				.findViewById(R.id.empty_list_for_photos);
+		
+		photoAdapter = new ListPhotoAdapter(activity.getContext());
+		newsAdapter = new ListNewsAdapter(activity.getContext());
+		videoAdapter = new ListVideoAdapter(activity.getContext());
+		commentAdapter = new ListCommentAdapter(activity.getContext());
+
 		listNewsEmptyView = (TextView) activity
 				.findViewById(R.id.empty_list_for_news);
 		if (listNewsEmptyView != null) {
@@ -162,9 +172,9 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		listPhotosEmptyView = (TextView) activity
 				.findViewById(R.id.empty_list_for_photos);
 
-		if (listPhotosEmptyView != null) {
+		/*if (listPhotosEmptyView != null) {
 			listPhotos.setEmptyView(listPhotosEmptyView);
-		}
+		}*/
 
 		listVideos = (ListView) activity.findViewById(R.id.list_video);
 		listVideoEmptyView = (TextView) activity

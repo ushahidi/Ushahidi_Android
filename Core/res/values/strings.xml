@@ -254,8 +254,13 @@
     <string name="opengeosms">Open GeoSMS</string>
     <string name="pending">Pending</string>
     <string name="no_maps">Google Maps V2 not available!</string>
-    
-    <!--  Map tiles preferences -->
+
+    <!-- Map tiles preferences -->
     <string name="map_tiles">Map tiles</string>
     <string name="map_tiles_summary">The map provider to use. Default is Google</string>
+    <string name="title_template_step">Step <xliff:g id="step_number">%1$d</xliff:g>: Lorem
+        Ipsum</string>
+	<string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="finish">Finish</string>
 </resources>

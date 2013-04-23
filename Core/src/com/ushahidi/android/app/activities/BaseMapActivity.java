@@ -161,7 +161,7 @@ public abstract class BaseMapActivity<V extends View> extends MapUserLocation
 
 	protected void sharePhoto(String path) {
 
-		// TODO: consider bringing in shortlink to session
+		// TODO: consider bringing in shortlink
 		Preferences.loadSettings(this);
 		final String reportUrl = Preferences.domain;
 		final String shareString = getString(R.string.share_template, "",

@@ -107,59 +107,11 @@
             </intent-filter>
         </activity>
 
-        <!-- Add a new checkin -->
-        <activity
-            android:name=".ui.phone.AddCheckinActivity"
-            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:label="@string/checkin" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.CHOOSER" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-        </activity>
-
         <!-- List Reports -->
         <activity
             android:name=".ui.tablet.ListReportFragmentActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/reports" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="org.addhen.ushahidi.INCIDENTS" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="org.addhen.ushahidi.NEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <!-- List Checkins -->
-        <activity
-            android:name=".ui.tablet.ListCheckinFragmentActivity"
-            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:label="@string/checkins" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -223,19 +175,6 @@
             </intent-filter>
         </activity>
 
-        <!-- checkin tab -->
-        <activity
-            android:name=".ui.phone.CheckinTabActivity"
-            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:label="@string/app_name"
-            android:launchMode="singleTop" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
         <!-- View Reports -->
         <activity
             android:name=".ui.tablet.DashboardActivity"
@@ -269,6 +208,17 @@
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name=".ui.phone.ViewReportSlideActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/reports" >
+           <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -307,19 +257,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <!-- View Checkins -->
-        <activity
-            android:name=".ui.phone.ViewCheckinActivity"
-            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:label="@string/checkins" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
+        <!-- activity
             android:name=".activities.SplashScreenActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
@@ -327,7 +265,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity> -->
         <activity
             android:name=".ui.phone.ReportMapActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation" >
@@ -337,25 +275,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.phone.CheckinMapActivity"
-            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.phone.ListCheckinCommentActivity"
-            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
-            android:label="@string/comments" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+       
         <activity
             android:name=".ui.phone.ListReportCommentActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
