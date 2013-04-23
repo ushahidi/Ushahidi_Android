@@ -5,299 +5,298 @@
     android:background="@color/table_even_row_color"
     android:fillViewport="true" >
 
-    <ViewAnimator
-        android:id="@+id/view_report_root"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+    <LinearLayout style="@style/LinearLayout.Vertical" >
+
+        <!-- Title starts -->
+
+        <TextView
+            android:id="@+id/page_indicator"
+            style="@style/TextView.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/report_title"
+            style="@style/TextView.Label"
+            android:text="@string/title" />
+
+        <LinearLayout
+            android:id="@+id/title_layout"
+            style="@style/LinearLayout.Vertical"
+            android:background="@color/table_odd_row_color" >
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/TextView.Title" />
+        </LinearLayout>
+        <!-- Title ends -->
+
+
+        <!-- Status starts -->
+
+        <TextView
+            android:id="@+id/report_status"
+            style="@style/TextView.Label"
+            android:text="@string/verified" />
+
+        <LinearLayout
+            style="@style/LinearLayout.Vertical"
+            android:background="@color/table_odd_row_color" >
+
+            <TextView
+                android:id="@+id/status"
+                style="@style/TextView.Title" />
+        </LinearLayout>
+        <!-- Status ends -->
+
+
+        <!-- Description starts -->
+
+        <TextView
+            android:id="@+id/report_description"
+            style="@style/TextView.Label"
+            android:text="@string/description" />
+
+        <LinearLayout
+            style="@style/LinearLayout.Vertical"
+            android:background="@color/table_odd_row_color" >
+
+            <TextView
+                android:id="@+id/desc"
+                style="@style/TextView.Description" />
+        </LinearLayout>
+        <!-- Description ends -->
+
+
+        <!-- Category starts -->
+
+        <TextView
+            android:id="@+id/report_category"
+            style="@style/TextView.Label"
+            android:text="@string/category" />
+
+        <LinearLayout
+            style="@style/LinearLayout.Vertical"
+            android:background="@color/table_odd_row_color" >
+
+            <TextView
+                android:id="@+id/category"
+                style="@style/TextView.Title" />
+        </LinearLayout>
+
+        <!-- Category ends -->
+
+
+        <!-- Date starts -->
+
+        <TextView
+            android:id="@+id/report_date"
+            style="@style/TextView.Label"
+            android:text="@string/date" />
+
+        <LinearLayout
+            style="@style/LinearLayout.Vertical"
+            android:background="@color/table_odd_row_color" >
+
+            <TextView
+                android:id="@+id/date"
+                style="@style/TextView.Title" />
+        </LinearLayout>
+
+        <!-- Date ends -->
+
+
+        <!-- Location starts -->
+
+        <TextView
+            android:id="@+id/report_loc"
+            style="@style/TextView.Label"
+            android:text="@string/location" />
 
         <LinearLayout style="@style/LinearLayout.Vertical" >
 
-            <!-- Title starts -->
-
             <TextView
-                android:id="@+id/report_title"
-                style="@style/TextView.Label"
-                android:text="@string/title" />
-
-            <LinearLayout
-                android:id="@+id/title_layout"
-                style="@style/LinearLayout.Vertical"
-                android:background="@color/table_odd_row_color" >
-
-                <TextView
-                    android:id="@+id/title"
-                    style="@style/TextView.Title" />
-            </LinearLayout>
-            <!-- Title ends -->
-
-
-            <!-- Status starts -->
-
-            <TextView
-                android:id="@+id/report_status"
-                style="@style/TextView.Label"
-                android:text="@string/verified" />
-
-            <LinearLayout
-                style="@style/LinearLayout.Vertical"
-                android:background="@color/table_odd_row_color" >
-
-                <TextView
-                    android:id="@+id/status"
-                    style="@style/TextView.Title" />
-            </LinearLayout>
-            <!-- Status ends -->
-
-
-            <!-- Description starts -->
-
-            <TextView
-                android:id="@+id/report_description"
-                style="@style/TextView.Label"
-                android:text="@string/description" />
-
-            <LinearLayout
-                style="@style/LinearLayout.Vertical"
-                android:background="@color/table_odd_row_color" >
-
-                <TextView
-                    android:id="@+id/desc"
-                    style="@style/TextView.Description" />
-            </LinearLayout>
-            <!-- Description ends -->
-
-
-            <!-- Category starts -->
-
-            <TextView
-                android:id="@+id/report_category"
-                style="@style/TextView.Label"
-                android:text="@string/category" />
-
-            <LinearLayout
-                style="@style/LinearLayout.Vertical"
-                android:background="@color/table_odd_row_color" >
-
-                <TextView
-                    android:id="@+id/category"
-                    style="@style/TextView.Title" />
-            </LinearLayout>
-
-            <!-- Category ends -->
-
-
-            <!-- Date starts -->
-
-            <TextView
-                android:id="@+id/report_date"
-                style="@style/TextView.Label"
-                android:text="@string/date" />
-
-            <LinearLayout
-                style="@style/LinearLayout.Vertical"
-                android:background="@color/table_odd_row_color" >
-
-                <TextView
-                    android:id="@+id/date"
-                    style="@style/TextView.Title" />
-            </LinearLayout>
-
-            <!-- Date ends -->
-
-
-            <!-- Location starts -->
-
-            <TextView
-                android:id="@+id/report_loc"
-                style="@style/TextView.Label"
-                android:text="@string/location" />
-
-            <LinearLayout style="@style/LinearLayout.Vertical" >
-
-                <TextView
-                    android:id="@+id/location"
-                    style="@style/TextView.Title" />
-            </LinearLayout>
-            <!-- Location ends -->
-
-
-            <!-- Map starts -->
-
-            <LinearLayout
-                android:id="@+id/map_fragment_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical"
-                android:padding="10dip" >
-
-                
-            </LinearLayout>
-
-            <!-- Map ends -->
-
-
-            <!-- Photo starts -->
-
-            <TextView
-                android:id="@+id/report_photo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dip"
-                android:text="@string/photos"
-                android:textColor="@color/title_color"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:id="@+id/list_photo_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp" >
-
-                    <ImageView
-                        android:id="@+id/list_report_photo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:adjustViewBounds="true" />
-
-                    <!-- This will hold the total number of images -->
-
-                    <TextView
-                        android:id="@+id/photo_total"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:gravity="center"
-                        android:padding="10dip"
-                        android:textColor="@color/white_color" />
-                </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/empty_list_for_photos"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dip"
-                    android:text="@string/no_photos"
-                    android:textColor="@color/black_color" />
-            </LinearLayout>
-
-            <!-- Photo ends -->
-
-
-            <!-- News starts -->
-
-            <TextView
-                android:id="@+id/report_news"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dip"
-                android:text="@string/news"
-                android:textColor="@color/title_color"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:id="@+id/list_news_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
-
-                <ListView
-                    android:id="@+id/list_news"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:listSelector="@color/table_selected_row_color"
-                    android:scrollbars="none" />
-
-                <TextView
-                    android:id="@+id/empty_list_for_news"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dip"
-                    android:text="@string/no_news"
-                    android:textColor="@color/black_color" />
-            </LinearLayout>
-
-            <!-- News ends -->
-
-
-            <!-- Video starts -->
-
-            <TextView
-                android:id="@+id/report_video"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dip"
-                android:text="@string/video"
-                android:textColor="@color/title_color"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
-
-                <ListView
-                    android:id="@+id/list_video"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:listSelector="@color/table_selected_row_color"
-                    android:scrollbars="none" />
-
-                <TextView
-                    android:id="@+id/empty_list_for_video"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dip"
-                    android:text="@string/no_video"
-                    android:textColor="@color/black_color" />
-            </LinearLayout>
-            <!-- Video ends -->
-
-
-            <!-- Comment starts -->
-
-            <TextView
-                android:id="@+id/report_comment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dip"
-                android:text="@string/comments"
-                android:textColor="@color/title_color"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/table_odd_row_color"
-                android:orientation="vertical" >
-
-                <ListView
-                    android:id="@+id/list_comments"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:listSelector="@color/table_selected_row_color"
-                    android:scrollbars="none" />
-
-                <TextView
-                    android:id="@+id/empty_list_for_comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dip"
-                    android:text="@string/no_comments"
-                    android:textColor="@color/black_color" />
-            </LinearLayout>
-            <!-- Comment ends -->
+                android:id="@+id/location"
+                style="@style/TextView.Title" />
         </LinearLayout>
-    </ViewAnimator>
+        <!-- Location ends -->
+
+
+        <!-- Map starts -->
+
+        <LinearLayout
+            android:id="@+id/map_fragment_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/table_odd_row_color"
+            android:orientation="vertical"
+            android:padding="10dip" >
+        </LinearLayout>
+
+        <!-- Map ends -->
+
+
+        <!-- Photo starts -->
+
+        <TextView
+            android:id="@+id/report_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip"
+            android:text="@string/photos"
+            android:textColor="@color/title_color"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/list_photo_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/table_odd_row_color"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp" >
+
+                <ImageView
+                    android:id="@+id/list_report_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:adjustViewBounds="true" />
+
+                <!-- This will hold the total number of images -->
+
+                <TextView
+                    android:id="@+id/photo_total"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center"
+                    android:padding="10dip"
+                    android:textColor="@color/white_color" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/empty_list_for_photos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dip"
+                android:text="@string/no_photos"
+                android:textColor="@color/black_color" />
+        </LinearLayout>
+
+        <!-- Photo ends -->
+
+
+        <!-- News starts -->
+
+        <TextView
+            android:id="@+id/report_news"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip"
+            android:text="@string/news"
+            android:textColor="@color/title_color"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/list_news_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/table_odd_row_color"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/list_news"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:listSelector="@color/table_selected_row_color"
+                android:scrollbars="none" />
+
+            <TextView
+                android:id="@+id/empty_list_for_news"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dip"
+                android:text="@string/no_news"
+                android:textColor="@color/black_color" />
+        </LinearLayout>
+
+        <!-- News ends -->
+
+
+        <!-- Video starts -->
+
+        <TextView
+            android:id="@+id/report_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip"
+            android:text="@string/video"
+            android:textColor="@color/title_color"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/table_odd_row_color"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/list_video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:listSelector="@color/table_selected_row_color"
+                android:scrollbars="none" />
+
+            <TextView
+                android:id="@+id/empty_list_for_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dip"
+                android:text="@string/no_video"
+                android:textColor="@color/black_color" />
+        </LinearLayout>
+        <!-- Video ends -->
+
+
+        <!-- Comment starts -->
+
+        <TextView
+            android:id="@+id/report_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip"
+            android:text="@string/comments"
+            android:textColor="@color/title_color"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/table_odd_row_color"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/list_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:listSelector="@color/table_selected_row_color"
+                android:scrollbars="none" />
+
+            <TextView
+                android:id="@+id/empty_list_for_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dip"
+                android:text="@string/no_comments"
+                android:textColor="@color/black_color" />
+        </LinearLayout>
+        <!-- Comment ends -->
+    </LinearLayout>
 
 </ScrollView>

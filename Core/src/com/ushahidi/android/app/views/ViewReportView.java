@@ -27,12 +27,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.ViewAnimator;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.ushahidi.android.app.Preferences;
@@ -62,6 +59,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
 	private TextView status;
 
+	private TextView mPageIndicator;
+
 	private TextView listNewsEmptyView;
 
 	private TextView listPhotosEmptyView;
@@ -74,15 +73,11 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
 	private ListView listNews;
 
-	private ListView listPhotos;
-
 	private ListView listVideos;
 
 	private ListView listComments;
 
 	private Context context;
-
-	private ViewAnimator viewReportRoot;
 
 	public ListPhotoAdapter photoAdapter;
 	public ListNewsAdapter newsAdapter;
@@ -99,15 +94,13 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		this.inflater = (LayoutInflater) activity
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		viewReportRoot = (ViewAnimator) activity
-				.findViewById(R.id.view_report_root);
-
 		title = (TextView) activity.findViewById(R.id.title);
 		category = (TextView) activity.findViewById(R.id.category);
 		date = (TextView) activity.findViewById(R.id.date);
 		location = (TextView) activity.findViewById(R.id.location);
 		body = (TextView) activity.findViewById(R.id.desc);
 		status = (TextView) activity.findViewById(R.id.status);
+		mPageIndicator = (TextView) activity.findViewById(R.id.page_indicator);
 		listNews = (ListView) activity.findViewById(R.id.list_news);
 
 		photoAdapter = new ListPhotoAdapter(activity);
@@ -152,12 +145,13 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		location = (TextView) activity.findViewById(R.id.location);
 		body = (TextView) activity.findViewById(R.id.desc);
 		status = (TextView) activity.findViewById(R.id.status);
+		mPageIndicator = (TextView) activity.findViewById(R.id.page_indicator);
 		listNews = (ListView) activity.findViewById(R.id.list_news);
 		this.photo = (ImageView) activity.findViewById(R.id.list_report_photo);
 		this.total = (TextView) activity.findViewById(R.id.photo_total);
 		listPhotosEmptyView = (TextView) activity
 				.findViewById(R.id.empty_list_for_photos);
-		
+
 		photoAdapter = new ListPhotoAdapter(activity.getContext());
 		newsAdapter = new ListNewsAdapter(activity.getContext());
 		videoAdapter = new ListVideoAdapter(activity.getContext());
@@ -172,9 +166,10 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		listPhotosEmptyView = (TextView) activity
 				.findViewById(R.id.empty_list_for_photos);
 
-		/*if (listPhotosEmptyView != null) {
-			listPhotos.setEmptyView(listPhotosEmptyView);
-		}*/
+		/*
+		 * if (listPhotosEmptyView != null) {
+		 * listPhotos.setEmptyView(listPhotosEmptyView); }
+		 */
 
 		listVideos = (ListView) activity.findViewById(R.id.list_video);
 		listVideoEmptyView = (TextView) activity
@@ -199,6 +194,14 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
 	public void setTitle(String title) {
 		this.title.setText(title);
+	}
+
+	public void setPageIndicator(String title) {
+		this.mPageIndicator.setText(title);
+	}
+
+	public String getPageIndicator() {
+		return this.mPageIndicator.getText().toString();
 	}
 
 	public String getTitle() {
@@ -308,19 +311,6 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
 	public ListView getListVideos() {
 		return this.listVideos;
-	}
-
-	public void goNext() {
-
-		Animation in = AnimationUtils.loadAnimation(context,
-				R.anim.slide_right_in);
-		viewReportRoot.startAnimation(in);
-	}
-
-	public void goPrevious() {
-		Animation out = AnimationUtils.loadAnimation(context,
-				R.anim.slide_left_in);
-		viewReportRoot.startAnimation(out);
 	}
 
 	public void getPhoto(String fileName, ImageView imageView) {

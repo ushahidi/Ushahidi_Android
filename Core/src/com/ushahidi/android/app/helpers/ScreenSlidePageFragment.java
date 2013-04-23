@@ -81,7 +81,7 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 	 * The argument key for the page number this fragment represents.
 	 */
 	public static final String ARG_PAGE = "page";
-	
+
 	public static final String ARG_CAT_ID = "catid";
 
 	/**
@@ -107,36 +107,32 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 	private Intent mFetchReportComments;
 
 	private GMap mGMap;
-	
+
 	private SupportMapFragment fragment;
 
 	/**
 	 * Factory method for this fragment class. Constructs a new fragment for the
 	 * given page number.
 	 */
-	public static ScreenSlidePageFragment newInstance(int pageNumber, int categoryId) {
+	public static ScreenSlidePageFragment newInstance(int pageNumber,
+			int categoryId) {
 		ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_PAGE, pageNumber);
 		args.putInt(ARG_CAT_ID, categoryId);
 		fragment.setArguments(args);
-		
+
 		return fragment;
 	}
 
 	public ScreenSlidePageFragment() {
 
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-	    super.onActivityCreated(savedInstanceState);
-	    FragmentManager fm = getFragmentManager();
-	    fragment = (SupportMapFragment) fm.findFragmentById(R.id.map_fragment_layout);
-	    if (fragment == null) {
-	        fragment = SupportMapFragment.newInstance();
-	        fm.beginTransaction().replace(R.id.map_fragment_layout, fragment).commit();
-	    }
+		super.onActivityCreated(savedInstanceState);
+		setupMap();
 	}
 
 	@Override
@@ -148,6 +144,17 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 
 	}
 
+	public void setupMap() {
+		FragmentManager fm = getFragmentManager();
+		fragment = (SupportMapFragment) fm
+				.findFragmentById(R.id.map_fragment_layout);
+		if (fragment == null) {
+			fragment = SupportMapFragment.newInstance();
+			fm.beginTransaction().replace(R.id.map_fragment_layout, fragment)
+					.commit();
+		}
+	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -155,7 +162,6 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 				fetchBroadcastReceiver,
 				new IntentFilter(
 						SyncServices.FETCH_REPORT_COMMENTS_SERVICES_ACTION));
-
 	}
 
 	public void onPause() {
@@ -182,15 +188,15 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout containing a title and body text.
-		ViewGroup rootView = (ViewGroup) inflater.inflate(
-				R.layout.view_report, container, false);
+		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.view_report,
+				container, false);
 		mView = new ViewReportView(rootView, getActivity());
 
 		mReports = new ListReportModel();
 		if (new GMap(getActivity()).checkForGMaps()) {
-			
-			if(fragment !=null) {
-				
+
+			if (fragment != null) {
+
 				mView.mapView = fragment.getMap();
 				mGMap = new GMap(mView.mapView);
 			}
@@ -206,9 +212,9 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 		fetchComments();
 
 		// Set the title view to show the page number.
-		/*((TextView) rootView.findViewById(android.R.id.text1))
-				.setText(getString(R.string.title_template_step,
-						mPageNumber + 1));*/
+		
+		mView.setPageIndicator(getString(R.string.title_template_step,
+				mPageNumber + 1, mReports.getReports().size()));
 
 		return rootView;
 	}
@@ -299,8 +305,6 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 			centerLocationWithMarker(mReport.get(position).getIncident()
 					.getLatitude(), mReport.get(position).getIncident()
 					.getLongitude());
-			//int page = position;
-			//this.setTitle(page + 1);
 		}
 	}
 
@@ -330,7 +334,7 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 			title.append(mReport.size());
 
 		if (mGMap != null)
-			mGMap.setActionBarTitle(title.toString());
+			mGMap.setActionBarTitle(title.toString(), getSherlockActivity());
 	}
 
 	/**
@@ -347,7 +351,6 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 
 				int status = intent.getIntExtra("status", 4);
 				getActivity().stopService(mFetchReportComments);
-				//mView.dialog.cancel();
 				if (status == 4) {
 					Util.showToast(getActivity(), R.string.internet_connection);
 				} else if (status == 110) {

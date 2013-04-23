@@ -258,8 +258,7 @@
     <!-- Map tiles preferences -->
     <string name="map_tiles">Map tiles</string>
     <string name="map_tiles_summary">The map provider to use. Default is Google</string>
-    <string name="title_template_step">Step <xliff:g id="step_number">%1$d</xliff:g>: Lorem
-        Ipsum</string>
+    <string name="title_template_step">Viewing <xliff:g id="step_number">%1$d</xliff:g> / <xliff:g id="total_number">%2$d</xliff:g> </string>
 	<string name="previous">Previous</string>
     <string name="next">Next</string>
     <string name="finish">Finish</string>

@@ -70,7 +70,7 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_report_slide);
 		mReports = new ListReportModel();
-
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		this.mCategoryId = getIntent().getExtras().getInt("category", 0);
 		int pos = getIntent().getExtras().getInt("id", 0);
 		if (mCategoryId > 0) {
@@ -155,7 +155,7 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 	private void share() {
 		mReportId = mReports.getReports().get(mPager.getCurrentItem())
 				.getDbId();
-		mReportTitle = new ListReportModel().getReports()
+		mReportTitle =  mReports.getReports()
 				.get(mPager.getCurrentItem()).getIncident().getTitle();
 		final String reportUrl = Preferences.domain + "reports/view/"
 				+ mReportId;
@@ -194,6 +194,7 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 		public int getCount() {
 			return NUM_PAGES;
 		}
+		
 	}
 
 }
