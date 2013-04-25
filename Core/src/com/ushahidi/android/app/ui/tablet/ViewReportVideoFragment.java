@@ -74,7 +74,7 @@ public class ViewReportVideoFragment extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout containing a title and body text.
-		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.news,
+		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.video,
 				container, false);
 		mView = new ReportVideoView(rootView);
 		if (mReportId > 0) {
