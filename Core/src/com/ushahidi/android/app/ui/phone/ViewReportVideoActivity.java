@@ -20,45 +20,69 @@
 
 package com.ushahidi.android.app.ui.phone;
 
-import java.util.List;
-
+import android.content.Intent;
 import android.os.Bundle;
-import com.actionbarsherlock.view.MenuItem;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.activities.BaseViewActivity;
+import com.ushahidi.android.app.adapters.VideoScreenSwipeAdapter;
 import com.ushahidi.android.app.models.ListReportVideoModel;
-import com.ushahidi.android.app.views.ReportVideoView;
 
 /**
- * @author eyedol
+ * 
  */
-public class ViewReportVideoActivity extends
-		BaseViewActivity<ReportVideoView, ListReportVideoModel> {
+public class ViewReportVideoActivity extends SherlockFragmentActivity {
 
-	private ListReportVideoModel video;
-
-	private List<ListReportVideoModel> listVideos;
+	private ListReportVideoModel mVideo;
 
 	private int position;
 
 	private int reportId;
 
-	public ViewReportVideoActivity() {
-		super(ReportVideoView.class, R.layout.video, R.menu.view_media);
-	}
+	/**
+	 * The number of pages (wizard steps) to show in this demo.
+	 */
+	private int NUM_PAGES = 0;
+
+	/**
+	 * The pager widget, which handles animation and allows swiping horizontally
+	 * to access previous and next wizard steps.
+	 */
+	private ViewPager mPager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		video = new ListReportVideoModel();
-		view = new ReportVideoView(this);
+		setContentView(R.layout.screen_slide);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		mVideo = new ListReportVideoModel();
 
 		this.reportId = getIntent().getExtras().getInt("reportid", 0);
 		this.position = getIntent().getExtras().getInt("position", 0);
-		initReport(this.position);
 
+		mVideo.getVideosByReportId(reportId);
+		NUM_PAGES = mVideo.getVideos().size();
+
+		mPager = (ViewPager) findViewById(R.id.screen_pager);
+		mPager.setAdapter(getAdapter());
+		mPager.setCurrentItem(position, true);
+
+	}
+
+	public PagerAdapter getAdapter() {
+		return new VideoScreenSwipeAdapter(getSupportFragmentManager(), this,
+				reportId, NUM_PAGES);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		getSupportMenuInflater().inflate(R.menu.view_media, menu);
+		return true;
 	}
 
 	@Override
@@ -68,76 +92,36 @@ public class ViewReportVideoActivity extends
 			return true;
 		} else if (item.getItemId() == R.id.menu_forward) {
 
-			goNext();
+			mPager.setCurrentItem(mPager.getCurrentItem() + 1);
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_backward) {
 
-			goPrevious();
+			mPager.setCurrentItem(mPager.getCurrentItem() - 1);
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_share) {
-			share();
+			share(mVideo.getVideos().get(mPager.getCurrentItem()).getVideo());
 		}
 
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void goNext() {
-		if (listVideos != null) {
-			position++;
-			if (!(position > (listVideos.size() - 1))) {
-				view.goNext(listVideos.get(position).getVideo());
-
-				int page = position;
-				this.setTitle(page + 1);
-
-			} else {
-				position = listVideos.size() - 1;
-			}
-		}
-	}
-
-	private void goPrevious() {
-		if (listVideos != null) {
-			position--;
-			if ((position < (listVideos.size() - 1)) && (position != -1)) {
-				view.goPrevious(listVideos.get(position).getVideo());
-
-				int page = position;
-				this.setTitle(page + 1);
-			} else {
-				position = 0;
-			}
-		}
-	}
-
-	private void initReport(int position) {
-		listVideos = video.getVideosByReportId(reportId);
-		if (view.webView != null) {
-			if (listVideos != null) {
-				view.url = listVideos.get(position).getVideo();
-				view.setWebView();
-
-				int page = position;
-				this.setTitle(page + 1);
-			}
-		}
-	}
-
-	public void setTitle(int page) {
-		final StringBuilder title = new StringBuilder(String.valueOf(page));
-		title.append("/");
-		if (listVideos != null)
-			title.append(listVideos.size());
-		setActionBarTitle(title.toString());
-	}
-
-	private void share() {
+	private void share(String url) {
 		final String shareString = getString(R.string.share_template, " ",
-				" \n" + view.url);
+				" \n" + url);
 		shareText(shareString);
 
+	}
+
+	private void shareText(String shareItem) {
+
+		final Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		intent.putExtra(Intent.EXTRA_TEXT, shareItem);
+
+		startActivity(Intent.createChooser(intent,
+				getText(R.string.title_share)));
 	}
 
 }

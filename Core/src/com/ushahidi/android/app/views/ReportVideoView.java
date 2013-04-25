@@ -19,83 +19,51 @@
  **/
 package com.ushahidi.android.app.views;
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.ViewAnimator;
 
 import com.ushahidi.android.app.R;
 
 /**
- * @author eyedol
+ * Video view
  * 
  */
 public class ReportVideoView extends View {
 
-	public ViewAnimator viewAnimator;
+	public WebView mWebView;
 
-	public WebView webView;
-
-	public Context context;
-
-	private ProgressBar loadingSpinner;
-
-	public String url;
+	private ProgressBar mLoadingSpinner;
 
 	private static boolean CLEAR_CACHE_ON_LOAD = false;
 
 	/**
 	 * @param activity
 	 */
-	public ReportVideoView(Activity activity) {
+	public ReportVideoView(ViewGroup activity) {
 		super(activity);
-		this.context = activity;
-		viewAnimator = (ViewAnimator) activity
-				.findViewById(R.id.videoViewAnimator);
-		webView = (WebView) activity.findViewById(R.id.videoWebView);
-		loadingSpinner = (ProgressBar) activity
+		
+		mWebView = (WebView) activity.findViewById(R.id.videoWebView);
+		mLoadingSpinner = (ProgressBar) activity
 				.findViewById(R.id.loading_spinner);
 	}
 
-	public void goNext(String url) {
-		Animation out = AnimationUtils.loadAnimation(context,
-				android.R.anim.slide_out_right);
-		Animation in = AnimationUtils.loadAnimation(context,
-				android.R.anim.slide_in_left);
-		viewAnimator.setInAnimation(in);
-		viewAnimator.setOutAnimation(out);
-		this.url = url;
-		setWebView();
-	}
-
-	public void goPrevious(String url) {
-		Animation out = AnimationUtils.loadAnimation(context, R.anim.fade_in);
-		Animation in = AnimationUtils.loadAnimation(context, R.anim.fade_out);
-		viewAnimator.setInAnimation(in);
-		viewAnimator.setOutAnimation(out);
-		this.url = url;
-		setWebView();
-	}
-
 	@SuppressWarnings("deprecation")
-	public void setWebView() {
-		WebSettings settings = webView.getSettings();
+	public void setWebView(final String url) {
+		WebSettings settings = mWebView.getSettings();
 		settings.setPluginsEnabled(true);
 		settings.setLightTouchEnabled(true);
-		webView.setWebViewClient(webClient);
-		webView.post(new Runnable() {
+		mWebView.setWebViewClient(webClient);
+		mWebView.post(new Runnable() {
 			public void run() {
 				if (CLEAR_CACHE_ON_LOAD) {
-					webView.clearCache(true);
+					mWebView.clearCache(true);
 				}
-				webView.loadUrl(url);
+				mWebView.loadUrl(url);
 			}
 		});
 
@@ -106,15 +74,15 @@ public class ReportVideoView extends View {
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			super.onPageStarted(view, url, favicon);
-			loadingSpinner.setVisibility(android.view.View.VISIBLE);
-			webView.setVisibility(android.view.View.INVISIBLE);
+			mLoadingSpinner.setVisibility(android.view.View.VISIBLE);
+			mWebView.setVisibility(android.view.View.INVISIBLE);
 		}
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
-			loadingSpinner.setVisibility(android.view.View.GONE);
-			webView.setVisibility(android.view.View.VISIBLE);
+			mLoadingSpinner.setVisibility(android.view.View.GONE);
+			mWebView.setVisibility(android.view.View.VISIBLE);
 		}
 
 		@Override
