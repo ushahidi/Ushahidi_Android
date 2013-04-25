@@ -91,55 +91,6 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	public ImageView photo;
 	public TextView total;
 
-	public ViewReportView(Activity activity) {
-		super(activity);
-		this.context = activity;
-		this.inflater = (LayoutInflater) activity
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-		title = (TextView) activity.findViewById(R.id.title);
-		category = (TextView) activity.findViewById(R.id.category);
-		date = (TextView) activity.findViewById(R.id.date);
-		location = (TextView) activity.findViewById(R.id.location);
-		body = (TextView) activity.findViewById(R.id.desc);
-		status = (TextView) activity.findViewById(R.id.status);
-		mPageIndicator = (TextView) activity.findViewById(R.id.page_indicator);
-		mMapView = (MapView) activity.findViewById(R.id.loc_map);
-		listNews = (ListView) activity.findViewById(R.id.list_news);
-
-		photoAdapter = new ListPhotoAdapter(activity);
-		newsAdapter = new ListNewsAdapter(activity);
-		videoAdapter = new ListVideoAdapter(activity);
-		commentAdapter = new ListCommentAdapter(activity);
-		this.dialog.setMessage(activity.getResources().getString(
-				R.string.please_wait));
-		listNewsEmptyView = (TextView) activity
-				.findViewById(R.id.empty_list_for_news);
-		if (listNewsEmptyView != null) {
-			listNews.setEmptyView(listNewsEmptyView);
-		}
-
-		this.photo = (ImageView) activity.findViewById(R.id.list_report_photo);
-		this.total = (TextView) activity.findViewById(R.id.photo_total);
-		listPhotosEmptyView = (TextView) activity
-				.findViewById(R.id.empty_list_for_photos);
-
-		listVideos = (ListView) activity.findViewById(R.id.list_video);
-		listVideoEmptyView = (TextView) activity
-				.findViewById(R.id.empty_list_for_video);
-		if (listVideoEmptyView != null) {
-			listVideos.setEmptyView(listVideoEmptyView);
-		}
-
-		listComments = (ListView) activity.findViewById(R.id.list_comments);
-		listCommentEmptyView = (TextView) activity
-				.findViewById(R.id.empty_list_for_comment);
-		if (listCommentEmptyView != null) {
-			listComments.setEmptyView(listCommentEmptyView);
-		}
-
-	}
-
 	public ViewReportView(ViewGroup activity, Context context) {
 		super(activity);
 		this.context = context;

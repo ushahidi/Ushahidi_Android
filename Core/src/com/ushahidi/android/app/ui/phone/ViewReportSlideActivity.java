@@ -101,7 +101,6 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 			}
 		});
 
-		this.mCategoryId = getIntent().getExtras().getInt("category", 0);
 
 		mPager.setCurrentItem(pos, true);
 	}

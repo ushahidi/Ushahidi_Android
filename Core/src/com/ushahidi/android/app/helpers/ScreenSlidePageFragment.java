@@ -70,15 +70,7 @@ import com.ushahidi.android.app.ui.phone.ViewReportVideoActivity;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ViewReportView;
 
-/**
- * A fragment representing a single step in a wizard. The fragment shows a dummy
- * title indicating the page number, along with some dummy text.
- * 
- * <p>
- * This class is used by the {@link CardFlipActivity} and
- * {@link ScreenSlideActivity} samples.
- * </p>
- */
+
 public class ScreenSlidePageFragment extends SherlockFragment {
 	/**
 	 * The argument key for the page number this fragment represents.
@@ -236,6 +228,7 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 		mReport = mReports.getReports();
 
 		if (mReport != null) {
+			// Configure map
 			CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(
 					mReport.get(position).getIncident().getLatitude(), mReport
 							.get(position).getIncident().getLongitude()));
@@ -243,8 +236,11 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 			mMap.getUiSettings().setMyLocationButtonEnabled(false);
 			mMap.moveCamera(center);
 			mMap.moveCamera(zoom);
+			
+			// Add a marker to this location
 			addMarker(mMap, mReport.get(position).getIncident().getLatitude(),
 					mReport.get(position).getIncident().getLongitude());
+			
 			mReportId = (int) mReport.get(position).getIncident().getId();
 
 			mReportTitle = mReport.get(position).getIncident().getTitle();

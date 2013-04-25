@@ -20,68 +20,67 @@
 
 package com.ushahidi.android.app.ui.phone;
 
-import java.util.List;
-
-import android.location.Location;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import com.actionbarsherlock.view.MenuItem;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageSwitcher;
-import android.widget.ViewSwitcher;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.activities.BaseViewActivity;
-import com.ushahidi.android.app.entities.PhotoEntity;
+import com.ushahidi.android.app.adapters.PhotoScreenSwipeAdapter;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.util.ImageManager;
-import com.ushahidi.android.app.util.ImageSwitchWorker;
-import com.ushahidi.android.app.util.Util;
-import com.ushahidi.android.app.views.ReportPhotoView;
 
-/**
- * @author eyedol
- */
-public class ViewReportPhotoActivity extends
-		BaseViewActivity<ReportPhotoView, ListPhotoModel> implements
-		AdapterView.OnItemSelectedListener, ViewSwitcher.ViewFactory,
-		View.OnTouchListener {
+public class ViewReportPhotoActivity extends SherlockFragmentActivity {
 
-	private ListPhotoModel photo;
-
-	private List<PhotoEntity> photos;
+	private ListPhotoModel mPhoto;
 
 	private int position;
 
 	private int reportId;
 
-	private String fileName;
+	/**
+	 * The number of pages (wizard steps) to show in this demo.
+	 */
+	private int NUM_PAGES = 0;
 
-	private GestureDetector gestureDetector;
-
-	private static final int SWIPE_MIN_DISTANCE = 120;
-	private static final int SWIPE_MAX_OFF_PATH = 250;
-	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-
-	public ViewReportPhotoActivity() {
-		super(ReportPhotoView.class, R.layout.photo, R.menu.view_media);
-	}
+	/**
+	 * The pager widget, which handles animation and allows swiping horizontally
+	 * to access previous and next wizard steps.
+	 */
+	private ViewPager mPager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		photo = new ListPhotoModel();
-		view = new ReportPhotoView(this);
+		setContentView(R.layout.screen_slide);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		mPhoto = new ListPhotoModel();
 
 		this.reportId = getIntent().getExtras().getInt("reportid", 0);
 		this.position = getIntent().getExtras().getInt("position", 0);
-		initReport(this.position);
+		mPhoto.getPhotosByReportId(reportId);
+		NUM_PAGES = mPhoto.getPhotos().size();
 
+		mPager = (ViewPager) findViewById(R.id.screen_pager);
+		mPager.setAdapter(getAdapter());
+		mPager.setCurrentItem(position, true);
+	}
+
+	public PagerAdapter getAdapter() {
+		return new PhotoScreenSwipeAdapter(getSupportFragmentManager(), this,
+				reportId, NUM_PAGES);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		getSupportMenuInflater().inflate(R.menu.view_media, menu);
+		return true;
 	}
 
 	@Override
@@ -91,162 +90,38 @@ public class ViewReportPhotoActivity extends
 			return true;
 		} else if (item.getItemId() == R.id.menu_forward) {
 
-			goNext();
+			mPager.setCurrentItem(mPager.getCurrentItem() + 1);
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_backward) {
 
-			goPrevious();
+			mPager.setCurrentItem(mPager.getCurrentItem() - 1);
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_share) {
-			sharePhoto(ImageManager.getPhotoPath(this) + fileName);
+			sharePhoto(ImageManager.getPhotoPath(this)
+					+ mPhoto.getPhotos().get(mPager.getCurrentItem())
+							.getPhoto());
 		}
 
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void goNext() {
-		if (photos != null) {
-			position++;
-			if (!(position > (photos.size() - 1))) {
-				setImage(view.imageSwitcher);
-				view.goNext();
-				int page = position;
-				this.setTitle(page + 1);
+	private void sharePhoto(String path) {
 
-			} else {
-				position = photos.size() - 1;
-			}
-		}
-	}
-
-	private void goPrevious() {
-		if (photos != null) {
-			position--;
-			if ((position < (photos.size() - 1)) && (position != -1)) {
-				setImage(view.imageSwitcher);
-				view.goPrevious();
-
-				int page = position;
-				this.setTitle(page + 1);
-			} else {
-				position = 0;
-			}
-		}
-	}
-
-	@SuppressWarnings("deprecation")
-	private void initReport(int position) {
-
-		photos = photo.getPhotosByReportId(reportId);
-		// Hack:: get by report ID, if it returns nothing get by checkin ID
-		// FIXME:: make this independent of ID
-		if (photos.size() == 0) {
-			photos = photo.getPhotosByCheckinId(reportId);
-		}
-		if (view.imageSwitcher != null) {
-			view.imageSwitcher.setFactory(this);
-			view.imageSwitcher.setOnTouchListener(this);
-		}
-
-		gestureDetector = new GestureDetector(new GestureDetectorListener());
-		if (photos != null && photos.size() > 0) {
-			fileName = photos.get(position).getPhoto();
-			setImage(view.imageSwitcher);
-			int page = position;
-			this.setTitle(page + 1);
-		}
-
-	}
-
-	public void setTitle(int page) {
-		final StringBuilder title = new StringBuilder(String.valueOf(page));
-		title.append("/");
-		if (photos != null)
-			title.append(photos.size());
-		setActionBarTitle(title.toString());
-	}
-
-	public void onLocationChanged(Location location) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void onProviderEnabled(String provider) {
-
-	}
-
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-
-	}
-
-	@Override
-	public View makeView() {
-		return view.imageView();
-	}
-
-	@Override
-	public void onItemSelected(AdapterView<?> parent, View v, int position,
-			long id) {
-
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> arg0) {
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.view.View.OnTouchListener#onTouch(android.view.View,
-	 * android.view.MotionEvent)
-	 */
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		if (gestureDetector.onTouchEvent(event)) {
-			return true;
-		}
-		return false;
-	}
-
-	class GestureDetectorListener extends SimpleOnGestureListener {
-
-		@Override
-		public boolean onFling(MotionEvent eventA, MotionEvent eventB,
-				float velocityX, float velocityY) {
-			try {
-				log("Swipe Max Off Path");
-				if (Math.abs(eventA.getY() - eventB.getY()) > SWIPE_MAX_OFF_PATH) {
-
-					return false;
-				}
-
-				// right to left
-				if (eventA.getX() - eventB.getX() > SWIPE_MIN_DISTANCE
-						&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-
-					goPrevious();
-
-				}
-			} catch (Exception e) {
-				log("GestureDetectorListener", e);
-			}
-			return false;
-		}
-	}
-	
-	private void setImage(ImageSwitcher imageSwitcher) {
+		// TODO: consider bringing in shortlink to session
 		Preferences.loadSettings(this);
-		ImageSwitchWorker imageWorker = new ImageSwitchWorker(this);
-		imageWorker.setImageFadeIn(true);
-		imageWorker.loadImage(fileName, imageSwitcher, true, Util.getScreenWidth(this));
+		final String reportUrl = Preferences.domain;
+		final String shareString = getString(R.string.share_template, " ", " "
+				+ reportUrl);
+		final Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("image/jpg");
+		intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + path));
+		intent.putExtra(Intent.EXTRA_TEXT, shareString);
+		startActivityForResult(
+				Intent.createChooser(intent, getText(R.string.title_share)), 0);
+		setResult(RESULT_OK);
+
 	}
 
 }

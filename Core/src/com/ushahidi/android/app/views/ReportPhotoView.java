@@ -19,11 +19,7 @@
  **/
 package com.ushahidi.android.app.views;
 
-import android.app.Activity;
-import android.content.Context;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageSwitcher;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.ushahidi.android.app.R;
@@ -34,36 +30,12 @@ import com.ushahidi.android.app.R;
  */
 public class ReportPhotoView extends View {
 
-	public ImageSwitcher imageSwitcher;
+	public ImageView imageSwitcher;
 
-	public Context context;
-
-	public ReportPhotoView(Activity activity) {
+	public ReportPhotoView(ViewGroup activity) {
 		super(activity);
-		this.context = activity;
-		imageSwitcher = (ImageSwitcher) activity
+		imageSwitcher = (ImageView) activity
 				.findViewById(R.id.imageSwitcher);
-	}
-
-	public void goNext() {
-		Animation in = AnimationUtils.loadAnimation(context,
-				android.R.anim.fade_in);
-		imageSwitcher.startAnimation(in);
-	}
-
-	public void goPrevious() {
-		Animation out = AnimationUtils.loadAnimation(context,
-				android.R.anim.fade_in);
-		imageSwitcher.startAnimation(out);
-	}
-
-	public ImageView imageView() {
-		ImageView i = new ImageView(context);
-		i.setScaleType(ImageView.ScaleType.FIT_CENTER);
-		i.setLayoutParams(new ImageSwitcher.LayoutParams(
-				android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-				android.view.ViewGroup.LayoutParams.MATCH_PARENT));
-		return i;
 	}
 
 }

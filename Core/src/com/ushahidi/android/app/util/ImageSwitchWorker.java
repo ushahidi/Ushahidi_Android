@@ -48,6 +48,7 @@ public class ImageSwitchWorker {
 
 	public void loadImage(Object data, ImageSwitcher imageSwitcher,
 			boolean fullScale, int width) {
+		
 		final BitmapWorkerTask task = new BitmapWorkerTask(imageSwitcher);
 		final AsyncDrawable asyncDrawable = new AsyncDrawable(
 				context.getResources(), loadingBitmap, task);
