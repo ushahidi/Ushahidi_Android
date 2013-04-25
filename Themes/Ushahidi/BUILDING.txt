@@ -14,4 +14,3 @@ To use ant to build the project,
 your sdk stored. Eg. sdk.dir=/home/username/android-sdk-linux_x86
 
 4) Type "ant debug"
-
