@@ -19,72 +19,38 @@
  **/
 package com.ushahidi.android.app.views;
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.ViewAnimator;
 
 import com.ushahidi.android.app.R;
 
 /**
- * @author eyedol
- * 
+ * News view 
  */
 public class ReportNewsView extends View {
 
-	public ViewAnimator viewAnimator;
-
 	public WebView webView;
 
-	public Context context;
-
-	private ProgressBar loadingSpinner;
-
-	public String url;
+	private ProgressBar mLoadingSpinner;
 
 	private static boolean CLEAR_CACHE_ON_LOAD = false;
 
 	/**
 	 * @param activity
 	 */
-	public ReportNewsView(Activity activity) {
+	public ReportNewsView(ViewGroup activity) {
 		super(activity);
-		this.context = activity;
-		viewAnimator = (ViewAnimator) activity
-				.findViewById(R.id.news_View_animator);
 		webView = (WebView) activity.findViewById(R.id.news_webview);
-		loadingSpinner = (ProgressBar) activity
+		mLoadingSpinner = (ProgressBar) activity
 				.findViewById(R.id.news_loading_spinner);
 	}
-
-	public void goNext(String url) {
-		Animation out = AnimationUtils.loadAnimation(context,
-				android.R.anim.slide_out_right);
-		Animation in = AnimationUtils.loadAnimation(context,
-				android.R.anim.slide_in_left);
-		viewAnimator.setInAnimation(in);
-		viewAnimator.setOutAnimation(out);
-		this.url = url;
-		setWebView();
-	}
-
-	public void goPrevious(String url) {
-		Animation out = AnimationUtils.loadAnimation(context, R.anim.fade_in);
-		Animation in = AnimationUtils.loadAnimation(context, R.anim.fade_out);
-		viewAnimator.setInAnimation(in);
-		viewAnimator.setOutAnimation(out);
-		this.url = url;
-		setWebView();
-	}
-
-	public void setWebView() {
+	
+	public void setWebView(final String url) {
 		WebSettings settings = webView.getSettings();
 		settings.setLightTouchEnabled(true);
 		webView.setWebViewClient(webClient);
@@ -104,14 +70,14 @@ public class ReportNewsView extends View {
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			super.onPageStarted(view, url, favicon);
-			loadingSpinner.setVisibility(android.view.View.VISIBLE);
+			mLoadingSpinner.setVisibility(android.view.View.VISIBLE);
 			webView.setVisibility(android.view.View.INVISIBLE);
 		}
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
-			loadingSpinner.setVisibility(android.view.View.GONE);
+			mLoadingSpinner.setVisibility(android.view.View.GONE);
 			webView.setVisibility(android.view.View.VISIBLE);
 		}
 

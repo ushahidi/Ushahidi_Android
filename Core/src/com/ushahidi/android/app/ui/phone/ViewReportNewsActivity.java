@@ -20,45 +20,69 @@
 
 package com.ushahidi.android.app.ui.phone;
 
-import java.util.List;
-
+import android.content.Intent;
 import android.os.Bundle;
-import com.actionbarsherlock.view.MenuItem;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.activities.BaseViewActivity;
+import com.ushahidi.android.app.adapters.NewsScreenSwipeAdapter;
 import com.ushahidi.android.app.models.ListReportNewsModel;
-import com.ushahidi.android.app.views.ReportNewsView;
 
 /**
  * @author eyedol
  */
-public class ViewReportNewsActivity extends
-		BaseViewActivity<ReportNewsView, ListReportNewsModel> {
+public class ViewReportNewsActivity extends SherlockFragmentActivity {
 
-	private ListReportNewsModel news;
-
-	private List<ListReportNewsModel> listNews;
+	private ListReportNewsModel mNews;
 
 	private int position;
 
 	private int reportId;
 
-	public ViewReportNewsActivity() {
-		super(ReportNewsView.class, R.layout.news, R.menu.view_media);
-	}
+	/**
+	 * The number of pages (wizard steps) to show in this demo.
+	 */
+	private int NUM_PAGES = 0;
+
+	/**
+	 * The pager widget, which handles animation and allows swiping horizontally
+	 * to access previous and next wizard steps.
+	 */
+	private ViewPager mPager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		news = new ListReportNewsModel();
-		view = new ReportNewsView(this);
+		setContentView(R.layout.screen_slide);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		mNews = new ListReportNewsModel();
 
 		this.reportId = getIntent().getExtras().getInt("reportid", 0);
 		this.position = getIntent().getExtras().getInt("position", 0);
-		initReport(this.position);
 
+		mNews.getNewsByReportId(reportId);
+		NUM_PAGES = mNews.getNews().size();
+
+		mPager = (ViewPager) findViewById(R.id.screen_pager);
+		mPager.setAdapter(getAdapter());
+		mPager.setCurrentItem(position, true);
+
+	}
+
+	public PagerAdapter getAdapter() {
+		return new NewsScreenSwipeAdapter(getSupportFragmentManager(), this,
+				reportId, NUM_PAGES);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		getSupportMenuInflater().inflate(R.menu.view_media, menu);
+		return true;
 	}
 
 	@Override
@@ -68,75 +92,34 @@ public class ViewReportNewsActivity extends
 			return true;
 		} else if (item.getItemId() == R.id.menu_forward) {
 
-			goNext();
+			mPager.setCurrentItem(mPager.getCurrentItem() + 1);
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_backward) {
 
-			goPrevious();
+			mPager.setCurrentItem(mPager.getCurrentItem() - 1);
 			return true;
 
 		} else if (item.getItemId() == R.id.menu_share) {
-			share();
+			share(mNews.getNews().get(mPager.getCurrentItem()).getUrl());
 		}
 
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void goNext() {
-		if (listNews != null) {
-			position++;
-			if (!(position > (listNews.size() - 1))) {
-				view.goNext(listNews.get(position).getUrl());
-
-				int page = position;
-				this.setTitle(page + 1);
-
-			} else {
-				position = listNews.size() - 1;
-			}
-		}
-	}
-
-	private void goPrevious() {
-		if (listNews != null) {
-			position--;
-			if ((position < (listNews.size() - 1)) && (position != -1)) {
-				view.goPrevious(listNews.get(position).getUrl());
-
-				int page = position;
-				this.setTitle(page + 1);
-			} else {
-				position = 0;
-			}
-		}
-	}
-
-	private void initReport(int position) {
-		listNews = news.getNewsByReportId(reportId);
-		if (view.webView != null) {
-
-			if (listNews != null) {
-				view.url = listNews.get(position).getUrl();
-				view.setWebView();
-				int page = position;
-				this.setTitle(page + 1);
-			}
-		}
-	}
-
-	public void setTitle(int page) {
-		final StringBuilder title = new StringBuilder(String.valueOf(page));
-		title.append("/");
-		if (listNews != null)
-			title.append(listNews.size());
-		setActionBarTitle(title.toString());
-	}
-
-	private void share() {
+	private void share(String url) {
 		final String shareString = getString(R.string.share_template, " ",
-				" \n"+view.url);
+				" \n" + url);
 		shareText(shareString);
+	}
 
+	private void shareText(String shareItem) {
+
+		final Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		intent.putExtra(Intent.EXTRA_TEXT, shareItem);
+
+		startActivity(Intent.createChooser(intent,
+				getText(R.string.title_share)));
 	}
 }

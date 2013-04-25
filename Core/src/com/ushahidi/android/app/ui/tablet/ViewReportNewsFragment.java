@@ -26,38 +26,33 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.entities.PhotoEntity;
-import com.ushahidi.android.app.models.ListPhotoModel;
-import com.ushahidi.android.app.util.ImageViewWorker;
-import com.ushahidi.android.app.util.Util;
-import com.ushahidi.android.app.views.ReportPhotoView;
+import com.ushahidi.android.app.models.ListReportNewsModel;
+import com.ushahidi.android.app.views.ReportNewsView;
 
 /**
  * View report fragment
  */
-public class ViewReportPhotoFragment extends SherlockFragment {
+public class ViewReportNewsFragment extends SherlockFragment {
 
 	private static final String ARG_PAGE = "position";
 
 	private static final String ARG_REPORT_ID = "report_id";
 
-	private ListPhotoModel mPhoto;
+	private ListReportNewsModel mNews;
 
-	private List<PhotoEntity> mPhotos;
+	private List<ListReportNewsModel> mListNews;
 
 	private int mPageNumber;
 
 	private int mReportId;
 
-	private ReportPhotoView mView;
+	private ReportNewsView mView;
 
-	public static ViewReportPhotoFragment newInstance(int position, int reportId) {
-		ViewReportPhotoFragment viewPhotoFrag = new ViewReportPhotoFragment();
+	public static ViewReportNewsFragment newInstance(int position, int reportId) {
+		ViewReportNewsFragment viewPhotoFrag = new ViewReportNewsFragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_PAGE, position);
 		args.putInt(ARG_REPORT_ID, reportId);
@@ -69,7 +64,7 @@ public class ViewReportPhotoFragment extends SherlockFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mPhoto = new ListPhotoModel();
+		mNews = new ListReportNewsModel();
 		mPageNumber = getArguments().getInt(ARG_PAGE);
 		mReportId = getArguments().getInt(ARG_REPORT_ID);
 
@@ -79,29 +74,24 @@ public class ViewReportPhotoFragment extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout containing a title and body text.
-		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.photo,
+		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.news,
 				container, false);
-		mView = new ReportPhotoView(rootView);
+		mView = new ReportNewsView(rootView);
 		if (mReportId > 0) {
-			mPhotos = mPhoto.getPhotosByReportId(mReportId);
-
-			initPhotos();
+			mListNews = mNews.getNewsByReportId(mReportId);
+			initNews();
 		}
 		return rootView;
 	}
 
-	private void initPhotos() {
-		if (mView.imageSwitcher != null)
-			setImage(mView.imageSwitcher, mPhotos.get(mPageNumber).getPhoto());
+	private void initNews() {
 
-	}
+		if (mView.webView != null) {
+			if (mListNews != null) {
+				mView.setWebView(mListNews.get(mPageNumber).getUrl());
+			}
+		}
 
-	private void setImage(ImageView imageSwitcher, String fileName) {
-		Preferences.loadSettings(getActivity());
-		ImageViewWorker imageWorker = new ImageViewWorker(getActivity());
-		imageWorker.setImageFadeIn(true);
-		imageWorker.loadImage(fileName, imageSwitcher, true,
-				Util.getScreenWidth(getActivity()));
 	}
 
 	public static String getTitle(Context context, int position, int total) {
