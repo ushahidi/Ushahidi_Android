@@ -214,12 +214,10 @@ public class MapFragment extends BaseMapFragment implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
+
 		if (item.getItemId() == R.id.menu_refresh) {
 			refresh = item;
-			new
-
-			RefreshReports(getActivity()).execute((String) null);
+			new RefreshReports(getActivity()).execute((String) null);
 			return true;
 		} else if (item.getItemId() == R.id.menu_add) {
 			launchAddReport();
@@ -370,11 +368,12 @@ public class MapFragment extends BaseMapFragment implements
 			}
 		}
 
-		/*
-		 * if (refresh != null) { if (refreshState)
-		 * refresh.setActionView(R.layout.indeterminate_progress_action); else
-		 * refresh.setActionView(null); }
-		 */
+		if (refresh != null) {
+			if (refreshState)
+				refresh.setActionView(R.layout.indeterminate_progress_action);
+			else
+				refresh.setActionView(null);
+		}
 
 	}
 
