@@ -24,10 +24,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
@@ -45,7 +45,7 @@ import com.ushahidi.android.app.util.Util;
  * @author eyedol
  * 
  */
-public abstract class BaseMapFragment extends SupportMapFragment {
+public abstract class BaseMapFragment extends SherlockMapFragment {
 
 	protected GoogleMap map;
 	protected UpdatableMarker updatableMarker;
@@ -68,6 +68,12 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 	 */
 	public BaseMapFragment(int menu) {
 		this.menu = menu;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -133,7 +139,7 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 	protected UpdatableMarker createUpdatableMarker(LatLng point) {
 		return new MapMarker(point);
 	}
-	
+
 	/* Override this to set a custom marker */
 	protected UpdatableMarker createUpdatableMarker() {
 		return new MapMarker();
@@ -260,6 +266,7 @@ public abstract class BaseMapFragment extends SupportMapFragment {
 
 		public abstract void addMarkerWithIcon(GoogleMap map, double lat,
 				double lng, String title, String snippet, String filename);
+
 		public abstract LatLng getCenter(double lat, double lng);
 	}
 
