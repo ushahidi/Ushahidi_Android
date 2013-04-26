@@ -32,6 +32,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.helpers.MapPager;
 import com.ushahidi.android.app.helpers.ScreenSlidePageFragment;
 import com.ushahidi.android.app.models.ListReportModel;
 
@@ -50,7 +51,7 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 	 * The pager widget, which handles animation and allows swiping horizontally
 	 * to access previous and next wizard steps.
 	 */
-	private ViewPager mPager;
+	private MapPager mPager;
 
 	/**
 	 * The pager adapter, which provides the pages to the view pager widget.
@@ -82,7 +83,7 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 		NUM_PAGES = mReports.getReports().size();
 
 		// Instantiate a ViewPager and a PagerAdapter.
-		mPager = (ViewPager) findViewById(R.id.report_pager);
+		mPager = (MapPager) findViewById(R.id.report_pager);
 		mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
 
 		mPager.setAdapter(mPagerAdapter);
