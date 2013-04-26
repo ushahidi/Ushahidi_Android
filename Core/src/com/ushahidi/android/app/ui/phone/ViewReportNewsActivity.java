@@ -64,8 +64,8 @@ public class ViewReportNewsActivity extends SherlockFragmentActivity {
 		this.reportId = getIntent().getExtras().getInt("reportid", 0);
 		this.position = getIntent().getExtras().getInt("position", 0);
 
-		mNews.getNewsByReportId(reportId);
-		NUM_PAGES = mNews.getNews().size();
+		mNews.load(reportId);
+		NUM_PAGES = mNews.totalReportNews();
 
 		mPager = (ViewPager) findViewById(R.id.screen_pager);
 		mPager.setAdapter(getAdapter());

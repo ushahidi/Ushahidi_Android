@@ -63,8 +63,8 @@ public class ViewReportPhotoActivity extends SherlockFragmentActivity {
 
 		this.reportId = getIntent().getExtras().getInt("reportid", 0);
 		this.position = getIntent().getExtras().getInt("position", 0);
-		mPhoto.getPhotosByReportId(reportId);
-		NUM_PAGES = mPhoto.getPhotos().size();
+		mPhoto.load(reportId);
+		NUM_PAGES = mPhoto.totalReportPhoto();
 
 		mPager = (ViewPager) findViewById(R.id.screen_pager);
 		mPager.setAdapter(getAdapter());

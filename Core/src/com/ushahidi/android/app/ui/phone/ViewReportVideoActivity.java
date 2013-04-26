@@ -64,8 +64,8 @@ public class ViewReportVideoActivity extends SherlockFragmentActivity {
 		this.reportId = getIntent().getExtras().getInt("reportid", 0);
 		this.position = getIntent().getExtras().getInt("position", 0);
 
-		mVideo.getVideosByReportId(reportId);
-		NUM_PAGES = mVideo.getVideos().size();
+		mVideo.load(reportId);
+		NUM_PAGES = mVideo.totalReportVideos();
 
 		mPager = (ViewPager) findViewById(R.id.screen_pager);
 		mPager.setAdapter(getAdapter());
