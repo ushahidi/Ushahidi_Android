@@ -101,7 +101,6 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 			}
 		});
 
-
 		mPager.setCurrentItem(pos, true);
 	}
 
@@ -139,11 +138,11 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 
 			share();
 		} else if (item.getItemId() == R.id.menu_comment) {
-			mReportTitle = mReports.getReports().get(mPager.getCurrentItem())
-					.getIncident().getTitle();
+			mReportId = mReports.getReports().get(mPager.getCurrentItem())
+					.getIncident().getId();
 			Intent i = new Intent(this, AddCommentActivity.class);
 
-			i.putExtra("reportid", mReportTitle);
+			i.putExtra("reportid", mReportId);
 			startActivityForResult(i, 0);
 			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
 		}
@@ -154,8 +153,8 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 	private void share() {
 		mReportId = mReports.getReports().get(mPager.getCurrentItem())
 				.getDbId();
-		mReportTitle =  mReports.getReports()
-				.get(mPager.getCurrentItem()).getIncident().getTitle();
+		mReportTitle = mReports.getReports().get(mPager.getCurrentItem())
+				.getIncident().getTitle();
 		final String reportUrl = Preferences.domain + "reports/view/"
 				+ mReportId;
 		final String shareString = getString(R.string.share_template, " "
@@ -193,7 +192,7 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 		public int getCount() {
 			return NUM_PAGES;
 		}
-		
+
 	}
 
 }

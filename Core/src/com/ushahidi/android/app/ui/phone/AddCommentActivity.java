@@ -55,8 +55,6 @@ public class AddCommentActivity extends
 
 	private int reportId;
 
-	private int checkinId;
-
 	private static final int DIALOG_SHOW_REQUIRED = 0;
 
 	private static final int DIALOG_SHOW_MESSAGE = 1;
@@ -75,7 +73,6 @@ public class AddCommentActivity extends
 		super.onCreate(savedInstanceState);
 		hidePersonalInfo();
 		this.reportId = getIntent().getExtras().getInt("reportid", 0);
-		this.checkinId = getIntent().getExtras().getInt("checkinid", 0);
 	}
 
 	@Override
@@ -177,8 +174,7 @@ public class AddCommentActivity extends
 		comments.putString("comment_email", view.emailAddress.getText()
 				.toString());
 		comments.putInt("report_id", reportId);
-		comments.putInt("checkin_id", checkinId);
-
+		
 		uploadComment = new Intent(this, UploadComments.class);
 		uploadComment.putExtras(comments);
 		startService(uploadComment);
