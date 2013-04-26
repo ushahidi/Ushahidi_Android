@@ -40,6 +40,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -213,6 +214,7 @@ public class MapFragment extends BaseMapFragment implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		
 		if (item.getItemId() == R.id.menu_refresh) {
 			refresh = item;
 			new
@@ -223,11 +225,14 @@ public class MapFragment extends BaseMapFragment implements
 			launchAddReport();
 			return true;
 		} else if (item.getItemId() == R.id.menu_normal) {
-			// map.setSatellite(false);
-			// map.setTraffic(false);
+			if (Preferences.mapTiles.equals("google"))
+				map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
 			return true;
 		} else if (item.getItemId() == R.id.menu_satellite) {
-			// map.setSatellite(true);
+			if (Preferences.mapTiles.equals("google"))
+				map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
 			return true;
 
 		} else if (item.getItemId() == R.id.filter_by) {
