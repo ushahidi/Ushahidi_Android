@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menu_posts_btn"
+    style="@style/MenuDrawer.Button"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/menu_row_icon"
+        android:layout_width="@dimen/menu_image_size"
+        android:layout_height="@dimen/menu_image_size"
+        android:clickable="false"
+        android:contentDescription="@string/maps"
+        android:scaleType="centerInside"
+        android:src="@drawable/app_icon"
+        android:tint="@color/md_iconTintColor" />
+
+    <TextView
+        android:id="@+id/menu_row_title"
+        style="@style/MenuDrawer.Button.Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:text="@string/maps" />
+
+</LinearLayout>

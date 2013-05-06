@@ -75,7 +75,15 @@
     <color name="tab_medium">#2B2B2B</color>
     <color name="tab_dark">#000000</color>
     <color name="tab_transparent">#10ffffff</color>
-
+    
+    <!--  Menu Drawer -->
+	
+	<!-- Colors for menu drawer. -->
+    <color name="md_itemBackground">#CC2EA2CC</color>
+    <color name="md_iconTintColor">#DDFFFFFF</color>
+    <color name="md_shadowColor">#44000000</color>
+    <color name="md_selected_item">#464646</color>
+    
 	<!-- TEXT SIZE -->
     <dimen name="text_size_small">14sp</dimen>
     <dimen name="text_size_medium">18sp</dimen>

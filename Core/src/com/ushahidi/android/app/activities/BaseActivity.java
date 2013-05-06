@@ -22,15 +22,14 @@ package com.ushahidi.android.app.activities;
 
 import java.lang.reflect.InvocationTargetException;
 
+import net.simonvt.menudrawer.MenuDrawer;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import android.view.KeyEvent;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,6 +39,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.util.Objects;
@@ -73,6 +76,10 @@ public abstract class BaseActivity<V extends View> extends SherlockActivity {
 
 	protected ActionBar actionBar;
 
+	private MenuDrawer mMenuDrawer;
+
+	private ListView mListView;
+
 	/**
 	 * BaseActivity
 	 * 
@@ -97,7 +104,9 @@ public abstract class BaseActivity<V extends View> extends SherlockActivity {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
 		if (layout != 0) {
-			setContentView(layout);
+			mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
+			mMenuDrawer.setContentView(layout);
+			initMenuDrawer();
 		}
 
 		view = Objects.createInstance(viewClass, Activity.class, this);
@@ -249,6 +258,40 @@ public abstract class BaseActivity<V extends View> extends SherlockActivity {
 		intent.removeExtra("_uri");
 		return intent;
 	}
+
+	private void initMenuDrawer() {
+		mListView = new ListView(this);
+		mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		mListView.setDivider(null);
+		mListView.setDividerHeight(0);
+		mListView.setCacheColorHint(android.R.color.transparent);
+
+		mListView.setOnItemClickListener(mItemClickListener);
+		mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				mMenuDrawer.invalidate();
+			}
+		});
+
+		mMenuDrawer.setMenuView(mListView);
+
+		// updateMenuDrawer();
+	}
+
+	private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+		@Override
+		public void onItemClick(AdapterView<?> parent, android.view.View view,
+				int position, long id) {
+
+		}
+
+	};
 
 	protected EditText findEditTextById(int id) {
 		return (EditText) findViewById(id);
