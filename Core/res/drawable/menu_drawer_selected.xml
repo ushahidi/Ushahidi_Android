@@ -1,0 +1,14 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item>
+        <shape>
+            <solid android:color="@color/tab_selected_color" />
+        </shape>
+    </item>
+    <item android:left="8dp">
+        <shape>
+            <solid android:color="@color/md_selected_item" />
+        </shape>
+    </item>
+
+</layer-list>
