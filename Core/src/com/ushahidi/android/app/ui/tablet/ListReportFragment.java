@@ -225,7 +225,7 @@ public class ListReportFragment
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		l.setItemChecked(position, true);
-		
+
 		if (fetchedReportAdapter == adapter.getAdapter(position - 1)) {
 
 			int itemAt = (adapter.getCount() - position);
@@ -235,7 +235,8 @@ public class ListReportFragment
 
 			int itemPosition = pendingReportAdapter.getCount() - position;
 			int itemAt = (pendingReportAdapter.getCount() - itemPosition) - 1;
-			launchAddReport((int) pendingReportAdapter.getItem(itemAt - 1).getDbId());
+			launchAddReport((int) pendingReportAdapter.getItem(itemAt - 1)
+					.getDbId());
 
 		}
 
@@ -313,7 +314,7 @@ public class ListReportFragment
 			}
 		}
 	};
-	
+
 	/**
 	 * Refresh both pending and fetched reports list
 	 */
@@ -742,7 +743,11 @@ public class ListReportFragment
 				} else if (status == 100) {
 					toastLong(R.string.could_not_fetch_reports);
 				} else if (status == 0) {
-					refreshReportLists();
+					if (filterCategory > 0) {
+						reportByCategoryList();
+					} else {
+						refreshReportLists();
+					}
 					showCategories();
 				}
 				refreshState = false;
