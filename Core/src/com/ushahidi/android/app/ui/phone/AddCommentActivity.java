@@ -20,17 +20,16 @@
 package com.ushahidi.android.app.ui.phone;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import com.actionbarsherlock.view.MenuItem;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseEditActivity;
@@ -157,9 +156,9 @@ public class AddCommentActivity extends
 		}
 
 		if (required) {
-			showDialog(DIALOG_SHOW_REQUIRED);
+			createDialog(DIALOG_SHOW_REQUIRED);
 		} else if (mError) {
-			showDialog(DIALOG_SHOW_MESSAGE);
+			createDialog(DIALOG_SHOW_MESSAGE);
 		} else {
 			addComment();
 		}
@@ -183,8 +182,7 @@ public class AddCommentActivity extends
 	/**
 	 * Create various dialog
 	 */
-	@Override
-	protected Dialog onCreateDialog(int id) {
+	private void createDialog(int id) {
 		switch (id) {
 		case DIALOG_SHOW_MESSAGE:
 			AlertDialog.Builder messageBuilder = new AlertDialog.Builder(this);
@@ -215,7 +213,6 @@ public class AddCommentActivity extends
 			showRequiredDialog.show();
 			break;
 		}
-		return null;
 	}
 
 	/*
