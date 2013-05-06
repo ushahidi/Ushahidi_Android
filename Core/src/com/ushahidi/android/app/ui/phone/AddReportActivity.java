@@ -120,8 +120,8 @@ public class AddReportActivity extends
 
 	private Calendar mCalendar;
 
-	//private String mDateToSubmit = "";
-	
+	// private String mDateToSubmit = "";
+
 	private Date date = null;
 
 	private int mCategoryLength;
@@ -160,7 +160,7 @@ public class AddReportActivity extends
 					.findFragmentById(R.id.location_map);
 			view.map = mapFrag.getMap();
 		}
-		
+
 		view.mBtnPicture.setOnClickListener(this);
 		view.mBtnAddCategory.setOnClickListener(this);
 		view.mPickDate.setOnClickListener(this);
@@ -277,7 +277,7 @@ public class AddReportActivity extends
 			validateReports();
 			return true;
 		} else if (item.getItemId() == R.id.menu_clear) {
-			showDialog(DIALOG_SHOW_PROMPT);
+			createDialog(DIALOG_SHOW_PROMPT);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -293,16 +293,16 @@ public class AddReportActivity extends
 			// keep a copy of the filename for later reuse
 			Preferences.fileName = photoName;
 			Preferences.saveSettings(AddReportActivity.this);
-			showDialog(DIALOG_CHOOSE_IMAGE_METHOD);
+			createDialog(DIALOG_CHOOSE_IMAGE_METHOD);
 
 		} else if (button.getId() == R.id.add_category) {
-			showDialog(DIALOG_MULTIPLE_CATEGORY);
+			createDialog(DIALOG_MULTIPLE_CATEGORY);
 		} else if (button.getId() == R.id.pick_date) {
-			showDialog(DATE_DIALOG_ID);
+			createDialog(DATE_DIALOG_ID);
 		} else if (button.getId() == R.id.pick_time) {
-			showDialog(TIME_DIALOG_ID);
+			createDialog(TIME_DIALOG_ID);
 		} else if (button.getId() == R.id.delete_report) {
-			showDialog(DIALOG_SHOW_DELETE_PROMPT);
+			createDialog(DIALOG_SHOW_DELETE_PROMPT);
 		}
 
 	}
@@ -376,9 +376,9 @@ public class AddReportActivity extends
 		}
 
 		if (required) {
-			showDialog(DIALOG_SHOW_REQUIRED);
+			createDialog(DIALOG_SHOW_REQUIRED);
 		} else if (mError) {
-			showDialog(DIALOG_SHOW_MESSAGE);
+			createDialog(DIALOG_SHOW_MESSAGE);
 		} else {
 			if (Preferences.canReceiveOpenGeoSms()) {
 				mDlgSendMethod.show();
@@ -427,11 +427,10 @@ public class AddReportActivity extends
 				.valueOf(view.mLatitude.getText().toString()));
 		incident.setLongitude(Double.valueOf(view.mLongitude.getText()
 				.toString()));
-		
+
 		incident.setDate(date);
 		report.setIncident(incident);
 		report.setPending(1);
-	
 
 		if (id == 0) {
 			// Add a new pending report
@@ -495,8 +494,7 @@ public class AddReportActivity extends
 		mVectorCategories.clear();
 		for (ReportCategory reportCategory : model
 				.fetchReportCategories(reportId)) {
-			mVectorCategories
-					.add(reportCategory.getCategoryId());
+			mVectorCategories.add(reportCategory.getCategoryId());
 		}
 
 		setSelectedCategories(mVectorCategories);
@@ -545,204 +543,216 @@ public class AddReportActivity extends
 	/**
 	 * Create various dialog
 	 */
-	@Override
-	protected Dialog onCreateDialog(int id) {
+	private void createDialog(int id) {
 		switch (id) {
-		case DIALOG_ERROR_NETWORK: {
-			AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-			dialog.setTitle(getString(R.string.network_error));
-			dialog.setMessage(getString(R.string.network_error_msg));
-			dialog.setButton2(getString(R.string.ok),
-					new Dialog.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					});
-			dialog.setCancelable(false);
-			return dialog;
+			case DIALOG_ERROR_NETWORK: {
+				Dialog dialog = new AlertDialog.Builder(this)
+				.setTitle(R.string.network_error)
+				.setMessage(R.string.network_error_msg)
+				.setPositiveButton(getString(R.string.ok),
+						new Dialog.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.dismiss();
+								}
+						}).setCancelable(false).create();
+				dialog.show();
+				break;
+			}
+			case DIALOG_ERROR_SAVING: {
+				Dialog dialog = new AlertDialog.Builder(this)
+					.setTitle(R.string.network_error)
+					.setMessage(R.string.file_system_error_msg)
+					.setPositiveButton(getString(R.string.ok),
+						new Dialog.OnClickListener() {
+							public void onClick(DialogInterface dialog,int which) {
+									dialog.dismiss();
+							}
+						}).setCancelable(false).create();
+				dialog.show();
+				break;
+			}
+
+			case DIALOG_CHOOSE_IMAGE_METHOD: {
+
+				Dialog dialog = new AlertDialog.Builder(this)
+					.setTitle(R.string.choose_method)
+					.setMessage(R.string.how_to_select_pic)
+					.setPositiveButton(getString(R.string.gallery_option),
+							new Dialog.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Intent intent = new Intent();
+									intent.setAction(Intent.ACTION_PICK);
+									intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+									startActivityForResult(intent,
+											REQUEST_CODE_IMAGE);
+									dialog.dismiss();
+								}
+							})
+					.setNegativeButton(getString(R.string.cancel),
+							new Dialog.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.dismiss();
+								}
+							})
+
+					.setNeutralButton(R.string.camera_option,
+							new Dialog.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Intent intent = new Intent(
+											android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+									intent.putExtra(MediaStore.EXTRA_OUTPUT,
+											PhotoUtils.getPhotoUri(photoName,
+													AddReportActivity.this));
+									startActivityForResult(intent,
+											REQUEST_CODE_CAMERA);
+									dialog.dismiss();
+								}
+							})
+
+					.setCancelable(false).create();
+			dialog.show();
+			break;
 		}
-		case DIALOG_ERROR_SAVING: {
-			AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-			dialog.setTitle(getString(R.string.network_error));
-			dialog.setMessage(getString(R.string.file_system_error_msg));
-			dialog.setButton2(getString(R.string.ok),
-					new Dialog.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					});
-			dialog.setCancelable(false);
-			return dialog;
-		}
 
-		case DIALOG_CHOOSE_IMAGE_METHOD: {
-
-			AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-			dialog.setTitle(getString(R.string.choose_method));
-			dialog.setMessage(getString(R.string.how_to_select_pic));
-			dialog.setButton(getString(R.string.gallery_option),
-					new Dialog.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							Intent intent = new Intent();
-							intent.setAction(Intent.ACTION_PICK);
-							intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-							startActivityForResult(intent, REQUEST_CODE_IMAGE);
-							dialog.dismiss();
-						}
-					});
-			dialog.setButton2(getString(R.string.cancel),
-					new Dialog.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					});
-			dialog.setButton3(getString(R.string.camera_option),
-					new Dialog.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							Intent intent = new Intent(
-									android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-							intent.putExtra(MediaStore.EXTRA_OUTPUT, PhotoUtils
-									.getPhotoUri(photoName,
-											AddReportActivity.this));
-							startActivityForResult(intent, REQUEST_CODE_CAMERA);
-							dialog.dismiss();
-						}
-					});
-
-			dialog.setCancelable(false);
-			return dialog;
-		}
-
-		case DIALOG_MULTIPLE_CATEGORY: {
-			if (showCategories() != null) {
-				return new AlertDialog.Builder(this)
-						.setTitle(R.string.choose_categories)
-						.setMultiChoiceItems(
-								showCategories(),
-								setCheckedCategories(),
-								new DialogInterface.OnMultiChoiceClickListener() {
-									public void onClick(DialogInterface dialog,
-											int whichButton, boolean isChecked) {
-										// see if categories have previously
-
-										if (isChecked) {
-											mVectorCategories.add(mCategoriesId
-													.get(whichButton));
-
-											mError = false;
-										} else {
-											mVectorCategories
-													.remove(mCategoriesId
-															.get(whichButton));
+			case DIALOG_MULTIPLE_CATEGORY: {
+				if (showCategories() != null) {
+					new AlertDialog.Builder(this)
+							.setTitle(R.string.choose_categories)
+							.setMultiChoiceItems(
+									showCategories(),
+									setCheckedCategories(),
+									new DialogInterface.OnMultiChoiceClickListener() {
+										public void onClick(DialogInterface dialog,
+												int whichButton, boolean isChecked) {
+											// see if categories have previously
+	
+											if (isChecked) {
+												mVectorCategories.add(mCategoriesId
+														.get(whichButton));
+	
+												mError = false;
+											} else {
+												mVectorCategories
+														.remove(mCategoriesId
+																.get(whichButton));
+											}
+	
+											setSelectedCategories(mVectorCategories);
 										}
-
-										setSelectedCategories(mVectorCategories);
+									})
+							.setPositiveButton(R.string.ok,
+									new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog,
+												int whichButton) {
+	
+											/* User clicked Yes so do some stuff */
+										}
+									}).create().show();
+				}
+				break;
+			}
+	
+			case TIME_DIALOG_ID:
+				new TimePickerDialog(this, mTimeSetListener,
+						mCalendar.get(Calendar.HOUR),
+						mCalendar.get(Calendar.MINUTE), false).show();
+				break;
+	
+			case DATE_DIALOG_ID:
+				new DatePickerDialog(this, mDateSetListener,
+						mCalendar.get(Calendar.YEAR),
+						mCalendar.get(Calendar.MONTH),
+						mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+				break;
+	
+			case DIALOG_SHOW_MESSAGE:
+				AlertDialog.Builder messageBuilder = new AlertDialog.Builder(this);
+				messageBuilder.setMessage(mErrorMessage).setPositiveButton(
+						getString(R.string.ok),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+	
+				AlertDialog showDialog = messageBuilder.create();
+				showDialog.show();
+				break;
+	
+			case DIALOG_SHOW_REQUIRED:
+				AlertDialog.Builder requiredBuilder = new AlertDialog.Builder(this);
+				requiredBuilder.setTitle(R.string.required_fields);
+				requiredBuilder.setMessage(mErrorMessage).setPositiveButton(
+						getString(R.string.ok),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+	
+				AlertDialog showRequiredDialog = requiredBuilder.create();
+				showRequiredDialog.show();
+				break;
+	
+			// prompt for unsaved changes
+			case DIALOG_SHOW_PROMPT: {
+				Dialog dialog = new AlertDialog.Builder(this)
+						.setTitle(R.string.unsaved_changes)
+						.setMessage(R.string.want_to_cancel)
+						.setNegativeButton(getString(R.string.no),
+								new Dialog.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+	
+										dialog.dismiss();
 									}
 								})
-						.setPositiveButton(R.string.ok,
-								new DialogInterface.OnClickListener() {
+						.setPositiveButton(getString(R.string.yes),
+								new Dialog.OnClickListener() {
 									public void onClick(DialogInterface dialog,
-											int whichButton) {
-
-										/* User clicked Yes so do some stuff */
+											int which) {
+										new DiscardTask(AddReportActivity.this)
+												.execute((String) null);
+										finish();
+										dialog.dismiss();
 									}
-								}).create();
+								})
+	
+						.setCancelable(false).create();
+				dialog.show();
+				break;
 			}
-		}
-
-		case TIME_DIALOG_ID:
-			return new TimePickerDialog(this, mTimeSetListener,
-					mCalendar.get(Calendar.HOUR),
-					mCalendar.get(Calendar.MINUTE), false);
-
-		case DATE_DIALOG_ID:
-			return new DatePickerDialog(this, mDateSetListener,
-					mCalendar.get(Calendar.YEAR),
-					mCalendar.get(Calendar.MONTH),
-					mCalendar.get(Calendar.DAY_OF_MONTH));
-
-		case DIALOG_SHOW_MESSAGE:
-			AlertDialog.Builder messageBuilder = new AlertDialog.Builder(this);
-			messageBuilder.setMessage(mErrorMessage).setPositiveButton(
-					getString(R.string.ok),
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-						}
-					});
-
-			AlertDialog showDialog = messageBuilder.create();
-			showDialog.show();
+	
+			// prompt for report deletion
+			case DIALOG_SHOW_DELETE_PROMPT: {
+				Dialog dialog = new AlertDialog.Builder(this)
+						.setTitle(R.string.delete_report)
+						.setMessage(R.string.want_to_delete)
+						.setNegativeButton(getString(R.string.no),
+								new Dialog.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+	
+										dialog.dismiss();
+									}
+								})
+						.setPositiveButton(getString(R.string.yes),
+								new Dialog.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// delete report
+										deleteReport();
+										dialog.dismiss();
+									}
+								}).setCancelable(false).create();
+				dialog.show();
+			}
 			break;
-
-		case DIALOG_SHOW_REQUIRED:
-			AlertDialog.Builder requiredBuilder = new AlertDialog.Builder(this);
-			requiredBuilder.setTitle(R.string.required_fields);
-			requiredBuilder.setMessage(mErrorMessage).setPositiveButton(
-					getString(R.string.ok),
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-						}
-					});
-
-			AlertDialog showRequiredDialog = requiredBuilder.create();
-			showRequiredDialog.show();
-			break;
-
-		// prompt for unsaved changes
-		case DIALOG_SHOW_PROMPT: {
-			AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-			dialog.setTitle(getString(R.string.unsaved_changes));
-			dialog.setMessage(getString(R.string.want_to_cancel));
-			dialog.setButton(getString(R.string.no),
-					new Dialog.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-
-							dialog.dismiss();
-						}
-					});
-			dialog.setButton2(getString(R.string.yes),
-					new Dialog.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							new DiscardTask(AddReportActivity.this)
-									.execute((String) null);
-							finish();
-							dialog.dismiss();
-						}
-					});
-
-			dialog.setCancelable(false);
-			return dialog;
 		}
-
-		// prompt for report deletion
-		case DIALOG_SHOW_DELETE_PROMPT: {
-			AlertDialog dialog = (new AlertDialog.Builder(this)).create();
-			dialog.setTitle(getString(R.string.delete_report));
-			dialog.setMessage(getString(R.string.want_to_delete));
-			dialog.setButton(getString(R.string.no),
-					new Dialog.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-
-							dialog.dismiss();
-						}
-					});
-			dialog.setButton2(getString(R.string.yes),
-					new Dialog.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							// delete report
-							deleteReport();
-							dialog.dismiss();
-						}
-					});
-
-			dialog.setCancelable(false);
-			return dialog;
-		}
-
-		}
-		return null;
 	}
 
 	@Override
@@ -771,8 +781,7 @@ public class AddReportActivity extends
 					try {
 						// @inoran fix
 						if (list != null) {
-							list.setItemChecked(
-									mCategoryLength - s, true);
+							list.setItemChecked(mCategoryLength - s, true);
 						}
 					} catch (NumberFormatException e) {
 						log("NumberFormatException", e);
@@ -825,10 +834,12 @@ public class AddReportActivity extends
 	private void updateDisplay() {
 		date = mCalendar.getTime();
 		if (date != null) {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy",Locale.US);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy",
+					Locale.US);
 			view.mPickDate.setText(dateFormat.format(date));
 
-			SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a",Locale.US);
+			SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a",
+					Locale.US);
 			view.mPickTime.setText(timeFormat.format(date));
 
 		} else {
@@ -852,7 +863,8 @@ public class AddReportActivity extends
 							"MMMM dd, yyyy", Locale.US);
 					view.mPickDate.setText(simpleDateFormat.format(date));
 
-					SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a",Locale.US);
+					SimpleDateFormat timeFormat = new SimpleDateFormat(
+							"h:mm a", Locale.US);
 					view.mPickTime.setText(timeFormat.format(date));
 
 				} else {
@@ -902,7 +914,8 @@ public class AddReportActivity extends
 					categories.append(", ");
 				}
 				if (category > 0) {
-					categories.append(mCategoriesTitle.get(String.valueOf(category)));
+					categories.append(mCategoriesTitle.get(String
+							.valueOf(category)));
 				}
 			}
 
@@ -1108,7 +1121,6 @@ public class AddReportActivity extends
 	protected boolean onSaveChanges() {
 		return addReport();
 	}
-
 
 	/*
 	 * (non-Javadoc)
