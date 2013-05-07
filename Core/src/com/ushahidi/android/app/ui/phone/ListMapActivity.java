@@ -47,7 +47,6 @@ import android.widget.AdapterView;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.BaseListActivity;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
 import com.ushahidi.android.app.models.ListCommentModel;
@@ -115,7 +114,6 @@ public class ListMapActivity extends
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		actionBar.setDisplayHomeAsUpEnabled(false);
 		registerForContextMenu(listView);
 		this.dialog = new ProgressDialog(this);
 		this.dialog.setCancelable(true);
@@ -321,15 +319,7 @@ public class ListMapActivity extends
 			edit = false;
 			createDialog(DIALOG_ADD_DEPLOYMENT);
 			return true;
-		} else if (item.getItemId() == R.id.app_settings) {
-			startActivity(new Intent(this, Settings.class));
-			setResult(RESULT_OK);
-			return true;
-		} else if (item.getItemId() == R.id.app_about) {
-			startActivity(new Intent(this, AboutActivity.class));
-			setResult(RESULT_OK);
-			return true;
-		}
+		} 
 
 		return super.onOptionsItemSelected(item);
 

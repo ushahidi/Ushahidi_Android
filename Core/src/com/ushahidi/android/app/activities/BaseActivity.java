@@ -237,6 +237,11 @@ public abstract class BaseActivity<V extends View> extends
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			toggleMenuDrawer();
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -249,11 +254,11 @@ public abstract class BaseActivity<V extends View> extends
 		// Default implementation simply calls startActivity
 		startActivity(intent);
 	}
-	
+
 	protected void toggleMenuDrawer() {
 		if (mMenuDrawer != null) {
-            mMenuDrawer.toggleMenu();
-        }
+			mMenuDrawer.toggleMenu();
+		}
 	}
 
 	protected void shareText(String shareItem) {

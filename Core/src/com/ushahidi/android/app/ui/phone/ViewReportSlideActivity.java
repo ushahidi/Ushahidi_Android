@@ -68,9 +68,9 @@ public class ViewReportSlideActivity<V extends View> extends BaseActivity<V> {
 	private ListReportModel mReports;
 
 	public ViewReportSlideActivity() {
-		
+
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -119,12 +119,7 @@ public class ViewReportSlideActivity<V extends View> extends BaseActivity<V> {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		if (item.getItemId() == android.R.id.home) {
-
-			finish();
-			return true;
-
-		} else if (item.getItemId() == R.id.menu_backward) {
+		if (item.getItemId() == R.id.menu_backward) {
 			// Go to the previous step in the wizard. If there is no previous
 			// step,
 			// setCurrentItem will do nothing.
