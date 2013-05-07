@@ -247,6 +247,18 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name=".ui.phone.AdminActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+            android:label="@string/video" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
         <activity
             android:name=".activities.SplashScreenActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar" >

@@ -20,7 +20,6 @@
 
 package com.ushahidi.android.app.activities;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +53,7 @@ import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.MenuAdapter;
 import com.ushahidi.android.app.models.MenuDrawerItemModel;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
+import com.ushahidi.android.app.ui.phone.AdminActivity;
 import com.ushahidi.android.app.ui.phone.ListMapActivity;
 import com.ushahidi.android.app.util.Objects;
 import com.ushahidi.android.app.util.Util;
@@ -137,15 +137,32 @@ public abstract class BaseActivity<V extends View> extends
 		}
 	}
 
-	protected void createMenuDrawer(int contentViewID) {
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
-		mMenuDrawer.setContentView(contentViewID);
+	private MenuDrawer appendMenuDrawer() {
+		MenuDrawer menuDrawer = null;
+		menuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
 		int shadowSizeInPixels = getResources().getDimensionPixelSize(
 				R.dimen.menu_shadow_width);
-		mMenuDrawer.setDropShadowSize(shadowSizeInPixels);
-		mMenuDrawer.setDropShadowColor(getResources().getColor(
+		menuDrawer.setDropShadowSize(shadowSizeInPixels);
+		menuDrawer.setDropShadowColor(getResources().getColor(
 				R.color.md_shadowColor));
+		return menuDrawer;
+	}
+
+	protected void createMenuDrawer(int contentViewID) {
+		mMenuDrawer = appendMenuDrawer();
+		mMenuDrawer.setContentView(contentViewID);
+		initMenuDrawer();
+	}
+
+	/**
+	 * Create a menu drawer and attach it to the activity.
+	 * 
+	 * @param contentView
+	 *            {@link View} of the main content for the activity.
+	 */
+	protected void createMenuDrawer(android.view.View contentView) {
+		mMenuDrawer = appendMenuDrawer();
+		mMenuDrawer.setContentView(contentView);
 
 		initMenuDrawer();
 	}
@@ -166,6 +183,9 @@ public abstract class BaseActivity<V extends View> extends
 	protected void onResume() {
 		super.onResume();
 		log("onResume");
+		if (mMenuDrawer != null) {
+			updateMenuDrawer();
+		}
 	}
 
 	@Override
@@ -381,7 +401,7 @@ public abstract class BaseActivity<V extends View> extends
 				break;
 
 			case ADMIN_ACTIVITY:
-				intent = new Intent(BaseActivity.this, ListMapActivity.class);
+				intent = new Intent(BaseActivity.this, AdminActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 				editor.putInt(Preferences.PREFS_NAME, ADMIN_ACTIVITY);
 				break;
@@ -439,7 +459,7 @@ public abstract class BaseActivity<V extends View> extends
 		if ((BaseActivity.this instanceof ListMapActivity))
 			position = 0;
 
-		if ((BaseActivity.this instanceof ListMapActivity))
+		if ((BaseActivity.this instanceof AdminActivity))
 			position = 1;
 
 		else if ((BaseActivity.this instanceof AboutActivity))
@@ -522,22 +542,5 @@ public abstract class BaseActivity<V extends View> extends
 
 	protected void toastShort(CharSequence message) {
 		Toast.makeText(this, message.toString(), Toast.LENGTH_SHORT).show();
-	}
-
-	@SuppressWarnings("unchecked")
-	protected <T> T createInstance(Class<?> type, Class<?> constructor,
-			Object... params) {
-		try {
-			return (T) type.getConstructor(constructor).newInstance(params);
-		} catch (InstantiationException e) {
-			log("InstantiationException", e);
-		} catch (IllegalAccessException e) {
-			log("IllegalAccessException", e);
-		} catch (InvocationTargetException e) {
-			log("InvocationTargetException", e);
-		} catch (NoSuchMethodException e) {
-			log("NoSuchMethodException", e);
-		}
-		return null;
 	}
 }
