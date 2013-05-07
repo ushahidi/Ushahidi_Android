@@ -5,28 +5,43 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.helpers.ReportViewPager;
 import com.ushahidi.android.app.helpers.TabsAdapter;
 import com.ushahidi.android.app.ui.tablet.ListReportFragment;
 import com.ushahidi.android.app.ui.tablet.MapFragment;
+import com.ushahidi.android.app.views.View;
 
-public class ReportTabActivity extends SherlockFragmentActivity {
+public class ReportTabActivity<V extends View> extends BaseActivity<V> {
 
-    private ReportViewPager mViewPager;
+	
+	public ReportTabActivity() {
+		
+	}
+    /**
+	 * @param view
+	 * @param layout
+	 * @param menu
+	 */
+	protected ReportTabActivity(Class<V> view, int layout, int menu) {
+		super(view, layout, menu);
+	}
+
+	private ReportViewPager mViewPager;
 
     private TabsAdapter mTabsAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.report_tab);
-
+        //setContentView(R.layout.report_tab);
+        
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        createMenuDrawer(R.layout.report_tab);
         setTitle();
         ActionBar.Tab reportsTab = getSupportActionBar().newTab().setText(
                 getString(R.string.reports));

@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
@@ -22,9 +21,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.util.Util;
+import com.ushahidi.android.app.views.View;
 
-public abstract class MapUserLocation extends SherlockFragmentActivity
+public abstract class MapUserLocation<V extends View> extends BaseActivity<V>
 		implements LocationListener {
 
 	protected static final int ONE_MINUTE = 60 * 1000;
@@ -44,6 +45,10 @@ public abstract class MapUserLocation extends SherlockFragmentActivity
 	protected UpdatableMarker updatableMarker;
 
 	protected Location currrentLocation;
+	
+	protected MapUserLocation(Class<V> view, int layout, int menu) {
+        super(view, layout, menu);
+    }
 	
 
 	/*

@@ -21,12 +21,17 @@
 package com.ushahidi.android.app.activities;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.simonvt.menudrawer.MenuDrawer;
-import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -40,11 +45,16 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.Settings;
+import com.ushahidi.android.app.adapters.MenuAdapter;
+import com.ushahidi.android.app.models.MenuDrawerItemModel;
+import com.ushahidi.android.app.ui.phone.AboutActivity;
+import com.ushahidi.android.app.ui.phone.ListMapActivity;
 import com.ushahidi.android.app.util.Objects;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.View;
@@ -52,7 +62,8 @@ import com.ushahidi.android.app.views.View;
 /**
  * BaseActivity Add shared functionality that exists between all Activities
  */
-public abstract class BaseActivity<V extends View> extends SherlockActivity {
+public abstract class BaseActivity<V extends View> extends
+		SherlockFragmentActivity {
 
 	/**
 	 * Layout resource id
@@ -80,6 +91,21 @@ public abstract class BaseActivity<V extends View> extends SherlockActivity {
 
 	private ListView mListView;
 
+	private MenuAdapter mAdapter;
+
+	protected int activePosition;
+
+	protected static final int MAP_ACTIVITY = 0;
+	protected static final int ADMIN_ACTIVITY = 1;
+	protected static final int SETTINGS_ACTIVITY = 2;
+	protected static final int ABOUT_ACTIVITY = 3;
+
+	public BaseActivity() {
+		this.viewClass = null;
+		this.layout = 0;
+		this.menu = 0;
+	}
+
 	/**
 	 * BaseActivity
 	 * 
@@ -104,12 +130,25 @@ public abstract class BaseActivity<V extends View> extends SherlockActivity {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
 		if (layout != 0) {
-			mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
-			mMenuDrawer.setContentView(layout);
-			initMenuDrawer();
+			createMenuDrawer(layout);
 		}
 
-		view = Objects.createInstance(viewClass, Activity.class, this);
+		if (viewClass != null)
+			view = Objects.createInstance(viewClass,
+					SherlockFragmentActivity.class, this);
+	}
+
+	protected void createMenuDrawer(int contentViewID) {
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
+		mMenuDrawer.setContentView(contentViewID);
+		int shadowSizeInPixels = getResources().getDimensionPixelSize(
+				R.dimen.menu_shadow_width);
+		mMenuDrawer.setDropShadowSize(shadowSizeInPixels);
+		mMenuDrawer.setDropShadowColor(getResources().getColor(
+				R.color.md_shadowColor));
+
+		initMenuDrawer();
 	}
 
 	@Override
@@ -160,8 +199,28 @@ public abstract class BaseActivity<V extends View> extends SherlockActivity {
 		return super.onKeyDown(keyCode, event);
 	}
 
+	/**
+	 * Called when the activity has detected the user's press of the back key.
+	 * If the activity has a menu drawer attached that is opened or in the
+	 * process of opening, the back button press closes it. Otherwise, the
+	 * normal back action is taken.
+	 */
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onBackPressed() {
+		if (mMenuDrawer != null) {
+			final int drawerState = mMenuDrawer.getDrawerState();
+			if (drawerState == MenuDrawer.STATE_OPEN
+					|| drawerState == MenuDrawer.STATE_OPENING) {
+				mMenuDrawer.closeMenu();
+				return;
+			}
+		}
+
+		super.onBackPressed();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		log("onActivityResult");
 	}
@@ -188,6 +247,12 @@ public abstract class BaseActivity<V extends View> extends SherlockActivity {
 	public void openActivityOrFragment(Intent intent) {
 		// Default implementation simply calls startActivity
 		startActivity(intent);
+	}
+	
+	protected void toggleMenuDrawer() {
+		if (mMenuDrawer != null) {
+            mMenuDrawer.toggleMenu();
+        }
 	}
 
 	protected void shareText(String shareItem) {
@@ -281,7 +346,7 @@ public abstract class BaseActivity<V extends View> extends SherlockActivity {
 
 		mMenuDrawer.setMenuView(mListView);
 
-		// updateMenuDrawer();
+		updateMenuDrawer();
 	}
 
 	private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
@@ -289,9 +354,96 @@ public abstract class BaseActivity<V extends View> extends SherlockActivity {
 		public void onItemClick(AdapterView<?> parent, android.view.View view,
 				int position, long id) {
 
+			if (position == activePosition) {
+				// Same row selected
+				mMenuDrawer.closeMenu();
+				return;
+			}
+
+			int activityTag = (Integer) view.getTag();
+
+			activePosition = position;
+			mAdapter.notifyDataSetChanged();
+			Intent intent = null;
+
+			SharedPreferences settings = PreferenceManager
+					.getDefaultSharedPreferences(BaseActivity.this);
+			SharedPreferences.Editor editor = settings.edit();
+			switch (activityTag) {
+			case MAP_ACTIVITY:
+				intent = new Intent(BaseActivity.this, ListMapActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+				editor.putInt(Preferences.PREFS_NAME, MAP_ACTIVITY);
+				break;
+
+			case ADMIN_ACTIVITY:
+				intent = new Intent(BaseActivity.this, ListMapActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+				editor.putInt(Preferences.PREFS_NAME, ADMIN_ACTIVITY);
+				break;
+
+			case SETTINGS_ACTIVITY:
+				intent = new Intent(BaseActivity.this, Settings.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+				editor.putInt(Preferences.PREFS_NAME, SETTINGS_ACTIVITY);
+				break;
+			case ABOUT_ACTIVITY:
+				intent = new Intent(BaseActivity.this, AboutActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+				editor.putInt(Preferences.PREFS_NAME, ABOUT_ACTIVITY);
+				break;
+			}
+			editor.commit();
+			if (intent != null) {
+				mMenuDrawer.closeMenu();
+				startActivityWithDelay(intent);
+			}
 		}
 
 	};
+
+	protected void startActivityWithDelay(final Intent i) {
+
+		// Let the menu animation finish before starting a new activity
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				startActivity(i);
+			}
+		}, 400);
+
+	}
+
+	/**
+	 * Update all of the items in the menu drawer based on the current active
+	 * blog.
+	 */
+	protected void updateMenuDrawer() {
+
+		List<Object> items = new ArrayList<Object>();
+		Resources resources = getResources();
+
+		items.add(new MenuDrawerItemModel(resources.getString(R.string.maps),
+				R.drawable.map));
+		items.add(new MenuDrawerItemModel(resources.getString(R.string.map),
+				R.drawable.map));
+		items.add(new MenuDrawerItemModel(resources
+				.getString(R.string.settings), R.drawable.settings));
+		items.add(new MenuDrawerItemModel(resources.getString(R.string.about),
+				R.drawable.about));
+
+		if ((BaseActivity.this instanceof ListMapActivity))
+			activePosition = 0;
+
+		if ((BaseActivity.this instanceof ListMapActivity))
+			activePosition = 1;
+
+		else if ((BaseActivity.this instanceof AboutActivity))
+			activePosition = 2;
+
+		mAdapter = new MenuAdapter(this, items);
+		mListView.setAdapter(mAdapter);
+	}
 
 	protected EditText findEditTextById(int id) {
 		return (EditText) findViewById(id);
