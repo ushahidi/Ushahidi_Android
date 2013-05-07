@@ -390,7 +390,7 @@
     <style name="MenuDrawer.Button.Text">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:textAppearance">?android:attr/textAppearance</item>
-        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+        <item name="android:textColor">@color/white_color</item>
         <item name="android:textSize">18sp</item>
     </style>
 
