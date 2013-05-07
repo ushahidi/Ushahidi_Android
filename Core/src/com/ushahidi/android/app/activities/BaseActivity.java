@@ -93,8 +93,6 @@ public abstract class BaseActivity<V extends View> extends
 
 	private MenuAdapter mAdapter;
 
-	protected int activePosition;
-
 	protected static final int MAP_ACTIVITY = 0;
 	protected static final int ADMIN_ACTIVITY = 1;
 	protected static final int SETTINGS_ACTIVITY = 2;
@@ -360,7 +358,7 @@ public abstract class BaseActivity<V extends View> extends
 		public void onItemClick(AdapterView<?> parent, android.view.View view,
 				int position, long id) {
 
-			if (position == activePosition) {
+			if (position == mAdapter.activePosition) {
 				// Same row selected
 				mMenuDrawer.closeMenu();
 				return;
@@ -368,7 +366,7 @@ public abstract class BaseActivity<V extends View> extends
 
 			int activityTag = (Integer) view.getTag();
 
-			activePosition = position;
+			mAdapter.activePosition = position;
 			mAdapter.notifyDataSetChanged();
 			Intent intent = null;
 
@@ -428,7 +426,7 @@ public abstract class BaseActivity<V extends View> extends
 
 		List<Object> items = new ArrayList<Object>();
 		Resources resources = getResources();
-
+		int position = 0;
 		items.add(new MenuDrawerItemModel(resources.getString(R.string.maps),
 				R.drawable.map));
 		items.add(new MenuDrawerItemModel(resources.getString(R.string.admin),
@@ -439,15 +437,16 @@ public abstract class BaseActivity<V extends View> extends
 				R.drawable.about));
 
 		if ((BaseActivity.this instanceof ListMapActivity))
-			activePosition = 0;
+			position = 0;
 
 		if ((BaseActivity.this instanceof ListMapActivity))
-			activePosition = 1;
+			position = 1;
 
 		else if ((BaseActivity.this instanceof AboutActivity))
-			activePosition = 2;
+			position = 2;
 
 		mAdapter = new MenuAdapter(this, items);
+		mAdapter.activePosition = position;
 		mListView.setAdapter(mAdapter);
 	}
 
