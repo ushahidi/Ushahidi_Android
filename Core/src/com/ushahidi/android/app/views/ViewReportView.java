@@ -90,8 +90,9 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 	public ImageView photo;
 	public TextView total;
 
-	public ViewReportView(ViewGroup activity, Context context) {
+	public ViewReportView(ViewGroup activity, Context context) { 
 		super(activity);
+		
 		this.context = context;
 		title = (TextView) activity.findViewById(R.id.title);
 		category = (TextView) activity.findViewById(R.id.category);

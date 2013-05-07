@@ -20,22 +20,22 @@
 
 package com.ushahidi.android.app.ui.phone;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.adapters.VideoScreenSwipeAdapter;
 import com.ushahidi.android.app.models.ListReportVideoModel;
+import com.ushahidi.android.app.views.View;
 
 /**
  * 
  */
-public class ViewReportVideoActivity extends SherlockFragmentActivity {
+public class ViewReportVideoActivity<V extends View> extends BaseActivity<V> {
 
 	private ListReportVideoModel mVideo;
 
@@ -53,12 +53,16 @@ public class ViewReportVideoActivity extends SherlockFragmentActivity {
 	 * to access previous and next wizard steps.
 	 */
 	private ViewPager mPager;
+	
+	public ViewReportVideoActivity() {
+		
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.screen_slide);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		createMenuDrawer(R.layout.screen_slide);
+		
 		mVideo = new ListReportVideoModel();
 
 		this.reportId = getIntent().getExtras().getInt("reportid", 0);
@@ -112,16 +116,6 @@ public class ViewReportVideoActivity extends SherlockFragmentActivity {
 				" \n" + url);
 		shareText(shareString);
 
-	}
-
-	private void shareText(String shareItem) {
-
-		final Intent intent = new Intent(Intent.ACTION_SEND);
-		intent.setType("text/plain");
-		intent.putExtra(Intent.EXTRA_TEXT, shareItem);
-
-		startActivity(Intent.createChooser(intent,
-				getText(R.string.title_share)));
 	}
 
 }

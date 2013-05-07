@@ -20,22 +20,22 @@
 
 package com.ushahidi.android.app.ui.phone;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.adapters.NewsScreenSwipeAdapter;
 import com.ushahidi.android.app.models.ListReportNewsModel;
+import com.ushahidi.android.app.views.View;
 
 /**
  * @author eyedol
  */
-public class ViewReportNewsActivity extends SherlockFragmentActivity {
+public class ViewReportNewsActivity<V extends View> extends BaseActivity<V> {
 
 	private ListReportNewsModel mNews;
 
@@ -54,11 +54,14 @@ public class ViewReportNewsActivity extends SherlockFragmentActivity {
 	 */
 	private ViewPager mPager;
 
+	public ViewReportNewsActivity() {
+
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.screen_slide);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		createMenuDrawer(R.layout.screen_slide);
 		mNews = new ListReportNewsModel();
 
 		this.reportId = getIntent().getExtras().getInt("reportid", 0);
@@ -111,15 +114,5 @@ public class ViewReportNewsActivity extends SherlockFragmentActivity {
 		final String shareString = getString(R.string.share_template, " ",
 				" \n" + url);
 		shareText(shareString);
-	}
-
-	private void shareText(String shareItem) {
-
-		final Intent intent = new Intent(Intent.ACTION_SEND);
-		intent.setType("text/plain");
-		intent.putExtra(Intent.EXTRA_TEXT, shareItem);
-
-		startActivity(Intent.createChooser(intent,
-				getText(R.string.title_share)));
 	}
 }

@@ -27,20 +27,21 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.helpers.MapPager;
 import com.ushahidi.android.app.helpers.ScreenSlidePageFragment;
 import com.ushahidi.android.app.models.ListReportModel;
+import com.ushahidi.android.app.views.View;
 
 /**
  * @author eyedol
  * 
  */
-public class ViewReportSlideActivity extends SherlockFragmentActivity {
+public class ViewReportSlideActivity<V extends View> extends BaseActivity<V> {
 
 	/**
 	 * The number of pages (wizard steps) to show in this demo.
@@ -66,12 +67,15 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 
 	private ListReportModel mReports;
 
+	public ViewReportSlideActivity() {
+		
+	}
+	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.view_report_slide);
+		createMenuDrawer(R.layout.view_report_slide);
 		mReports = new ListReportModel();
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		this.mCategoryId = getIntent().getExtras().getInt("category", 0);
 		int pos = getIntent().getExtras().getInt("id", 0);
 		if (mCategoryId > 0) {
@@ -162,16 +166,6 @@ public class ViewReportSlideActivity extends SherlockFragmentActivity {
 				+ mReportTitle, "\n" + reportUrl);
 		shareText(shareString);
 
-	}
-
-	private void shareText(String shareItem) {
-
-		final Intent intent = new Intent(Intent.ACTION_SEND);
-		intent.setType("text/plain");
-		intent.putExtra(Intent.EXTRA_TEXT, shareItem);
-
-		startActivity(Intent.createChooser(intent,
-				getText(R.string.title_share)));
 	}
 
 	/**

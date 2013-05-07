@@ -33,6 +33,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -133,9 +134,10 @@ public abstract class BaseActivity<V extends View> extends
 			createMenuDrawer(layout);
 		}
 
-		if (viewClass != null)
+		if (viewClass != null) {
 			view = Objects.createInstance(viewClass,
 					SherlockFragmentActivity.class, this);
+		}
 	}
 
 	protected void createMenuDrawer(int contentViewID) {

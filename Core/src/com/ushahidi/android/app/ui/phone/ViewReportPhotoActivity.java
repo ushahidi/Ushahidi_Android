@@ -20,22 +20,20 @@
 
 package com.ushahidi.android.app.ui.phone;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.adapters.PhotoScreenSwipeAdapter;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.util.ImageManager;
+import com.ushahidi.android.app.views.View;
 
-public class ViewReportPhotoActivity extends SherlockFragmentActivity {
+public class ViewReportPhotoActivity<V extends View> extends BaseActivity<V> {
 
 	private ListPhotoModel mPhoto;
 
@@ -54,11 +52,14 @@ public class ViewReportPhotoActivity extends SherlockFragmentActivity {
 	 */
 	private ViewPager mPager;
 
+	public ViewReportPhotoActivity() {
+
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.screen_slide);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		createMenuDrawer(R.layout.screen_slide);
 		mPhoto = new ListPhotoModel();
 
 		this.reportId = getIntent().getExtras().getInt("reportid", 0);
@@ -105,23 +106,6 @@ public class ViewReportPhotoActivity extends SherlockFragmentActivity {
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	private void sharePhoto(String path) {
-
-		// TODO: consider bringing in shortlink to session
-		Preferences.loadSettings(this);
-		final String reportUrl = Preferences.domain;
-		final String shareString = getString(R.string.share_template, " ", " "
-				+ reportUrl);
-		final Intent intent = new Intent(Intent.ACTION_SEND);
-		intent.setType("image/jpg");
-		intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + path));
-		intent.putExtra(Intent.EXTRA_TEXT, shareString);
-		startActivityForResult(
-				Intent.createChooser(intent, getText(R.string.title_share)), 0);
-		setResult(RESULT_OK);
-
 	}
 
 }
