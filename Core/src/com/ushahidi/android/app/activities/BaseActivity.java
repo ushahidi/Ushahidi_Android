@@ -33,7 +33,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -427,8 +426,8 @@ public abstract class BaseActivity<V extends View> extends
 
 		items.add(new MenuDrawerItemModel(resources.getString(R.string.maps),
 				R.drawable.map));
-		items.add(new MenuDrawerItemModel(resources.getString(R.string.map),
-				R.drawable.map));
+		items.add(new MenuDrawerItemModel(resources.getString(R.string.admin),
+				R.drawable.web));
 		items.add(new MenuDrawerItemModel(resources
 				.getString(R.string.settings), R.drawable.settings));
 		items.add(new MenuDrawerItemModel(resources.getString(R.string.about),

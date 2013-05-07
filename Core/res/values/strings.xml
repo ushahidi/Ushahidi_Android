@@ -262,4 +262,5 @@
 	<string name="previous">Previous</string>
     <string name="next">Next</string>
     <string name="finish">Finish</string>
+    <string name="admin">Admin</string>
 </resources>
