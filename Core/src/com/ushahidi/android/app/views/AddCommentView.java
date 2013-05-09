@@ -50,7 +50,7 @@ public class AddCommentView extends View {
 		emailAddressLbl = (TextView) activity
 				.findViewById(R.id.comment_email_lbl);
 		emailAddress = (EditText) activity.findViewById(R.id.comment_email);
-		commentLbl = (TextView) activity.findViewById(R.id.comment_message);
+		commentLbl = (TextView) activity.findViewById(R.id.comment_message_lbl);
 		comment = (EditText) activity.findViewById(R.id.comment_message);
 		this.dialog.setMessage(activity.getResources().getString(
 				R.string.uploading));

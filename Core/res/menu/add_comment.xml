@@ -11,17 +11,16 @@
     at team@ushahidi.com.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <item
         android:id="@+id/menu_send_comment"
         android:icon="@drawable/send"
-        android:orderInCategory="0"
         android:showAsAction="ifRoom"
-        android:title="@string/save"/> 
+        android:title="@string/save"/>
     <item
         android:id="@+id/menu_cancel_comment"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:orderInCategory="1"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="@string/cancel"/>
-    
+
 </menu>

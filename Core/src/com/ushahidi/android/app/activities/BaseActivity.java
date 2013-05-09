@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.simonvt.menudrawer.MenuDrawer;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -44,6 +45,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -68,17 +70,17 @@ public abstract class BaseActivity<V extends View> extends
 	/**
 	 * Layout resource id
 	 */
-	protected final int layout;
+	protected  int layout;
 
 	/**
 	 * Menu resource id
 	 */
-	protected final int menu;
+	protected  int menu;
 
 	/**
 	 * View class
 	 */
-	protected final Class<V> viewClass;
+	protected  Class<V> viewClass;
 
 	/**
 	 * View
@@ -99,6 +101,7 @@ public abstract class BaseActivity<V extends View> extends
 	protected static final int ABOUT_ACTIVITY = 3;
 
 	public BaseActivity() {
+		
 		this.viewClass = null;
 		this.layout = 0;
 		this.menu = 0;
@@ -115,6 +118,7 @@ public abstract class BaseActivity<V extends View> extends
 	 *            menu resource id
 	 */
 	protected BaseActivity(Class<V> view, int layout, int menu) {
+		
 		this.viewClass = view;
 		this.layout = layout;
 		this.menu = menu;
@@ -133,7 +137,7 @@ public abstract class BaseActivity<V extends View> extends
 
 		if (viewClass != null) {
 			view = Objects.createInstance(viewClass,
-					SherlockFragmentActivity.class, this);
+					Activity.class, this);
 		}
 	}
 

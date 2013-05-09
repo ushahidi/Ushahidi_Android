@@ -57,12 +57,7 @@ public class AddCommentActivity extends
 	private static final int DIALOG_SHOW_REQUIRED = 0;
 
 	private static final int DIALOG_SHOW_MESSAGE = 1;
-
-	/**
-	 * @param view
-	 * @param layout
-	 * @param menu
-	 */
+	
 	public AddCommentActivity() {
 		super(AddCommentView.class, R.layout.add_comment, R.menu.add_comment);
 	}
@@ -70,6 +65,7 @@ public class AddCommentActivity extends
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//view = new AddCommentView(this);
 		hidePersonalInfo();
 		this.reportId = getIntent().getExtras().getInt("reportid", 0);
 	}
