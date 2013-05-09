@@ -20,8 +20,11 @@
 package com.ushahidi.android.app.ui.phone;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.WebViewClientActivity;
@@ -35,7 +38,7 @@ import com.ushahidi.android.app.views.View;
 public class AdminActivity<V extends View> extends WebViewClientActivity<V> {
 
 	public AdminActivity() {
-
+		super(R.menu.admin);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -59,8 +62,32 @@ public class AdminActivity<V extends View> extends WebViewClientActivity<V> {
 	public void loadAdmin() {
 		// load dashboard
 		final String dashboardUrl = Preferences.domain + "/admin";
-		log("Admin: "+dashboardUrl);
 		loadUrl(dashboardUrl);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		if (mWebView == null)
+			return false;
+
+		int itemID = item.getItemId();
+		if (itemID == R.id.menu_page_refresh) {
+			mWebView.reload();
+			return true;
+		} else if (itemID == R.id.menu_browser) {
+			final String url = mWebView.getUrl();
+			if (url != null) {
+				Uri uri = Uri.parse(url);
+				if (uri != null) {
+					Intent i = new Intent(Intent.ACTION_VIEW);
+					i.setData(uri);
+					startActivity(i);
+				}
+			}
+			return true;
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 }

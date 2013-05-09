@@ -22,9 +22,12 @@ package com.ushahidi.android.app.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.Window;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.views.View;
@@ -39,8 +42,14 @@ public class WebViewClientActivity<V extends View> extends BaseActivity<V> {
 
 	private static final String USER_AGENT = "ushahidi-android";
 
+	private int mMenu;
+
 	public WebViewClientActivity() {
 
+	}
+
+	public WebViewClientActivity(int menu) {
+		mMenu = menu;
 	}
 
 	@Override
@@ -57,6 +66,8 @@ public class WebViewClientActivity<V extends View> extends BaseActivity<V> {
 		ab.setDisplayShowTitleEnabled(true);
 
 		mWebView = (WebView) findViewById(R.id.webView);
+		mWebView.setWebViewClient(new UshahidiWebClient());
+		mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 		mWebView.getSettings().setUserAgentString(USER_AGENT);
 		mWebView.getSettings().setBuiltInZoomControls(true);
 		mWebView.setScrollBarStyle(android.view.View.SCROLLBARS_INSIDE_OVERLAY);
@@ -66,6 +77,16 @@ public class WebViewClientActivity<V extends View> extends BaseActivity<V> {
 		if (url != null) {
 			loadUrl(url);
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		if (mMenu != 0) {
+			getSupportMenuInflater().inflate(mMenu, menu);
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -85,6 +106,16 @@ public class WebViewClientActivity<V extends View> extends BaseActivity<V> {
 			mWebView.goBack();
 		else
 			super.onBackPressed();
+	}
+
+	protected class UshahidiWebClient extends WebViewClient {
+
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			view.loadUrl(url);
+			return true;
+		}
+
 	}
 
 	/**
