@@ -14,23 +14,17 @@
 
     <item
         android:id="@+id/filter_by"
-        android:orderInCategory="0"
+        android:icon="@drawable/expand"
         android:showAsAction="ifRoom"
-        android:title="@string/categories"
-        android:icon="@drawable/expand"/>
-    
+        android:title="@string/categories"/>
     <item
         android:id="@+id/menu_refresh"
         android:icon="@drawable/refresh"
-        android:orderInCategory="1"
         android:showAsAction="ifRoom"
         android:title="@string/menu_refresh"/>
-    
     <item
         android:id="@+id/menu_add"
         android:icon="@drawable/add"
-        android:orderInCategory="2"
-        android:showAsAction="ifRoom"
         android:title="@string/add_report"/>
-    
+
 </menu>
