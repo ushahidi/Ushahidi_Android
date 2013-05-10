@@ -44,7 +44,7 @@ public class ViewReportVideoActivity<V extends View> extends BaseActivity<V> {
 	private int reportId;
 
 	/**
-	 * The number of pages (wizard steps) to show in this demo.
+	 * The number of pages (wizard steps) to show
 	 */
 	private int NUM_PAGES = 0;
 
@@ -53,16 +53,16 @@ public class ViewReportVideoActivity<V extends View> extends BaseActivity<V> {
 	 * to access previous and next wizard steps.
 	 */
 	private ViewPager mPager;
-	
+
 	public ViewReportVideoActivity() {
-		
+
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		createMenuDrawer(R.layout.screen_slide);
-		
+
 		mVideo = new ListReportVideoModel();
 
 		this.reportId = getIntent().getExtras().getInt("reportid", 0);
@@ -91,10 +91,7 @@ public class ViewReportVideoActivity<V extends View> extends BaseActivity<V> {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-			finish();
-			return true;
-		} else if (item.getItemId() == R.id.menu_forward) {
+		if (item.getItemId() == R.id.menu_forward) {
 
 			mPager.setCurrentItem(mPager.getCurrentItem() + 1);
 			return true;
@@ -115,7 +112,6 @@ public class ViewReportVideoActivity<V extends View> extends BaseActivity<V> {
 		final String shareString = getString(R.string.share_template, " ",
 				" \n" + url);
 		shareText(shareString);
-
 	}
 
 }

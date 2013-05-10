@@ -45,7 +45,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -70,17 +69,17 @@ public abstract class BaseActivity<V extends View> extends
 	/**
 	 * Layout resource id
 	 */
-	protected  int layout;
+	protected int layout;
 
 	/**
 	 * Menu resource id
 	 */
-	protected  int menu;
+	protected int menu;
 
 	/**
 	 * View class
 	 */
-	protected  Class<V> viewClass;
+	protected Class<V> viewClass;
 
 	/**
 	 * View
@@ -101,7 +100,7 @@ public abstract class BaseActivity<V extends View> extends
 	protected static final int ABOUT_ACTIVITY = 3;
 
 	public BaseActivity() {
-		
+
 		this.viewClass = null;
 		this.layout = 0;
 		this.menu = 0;
@@ -118,7 +117,7 @@ public abstract class BaseActivity<V extends View> extends
 	 *            menu resource id
 	 */
 	protected BaseActivity(Class<V> view, int layout, int menu) {
-		
+
 		this.viewClass = view;
 		this.layout = layout;
 		this.menu = menu;
@@ -136,8 +135,7 @@ public abstract class BaseActivity<V extends View> extends
 		}
 
 		if (viewClass != null) {
-			view = Objects.createInstance(viewClass,
-					Activity.class, this);
+			view = Objects.createInstance(viewClass, Activity.class, this);
 		}
 	}
 
@@ -162,7 +160,7 @@ public abstract class BaseActivity<V extends View> extends
 	 * Create a menu drawer and attach it to the activity.
 	 * 
 	 * @param contentView
-	 *            {@link View} of the main content for the activity.
+	 *            {@link android.view.View} of the main content for the activity.
 	 */
 	protected void createMenuDrawer(android.view.View contentView) {
 		mMenuDrawer = appendMenuDrawer();
@@ -235,6 +233,7 @@ public abstract class BaseActivity<V extends View> extends
 			if (drawerState == MenuDrawer.STATE_OPEN
 					|| drawerState == MenuDrawer.STATE_OPENING) {
 				mMenuDrawer.closeMenu();
+				finish();
 				return;
 			}
 		}
@@ -443,8 +442,7 @@ public abstract class BaseActivity<V extends View> extends
 	}
 
 	/**
-	 * Update all of the items in the menu drawer based on the current active
-	 * blog.
+	 * Update all of the items in the menu drawer.
 	 */
 	protected void updateMenuDrawer() {
 

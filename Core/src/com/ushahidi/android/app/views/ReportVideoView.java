@@ -54,10 +54,12 @@ public class ReportVideoView extends View {
 
 	@SuppressWarnings("deprecation")
 	public void setWebView(final String url) {
+		mWebView.setWebViewClient(webClient);
 		WebSettings settings = mWebView.getSettings();
+		settings.setBuiltInZoomControls(true);
 		settings.setPluginsEnabled(true);
 		settings.setLightTouchEnabled(true);
-		mWebView.setWebViewClient(webClient);
+		
 		mWebView.post(new Runnable() {
 			public void run() {
 				if (CLEAR_CACHE_ON_LOAD) {
@@ -93,6 +95,12 @@ public class ReportVideoView extends View {
 					"Error " + errorCode + ": " + description,
 					Toast.LENGTH_LONG).show();
 			super.onReceivedError(view, errorCode, description, failingUrl);
+		}
+		
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			view.loadUrl(url);
+			return true;
 		}
 	};
 

@@ -30,7 +30,7 @@ import android.widget.Toast;
 import com.ushahidi.android.app.R;
 
 /**
- * News view 
+ * News view
  */
 public class ReportNewsView extends View {
 
@@ -49,11 +49,12 @@ public class ReportNewsView extends View {
 		mLoadingSpinner = (ProgressBar) activity
 				.findViewById(R.id.news_loading_spinner);
 	}
-	
+
 	public void setWebView(final String url) {
+		webView.setWebViewClient(webClient);
 		WebSettings settings = webView.getSettings();
 		settings.setLightTouchEnabled(true);
-		webView.setWebViewClient(webClient);
+		settings.setBuiltInZoomControls(true);
 		webView.post(new Runnable() {
 			public void run() {
 				if (CLEAR_CACHE_ON_LOAD) {
@@ -89,6 +90,12 @@ public class ReportNewsView extends View {
 					"Error " + errorCode + ": " + description,
 					Toast.LENGTH_LONG).show();
 			super.onReceivedError(view, errorCode, description, failingUrl);
+		}
+
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			view.loadUrl(url);
+			return true;
 		}
 	};
 
