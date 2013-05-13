@@ -15,18 +15,16 @@
     <item
         android:id="@+id/menu_backward"
         android:icon="@drawable/previous"
-        android:orderInCategory="0"
         android:showAsAction="ifRoom"
         android:title="@string/previous"/>
     <item
         android:id="@+id/menu_forward"
         android:icon="@drawable/next"
-        android:orderInCategory="1"
+        android:title="@string/next"
         android:showAsAction="ifRoom"/>
     <item
         android:id="@+id/menu_share"
         android:icon="@drawable/share"
-        android:orderInCategory="2"
         android:showAsAction="never"
         android:title="@string/share"/>
 

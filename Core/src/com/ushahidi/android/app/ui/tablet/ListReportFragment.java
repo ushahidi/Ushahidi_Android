@@ -41,7 +41,6 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.BaseListReportAdapter;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
@@ -60,7 +59,6 @@ import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.opengeosms.OpenGeoSMSSender;
 import com.ushahidi.android.app.tasks.ProgressTask;
-import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.ui.phone.AddReportActivity;
 import com.ushahidi.android.app.ui.phone.ViewReportSlideActivity;
 import com.ushahidi.android.app.util.ImageManager;
@@ -254,12 +252,6 @@ public class ListReportFragment
 			return true;
 		} else if (item.getItemId() == android.R.id.home) {
 			getActivity().finish();
-			return true;
-		} else if (item.getItemId() == R.id.app_settings) {
-			startActivity(new Intent(getActivity(), Settings.class));
-			return true;
-		} else if (item.getItemId() == R.id.app_about) {
-			startActivity(new Intent(getActivity(), AboutActivity.class));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

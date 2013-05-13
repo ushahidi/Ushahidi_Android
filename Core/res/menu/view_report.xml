@@ -19,9 +19,9 @@
         android:title="@string/previous"/>
     <item
         android:id="@+id/menu_forward"
-        android:title="@string/next"
         android:icon="@drawable/next"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="ifRoom"
+        android:title="@string/next"/>
     <item
         android:id="@+id/menu_comment"
         android:icon="@drawable/comment"
