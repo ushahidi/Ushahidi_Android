@@ -32,6 +32,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -56,6 +58,7 @@ import com.ushahidi.android.app.models.MenuDrawerItemModel;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.ui.phone.AdminActivity;
 import com.ushahidi.android.app.ui.phone.ListMapActivity;
+import com.ushahidi.android.app.ui.tablet.AboutFragment;
 import com.ushahidi.android.app.util.Objects;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.View;
@@ -450,12 +453,16 @@ public abstract class BaseActivity<V extends View> extends
 		List<Object> items = new ArrayList<Object>();
 		Resources resources = getResources();
 		int position = 0;
+		
 		items.add(new MenuDrawerItemModel(resources.getString(R.string.maps),
 				R.drawable.map));
+		
 		items.add(new MenuDrawerItemModel(resources.getString(R.string.admin),
 				R.drawable.web));
+		
 		items.add(new MenuDrawerItemModel(resources
 				.getString(R.string.settings), R.drawable.settings));
+		
 		items.add(new MenuDrawerItemModel(resources.getString(R.string.about),
 				R.drawable.about));
 
@@ -471,6 +478,25 @@ public abstract class BaseActivity<V extends View> extends
 		mAdapter = new MenuAdapter(this, items);
 		mAdapter.activePosition = position;
 		mListView.setAdapter(mAdapter);
+	}
+	
+	public void showAboutDialog() {
+
+		// DialogFragment.show() will take care of adding the fragment
+		// in a transaction. We also want to remove any currently showing
+		// dialog, so make our own transaction and take care of that here.
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out,
+				R.anim.slide_right_in, R.anim.slide_right_out);
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		AboutFragment newFragment = AboutFragment.newInstance();
+		newFragment.show(ft, "dialog");
 	}
 
 	protected EditText findEditTextById(int id) {

@@ -26,7 +26,6 @@ import android.widget.ListView;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.ListMapAdapter;
 import com.ushahidi.android.app.fragments.BaseListFragment;
 import com.ushahidi.android.app.helpers.ActionModeHelper;
@@ -34,7 +33,6 @@ import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.tasks.LoadMapTask;
-import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.AddMapView;
 import com.ushahidi.android.app.views.ListMapView;
@@ -321,14 +319,6 @@ public class ListMapFragment extends
 		} else if (item.getItemId() == R.id.menu_add) {
 			edit = false;
 			createDialog(DIALOG_ADD_DEPLOYMENT);
-			return true;
-		} else if (item.getItemId() == R.id.app_settings) {
-			startActivity(new Intent(getActivity(), Settings.class));
-
-			return true;
-		} else if (item.getItemId() == R.id.app_about) {
-			startActivity(new Intent(getActivity(), AboutActivity.class));
-
 			return true;
 		}
 

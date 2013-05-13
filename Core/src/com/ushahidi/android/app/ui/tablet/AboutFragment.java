@@ -33,7 +33,7 @@ public class AboutFragment extends DialogFragment {
      * Create a new instance of MyDialogFragment, providing "num" as an
      * argument.
      */
-    static AboutFragment newInstance() {
+    public static AboutFragment newInstance() {
         AboutFragment f = new AboutFragment();
         return f;
     }

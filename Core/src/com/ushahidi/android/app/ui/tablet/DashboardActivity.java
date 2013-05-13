@@ -109,11 +109,7 @@ public class DashboardActivity<V extends com.ushahidi.android.app.views.View>
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.app_about) {
-			showDialog();
-			return true;
-
-		} else if (item.getItemId() == R.id.menu_report_map) {
+		 if (item.getItemId() == R.id.menu_report_map) {
 			Intent launchIntent;
 			launchIntent = new Intent(this, ReportMapActivity.class);
 			startActivityZoomIn(launchIntent);
@@ -124,26 +120,6 @@ public class DashboardActivity<V extends com.ushahidi.android.app.views.View>
 		return super.onOptionsItemSelected(item);
 
 	}
-
-	public void showDialog() {
-
-		// DialogFragment.show() will take care of adding the fragment
-		// in a transaction. We also want to remove any currently showing
-		// dialog, so make our own transaction and take care of that here.
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-		if (prev != null) {
-			ft.remove(prev);
-		}
-		ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out,
-				R.anim.slide_right_in, R.anim.slide_right_out);
-		ft.addToBackStack(null);
-
-		// Create and show the dialog.
-		AboutFragment newFragment = AboutFragment.newInstance();
-		newFragment.show(ft, "dialog");
-	}
-
 
 	/*
 	 * (non-Javadoc)
