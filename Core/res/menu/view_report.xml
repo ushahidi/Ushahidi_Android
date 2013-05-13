@@ -15,25 +15,22 @@
     <item
         android:id="@+id/menu_backward"
         android:icon="@drawable/previous"
-        android:orderInCategory="0"
         android:showAsAction="ifRoom"
         android:title="@string/previous"/>
     <item
         android:id="@+id/menu_forward"
+        android:title="@string/next"
         android:icon="@drawable/next"
-        android:orderInCategory="1"
         android:showAsAction="ifRoom"/>
     <item
         android:id="@+id/menu_comment"
         android:icon="@drawable/comment"
-        android:orderInCategory="2"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="@string/comment"/>
     <item
         android:id="@+id/menu_share"
         android:icon="@drawable/share"
-        android:orderInCategory="3"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="@string/share"/>
 
 </menu>

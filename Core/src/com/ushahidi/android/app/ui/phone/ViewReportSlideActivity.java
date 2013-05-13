@@ -33,8 +33,8 @@ import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.helpers.MapPager;
-import com.ushahidi.android.app.helpers.ScreenSlidePageFragment;
 import com.ushahidi.android.app.models.ListReportModel;
+import com.ushahidi.android.app.ui.tablet.ViewReportFragment;
 import com.ushahidi.android.app.views.View;
 
 /**
@@ -164,7 +164,7 @@ public class ViewReportSlideActivity<V extends View> extends BaseActivity<V> {
 	}
 
 	/**
-	 * A simple pager adapter that represents 5 {@link ScreenSlidePageFragment}
+	 * A simple pager adapter that represents 5 {@link ViewReportFragment}
 	 * objects, in sequence.
 	 */
 	private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
@@ -175,7 +175,7 @@ public class ViewReportSlideActivity<V extends View> extends BaseActivity<V> {
 
 		@Override
 		public Fragment getItem(int position) {
-			return ScreenSlidePageFragment.newInstance(position, mCategoryId);
+			return ViewReportFragment.newInstance(position, mCategoryId);
 		}
 
 		@Override

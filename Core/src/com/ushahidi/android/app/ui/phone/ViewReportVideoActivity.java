@@ -33,7 +33,7 @@ import com.ushahidi.android.app.models.ListReportVideoModel;
 import com.ushahidi.android.app.views.View;
 
 /**
- * 
+ * View vidoes attached to a report
  */
 public class ViewReportVideoActivity<V extends View> extends BaseActivity<V> {
 

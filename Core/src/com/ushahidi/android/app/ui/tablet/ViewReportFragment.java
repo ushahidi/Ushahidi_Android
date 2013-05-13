@@ -17,7 +17,7 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
-package com.ushahidi.android.app.helpers;
+package com.ushahidi.android.app.ui.tablet;
 
 /*
  * Copyright 2012 The Android Open Source Project
@@ -71,7 +71,7 @@ import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ViewReportView;
 
 
-public class ScreenSlidePageFragment extends SherlockFragment {
+public class ViewReportFragment extends SherlockFragment {
 	/**
 	 * The argument key for the page number this fragment represents.
 	 */
@@ -107,9 +107,9 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 	 * Factory method for this fragment class. Constructs a new fragment for the
 	 * given page number.
 	 */
-	public static ScreenSlidePageFragment newInstance(int pageNumber,
+	public static ViewReportFragment newInstance(int pageNumber,
 			int categoryId) {
-		ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
+		ViewReportFragment fragment = new ViewReportFragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_PAGE, pageNumber);
 		args.putInt(ARG_CAT_ID, categoryId);
@@ -118,7 +118,7 @@ public class ScreenSlidePageFragment extends SherlockFragment {
 		return fragment;
 	}
 
-	public ScreenSlidePageFragment() {
+	public ViewReportFragment() {
 
 	}
 

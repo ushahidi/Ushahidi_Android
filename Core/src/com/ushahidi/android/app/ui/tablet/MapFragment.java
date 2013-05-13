@@ -105,7 +105,8 @@ public class MapFragment extends BaseMapFragment implements
 			map = getMap();
 
 			Preferences.loadSettings(getActivity());
-			// set up map tile
+			
+			// set up the  map tile use
 			Util.setMapTile(getActivity(), map);
 			if (mReportModel.size() > 0) {
 				setupMapCenter();
@@ -203,7 +204,7 @@ public class MapFragment extends BaseMapFragment implements
 							.getLongitude());
 				} catch (NumberFormatException e) {
 					longitude = 0.0;
-				}
+				} 
 
 				builder.include(new LatLng(latitude, longitude));
 			}
@@ -223,13 +224,17 @@ public class MapFragment extends BaseMapFragment implements
 			launchAddReport();
 			return true;
 		} else if (item.getItemId() == R.id.menu_normal) {
-			if (Preferences.mapTiles.equals("google"))
+			if (Preferences.mapTiles.equals("google")){
+				map.setMapType(GoogleMap.MAP_TYPE_NONE);
 				map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+			}
 
 			return true;
 		} else if (item.getItemId() == R.id.menu_satellite) {
-			if (Preferences.mapTiles.equals("google"))
+			if (Preferences.mapTiles.equals("google")) {
+				map.setMapType(GoogleMap.MAP_TYPE_NONE);
 				map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+			}
 
 			return true;
 
@@ -238,10 +243,7 @@ public class MapFragment extends BaseMapFragment implements
 			showDropDownNav();
 
 			return true;
-		} else if (item.getItemId() == android.R.id.home) {
-			getActivity().finish();
-			return true;
-		}
+		} 
 
 		return super.onOptionsItemSelected(item);
 	}

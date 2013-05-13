@@ -641,8 +641,9 @@ public class Util {
 		Preferences.loadSettings(context);
 		final String mapTile = Preferences.mapTiles;
 		if (map != null) {
-			map.setMapType(GoogleMap.MAP_TYPE_NONE);
+			map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			if (mapTile.equals("google")) {
+				map.setMapType(GoogleMap.MAP_TYPE_NONE);
 				map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			} else if (mapTile.equals("osm")) {
 				map.addTileOverlay(new TileOverlayOptions()

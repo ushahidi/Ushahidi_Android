@@ -29,7 +29,7 @@ public class DashboardActivity extends SherlockFragmentActivity implements
 
 	private ListMapFragment maps;
 
-	private ReportTabFragment reportTabFragment;
+	private ListReportFragment listReportFragment;
 
 	private static final int DIALOG_DISTANCE = 0;
 
@@ -66,8 +66,8 @@ public class DashboardActivity extends SherlockFragmentActivity implements
 			FragmentTransaction ft = getSupportFragmentManager()
 					.beginTransaction();
 
-			reportTabFragment = new ReportTabFragment();
-			ft.add(R.id.show_fragment, reportTabFragment);
+			listReportFragment = new ListReportFragment();
+			ft.add(R.id.show_fragment, listReportFragment);
 			ft.setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
 			ft.commit();
 		} else if (f != null) {
@@ -82,8 +82,8 @@ public class DashboardActivity extends SherlockFragmentActivity implements
 			FragmentTransaction ft = getSupportFragmentManager()
 					.beginTransaction();
 
-			reportTabFragment = new ReportTabFragment();
-			ft.replace(R.id.show_fragment, reportTabFragment);
+			listReportFragment = new ListReportFragment();
+			ft.replace(R.id.show_fragment, listReportFragment);
 			ft.setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
 			ft.commit();
 
