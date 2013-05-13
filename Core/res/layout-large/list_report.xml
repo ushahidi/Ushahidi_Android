@@ -20,12 +20,13 @@
         android:id="@+id/footer_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+         android:paddingTop="20dip"
         android:textColor="@color/title_color" />
     <!-- List incidents -->
 
     <ListView
         android:id="@android:id/list"
-        
+        android:paddingTop="20dip"
         style="@style/ListView" />
 
     <!-- Here is the view to show if the list is emtpy -->
