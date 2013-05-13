@@ -16,38 +16,6 @@
     android:background="@color/background_color"
     android:orientation="vertical" >
 
-    <!-- toolbar -->
-
-    <LinearLayout
-        android:id="@+id/title_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:paddingTop="10dip"
-        android:gravity="right"
-        android:orientation="horizontal" >
-
-        <ImageButton
-            android:id="@+id/filter_by_category"
-            style="@style/ActionBarTitle"
-            android:src="@drawable/expand_dark" />
-
-        <ImageButton
-            android:id="@+id/add_report_btn"
-            style="@style/ActionBarTitle"
-            android:src="@drawable/add_dark" />
-
-        <ImageButton
-            android:id="@+id/refresh_report_btn"
-            style="@style/ActionBarTitle"
-            android:src="@drawable/refresh_dark" />
-
-        <ProgressBar
-            android:id="@+id/title_refresh_progress"
-            style="@style/TitleBarProgressIndicator"
-            android:visibility="gone" />
-    </LinearLayout>
-
     <TextView
         android:id="@+id/footer_text"
         android:layout_width="wrap_content"

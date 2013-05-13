@@ -34,9 +34,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -95,14 +93,6 @@ public class ListReportFragment
 	private int filterCategory = 0;
 
 	private CharSequence filterTitle = null;
-
-	private ViewGroup mRootView;
-
-	private ImageButton addReport = null;
-
-	private ImageButton refreshReport = null;
-
-	private ImageButton filterReport = null;
 
 	private boolean refreshState = false;
 
@@ -417,60 +407,7 @@ public class ListReportFragment
 		spinnerArrayAdapter.refresh();
 	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		mRootView = (ViewGroup) inflater.inflate(R.layout.list_report, null);
-		addReport = (ImageButton) mRootView.findViewById(R.id.add_report_btn);
-		refreshReport = (ImageButton) mRootView
-				.findViewById(R.id.refresh_report_btn);
-		filterReport = (ImageButton) mRootView
-				.findViewById(R.id.filter_by_category);
-
-		if (addReport != null) {
-			addReport.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					launchAddReport(0);
-				}
-
-			});
-		}
-
-		if (refreshReport != null) {
-			refreshReport.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					new RefreshReports(getActivity()).execute((String) null);
-				}
-
-			});
-		}
-
-		if (filterReport != null) {
-			filterReport.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					showDropDownNav();
-				}
-			});
-		}
-
-		return mRootView;
-	}
-
 	private void updateRefreshStatus() {
-		if (mRootView != null) {
-			if (addReport != null) {
-				mRootView.findViewById(R.id.refresh_report_btn).setVisibility(
-						refreshState ? View.GONE : View.VISIBLE);
-				mRootView.findViewById(R.id.title_refresh_progress)
-						.setVisibility(refreshState ? View.VISIBLE : View.GONE);
-			}
-		}
 
 		if (refresh != null) {
 			if (refreshState)

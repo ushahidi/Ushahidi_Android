@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
@@ -13,7 +12,6 @@ import android.widget.SpinnerAdapter;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseActivity;
@@ -118,8 +116,7 @@ public class DashboardActivity<V extends com.ushahidi.android.app.views.View>
 		} else if (item.getItemId() == R.id.menu_report_map) {
 			Intent launchIntent;
 			launchIntent = new Intent(this, ReportMapActivity.class);
-			startActivityForResult(launchIntent, 0);
-			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+			startActivityZoomIn(launchIntent);
 			setResult(RESULT_OK);
 			return true;
 		}
@@ -147,20 +144,6 @@ public class DashboardActivity<V extends com.ushahidi.android.app.views.View>
 		newFragment.show(ft, "dialog");
 	}
 
-	protected void log(String message) {
-		if (MainApplication.LOGGING_MODE)
-			Log.i(getClass().getName(), message);
-	}
-
-	protected void log(String format, Object... args) {
-		if (MainApplication.LOGGING_MODE)
-			Log.i(getClass().getName(), String.format(format, args));
-	}
-
-	protected void log(String message, Exception ex) {
-		if (MainApplication.LOGGING_MODE)
-			Log.e(getClass().getName(), message, ex);
-	}
 
 	/*
 	 * (non-Javadoc)

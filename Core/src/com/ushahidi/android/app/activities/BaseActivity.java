@@ -160,7 +160,8 @@ public abstract class BaseActivity<V extends View> extends
 	 * Create a menu drawer and attach it to the activity.
 	 * 
 	 * @param contentView
-	 *            {@link android.view.View} of the main content for the activity.
+	 *            {@link android.view.View} of the main content for the
+	 *            activity.
 	 */
 	protected void createMenuDrawer(android.view.View contentView) {
 		mMenuDrawer = appendMenuDrawer();
@@ -269,11 +270,6 @@ public abstract class BaseActivity<V extends View> extends
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
 		return super.onContextItemSelected(item);
-	}
-
-	public void openActivityOrFragment(Intent intent) {
-		// Default implementation simply calls startActivity
-		startActivity(intent);
 	}
 
 	protected void toggleMenuDrawer() {
@@ -428,6 +424,11 @@ public abstract class BaseActivity<V extends View> extends
 		}
 
 	};
+
+	protected void startActivityZoomIn(final Intent i) {
+		startActivity(i);
+		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+	}
 
 	protected void startActivityWithDelay(final Intent i) {
 

@@ -35,7 +35,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
@@ -78,14 +77,6 @@ public class MapFragment extends BaseMapFragment implements
 
 	private CategorySpinnerAdater spinnerArrayAdapter;
 
-	private ViewGroup mRootView;
-
-	private ImageButton addReport = null;
-
-	private ImageButton refreshReport = null;
-
-	private ImageButton filterReport = null;
-
 	private boolean refreshState = false;
 
 	public MapFragment() {
@@ -105,8 +96,8 @@ public class MapFragment extends BaseMapFragment implements
 			map = getMap();
 
 			Preferences.loadSettings(getActivity());
-			
-			// set up the  map tile use
+
+			// set up the map tile use
 			Util.setMapTile(getActivity(), map);
 			if (mReportModel.size() > 0) {
 				setupMapCenter();
@@ -204,7 +195,7 @@ public class MapFragment extends BaseMapFragment implements
 							.getLongitude());
 				} catch (NumberFormatException e) {
 					longitude = 0.0;
-				} 
+				}
 
 				builder.include(new LatLng(latitude, longitude));
 			}
@@ -224,7 +215,7 @@ public class MapFragment extends BaseMapFragment implements
 			launchAddReport();
 			return true;
 		} else if (item.getItemId() == R.id.menu_normal) {
-			if (Preferences.mapTiles.equals("google")){
+			if (Preferences.mapTiles.equals("google")) {
 				map.setMapType(GoogleMap.MAP_TYPE_NONE);
 				map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			}
@@ -243,7 +234,7 @@ public class MapFragment extends BaseMapFragment implements
 			showDropDownNav();
 
 			return true;
-		} 
+		}
 
 		return super.onOptionsItemSelected(item);
 	}
@@ -327,49 +318,7 @@ public class MapFragment extends BaseMapFragment implements
 		}
 	};
 
-	/*
-	 * @Override public View onCreateView(LayoutInflater inflater, ViewGroup
-	 * container, Bundle savedInstanceState) { super.onCreateView(inflater,
-	 * container, savedInstanceState); mRootView = (ViewGroup)
-	 * inflater.inflate(R.layout.list_report, null); addReport = (ImageButton)
-	 * mRootView.findViewById(R.id.add_report_btn); refreshReport =
-	 * (ImageButton) mRootView .findViewById(R.id.refresh_report_btn);
-	 * filterReport = (ImageButton) mRootView
-	 * .findViewById(R.id.filter_by_category);
-	 * 
-	 * if (addReport != null) { addReport.setOnClickListener(new
-	 * OnClickListener() {
-	 * 
-	 * @Override public void onClick(View v) { launchAddReport(); }
-	 * 
-	 * }); }
-	 * 
-	 * if (refreshReport != null) { refreshReport.setOnClickListener(new
-	 * OnClickListener() {
-	 * 
-	 * @Override public void onClick(View v) { new
-	 * RefreshReports(getActivity()).execute((String) null); }
-	 * 
-	 * }); }
-	 * 
-	 * if (filterReport != null) { filterReport.setOnClickListener(new
-	 * OnClickListener() {
-	 * 
-	 * @Override public void onClick(View v) { showDropDownNav(); } }); }
-	 * 
-	 * return mRootView; }
-	 */
-
 	private void updateRefreshStatus() {
-		if (mRootView != null) {
-			if (addReport != null) {
-				mRootView.findViewById(R.id.refresh_report_btn).setVisibility(
-						refreshState ? View.GONE : View.VISIBLE);
-				mRootView.findViewById(R.id.title_refresh_progress)
-						.setVisibility(refreshState ? View.VISIBLE : View.GONE);
-			}
-		}
-
 		if (refresh != null) {
 			if (refreshState)
 				refresh.setActionView(R.layout.indeterminate_progress_action);
