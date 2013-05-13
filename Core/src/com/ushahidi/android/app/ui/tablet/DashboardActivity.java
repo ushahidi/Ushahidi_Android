@@ -3,26 +3,26 @@ package com.ushahidi.android.app.ui.tablet;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import com.actionbarsherlock.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.ui.phone.ReportMapActivity;
 import com.ushahidi.android.app.ui.phone.ReportTabActivity;
 
-public class DashboardActivity<V extends com.ushahidi.android.app.views.View> extends BaseActivity<V> implements
-		ListMapFragmentListener, ActionBar.OnNavigationListener {
+public class DashboardActivity<V extends com.ushahidi.android.app.views.View>
+		extends BaseActivity<V> implements ListMapFragmentListener,
+		ActionBar.OnNavigationListener {
 
 	private boolean detailsInline = false;
 
@@ -39,8 +39,9 @@ public class DashboardActivity<V extends com.ushahidi.android.app.views.View> ex
 	private static final int DIALOG_ADD_DEPLOYMENT = 2;
 
 	public DashboardActivity() {
-		
+
 	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -160,7 +161,6 @@ public class DashboardActivity<V extends com.ushahidi.android.app.views.View> ex
 		if (MainApplication.LOGGING_MODE)
 			Log.e(getClass().getName(), message, ex);
 	}
-
 
 	/*
 	 * (non-Javadoc)
