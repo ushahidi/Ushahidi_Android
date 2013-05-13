@@ -493,6 +493,7 @@ public abstract class BaseActivity<V extends View> extends
 		ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out,
 				R.anim.slide_right_in, R.anim.slide_right_out);
 		ft.addToBackStack(null);
+		
 
 		// Create and show the dialog.
 		AboutFragment newFragment = AboutFragment.newInstance();

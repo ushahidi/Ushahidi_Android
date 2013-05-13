@@ -1,10 +1,7 @@
 
 package com.ushahidi.android.app.helpers;
 
-import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.ui.phone.ListMapActivity;
-import com.ushahidi.android.app.ui.tablet.ListMapFragment;
-
+import android.annotation.SuppressLint;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,9 +10,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class ActionModeHelper implements ActionMode.Callback, AdapterView.OnItemLongClickListener {
-    private ListMapActivity host;
+import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.ui.tablet.ListMapFragment;
 
+@SuppressLint("NewApi")
+public class ActionModeHelper implements ActionMode.Callback, AdapterView.OnItemLongClickListener {
+   
     private ListMapFragment listMapFragment;
 
     private ActionMode activeMode;
@@ -23,11 +23,6 @@ public class ActionModeHelper implements ActionMode.Callback, AdapterView.OnItem
     private ListView modeView;
 
     private int lastPosition = -1;
-
-    public ActionModeHelper(final ListMapActivity host, ListView modeView) {
-        this.host = host;
-        this.modeView = modeView;
-    }
 
     public ActionModeHelper(ListMapFragment listMapFragment, ListView listView) {
         this.listMapFragment = listMapFragment;
@@ -41,8 +36,6 @@ public class ActionModeHelper implements ActionMode.Callback, AdapterView.OnItem
         modeView.setItemChecked(lastPosition, true);
 
         if (activeMode == null) {
-            if (host != null)
-                activeMode = host.startActionMode(this);
             if (listMapFragment != null) {
                 activeMode = listMapFragment.getActivity().startActionMode(this);
             }
@@ -53,13 +46,7 @@ public class ActionModeHelper implements ActionMode.Callback, AdapterView.OnItem
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        if (host != null) {
-            MenuInflater inflater = host.getMenuInflater();
-
-            inflater.inflate(R.menu.list_map_context, menu);
-            mode.setTitle(R.string.map);
-        }
-
+       
         if (listMapFragment != null) {
             MenuInflater inflater = listMapFragment.getActivity().getMenuInflater();
 
@@ -78,8 +65,6 @@ public class ActionModeHelper implements ActionMode.Callback, AdapterView.OnItem
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         boolean result = false;
-        if( host !=null ) 
-            result = host.performAction(item, lastPosition);
         
         if( listMapFragment !=null)
             result = listMapFragment.performAction(item, lastPosition);

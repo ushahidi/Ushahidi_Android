@@ -44,13 +44,13 @@ public class ListMapFragment extends
 	private final String[] items = { "50", "100", "250", "500", "750", "1000",
 			"1500" };
 
-	private static final int DIALOG_DISTANCE = 0;
+	public static final int DIALOG_DISTANCE = 0;
 
-	private static final int DIALOG_CLEAR_DEPLOYMENT = 1;
+	public static final int DIALOG_CLEAR_DEPLOYMENT = 1;
 
-	private static final int DIALOG_ADD_DEPLOYMENT = 2;
+	public static final int DIALOG_ADD_DEPLOYMENT = 2;
 
-	private static final int DIALOG_SHOW_MESSAGE = 3;
+	public static final int DIALOG_SHOW_MESSAGE = 3;
 
 	private LocationManager mLocationMgr = null;
 
@@ -76,8 +76,10 @@ public class ListMapFragment extends
 
 	private String errorMessage = "";
 
-	static private final String STATE_CHECKED = "com.ushahidi.android.app.activity.STATE_CHECKED";
-
+	private static final String STATE_CHECKED = "com.ushahidi.android.app.activity.STATE_CHECKED";
+	
+	public static final String BUG_1997_FIX = "bug_19917_fix";
+	
 	private Intent fetchReports;
 
 	private LoadMapTask mDeploymentTask;
@@ -93,6 +95,7 @@ public class ListMapFragment extends
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 	}
 
 	@Override
@@ -114,7 +117,7 @@ public class ListMapFragment extends
 
 			registerForContextMenu(listView);
 		}
-		
+
 		mHandler.post(fetchMapList);
 
 		if (savedInstanceState != null) {
@@ -138,8 +141,11 @@ public class ListMapFragment extends
 
 	@Override
 	public void onSaveInstanceState(Bundle state) {
-		super.onSaveInstanceState(state);
+		if (state.isEmpty()) {
+			state.putBoolean("bug_19917_fix", true);
+		}
 		state.putInt(STATE_CHECKED, listView.getCheckedItemPosition());
+		super.onSaveInstanceState(state);
 	}
 
 	@Override
