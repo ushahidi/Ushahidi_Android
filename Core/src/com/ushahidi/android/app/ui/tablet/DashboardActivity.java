@@ -13,14 +13,15 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
+import com.ushahidi.android.app.activities.BaseActivity;
+import com.ushahidi.android.app.ui.phone.ReportMapActivity;
 import com.ushahidi.android.app.ui.phone.ReportTabActivity;
 
-public class DashboardActivity extends SherlockFragmentActivity implements
+public class DashboardActivity<V extends com.ushahidi.android.app.views.View> extends BaseActivity<V> implements
 		ListMapFragmentListener, ActionBar.OnNavigationListener {
 
 	private boolean detailsInline = false;
@@ -37,10 +38,13 @@ public class DashboardActivity extends SherlockFragmentActivity implements
 
 	private static final int DIALOG_ADD_DEPLOYMENT = 2;
 
+	public DashboardActivity() {
+		
+	}
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.dashboard_items);
+		createMenuDrawer(R.layout.dashboard_items);
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		Preferences.loadSettings(this);
 		mSpinnerAdapter = ArrayAdapter
@@ -110,8 +114,12 @@ public class DashboardActivity extends SherlockFragmentActivity implements
 			showDialog();
 			return true;
 
-		} else if (item.getItemId() == R.id.app_settings) {
-			startActivity(new Intent(this, Settings.class));
+		} else if (item.getItemId() == R.id.menu_report_map) {
+			Intent launchIntent;
+			launchIntent = new Intent(this, ReportMapActivity.class);
+			startActivityForResult(launchIntent, 0);
+			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+			setResult(RESULT_OK);
 			return true;
 		}
 
