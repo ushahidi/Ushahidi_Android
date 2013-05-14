@@ -96,6 +96,6 @@
     <!--  Dev Key  -->
     <string name="google_map_api_key">AIzaSyCMm_TKMClnukKXP9DqoegNJbv-eNCZqQI</string> 
     <!-- Live Key -->
-    <string name="google_map_api_key_live">02cv5Q8Rob0CKZ9PP72gMQ10QuVVFv8q4zZ91yA</string>
+    <string name="google_map_api_key_live">AIzaSyDfmnptOeDh0XVELv3WJkyMbckdtMW7Aiw</string>
 
 </resources>
