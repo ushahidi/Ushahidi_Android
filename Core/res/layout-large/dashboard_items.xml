@@ -25,11 +25,10 @@
         class="com.ushahidi.android.app.ui.tablet.ListMapFragment"
         android:paddingRight="2dip" />
 
-    <FrameLayout
-        android:id="@+id/show_fragment"
+    <fragment
+        android:id="@+id/show_report_fragment"
         android:layout_width="0dip"
         android:layout_height="match_parent"
-        android:layout_weight="60" >
-    </FrameLayout>
-
+        android:layout_weight="60"
+        class="com.ushahidi.android.app.ui.tablet.ListReportFragment" />
 </LinearLayout>

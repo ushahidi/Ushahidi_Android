@@ -3,7 +3,7 @@ package com.ushahidi.android.app.ui.tablet;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
@@ -26,8 +26,6 @@ public class DashboardActivity<V extends com.ushahidi.android.app.views.View>
 	private SpinnerAdapter mSpinnerAdapter;
 
 	private ListMapFragment maps;
-
-	private ListReportFragment listReportFragment;
 
 	private static final int DIALOG_DISTANCE = 0;
 
@@ -56,24 +54,15 @@ public class DashboardActivity<V extends com.ushahidi.android.app.views.View>
 		maps.setListMapListener(this);
 
 		// check if we have a frame to embed list fragment
-		View f = findViewById(R.id.show_fragment);
+		Fragment f = getSupportFragmentManager().findFragmentById(
+				R.id.show_report_fragment);
 
-		detailsInline = (f != null
-				&& (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) && f
-				.getVisibility() == View.VISIBLE);
+		detailsInline = (f != null && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE));
 
 		if (detailsInline) {
-
 			maps.enablePersistentSelection();
-			FragmentTransaction ft = getSupportFragmentManager()
-					.beginTransaction();
-
-			listReportFragment = new ListReportFragment();
-			ft.add(R.id.show_fragment, listReportFragment);
-			ft.setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
-			ft.commit();
 		} else if (f != null) {
-			f.setVisibility(View.GONE);
+			f.getView().setVisibility(View.GONE);
 		}
 
 	}
@@ -81,13 +70,9 @@ public class DashboardActivity<V extends com.ushahidi.android.app.views.View>
 	@Override
 	public void onMapSelected() {
 		if (detailsInline) {
-			FragmentTransaction ft = getSupportFragmentManager()
-					.beginTransaction();
 
-			listReportFragment = new ListReportFragment();
-			ft.replace(R.id.show_fragment, listReportFragment);
-			ft.setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
-			ft.commit();
+			((ListReportFragment) getSupportFragmentManager().findFragmentById(
+					R.id.show_report_fragment)).refreshReportLists();
 
 		} else {
 
@@ -108,7 +93,7 @@ public class DashboardActivity<V extends com.ushahidi.android.app.views.View>
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		 if (item.getItemId() == R.id.menu_report_map) {
+		if (item.getItemId() == R.id.menu_report_map) {
 			Intent launchIntent;
 			launchIntent = new Intent(this, ReportMapActivity.class);
 			startActivityZoomIn(launchIntent);

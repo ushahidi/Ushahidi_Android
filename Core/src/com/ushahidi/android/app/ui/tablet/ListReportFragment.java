@@ -300,7 +300,7 @@ public class ListReportFragment
 	/**
 	 * Refresh both pending and fetched reports list
 	 */
-	private void refreshReportLists() {
+	public void refreshReportLists() {
 
 		pendingReportAdapter.refresh();
 		fetchedReportAdapter.refresh();

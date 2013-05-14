@@ -95,12 +95,6 @@ public class ListMapFragment extends
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-	}
-
-	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
@@ -131,6 +125,18 @@ public class ListMapFragment extends
 		}
 
 	}
+	
+	public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            // check that the containing activity implements our callback
+            listener = (ListMapFragmentListener) activity;
+        } catch (ClassCastException e) {
+            activity.finish();
+            throw new ClassCastException(activity.toString()
+                    + " must implement Callback");
+        }
+    }
 
 	private void fetchReports(int id) {
 		if (id != 0) {
@@ -155,7 +161,7 @@ public class ListMapFragment extends
 		super.onResume();
 		getActivity().registerReceiver(broadcastReceiver,
 				new IntentFilter(SyncServices.SYNC_SERVICES_ACTION));
-		mHandler.post(fetchMapList);
+		refreshMapLists();
 	}
 
 	@Override
@@ -218,8 +224,6 @@ public class ListMapFragment extends
 		public void run() {
 			try {
 				adapter.refresh();
-				// mListMapView.mListView.setAdapter(mListMapAdapter);
-				// mListMapView.displayEmptyListText();
 			} catch (Exception e) {
 				return;
 			}
@@ -233,7 +237,6 @@ public class ListMapFragment extends
 		public void run() {
 			try {
 				adapter.getFilter().filter(filter);
-				// mListMapView.displayEmptyListText();
 			} catch (Exception e) {
 				return;
 			}
@@ -339,6 +342,7 @@ public class ListMapFragment extends
 			if (Util.isTablet(getActivity())) {
 				if (listener != null) {
 					listener.onMapSelected();
+					refreshMapLists();
 				}
 			} else {
 				goToReports();
@@ -358,9 +362,8 @@ public class ListMapFragment extends
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		l.setItemChecked(position, true);
-
+		log("on listItemClicked");
 		sId = adapter.getItem(position).getId();
-
 		onListItemTap(sId);
 
 	}
