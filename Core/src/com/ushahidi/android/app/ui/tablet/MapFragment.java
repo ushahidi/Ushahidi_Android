@@ -97,20 +97,24 @@ public class MapFragment extends BaseMapFragment implements
 
 			Preferences.loadSettings(getActivity());
 
-			// set up the map tile use
-			Util.setMapTile(getActivity(), map);
-			if (mReportModel.size() > 0) {
-				setupMapCenter();
-				mHandler.post(mMarkersOnMap);
-
-			} else {
-				toastLong(R.string.no_reports);
-			}
+			initMap();
 			map.setInfoWindowAdapter(new PopupAdapter(
 					getLayoutInflater(savedInstanceState)));
 			map.setOnInfoWindowClickListener(this);
 		}
 
+	}
+
+	private void initMap() {
+		// set up the map tile use
+		Util.setMapTile(getActivity(), map);
+		if (mReportModel.size() > 0) {
+			setupMapCenter();
+			mHandler.post(mMarkersOnMap);
+
+		} else {
+			toastLong(R.string.no_reports);
+		}
 	}
 
 	@Override
@@ -335,10 +339,7 @@ public class MapFragment extends BaseMapFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		Util.setMapTile(getActivity(), map);
-		if (mReportModel.size() == 0) {
-			mHandler.post(mMarkersOnMap);
-		}
+		initMap();
 	}
 
 	public void onDestroy() {

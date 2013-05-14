@@ -639,18 +639,24 @@ public class Util {
 	public static void setMapTile(Context context, GoogleMap map) {
 		// load preferences
 		Preferences.loadSettings(context);
+		TileOverlayOptions osm = new TileOverlayOptions()
+				.tileProvider(new OpenStreetMapTileProvider());
+
+		TileOverlayOptions mapbox = new TileOverlayOptions()
+				.tileProvider(new MapBoxTileProvider());
+
 		final String mapTile = Preferences.mapTiles;
 		if (map != null) {
-			map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+			map.setMapType(GoogleMap.MAP_TYPE_NONE);
+			map.addTileOverlay(osm).remove();
+			map.addTileOverlay(mapbox).remove();
+			map.clear();
 			if (mapTile.equals("google")) {
-				map.setMapType(GoogleMap.MAP_TYPE_NONE);
 				map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			} else if (mapTile.equals("osm")) {
-				map.addTileOverlay(new TileOverlayOptions()
-						.tileProvider(new OpenStreetMapTileProvider()));
+				map.addTileOverlay(osm);
 			} else {
-				map.addTileOverlay(new TileOverlayOptions()
-						.tileProvider(new MapBoxTileProvider()));
+				map.addTileOverlay(mapbox);
 			}
 		}
 	}
