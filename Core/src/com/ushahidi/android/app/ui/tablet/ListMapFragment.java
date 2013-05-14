@@ -3,6 +3,7 @@ package com.ushahidi.android.app.ui.tablet;
 import java.util.Date;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -33,6 +34,7 @@ import com.ushahidi.android.app.models.ListMapModel;
 import com.ushahidi.android.app.services.FetchReports;
 import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.tasks.LoadMapTask;
+import com.ushahidi.android.app.ui.phone.ReportTabActivity;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.AddMapView;
 import com.ushahidi.android.app.views.ListMapView;
@@ -77,9 +79,9 @@ public class ListMapFragment extends
 	private String errorMessage = "";
 
 	private static final String STATE_CHECKED = "com.ushahidi.android.app.activity.STATE_CHECKED";
-	
+
 	public static final String BUG_1997_FIX = "bug_19917_fix";
-	
+
 	private Intent fetchReports;
 
 	private LoadMapTask mDeploymentTask;
@@ -95,7 +97,7 @@ public class ListMapFragment extends
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 	}
 
 	@Override
@@ -332,19 +334,25 @@ public class ListMapFragment extends
 
 	}
 
-	public void onItemClick(AdapterView<?> adapterView, View view,
-			int position, long id) {
-		log("on map itemClicked");
-		final int sId = adapter.getItem(position).getId();
-
+	private void onListItemTap(int id) {
 		if (isMapActive(sId)) {
-			if (listener != null) {
-				listener.onMapSelected();
+			if (Util.isTablet(getActivity())) {
+				if (listener != null) {
+					listener.onMapSelected();
+				}
+			} else {
+				goToReports();
 			}
 		} else {
 			fetchReports(sId);
 		}
+	}
 
+	public void onItemClick(AdapterView<?> adapterView, View view,
+			int position, long id) {
+		log("on map itemClicked");
+		final int sId = adapter.getItem(position).getId();
+		onListItemTap(sId);
 	}
 
 	@Override
@@ -353,15 +361,17 @@ public class ListMapFragment extends
 
 		sId = adapter.getItem(position).getId();
 
-		if (isMapActive(sId)) {
-			if (listener != null) {
-				listener.onMapSelected();
-			}
-		} else {
+		onListItemTap(sId);
 
-			fetchReports(sId);
-		}
+	}
 
+	private void goToReports() {
+		Intent launchIntent;
+		launchIntent = new Intent(getActivity(), ReportTabActivity.class);
+		this.startActivityForResult(launchIntent, 0);
+		getActivity().overridePendingTransition(R.anim.home_enter,
+				R.anim.home_exit);
+		getActivity().setResult(Activity.RESULT_OK);
 	}
 
 	/**

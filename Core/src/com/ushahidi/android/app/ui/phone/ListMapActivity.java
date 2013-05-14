@@ -40,12 +40,12 @@ public class ListMapActivity<V extends View> extends BaseActivity<V> {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		createMenuDrawer(R.layout.map_activity);
-		if (savedInstanceState == null) {
+		//if (savedInstanceState == null) {
 			// load list map fragment
 			mPostFragment = new ListMapFragment();
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.show_map_fragment, mPostFragment).commit();
-		}
+	//}
 	}
 
 	@Override
