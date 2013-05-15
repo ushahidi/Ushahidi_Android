@@ -125,18 +125,6 @@ public class ListMapFragment extends
 		}
 
 	}
-	
-	public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            // check that the containing activity implements our callback
-            listener = (ListMapFragmentListener) activity;
-        } catch (ClassCastException e) {
-            activity.finish();
-            throw new ClassCastException(activity.toString()
-                    + " must implement Callback");
-        }
-    }
 
 	private void fetchReports(int id) {
 		if (id != 0) {
@@ -526,11 +514,14 @@ public class ListMapFragment extends
 		try {
 
 			if (success) {
-				if (Preferences.isCheckinEnabled == 1) {
-					toastLong(R.string.checkin_is_enabled);
-				}
-				if (listener != null) {
-					listener.onMapSelected();
+				
+				if (Util.isTablet(getActivity())) {
+					if (listener != null) {
+						listener.onMapSelected();
+						refreshMapLists();
+					}
+				} else {
+					goToReports();
 				}
 
 			} else {

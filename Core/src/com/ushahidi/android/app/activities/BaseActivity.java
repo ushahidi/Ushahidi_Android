@@ -59,6 +59,7 @@ import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.ui.phone.AdminActivity;
 import com.ushahidi.android.app.ui.phone.ListMapActivity;
 import com.ushahidi.android.app.ui.tablet.AboutFragment;
+import com.ushahidi.android.app.ui.tablet.DashboardActivity;
 import com.ushahidi.android.app.util.Objects;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.View;
@@ -101,6 +102,7 @@ public abstract class BaseActivity<V extends View> extends
 	protected static final int ADMIN_ACTIVITY = 1;
 	protected static final int SETTINGS_ACTIVITY = 2;
 	protected static final int ABOUT_ACTIVITY = 3;
+	private boolean mAboutDialog = false;
 
 	public BaseActivity() {
 
@@ -397,9 +399,17 @@ public abstract class BaseActivity<V extends View> extends
 			SharedPreferences.Editor editor = settings.edit();
 			switch (activityTag) {
 			case MAP_ACTIVITY:
-				intent = new Intent(BaseActivity.this, ListMapActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-				editor.putInt(Preferences.PREFS_NAME, MAP_ACTIVITY);
+				if (Util.isTablet(BaseActivity.this)) {
+					intent = new Intent(BaseActivity.this,
+							DashboardActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+					editor.putInt(Preferences.PREFS_NAME, MAP_ACTIVITY);
+				} else {
+					intent = new Intent(BaseActivity.this,
+							ListMapActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+					editor.putInt(Preferences.PREFS_NAME, MAP_ACTIVITY);
+				}
 				break;
 
 			case ADMIN_ACTIVITY:
@@ -414,9 +424,14 @@ public abstract class BaseActivity<V extends View> extends
 				editor.putInt(Preferences.PREFS_NAME, SETTINGS_ACTIVITY);
 				break;
 			case ABOUT_ACTIVITY:
-				intent = new Intent(BaseActivity.this, AboutActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-				editor.putInt(Preferences.PREFS_NAME, ABOUT_ACTIVITY);
+				if (Util.isTablet(BaseActivity.this)) {
+					mMenuDrawer.closeMenu();
+					startDialogWithDelay();
+				} else {
+					intent = new Intent(BaseActivity.this, AboutActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+					editor.putInt(Preferences.PREFS_NAME, ABOUT_ACTIVITY);
+				}
 				break;
 			}
 			editor.commit();
@@ -445,6 +460,16 @@ public abstract class BaseActivity<V extends View> extends
 
 	}
 
+	protected void startDialogWithDelay() {
+		// Let the menu animation finish before starting a new activity
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				showAboutDialog();
+			}
+		}, 400);
+	}
+
 	/**
 	 * Update all of the items in the menu drawer.
 	 */
@@ -453,35 +478,42 @@ public abstract class BaseActivity<V extends View> extends
 		List<Object> items = new ArrayList<Object>();
 		Resources resources = getResources();
 		int position = 0;
-		
+
 		items.add(new MenuDrawerItemModel(resources.getString(R.string.maps),
 				R.drawable.map));
-		
+
 		items.add(new MenuDrawerItemModel(resources.getString(R.string.admin),
 				R.drawable.web));
-		
+
 		items.add(new MenuDrawerItemModel(resources
 				.getString(R.string.settings), R.drawable.settings));
-		
+
 		items.add(new MenuDrawerItemModel(resources.getString(R.string.about),
 				R.drawable.about));
 
-		if ((BaseActivity.this instanceof ListMapActivity))
+		if ((BaseActivity.this instanceof ListMapActivity)
+				|| (BaseActivity.this instanceof DashboardActivity)) {
+			mAboutDialog = false;
 			position = 0;
 
-		if ((BaseActivity.this instanceof AdminActivity))
+		} else if ((BaseActivity.this instanceof AdminActivity)) {
+			mAboutDialog = false;
 			position = 1;
 
-		else if ((BaseActivity.this instanceof AboutActivity))
+		} else if ((BaseActivity.this instanceof AboutActivity)
+				|| (mAboutDialog)) {
 			position = 2;
+
+		}
 
 		mAdapter = new MenuAdapter(this, items);
 		mAdapter.activePosition = position;
 		mListView.setAdapter(mAdapter);
 	}
-	
+
 	public void showAboutDialog() {
 
+		mAboutDialog = true;
 		// DialogFragment.show() will take care of adding the fragment
 		// in a transaction. We also want to remove any currently showing
 		// dialog, so make our own transaction and take care of that here.
@@ -493,7 +525,6 @@ public abstract class BaseActivity<V extends View> extends
 		ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out,
 				R.anim.slide_right_in, R.anim.slide_right_out);
 		ft.addToBackStack(null);
-		
 
 		// Create and show the dialog.
 		AboutFragment newFragment = AboutFragment.newInstance();

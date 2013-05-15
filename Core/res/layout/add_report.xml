@@ -132,6 +132,7 @@
             <fragment
                 android:id="@+id/location_map"
                 style="@style/MapView.Location"
+                android:scrollingCache="false"
                 class="com.google.android.gms.maps.SupportMapFragment" />
 
             <LinearLayout

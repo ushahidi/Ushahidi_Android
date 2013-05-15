@@ -94,13 +94,14 @@ public class MapFragment extends BaseMapFragment implements
 
 		if (checkForGMap()) {
 			map = getMap();
-
+			
 			Preferences.loadSettings(getActivity());
 
 			initMap();
 			map.setInfoWindowAdapter(new PopupAdapter(
 					getLayoutInflater(savedInstanceState)));
 			map.setOnInfoWindowClickListener(this);
+
 		}
 
 	}

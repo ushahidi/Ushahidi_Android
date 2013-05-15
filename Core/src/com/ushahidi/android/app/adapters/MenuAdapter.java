@@ -40,7 +40,7 @@ import com.ushahidi.android.app.models.MenuDrawerItemModel;
 public class MenuAdapter extends BaseAdapter {
 	private List<Object> mItems;
 	private final LayoutInflater mInflater;
-	public int activePosition;
+	public int activePosition = -1;
 
 	public MenuAdapter(Context context, List<Object> items) {
 		mInflater = LayoutInflater.from(context);

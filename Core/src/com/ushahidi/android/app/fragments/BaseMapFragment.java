@@ -33,6 +33,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -58,10 +59,6 @@ public abstract class BaseMapFragment extends SherlockMapFragment {
 	/**
 	 * BaseActivity
 	 * 
-	 * @param view
-	 *            View class
-	 * @param layout
-	 *            layout resource id
 	 * @param menu
 	 *            menu resource id
 	 */
@@ -72,14 +69,15 @@ public abstract class BaseMapFragment extends SherlockMapFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
-
+		GoogleMapOptions op = new GoogleMapOptions();
+		op.zOrderOnTop(true);
+		this.newInstance(op);
 	}
 
 	@Override

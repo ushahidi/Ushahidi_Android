@@ -22,6 +22,7 @@ package com.ushahidi.android.app.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.JsonSyntaxException;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.CategoryEntity;
 import com.ushahidi.android.app.util.Util;
@@ -71,7 +72,10 @@ public class CategoriesApi extends UshahidiApi {
 			} catch (UshahidiException e) {
 				log("UshahidiException", e);
 				processingResult = false;
+			}catch(JsonSyntaxException e) {
+				log("JSONSyntaxException", e);
 			}
+				
 		}
 		return false;
 	}

@@ -22,6 +22,7 @@ package com.ushahidi.android.app.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.JsonSyntaxException;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.CommentEntity;
 import com.ushahidi.android.app.util.Util;
@@ -68,7 +69,11 @@ public class CommentsApi extends UshahidiApi {
 				}
 			} catch (UshahidiException e) {
 				processingResult = false;
-				new Util().log("CommentsApi getCommentsList",e);
+				log("CommentsApi getCommentsList",e);
+			}catch(JsonSyntaxException e) {
+				
+				processingResult = false;
+				log("CommentsApi getCommentsList",e);
 			}
 		}
 		return comments;

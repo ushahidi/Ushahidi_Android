@@ -25,6 +25,7 @@ import java.util.List;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.google.gson.JsonSyntaxException;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.MediaEntity;
@@ -127,6 +128,9 @@ public class ReportsApi extends UshahidiApi {
 			} catch (UshahidiException e) {
 				log("UshahidiException", e);
 				processingResult = false;
+			} catch (JsonSyntaxException e) {
+				log("JSONSyntaxException", e);
+				processingResult = false;
 			}
 
 		}
@@ -155,6 +159,8 @@ public class ReportsApi extends UshahidiApi {
 		try {
 			return reportTask.submit(report);
 		} catch (UshahidiException e) {
+			e.getMessage();
+		} catch (JsonSyntaxException e) {
 			e.getMessage();
 		}
 
