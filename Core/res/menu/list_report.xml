@@ -23,7 +23,7 @@
         android:showAsAction="ifRoom"
         android:title="@string/menu_refresh"/>
     <item
-        android:id="@+id/menu_add"
+        android:id="@+id/menu_add_report"
         android:icon="@drawable/add"
         android:title="@string/add_report"/>
 

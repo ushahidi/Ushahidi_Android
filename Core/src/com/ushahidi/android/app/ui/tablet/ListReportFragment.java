@@ -244,7 +244,7 @@ public class ListReportFragment
 			refresh = item;
 			new RefreshReports(getActivity()).execute((String) null);
 			return true;
-		} else if (item.getItemId() == R.id.menu_add) {
+		} else if (item.getItemId() == R.id.menu_add_report) {
 			launchAddReport(0);
 			return true;
 		} else if (item.getItemId() == R.id.filter_by) {

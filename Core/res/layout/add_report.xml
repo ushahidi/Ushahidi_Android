@@ -126,14 +126,19 @@
             <EditText
                 android:id="@+id/incident_location"
                 style="@style/EditText.CapWords"
-                android:hint="@string/hint_location"
-                android:paddingBottom="2dip" />
+                android:hint="@string/hint_location" />
 
-            <fragment
-                android:id="@+id/location_map"
-                style="@style/MapView.Location"
-                android:scrollingCache="false"
-                class="com.google.android.gms.maps.SupportMapFragment" />
+            <LinearLayout
+                style="@style/LinearLayout.Horizontal"
+                android:paddingTop="5dp" >
+
+                <fragment
+                    android:id="@+id/location_map"
+                    style="@style/MapView.Location"
+                    class="com.google.android.gms.maps.SupportMapFragment"
+                    android:paddingTop="10dip"
+                    android:scrollingCache="false" />
+            </LinearLayout>
 
             <LinearLayout
                 style="@style/LinearLayout.Horizontal"
