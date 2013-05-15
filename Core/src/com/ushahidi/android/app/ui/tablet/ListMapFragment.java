@@ -16,6 +16,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -114,7 +117,33 @@ public class ListMapFragment extends
 			registerForContextMenu(listView);
 		}
 
-		mHandler.post(fetchMapList);
+		// filter map list
+		if (view != null) {
+			view.mSearchMap.addTextChangedListener(new TextWatcher() {
+
+				public void afterTextChanged(Editable arg0) {
+
+				}
+
+				public void beforeTextChanged(CharSequence s, int start,
+						int count, int after) {
+
+				}
+
+				public void onTextChanged(CharSequence s, int start,
+						int before, int count) {
+
+					if (!(TextUtils.isEmpty(s.toString()))) {
+						filter = s.toString();
+						mHandler.post(filterMapList);
+					} else {
+						mHandler.post(fetchMapList);
+					}
+
+				}
+
+			});
+		}
 
 		if (savedInstanceState != null) {
 			int position = savedInstanceState.getInt(STATE_CHECKED, -1);
@@ -514,7 +543,7 @@ public class ListMapFragment extends
 		try {
 
 			if (success) {
-				
+
 				if (Util.isTablet(getActivity())) {
 					if (listener != null) {
 						listener.onMapSelected();

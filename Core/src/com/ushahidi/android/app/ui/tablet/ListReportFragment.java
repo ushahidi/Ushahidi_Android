@@ -141,6 +141,7 @@ public class ListReportFragment
 		return viewGroup;
 	}
 
+	@Override
 	protected View headerView() {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		ViewGroup viewGroup = (ViewGroup) inflater.inflate(
@@ -162,7 +163,7 @@ public class ListReportFragment
 					int count) {
 
 				if (!(TextUtils.isEmpty(s.toString()))) {
-					filterTitle = s;
+					filterTitle = s.toString();
 					mHandler.post(filterReportList);
 				}
 
@@ -323,18 +324,6 @@ public class ListReportFragment
 	private void filterReportList() {
 		fetchedReportAdapter.getFilter().filter(filterTitle);
 		pendingReportAdapter.getFilter().filter(filterTitle);
-		adapter = new BaseListReportAdapter(getActivity());
-		if (!pendingReportAdapter.isEmpty()) {
-			adapter.addView(pendingHeader());
-			adapter.addAdapter(pendingReportAdapter);
-			// add fetched report
-			adapter.addView(fetchedHeader());
-			adapter.addAdapter(fetchedReportAdapter);
-		} else {
-			adapter.addAdapter(fetchedReportAdapter);
-		}
-		listView.setAdapter(adapter);
-
 	}
 
 	private void executeUploadTask() {
