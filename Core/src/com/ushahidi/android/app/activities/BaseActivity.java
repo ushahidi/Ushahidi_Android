@@ -24,9 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.simonvt.menudrawer.MenuDrawer;
+import net.simonvt.menudrawer.Position;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
@@ -103,6 +105,7 @@ public abstract class BaseActivity<V extends View> extends
 	protected static final int SETTINGS_ACTIVITY = 2;
 	protected static final int ABOUT_ACTIVITY = 3;
 	private boolean mAboutDialog = false;
+	private boolean mXLargeDevice = false;
 
 	public BaseActivity() {
 
@@ -134,7 +137,8 @@ public abstract class BaseActivity<V extends View> extends
 		log("onCreate");
 		actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-
+		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4)
+			mXLargeDevice = true;
 		if (layout != 0) {
 			createMenuDrawer(layout);
 		}
@@ -146,7 +150,19 @@ public abstract class BaseActivity<V extends View> extends
 
 	private MenuDrawer appendMenuDrawer() {
 		MenuDrawer menuDrawer = null;
-		menuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
+		if (mXLargeDevice) {
+			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+				menuDrawer = MenuDrawer.attach(this,
+						MenuDrawer.MENU_DRAG_CONTENT, Position.LEFT, true);
+				getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+			} else {
+				menuDrawer = MenuDrawer.attach(this,
+						MenuDrawer.MENU_DRAG_CONTENT);
+				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			}
+		} else {
+			menuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
+		}
 		int shadowSizeInPixels = getResources().getDimensionPixelSize(
 				R.dimen.menu_shadow_width);
 		menuDrawer.setDropShadowSize(shadowSizeInPixels);
@@ -449,14 +465,17 @@ public abstract class BaseActivity<V extends View> extends
 	}
 
 	protected void startActivityWithDelay(final Intent i) {
-
-		// Let the menu animation finish before starting a new activity
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				startActivity(i);
-			}
-		}, 400);
+		if (mXLargeDevice
+				&& getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			startActivity(i);
+		} else {
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					startActivity(i);
+				}
+			}, 400);
+		}
 
 	}
 
