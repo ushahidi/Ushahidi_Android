@@ -30,6 +30,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.JsonSyntaxException;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.json.UshahidiApiVersion;
@@ -172,6 +173,8 @@ public class ApiUtils {
 
 		} catch (UshahidiException e) {
 			new Util().log(CLASS_TAG, e);
+		}catch (JsonSyntaxException e) {
+			e.getMessage();
 		}
 	}
 
