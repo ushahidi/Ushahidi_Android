@@ -1,6 +1,27 @@
+3.1.6
+Features:
+* Add Google maps v2 for Android
+* Add menu drawer.
+* Add ability to swipe through report views
+* Add admin dashboard support view WebView
+* Add cwacmerge library into the core library. No long a dependency
+* Add OSM and Mapbox tiles support in addition to Google maps tiles.
+* Dropped support for API level 7. 
+* Upgraded ABS library to the lastest release
+* Axed out checkin code.
+* Used Ushahidi Java SDK.
+
+Bugs:
+* Fix crashes when there is no category to filter by and an attempted is made to filter by category.
+* Improved image scaling functionality.
+* Refactored a lot of the code.
+* Fix intermitent crashes when launching comment view.
+* Fix crashes when fetching and posting comments.
+
+
 3.1.5
 Bug:
-* Fix crashes when there are null values for latitude and longitude
+* Fix crashes when there are null values for latitude and longitude.
 
 3.1.4
 Feature:
