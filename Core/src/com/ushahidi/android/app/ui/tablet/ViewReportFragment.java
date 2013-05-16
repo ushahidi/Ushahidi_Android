@@ -70,7 +70,6 @@ import com.ushahidi.android.app.ui.phone.ViewReportVideoActivity;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ViewReportView;
 
-
 public class ViewReportFragment extends SherlockFragment {
 	/**
 	 * The argument key for the page number this fragment represents.
@@ -107,8 +106,7 @@ public class ViewReportFragment extends SherlockFragment {
 	 * Factory method for this fragment class. Constructs a new fragment for the
 	 * given page number.
 	 */
-	public static ViewReportFragment newInstance(int pageNumber,
-			int categoryId) {
+	public static ViewReportFragment newInstance(int pageNumber, int categoryId) {
 		ViewReportFragment fragment = new ViewReportFragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_PAGE, pageNumber);
@@ -197,7 +195,7 @@ public class ViewReportFragment extends SherlockFragment {
 		} else {
 			mReports.load();
 		}
-		
+
 		// Get GoogleMap from MapView
 		mMap = mView.mMapView.getMap();
 
@@ -206,8 +204,9 @@ public class ViewReportFragment extends SherlockFragment {
 		} catch (GooglePlayServicesNotAvailableException e) {
 			e.printStackTrace();
 		}
-		
-		// Initialize views with report data. This also handles map initialization
+
+		// Initialize views with report data. This also handles map
+		// initialization
 		initReport(mPageNumber);
 		fetchComments();
 
@@ -236,11 +235,11 @@ public class ViewReportFragment extends SherlockFragment {
 			mMap.getUiSettings().setMyLocationButtonEnabled(false);
 			mMap.moveCamera(center);
 			mMap.moveCamera(zoom);
-			
+
 			// Add a marker to this location
 			addMarker(mMap, mReport.get(position).getIncident().getLatitude(),
 					mReport.get(position).getIncident().getLongitude());
-			
+
 			mReportId = (int) mReport.get(position).getIncident().getId();
 
 			mReportTitle = mReport.get(position).getIncident().getTitle();
@@ -249,8 +248,9 @@ public class ViewReportFragment extends SherlockFragment {
 			mView.setCategory(fetchCategories(mReportId));
 			mView.setLocation(mReport.get(position).getIncident()
 					.getLocationName());
-			mView.setDate(mReport.get(position).getIncident().getDate()
-					.toString());
+			String date = Util.datePattern("MMMM dd, yyyy 'at' hh:mm:ss aaa",
+					mReport.get(position).getIncident().getDate());
+			mView.setDate(date);
 			mView.setTitle(mReportTitle);
 			mView.setStatus(Util.setVerificationStatus(mReport.get(position)
 					.getIncident().getVerified(), getActivity()));
