@@ -178,7 +178,7 @@ public class ListMapFragment extends
 		super.onResume();
 		getActivity().registerReceiver(broadcastReceiver,
 				new IntentFilter(SyncServices.SYNC_SERVICES_ACTION));
-		refreshMapLists();
+		mHandler.post(fetchMapList);
 	}
 
 	@Override

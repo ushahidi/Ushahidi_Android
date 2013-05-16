@@ -222,13 +222,23 @@ public class ListMapModel extends Model {
 	 * @param desc
 	 *            The map's description
 	 */
-	public boolean updateMap(int id, String name, String desc, String url) {
+	public boolean updateMap(int id, String name, String desc, String url,
+			Context context) {
 		Map map = new Map();
 		map.setDbId(id);
 		map.setName(name);
 		map.setDesc(desc);
 		map.setUrl(url);
-		return Database.mMapDao.updateMap(map);
+		if (Database.mMapDao.updateMap(map)) {
+			
+			Preferences.loadSettings(context);
+			Preferences.activeDeployment = id;
+			Preferences.activeMapName = name;
+			Preferences.domain = url;
+			Preferences.saveSettings(context);
+			return true;
+		}
+		return false;
 	}
 
 	public void setActivness(int id) {
