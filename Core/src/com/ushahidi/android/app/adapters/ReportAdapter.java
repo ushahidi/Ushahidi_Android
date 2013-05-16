@@ -133,8 +133,10 @@ public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
 
 		}
 		widgets.title.setText(getItem(position).getIncident().getTitle());
-		widgets.date.setText(getItem(position).getIncident().getDate()
-				.toString());
+
+		widgets.date.setText(Util.datePattern(
+				"MMMM dd, yyyy 'at' hh:mm:ss aaa", getItem(position)
+						.getIncident().getDate()));
 		widgets.description.setText(Util.capitalizeString(getItem(position)
 				.getIncident().getDescription()));
 
@@ -169,13 +171,13 @@ public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
 	}
 
 	private String thumbnail(int position) {
-		
+
 		// Get pending report's image
 		if (getItem(position).getIncident().getId() == 0) {
 			return mListReportModel.getImage(getItem(position).getDbId());
 
 		}
-		
+
 		// Get fetched report's image
 		return mListReportModel.getImage(getItem(position).getIncident()
 				.getId());

@@ -434,7 +434,6 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	}
 	
 	public String getDate(Date d ) {
-		
 		return FORMATTER.format(d);
 	}
 	

@@ -121,11 +121,11 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
 				listView.addHeaderView(headerView());
 			}
 			// listView.setOnItemClickListener(this);
-			android.view.View emptyView = getActivity().findViewById(
-					android.R.id.empty);
-			if (emptyView != null) {
+			//android.view.View emptyView = getActivity().findViewById(
+				//	android.R.id.empty);
+			/*if (emptyView != null) {
 				listView.setEmptyView(emptyView);
-			}
+			}*/
 
 			view = Objects.createInstance(viewClass, Activity.class,
 					getActivity());

@@ -159,9 +159,9 @@ public class ReportsApi extends UshahidiApi {
 		try {
 			return reportTask.submit(report);
 		} catch (UshahidiException e) {
-			e.getMessage();
+			e.printStackTrace();
 		} catch (JsonSyntaxException e) {
-			e.getMessage();
+			e.printStackTrace();
 		}
 
 		return null;

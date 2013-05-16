@@ -119,30 +119,32 @@ public class ListMapFragment extends
 
 		// filter map list
 		if (view != null) {
-			view.mSearchMap.addTextChangedListener(new TextWatcher() {
+			if (view.mSearchMap != null) {
+				view.mSearchMap.addTextChangedListener(new TextWatcher() {
 
-				public void afterTextChanged(Editable arg0) {
+					public void afterTextChanged(Editable arg0) {
 
-				}
-
-				public void beforeTextChanged(CharSequence s, int start,
-						int count, int after) {
-
-				}
-
-				public void onTextChanged(CharSequence s, int start,
-						int before, int count) {
-
-					if (!(TextUtils.isEmpty(s.toString()))) {
-						filter = s.toString();
-						mHandler.post(filterMapList);
-					} else {
-						mHandler.post(fetchMapList);
 					}
 
-				}
+					public void beforeTextChanged(CharSequence s, int start,
+							int count, int after) {
 
-			});
+					}
+
+					public void onTextChanged(CharSequence s, int start,
+							int before, int count) {
+
+						if (!(TextUtils.isEmpty(s.toString()))) {
+							filter = s.toString();
+							mHandler.post(filterMapList);
+						} else {
+							mHandler.post(fetchMapList);
+						}
+
+					}
+
+				});
+			}
 		}
 
 		if (savedInstanceState != null) {
