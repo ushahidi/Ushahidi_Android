@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Core/libs/CWAC-SackOfViewsAdapter.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Core/libs/ushahidi_sdk-1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
