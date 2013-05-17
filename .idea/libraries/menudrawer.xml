@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="menudrawer">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Libraries/menudrawer/bin/menudrawer.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

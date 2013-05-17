@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="dexedLibs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Themes/Ushahidi/bin/dexedLibs/cwacmerge-02394dd3a363722811604ce5ab5ddddd.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Themes/Ushahidi/bin/dexedLibs/core-e36dbb6162e8a59bfd0549a28514fcc3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Themes/Ushahidi/bin/dexedLibs/menudrawer-5225bd03ef3aac3eedbc3ee89afde589.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Themes/Ushahidi/bin/dexedLibs/CWAC-SackOfViewsAdapter-25b0a08a2cab710a9fed124a0300b55e.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Themes/Ushahidi/bin/dexedLibs/ushahidi_sdk-1.0-2db6fcc1459801a7a2c48644104975d5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Themes/Ushahidi/bin/dexedLibs/CWAC-SackOfViewsAdapter-dad3f4bec04e89645005ff9b836a4bcf.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Themes/Ushahidi/bin/dexedLibs/abs-66dc55730d68e322d9757ed48711e067.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Themes/Ushahidi/bin/dexedLibs/google-play-services-2beba1aa31e105f778b0db89568d1c6a.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Themes/Ushahidi/bin/dexedLibs/android-support-v4-460a7fa46043aa969f31b9060fa3617a.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Themes/Ushahidi/bin/dexedLibs/google-play-services_lib-11e7e833476fd29d0273314e67e8317d.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
