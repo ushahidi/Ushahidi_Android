@@ -1,0 +1,1 @@
+include ':Themes:Uchaguzi', ':Themes:Ushahidi',':Core', 'Libraries:abs', 'Libraries:google-play-services_lib', 'Libraries:menudrawer'

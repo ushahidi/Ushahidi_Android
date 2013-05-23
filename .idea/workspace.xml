@@ -10,18 +10,67 @@
       <config />
     </shared>
   </component>
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/settings.gradle" line="1" mnemonic="4" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="fdd3602c-411b-4b0c-8046-4416c4565af4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/res/values/strings.xml" afterPath="$PROJECT_DIR$/Core/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/res/values-de/strings.xml" afterPath="$PROJECT_DIR$/Core/res/values-de/strings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/.name" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Core/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Core/tests/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Libraries/abs/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Libraries/google-play-services_lib/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Libraries/menudrawer/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Uchaguzi/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/compiler.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/encodings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/copyright/profiles_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/scopes/scope_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/settings.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/workspace.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/android_support_v4.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/bin.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/core.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/dexedLibs.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/google_play_services.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/google_play_services_lib.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/libs.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/menudrawer.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/.classpath" afterPath="$PROJECT_DIR$/Core/.classpath" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/tests/.classpath" afterPath="$PROJECT_DIR$/Core/tests/.classpath" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Libraries/abs/.classpath" afterPath="$PROJECT_DIR$/Libraries/abs/.classpath" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Libraries/google-play-services_lib/.classpath" afterPath="$PROJECT_DIR$/Libraries/google-play-services_lib/.classpath" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Libraries/menudrawer/.classpath" afterPath="$PROJECT_DIR$/Libraries/menudrawer/.classpath" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Uchaguzi/.classpath" afterPath="$PROJECT_DIR$/Themes/Uchaguzi/.classpath" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Ushahidi/.classpath" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.classpath" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Beijing/Beijing.iml" afterPath="$PROJECT_DIR$/Themes/Beijing/Beijing.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/Core.iml" afterPath="$PROJECT_DIR$/Core/Core.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Firsthand/Firsthand.iml" afterPath="$PROJECT_DIR$/Themes/Firsthand/Firsthand.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Iccm/Iccm.iml" afterPath="$PROJECT_DIR$/Themes/Iccm/Iccm.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Inherity/Inherity.iml" afterPath="$PROJECT_DIR$/Themes/Inherity/Inherity.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Uchaguzi/Uchaguzi.iml" afterPath="$PROJECT_DIR$/Themes/Uchaguzi/Uchaguzi.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Ushahidi/Ushahidi.iml" afterPath="$PROJECT_DIR$/Themes/Ushahidi/Ushahidi.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Libraries/abs/abs.iml" afterPath="$PROJECT_DIR$/Libraries/abs/abs.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Libraries/google-play-services_lib/google-play-services_lib.iml" afterPath="$PROJECT_DIR$/Libraries/google-play-services_lib/google-play-services_lib.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Libraries/menudrawer/menudrawer.iml" afterPath="$PROJECT_DIR$/Libraries/menudrawer/menudrawer.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/res/values-ko/strings.xml" afterPath="$PROJECT_DIR$/Core/res/values-ko/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/res/values-mk/strings.xml" afterPath="$PROJECT_DIR$/Core/res/values-mk/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/tests/tests.iml" afterPath="$PROJECT_DIR$/Core/tests/tests.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Ushahidi_Android.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1369270992202" ignored="false" />
+    <file path="/Dummy.txt" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1369295517948" ignored="false" />
     <file path="/a.java" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1368835818506" ignored="false" />
     <file path="/sample.java" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1368833665351" ignored="false" />
+    <file path="/Core.iml" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1369275038775" ignored="false" />
+    <file path="/fragment.java" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1369296117324" ignored="false" />
+    <file path="/a.dummy" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1369291707384" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +93,7 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -80,7 +130,6 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -90,28 +139,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="settings.gradle" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/settings.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1" column="0" selection-start="134" selection-end="134" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ManifestParsingTest.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Libraries/abs/test/com/actionbarsherlock/internal/ManifestParsingTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="2" column="16" selection-start="57" selection-end="57" vertical-scroll-proportion="0.083516486">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="MapBoxTileProvider.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapBoxTileProvider.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="36" column="0" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Core/res/values-ko/strings.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="0" selection-start="281" selection-end="281" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="strings.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Core/res/values-mk/strings.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="221" column="53" selection-start="12247" selection-end="12247" vertical-scroll-proportion="0.6545454">
               <folding />
             </state>
           </provider>
@@ -140,16 +189,20 @@
         <option value="$PROJECT_DIR$/Core/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/Core/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/Core/res/values-de/strings.xml" />
-        <option value="$PROJECT_DIR$/Core/res/values-ko/strings.xml" />
         <option value="$PROJECT_DIR$/Core/res/values-mk/strings.xml" />
+        <option value="$PROJECT_DIR$/Core/res/values-ko/strings.xml" />
+        <option value="$PROJECT_DIR$/Core/Core.iml" />
       </list>
     </option>
   </component>
+  <component name="MavenProjectNavigator">
+    <treeState />
+  </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-10" />
+    <option name="x" value="-9" />
     <option name="y" value="19" />
-    <option name="width" value="1460" />
-    <option name="height" value="891" />
+    <option name="width" value="1458" />
+    <option name="height" value="890" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -193,6 +246,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -201,29 +255,57 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Ushahidi_Android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="abs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="SDKs" />
-    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
     <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.lastSelected" value="preferences.sourceCode.Java" />
     <property name="MemberChooser.sorted" value="false" />
-    <property name="options.lastSelected" value="reference.settingsdialog.IDE.editor.colors.Font" />
-    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="recentsLimit" value="5" />
+    <property name="project.structure.side.proportion" value="0.3128621" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="FullScreen" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Android Application.Ushahidi">
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <method />
+    </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
@@ -279,7 +361,43 @@
       <patterns />
       <method />
     </configuration>
-    <list size="0" />
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Ushahidi" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="Ushahidi" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <RunnerSettings RunnerId="AndroidDebugRunner" />
+      <ConfigurationWrapper RunnerId="AndroidDebugRunner" />
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="Android Application.Ushahidi" />
+    </list>
     <configuration name="&lt;template&gt;" type="TestNG" default="true" selected="false">
       <option name="MAIN_CLASS_NAME" />
       <option name="VM_PARAMETERS" value="-ea" />
@@ -323,40 +441,48 @@
       <workItem from="1368838370489" duration="1469000" />
       <workItem from="1368870438426" duration="714000" />
       <workItem from="1368950930259" duration="1194000" />
-      <workItem from="1369270984129" duration="2228000" />
+      <workItem from="1369270984129" duration="4995000" />
+      <workItem from="1369281639292" duration="3460000" />
+      <workItem from="1369287900486" duration="2081000" />
+      <workItem from="1369290199245" duration="988000" />
+      <workItem from="1369291564015" duration="807000" />
+      <workItem from="1369292727783" duration="1844000" />
+      <workItem from="1369294698294" duration="717000" />
+      <workItem from="1369295508165" duration="665000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14311000" />
+    <option name="totallyTimeSpent" value="27640000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-10" y="19" width="1460" height="891" extended-state="6" />
-    <editor active="true" />
+    <frame x="-9" y="19" width="1458" height="890" extended-state="2" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32823366" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32823366" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32673267" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32451254" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32451254" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3294964" sideWeight="0.67176634" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24820144" sideWeight="0.67176634" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24711816" sideWeight="0.67548746" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293944" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293944" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293944" sideWeight="0.6719653" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293944" sideWeight="0.6719653" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -421,61 +547,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapBoxTileProvider.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="0" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapBoxTileProvider.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="0" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapBoxTileProvider.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="0" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapBoxTileProvider.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="0" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapBoxTileProvider.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="0" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapBoxTileProvider.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="0" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/res/layout-large/about_view.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="44" selection-start="1149" selection-end="1149" vertical-scroll-proportion="-12.6" />
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/res/values/styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="247" column="22" selection-start="11093" selection-end="11093" vertical-scroll-proportion="0.4009009" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Core/res/layout/add_report.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="136" column="20" selection-start="4614" selection-end="4614" vertical-scroll-proportion="0.33280253" />
@@ -500,6 +571,41 @@
         <state />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Core/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="252" column="141" selection-start="13684" selection-end="13684" vertical-scroll-proportion="-9.964286" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/res/values-de/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="220" column="61" selection-start="12247" selection-end="12247" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/res/values-mk/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="221" column="53" selection-start="12247" selection-end="12247" vertical-scroll-proportion="0.6545454" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/res/values-ko/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="34" selection-start="85" selection-end="85" vertical-scroll-proportion="0.08388521" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/libs/README.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-2.816777" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/local.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapBoxTileProvider.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="36" column="0" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.0">
@@ -507,30 +613,33 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Core/res/values/strings.xml">
+    <entry file="file://$PROJECT_DIR$/Libraries/abs/res/values-v14/abs__styles.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="252" column="141" selection-start="13684" selection-end="13684" vertical-scroll-proportion="-9.964286">
+        <state line="3" column="0" selection-start="52" selection-end="52" vertical-scroll-proportion="0.12527473" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Libraries/abs/gen/com/actionbarsherlock/R.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="19" selection-start="172" selection-end="172" vertical-scroll-proportion="0.20879121" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/project.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Core/res/values-de/strings.xml">
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="220" column="61" selection-start="12247" selection-end="12247" vertical-scroll-proportion="0.0">
+        <state line="1" column="0" selection-start="134" selection-end="134" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Core/res/values-ko/strings.xml">
+    <entry file="file://$PROJECT_DIR$/Libraries/abs/test/com/actionbarsherlock/internal/ManifestParsingTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="0" selection-start="281" selection-end="281" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/res/values-mk/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="221" column="53" selection-start="12247" selection-end="12247" vertical-scroll-proportion="0.6545454">
+        <state line="2" column="16" selection-start="57" selection-end="57" vertical-scroll-proportion="0.083516486">
           <folding />
         </state>
       </provider>
@@ -541,17 +650,6 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="Copyright.UI">
-        <settings>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -598,11 +696,11 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>Core</last-edited>
+          <last-edited>Ushahidi</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.3128621" />
                 <option value="0.5" />
               </list>
             </option>
@@ -615,7 +713,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.2673147" />
               </list>
             </option>
           </splitter-proportions>
@@ -623,22 +721,11 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>android-support-v4</last-edited>
+          <last-edited>libs</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ScopeChooserConfigurable.UI">
-        <settings>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
+                <option value="0.3128621" />
               </list>
             </option>
           </splitter-proportions>
