@@ -160,7 +160,6 @@
   <string name="pending_upload">업로드 보류</string>
   <string name="fetched">불러옴</string>
   <string name="required_fields">필수필드</string>
-  <string name="title">제목</string>
   <string name="category">카테고리</string>
   <string name="location">위치</string>
   <string name="description">상세내용</string>
@@ -168,7 +167,6 @@
   <string name="longitude">경도</string>
   <string name="date_and_time">날짜와 시간</string>
   <string name="enter_news_url">뉴스 URL 입력</string>
-  <string name="unsaved_changes">저장되지 않은 변경사항</string>
   <string name="want_to_cancel">정말 취소하길 원하세요?</string>
   <string name="added">추가완료</string>
   <string name="uploaded">업로드완료</string>
@@ -208,7 +206,6 @@
   <string name="change_time">시간 변경</string>
   <string name="prompt_mesg">필터할 카테고리를 선택하세요</string>
   <string name="invalid_email_address">입력한 이메일주소가 유효하지 않습니다</string>
-  <string name="choose_categories">카테고리 선택</string>
   <string name="location_disabled">위치 찾기가 사용이 중단되었습니다.</string>
   <string name="location_reenable">해당 위치에 방문하길 원할 경우,  보안설정에서 위치 탐색을 실행으로 설정해주세요.</string>
   <string name="basic_settings">기본설정</string>
@@ -218,9 +215,4 @@
   <string name="hint_last_name">리포트 제출 시 속성 (옵션)</string>
   <string name="txt_email">E-mail 주소</string>
   <string name="hint_email">연락 목적으로만 사용해주세요.</string>
-  <string name="txt_phonenumber">휴대폰 번호</string>
-  <string name="hint_phonenumber">리포트를 보내는 목적으로만 사용해주세요.</string>
-  <string name="total_reports">리포트 개수</string>
-  <string name="hint_total_reports">선택한 배치에서 가져온 리포트 총 개수.</string>
-  <string name="no_reports">더이상 보여줄 리포트가 없습니다.</string>
 </resources>

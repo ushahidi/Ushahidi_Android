@@ -12,21 +12,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fdd3602c-411b-4b0c-8046-4416c4565af4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Firsthand/Firsthand.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Uchaguzi/Uchaguzi.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Libraries/abs/abs.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Libraries/google-play-services_lib/google-play-services_lib.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Libraries/menudrawer/menudrawer.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Core/tests/tests.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Iccm/Iccm.iml" afterPath="$PROJECT_DIR$/Themes/Iccm/Iccm.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/res/values/styles.xml" afterPath="$PROJECT_DIR$/Core/res/values/styles.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/res/values/strings.xml" afterPath="$PROJECT_DIR$/Core/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/res/values-de/strings.xml" afterPath="$PROJECT_DIR$/Core/res/values-de/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/res/values-ko/strings.xml" afterPath="$PROJECT_DIR$/Core/res/values-ko/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/res/values-mk/strings.xml" afterPath="$PROJECT_DIR$/Core/res/values-mk/strings.xml" />
     </list>
     <ignored path="Ushahidi_Android.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1368950955084" ignored="false" />
+    <file path="/Dummy.txt" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1369270992202" ignored="false" />
     <file path="/a.java" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1368835818506" ignored="false" />
     <file path="/sample.java" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1368833665351" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -51,7 +44,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -88,6 +80,7 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -97,10 +90,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MapBoxTileProvider.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="MapBoxTileProvider.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapBoxTileProvider.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="0" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.6486486">
+            <state line="36" column="0" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Core/res/values-ko/strings.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="6" column="0" selection-start="281" selection-end="281" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="strings.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Core/res/values-mk/strings.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="221" column="53" selection-start="12247" selection-end="12247" vertical-scroll-proportion="0.6545454">
               <folding />
             </state>
           </provider>
@@ -127,14 +138,18 @@
         <option value="$PROJECT_DIR$/Core/res/layout-large/about_view.xml" />
         <option value="$PROJECT_DIR$/Core/res/layout/about_view.xml" />
         <option value="$PROJECT_DIR$/Core/res/values/styles.xml" />
+        <option value="$PROJECT_DIR$/Core/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/Core/res/values-de/strings.xml" />
+        <option value="$PROJECT_DIR$/Core/res/values-ko/strings.xml" />
+        <option value="$PROJECT_DIR$/Core/res/values-mk/strings.xml" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-9" />
+    <option name="x" value="-10" />
     <option name="y" value="19" />
-    <option name="width" value="1430" />
-    <option name="height" value="879" />
+    <option name="width" value="1460" />
+    <option name="height" value="891" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -178,7 +193,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -189,6 +203,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -205,8 +220,8 @@
     <property name="FullScreen" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="Remote" factoryName="Remote">
@@ -308,19 +323,20 @@
       <workItem from="1368838370489" duration="1469000" />
       <workItem from="1368870438426" duration="714000" />
       <workItem from="1368950930259" duration="1194000" />
+      <workItem from="1369270984129" duration="2228000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12083000" />
+    <option name="totallyTimeSpent" value="14311000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="19" width="1430" height="879" extended-state="0" />
-    <editor active="false" />
+    <frame x="-10" y="19" width="1460" height="891" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32956153" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32823366" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32673267" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -329,7 +345,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2485294" sideWeight="0.67043847" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24820144" sideWeight="0.67176634" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293944" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -440,6 +456,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapBoxTileProvider.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="0" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Core/res/layout-large/about_view.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="21" column="44" selection-start="1149" selection-end="1149" vertical-scroll-proportion="-12.6" />
@@ -479,7 +502,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Core/src/com/ushahidi/android/app/MapBoxTileProvider.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="0" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.6486486">
+        <state line="36" column="0" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="252" column="141" selection-start="13684" selection-end="13684" vertical-scroll-proportion="-9.964286">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/res/values-de/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="220" column="61" selection-start="12247" selection-end="12247" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/res/values-ko/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="0" selection-start="281" selection-end="281" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/res/values-mk/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="221" column="53" selection-start="12247" selection-end="12247" vertical-scroll-proportion="0.6545454">
           <folding />
         </state>
       </provider>
