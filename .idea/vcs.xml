@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="IssueNavigationConfiguration">
+    <option name="links">
+      <list>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="131" />
+          <option name="linkRegexp" value="https://github.com/ushahidi/Ushahidi_Android/issues/131" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="126" />
+          <option name="linkRegexp" value="https://github.com/ushahidi/Ushahidi_Android/issues/126" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="125" />
+          <option name="linkRegexp" value="https://github.com/ushahidi/Ushahidi_Android/issues/125" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="105" />
+          <option name="linkRegexp" value="https://github.com/ushahidi/Ushahidi_Android/issues/105" />
+        </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="87" />
+          <option name="linkRegexp" value="https://github.com/ushahidi/Ushahidi_Android/issues/87" />
+        </IssueNavigationLink>
+      </list>
+    </option>
+  </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />

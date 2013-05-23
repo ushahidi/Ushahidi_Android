@@ -243,9 +243,6 @@
     <style name="MapView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:apiKey">@string/google_map_api_key</item>
-        <item name="android:clickable">true</item>
-        <item name="android:enabled">true</item>
     </style>
 
     <style name="MapView.Location">
