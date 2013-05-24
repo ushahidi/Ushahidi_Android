@@ -45,7 +45,7 @@ public interface IReportCategorySchema {
 			+ CATEGORY_ID
 			+ " INTEGER NOT NULL, "
 			+ REPORT_ID
-			+ " INTEGER NOT NULL, " + PENDING + " INTEGER NOT NULL )";
+			+ " INTEGER NOT NULL, " + PENDING + " INTEGER DEFAULT 0 )";
 
 	public static final String[] COLUMNS = new String[] { ID, CATEGORY_ID,
 			REPORT_ID, CATEGORY_ID, PENDING };
