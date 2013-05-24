@@ -94,31 +94,27 @@ public class ReportsApi extends UshahidiApi {
 								// find photos, it's type is 1
 								if (m != null) {
 									if (m.getType() == 1) {
-										final String fileName = Util
-												.getDateTime() + ".jpg";
-
-										// save details of photo to database
-										saveMedia(m.getId(),
-												i.incident.getId(),
-												m.getType(), fileName);
 
 										// save photo to a file
-										if (m.getLink().startsWith("http")) {
-											saveImages(m.getLink(), fileName,
-													context);
-										} else {
-											final String link = Preferences.domain
-													+ "/media/uploads/"
-													+ m.getLink();
 
-											saveImages(link, fileName, context);
+										if (m.getLinkUrl() != null) {
+											final String fileName = Util
+													.getDateTime() + ".jpg";
+											// save details of photo to database
+											saveMedia(m.getId(),
+													i.incident.getId(),
+													m.getType(), fileName);
+											
+											saveImages(m.getLinkUrl(),
+													fileName, context);
 										}
 
 									} else {
 										// other media type to database
-										saveMedia(m.getId(),
-												(int) i.incident.getId(),
-												m.getType(), m.getLink());
+										if (m.getLink() != null)
+											saveMedia(m.getId(),
+													(int) i.incident.getId(),
+													m.getType(), m.getLink());
 									}
 								}
 							}
