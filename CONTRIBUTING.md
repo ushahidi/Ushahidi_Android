@@ -20,7 +20,7 @@ If you're exepriencing an issue and want to file it for the contributors to work
 
 1. Search the [Github issue tracker][3] to make sure your issue has not been filed already. If it has, please add comment to the existing issue to add more details to it.
 
-2. Give a step by step guide on how to reproduce the issue. You can read our [guide]4] on how to file an issue on the [wiki][4]. 
+2. Give a step by step guide on how to reproduce the issue. You can read our [guide][4] on how to file an issue on the [wiki][4]. 
 
 **Note:** The more we know about the issue, the easier it's for us to fix it.
 
