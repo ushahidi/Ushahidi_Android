@@ -32,9 +32,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.util.Util;
-
 public class Database {
 
 	private static final String TAG = "UshahidiDatabase";
@@ -45,7 +42,7 @@ public class Database {
 
 	public static final String DATABASE_NAME = "ushahidi_db";
 
-	private static final int DATABASE_VERSION = 18;
+	private static final int DATABASE_VERSION = 19;
 
 	private final Context mContext;
 
@@ -350,50 +347,6 @@ public class Database {
 
 	public void close() {
 		mDbHelper.close();
-	}
-
-	public boolean clearData() {
-
-		// deleteAllIncidents();
-		// deleteAllCategories();
-		// deleteUsers();
-		// deleteAllCheckins();
-		// deleteCheckinMedia();
-		// delete all files
-		Util.rmDir(Preferences.savePath);
-		return true;
-
-	}
-
-	public boolean clearReports() {
-
-		// deleteAllIncidents();
-		deleteAllCategories();
-		// deleteUsers();
-		// deleteAllCheckins();
-		deleteCheckinMedia();
-		// delete all files
-		Util.rmDir(Preferences.savePath);
-		return true;
-
-	}
-
-	public boolean deleteAllCategories() {
-		Log.i(TAG, "Deleting all categories");
-		// return mDb.delete(CATEGORIES_TABLE, null, null) > 0;
-		return true;
-	}
-
-	public boolean deleteCategory(int id) {
-		Log.i(TAG, "Deleteing all Category by id " + id);
-		// return mDb.delete(CATEGORIES_TABLE, CATEGORY_ID + "=" + id, null) >
-		// 0;
-		return true;
-	}
-
-	public boolean deleteCheckinMedia() {
-		Log.i(TAG, "Deleting all Media Checkins");
-		return mDb.delete(IMediaSchema.TABLE, null, null) > 0;
 	}
 
 }

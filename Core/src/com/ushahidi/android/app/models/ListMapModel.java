@@ -25,10 +25,10 @@ import java.util.List;
 
 import android.content.Context;
 
-import com.ushahidi.android.app.MainApplication;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.Map;
+import com.ushahidi.android.app.util.Util;
 
 /**
  * @author eyedol
@@ -198,7 +198,7 @@ public class ListMapModel extends Model {
 
 	public boolean deleteAllMap(Context context) {
 		Database.mMapDao.deleteAllMap();
-		MainApplication.mDb.clearData();
+		Util.rmDir(Preferences.savePath);
 		// clear the stuff that has been initialized in the
 		// sharedpreferences.
 		Preferences.loadSettings(context);
