@@ -15,57 +15,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fdd3602c-411b-4b0c-8046-4416c4565af4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/.name" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Core/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Core/tests/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Libraries/abs/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Libraries/google-play-services_lib/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Libraries/menudrawer/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Uchaguzi/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/compiler.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/copyright/profiles_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/scopes/scope_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/settings.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.idea/workspace.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/android_support_v4.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/bin.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/core.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/dexedLibs.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/google_play_services.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/google_play_services_lib.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/libs.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/menudrawer.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/.classpath" afterPath="$PROJECT_DIR$/Core/.classpath" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/tests/.classpath" afterPath="$PROJECT_DIR$/Core/tests/.classpath" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Libraries/abs/.classpath" afterPath="$PROJECT_DIR$/Libraries/abs/.classpath" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Libraries/google-play-services_lib/.classpath" afterPath="$PROJECT_DIR$/Libraries/google-play-services_lib/.classpath" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Libraries/menudrawer/.classpath" afterPath="$PROJECT_DIR$/Libraries/menudrawer/.classpath" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Uchaguzi/.classpath" afterPath="$PROJECT_DIR$/Themes/Uchaguzi/.classpath" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Ushahidi/.classpath" afterPath="$PROJECT_DIR$/Themes/Ushahidi/.classpath" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Beijing/Beijing.iml" afterPath="$PROJECT_DIR$/Themes/Beijing/Beijing.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/Core.iml" afterPath="$PROJECT_DIR$/Core/Core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Firsthand/Firsthand.iml" afterPath="$PROJECT_DIR$/Themes/Firsthand/Firsthand.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Iccm/Iccm.iml" afterPath="$PROJECT_DIR$/Themes/Iccm/Iccm.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Inherity/Inherity.iml" afterPath="$PROJECT_DIR$/Themes/Inherity/Inherity.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Uchaguzi/Uchaguzi.iml" afterPath="$PROJECT_DIR$/Themes/Uchaguzi/Uchaguzi.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Themes/Ushahidi/Ushahidi.iml" afterPath="$PROJECT_DIR$/Themes/Ushahidi/Ushahidi.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Libraries/abs/abs.iml" afterPath="$PROJECT_DIR$/Libraries/abs/abs.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Libraries/google-play-services_lib/google-play-services_lib.iml" afterPath="$PROJECT_DIR$/Libraries/google-play-services_lib/google-play-services_lib.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Libraries/menudrawer/menudrawer.iml" afterPath="$PROJECT_DIR$/Libraries/menudrawer/menudrawer.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/res/values-ko/strings.xml" afterPath="$PROJECT_DIR$/Core/res/values-ko/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/tests/tests.iml" afterPath="$PROJECT_DIR$/Core/tests/tests.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Ushahidi_Android.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1369295517948" ignored="false" />
+    <file path="/Dummy.txt" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1369546823646" ignored="false" />
     <file path="/a.java" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1368835818506" ignored="false" />
     <file path="/sample.java" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1368833665351" ignored="false" />
     <file path="/Core.iml" changelist="fdd3602c-411b-4b0c-8046-4416c4565af4" time="1369275038775" ignored="false" />
@@ -93,7 +47,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -130,6 +83,7 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -139,19 +93,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="settings.gradle" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="settings.gradle" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/settings.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="0" selection-start="134" selection-end="134" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ManifestParsingTest.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Libraries/abs/test/com/actionbarsherlock/internal/ManifestParsingTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="16" selection-start="57" selection-end="57" vertical-scroll-proportion="0.083516486">
+            <state line="1" column="0" selection-start="134" selection-end="134" vertical-scroll-proportion="0.04288939">
               <folding />
             </state>
           </provider>
@@ -199,10 +144,9 @@
     <treeState />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-9" />
-    <option name="y" value="19" />
-    <option name="width" value="1458" />
-    <option name="height" value="890" />
+    <option name="y" value="27" />
+    <option name="width" value="1440" />
+    <option name="height" value="873" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -246,7 +190,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -267,6 +210,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -449,33 +393,34 @@
       <workItem from="1369292727783" duration="1844000" />
       <workItem from="1369294698294" duration="717000" />
       <workItem from="1369295508165" duration="665000" />
+      <workItem from="1369540139127" duration="96000" />
+      <workItem from="1369546572376" duration="195000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27640000" />
+    <option name="totallyTimeSpent" value="27931000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="19" width="1458" height="890" extended-state="2" />
+    <frame x="0" y="27" width="1440" height="873" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32823366" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32451254" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3240612" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32451254" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3294964" sideWeight="0.67176634" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24711816" sideWeight="0.67548746" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24676259" sideWeight="0.6759388" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293944" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32823366" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -483,6 +428,7 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293944" sideWeight="0.6719653" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32451254" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -548,27 +494,27 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Core/res/layout/add_report.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state line="136" column="20" selection-start="4614" selection-end="4614" vertical-scroll-proportion="0.33280253" />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/res/layout/add_map.xml">
       <provider editor-type-id="android-designer">
         <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/res/layout/add_map.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Core/res/layout/about_view.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="44" selection-start="1149" selection-end="1149" vertical-scroll-proportion="0.50159234" />
-      </provider>
       <provider editor-type-id="android-designer">
         <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="44" selection-start="1149" selection-end="1149" vertical-scroll-proportion="0.50159234" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Core/res/values/strings.xml">
@@ -625,21 +571,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Core/project.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="134" selection-end="134" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Libraries/abs/test/com/actionbarsherlock/internal/ManifestParsingTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="16" selection-start="57" selection-end="57" vertical-scroll-proportion="0.083516486">
+        <state line="2" column="16" selection-start="57" selection-end="57" vertical-scroll-proportion="0.041758243" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="0" selection-start="134" selection-end="134" vertical-scroll-proportion="0.04288939">
           <folding />
         </state>
       </provider>

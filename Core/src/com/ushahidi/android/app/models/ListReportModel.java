@@ -24,6 +24,7 @@ import java.util.List;
 
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IMediaSchema;
+import com.ushahidi.android.app.database.IReportSchema;
 import com.ushahidi.android.app.entities.CategoryEntity;
 import com.ushahidi.android.app.entities.MediaEntity;
 import com.ushahidi.android.app.entities.ReportEntity;
@@ -133,7 +134,7 @@ public class ListReportModel{
 
 		// delete categories
 		if (Database.mReportCategoryDao
-				.deleteReportCategoryByReportId(reportId)) {
+				.deleteReportCategoryByReportId(reportId,IReportSchema.FETCHED)) {
 			new Util().log("All fetched report categories deleted");
 		}
 

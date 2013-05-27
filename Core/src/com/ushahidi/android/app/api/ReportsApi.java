@@ -28,6 +28,7 @@ import android.text.TextUtils;
 import com.google.gson.JsonSyntaxException;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.database.IReportSchema;
 import com.ushahidi.android.app.entities.MediaEntity;
 import com.ushahidi.android.app.entities.ReportCategory;
 import com.ushahidi.android.app.entities.ReportEntity;
@@ -184,6 +185,7 @@ public class ReportsApi extends UshahidiApi {
 		ReportCategory reportCategory = new ReportCategory();
 		reportCategory.setCategoryId(categoryId);
 		reportCategory.setReportId(reportId);
+		reportCategory.setStatus(IReportSchema.FETCHED);
 		List<ReportCategory> reportCategories = new ArrayList<ReportCategory>();
 		reportCategories.add(reportCategory);
 

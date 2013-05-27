@@ -20,50 +20,72 @@
 
 package com.ushahidi.android.app.entities;
 
-
 /**
  * @author eyedol
  */
 public class ReportCategory implements IDbEntity {
 
-    private int id;
+	private int id;
 
-    private int categoryId;
+	private int categoryId;
 
-    private int reportId;
+	private int reportId;
 
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.database.DbEntity#getDbId()
-     */
-    @Override
-    public int getDbId() {
-        return id;
-    }
+	private int status;
 
-    /*
-     * (non-Javadoc)
-     * @see com.ushahidi.android.app.database.DbEntity#setDbId(java.lang.Long)
-     */
-    @Override
-    public void setDbId(int id) {
-        this.id = id;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.database.DbEntity#getDbId()
+	 */
+	@Override
+	public int getDbId() {
+		return id;
+	}
 
-    public int getReportId() {
-        return reportId;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ushahidi.android.app.database.DbEntity#setDbId(java.lang.Long)
+	 */
+	@Override
+	public void setDbId(int id) {
+		this.id = id;
+	}
 
-    public void setReportId(int reportId) {
-        this.reportId = reportId;
-    }
+	public int getReportId() {
+		return reportId;
+	}
 
-    public int getCategoryId() {
-        return categoryId;
-    }
+	public void setReportId(int reportId) {
+		this.reportId = reportId;
+	}
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-    }
+	public int getCategoryId() {
+		return categoryId;
+	}
 
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	/**
+	 *  Set the status of a report. Pending or not.
+	 * @param status
+	 *            The status of the report - 1 for a pending report 0 is not a
+	 *            pending report.
+	 */
+	public void setStatus(int status) {
+		this.status = status;
+	}
+	
+	/**
+	 * Get the status of the report
+	 * 
+	 * @return int status - The status of the report
+	 */
+	public int getStatus() {
+		return this.status;
+	}
+	
 }

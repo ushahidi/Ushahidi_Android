@@ -94,8 +94,8 @@
 		including SMS, email, Twitter and the web.</string>
 	 <!--GOOGLE MAPS API-->
     <!--  Dev Key  -->
-    <string name="google_map_api_key_dev">AIzaSyCMm_TKMClnukKXP9DqoegNJbv-eNCZqQI</string> 
+    <string name="google_map_api_key">AIzaSyCMm_TKMClnukKXP9DqoegNJbv-eNCZqQI</string> 
     <!-- Live Key -->
-    <string name="google_map_api_key">AIzaSyDfmnptOeDh0XVELv3WJkyMbckdtMW7Aiw</string>
+    <string name="google_map_api_key_pro">AIzaSyDfmnptOeDh0XVELv3WJkyMbckdtMW7Aiw</string>
 
 </resources>

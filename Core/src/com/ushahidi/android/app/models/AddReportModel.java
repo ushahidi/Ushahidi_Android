@@ -25,6 +25,7 @@ import java.util.Vector;
 
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IMediaSchema;
+import com.ushahidi.android.app.database.IReportSchema;
 import com.ushahidi.android.app.entities.MediaEntity;
 import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.entities.ReportCategory;
@@ -52,6 +53,7 @@ public class AddReportModel extends Model {
 					ReportCategory reportCategory = new ReportCategory();
 					reportCategory.setCategoryId(cat);
 					reportCategory.setReportId(id);
+					reportCategory.setStatus(IReportSchema.PENDING);
 					Database.mReportCategoryDao
 							.addReportCategory(reportCategory);
 
@@ -102,12 +104,13 @@ public class AddReportModel extends Model {
 			if (category != null && category.size() > 0) {
 				// delete existing categories. It's easier this way
 				Database.mReportCategoryDao
-						.deleteReportCategoryByReportId(reportId);
+						.deleteReportCategoryByReportId(reportId,IReportSchema.PENDING);
 
 				for (Integer cat : category) {
 					ReportCategory reportCategory = new ReportCategory();
 					reportCategory.setCategoryId(cat);
 					reportCategory.setReportId(reportId);
+					reportCategory.setStatus(IReportSchema.PENDING);
 					Database.mReportCategoryDao
 							.addReportCategory(reportCategory);
 
@@ -155,9 +158,9 @@ public class AddReportModel extends Model {
 		return Database.mReportDao.fetchPendingReportIdById(reportId);
 	}
 
-	public List<ReportCategory> fetchReportCategories(int reportId) {
+	public List<ReportCategory> fetchReportCategories(int reportId, int status) {
 		return Database.mReportCategoryDao
-				.fetchReportCategoryByReportId(reportId);
+				.fetchReportCategoryByReportId(reportId, status);
 	}
 
 	public List<MediaEntity> fetchReportNews(int reportId) {
@@ -169,7 +172,7 @@ public class AddReportModel extends Model {
 		Database.mReportDao.deletePendingReportById(reportId);
 
 		// delete categories
-		Database.mReportCategoryDao.deleteReportCategoryByReportId(reportId);
+		Database.mReportCategoryDao.deleteReportCategoryByReportId(reportId,IReportSchema.PENDING);
 
 		// delete media
 		Database.mMediaDao.deleteMediaByReportId(reportId);

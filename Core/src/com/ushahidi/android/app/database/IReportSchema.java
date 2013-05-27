@@ -7,10 +7,14 @@ package com.ushahidi.android.app.database;
  */
 public interface IReportSchema {
 
+	public static final int PENDING = 1;
+
+	public static final int FETCHED = 0;
+
 	public static final String ID = "_id";
 
 	public static final String INCIDENT_ID = "incident_id";
-	
+
 	public static final String INCIDENT_TITLE = "incident_title";
 
 	public static final String INCIDENT_DESC = "incident_desc";

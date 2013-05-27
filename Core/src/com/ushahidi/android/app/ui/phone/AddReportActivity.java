@@ -69,6 +69,7 @@ import com.ushahidi.android.app.activities.BaseEditMapActivity;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IOpenGeoSmsSchema;
+import com.ushahidi.android.app.database.IReportSchema;
 import com.ushahidi.android.app.database.OpenGeoSmsDao;
 import com.ushahidi.android.app.entities.CategoryEntity;
 import com.ushahidi.android.app.entities.MediaEntity;
@@ -497,7 +498,7 @@ public class AddReportActivity extends
 		// set Categories.
 		mVectorCategories.clear();
 		for (ReportCategory reportCategory : model
-				.fetchReportCategories(reportId)) {
+				.fetchReportCategories(reportId, IReportSchema.PENDING)) {
 			mVectorCategories.add(reportCategory.getCategoryId());
 		}
 
