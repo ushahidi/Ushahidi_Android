@@ -42,7 +42,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	private List<ReportEntity> listReport;
 
 	private ContentValues initialValues;
-	
+
 	private final SimpleDateFormat FORMATTER = new SimpleDateFormat(
 			"MM/dd/yyyy h m a", Locale.US);
 
@@ -179,10 +179,12 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 				+ " reports INNER JOIN " + IReportCategorySchema.TABLE
 				+ " cats ON reports." + ID + " = cats."
 				+ IReportCategorySchema.REPORT_ID + " WHERE cats."
-				+ IReportCategorySchema.CATEGORY_ID + " =? AND "
-				+ INCIDENT_PENDING + "=? " + "ORDER BY  " + sortOrder;
+				+ IReportCategorySchema.CATEGORY_ID + " =? AND " + "cats."
+				+ IReportCategorySchema.STATUS + " =?  AND " + INCIDENT_PENDING
+				+ "=? ORDER BY  " + sortOrder;
 		final String selectionArgs[] = { String.valueOf(categoryId),
-				String.valueOf(1) };
+				String.valueOf(IReportSchema.PENDING),
+				String.valueOf(IReportSchema.PENDING) };
 		listReport = new ArrayList<ReportEntity>();
 
 		cursor = super.rawQuery(sql, selectionArgs);
@@ -207,10 +209,11 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 				+ " reports INNER JOIN " + IReportCategorySchema.TABLE
 				+ " cats ON reports." + INCIDENT_ID + " = cats."
 				+ IReportCategorySchema.REPORT_ID + " WHERE cats."
-				+ IReportCategorySchema.CATEGORY_ID + " =? AND "
-				+ INCIDENT_PENDING + "=? " + "ORDER BY  " + sortOrder;
+				+ IReportCategorySchema.CATEGORY_ID + " =? AND " + "cats."
+				+ IReportCategorySchema.STATUS + " =?  AND " + INCIDENT_PENDING
+				+ "=? ORDER BY  " + sortOrder;
 		final String selectionArgs[] = { String.valueOf(categoryId),
-				String.valueOf(0) };
+				String.valueOf(IReportSchema.FETCHED),String.valueOf(IReportSchema.FETCHED) };
 
 		listReport = new ArrayList<ReportEntity>();
 
@@ -320,7 +323,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 	@SuppressWarnings("unchecked")
 	@Override
 	protected ReportEntity cursorToEntity(Cursor cursor) {
-		ReportEntity r= new ReportEntity();
+		ReportEntity r = new ReportEntity();
 		Incident report = new Incident();
 		int idIndex;
 		int reportIdIndex;
@@ -382,7 +385,6 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 			r.setIncident(report);
 		}
 
-		
 		return r;
 	}
 
@@ -391,12 +393,17 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 		initialValues.put(INCIDENT_ID, report.getIncident().getId());
 		initialValues.put(INCIDENT_TITLE, report.getIncident().getTitle());
 		initialValues.put(INCIDENT_DESC, report.getIncident().getDescription());
-		initialValues.put(INCIDENT_DATE, getDate(report.getIncident().getDate()));
+		initialValues.put(INCIDENT_DATE,
+				getDate(report.getIncident().getDate()));
 		initialValues.put(INCIDENT_MODE, report.getIncident().getMode());
-		initialValues.put(INCIDENT_VERIFIED, report.getIncident().getVerified());
-		initialValues.put(INCIDENT_LOC_NAME, report.getIncident().getLocationName());
-		initialValues.put(INCIDENT_LOC_LATITUDE, report.getIncident().getLatitude());
-		initialValues.put(INCIDENT_LOC_LONGITUDE, report.getIncident().getLongitude());
+		initialValues
+				.put(INCIDENT_VERIFIED, report.getIncident().getVerified());
+		initialValues.put(INCIDENT_LOC_NAME, report.getIncident()
+				.getLocationName());
+		initialValues.put(INCIDENT_LOC_LATITUDE, report.getIncident()
+				.getLatitude());
+		initialValues.put(INCIDENT_LOC_LONGITUDE, report.getIncident()
+				.getLongitude());
 		initialValues.put(INCIDENT_PENDING, report.getPending());
 	}
 
@@ -432,11 +439,11 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 		}
 		return status;
 	}
-	
-	public String getDate(Date d ) {
+
+	public String getDate(Date d) {
 		return FORMATTER.format(d);
 	}
-	
+
 	public Date setDate(String date) {
 		try {
 			return FORMATTER.parse(date);
