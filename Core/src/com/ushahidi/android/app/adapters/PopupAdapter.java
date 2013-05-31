@@ -38,7 +38,7 @@ public class PopupAdapter implements InfoWindowAdapter {
 
 	protected LayoutInflater inflater = null;
 
-	protected TextView title;
+	public TextView title;
 
 	protected TextView snippet;
 
@@ -63,7 +63,7 @@ public class PopupAdapter implements InfoWindowAdapter {
 
 		title.setText(marker.getTitle());
 		snippet.setText(marker.getSnippet());
-
+		
 		getPhoto("", badge, v);
 	}
 

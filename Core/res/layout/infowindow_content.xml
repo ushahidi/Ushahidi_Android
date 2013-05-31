@@ -10,7 +10,9 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/maps"
         android:src="@drawable/report_icon" >
+
     </ImageView>
 
     <LinearLayout
@@ -25,17 +27,23 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@android:color/primary_text_light"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textStyle="bold" />
-
+        <TextView
+            android:id="@+id/id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"/>
         <TextView
             android:id="@+id/snippet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/map"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@android:color/secondary_text_light"
-            android:textSize="14dp" />
+            android:textSize="14sp" />
+
     </LinearLayout>
 
 </LinearLayout>

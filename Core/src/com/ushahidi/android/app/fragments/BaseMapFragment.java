@@ -77,7 +77,7 @@ public abstract class BaseMapFragment extends SherlockMapFragment {
 		setHasOptionsMenu(true);
 		GoogleMapOptions op = new GoogleMapOptions();
 		op.zOrderOnTop(true);
-		this.newInstance(op);
+		newInstance(op);
 	}
 
 	@Override
