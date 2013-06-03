@@ -202,8 +202,9 @@ public class Util {
 	}
 
 	public static String datePattern(String dateFormat, Date date) {
-		return android.text.format.DateFormat.format("MMMM dd, yyyy 'at' hh:mm:ss aaa",date).toString();
-		
+		return android.text.format.DateFormat.format(
+				"MMMM dd, yyyy 'at' hh:mm:ss aaa", date).toString();
+
 	}
 
 	/**
