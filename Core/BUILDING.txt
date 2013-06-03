@@ -1,2 +1,0 @@
-Make sure your project targets Android API level 7 or higher. 
-The read the how to build guide https://wiki.ushahidi.com/display/WIKI/Build+The+Android+App
