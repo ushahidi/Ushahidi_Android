@@ -1,3 +1,28 @@
-To build any of the white-labled app, read the BUILDING.txt file in their 
-respective directory. It has all the information you need to successfully 
-build any of them. 
+The following are brief instructions for building on the command line using
+Ant. More detailed instructions for Ant and Eclipse are available at:
+https://wiki.ushahidi.com/display/WIKI/Build+The+Android+App
+
+1) The project depends on the libraries in the Libraries/ sub-directory. For
+each of these sub-directories, run the update lib-project command, for example:
+
+$> android update lib-project -p <directory> -t <num>
+
+where <directory> is the path to the sub-directory of the library and <num> is
+the target ID of the build target.
+
+2) The main program is in Core/ which is also a library project. Run the same
+command as above on the Core/ sub-directory.
+
+3) The actual app build is done from one of the theme directories. The default
+theme is Ushahidi. Assuming you choose to build with this theme, do the
+following:
+
+Create a sub-directory called src/ in the Themes/Ushahidi/ directory.
+
+Run the following android update project command:
+
+$> android update project -p <path to chosen theme> -t <num>
+
+4) Build the app using ant from within Themes/Ushahidi/
+
+For details on making your own themes, see README.md.

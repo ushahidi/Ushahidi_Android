@@ -60,7 +60,5 @@ In the **"/Themes/MyTheme/res/values/theme.xml"**, update the 'about_text' with 
 
 ### How To Build The App ###
 
-To build any of the white-labled app, read the **BUILDING.txt** file in their 
-respective directory. It has all the information you need to successfully 
-build any of them. 
+To build any of the white-labled app, read **BUILDING.txt**.
 
