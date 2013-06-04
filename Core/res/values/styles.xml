@@ -243,7 +243,6 @@
     <style name="MapView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:enabled">true</item>
     </style>
 
     <style name="MapView.Location">
@@ -252,6 +251,7 @@
 
     <style name="EditText" parent="@android:style/Widget.EditText">
         <item name="android:cursorVisible">true</item>
+        <item name="android:textCursorDrawable">@drawable/edit_text_cursor</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>

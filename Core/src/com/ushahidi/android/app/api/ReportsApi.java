@@ -28,6 +28,7 @@ import android.text.TextUtils;
 import com.google.gson.JsonSyntaxException;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.database.Database;
+import com.ushahidi.android.app.database.IReportSchema;
 import com.ushahidi.android.app.entities.MediaEntity;
 import com.ushahidi.android.app.entities.ReportCategory;
 import com.ushahidi.android.app.entities.ReportEntity;
@@ -94,31 +95,27 @@ public class ReportsApi extends UshahidiApi {
 								// find photos, it's type is 1
 								if (m != null) {
 									if (m.getType() == 1) {
-										final String fileName = Util
-												.getDateTime() + ".jpg";
-
-										// save details of photo to database
-										saveMedia(m.getId(),
-												i.incident.getId(),
-												m.getType(), fileName);
 
 										// save photo to a file
-										if (m.getLink().startsWith("http")) {
-											saveImages(m.getLink(), fileName,
-													context);
-										} else {
-											final String link = Preferences.domain
-													+ "/media/uploads/"
-													+ m.getLink();
 
-											saveImages(link, fileName, context);
+										if (m.getLinkUrl() != null) {
+											final String fileName = Util
+													.getDateTime() + ".jpg";
+											// save details of photo to database
+											saveMedia(m.getId(),
+													i.incident.getId(),
+													m.getType(), fileName);
+											
+											saveImages(m.getLinkUrl(),
+													fileName, context);
 										}
 
 									} else {
 										// other media type to database
-										saveMedia(m.getId(),
-												(int) i.incident.getId(),
-												m.getType(), m.getLink());
+										if (m.getLink() != null)
+											saveMedia(m.getId(),
+													(int) i.incident.getId(),
+													m.getType(), m.getLink());
 									}
 								}
 							}
@@ -188,6 +185,7 @@ public class ReportsApi extends UshahidiApi {
 		ReportCategory reportCategory = new ReportCategory();
 		reportCategory.setCategoryId(categoryId);
 		reportCategory.setReportId(reportId);
+		reportCategory.setStatus(IReportSchema.FETCHED);
 		List<ReportCategory> reportCategories = new ArrayList<ReportCategory>();
 		reportCategories.add(reportCategory);
 

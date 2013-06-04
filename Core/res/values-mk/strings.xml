@@ -165,7 +165,6 @@
   <string name="pending_upload">Качувањето е во тек</string>
   <string name="fetched">Превземено</string>
   <string name="required_fields">Задолжителни полиња</string>
-  <string name="title">Наслов</string>
   <string name="category">Категорија</string>
   <string name="location">Локација</string>
   <string name="description">Опис</string>
@@ -173,7 +172,6 @@
   <string name="longitude">Географска должина</string>
   <string name="date_and_time">Датум и време</string>
   <string name="enter_news_url">Внеси URL за вести</string>
-  <string name="unsaved_changes">Незачувани измени</string>
   <string name="want_to_cancel">Дали сте сигурни дека сакате да откажете?</string>
   <string name="added">Додадено</string>
   <string name="uploaded">Качено</string>
@@ -213,7 +211,6 @@
   <string name="change_time">Измени време</string>
   <string name="prompt_mesg">Изберете категорија да филтрирате</string>
   <string name="invalid_email_address">Внесена е невалидна email адреса</string>
-  <string name="choose_categories">Избери категории</string>
   <string name="location_disabled">Детекција на локацијата оневозможена</string>
   <string name="location_reenable">Дали би сакале да одите до подесувањата за Локација и Безбедност за да ја овозможите детекцијата на локацијата?</string>
   <string name="basic_settings">Основни подесувања</string>
@@ -223,9 +220,4 @@
   <string name="hint_last_name">Исто така за искористување на името кога се поднесува пријавата (незадолжително)</string>
   <string name="txt_email">E-mail адреса</string>
   <string name="hint_email">Само за контакт.</string>
-  <string name="txt_phonenumber">Мобилен телефон</string>
-  <string name="hint_phonenumber">Само за исраќање на пријава.</string>
-  <string name="total_reports">Број на пријави</string>
-  <string name="hint_total_reports">Вкупен број на пријави да се превземат од избраната инстанца.</string>
-  <string name="no_reports">Нема пријави за прикажување</string>
 </resources>

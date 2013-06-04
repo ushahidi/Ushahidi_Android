@@ -12,8 +12,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ushahidi.android.app"
-    android:versionCode="31"
-    android:versionName="3.1.6" >
+    android:versionCode="33"
+    android:versionName="3.7" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -200,13 +200,13 @@
         </activity>
 
         <!-- Launch View Reports -->
-        
+
         <activity
             android:name=".ui.phone.ViewReportSlideActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/reports" >
-           <intent-filter>
-               <action android:name="android.intent.action.VIEW" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -247,7 +247,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".ui.phone.AdminActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
@@ -258,7 +257,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".activities.SplashScreenActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
@@ -277,7 +275,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-       
         <activity
             android:name=".ui.phone.ListReportCommentActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"

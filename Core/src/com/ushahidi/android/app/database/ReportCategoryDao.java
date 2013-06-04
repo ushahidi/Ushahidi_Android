@@ -56,9 +56,9 @@ public class ReportCategoryDao extends DbContentProvider implements
 	 * (long)
 	 */
 	@Override
-	public List<ReportCategory> fetchReportCategory(long reportId) {
+	public List<ReportCategory> fetchReportCategory(long id) {
 		listReportCategories = new ArrayList<ReportCategory>();
-		final String selectionArgs[] = { String.valueOf(reportId) };
+		final String selectionArgs[] = { String.valueOf(id) };
 
 		final String selection = ID + " =?";
 		cursor = super.query(TABLE, COLUMNS, selection, selectionArgs, null);
@@ -75,11 +75,11 @@ public class ReportCategoryDao extends DbContentProvider implements
 	}
 
 	@Override
-	public List<ReportCategory> fetchReportCategoryByReportId(int reportId) {
+	public List<ReportCategory> fetchReportCategoryByReportId(int reportId, int status) {
 		listReportCategories = new ArrayList<ReportCategory>();
-		final String selectionArgs[] = { String.valueOf(reportId) };
+		final String selectionArgs[] = { String.valueOf(reportId), String.valueOf(status) };
 
-		final String selection = REPORT_ID + " =?";
+		final String selection = REPORT_ID + " =? AND "+STATUS+" =?";
 		cursor = super.query(TABLE, COLUMNS, selection, selectionArgs, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -157,6 +157,7 @@ public class ReportCategoryDao extends DbContentProvider implements
 		int idIndex;
 		int reportIdIndex;
 		int categoryIdIndex;
+		int statusIndex;
 
 		if (cursor != null) {
 			if (cursor.getColumnIndex(ID) != -1) {
@@ -173,6 +174,11 @@ public class ReportCategoryDao extends DbContentProvider implements
 				categoryIdIndex = cursor.getColumnIndexOrThrow(CATEGORY_ID);
 				reportCategory.setCategoryId(cursor.getInt(categoryIdIndex));
 			}
+			
+			if (cursor.getColumnIndex(STATUS) != -1 ) {
+				statusIndex = cursor.getColumnIndexOrThrow(STATUS);
+				reportCategory.setStatus(cursor.getInt(statusIndex));
+			}
 		}
 		return reportCategory;
 	}
@@ -181,6 +187,7 @@ public class ReportCategoryDao extends DbContentProvider implements
 		initialValues = new ContentValues();
 		initialValues.put(REPORT_ID, reportCategory.getReportId());
 		initialValues.put(CATEGORY_ID, reportCategory.getCategoryId());
+		initialValues.put(STATUS, reportCategory.getStatus());
 	}
 
 	private ContentValues getContentValue() {
@@ -188,9 +195,9 @@ public class ReportCategoryDao extends DbContentProvider implements
 	}
 
 	@Override
-	public boolean deleteReportCategoryByReportId(int reportId) {
-		final String selectionArgs[] = { String.valueOf(reportId) };
-		final String selection = REPORT_ID + " =?";
+	public boolean deleteReportCategoryByReportId(int reportId, int status) {
+		final String selectionArgs[] = { String.valueOf(reportId), String.valueOf(status) };
+		final String selection = REPORT_ID + " =? AND "+ STATUS +" =?";
 		return super.delete(TABLE, selection, selectionArgs) > 0;
 	}
 

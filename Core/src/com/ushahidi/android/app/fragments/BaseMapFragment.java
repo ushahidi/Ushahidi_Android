@@ -19,6 +19,9 @@
  **/
 package com.ushahidi.android.app.fragments;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -77,7 +80,7 @@ public abstract class BaseMapFragment extends SherlockMapFragment {
 		setHasOptionsMenu(true);
 		GoogleMapOptions op = new GoogleMapOptions();
 		op.zOrderOnTop(true);
-		this.newInstance(op);
+		newInstance(op);
 	}
 
 	@Override
@@ -198,29 +201,38 @@ public abstract class BaseMapFragment extends SherlockMapFragment {
 		}
 
 		public void update(LatLng point) {
-			if (point != null)
+			if (point != null) {
+				
 				map.addMarker(new MarkerOptions().position(point));
+			}
 		}
 
-		public void addMarker(GoogleMap map, double lat, double lng,
+		public void addMarker(GoogleMap map, final double lat, final double lng,
 				String title, String snippet) {
-			map.addMarker(new MarkerOptions().position(new LatLng(lat, lng))
-					.title(title).snippet(snippet));
+
+			final LatLng latLng = new LatLng(lat, lng);
+			markersHolder.add(title);
+			map.addMarker(new MarkerOptions().position(latLng).title(title)
+					.snippet(snippet));
 		}
 
-		public void addMarkerWithIcon(GoogleMap gMap, double lat, double lng,
+		public void addMarkerWithIcon(GoogleMap map, final double lat, final double lng,
 				String title, String snippet, String filename) {
+			final LatLng latLng = new LatLng(lat, lng);
+			//FIX ME: Using the title to find which latlng have been tapped. 
+			// This ugly hack has to do with the limitation in Google maps api for android
+			// SEE: https://code.google.com/p/gmaps-api-issues/issues/detail?id=4650
+			markersHolder.add(title);
 			if ((filename != null) && (!TextUtils.isEmpty(filename))) {
-				gMap.addMarker(new MarkerOptions()
-						.position(new LatLng(lat, lng)).title(title)
-						.snippet(snippet)
+				
+				map.addMarker(new MarkerOptions().position(latLng)
+						.title(title).snippet(snippet)
 						.icon(BitmapDescriptorFactory.fromPath(filename)));
 			} else {
-				gMap.addMarker(new MarkerOptions()
-						.position(new LatLng(lat, lng)).title(title)
-						.snippet(snippet));
+				map.addMarker(new MarkerOptions().position(latLng)
+						.title(title).snippet(snippet));
 			}
-
+			
 		}
 	}
 
@@ -256,6 +268,11 @@ public abstract class BaseMapFragment extends SherlockMapFragment {
 	}
 
 	public abstract interface UpdatableMarker {
+		
+		// This is for a workaround regarding this issue
+		// https://code.google.com/p/gmaps-api-issues/issues/detail?id=4650
+		public List<String> markersHolder = new ArrayList<String>();
+		
 		public abstract void update(LatLng point);
 
 		public abstract void addMarker(GoogleMap map, double lat, double lng,

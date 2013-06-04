@@ -32,7 +32,7 @@ import com.ushahidi.android.app.entities.ReportCategory;
  */
 public interface IReportCategoryDao {
 
-    // get reports by report id
+    // get reports by report category id
     public List<ReportCategory> fetchReportCategory(long reportId);
 
     public boolean addReportCategory(ReportCategory reportCategory);
@@ -42,9 +42,9 @@ public interface IReportCategoryDao {
     // delete all report categories
     public boolean deleteAllReportCategory();
     
-    public boolean deleteReportCategoryByReportId(int reportId);
+    public boolean deleteReportCategoryByReportId(int reportId, int status);
     
-    public List<ReportCategory> fetchReportCategoryByReportId(int reportId);
+    public List<ReportCategory> fetchReportCategoryByReportId(int reportId, int status);
     
     public boolean updateReportCategory(int reportId, ReportCategory reportCategory);
 }

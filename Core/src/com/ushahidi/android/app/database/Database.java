@@ -32,9 +32,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.util.Util;
-
 public class Database {
 
 	private static final String TAG = "UshahidiDatabase";
@@ -45,7 +42,7 @@ public class Database {
 
 	public static final String DATABASE_NAME = "ushahidi_db";
 
-	private static final int DATABASE_VERSION = 18;
+	private static final int DATABASE_VERSION = 19;
 
 	private final Context mContext;
 
@@ -100,131 +97,29 @@ public class Database {
 			Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
 					+ newVersion + " which destroys all old data");
 
-			List<String> addIncidentColumns;
-			List<String> checkinsColums;
-			List<String> usersColumns;
-			List<String> deploymentColumns;
-			List<String> categoriesColumns;
+			List<String> reportCategoryColumns;
+
 			try {
-				// upgrade incident table
-				Log.i("Upgrading", "Upgrading incidents table");
-				dropColumn(db, IReportSchema.INCIDENTS_TABLE_CREATE,
-						IReportSchema.INCIDENTS_TABLE, new String[] {
-								IReportSchema.INCIDENT_CATEGORIES,
-								IReportSchema.INCIDENT_MEDIA,
-								IReportSchema.INCIDENT_IMAGE, "is_unread" });
 
-				// upgrade category table
-				Log.i("Upgrading", "Upgrading categories table");
-				dropColumn(db, ICategorySchema.CATEGORIES_TABLE_CREATE,
-						ICategorySchema.TABLE, new String[] { "is_unread" });
-
-				// upgrade add incident table
-				Log.i("Upgrading", "Upgrading offline incidents table");
-				// drop the offline report table. It's no longer in use
-				db.execSQL("DROP TABLE IF EXISTS "
-						+ IOfflineReportSchema.OFFLINE_REPORT_TABLE);
-
-				db.execSQL(IOfflineReportSchema.OFFLINE_REPORT_TABLE_CREATE);
-				addIncidentColumns = Database.getColumns(db,
-						IOfflineReportSchema.OFFLINE_REPORT_TABLE);
-				db.execSQL("ALTER TABLE "
-						+ IOfflineReportSchema.OFFLINE_REPORT_TABLE
-						+ " RENAME TO temp_"
-						+ IOfflineReportSchema.OFFLINE_REPORT_TABLE);
-				db.execSQL(IOfflineReportSchema.OFFLINE_REPORT_TABLE_CREATE);
-				addIncidentColumns.retainAll(Database.getColumns(db,
-						IOfflineReportSchema.OFFLINE_REPORT_TABLE));
-				String addIncidentCols = Database.join(addIncidentColumns, ",");
-				db.execSQL(String.format(
-						"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-						IOfflineReportSchema.OFFLINE_REPORT_TABLE,
-						addIncidentCols, addIncidentCols,
-						IOfflineReportSchema.OFFLINE_REPORT_TABLE));
-				db.execSQL("DROP TABLE IF EXISTS temp_"
-						+ IOfflineReportSchema.OFFLINE_REPORT_TABLE);
-
-				// upgrade checkin table
-				Log.i("Upgrading", "Upgrading checkins table");
-				db.execSQL(ICheckinSchema.CHECKINS_TABLE_CREATE);
-				checkinsColums = Database.getColumns(db,
-						ICheckinSchema.CHECKINS_TABLE);
-				db.execSQL("ALTER TABLE " + ICheckinSchema.CHECKINS_TABLE
-						+ " RENAME TO temp_" + ICheckinSchema.CHECKINS_TABLE);
-				db.execSQL(ICheckinSchema.CHECKINS_TABLE_CREATE);
-				checkinsColums.retainAll(Database.getColumns(db,
-						ICheckinSchema.CHECKINS_TABLE));
-				String checkinsCols = Database.join(checkinsColums, ",");
-
-				db.execSQL(String.format(
-						"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-						ICheckinSchema.CHECKINS_TABLE, checkinsCols,
-						checkinsCols, ICheckinSchema.CHECKINS_TABLE));
-				db.execSQL("DROP TABLE IF EXISTS temp_"
-						+ ICheckinSchema.CHECKINS_TABLE);
-
-				// upgrade checkin media table
-				Log.i("Upgrading", "Upgrading checkin media table");
-				dropColumn(db, IMediaSchema.MEDIA_TABLE_CREATE,
-						IMediaSchema.TABLE, new String[] {
-								"media_thumbnail_link", "media_medium_link" });
-
-				// upgrade checkin users table
-				Log.i("Upgrading", "Upgrading checkin users table");
-				db.execSQL(IUserSchema.USER_TABLE_CREATE);
-				usersColumns = Database.getColumns(db, IUserSchema.USER_TABLE);
-				db.execSQL("ALTER TABLE " + IUserSchema.USER_TABLE
-						+ " RENAME TO temp_" + IUserSchema.USER_TABLE);
-				db.execSQL(IUserSchema.USER_TABLE_CREATE);
-				usersColumns.retainAll(Database.getColumns(db,
-						IUserSchema.USER_TABLE));
-				String usersCols = Database.join(usersColumns, ",");
-				db.execSQL(String.format(
-						"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-						IUserSchema.USER_TABLE, usersCols, usersCols,
-						IUserSchema.USER_TABLE));
-				db.execSQL("DROP TABLE IF EXISTS temp_"
-						+ IUserSchema.USER_TABLE);
-
-				// upgrade categories table
-				db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
-				categoriesColumns = Database.getColumns(db,
-						ICategorySchema.TABLE);
-				db.execSQL("ALTER TABLE " + ICategorySchema.TABLE
-						+ " RENAME TO temp_" + ICategorySchema.TABLE);
-				db.execSQL(ICategorySchema.CATEGORIES_TABLE_CREATE);
-				usersColumns.retainAll(Database.getColumns(db,
-						ICategorySchema.TABLE));
-				String categoriesCols = Database.join(categoriesColumns, ",");
-				db.execSQL(String.format(
-						"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-						ICategorySchema.TABLE, categoriesCols, categoriesCols,
-						ICategorySchema.TABLE));
-				db.execSQL("DROP TABLE IF EXISTS temp_" + ICategorySchema.TABLE);
-
-				// upgrade deployment table
-				deploymentColumns = Database.getColumns(db, IMapSchema.TABLE);
-				db.execSQL("ALTER TABLE " + IMapSchema.TABLE
-						+ " RENAME TO temp_" + IMapSchema.TABLE);
-
-				db.execSQL("DROP TABLE IF EXISTS " + IMapSchema.TABLE);
-
-				db.execSQL(IMapSchema.MAP_TABLE_CREATE);
-				deploymentColumns.retainAll(Database.getColumns(db,
-						IMapSchema.TABLE));
-
-				String deploymentCols = Database.join(deploymentColumns, ",");
-				db.execSQL(String.format(
-						"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
-						IMapSchema.TABLE, deploymentCols, deploymentCols,
-						IMapSchema.TABLE));
-
-				db.execSQL("DROP TABLE IF EXISTS temp_" + IMapSchema.TABLE);
-
-				// create missing tables
+				// upgrade report category
 				db.execSQL(IReportCategorySchema.REPORT_CATEGORY_TABLE_CREATE);
-				db.execSQL(ICommentSchema.COMMENT_TABLE_CREATE);
-				db.execSQL(IOpenGeoSmsSchema.OPENGEOSMS_TABLE_CREATE);
+				reportCategoryColumns = Database.getColumns(db,
+						IReportCategorySchema.TABLE);
+				
+				db.execSQL("ALTER TABLE " + IReportCategorySchema.TABLE
+						+ " RENAME TO temp_" + IReportCategorySchema.TABLE);
+				db.execSQL(IReportCategorySchema.REPORT_CATEGORY_TABLE_CREATE);
+				
+				reportCategoryColumns.retainAll(Database.getColumns(db,
+						IReportCategorySchema.TABLE));
+				String reportsCategoryCols = Database.join(
+						reportCategoryColumns, ",");
+				db.execSQL(String.format(
+						"INSERT INTO %s (%s) SELECT %s FROM temp_%s",
+						IReportCategorySchema.TABLE, reportsCategoryCols,
+						reportsCategoryCols, IReportCategorySchema.TABLE));
+				db.execSQL("DROP TABLE IF EXISTS temp_"
+						+ IReportCategorySchema.TABLE);
 
 				onCreate(db);
 			} catch (SQLException e) {
@@ -350,50 +245,6 @@ public class Database {
 
 	public void close() {
 		mDbHelper.close();
-	}
-
-	public boolean clearData() {
-
-		// deleteAllIncidents();
-		// deleteAllCategories();
-		// deleteUsers();
-		// deleteAllCheckins();
-		// deleteCheckinMedia();
-		// delete all files
-		Util.rmDir(Preferences.savePath);
-		return true;
-
-	}
-
-	public boolean clearReports() {
-
-		// deleteAllIncidents();
-		deleteAllCategories();
-		// deleteUsers();
-		// deleteAllCheckins();
-		deleteCheckinMedia();
-		// delete all files
-		Util.rmDir(Preferences.savePath);
-		return true;
-
-	}
-
-	public boolean deleteAllCategories() {
-		Log.i(TAG, "Deleting all categories");
-		// return mDb.delete(CATEGORIES_TABLE, null, null) > 0;
-		return true;
-	}
-
-	public boolean deleteCategory(int id) {
-		Log.i(TAG, "Deleteing all Category by id " + id);
-		// return mDb.delete(CATEGORIES_TABLE, CATEGORY_ID + "=" + id, null) >
-		// 0;
-		return true;
-	}
-
-	public boolean deleteCheckinMedia() {
-		Log.i(TAG, "Deleting all Media Checkins");
-		return mDb.delete(IMediaSchema.TABLE, null, null) > 0;
 	}
 
 }

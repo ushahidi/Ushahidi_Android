@@ -75,6 +75,7 @@
     <color name="tab_medium">#2B2B2B</color>
     <color name="tab_dark">#000000</color>
     <color name="tab_transparent">#10ffffff</color>
+    <color name="edit_text_cursor">#A6A6A6</color>
     
     <!--  Menu Drawer -->
 	

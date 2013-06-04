@@ -25,6 +25,7 @@ import java.util.Vector;
 
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IMediaSchema;
+import com.ushahidi.android.app.database.IReportSchema;
 import com.ushahidi.android.app.entities.MediaEntity;
 import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.entities.ReportCategory;
@@ -36,13 +37,13 @@ import com.ushahidi.android.app.entities.ReportEntity;
  */
 public class AddReportModel extends Model {
 
-	public boolean addPendingReport(ReportEntity report, Vector<Integer> category,
-			File[] pendingPhotos, String news) {
+	public boolean addPendingReport(ReportEntity report,
+			Vector<Integer> category, File[] pendingPhotos, String news) {
 		boolean status;
 		// add pending reports
 		status = Database.mReportDao.addReport(report);
-		final String date = Database.mReportDao.getDate(report
-				.getIncident().getDate());											
+		final String date = Database.mReportDao.getDate(report.getIncident()
+				.getDate());
 		int id = Database.mReportDao.fetchPendingReportIdByDate(date);
 		report.setDbId(id);
 		// add category
@@ -52,6 +53,7 @@ public class AddReportModel extends Model {
 					ReportCategory reportCategory = new ReportCategory();
 					reportCategory.setCategoryId(cat);
 					reportCategory.setReportId(id);
+					reportCategory.setStatus(IReportSchema.PENDING);
 					Database.mReportCategoryDao
 							.addReportCategory(reportCategory);
 
@@ -92,7 +94,8 @@ public class AddReportModel extends Model {
 	}
 
 	public boolean updatePendingReport(int reportId, ReportEntity report,
-			Vector<Integer> category, List<PhotoEntity> pendingPhotos, String news) {
+			Vector<Integer> category, List<PhotoEntity> pendingPhotos,
+			String news) {
 		boolean status;
 		// update pending reports
 		status = Database.mReportDao.updatePendingReport(reportId, report);
@@ -101,13 +104,14 @@ public class AddReportModel extends Model {
 		if (status) {
 			if (category != null && category.size() > 0) {
 				// delete existing categories. It's easier this way
-				Database.mReportCategoryDao
-						.deleteReportCategoryByReportId(reportId);
+				Database.mReportCategoryDao.deleteReportCategoryByReportId(
+						reportId, IReportSchema.PENDING);
 
 				for (Integer cat : category) {
 					ReportCategory reportCategory = new ReportCategory();
 					reportCategory.setCategoryId(cat);
 					reportCategory.setReportId(reportId);
+					reportCategory.setStatus(IReportSchema.PENDING);
 					Database.mReportCategoryDao
 							.addReportCategory(reportCategory);
 
@@ -155,9 +159,9 @@ public class AddReportModel extends Model {
 		return Database.mReportDao.fetchPendingReportIdById(reportId);
 	}
 
-	public List<ReportCategory> fetchReportCategories(int reportId) {
-		return Database.mReportCategoryDao
-				.fetchReportCategoryByReportId(reportId);
+	public List<ReportCategory> fetchReportCategories(int reportId, int status) {
+		return Database.mReportCategoryDao.fetchReportCategoryByReportId(
+				reportId, status);
 	}
 
 	public List<MediaEntity> fetchReportNews(int reportId) {
@@ -169,7 +173,8 @@ public class AddReportModel extends Model {
 		Database.mReportDao.deletePendingReportById(reportId);
 
 		// delete categories
-		Database.mReportCategoryDao.deleteReportCategoryByReportId(reportId);
+		Database.mReportCategoryDao.deleteReportCategoryByReportId(reportId,
+				IReportSchema.PENDING);
 
 		// delete media
 		Database.mMediaDao.deleteMediaByReportId(reportId);

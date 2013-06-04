@@ -164,7 +164,6 @@
   <string name="pending_upload">Warte auf Hochladen</string>
   <string name="fetched">Abgerufen</string>
   <string name="required_fields">Benötigte Felder</string>
-  <string name="title">Titel</string>
   <string name="category">Kategorie</string>
   <string name="location">Standort</string>
   <string name="description">Beschreibung</string>
@@ -172,7 +171,6 @@
   <string name="longitude">Längengrad</string>
   <string name="date_and_time">Datum und Uhrzeit</string>
   <string name="enter_news_url">Nachrichten URL eingeben</string>
-  <string name="unsaved_changes">Ungespeicherte Änderungen</string>
   <string name="want_to_cancel">Wirklich abbrechen?</string>
   <string name="added">Hinzugefügt</string>
   <string name="uploaded">Hochgeladen</string>
@@ -212,7 +210,6 @@
   <string name="change_time">Uhrzeit ändern</string>
   <string name="prompt_mesg">Wähle eine Kategorie zur Filterung</string>
   <string name="invalid_email_address">Es wurde eine ungültige E-Mail Adresse eingegeben</string>
-  <string name="choose_categories">Kategorie auswählen</string>
   <string name="location_disabled">Standortsbestimmung deaktiviert</string>
   <string name="location_reenable">Möchtest Du die Einstellungen zu \"Standort und Sicherheit\" aufrufen und dort die Standortbestimmung aktivieren?</string>
   <string name="basic_settings">Basiseinstellungen</string>
@@ -222,9 +219,4 @@
   <string name="hint_last_name">Auch als Zuordnung beim Erstellen eines Berichts (optional).</string>
   <string name="txt_email">E-Mail Adresse</string>
   <string name="hint_email">Nur zur Kontaktaufnahme.</string>
-  <string name="txt_phonenumber">Mobilfunknummer</string>
-  <string name="hint_phonenumber">Nur zum Senden des Berichts.</string>
-  <string name="total_reports">Anzahl der Berichte</string>
-  <string name="hint_total_reports">Die gesamte Anzahl an Berichten, die verwendet werden sollen.</string>
-  <string name="no_reports">Es gibt keine Berichte zur Ansicht.</string>
 </resources>

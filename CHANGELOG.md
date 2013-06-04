@@ -1,0 +1,218 @@
+### v3.7
+========
+**Bug:**
+* Fix possible incorrect category data - #87
+* Removed duplicate string entry - #134
+* Delete report upload upon a successful upload - #131
+* Cursor now shows in EditText - #135
+* Fix crashes with media values being NULL - #136
+* App somewhat launches the correct view - #137
+
+**Known Issue**
+* Map in views flickers with black ground. This is due to a bug in the Google maps v2 Android - #126
+
+### v3.2.6
+==========
+**Bug:**
+* Fix date formatting.
+* Fix failing report upload.
+
+
+### v3.1.6
+==========
+**Features:**
+* Add Google maps v2 for Android
+* Add menu drawer.
+* Add ability to swipe through report views
+* Add admin dashboard support view WebView
+* Add cwacmerge library into the core library. No long a dependency
+* Add OSM and Mapbox tiles support in addition to Google maps tiles.
+* Dropped support for API level 7. 
+* Upgraded ABS library to the lastest release
+* Axed out checkin code.
+* Used Ushahidi Java SDK.
+
+**Bugs:**
+* Fix crashes when there is no category to filter by and an attempted is made to filter by category.
+* Improved image scaling functionality.
+* Refactored a lot of the code.
+* Fix intermitent crashes when launching comment view.
+* Fix crashes when fetching and posting comments.
+
+
+### v3.1.5
+==========
+**Bug:**
+* Fix crashes when there are null values for latitude and longitude.
+
+### v3.1.4
+==========
+**Feature:**
+ * Support for OpenGeoSMS
+ * Removed restrictions to telephony hardware so the app shows up for devices without the telephony hardware. 
+ * Add Korean translation
+ * Add German translation
+
+**Bug:**
+ * Fix issue with consistencies with input field character case.
+ * Fix report upload occassional failure.
+ * Fix crashes with comments.
+    
+### v3.0.3
+==========
+**Bug:** 
+  * Fixed crashes with change in internet connectivity on the device
+
+### v3.0.2
+==========
+**Features:**  
+  * Added Android-16 as a target. So now Jelly Bean devices can install this app.
+  * Changed the background color for filter by text to red and changed text color to white.
+  * Improved whitel labeling experience by add more options for customization.
+
+**Bug:**
+  * Fix lat/lon reverse issue. See #69.
+
+### v3.0.1
+==========
+**Features:**
+  * Added Hierarchical support categories.
+  
+**Bug:**
+  * Fixed force close on certain devices.
+  * Fixed actionbar menu consistency issue.
+  * Fixed crashes when doing multiple photo uploads when checkin is enabled.
+
+### v3.0.0
+==========
+**Features:**
+  * Much faster when loading images.
+  * Added the ability to view media attached to reports.
+  * Added the ability to view and add comments to reports.
+  * Replaced dashboard with map listing.
+  * Removed unnecessary setting options.
+  * Restructured the code base.
+
+### v2.9.3:
+==========
+**Bug:**
+  * Fixed report uploading problem
+  * Fixed 'about screen' crashing
+
+### v2.9.2:
+==========
+**Bug:**
+  * Fixed auto sync sound/vibrate always on.
+  * Fixed Latitude/Longitude fields in "New Report" crashes system with invalid values	
+  * Fixed Reports not uploaded when unit regains connectivity
+  * Fix pictures upload failure
+  * Fix entered location from being reset when add a photo to a report
+
+### v2.9.1:
+==========
+**Bug:**
+  * Fixed checkin photo upload failure.
+  * Fixed HTTPS not working on some devices. 
+
+### v2.9:
+=========
+**Bug:**
+  * Fixed FC when there is no category in the system.
+  * Fixed HTTPS/HTTP switch.
+  * Fixed FC when the app is clearing cache.
+
+### v2.8:
+=========
+**Bug:**
+  * Fixed full HTTPS support
+
+### v2.7:
+=========
+**Bug:**
+  * Fixed the wrong use of R in switch statements causing images to be displaced. 
+
+### v2.6:
+=========
+**Bug:**
+  * Fixed photo rotation issue for nexus one phones
+  * Fixed issue of ordering category by position
+  * Fixed issue of app complaining about slow connection even though the app is on a fast connection.
+
+**Feature:**
+  * Easier whitelabeling process for developers.
+  * Enabled Location Detection Inside App
+  * Improved add incident UI
+  * Added the ability for users move map pin to set a new location
+
+### v2.5:
+=========
+**Bug:**
+  * Fixed old check-in messages showing up when a different check-in deployment is selected.
+  
+### v2.4:
+=========
+**Feature:**
+  * Added Catalan langauge
+  * Improved UI when viewing details of a report/checkin
+  * More code clean up. Thanks to https://github.com/jmschanck
+  * Added automatic state saving when adding a report/checkin.
+
+**Bug:**
+  * Removed hardware camera auto focus requirement 
+
+### v2.3:
+=========
+**Feature:**
+  * Added a new settings field to allow resizing of images to be uploaded.
+  * Removed custom camera app and replaces it with inbuilt camera app which has more features.  
+  
+**Bug:**
+  * Minor bug fixes. More tweaks to the white-labelling feature
+  
+### v2.2:
+=========
+**Bug:** 
+  * Minor bug fix. Fixed more null pointer exception causing app to crash
+
+### v2.1:
+=========
+**Bug:**
+  * Minor bug fix. Malformed XML, crashes the app
+
+### v2.0:
+=========
+**Feature:**
+ * Added sharing support; Reports / Checkins can now be shared via email, twitter, bluetooth,etc
+ * Added Deployment search support.
+ * Redesigned dashboard UI.
+ * Added action bar to most activities.
+ * Added new translations. French, Chinese, Portuguese, Japanese, Turkish
+ * Supports white-labeling.
+
+**Fixed:**
+ * Improved GPS fix. Its much faster now.
+
+### v1.0:
+=========
+**Feature:**
+ * Added Checkin support.
+ * Added color to tabs.
+ * Added offline reporting to the app
+ 
+**Fixed:**
+ * Fixed issue with changes in preferences value not taking effect.
+ * Formatted code to official Android coding style.
+ * Fixed default images not showing when listing reports.
+ * Fixed status colorization bug.
+ * Fixed issue with image overlapping its view.
+ * Fixed issues with images not being saved with Crowdmap deployment.
+ * Improved GPS fix. Now it doesn't take forever getting a fix especially when GPS is turned on.
+
+### v0.9.4:
+===========
+ * Fixed issue with the app not sending the longitude when submitting a report but sends the latitude value as longitude value.
+
+### v0.9.3:
+===========
+ * Added the app version number to the about page.
+

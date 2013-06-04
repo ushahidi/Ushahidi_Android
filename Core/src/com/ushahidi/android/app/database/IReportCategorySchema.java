@@ -35,6 +35,8 @@ public interface IReportCategorySchema {
 
 	public static String CATEGORY_ID = "category_id";
 
+	public static String STATUS = "pending";
+
 	public static final String REPORT_CATEGORY_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
 			+ TABLE
 			+ " ("
@@ -43,9 +45,9 @@ public interface IReportCategorySchema {
 			+ CATEGORY_ID
 			+ " INTEGER NOT NULL, "
 			+ REPORT_ID
-			+ " INTEGER NOT NULL )";
+			+ " INTEGER NOT NULL, " + STATUS + " INTEGER DEFAULT 0 )";
 
 	public static final String[] COLUMNS = new String[] { ID, CATEGORY_ID,
-			REPORT_ID, CATEGORY_ID };
+			REPORT_ID, CATEGORY_ID, STATUS };
 
 }

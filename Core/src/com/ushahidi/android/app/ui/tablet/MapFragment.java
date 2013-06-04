@@ -79,6 +79,8 @@ public class MapFragment extends BaseMapFragment implements
 
 	private boolean refreshState = false;
 
+	private UpdatableMarker mMarker = createUpdatableMarker();
+
 	public MapFragment() {
 		super(R.menu.map_report);
 	}
@@ -94,7 +96,7 @@ public class MapFragment extends BaseMapFragment implements
 
 		if (checkForGMap()) {
 			map = getMap();
-			
+
 			Preferences.loadSettings(getActivity());
 
 			initMap();
@@ -121,9 +123,20 @@ public class MapFragment extends BaseMapFragment implements
 	@Override
 	public void onInfoWindowClick(Marker marker) {
 		if (mReportModel != null) {
-			final int position = Integer.valueOf(marker.getId()
-					.replace("m", "").trim());
-			launchViewReport(position, "");
+
+			List<String> markers = mMarker.markersHolder;
+
+			// FIX ME: Using the title to find which latlng have been tapped.
+			// This ugly hack has to do with the limitation in Google maps api
+			// for android. There is a
+			// posibility of having the wront position returned in case there
+			// are two or more of the same title.
+			// SEE:https://code.google.com/p/gmaps-api-issues/issues/detail?id=4650
+			final int position = markers.indexOf(marker.getTitle());
+			if (markers != null && markers.size() > 0) {
+				
+				launchViewReport(position, "");
+			}
 		}
 
 		if (marker.isInfoWindowShown())
@@ -364,8 +377,7 @@ public class MapFragment extends BaseMapFragment implements
 	public void populateMap() {
 
 		if (mReportModel != null) {
-			UpdatableMarker marker = createUpdatableMarker();
-
+			mMarker.markersHolder.clear();
 			for (ReportEntity reportEntity : mReportModel) {
 				double latitude = 0.0;
 				double longitude = 0.0;
@@ -384,9 +396,10 @@ public class MapFragment extends BaseMapFragment implements
 				}
 				final String description = Util.limitString(reportEntity
 						.getIncident().getDescription(), 30);
-				marker.addMarkerWithIcon(map, latitude, longitude, reportEntity
-						.getIncident().getTitle(), description, reportEntity
-						.getThumbnail());
+
+				mMarker.addMarkerWithIcon(map, latitude, longitude,
+						reportEntity.getIncident().getTitle(), description,
+						reportEntity.getThumbnail());
 
 			}
 		}

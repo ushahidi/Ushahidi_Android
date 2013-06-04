@@ -182,6 +182,8 @@ public class ViewReportSlideActivity<V extends View> extends BaseActivity<V> {
 		public int getCount() {
 			return NUM_PAGES;
 		}
+		
+		
 
 	}
 
