@@ -7,6 +7,9 @@
 * Fix crashes with media values being NULL - #136
 * App somewhat launches the correct view - #137
 
+**Known Issue**
+* Map in views flickers with black ground. This is due to a bug in the Google maps v2 Android - #126
+
 ### v3.2.6
 **Bug:**
 * Fix date formatting.

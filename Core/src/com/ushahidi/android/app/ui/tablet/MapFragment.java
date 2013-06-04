@@ -134,9 +134,7 @@ public class MapFragment extends BaseMapFragment implements
 			// SEE:https://code.google.com/p/gmaps-api-issues/issues/detail?id=4650
 			final int position = markers.indexOf(marker.getTitle());
 			if (markers != null && markers.size() > 0) {
-
-				// toastLong(" hello : "+);
-
+				
 				launchViewReport(position, "");
 			}
 		}
