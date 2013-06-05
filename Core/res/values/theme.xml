@@ -25,7 +25,6 @@
 
 	<!-- BACKROUND IMAGES -->
     <drawable name="splash_background">@null</drawable>
-    <drawable name="dashboard_background">@null</drawable>
     <drawable name="about_background">@null</drawable>
     <drawable name="actionbar_background">@null</drawable>
 

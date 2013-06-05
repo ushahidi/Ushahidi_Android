@@ -16,22 +16,23 @@ For more information visit:
 ### How To White-Label The App ###
 
 Duplicate the **/Themes/Ushahidi** folder and rename with your theme name, for example **/Themes/MyTheme**. Note, you can use **/Beijing** or **/Inherity** themes as an example.
+
   
 ### Application Icon ###
 
 Replace the files **"/Themes/MyTheme/res/drawable-hdpi/icon.png" (72 x 72), "/Themes/MyTheme/res/drawable-ldpi/icon.png" (36px x 36px) and "/Themes/MyTheme/res/drawable-mdpi/icon.png"(48px x 48px)** with your custom designed application icon. 
+You can use this (launcher icon generator)[http://android-ui-utils.googlecode.com/hg/asset-studio/dist/icons-launcher.html] tool to generate a launcher Icon.
+
 
 ### Splash Screen ###
 
 Replace the file **"/Themes/MyTheme/res/drawable/splash.png"** with your custom designed splash image. It should be of the size 320px x 480px
 
-### Dashboard Background ###
-
-Replace the file **"/Themes/MyTheme/res/drawable/dashboard.png" (320px x 480px)** with your custom dashboard background image. 
 
 ### About Background ###
 
 Replace the file **"/Themes/MyTheme/res/drawable/about.png" (320px x 440px)** with your custom about background image.
+
 
 ### Deployment Logo ###
 
@@ -51,14 +52,22 @@ In the **"/Themes/MyTheme/res/values/theme.xml"**, replace the various hexadecim
 
 ### Deployment Information ###
 
-In the **"/Themes/MyTheme/res/values/theme.xml"**, specify the 'app_title' and also various URLs for your deployment: 'deployment_url', 'team_url', 'media_url', 'twitter_url', 'facebook_url' and 'contact_url'. Note, if you do not have a Facebook or Twitter account, leaving these values blank will hide these About screen buttons.
+In the **"/Themes/MyTheme/res/values/theme.xml"**, specify the 'app_title' and also various URLs for your deployment: 
+* `deployment_url`
+* `team_url` 
+* `media_url` 
+* `twitter_url` 
+* `facebook_url`
+* `contact_url` 
+
+**Note:**, if you do not have a Facebook or Twitter account, leaving these values blank will hide these About screen buttons.
 
 ### Deployment Text ###
  
-In the **"/Themes/MyTheme/res/values/theme.xml"**, update the 'about_text' with a description of your deployment.
+In the **"/Themes/MyTheme/res/values/theme.xml"**, update the `about_text` with a description of your deployment.
 
 
 ### How To Build The App ###
 
-To build any of the white-labled app, read **BUILDING.txt**.
+To build any of the white-labled app, read the wiki [entry](https://wiki.ushahidi.com/display/WIKI/Build+The+Android+App).
 
