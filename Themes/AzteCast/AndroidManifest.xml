@@ -11,7 +11,7 @@
 	at team@ushahidi.com.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ushahidi.android.app"
+    package="com.aztecast.android.app"
     android:versionCode="33"
     android:versionName="3.7" >
 
@@ -48,7 +48,7 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
-        android:name=".MainApplication"
+        android:name="com.ushahidi.android.app.MainApplication"
         android:hardwareAccelerated="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
@@ -57,7 +57,7 @@
 
         <!-- Settings -->
         <activity
-            android:name=".Settings"
+            android:name="com.ushahidi.android.app.Settings"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/settings"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
@@ -70,7 +70,7 @@
 
         <!-- About -->
         <activity
-            android:name=".ui.phone.AboutActivity"
+            android:name="com.ushahidi.android.app.ui.phone.AboutActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/about" >
             <intent-filter>
@@ -82,7 +82,7 @@
 
         <!-- Add a new report -->
         <activity
-            android:name=".ui.phone.AddReportActivity"
+            android:name="com.ushahidi.android.app.ui.phone.AddReportActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/add_report"
             android:windowSoftInputMode="stateHidden" >
@@ -109,7 +109,7 @@
 
         <!-- List Reports -->
         <activity
-            android:name=".ui.tablet.ListReportFragmentActivity"
+            android:name="com.ushahidi.android.app.ui.tablet.ListReportFragmentActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/reports" >
             <intent-filter>
@@ -131,7 +131,7 @@
 
         <!-- List Maps -->
         <activity
-            android:name=".ui.phone.ListMapActivity"
+            android:name="com.ushahidi.android.app.ui.phone.ListMapActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/maps"
             android:windowSoftInputMode="stateHidden" >
@@ -164,7 +164,7 @@
 
         <!-- report tab -->
         <activity
-            android:name=".ui.phone.ReportTabActivity"
+            android:name="com.ushahidi.android.app.ui.phone.ReportTabActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/app_name"
             android:launchMode="singleTop" >
@@ -177,7 +177,7 @@
 
         <!-- View Reports -->
         <activity
-            android:name=".ui.tablet.DashboardActivity"
+            android:name="com.ushahidi.android.app.ui.tablet.DashboardActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/reports" >
             <intent-filter>
@@ -189,7 +189,7 @@
 
         <!-- View Reports -->
         <activity
-            android:name=".ui.tablet.AddReportFragmentActivity"
+            android:name="com.ushahidi.android.app.ui.tablet.AddReportFragmentActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/reports" >
             <intent-filter>
@@ -202,7 +202,7 @@
         <!-- Launch View Reports -->
 
         <activity
-            android:name=".ui.phone.ViewReportSlideActivity"
+            android:name="com.ushahidi.android.app.ui.phone.ViewReportSlideActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/reports" >
             <intent-filter>
@@ -214,7 +214,7 @@
 
         <!-- Launch View Photos -->
         <activity
-            android:name=".ui.phone.ViewReportPhotoActivity"
+            android:name="com.ushahidi.android.app.ui.phone.ViewReportPhotoActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/photos" >
             <intent-filter>
@@ -226,7 +226,7 @@
 
         <!-- Launch View News -->
         <activity
-            android:name=".ui.phone.ViewReportNewsActivity"
+            android:name="com.ushahidi.android.app.ui.phone.ViewReportNewsActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/news" >
             <intent-filter>
@@ -238,7 +238,7 @@
 
         <!-- Launch View Video -->
         <activity
-            android:name=".ui.phone.ViewReportVideoActivity"
+            android:name="com.ushahidi.android.app.ui.phone.ViewReportVideoActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/video" >
             <intent-filter>
@@ -248,7 +248,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.phone.AdminActivity"
+            android:name="com.ushahidi.android.app.ui.phone.AdminActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/video" >
             <intent-filter>
@@ -258,7 +258,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SplashScreenActivity"
+            android:name="com.ushahidi.android.app.activities.SplashScreenActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -267,7 +267,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.phone.ReportMapActivity"
+            android:name="com.ushahidi.android.app.ui.phone.ReportMapActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -276,7 +276,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.phone.ListReportCommentActivity"
+            android:name="com.ushahidi.android.app.ui.phone.ListReportCommentActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/comments" >
             <intent-filter>
@@ -286,7 +286,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.phone.AddCommentActivity"
+            android:name="com.ushahidi.android.app.ui.phone.AddCommentActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/comments" >
             <intent-filter>
@@ -300,16 +300,16 @@
 
 
         <!-- Services -->
-        <service android:name=".services.UploadCheckins" />
-        <service android:name=".services.FetchCheckinsComments" />
-        <service android:name=".services.FetchReportsComments" />
-        <service android:name=".services.UploadComments" />
-        <service android:name=".services.FetchReports" />
-        <service android:name=".services.FetchCheckins" />
+        <service android:name="com.ushahidi.android.app.services.UploadCheckins" />
+        <service android:name="com.ushahidi.android.app.services.FetchCheckinsComments" />
+        <service android:name="com.ushahidi.android.app.services.FetchReportsComments" />
+        <service android:name="com.ushahidi.android.app.services.UploadComments" />
+        <service android:name="com.ushahidi.android.app.services.FetchReports" />
+        <service android:name="com.ushahidi.android.app.services.FetchCheckins" />
 
         <!-- connectivity changed -->
         <receiver
-            android:name=".services.ConnectivityChangedReceiver"
+            android:name="com.ushahidi.android.app.services.ConnectivityChangedReceiver"
             android:enabled="false" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

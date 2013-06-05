@@ -52,7 +52,7 @@ In the **"/Themes/MyTheme/res/values/theme.xml"**, replace the various hexadecim
 
 ### Deployment Information ###
 
-In the **"/Themes/MyTheme/res/values/theme.xml"**, specify the 'app_title' and also various URLs for your deployment: 
+In the **"/Themes/MyTheme/res/values/theme.xml"**, specify the `app_title` and also various URLs for your deployment: 
 * `deployment_url`
 * `team_url` 
 * `media_url` 

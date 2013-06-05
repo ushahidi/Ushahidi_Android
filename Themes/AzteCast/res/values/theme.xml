@@ -1,8 +1,9 @@
 <resources>
 
     <!-- DEPLOYMENT INFORMATION -->
-    <string name="app_title">Ushahidi</string>
-    <string name="deployment_url" />
+    <string name="app_title">AzteCast</string>
+    <string name="app_name">AzteCast</string>
+    <string name="deployment_url">http://aztecast.com</string>
     <string name="team_url">http://ushahidi.com/about-us/team</string>
     <string name="media_url">http://www.ushahidi.com</string>
     <string name="twitter_url">http://twitter.com/ushahidi</string>
@@ -12,8 +13,9 @@
     <!-- DEPLOYMENT PROVIDER AUTHORITIES. USUALLY PACKAGE NAME AND CLASS NAME Eg. com.ushahidi.android.app.data.deploymentprovider -->
     <string name="provider_authorities">com.ushahidi.android.app.data.deploymentprovider</string>
 
-    <!-- NAMESPACE  -->
+    <!-- NAMESPACE -->
     <string name="rounded_corner">http://schemas.android.com/apk/res/com.ushahidi.android.app</string>
+     
     <!-- ICON IMAGES -->
     <drawable name="app_icon">@drawable/icon</drawable>
     <drawable name="logo_icon">@drawable/logo</drawable>
@@ -23,56 +25,56 @@
 
     <!-- BACKROUND IMAGES -->
     <drawable name="splash_background">@drawable/splash</drawable>
-    <drawable name="dashboard_background">@drawable/dashboard</drawable>
-    <drawable name="about_background">@drawable/skyline</drawable>
-    <drawable name="actionbar_background">@drawable/actionbar</drawable>
-
-    <!-- COLOR CODES -->
+    <drawable name="about_background">@color/about</drawable>
+    <drawable name="actionbar_background">@color/ab_background</drawable>
+    
+     <!-- COLOR CODES -->
     <color name="title_color">#7C2811</color>
     <color name="date_color">#262321</color>
     <color name="report_table">#f6f6ee</color>
     <color name="header_color">#3E51BC</color>
-    <color name="background_color">#ede7d1</color>
+    <color name="background_color">#FAEBEB</color>
     <color name="thick_background_color">#DDD0A3</color>
     <color name="button_background_color">#ffffff</color>
     <color name="button_stroke_color">#cac7c0</color>
     <color name="white_color">#FFFFFF</color>
-    
-     <!-- Report listing screen -->
-    <color name="filter_by_text_color">#7C2811</color>
-    <color name="filter_by_background_color">#e6ddbe</color> <!-- Report listing screen -->
-    
+    <color name="ab_background">#B82E2E</color>
+    <color name="about">#FAEBEB</color>
+
+    <!-- Report listing screen -->
+    <color name="filter_by_text_color">@color/black_color</color>
+    <color name="filter_by_background_color">@color/background_color</color> <!-- Report listing screen -->
+
     <color name="verified_color">#25991C</color>
     <color name="black_color">#000000</color>
     <color name="gray_color">#736F6E</color>
     <color name="title_background">#453727</color>
     <color name="title_separator">#000000</color>
-    <color name="title_text">#ffffff</color>
-    <color name="title_text_alt">#bf2b05</color>
-    <color name="icon_title">#89221b</color>
-    <color name="foreground2">#ff7081a3</color>
-    <color name="background1">#ffffff</color>
-    <color name="background2">#ffd5ddeb</color>
-    <color name="background3">#ffe3e8f1</color>
-    <color name="list_view_date">#90544a</color>
-    <color name="table_background">#f6f6ee</color>
-    <color name="table_odd_row_color">#f2eddc</color>
-    <color name="table_even_row_color">#efdbad</color>
-    <color name="table_selected_row_color">#e6ddbe</color>
-    <color name="table_header_color">#e6ddbe</color>
+    <color name="title_text">@color/white_color</color>
+    <color name="title_text_alt">#BF2B05</color>
+    <color name="icon_title">#89221B</color>
+    <color name="foreground2">#FF7081A3</color>
+    <color name="background1">@color/white_color</color>
+    <color name="background2">#FFD5DDEB</color>
+    <color name="background3">#FFE3E8F1</color>
+    <color name="list_view_date">#90544A</color>
+    <color name="table_background">#F6F6EE</color>
+    <color name="table_odd_row_color">@color/white_color</color>
+    <color name="table_even_row_color">@color/white_color</color>
+    <color name="table_selected_row_color">#D14848</color>
+    <color name="table_header_color">#E6DDBE</color>
     <color name="verified_text_color">#99CC99</color>
     <color name="unverified_text_color">#CC6666</color>
-    <color name="tab_background">#1a1a1a</color>
+    <color name="tab_background">#1A1A1A</color>
     <color name="tab_selected_color">#8A1F03</color>
     <color name="tab_unselected_color">#404041</color>
-    <color name="list_divider_color">#e0e0e0</color>
-    <color name="overlay_text_color">#aa000000</color>
+    <color name="list_divider_color">#E0E0E0</color>
+    <color name="overlay_text_color">#AA000000</color>
     <color name="selectable_color">#7C2811</color>
     <color name="text_value_color">#000000</color>
-    
     <color name="tab_medium">#2B2B2B</color>
     <color name="tab_dark">#000000</color>
-    <color name="tab_transparent">#10ffffff</color>
+    <color name="tab_transparent">#10FFFFFF</color>
 
     <!-- TEXT SIZE -->
     <dimen name="text_size_small">14sp</dimen>
@@ -84,17 +86,12 @@
     <dimen name="actionbar_height">45dip</dimen>
     <dimen name="actionbar_button_height">30dip</dimen>
     <dimen name="bottom_actionbar_height">65dip</dimen>
-    
 
     <!-- DEPLOYMENT TEXT -->
-    <string name="about_text">Ushahidi is a non-profit tech company that develops
-		free and open source software for information collection,
-		visualization and interactive mapping. We built the Ushahidi platform
-		as a tool to easily crowdsource information using multiple channels,
-		including SMS, email, Twitter and the web.</string>
-	 <!--GOOGLE MAPS API-->
-    <!--  Dev Key  -->
-    <string name="google_map_api_key_dev">AIzaSyCMm_TKMClnukKXP9DqoegNJbv-eNCZqQI</string> 
+    <string name="about_text">The AzteCast app is a powerful mapping tool that helps the San Diego State University campus population to post and share news events happening at the university to a physical map.</string>
+    <!-- GOOGLE MAPS API -->
+    <!-- Dev Key -->
+    <string name="google_map_api_key_dev">AIzaSyCMm_TKMClnukKXP9DqoegNJbv-eNCZqQI</string>
     <!-- Live Key -->
     <string name="google_map_api_key">AIzaSyDfmnptOeDh0XVELv3WJkyMbckdtMW7Aiw</string>
 
