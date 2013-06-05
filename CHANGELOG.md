@@ -1,3 +1,7 @@
+### v3.7.1
+**Bug:**
+* Remove SMS permission from manifest file.
+
 ### v3.7
 ========
 **Bug:**
