@@ -17,6 +17,7 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
+
 package com.ushahidi.android.app.adapters;
 
 import java.util.ArrayList;
@@ -39,200 +40,201 @@ import com.ushahidi.android.app.util.Util;
 
 /**
  * @author eyedol
- * 
  */
 public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
-		implements Filterable {
+        implements Filterable {
 
-	class Widgets extends com.ushahidi.android.app.views.View {
+    class Widgets {
 
-		public Widgets(View view) {
-			super(view);
-			this.thumbnail = (ImageView) view
-					.findViewById(R.id.report_thumbnail);
-			this.title = (TextView) view.findViewById(R.id.report_title);
-			this.description = (TextView) view
-					.findViewById(R.id.report_description);
-			this.date = (TextView) view.findViewById(R.id.report_date);
-			this.iLocation = (TextView) view.findViewById(R.id.report_location);
-			this.categories = (TextView) view
-					.findViewById(R.id.report_categories);
-			this.status = (TextView) view.findViewById(R.id.report_status);
-			this.arrow = (ImageView) view.findViewById(R.id.report_arrow);
-		}
+        public Widgets(View view) {
 
-		TextView title;
+            this.thumbnail = (ImageView) view
+                    .findViewById(R.id.report_thumbnail);
+            this.title = (TextView) view.findViewById(R.id.report_title);
+            this.description = (TextView) view
+                    .findViewById(R.id.report_description);
+            this.date = (TextView) view.findViewById(R.id.report_date);
+            this.iLocation = (TextView) view.findViewById(R.id.report_location);
+            this.categories = (TextView) view
+                    .findViewById(R.id.report_categories);
+            this.status = (TextView) view.findViewById(R.id.report_status);
+            this.arrow = (ImageView) view.findViewById(R.id.report_arrow);
+        }
 
-		TextView iLocation;
+        TextView title;
 
-		TextView date;
+        TextView iLocation;
 
-		TextView status;
+        TextView date;
 
-		TextView categories;
+        TextView status;
 
-		TextView description;
+        TextView categories;
 
-		ImageView thumbnail;
+        TextView description;
 
-		ImageView arrow;
+        ImageView thumbnail;
 
-	}
+        ImageView arrow;
 
-	protected int[] colors;
+    }
 
-	protected ListReportModel mListReportModel;
+    protected int[] colors;
 
-	protected List<ReportEntity> items;
+    protected ListReportModel mListReportModel;
 
-	public ReportAdapter(Context context) {
-		super(context);
+    protected List<ReportEntity> items;
 
-		colors = new int[] { R.drawable.odd_row_rounded_corners,
-				R.drawable.even_row_rounded_corners };
-		mListReportModel = new ListReportModel();
-	}
+    public ReportAdapter(Context context) {
+        super(context);
 
-	public String fetchCategories(int reportId) {
-		StringBuilder categories = new StringBuilder();
-		for (CategoryEntity category : mListReportModel
-				.getCategoriesByReportId(reportId)) {
-			if (category.getCategoryTitle().length() > 0) {
-				categories.append(category.getCategoryTitle() + " |");
-			}
+        colors = new int[] {
+                R.drawable.odd_row_rounded_corners,
+                R.drawable.even_row_rounded_corners
+        };
+        mListReportModel = new ListReportModel();
+    }
 
-		}
+    public String fetchCategories(int reportId) {
+        StringBuilder categories = new StringBuilder();
+        for (CategoryEntity category : mListReportModel
+                .getCategoriesByReportId(reportId)) {
+            if (category.getCategoryTitle().length() > 0) {
+                categories.append(category.getCategoryTitle() + " |");
+            }
 
-		// delete the last |
-		if (categories.length() > 0) {
-			categories.deleteCharAt(categories.length() - 1);
-		}
-		return categories.toString();
-	}
+        }
 
-	public View getView(int position, View view, ViewGroup viewGroup) {
+        // delete the last |
+        if (categories.length() > 0) {
+            categories.deleteCharAt(categories.length() - 1);
+        }
+        return categories.toString();
+    }
 
-		int colorPosition = position % colors.length;
-		View row = inflater
-				.inflate(R.layout.list_report_item, viewGroup, false);
-		row.setBackgroundResource(colors[colorPosition]);
+    public View getView(int position, View view, ViewGroup viewGroup) {
 
-		Widgets widgets = (Widgets) row.getTag();
-		final String thumbnailPath = thumbnail(position);
+        int colorPosition = position % colors.length;
+        View row = inflater
+                .inflate(R.layout.list_report_item, viewGroup, false);
+        row.setBackgroundResource(colors[colorPosition]);
 
-		if (widgets == null) {
-			widgets = new Widgets(row);
-			row.setTag(widgets);
-		}
-		if (thumbnailPath == null) {
+        Widgets widgets = (Widgets) row.getTag();
+        final String thumbnailPath = thumbnail(position);
 
-			widgets.thumbnail.setImageResource(R.drawable.report_icon);
+        if (widgets == null) {
+            widgets = new Widgets(row);
+            row.setTag(widgets);
+        }
+        if (thumbnailPath == null) {
 
-		} else {
-			getPhoto(thumbnailPath, widgets.thumbnail);
+            widgets.thumbnail.setImageResource(R.drawable.report_icon);
 
-		}
-		widgets.title.setText(getItem(position).getIncident().getTitle());
+        } else {
+            getPhoto(thumbnailPath, widgets.thumbnail);
 
-		widgets.date.setText(Util.datePattern(
-				"MMMM dd, yyyy 'at' hh:mm:ss aaa", getItem(position)
-						.getIncident().getDate()));
-		widgets.description.setText(Util.capitalizeString(getItem(position)
-				.getIncident().getDescription()));
+        }
+        widgets.title.setText(getItem(position).getIncident().getTitle());
 
-		widgets.categories.setText(Util.capitalizeString(Util.limitString(
-				fetchCategories((int) getItem(position).getIncident().getId()),
-				100)));
-		widgets.iLocation.setText(Util.capitalizeString(getItem(position)
-				.getIncident().getLocationName()));
-		// change the status color
+        widgets.date.setText(Util.datePattern(
+                "MMMM dd, yyyy 'at' hh:mm:ss aaa", getItem(position)
+                        .getIncident().getDate()));
+        widgets.description.setText(Util.capitalizeString(getItem(position)
+                .getIncident().getDescription()));
 
-		if (getItem(position).getIncident().getVerified() == 1) {
-			widgets.status.setTextColor(context.getResources().getColor(
-					R.color.verified_text_color)); // green
-		} else {
-			widgets.status.setTextColor(context.getResources().getColor(
-					R.color.unverified_text_color)); // red
-		}
+        widgets.categories.setText(Util.capitalizeString(Util.limitString(
+                fetchCategories((int) getItem(position).getIncident().getId()),
+                100)));
+        widgets.iLocation.setText(Util.capitalizeString(getItem(position)
+                .getIncident().getLocationName()));
+        // change the status color
 
-		widgets.status.setText(status((position)));
+        if (getItem(position).getIncident().getVerified() == 1) {
+            widgets.status.setTextColor(context.getResources().getColor(
+                    R.color.verified_text_color)); // green
+        } else {
+            widgets.status.setTextColor(context.getResources().getColor(
+                    R.color.unverified_text_color)); // red
+        }
 
-		widgets.arrow.setImageDrawable(context.getResources().getDrawable(
-				R.drawable.arrow));
+        widgets.status.setText(status((position)));
 
-		return row;
-	}
+        widgets.arrow.setImageDrawable(context.getResources().getDrawable(
+                R.drawable.arrow));
 
-	public void getPhoto(String fileName, ImageView imageView) {
-		ImageViewWorker imageWorker = new ImageViewWorker(context);
-		imageWorker.setImageFadeIn(true);
-		imageWorker.loadImage(fileName, imageView, true, 0);
+        return row;
+    }
 
-	}
+    public void getPhoto(String fileName, ImageView imageView) {
+        ImageViewWorker imageWorker = new ImageViewWorker(context);
+        imageWorker.setImageFadeIn(true);
+        imageWorker.loadImage(fileName, imageView, true, 0);
 
-	private String thumbnail(int position) {
+    }
 
-		// Get pending report's image
-		if (getItem(position).getIncident().getId() == 0) {
-			return mListReportModel.getImage(getItem(position).getDbId());
+    private String thumbnail(int position) {
 
-		}
+        // Get pending report's image
+        if (getItem(position).getIncident().getId() == 0) {
+            return mListReportModel.getImage(getItem(position).getDbId());
 
-		// Get fetched report's image
-		return mListReportModel.getImage(getItem(position).getIncident()
-				.getId());
+        }
 
-	}
+        // Get fetched report's image
+        return mListReportModel.getImage(getItem(position).getIncident()
+                .getId());
 
-	private String status(int position) {
-		return Util.setVerificationStatus(getItem(position).getIncident()
-				.getVerified(), context);
+    }
 
-	}
+    private String status(int position) {
+        return Util.setVerificationStatus(getItem(position).getIncident()
+                .getVerified(), context);
 
-	// Implements fitering pattern for the list items.
-	@Override
-	public Filter getFilter() {
-		return new ReportFilter();
-	}
+    }
 
-	public class ReportFilter extends Filter {
+    // Implements fitering pattern for the list items.
+    @Override
+    public Filter getFilter() {
+        return new ReportFilter();
+    }
 
-		@Override
-		protected FilterResults performFiltering(CharSequence constraint) {
-			FilterResults results = new FilterResults();
-			results.values = items;
-			results.count = items.size();
+    public class ReportFilter extends Filter {
 
-			if (constraint != null && constraint.toString().length() > 0) {
-				constraint = Util.toLowerCase(constraint.toString(), context);
-				ArrayList<ReportEntity> filteredItems = new ArrayList<ReportEntity>();
-				ArrayList<ReportEntity> itemsHolder = new ArrayList<ReportEntity>();
-				itemsHolder.addAll(items);
-				for (ReportEntity report : itemsHolder) {
-					if (Util.toLowerCase(report.getIncident().getTitle(),
-							context).contains(constraint)
-							|| Util.toLowerCase(
-									report.getIncident().getLocationName(),
-									context).contains(constraint)) {
-						filteredItems.add(report);
-					}
-				}
-				results.count = filteredItems.size();
-				results.values = filteredItems;
-			}
-			return results;
-		}
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            results.values = items;
+            results.count = items.size();
 
-		@SuppressWarnings("unchecked")
-		@Override
-		protected void publishResults(CharSequence constraint,
-				FilterResults results) {
-			List<ReportEntity> reports = (ArrayList<ReportEntity>) results.values;
-			setItems(reports);
+            if (constraint != null && constraint.toString().length() > 0) {
+                constraint = Util.toLowerCase(constraint.toString(), context);
+                ArrayList<ReportEntity> filteredItems = new ArrayList<ReportEntity>();
+                ArrayList<ReportEntity> itemsHolder = new ArrayList<ReportEntity>();
+                itemsHolder.addAll(items);
+                for (ReportEntity report : itemsHolder) {
+                    if (Util.toLowerCase(report.getIncident().getTitle(),
+                            context).contains(constraint)
+                            || Util.toLowerCase(
+                                    report.getIncident().getLocationName(),
+                                    context).contains(constraint)) {
+                        filteredItems.add(report);
+                    }
+                }
+                results.count = filteredItems.size();
+                results.values = filteredItems;
+            }
+            return results;
+        }
 
-		}
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint,
+                FilterResults results) {
+            List<ReportEntity> reports = (ArrayList<ReportEntity>) results.values;
+            setItems(reports);
 
-	}
+        }
+
+    }
 
 }

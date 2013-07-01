@@ -38,84 +38,83 @@ import com.ushahidi.android.app.util.ImageViewWorker;
  */
 public class ListPhotoAdapter extends BaseListAdapter<PhotoEntity> {
 
-	private ListPhotoModel mListPhotoModel;
+    private ListPhotoModel mListPhotoModel;
 
-	private List<PhotoEntity> items;
-	
-	private int totalPhotos;
+    private List<PhotoEntity> items;
 
-	/**
-	 * @param context
-	 */
-	public ListPhotoAdapter(Context context) {
-		super(context);
-	}
+    private int totalPhotos;
 
-	class Widgets extends com.ushahidi.android.app.views.View {
+    /**
+     * @param context
+     */
+    public ListPhotoAdapter(Context context) {
+        super(context);
+    }
 
-		public Widgets(View view) {
-			super(view);
-			this.photo = (ImageView) view.findViewById(R.id.list_report_photo);
-			this.total = (TextView) view.findViewById(R.id.photo_total);
+    class Widgets {
+        ImageView photo;
+        TextView total;
 
-		}
+        public Widgets(View view) {
 
-		ImageView photo;
-		TextView total;
-	}
+            this.photo = (ImageView) view.findViewById(R.id.list_report_photo);
+            this.total = (TextView) view.findViewById(R.id.photo_total);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.widget.Adapter#getView(int, android.view.View,
-	 * android.view.ViewGroup)
-	 */
-	@Override
-	public View getView(int position, View view, ViewGroup viewGroup) {
-		View row = inflater.inflate(R.layout.list_photo_item, viewGroup, false);
-		Widgets widgets = (Widgets) row.getTag();
+        }
 
-		if (widgets == null) {
-			widgets = new Widgets(row);
-			row.setTag(widgets);
-		}
+    }
 
-		// FIXME: only show the first item for now. In the future only get one
-		// item
-		//widgets.photo.setImageDrawable(getPhoto(getItem(position).getPhoto()));
-		
-		getPhoto(getItem(position).getPhoto(), widgets.photo);
-		widgets.total.setText(context.getResources().getQuantityString(
-				R.plurals.no_of_images, totalPhotos, totalPhotos));
-		return row;
-	}
+    /*
+     * (non-Javadoc)
+     * @see android.widget.Adapter#getView(int, android.view.View,
+     * android.view.ViewGroup)
+     */
+    @Override
+    public View getView(int position, View view, ViewGroup viewGroup) {
+        Widgets widgets;
+        if (view == null) {
+            view = inflater.inflate(R.layout.list_photo_item, null);
+            widgets = new Widgets(view);
+            view.setTag(widgets);
+        } else {
+            widgets = (Widgets) view.getTag();
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ushahidi.android.app.adapters.BaseListAdapter#refresh(android.content
-	 * .Context)
-	 */
-	@Override
-	public void refresh() {
+        // FIXME: only show the first item for now. In the future only get one
+        // item
+        // widgets.photo.setImageDrawable(getPhoto(getItem(position).getPhoto()));
 
-	}
+        getPhoto(getItem(position).getPhoto(), widgets.photo);
+        widgets.total.setText(context.getResources().getQuantityString(
+                R.plurals.no_of_images, totalPhotos, totalPhotos));
+        return view;
+    }
 
-	public void refresh(int reportId) {
-		mListPhotoModel = new ListPhotoModel();
-		final boolean loaded = mListPhotoModel.load(reportId);
-		totalPhotos = mListPhotoModel.totalReportPhoto();
-		if (loaded) {
-			items = mListPhotoModel.getPhotos();
-			this.setItems(items);
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * @see
+     * com.ushahidi.android.app.adapters.BaseListAdapter#refresh(android.content
+     * .Context)
+     */
+    @Override
+    public void refresh() {
 
-	public void getPhoto(String fileName, ImageView imageView) {
-		ImageViewWorker imageWorker = new ImageViewWorker(context);
-		imageWorker.setImageFadeIn(true);
-		imageWorker.loadImage(fileName, imageView, true, 0);
-	}
+    }
+
+    public void refresh(int reportId) {
+        mListPhotoModel = new ListPhotoModel();
+        final boolean loaded = mListPhotoModel.load(reportId);
+        totalPhotos = mListPhotoModel.totalReportPhoto();
+        if (loaded) {
+            items = mListPhotoModel.getPhotos();
+            this.setItems(items);
+        }
+    }
+
+    public void getPhoto(String fileName, ImageView imageView) {
+        ImageViewWorker imageWorker = new ImageViewWorker(context);
+        imageWorker.setImageFadeIn(true);
+        imageWorker.loadImage(fileName, imageView, true, 0);
+    }
 
 }
