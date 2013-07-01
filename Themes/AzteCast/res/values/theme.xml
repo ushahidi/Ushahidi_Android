@@ -4,11 +4,11 @@
     <string name="app_title">AzteCast</string>
     <string name="app_name">AzteCast</string>
     <string name="deployment_url">http://aztecast.com</string>
-    <string name="team_url">http://ushahidi.com/about-us/team</string>
-    <string name="media_url">http://www.ushahidi.com</string>
-    <string name="twitter_url">http://twitter.com/ushahidi</string>
-    <string name="facebook_url">http://www.facebook.com/ushahidi</string>
-    <string name="contact_url">http://ushahidi.com/contact-us</string>
+    <string name="team_url">http://aztecast.com/page/index/1</string>
+    <string name="media_url"/>
+    <string name="twitter_url"/>
+    <string name="facebook_url"/>
+    <string name="contact_url">http://aztecast.com/contact</string>
 
     <!-- DEPLOYMENT PROVIDER AUTHORITIES. USUALLY PACKAGE NAME AND CLASS NAME Eg. com.ushahidi.android.app.data.deploymentprovider -->
     <string name="provider_authorities">com.ushahidi.android.app.data.deploymentprovider</string>
@@ -91,8 +91,8 @@
     <string name="about_text">The AzteCast app is a powerful mapping tool that helps the San Diego State University campus population to post and share news events happening at the university to a physical map.</string>
     <!-- GOOGLE MAPS API -->
     <!-- Dev Key -->
-    <string name="google_map_api_key_dev">AIzaSyCMm_TKMClnukKXP9DqoegNJbv-eNCZqQI</string>
+    <string name="google_map_api_key_dev">AIzaSyByeWOSEFtFvfpKtDcHO8Zg7jFSp0D88lM</string>
     <!-- Live Key -->
-    <string name="google_map_api_key">AIzaSyDfmnptOeDh0XVELv3WJkyMbckdtMW7Aiw</string>
+    <string name="google_map_api_key">AIzaSyAUwfY5bdA2xxA4r9Aqn6k82f_RyktwR_I</string>
 
 </resources>
