@@ -180,7 +180,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 				+ " cats ON reports." + ID + " = cats."
 				+ IReportCategorySchema.REPORT_ID + " WHERE cats."
 				+ IReportCategorySchema.CATEGORY_ID + " =? AND " + "cats."
-				+ IReportCategorySchema.STATUS + " =?  AND " + INCIDENT_PENDING
+				+ IReportCategorySchema.STATUS + " =?  AND cats." + INCIDENT_PENDING
 				+ "=? ORDER BY  " + sortOrder;
 		final String selectionArgs[] = { String.valueOf(categoryId),
 				String.valueOf(IReportSchema.PENDING),
@@ -210,7 +210,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 				+ " cats ON reports." + INCIDENT_ID + " = cats."
 				+ IReportCategorySchema.REPORT_ID + " WHERE cats."
 				+ IReportCategorySchema.CATEGORY_ID + " =? AND " + "cats."
-				+ IReportCategorySchema.STATUS + " =?  AND " + INCIDENT_PENDING
+				+ IReportCategorySchema.STATUS + " =?  AND cats." + INCIDENT_PENDING
 				+ "=? ORDER BY  " + sortOrder;
 		final String selectionArgs[] = { String.valueOf(categoryId),
 				String.valueOf(IReportSchema.FETCHED),String.valueOf(IReportSchema.FETCHED) };

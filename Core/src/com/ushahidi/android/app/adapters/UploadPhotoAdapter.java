@@ -17,6 +17,7 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
+
 package com.ushahidi.android.app.adapters;
 
 import java.io.File;
@@ -38,90 +39,90 @@ import com.ushahidi.android.app.util.ImageManager;
  * This is the adapter for photos to be uploaded to the server.
  * 
  * @author eyedol
- * 
  */
 public class UploadPhotoAdapter extends BaseListAdapter<PhotoEntity> {
 
-	class Widgets extends com.ushahidi.android.app.views.View {
+    class Widgets {
+        ImageView photo;
 
-		public Widgets(View view) {
-			super(view);
-			this.photo = (ImageView) view.findViewById(R.id.upload_photo);
+        public Widgets(View view) {
 
-		}
+            this.photo = (ImageView) view.findViewById(R.id.upload_photo);
 
-		ImageView photo;
-	}
+        }
 
-	private ListPhotoModel mListPhotoModel;
+    }
 
-	private List<PhotoEntity> items;
+    private ListPhotoModel mListPhotoModel;
 
-	/**
-	 * @param context
-	 */
-	public UploadPhotoAdapter(Context context) {
-		super(context);
-	}
+    private List<PhotoEntity> items;
 
-	/**
-	 * @see android.widget.Adapter#getView(int, android.view.View,
-	 *      android.view.ViewGroup)
-	 */
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View row = inflater.inflate(R.layout.upload_photo, parent, false);
-		Widgets widgets = (Widgets) row.getTag();
+    /**
+     * @param context
+     */
+    public UploadPhotoAdapter(Context context) {
+        super(context);
+    }
 
-		if (widgets == null) {
-			widgets = new Widgets(row);
-			row.setTag(widgets);
-		}
+    /**
+     * @see android.widget.Adapter#getView(int, android.view.View,
+     *      android.view.ViewGroup)
+     */
+    @Override
+    public View getView(int position, View view, ViewGroup parent) {
+        Widgets widgets;
+        if (view == null) {
+            view = inflater.inflate(R.layout.upload_photo, null);
+            widgets = new Widgets(view);
+            view.setTag(widgets);
+        } else {
+            widgets = (Widgets) view.getTag();
+        }
 
-		widgets.photo.setImageDrawable(getPhoto(getItem(position).getPhoto()));
+        widgets.photo.setImageDrawable(getPhoto(getItem(position).getPhoto()));
 
-		return row;
+        return view;
 
-	}
+    }
 
-	/**
-	 * @see com.ushahidi.android.app.adapters.BaseListAdapter#refresh()
-	 */
-	@Override
-	public void refresh() {
-		mListPhotoModel = new ListPhotoModel();
-		items = mListPhotoModel.getPendingPhotos(context);
-		this.setItems(items);
+    /**
+     * @see com.ushahidi.android.app.adapters.BaseListAdapter#refresh()
+     */
+    @Override
+    public void refresh() {
+        mListPhotoModel = new ListPhotoModel();
+        items = mListPhotoModel.getPendingPhotos(context);
+        this.setItems(items);
 
-	}
+    }
 
-	public void refresh(int reportId) {
-		mListPhotoModel = new ListPhotoModel();
-		items = mListPhotoModel.getPendingPhotosByReportId(reportId);
-		this.setItems(items);
+    public void refresh(int reportId) {
+        mListPhotoModel = new ListPhotoModel();
+        items = mListPhotoModel.getPendingPhotosByReportId(reportId);
+        this.setItems(items);
 
-	}
+    }
 
-	public List<File> pendingPhotos(int reportId) {
-		mListPhotoModel = new ListPhotoModel();
-		items = mListPhotoModel.getPendingPhotosByReportId(reportId);
-		return getPhotos(items);
-	}
+    public List<File> pendingPhotos(int reportId) {
+        mListPhotoModel = new ListPhotoModel();
+        items = mListPhotoModel.getPendingPhotosByReportId(reportId);
+        return getPhotos(items);
+    }
 
-	private List<File> getPhotos(List<PhotoEntity> photoEntities) {
-		List<File> photos = new ArrayList<File>();
-		for (PhotoEntity photo : photoEntities) {
-			photos.add(new File(ImageManager.getPhotoPath(context,
-					photo.getPhoto())));
+    private List<File> getPhotos(List<PhotoEntity> photoEntities) {
+        List<File> photos = new ArrayList<File>();
+        for (PhotoEntity photo : photoEntities) {
+            photos.add(new File(ImageManager.getPhotoPath(context,
+                    photo.getPhoto())));
 
-		}
+        }
 
-		return photos;
-	}
+        return photos;
+    }
 
-	private Drawable getPhoto(String fileName) {
-		
-		return ImageManager.getPendingDrawables(context, fileName);
-	}
+    private Drawable getPhoto(String fileName) {
+
+        return ImageManager.getPendingDrawables(context, fileName);
+    }
 
 }
