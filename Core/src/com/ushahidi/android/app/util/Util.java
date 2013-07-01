@@ -581,7 +581,7 @@ public class Util {
      * @return The verification name
      */
     public static String setVerificationStatus(int verify, Context context) {
-        new Util().log("Util", "Status: " + verify);
+
         final String s = verify == 0 ? context.getString(R.string.unverified)
                 : context.getString(R.string.verified);
 

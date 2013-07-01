@@ -87,8 +87,8 @@ public class ListCommentAdapter extends BaseListAdapter<ListCommentModel> {
         // FIXME: only show the first item for now. In the future only get one
         // item
         widgets.commentAuthor.setText(getItem(position).getCommentAuthor());
-        widgets.commentDate.setText(Util.formatDate("yyyy-MM-dd HH:mm:ss",
-                getItem(position).getCommentDate(), "MMM dd, yyyy"));
+        widgets.commentDate.setText(
+                getItem(position).getCommentDate());
         widgets.commentDescription.setText(getItem(position)
                 .getCommentDescription());
         widgets.total.setText(context.getResources().getQuantityString(

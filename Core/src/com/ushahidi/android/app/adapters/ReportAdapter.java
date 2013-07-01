@@ -44,7 +44,6 @@ import com.ushahidi.android.app.util.Util;
 public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
         implements Filterable {
 
-    
     class Widgets {
 
         TextView title;
