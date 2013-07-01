@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.models.ListCommentModel;
-import com.ushahidi.android.app.util.Util;
 
 /**
  * @author eyedol

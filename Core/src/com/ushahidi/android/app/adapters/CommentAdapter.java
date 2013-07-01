@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.models.ListCommentModel;
-import com.ushahidi.android.app.util.Util;
 
 /**
  * @author eyedol
@@ -80,7 +79,7 @@ public class CommentAdapter extends BaseListAdapter<ListCommentModel> {
         Widgets widgets;
 
         if (view == null) {
-            view = inflater.inflate(R.layout.comment_item, null);
+            view = inflater.inflate(R.layout.list_comment_item, null);
             widgets = new Widgets(view);
             view.setTag(widgets);
         }
