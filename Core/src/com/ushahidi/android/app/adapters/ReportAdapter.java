@@ -44,22 +44,7 @@ import com.ushahidi.android.app.util.Util;
 public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
         implements Filterable {
 
-    TextView title;
-
-    TextView iLocation;
-
-    TextView date;
-
-    TextView status;
-
-    TextView categories;
-
-    TextView description;
-
-    ImageView thumbnail;
-
-    ImageView arrow;
-
+    
     class Widgets {
 
         TextView title;
