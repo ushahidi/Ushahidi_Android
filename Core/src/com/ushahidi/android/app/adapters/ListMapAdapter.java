@@ -40,8 +40,11 @@ public class ListMapAdapter extends BaseListAdapter<ListMapModel> implements
 	public View getView(int position, View view, ViewGroup viewGroup) {
 		Preferences.loadSettings(context);
 		final int mapId = Preferences.activeDeployment;
-		View row = inflater.inflate(R.layout.list_map_item, viewGroup, false);
+		
 		int colorPosition = position % colors.length;
+		if( view == null) {
+		    view = inflater.inflate(R.layout.list_map_item, null);
+		}
 		row.setBackgroundResource(colors[colorPosition]);
 		
 		Widgets widget = (Widgets) row.getTag();
