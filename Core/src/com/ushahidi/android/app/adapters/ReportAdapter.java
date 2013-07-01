@@ -44,22 +44,23 @@ import com.ushahidi.android.app.util.Util;
 public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
         implements Filterable {
 
+    TextView title;
+
+    TextView iLocation;
+
+    TextView date;
+
+    TextView status;
+
+    TextView categories;
+
+    TextView description;
+
+    ImageView thumbnail;
+
+    ImageView arrow;
+
     class Widgets {
-
-        public Widgets(View view) {
-
-            this.thumbnail = (ImageView) view
-                    .findViewById(R.id.report_thumbnail);
-            this.title = (TextView) view.findViewById(R.id.report_title);
-            this.description = (TextView) view
-                    .findViewById(R.id.report_description);
-            this.date = (TextView) view.findViewById(R.id.report_date);
-            this.iLocation = (TextView) view.findViewById(R.id.report_location);
-            this.categories = (TextView) view
-                    .findViewById(R.id.report_categories);
-            this.status = (TextView) view.findViewById(R.id.report_status);
-            this.arrow = (ImageView) view.findViewById(R.id.report_arrow);
-        }
 
         TextView title;
 
@@ -76,6 +77,21 @@ public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
         ImageView thumbnail;
 
         ImageView arrow;
+
+        public Widgets(View view) {
+
+            this.thumbnail = (ImageView) view
+                    .findViewById(R.id.report_thumbnail);
+            this.title = (TextView) view.findViewById(R.id.report_title);
+            this.description = (TextView) view
+                    .findViewById(R.id.report_description);
+            this.date = (TextView) view.findViewById(R.id.report_date);
+            this.iLocation = (TextView) view.findViewById(R.id.report_location);
+            this.categories = (TextView) view
+                    .findViewById(R.id.report_categories);
+            this.status = (TextView) view.findViewById(R.id.report_status);
+            this.arrow = (ImageView) view.findViewById(R.id.report_arrow);
+        }
 
     }
 
@@ -115,17 +131,20 @@ public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
     public View getView(int position, View view, ViewGroup viewGroup) {
 
         int colorPosition = position % colors.length;
-        View row = inflater
-                .inflate(R.layout.list_report_item, viewGroup, false);
-        row.setBackgroundResource(colors[colorPosition]);
+        Widgets widgets;
+        if (view == null) {
+            view = inflater
+                    .inflate(R.layout.list_report_item, null);
+            widgets = new Widgets(view);
+            view.setTag(widgets);
+        } else {
+            widgets = (Widgets) view.getTag();
+        }
 
-        Widgets widgets = (Widgets) row.getTag();
+        view.setBackgroundResource(colors[colorPosition]);
+
         final String thumbnailPath = thumbnail(position);
 
-        if (widgets == null) {
-            widgets = new Widgets(row);
-            row.setTag(widgets);
-        }
         if (thumbnailPath == null) {
 
             widgets.thumbnail.setImageResource(R.drawable.report_icon);
@@ -162,7 +181,7 @@ public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
         widgets.arrow.setImageDrawable(context.getResources().getDrawable(
                 R.drawable.arrow));
 
-        return row;
+        return view;
     }
 
     public void getPhoto(String fileName, ImageView imageView) {
