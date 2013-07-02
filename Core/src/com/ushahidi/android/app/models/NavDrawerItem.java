@@ -64,6 +64,24 @@ public class NavDrawerItem extends Model {
     }
 
     /**
+     * Creates a NavDrawerItem with the specific id, string resource id and
+     * drawable resource id
+     */
+    public NavDrawerItem(int stringRes, int iconRes, int counter) {
+        this(NO_ITEM_ID, stringRes, iconRes, counter, null);
+
+    }
+
+    /**
+     * Creates a NavDrawerItem with the specific id, string resource id and
+     * drawable resource id
+     */
+    public NavDrawerItem(int stringRes, int iconRes, int counter, String counterBgColor) {
+        this(NO_ITEM_ID, stringRes, iconRes, counter, counterBgColor);
+
+    }
+
+    /**
      * Creates a NavDrawerItem with NO_ITEM_ID for it's id for items that
      * shouldn't be remembered between application launches.
      */
