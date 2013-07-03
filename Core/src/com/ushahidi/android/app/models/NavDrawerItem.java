@@ -32,7 +32,7 @@ public class NavDrawerItem extends Model {
     public static int NO_ICON_RES_ID = -1;
 
     // Resource id for the title string
-    protected int mTitle;
+    protected String mTitle;
     // Resource id for the icon drawable
     protected int mIconRes;
     // ID for the item for remembering which item was selected
@@ -48,60 +48,13 @@ public class NavDrawerItem extends Model {
      * Creates a NavDrawerItem with the specific id, string resource id and
      * drawable resource id
      */
-    public NavDrawerItem(int itemId, int stringRes, int iconRes, int counter, String counterBgColor) {
-        mTitle = stringRes;
+    public NavDrawerItem(int itemId, String title, int iconRes, int counter, String counterBgColor) {
+        mTitle = title;
         mIconRes = iconRes;
         mItemId = itemId;
         mCounter = counter;
         mCounterBgColor = counterBgColor;
     }
-
-    /**
-     * Creates a NavDrawerItem with the specific id, string resource id and
-     * drawable resource id
-     */
-    public NavDrawerItem(int itemId, int stringRes, int iconRes, int counter) {
-        this(itemId, stringRes, iconRes, counter, null);
-
-    }
-
-    /**
-     * Creates a NavDrawerItem with the specific id, string resource id and
-     * drawable resource id
-     */
-    public NavDrawerItem(int stringRes, int iconRes, int counter) {
-        this(NO_ITEM_ID, stringRes, iconRes, counter, null);
-
-    }
-
-    /**
-     * Creates a NavDrawerItem with the specific id, string resource id and
-     * drawable resource id
-     */
-    public NavDrawerItem(int stringRes, int iconRes, int counter, String counterBgColor) {
-        this(NO_ITEM_ID, stringRes, iconRes, counter, counterBgColor);
-
-    }
-
-    /**
-     * Creates a NavDrawerItem with NO_ITEM_ID for it's id for items that
-     * shouldn't be remembered between application launches.
-     */
-    public NavDrawerItem(int stringRes, int iconRes) {
-        this(NO_ITEM_ID, stringRes, iconRes, NO_COUNTER);
-    }
-
-    /**
-     * Creates a NavDrawerItem with NO_ITEM_ID for it's id for items that
-     * shouldn't be remembered between application launches.
-     */
-    public NavDrawerItem(int stringRes) {
-        this(NO_ITEM_ID, stringRes, NO_ICON_RES_ID, NO_COUNTER);
-    }
-
-    /**
-     * 
-     */
 
     /**
      * Get's the item's unique ID
@@ -120,7 +73,7 @@ public class NavDrawerItem extends Model {
     /**
      * The resource id to use for the menu item's title
      */
-    public int getTitleRes() {
+    public String getTitleRes() {
         return mTitle;
     }
 
