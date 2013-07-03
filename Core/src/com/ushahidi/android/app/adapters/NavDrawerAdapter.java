@@ -20,13 +20,16 @@
 
 package com.ushahidi.android.app.adapters;
 
-import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.models.NavDrawerItem;
-
+import static com.ushahidi.android.app.models.NavDrawerItem.NO_COUNTER;
+import static com.ushahidi.android.app.models.NavDrawerItem.NO_ICON_RES_ID;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.models.NavDrawerItem;
 
 /**
  * @author eyedol
@@ -40,15 +43,36 @@ public class NavDrawerAdapter extends BaseListAdapter<NavDrawerItem> {
         super(context);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.widget.Adapter#getView(int, android.view.View,
-     * android.view.ViewGroup)
-     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
-        return null;
+        Widgets widget;
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.nav_drawer_item,
+                    null);
+            widget = new Widgets(convertView);
+            convertView.setTag(widget);
+        } else {
+            widget = (Widgets) convertView.getTag();
+        }
+        widget.title.setText(this.getItem(position).getTitleRes());
+
+        if (getItem(position).getIconRes() != NO_ICON_RES_ID) {
+
+            widget.title.setCompoundDrawablesWithIntrinsicBounds(getItem(position).getIconRes(), 0,
+                    0, 0);
+
+        }
+
+        if (getItem(position).getCounter() != NO_COUNTER) {
+            widget.counter.setText(getItem(position).getCounter());
+        }
+
+        if (getItem(position).getCounterBgColor() != null) {
+            widget.counter.setBackgroundColor(Color.parseColor(getItem(position)
+                    .getCounterBgColor().trim()));
+        }
+
+        return convertView;
     }
 
     /*

@@ -29,6 +29,8 @@ public class NavDrawerItem extends Model {
 
     public static int NO_COUNTER = -1;
 
+    public static int NO_ICON_RES_ID = -1;
+
     // Resource id for the title string
     protected int mTitle;
     // Resource id for the icon drawable
@@ -87,6 +89,14 @@ public class NavDrawerItem extends Model {
      */
     public NavDrawerItem(int stringRes, int iconRes) {
         this(NO_ITEM_ID, stringRes, iconRes, NO_COUNTER);
+    }
+
+    /**
+     * Creates a NavDrawerItem with NO_ITEM_ID for it's id for items that
+     * shouldn't be remembered between application launches.
+     */
+    public NavDrawerItem(int stringRes) {
+        this(NO_ITEM_ID, stringRes, NO_ICON_RES_ID, NO_COUNTER);
     }
 
     /**

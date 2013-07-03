@@ -27,17 +27,16 @@ import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,8 +53,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.MenuAdapter;
+import com.ushahidi.android.app.adapters.NavDrawerAdapter;
 import com.ushahidi.android.app.models.MenuDrawerItemModel;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
 import com.ushahidi.android.app.ui.phone.AdminActivity;
@@ -98,7 +97,22 @@ public abstract class BaseActivity<V extends View> extends
 
     private ListView mListView;
 
+    protected ListView listView;
+
     private MenuAdapter mAdapter;
+
+    protected NavDrawerAdapter drawerMenuAdapter;
+
+    protected ActionBarDrawerToggle drawerToggle;
+
+    protected final int drawerLayoutId;
+
+    protected DrawerLayout drawerLayout;
+
+    /**
+     * ListView resource id
+     */
+    protected final int listViewId;
 
     protected static final int MAP_ACTIVITY = 0;
     protected static final int ADMIN_ACTIVITY = 1;
@@ -107,11 +121,25 @@ public abstract class BaseActivity<V extends View> extends
     private boolean mAboutDialog = false;
     private boolean mXLargeDevice = false;
 
-    public BaseActivity() {
+    /**
+     * BaseActivity
+     * 
+     * @param view View class
+     * @param layout layout resource id
+     * @param menu menu resource id
+     */
+    protected BaseActivity(Class<V> view, int layout, int menu, int drawerLayoutId, int listViewId) {
 
-        this.viewClass = null;
-        this.layout = 0;
-        this.menu = 0;
+        this.viewClass = view;
+        this.layout = layout;
+        this.menu = menu;
+        this.drawerLayoutId = drawerLayoutId;
+        this.listViewId = listViewId;
+    }
+
+    public BaseActivity() {
+        this(null, 0, 0);
+
     }
 
     /**
@@ -122,27 +150,91 @@ public abstract class BaseActivity<V extends View> extends
      * @param menu menu resource id
      */
     protected BaseActivity(Class<V> view, int layout, int menu) {
+        this(view, layout, menu, 0, 0);
 
-        this.viewClass = view;
-        this.layout = layout;
-        this.menu = menu;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         log("onCreate");
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+
         if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4)
             mXLargeDevice = true;
-        if (layout != 0) {
-            createMenuDrawer(layout);
+        if (layout != 0)
+            setContentView(layout);
+
+        if (drawerLayoutId != 0)
+            drawerLayout = (DrawerLayout) findViewById(drawerLayoutId);
+
+        if (listViewId != 0)
+            listView = (ListView) findViewById(listViewId);
+
+        if (viewClass != null)
+            view = Objects.createInstance(viewClass, Activity.class, this);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+    }
+
+    protected void createMenuDrawer() {
+        initMenuDrawer();
+    }
+
+    private void initMenuDrawer() {
+        drawerMenuAdapter = new NavDrawerAdapter(this);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listView.setDivider(null);
+        listView.setDividerHeight(0);
+        listView.setCacheColorHint(android.R.color.transparent);
+
+        listView.setOnItemClickListener(new NavDrawerItemClickListener());
+        listView.setAdapter(drawerMenuAdapter);
+
+        if (drawerLayout != null) {
+            // drawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+            // GravityCompat.START);
+            // ActionBarDrawerToggle ties together the the proper interactions
+            // between the sliding drawer and the action bar app icon
+            drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer,
+                    R.string.open, R.string.close) {
+                public void onDrawerClosed(android.view.View view) {
+                    getSupportActionBar().setTitle(getTitle());
+                    super.onDrawerClosed(view);
+                }
+
+                public void onDrawerOpened(android.view.View drawerView) {
+                    getSupportActionBar().setTitle(getTitle());
+
+                    super.onDrawerOpened(drawerView);
+                }
+            };
         }
 
-        if (viewClass != null) {
-            view = Objects.createInstance(viewClass, Activity.class, this);
-        }
+        drawerLayout.setDrawerListener(drawerToggle);
+
+    }
+
+    /**
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
+     */
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        if (drawerToggle != null)
+            drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        if (drawerToggle != null)
+            drawerToggle.onConfigurationChanged(newConfig);
     }
 
     private MenuDrawer appendMenuDrawer() {
@@ -364,96 +456,28 @@ public abstract class BaseActivity<V extends View> extends
         return intent;
     }
 
-    private void initMenuDrawer() {
-        mListView = new ListView(this);
-        mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        mListView.setDivider(null);
-        mListView.setDividerHeight(0);
-        mListView.setCacheColorHint(android.R.color.transparent);
+    private class NavDrawerItemClickListener implements ListView.OnItemClickListener {
 
-        mListView.setOnItemClickListener(mItemClickListener);
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                    int visibleItemCount, int totalItemCount) {
-                mMenuDrawer.invalidate();
-            }
-        });
-
-        mMenuDrawer.setMenuView(mListView);
-
-        updateMenuDrawer();
-    }
-
-    private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+        /*
+         * (non-Javadoc)
+         * @see
+         * android.widget.AdapterView.OnItemClickListener#onItemClick(android
+         * .widget.AdapterView, android.view.View, int, long)
+         */
         @Override
-        public void onItemClick(AdapterView<?> parent, android.view.View view,
-                int position, long id) {
-
-            if (position == mAdapter.activePosition) {
-                // Same row selected
-                mMenuDrawer.closeMenu();
-                return;
-            }
-
-            int activityTag = (Integer) view.getTag();
-
-            mAdapter.activePosition = position;
-            mAdapter.notifyDataSetChanged();
-            Intent intent = null;
-
-            SharedPreferences settings = PreferenceManager
-                    .getDefaultSharedPreferences(BaseActivity.this);
-            SharedPreferences.Editor editor = settings.edit();
-            switch (activityTag) {
-                case MAP_ACTIVITY:
-                    if (Util.isTablet(BaseActivity.this)) {
-                        intent = new Intent(BaseActivity.this,
-                                DashboardActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        editor.putInt(Preferences.PREFS_NAME, MAP_ACTIVITY);
-                    } else {
-                        intent = new Intent(BaseActivity.this,
-                                ListMapActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        editor.putInt(Preferences.PREFS_NAME, MAP_ACTIVITY);
-                    }
-                    break;
-
-                case ADMIN_ACTIVITY:
-                    intent = new Intent(BaseActivity.this, AdminActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    editor.putInt(Preferences.PREFS_NAME, ADMIN_ACTIVITY);
-                    break;
-
-                case SETTINGS_ACTIVITY:
-                    intent = new Intent(BaseActivity.this, Settings.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    editor.putInt(Preferences.PREFS_NAME, SETTINGS_ACTIVITY);
-                    break;
-                case ABOUT_ACTIVITY:
-                    if (Util.isTablet(BaseActivity.this)) {
-                        mMenuDrawer.closeMenu();
-                        startDialogWithDelay();
-                    } else {
-                        intent = new Intent(BaseActivity.this, AboutActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        editor.putInt(Preferences.PREFS_NAME, ABOUT_ACTIVITY);
-                    }
-                    break;
-            }
-            editor.commit();
-            if (intent != null) {
-                mMenuDrawer.closeMenu();
-                startActivityWithDelay(intent);
-            }
+        public void onItemClick(AdapterView<?> parent, android.view.View view, int position, long id) {
+            selectItem(position);
         }
 
-    };
+    }
+
+    protected void selectItem(int position) {
+
+        // update selected item and title, then close the drawer
+        listView.setItemChecked(position, true);
+
+        drawerLayout.closeDrawer(listView);
+    }
 
     protected void startActivityZoomIn(final Intent i) {
         startActivity(i);
