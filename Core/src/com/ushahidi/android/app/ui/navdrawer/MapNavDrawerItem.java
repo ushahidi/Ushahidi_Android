@@ -45,11 +45,6 @@ public class MapNavDrawerItem extends BaseNavDrawerItem {
         mContext = context;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.ushahidi.android.app.ui.navdrawer.BaseNavDrawerItem#onSelectItem()
-     */
     @Override
     public void onSelectItem() {
 

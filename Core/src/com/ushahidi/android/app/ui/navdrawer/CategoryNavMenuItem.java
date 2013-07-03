@@ -24,7 +24,7 @@ package com.ushahidi.android.app.ui.navdrawer;
 /**
  * @author eyedol
  */
-public class CategoryMenuItem extends BaseNavDrawerItem {
+public class CategoryNavMenuItem extends BaseNavDrawerItem {
 
     /**
      * @param itemId
@@ -33,7 +33,7 @@ public class CategoryMenuItem extends BaseNavDrawerItem {
      * @param counter
      * @param counterBgColor
      */
-    public CategoryMenuItem(int itemId, String title, String counterBgColor) {
+    public CategoryNavMenuItem(int itemId, String title, String counterBgColor) {
         super(itemId, title, NO_ICON_RES_ID, NO_COUNTER, counterBgColor);
     }
 
