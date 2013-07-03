@@ -17,12 +17,39 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
+
 package com.ushahidi.android.app.ui.navdrawer;
+
+import com.ushahidi.android.app.ui.phone.AdminActivity;
+
+import android.content.Context;
+import android.content.Intent;
 
 /**
  * @author eyedol
- *
  */
-public class AdminNavMenuItem {
+public class AdminNavMenuItem extends BaseNavDrawerItem {
+
+    private Intent mIntent;
+
+    private Context mContext;
+
+    /**
+     * @param itemId
+     * @param title
+     * @param iconRes
+     * @param counter
+     * @param counterBgColor
+     */
+    public AdminNavMenuItem(String title, int iconRes, Context context) {
+        super(NO_ITEM_ID, title, NO_ICON_RES_ID, NO_COUNTER, null);
+        mContext = context;
+    }
+
+    @Override
+    public void onSelectItem() {
+        mIntent = new Intent(mContext, AdminActivity.class);
+        mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+    }
 
 }
