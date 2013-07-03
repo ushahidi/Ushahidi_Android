@@ -20,21 +20,13 @@
 
 package com.ushahidi.android.app.activities;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.simonvt.menudrawer.MenuDrawer;
-import net.simonvt.menudrawer.Position;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.widget.AdapterView;
@@ -53,14 +45,10 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.adapters.MenuAdapter;
 import com.ushahidi.android.app.adapters.NavDrawerAdapter;
-import com.ushahidi.android.app.models.MenuDrawerItemModel;
-import com.ushahidi.android.app.ui.phone.AboutActivity;
-import com.ushahidi.android.app.ui.phone.AdminActivity;
-import com.ushahidi.android.app.ui.phone.ListMapActivity;
-import com.ushahidi.android.app.ui.tablet.AboutFragment;
-import com.ushahidi.android.app.ui.tablet.DashboardActivity;
+import com.ushahidi.android.app.ui.navdrawer.AboutNavDrawerItem;
+import com.ushahidi.android.app.ui.navdrawer.AdminNavDrawerItem;
+import com.ushahidi.android.app.ui.navdrawer.MapNavDrawerItem;
 import com.ushahidi.android.app.util.Objects;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.View;
@@ -93,15 +81,9 @@ public abstract class BaseActivity<V extends View> extends
 
     protected ActionBar actionBar;
 
-    private MenuDrawer mMenuDrawer;
-
-    private ListView mListView;
-
     protected ListView listView;
 
-    private MenuAdapter mAdapter;
-
-    protected NavDrawerAdapter drawerMenuAdapter;
+    protected NavDrawerAdapter navDrawerAdapter;
 
     protected ActionBarDrawerToggle drawerToggle;
 
@@ -118,7 +100,6 @@ public abstract class BaseActivity<V extends View> extends
     protected static final int ADMIN_ACTIVITY = 1;
     protected static final int SETTINGS_ACTIVITY = 2;
     protected static final int ABOUT_ACTIVITY = 3;
-    private boolean mAboutDialog = false;
     private boolean mXLargeDevice = false;
 
     /**
@@ -178,19 +159,27 @@ public abstract class BaseActivity<V extends View> extends
 
     }
 
-    protected void createMenuDrawer() {
-        initMenuDrawer();
+    protected void createNavDrawer() {
+        initNavDrawer();
+        navDrawerAdapter.addItem(new MapNavDrawerItem(getString(R.string.maps),
+                R.drawable.map, BaseActivity.this));
+
+        navDrawerAdapter.addItem(new AdminNavDrawerItem(getString(R.string.admin),
+                R.drawable.web, BaseActivity.this));
+
+        navDrawerAdapter.addItem(new AboutNavDrawerItem(getString(R.string.about),
+                R.drawable.about, this));
     }
 
-    private void initMenuDrawer() {
-        drawerMenuAdapter = new NavDrawerAdapter(this);
+    private void initNavDrawer() {
+        navDrawerAdapter = new NavDrawerAdapter(this);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setDivider(null);
         listView.setDividerHeight(0);
         listView.setCacheColorHint(android.R.color.transparent);
 
         listView.setOnItemClickListener(new NavDrawerItemClickListener());
-        listView.setAdapter(drawerMenuAdapter);
+        listView.setAdapter(navDrawerAdapter);
 
         if (drawerLayout != null) {
             // drawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
@@ -237,48 +226,6 @@ public abstract class BaseActivity<V extends View> extends
             drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private MenuDrawer appendMenuDrawer() {
-        MenuDrawer menuDrawer = null;
-        if (mXLargeDevice) {
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                menuDrawer = MenuDrawer.attach(this,
-                        MenuDrawer.MENU_DRAG_CONTENT, Position.LEFT, true);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            } else {
-                menuDrawer = MenuDrawer.attach(this,
-                        MenuDrawer.MENU_DRAG_CONTENT);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            }
-        } else {
-            menuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
-        }
-        int shadowSizeInPixels = getResources().getDimensionPixelSize(
-                R.dimen.menu_shadow_width);
-        menuDrawer.setDropShadowSize(shadowSizeInPixels);
-        menuDrawer.setDropShadowColor(getResources().getColor(
-                R.color.md_shadowColor));
-        return menuDrawer;
-    }
-
-    protected void createMenuDrawer(int contentViewID) {
-        mMenuDrawer = appendMenuDrawer();
-        mMenuDrawer.setContentView(contentViewID);
-        initMenuDrawer();
-    }
-
-    /**
-     * Create a menu drawer and attach it to the activity.
-     * 
-     * @param contentView {@link android.view.View} of the main content for the
-     *            activity.
-     */
-    protected void createMenuDrawer(android.view.View contentView) {
-        mMenuDrawer = appendMenuDrawer();
-        mMenuDrawer.setContentView(contentView);
-
-        initMenuDrawer();
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -295,9 +242,7 @@ public abstract class BaseActivity<V extends View> extends
     protected void onResume() {
         super.onResume();
         log("onResume");
-        if (mMenuDrawer != null) {
-            updateMenuDrawer();
-        }
+
     }
 
     @Override
@@ -338,15 +283,6 @@ public abstract class BaseActivity<V extends View> extends
      */
     @Override
     public void onBackPressed() {
-        if (mMenuDrawer != null) {
-            final int drawerState = mMenuDrawer.getDrawerState();
-            if (drawerState == MenuDrawer.STATE_OPEN
-                    || drawerState == MenuDrawer.STATE_OPENING) {
-                mMenuDrawer.closeMenu();
-                finish();
-                return;
-            }
-        }
 
         super.onBackPressed();
     }
@@ -370,7 +306,7 @@ public abstract class BaseActivity<V extends View> extends
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                toggleMenuDrawer();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -379,12 +315,6 @@ public abstract class BaseActivity<V extends View> extends
     @Override
     public boolean onContextItemSelected(android.view.MenuItem item) {
         return super.onContextItemSelected(item);
-    }
-
-    protected void toggleMenuDrawer() {
-        if (mMenuDrawer != null) {
-            mMenuDrawer.toggleMenu();
-        }
     }
 
     protected void shareText(String shareItem) {
@@ -497,77 +427,6 @@ public abstract class BaseActivity<V extends View> extends
             }, 400);
         }
 
-    }
-
-    protected void startDialogWithDelay() {
-        // Let the menu animation finish before starting a new activity
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showAboutDialog();
-            }
-        }, 400);
-    }
-
-    /**
-     * Update all of the items in the menu drawer.
-     */
-    protected void updateMenuDrawer() {
-
-        List<Object> items = new ArrayList<Object>();
-        Resources resources = getResources();
-        int position = 0;
-
-        items.add(new MenuDrawerItemModel(resources.getString(R.string.maps),
-                R.drawable.map));
-
-        items.add(new MenuDrawerItemModel(resources.getString(R.string.admin),
-                R.drawable.web));
-
-        items.add(new MenuDrawerItemModel(resources
-                .getString(R.string.settings), R.drawable.settings));
-
-        items.add(new MenuDrawerItemModel(resources.getString(R.string.about),
-                R.drawable.about));
-
-        if ((BaseActivity.this instanceof ListMapActivity)
-                || (BaseActivity.this instanceof DashboardActivity)) {
-            mAboutDialog = false;
-            position = 0;
-
-        } else if ((BaseActivity.this instanceof AdminActivity)) {
-            mAboutDialog = false;
-            position = 1;
-
-        } else if ((BaseActivity.this instanceof AboutActivity)
-                || (mAboutDialog)) {
-            position = 2;
-
-        }
-
-        mAdapter = new MenuAdapter(this, items);
-        mAdapter.activePosition = position;
-        mListView.setAdapter(mAdapter);
-    }
-
-    public void showAboutDialog() {
-
-        mAboutDialog = true;
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction. We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out,
-                R.anim.slide_right_in, R.anim.slide_right_out);
-        ft.addToBackStack(null);
-
-        // Create and show the dialog.
-        AboutFragment newFragment = AboutFragment.newInstance();
-        newFragment.show(ft, "dialog");
     }
 
     protected EditText findEditTextById(int id) {

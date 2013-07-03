@@ -28,7 +28,7 @@ import android.content.Intent;
 /**
  * @author eyedol
  */
-public class AdminNavMenuItem extends BaseNavDrawerItem {
+public class AdminNavDrawerItem extends BaseNavDrawerItem {
 
     private Intent mIntent;
 
@@ -41,8 +41,8 @@ public class AdminNavMenuItem extends BaseNavDrawerItem {
      * @param counter
      * @param counterBgColor
      */
-    public AdminNavMenuItem(String title, int iconRes, Context context) {
-        super(NO_ITEM_ID, title, NO_ICON_RES_ID, NO_COUNTER, null);
+    public AdminNavDrawerItem(String title, int iconRes, Context context) {
+        super(NO_ITEM_ID, title, iconRes, NO_COUNTER, null);
         mContext = context;
     }
 
