@@ -20,9 +20,9 @@
 
 package com.ushahidi.android.app.adapters;
 
+import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.models.NavDrawerItem;
 
-import android.R;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
