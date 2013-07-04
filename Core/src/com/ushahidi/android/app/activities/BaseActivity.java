@@ -48,6 +48,7 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.NavDrawerAdapter;
 import com.ushahidi.android.app.ui.navdrawer.AboutNavDrawerItem;
 import com.ushahidi.android.app.ui.navdrawer.AdminNavDrawerItem;
+import com.ushahidi.android.app.ui.navdrawer.BaseNavDrawerItem;
 import com.ushahidi.android.app.ui.navdrawer.MapNavDrawerItem;
 import com.ushahidi.android.app.util.Objects;
 import com.ushahidi.android.app.util.Util;
@@ -168,7 +169,7 @@ public abstract class BaseActivity<V extends View> extends
                 R.drawable.web, BaseActivity.this));
 
         navDrawerAdapter.addItem(new AboutNavDrawerItem(getString(R.string.about),
-                R.drawable.about, this));
+                R.drawable.about, BaseActivity.this));
     }
 
     private void initNavDrawer() {
@@ -398,12 +399,6 @@ public abstract class BaseActivity<V extends View> extends
 
     private class NavDrawerItemClickListener implements ListView.OnItemClickListener {
 
-        /*
-         * (non-Javadoc)
-         * @see
-         * android.widget.AdapterView.OnItemClickListener#onItemClick(android
-         * .widget.AdapterView, android.view.View, int, long)
-         */
         @Override
         public void onItemClick(AdapterView<?> parent, android.view.View view, int position, long id) {
             selectItem(position);
@@ -415,7 +410,8 @@ public abstract class BaseActivity<V extends View> extends
 
         // update selected item and title, then close the drawer
         listView.setItemChecked(position, true);
-
+        BaseNavDrawerItem item = navDrawerAdapter.getItem(position);
+        item.selectItem();
         drawerLayout.closeDrawer(listView);
     }
 

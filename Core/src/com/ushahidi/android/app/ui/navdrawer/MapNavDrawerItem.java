@@ -41,7 +41,7 @@ public class MapNavDrawerItem extends BaseNavDrawerItem {
      * @param iconRes
      */
     public MapNavDrawerItem(String title, int iconRes, Context context) {
-        super(NO_ITEM_ID, title, NO_ICON_RES_ID, NO_COUNTER, null);
+        super(NO_ITEM_ID, title, iconRes, NO_COUNTER, null);
         mContext = context;
     }
 

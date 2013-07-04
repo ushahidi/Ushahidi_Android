@@ -26,9 +26,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseActivity;
-import com.ushahidi.android.app.ui.navdrawer.AboutNavDrawerItem;
-import com.ushahidi.android.app.ui.navdrawer.AdminNavDrawerItem;
-import com.ushahidi.android.app.ui.navdrawer.MapNavDrawerItem;
 import com.ushahidi.android.app.ui.tablet.ListMapFragment;
 import com.ushahidi.android.app.views.ListMapView;
 
@@ -55,14 +52,7 @@ public class ListMapActivity extends BaseActivity<ListMapView> {
                 .add(R.id.show_map_fragment, mPostFragment).commit();
         // }
         createNavDrawer();
-        navDrawerAdapter.addItem(new MapNavDrawerItem(getString(R.string.maps),
-                R.drawable.map, ListMapActivity.this));
 
-        navDrawerAdapter.addItem(new AdminNavDrawerItem(getString(R.string.admin),
-                R.drawable.web, ListMapActivity.this));
-
-        navDrawerAdapter.addItem(new AboutNavDrawerItem(getString(R.string.about),
-                R.drawable.about, this));
     }
 
     @Override

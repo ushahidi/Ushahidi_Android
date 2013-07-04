@@ -50,6 +50,7 @@ public class AdminNavDrawerItem extends BaseNavDrawerItem {
     public void onSelectItem() {
         mIntent = new Intent(mContext, AdminActivity.class);
         mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        mContext.startActivity(mIntent);
     }
 
 }

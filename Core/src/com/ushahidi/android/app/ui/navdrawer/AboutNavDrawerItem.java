@@ -58,7 +58,7 @@ public class AboutNavDrawerItem extends BaseNavDrawerItem {
         } else {
             mIntent = new Intent(activity.getApplicationContext(), AboutActivity.class);
             mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
+            activity.startActivity(mIntent);
         }
 
     }

@@ -29,12 +29,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.models.NavDrawerItem;
+import com.ushahidi.android.app.ui.navdrawer.BaseNavDrawerItem;
 
 /**
  * @author eyedol
  */
-public class NavDrawerAdapter extends BaseListAdapter<NavDrawerItem> {
+public class NavDrawerAdapter extends BaseListAdapter<BaseNavDrawerItem> {
 
     /**
      * @param context
