@@ -28,7 +28,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
@@ -68,14 +67,13 @@ public class ViewReportSlideActivity extends BaseActivity<View> {
     private ListReportModel mReports;
 
     public ViewReportSlideActivity() {
-        super(View.class, R.layout.screen_slide, 0, R.id.drawer_layout,
-                R.id.left_drawer);
+        super(View.class, R.layout.view_report_slide, R.menu.view_report);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createNavDrawer();
+
         mReports = new ListReportModel();
         this.mCategoryId = getIntent().getExtras().getInt("category", 0);
         int pos = getIntent().getExtras().getInt("id", 0);
@@ -108,13 +106,6 @@ public class ViewReportSlideActivity extends BaseActivity<View> {
         });
 
         mPager.setCurrentItem(pos, true);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getSupportMenuInflater().inflate(R.menu.view_report, menu);
-        return true;
     }
 
     @Override

@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseActivity;
@@ -55,8 +54,7 @@ public class ViewReportVideoActivity extends BaseActivity<View> {
     private ViewPager mPager;
 
     public ViewReportVideoActivity() {
-        super(View.class, R.layout.screen_slide, 0, R.id.drawer_layout,
-                R.id.left_drawer);
+        super(View.class, R.layout.screen_slide, R.menu.view_media);
     }
 
     @Override
@@ -81,13 +79,6 @@ public class ViewReportVideoActivity extends BaseActivity<View> {
     public PagerAdapter getAdapter() {
         return new VideoScreenSwipeAdapter(getSupportFragmentManager(), this,
                 reportId, NUM_PAGES);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getSupportMenuInflater().inflate(R.menu.view_media, menu);
-        return true;
     }
 
     @Override

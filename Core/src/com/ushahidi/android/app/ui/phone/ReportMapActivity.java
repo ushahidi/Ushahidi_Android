@@ -10,8 +10,7 @@ import com.ushahidi.android.app.views.View;
 public class ReportMapActivity extends BaseActivity<View> {
 
     public ReportMapActivity() {
-        super(View.class, R.layout.report_map, 0, R.id.drawer_layout,
-                R.id.left_drawer);
+        super(View.class, R.layout.report_map, 0, 0, 0);
     }
 
     @Override

@@ -10,15 +10,16 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com.
 -->
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical"
+    android:padding="10dip" >
 
-    <FrameLayout
-        android:id="@+id/show_map_fragment"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/map_rounded_corner_bg"
         android:orientation="horizontal"
         android:padding="10dip" >
@@ -28,16 +29,6 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             class="com.ushahidi.android.app.ui.tablet.MapFragment" />
-    </FrameLayout>
+    </LinearLayout>
 
-    <ListView
-        android:id="@+id/left_drawer"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#111"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/white"
-        android:dividerHeight="1dp" />
-
-</android.support.v4.widget.DrawerLayout>
+</LinearLayout>

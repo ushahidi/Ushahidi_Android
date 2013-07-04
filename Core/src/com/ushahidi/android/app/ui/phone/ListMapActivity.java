@@ -84,15 +84,7 @@ public class ListMapActivity extends BaseActivity<ListMapView> {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == android.R.id.home) {
-            if (drawerLayout.isDrawerOpen(listView)) {
-                drawerLayout.closeDrawer(listView);
-            } else {
-                drawerLayout.openDrawer(listView);
-            }
-
-            return true;
-        } else if (item.getItemId() == R.id.clear_map) {
+        if (item.getItemId() == R.id.clear_map) {
             mPostFragment.createDialog(ListMapFragment.DIALOG_CLEAR_DEPLOYMENT);
             return true;
         } else if (item.getItemId() == R.id.menu_find) {

@@ -297,16 +297,26 @@ public abstract class BaseActivity<V extends View> extends
     public boolean onCreateOptionsMenu(Menu menu) {
         if (this.menu != 0) {
             getSupportMenuInflater().inflate(this.menu, menu);
-            return true;
+
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case android.R.id.home:
+                if (drawerLayout != null) {
+                    if (drawerLayout.isDrawerOpen(listView)) {
+                        drawerLayout.closeDrawer(listView);
+                    } else {
+                        drawerLayout.openDrawer(listView);
+                    }
+                } else {
 
+                    finish();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);

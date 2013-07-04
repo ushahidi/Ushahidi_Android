@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseActivity;
@@ -53,14 +52,13 @@ public class ViewReportPhotoActivity extends BaseActivity<View> {
     private ViewPager mPager;
 
     public ViewReportPhotoActivity() {
-        super(View.class, R.layout.screen_slide, 0, R.id.drawer_layout,
-                R.id.left_drawer);
+        super(View.class, R.layout.screen_slide, R.menu.view_media);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createNavDrawer();
+
         mPhoto = new ListPhotoModel();
 
         this.reportId = getIntent().getExtras().getInt("reportid", 0);
@@ -79,18 +77,9 @@ public class ViewReportPhotoActivity extends BaseActivity<View> {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getSupportMenuInflater().inflate(R.menu.view_media, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        } else if (item.getItemId() == R.id.menu_forward) {
+
+        if (item.getItemId() == R.id.menu_forward) {
 
             mPager.setCurrentItem(mPager.getCurrentItem() + 1);
             return true;
