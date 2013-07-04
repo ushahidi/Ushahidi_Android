@@ -25,7 +25,7 @@ public class ReportTabActivity<V extends View> extends BaseActivity<V> {
 	 * @param menu
 	 */
 	protected ReportTabActivity(Class<V> view, int layout, int menu) {
-		super(view, layout, menu);
+		super(view, layout, menu, R.id.drawer_layout, R.id.left_drawer);
 	}
 
 	private ReportViewPager mViewPager;
@@ -40,7 +40,7 @@ public class ReportTabActivity<V extends View> extends BaseActivity<V> {
 
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		createMenuDrawer(R.layout.report_tab);
+		createNavDrawer();
 		setTitle();
 		ActionBar.Tab reportsTab = getSupportActionBar().newTab().setText(
 				getString(R.string.reports));

@@ -17,6 +17,7 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
+
 package com.ushahidi.android.app.ui.phone;
 
 import android.content.Intent;
@@ -39,152 +40,150 @@ import com.ushahidi.android.app.views.View;
 
 /**
  * @author eyedol
- * 
  */
-public class ViewReportSlideActivity<V extends View> extends BaseActivity<V> {
+public class ViewReportSlideActivity extends BaseActivity<View> {
 
-	/**
-	 * The number of pages (wizard steps) to show in this demo.
-	 */
-	private int NUM_PAGES = 0;
+    /**
+     * The number of pages (wizard steps) to show in this demo.
+     */
+    private int NUM_PAGES = 0;
 
-	/**
-	 * The pager widget, which handles animation and allows swiping horizontally
-	 * to access previous and next wizard steps.
-	 */
-	private MapPager mPager;
+    /**
+     * The pager widget, which handles animation and allows swiping horizontally
+     * to access previous and next wizard steps.
+     */
+    private MapPager mPager;
 
-	/**
-	 * The pager adapter, which provides the pages to the view pager widget.
-	 */
-	private PagerAdapter mPagerAdapter;
+    /**
+     * The pager adapter, which provides the pages to the view pager widget.
+     */
+    private PagerAdapter mPagerAdapter;
 
-	private int mCategoryId;
+    private int mCategoryId;
 
-	private int mReportId;
+    private int mReportId;
 
-	private String mReportTitle;
+    private String mReportTitle;
 
-	private ListReportModel mReports;
+    private ListReportModel mReports;
 
-	public ViewReportSlideActivity() {
+    public ViewReportSlideActivity() {
+        super(View.class, R.layout.screen_slide, 0, R.id.drawer_layout,
+                R.id.left_drawer);
+    }
 
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        createNavDrawer();
+        mReports = new ListReportModel();
+        this.mCategoryId = getIntent().getExtras().getInt("category", 0);
+        int pos = getIntent().getExtras().getInt("id", 0);
+        if (mCategoryId > 0) {
+            mReports.loadReportByCategory(mCategoryId);
+        } else {
+            mReports.load();
+        }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		createMenuDrawer(R.layout.view_report_slide);
-		mReports = new ListReportModel();
-		this.mCategoryId = getIntent().getExtras().getInt("category", 0);
-		int pos = getIntent().getExtras().getInt("id", 0);
-		if (mCategoryId > 0) {
-			mReports.loadReportByCategory(mCategoryId);
-		} else {
-			mReports.load();
-		}
+        NUM_PAGES = mReports.getReports().size();
 
-		NUM_PAGES = mReports.getReports().size();
+        // Instantiate a ViewPager and a PagerAdapter.
+        mPager = (MapPager) findViewById(R.id.report_pager);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
 
-		// Instantiate a ViewPager and a PagerAdapter.
-		mPager = (MapPager) findViewById(R.id.report_pager);
-		mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                // When changing pages, reset the action bar actions since they
+                // are dependent
+                // on which page is currently active. An alternative approach is
+                // to have each
+                // fragment expose actions itself (rather than the activity
+                // exposing actions),
+                // but for simplicity, the activity provides the actions in this
+                // sample.
+                supportInvalidateOptionsMenu();
+            }
+        });
 
-		mPager.setAdapter(mPagerAdapter);
-		mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-			@Override
-			public void onPageSelected(int position) {
-				// When changing pages, reset the action bar actions since they
-				// are dependent
-				// on which page is currently active. An alternative approach is
-				// to have each
-				// fragment expose actions itself (rather than the activity
-				// exposing actions),
-				// but for simplicity, the activity provides the actions in this
-				// sample.
-				supportInvalidateOptionsMenu();
-			}
-		});
+        mPager.setCurrentItem(pos, true);
+    }
 
-		mPager.setCurrentItem(pos, true);
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getSupportMenuInflater().inflate(R.menu.view_report, menu);
+        return true;
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getSupportMenuInflater().inflate(R.menu.view_report, menu);
-		return true;
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_backward) {
+            // Go to the previous step in the wizard. If there is no previous
+            // step,
+            // setCurrentItem will do nothing.
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+            return true;
+        }
 
-		if (item.getItemId() == R.id.menu_backward) {
-			// Go to the previous step in the wizard. If there is no previous
-			// step,
-			// setCurrentItem will do nothing.
-			mPager.setCurrentItem(mPager.getCurrentItem() - 1);
-			return true;
-		}
+        else if (item.getItemId() == R.id.menu_forward) {
+            // Advance to the next step in the wizard. If there is no next step,
+            // setCurrentItem
+            // will do nothing.
+            mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+            return true;
 
-		else if (item.getItemId() == R.id.menu_forward) {
-			// Advance to the next step in the wizard. If there is no next step,
-			// setCurrentItem
-			// will do nothing.
-			mPager.setCurrentItem(mPager.getCurrentItem() + 1);
-			return true;
+        } else if (item.getItemId() == R.id.menu_share) {
 
-		} else if (item.getItemId() == R.id.menu_share) {
+            share();
+        } else if (item.getItemId() == R.id.menu_comment) {
+            mReportId = mReports.getReports().get(mPager.getCurrentItem())
+                    .getIncident().getId();
+            Intent i = new Intent(this, AddCommentActivity.class);
 
-			share();
-		} else if (item.getItemId() == R.id.menu_comment) {
-			mReportId = mReports.getReports().get(mPager.getCurrentItem())
-					.getIncident().getId();
-			Intent i = new Intent(this, AddCommentActivity.class);
+            i.putExtra("reportid", mReportId);
+            startActivityForResult(i, 0);
+            overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+        }
 
-			i.putExtra("reportid", mReportId);
-			startActivityForResult(i, 0);
-			overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
-		}
+        return super.onOptionsItemSelected(item);
+    }
 
-		return super.onOptionsItemSelected(item);
-	}
+    private void share() {
+        mReportId = mReports.getReports().get(mPager.getCurrentItem())
+                .getDbId();
+        mReportTitle = mReports.getReports().get(mPager.getCurrentItem())
+                .getIncident().getTitle();
+        final String reportUrl = Preferences.domain + "reports/view/"
+                + mReportId;
+        final String shareString = getString(R.string.share_template, " "
+                + mReportTitle, "\n" + reportUrl);
+        shareText(shareString);
 
-	private void share() {
-		mReportId = mReports.getReports().get(mPager.getCurrentItem())
-				.getDbId();
-		mReportTitle = mReports.getReports().get(mPager.getCurrentItem())
-				.getIncident().getTitle();
-		final String reportUrl = Preferences.domain + "reports/view/"
-				+ mReportId;
-		final String shareString = getString(R.string.share_template, " "
-				+ mReportTitle, "\n" + reportUrl);
-		shareText(shareString);
+    }
 
-	}
+    /**
+     * A simple pager adapter that represents 5 {@link ViewReportFragment}
+     * objects, in sequence.
+     */
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
-	/**
-	 * A simple pager adapter that represents 5 {@link ViewReportFragment}
-	 * objects, in sequence.
-	 */
-	private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
 
-		public ScreenSlidePagerAdapter(FragmentManager fm) {
-			super(fm);
-		}
+        @Override
+        public Fragment getItem(int position) {
+            return ViewReportFragment.newInstance(position, mCategoryId);
+        }
 
-		@Override
-		public Fragment getItem(int position) {
-			return ViewReportFragment.newInstance(position, mCategoryId);
-		}
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
 
-		@Override
-		public int getCount() {
-			return NUM_PAGES;
-		}
-		
-		
-
-	}
+    }
 
 }
