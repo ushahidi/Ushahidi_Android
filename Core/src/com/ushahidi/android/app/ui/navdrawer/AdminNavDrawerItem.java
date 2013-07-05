@@ -20,10 +20,10 @@
 
 package com.ushahidi.android.app.ui.navdrawer;
 
-import com.ushahidi.android.app.ui.phone.AdminActivity;
-
-import android.content.Context;
 import android.content.Intent;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.ushahidi.android.app.ui.phone.AdminActivity;
 
 /**
  * @author eyedol
@@ -32,8 +32,6 @@ public class AdminNavDrawerItem extends BaseNavDrawerItem {
 
     private Intent mIntent;
 
-    private Context mContext;
-
     /**
      * @param itemId
      * @param title
@@ -41,16 +39,22 @@ public class AdminNavDrawerItem extends BaseNavDrawerItem {
      * @param counter
      * @param counterBgColor
      */
-    public AdminNavDrawerItem(String title, int iconRes, Context context) {
-        super(NO_ITEM_ID, title, iconRes, NO_COUNTER, null);
-        mContext = context;
+    public AdminNavDrawerItem(String title, int iconRes, SherlockFragmentActivity activity) {
+        super(NO_ITEM_ID, title, iconRes, NO_COUNTER, null, activity);
+    }
+
+    @Override
+    public boolean isSelected() {
+        return mActivity instanceof AdminActivity;
     }
 
     @Override
     public void onSelectItem() {
-        mIntent = new Intent(mContext, AdminActivity.class);
-        mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        mContext.startActivity(mIntent);
+        if (!isSelected()) {
+            mIntent = new Intent(mActivity, AdminActivity.class);
+            mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            mActivity.startActivity(mIntent);
+        }
     }
 
 }

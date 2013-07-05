@@ -37,8 +37,6 @@ public class AboutNavDrawerItem extends BaseNavDrawerItem {
 
     private Intent mIntent;
 
-    private SherlockFragmentActivity mActivity;
-
     /**
      * @param itemId
      * @param title
@@ -47,8 +45,12 @@ public class AboutNavDrawerItem extends BaseNavDrawerItem {
      * @param counterBgColor
      */
     public AboutNavDrawerItem(String title, int iconRes, SherlockFragmentActivity activity) {
-        super(NO_ITEM_ID, title, iconRes, NO_COUNTER, null);
-        mActivity = activity;
+        super(NO_ITEM_ID, title, iconRes, NO_COUNTER, null, activity);
+    }
+
+    @Override
+    public boolean isSelected() {
+        return mActivity instanceof AboutActivity;
     }
 
     @Override
@@ -56,9 +58,11 @@ public class AboutNavDrawerItem extends BaseNavDrawerItem {
         if (Util.isTablet(mActivity.getApplicationContext())) {
             showAboutDialog();
         } else {
-            mIntent = new Intent(mActivity.getApplicationContext(), AboutActivity.class);
-            mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            mActivity.startActivity(mIntent);
+            if (!isSelected()) {
+                mIntent = new Intent(mActivity.getApplicationContext(), AboutActivity.class);
+                mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                mActivity.startActivity(mIntent);
+            }
         }
 
     }

@@ -20,9 +20,9 @@
 
 package com.ushahidi.android.app.ui.navdrawer;
 
-import android.content.Context;
 import android.content.Intent;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.ushahidi.android.app.ui.phone.ListMapActivity;
 import com.ushahidi.android.app.ui.tablet.DashboardActivity;
 import com.ushahidi.android.app.util.Util;
@@ -34,28 +34,26 @@ public class MapNavDrawerItem extends BaseNavDrawerItem {
 
     private Intent mIntent;
 
-    private Context mContext;
-
     /**
      * @param stringRes
      * @param iconRes
      */
-    public MapNavDrawerItem(String title, int iconRes, Context context) {
-        super(NO_ITEM_ID, title, iconRes, NO_COUNTER, null);
-        mContext = context;
+    public MapNavDrawerItem(String title, int iconRes, SherlockFragmentActivity activity) {
+        super(NO_ITEM_ID, title, iconRes, NO_COUNTER, null, activity);
+
     }
 
     @Override
     public void onSelectItem() {
 
         // TODO Auto-generated method stub
-        if (Util.isTablet(mContext)) {
+        if (Util.isTablet(mActivity.getApplicationContext())) {
 
-            mIntent = new Intent(mContext, DashboardActivity.class);
+            mIntent = new Intent(mActivity.getApplicationContext(), DashboardActivity.class);
             mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
         } else {
-            mIntent = new Intent(mContext, ListMapActivity.class);
+            mIntent = new Intent(mActivity.getApplicationContext(), ListMapActivity.class);
             mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
         }

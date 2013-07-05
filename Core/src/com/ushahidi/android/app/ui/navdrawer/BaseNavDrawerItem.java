@@ -20,14 +20,17 @@
 
 package com.ushahidi.android.app.ui.navdrawer;
 
-import com.ushahidi.android.app.models.NavDrawerItem;
-
 import android.view.View;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.ushahidi.android.app.models.NavDrawerItem;
 
 /**
  * @author eyedol
  */
 public abstract class BaseNavDrawerItem extends NavDrawerItem {
+
+    protected SherlockFragmentActivity mActivity;
 
     /**
      * @param itemId
@@ -37,8 +40,9 @@ public abstract class BaseNavDrawerItem extends NavDrawerItem {
      * @param counterBgColor
      */
     public BaseNavDrawerItem(int itemId, String title, int iconRes, int counter,
-            String counterBgColor) {
+            String counterBgColor, SherlockFragmentActivity activity) {
         super(itemId, title, iconRes, counter, counterBgColor);
+        mActivity = activity;
     }
 
     public void onConfigureView(View view) {
@@ -67,7 +71,7 @@ public abstract class BaseNavDrawerItem extends NavDrawerItem {
     /**
      * Determines if the item is selected. Default is always false.
      */
-    public Boolean isSelected() {
+    public boolean isSelected() {
         return false;
     }
 
@@ -75,7 +79,7 @@ public abstract class BaseNavDrawerItem extends NavDrawerItem {
      * Determines if the menu item should be displayed in the menu. Default is
      * always true.
      */
-    public Boolean isVisible() {
+    public boolean isVisible() {
         return true;
     };
 }

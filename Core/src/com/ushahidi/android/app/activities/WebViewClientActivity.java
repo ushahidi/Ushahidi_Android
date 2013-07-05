@@ -28,7 +28,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.Window;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.views.View;
@@ -43,8 +42,6 @@ public class WebViewClientActivity extends BaseActivity<View> {
 
     private static final String USER_AGENT = "ushahidi-android";
 
-    private int mMenu;
-
     public WebViewClientActivity() {
 
     }
@@ -52,7 +49,6 @@ public class WebViewClientActivity extends BaseActivity<View> {
     public WebViewClientActivity(int menu) {
         super(View.class, R.layout.webview, menu, R.id.drawer_layout,
                 R.id.left_drawer);
-        mMenu = menu;
     }
 
     @Override
@@ -61,8 +57,6 @@ public class WebViewClientActivity extends BaseActivity<View> {
         requestWindowFeature(Window.FEATURE_PROGRESS);
 
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.webview);
 
         ActionBar ab = getSupportActionBar();
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -80,16 +74,6 @@ public class WebViewClientActivity extends BaseActivity<View> {
         if (url != null) {
             loadUrl(url);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        if (mMenu != 0) {
-            getSupportMenuInflater().inflate(mMenu, menu);
-            return true;
-        }
-        return false;
     }
 
     /**
