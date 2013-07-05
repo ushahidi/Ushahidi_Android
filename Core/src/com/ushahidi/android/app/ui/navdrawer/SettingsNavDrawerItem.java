@@ -20,11 +20,17 @@
 
 package com.ushahidi.android.app.ui.navdrawer;
 
+import android.content.Context;
+import android.content.Intent;
+
+import com.ushahidi.android.app.Settings;
 
 /**
  * @author eyedol
  */
-public class CategoryNavDrawerItem extends BaseNavDrawerItem {
+public class SettingsNavDrawerItem extends BaseNavDrawerItem {
+
+    private Context mContext;
 
     /**
      * @param itemId
@@ -33,8 +39,14 @@ public class CategoryNavDrawerItem extends BaseNavDrawerItem {
      * @param counter
      * @param counterBgColor
      */
-    public CategoryNavDrawerItem(int itemId, String title, String counterBgColor) {
-        super(itemId, title, NO_ICON_RES_ID, NO_COUNTER, counterBgColor, null);
+    public SettingsNavDrawerItem(String title, int resIconId, Context context) {
+        super(NO_ITEM_ID, title, resIconId, NO_COUNTER, null, null);
+        mContext = context;
+    }
+
+    @Override
+    public boolean isSelected() {
+        return mContext instanceof Settings;
     }
 
     /*
@@ -44,7 +56,11 @@ public class CategoryNavDrawerItem extends BaseNavDrawerItem {
      */
     @Override
     public void onSelectItem() {
-        // TODO Auto-generated method stub
+        if (!isSelected()) {
+            Intent mIntent = new Intent(mContext, Settings.class);
+            mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            mContext.startActivity(mIntent);
+        }
     }
 
 }

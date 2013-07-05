@@ -45,17 +45,19 @@ public class MapNavDrawerItem extends BaseNavDrawerItem {
 
     @Override
     public void onSelectItem() {
+        if (!isSelected()) {
+            // TODO Auto-generated method stub
+            if (Util.isTablet(mActivity.getApplicationContext())) {
 
-        // TODO Auto-generated method stub
-        if (Util.isTablet(mActivity.getApplicationContext())) {
+                mIntent = new Intent(mActivity.getApplicationContext(), DashboardActivity.class);
+                mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-            mIntent = new Intent(mActivity.getApplicationContext(), DashboardActivity.class);
-            mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            } else {
+                mIntent = new Intent(mActivity.getApplicationContext(), ListMapActivity.class);
+                mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-        } else {
-            mIntent = new Intent(mActivity.getApplicationContext(), ListMapActivity.class);
-            mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
+            }
+            mActivity.startActivity(mIntent);
         }
     }
 

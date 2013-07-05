@@ -50,6 +50,7 @@ import com.ushahidi.android.app.ui.navdrawer.AboutNavDrawerItem;
 import com.ushahidi.android.app.ui.navdrawer.AdminNavDrawerItem;
 import com.ushahidi.android.app.ui.navdrawer.BaseNavDrawerItem;
 import com.ushahidi.android.app.ui.navdrawer.MapNavDrawerItem;
+import com.ushahidi.android.app.ui.navdrawer.SettingsNavDrawerItem;
 import com.ushahidi.android.app.util.Objects;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.View;
@@ -170,6 +171,10 @@ public abstract class BaseActivity<V extends View> extends
 
         navDrawerAdapter.addItem(new AboutNavDrawerItem(getString(R.string.about),
                 R.drawable.about, BaseActivity.this));
+        // The Android Design guidelines discourages putting settings on the nav
+        // drawer but.... it makes sense here
+        navDrawerAdapter.addItem(new SettingsNavDrawerItem(getString(R.string.settings),
+                R.drawable.settings, BaseActivity.this));
     }
 
     private void initNavDrawer() {
