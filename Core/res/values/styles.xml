@@ -374,8 +374,8 @@
         <item name="android:padding">5dp</item>
     </style>
 
-    <style name="MenuDrawer" parent="Widget.MenuDrawer">
-        <item name="mdMenuSize">250dp</item>
+    <style name="MenuDrawer" >
+        <item name="android:padding">0dp</item>
     </style>
 
     <style name="MenuDrawer.Button">
