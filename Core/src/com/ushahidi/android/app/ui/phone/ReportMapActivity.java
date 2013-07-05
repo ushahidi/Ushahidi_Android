@@ -16,7 +16,6 @@ public class ReportMapActivity extends BaseActivity<View> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createNavDrawer();
     }
 
 }

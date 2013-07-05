@@ -37,7 +37,7 @@ public class AboutNavDrawerItem extends BaseNavDrawerItem {
 
     private Intent mIntent;
 
-    SherlockFragmentActivity activity;
+    private SherlockFragmentActivity mActivity;
 
     /**
      * @param itemId
@@ -48,17 +48,17 @@ public class AboutNavDrawerItem extends BaseNavDrawerItem {
      */
     public AboutNavDrawerItem(String title, int iconRes, SherlockFragmentActivity activity) {
         super(NO_ITEM_ID, title, iconRes, NO_COUNTER, null);
-
+        mActivity = activity;
     }
 
     @Override
     public void onSelectItem() {
-        if (Util.isTablet(activity.getApplicationContext())) {
+        if (Util.isTablet(mActivity.getApplicationContext())) {
             showAboutDialog();
         } else {
-            mIntent = new Intent(activity.getApplicationContext(), AboutActivity.class);
+            mIntent = new Intent(mActivity.getApplicationContext(), AboutActivity.class);
             mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            activity.startActivity(mIntent);
+            mActivity.startActivity(mIntent);
         }
 
     }
@@ -68,8 +68,8 @@ public class AboutNavDrawerItem extends BaseNavDrawerItem {
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction. We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
-        Fragment prev = activity.getSupportFragmentManager().findFragmentByTag("dialog");
+        FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
+        Fragment prev = mActivity.getSupportFragmentManager().findFragmentByTag("dialog");
         if (prev != null) {
             ft.remove(prev);
         }
