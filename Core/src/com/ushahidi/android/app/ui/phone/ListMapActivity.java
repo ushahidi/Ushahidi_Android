@@ -20,11 +20,12 @@
 
 package com.ushahidi.android.app.ui.phone;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.ui.tablet.ListMapFragment;
 import com.ushahidi.android.app.views.ListMapView;
@@ -64,14 +65,6 @@ public class ListMapActivity extends BaseActivity<ListMapView> {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getSupportMenuInflater().inflate(R.menu.list_map, menu);
-        return true;
-
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.clear_map) {
@@ -84,6 +77,10 @@ public class ListMapActivity extends BaseActivity<ListMapView> {
         } else if (item.getItemId() == R.id.menu_add) {
             mPostFragment.edit = false;
             mPostFragment.createDialog(ListMapFragment.DIALOG_ADD_DEPLOYMENT);
+            return true;
+        } else if (item.getItemId() == R.id.app_settings) {
+            startActivity(new Intent(this, Settings.class));
+            setResult(RESULT_OK);
             return true;
         }
 
