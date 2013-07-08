@@ -60,7 +60,7 @@ public class ViewReportNewsActivity extends BaseActivity<View> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createNavDrawer();
+        
         mNews = new ListReportNewsModel();
 
         this.reportId = getIntent().getExtras().getInt("reportid", 0);

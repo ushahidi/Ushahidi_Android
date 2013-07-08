@@ -150,6 +150,10 @@ public abstract class BaseActivity<V extends View> extends
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        if (drawerLayout != null) {
+            createNavDrawer();
+        }
+
     }
 
     protected void createNavDrawer() {
@@ -162,6 +166,7 @@ public abstract class BaseActivity<V extends View> extends
 
         navDrawerAdapter.addItem(new AboutNavDrawerItem(getString(R.string.about),
                 R.drawable.about, BaseActivity.this));
+
     }
 
     private void initNavDrawer() {
@@ -405,11 +410,13 @@ public abstract class BaseActivity<V extends View> extends
 
         // update selected item and title, then close the drawer
         listView.setItemChecked(position, true);
+
         BaseNavDrawerItem item = navDrawerAdapter.getItem(position);
 
         // Perform selection only if item is selected
         if (!item.isSelected())
             item.selectItem();
+
         drawerLayout.closeDrawer(listView);
     }
 

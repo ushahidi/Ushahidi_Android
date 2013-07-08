@@ -52,7 +52,8 @@ public class ListMapActivity extends BaseActivity<ListMapView> {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.show_map_fragment, mPostFragment).commit();
         // }
-        createNavDrawer();
+        
+        
 
     }
 

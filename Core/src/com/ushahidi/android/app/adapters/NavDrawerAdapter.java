@@ -72,6 +72,15 @@ public class NavDrawerAdapter extends BaseListAdapter<BaseNavDrawerItem> {
                     .getCounterBgColor().trim()));
         }
 
+        if (getItem(position).isSelected()) {
+            int bottom = convertView.getPaddingBottom();
+            int top = convertView.getPaddingTop();
+            int right = convertView.getPaddingRight();
+            int left = convertView.getPaddingLeft();
+            convertView.setBackgroundResource(R.drawable.nav_drawer_selected);
+            convertView.setPadding(left, top, right, bottom);
+        }
+
         return convertView;
     }
 

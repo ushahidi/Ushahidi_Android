@@ -53,11 +53,9 @@ public class WebViewClientActivity extends BaseActivity<View> {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         requestWindowFeature(Window.FEATURE_PROGRESS);
-
         super.onCreate(savedInstanceState);
-
+        
         ActionBar ab = getSupportActionBar();
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         ab.setDisplayShowTitleEnabled(true);

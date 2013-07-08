@@ -20,6 +20,5 @@ public class AboutActivity extends BaseActivity<AboutView> {
         super.onCreate(savedInstanceState);
         // lock about activity to portrait
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        createNavDrawer();
     }
 }

@@ -60,7 +60,6 @@ public class ViewReportVideoActivity extends BaseActivity<View> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createNavDrawer();
 
         mVideo = new ListReportVideoModel();
 

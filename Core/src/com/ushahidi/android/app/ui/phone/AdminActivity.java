@@ -45,8 +45,6 @@ public class AdminActivity extends WebViewClientActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        createNavDrawer();
-
         setTitle(getResources().getText(R.string.admin));
 
         // configure webview

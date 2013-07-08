@@ -44,7 +44,6 @@ public class DashboardActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createNavDrawer();
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         Preferences.loadSettings(this);
         mSpinnerAdapter = ArrayAdapter
