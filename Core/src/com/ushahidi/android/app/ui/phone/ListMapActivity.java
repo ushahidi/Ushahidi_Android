@@ -20,75 +20,77 @@
 
 package com.ushahidi.android.app.ui.phone;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.ui.tablet.ListMapFragment;
-import com.ushahidi.android.app.views.View;
+import com.ushahidi.android.app.views.ListMapView;
 
 /**
  * @author eyedol
  */
-public class ListMapActivity<V extends View> extends BaseActivity<V> {
+public class ListMapActivity extends BaseActivity<ListMapView> {
 
-	private ListMapFragment mPostFragment;
+    private ListMapFragment mPostFragment;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		createMenuDrawer(R.layout.map_activity);
-		//if (savedInstanceState == null) {
-			// load list map fragment
-			mPostFragment = new ListMapFragment();
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.show_map_fragment, mPostFragment).commit();
-	//}
-	}
+    public ListMapActivity() {
+        super(ListMapView.class, R.layout.map_activity, R.menu.list_map, R.id.drawer_layout,
+                R.id.left_drawer);
+    }
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		if (outState.isEmpty()) {
-			outState.putBoolean(ListMapFragment.BUG_1997_FIX, true);
-		}
-		super.onSaveInstanceState(outState);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+        // if (savedInstanceState == null) {
+        // load list map fragment
+        mPostFragment = new ListMapFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.show_map_fragment, mPostFragment).commit();
+        // }
+        
+        
 
-		getSupportMenuInflater().inflate(R.menu.list_map, menu);
-		return true;
+    }
 
-	}
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (outState.isEmpty()) {
+            outState.putBoolean(ListMapFragment.BUG_1997_FIX, true);
+        }
+        super.onSaveInstanceState(outState);
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-		if (item.getItemId() == android.R.id.home) {
-			toggleMenuDrawer();
-			return true;
-		} else if (item.getItemId() == R.id.clear_map) {
-			mPostFragment.createDialog(ListMapFragment.DIALOG_CLEAR_DEPLOYMENT);
-			return true;
-		} else if (item.getItemId() == R.id.menu_find) {
+        if (item.getItemId() == R.id.clear_map) {
+            mPostFragment.createDialog(ListMapFragment.DIALOG_CLEAR_DEPLOYMENT);
+            return true;
+        } else if (item.getItemId() == R.id.menu_find) {
 
-			mPostFragment.createDialog(ListMapFragment.DIALOG_DISTANCE);
-			return true;
-		} else if (item.getItemId() == R.id.menu_add) {
-			mPostFragment.edit = false;
-			mPostFragment.createDialog(ListMapFragment.DIALOG_ADD_DEPLOYMENT);
-			return true;
-		}
+            mPostFragment.createDialog(ListMapFragment.DIALOG_DISTANCE);
+            return true;
+        } else if (item.getItemId() == R.id.menu_add) {
+            mPostFragment.edit = false;
+            mPostFragment.createDialog(ListMapFragment.DIALOG_ADD_DEPLOYMENT);
+            return true;
+        } else if (item.getItemId() == R.id.app_settings) {
+            startActivity(new Intent(this, Settings.class));
+            setResult(RESULT_OK);
+            return true;
+        }
 
-		return super.onOptionsItemSelected(item);
-	}
+        return super.onOptionsItemSelected(item);
+    }
 
-	@Override
-	public boolean onContextItemSelected(android.view.MenuItem item) {
-		return super.onContextItemSelected(item);
-	}
+    @Override
+    public boolean onContextItemSelected(android.view.MenuItem item) {
+        return super.onContextItemSelected(item);
+    }
 
 }

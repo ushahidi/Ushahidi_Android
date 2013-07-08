@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseActivity;
@@ -35,84 +34,74 @@ import com.ushahidi.android.app.views.View;
 /**
  * @author eyedol
  */
-public class ViewReportNewsActivity<V extends View> extends BaseActivity<V> {
+public class ViewReportNewsActivity extends BaseActivity<View> {
 
-	private ListReportNewsModel mNews;
+    private ListReportNewsModel mNews;
 
-	private int position;
+    private int position;
 
-	private int reportId;
+    private int reportId;
 
-	/**
-	 * The number of pages (wizard steps) to show in this demo.
-	 */
-	private int NUM_PAGES = 0;
+    /**
+     * The number of pages (wizard steps) to show in this demo.
+     */
+    private int NUM_PAGES = 0;
 
-	/**
-	 * The pager widget, which handles animation and allows swiping horizontally
-	 * to access previous and next wizard steps.
-	 */
-	private ViewPager mPager;
+    /**
+     * The pager widget, which handles animation and allows swiping horizontally
+     * to access previous and next wizard steps.
+     */
+    private ViewPager mPager;
 
-	public ViewReportNewsActivity() {
+    public ViewReportNewsActivity() {
+        super(View.class, R.layout.screen_slide, R.menu.view_media);
+    }
 
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        mNews = new ListReportNewsModel();
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		createMenuDrawer(R.layout.screen_slide);
-		mNews = new ListReportNewsModel();
+        this.reportId = getIntent().getExtras().getInt("reportid", 0);
+        this.position = getIntent().getExtras().getInt("position", 0);
 
-		this.reportId = getIntent().getExtras().getInt("reportid", 0);
-		this.position = getIntent().getExtras().getInt("position", 0);
+        mNews.load(reportId);
+        NUM_PAGES = mNews.totalReportNews();
 
-		mNews.load(reportId);
-		NUM_PAGES = mNews.totalReportNews();
+        mPager = (ViewPager) findViewById(R.id.screen_pager);
+        mPager.setAdapter(getAdapter());
+        mPager.setCurrentItem(position, true);
 
-		mPager = (ViewPager) findViewById(R.id.screen_pager);
-		mPager.setAdapter(getAdapter());
-		mPager.setCurrentItem(position, true);
+    }
 
-	}
+    public PagerAdapter getAdapter() {
+        return new NewsScreenSwipeAdapter(getSupportFragmentManager(), this,
+                reportId, NUM_PAGES);
+    }
 
-	public PagerAdapter getAdapter() {
-		return new NewsScreenSwipeAdapter(getSupportFragmentManager(), this,
-				reportId, NUM_PAGES);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_forward) {
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getSupportMenuInflater().inflate(R.menu.view_media, menu);
-		return true;
-	}
+            mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+            return true;
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-			finish();
-			return true;
-		} else if (item.getItemId() == R.id.menu_forward) {
+        } else if (item.getItemId() == R.id.menu_backward) {
 
-			mPager.setCurrentItem(mPager.getCurrentItem() + 1);
-			return true;
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+            return true;
 
-		} else if (item.getItemId() == R.id.menu_backward) {
+        } else if (item.getItemId() == R.id.menu_share) {
+            share(mNews.getNews().get(mPager.getCurrentItem()).getUrl());
+        }
 
-			mPager.setCurrentItem(mPager.getCurrentItem() - 1);
-			return true;
+        return super.onOptionsItemSelected(item);
+    }
 
-		} else if (item.getItemId() == R.id.menu_share) {
-			share(mNews.getNews().get(mPager.getCurrentItem()).getUrl());
-		}
-
-		return super.onOptionsItemSelected(item);
-	}
-
-	private void share(String url) {
-		final String shareString = getString(R.string.share_template, " ",
-				" \n" + url);
-		shareText(shareString);
-	}
+    private void share(String url) {
+        final String shareString = getString(R.string.share_template, " ",
+                " \n" + url);
+        shareText(shareString);
+    }
 }

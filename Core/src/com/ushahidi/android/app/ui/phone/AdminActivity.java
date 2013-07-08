@@ -17,6 +17,7 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
+
 package com.ushahidi.android.app.ui.phone;
 
 import android.annotation.SuppressLint;
@@ -28,66 +29,62 @@ import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.WebViewClientActivity;
-import com.ushahidi.android.app.views.View;
 
 /**
  * @author eyedol
- * 
  */
 @SuppressLint("SetJavaScriptEnabled")
-public class AdminActivity<V extends View> extends WebViewClientActivity<V> {
+public class AdminActivity extends WebViewClientActivity {
 
-	public AdminActivity() {
-		super(R.menu.admin);
-	}
+    public AdminActivity() {
+        super(R.menu.admin);
+    }
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		createMenuDrawer(this.findViewById(R.id.webview_wrapper));
+        setTitle(getResources().getText(R.string.admin));
 
-		this.setTitle(getResources().getText(R.string.admin));
+        // configure webview
+        mWebView.setWebChromeClient(new UshahidiWebChromeClient(this));
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setPluginsEnabled(true);
+        mWebView.getSettings().setDomStorageEnabled(true);
 
-		// configure webview
-		mWebView.setWebChromeClient(new UshahidiWebChromeClient(this));
-		mWebView.getSettings().setJavaScriptEnabled(true);
-		mWebView.getSettings().setPluginsEnabled(true);
-		mWebView.getSettings().setDomStorageEnabled(true);
+        loadAdmin();
+    }
 
-		loadAdmin();
-	}
+    public void loadAdmin() {
+        // load dashboard
+        final String dashboardUrl = Preferences.domain + "/admin";
+        loadUrl(dashboardUrl);
+    }
 
-	public void loadAdmin() {
-		// load dashboard
-		final String dashboardUrl = Preferences.domain + "/admin";
-		loadUrl(dashboardUrl);
-	}
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (mWebView == null)
+            return false;
 
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
-		if (mWebView == null)
-			return false;
+        int itemID = item.getItemId();
+        if (itemID == R.id.menu_page_refresh) {
+            mWebView.reload();
+            return true;
+        } else if (itemID == R.id.menu_browser) {
+            final String url = mWebView.getUrl();
+            if (url != null) {
+                Uri uri = Uri.parse(url);
+                if (uri != null) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(uri);
+                    startActivity(i);
+                }
+            }
+            return true;
+        }
 
-		int itemID = item.getItemId();
-		if (itemID == R.id.menu_page_refresh) {
-			mWebView.reload();
-			return true;
-		} else if (itemID == R.id.menu_browser) {
-			final String url = mWebView.getUrl();
-			if (url != null) {
-				Uri uri = Uri.parse(url);
-				if (uri != null) {
-					Intent i = new Intent(Intent.ACTION_VIEW);
-					i.setData(uri);
-					startActivity(i);
-				}
-			}
-			return true;
-		}
-
-		return super.onOptionsItemSelected(item);
-	}
+        return super.onOptionsItemSelected(item);
+    }
 
 }

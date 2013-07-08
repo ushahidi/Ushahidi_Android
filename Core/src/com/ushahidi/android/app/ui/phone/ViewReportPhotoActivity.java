@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseActivity;
@@ -33,79 +32,70 @@ import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.util.ImageManager;
 import com.ushahidi.android.app.views.View;
 
-public class ViewReportPhotoActivity<V extends View> extends BaseActivity<V> {
+public class ViewReportPhotoActivity extends BaseActivity<View> {
 
-	private ListPhotoModel mPhoto;
+    private ListPhotoModel mPhoto;
 
-	private int position;
+    private int position;
 
-	private int reportId;
+    private int reportId;
 
-	/**
-	 * The number of pages (wizard steps) to show in this demo.
-	 */
-	private int NUM_PAGES = 0;
+    /**
+     * The number of pages (wizard steps) to show in this demo.
+     */
+    private int NUM_PAGES = 0;
 
-	/**
-	 * The pager widget, which handles animation and allows swiping horizontally
-	 * to access previous and next wizard steps.
-	 */
-	private ViewPager mPager;
+    /**
+     * The pager widget, which handles animation and allows swiping horizontally
+     * to access previous and next wizard steps.
+     */
+    private ViewPager mPager;
 
-	public ViewReportPhotoActivity() {
+    public ViewReportPhotoActivity() {
+        super(View.class, R.layout.screen_slide, R.menu.view_media);
+    }
 
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		createMenuDrawer(R.layout.screen_slide);
-		mPhoto = new ListPhotoModel();
+        mPhoto = new ListPhotoModel();
 
-		this.reportId = getIntent().getExtras().getInt("reportid", 0);
-		this.position = getIntent().getExtras().getInt("position", 0);
-		mPhoto.load(reportId);
-		NUM_PAGES = mPhoto.totalReportPhoto();
+        this.reportId = getIntent().getExtras().getInt("reportid", 0);
+        this.position = getIntent().getExtras().getInt("position", 0);
+        mPhoto.load(reportId);
+        NUM_PAGES = mPhoto.totalReportPhoto();
 
-		mPager = (ViewPager) findViewById(R.id.screen_pager);
-		mPager.setAdapter(getAdapter());
-		mPager.setCurrentItem(position, true);
-	}
+        mPager = (ViewPager) findViewById(R.id.screen_pager);
+        mPager.setAdapter(getAdapter());
+        mPager.setCurrentItem(position, true);
+    }
 
-	public PagerAdapter getAdapter() {
-		return new PhotoScreenSwipeAdapter(getSupportFragmentManager(), this,
-				reportId, NUM_PAGES);
-	}
+    public PagerAdapter getAdapter() {
+        return new PhotoScreenSwipeAdapter(getSupportFragmentManager(), this,
+                reportId, NUM_PAGES);
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getSupportMenuInflater().inflate(R.menu.view_media, menu);
-		return true;
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-			finish();
-			return true;
-		} else if (item.getItemId() == R.id.menu_forward) {
+        if (item.getItemId() == R.id.menu_forward) {
 
-			mPager.setCurrentItem(mPager.getCurrentItem() + 1);
-			return true;
+            mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+            return true;
 
-		} else if (item.getItemId() == R.id.menu_backward) {
+        } else if (item.getItemId() == R.id.menu_backward) {
 
-			mPager.setCurrentItem(mPager.getCurrentItem() - 1);
-			return true;
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+            return true;
 
-		} else if (item.getItemId() == R.id.menu_share) {
-			sharePhoto(ImageManager.getPhotoPath(this)
-					+ mPhoto.getPhotos().get(mPager.getCurrentItem())
-							.getPhoto());
-		}
+        } else if (item.getItemId() == R.id.menu_share) {
+            sharePhoto(ImageManager.getPhotoPath(this)
+                    + mPhoto.getPhotos().get(mPager.getCurrentItem())
+                            .getPhoto());
+        }
 
-		return super.onOptionsItemSelected(item);
-	}
+        return super.onOptionsItemSelected(item);
+    }
 
 }
