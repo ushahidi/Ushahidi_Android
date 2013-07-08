@@ -17,6 +17,7 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
+
 package com.ushahidi.android.app.api;
 
 import android.util.Log;
@@ -30,30 +31,29 @@ import com.ushahidi.java.sdk.net.UshahidiHttpClient;
  * Initializes the Ushahidi API
  * 
  * @author eyedol
- * 
  */
 public abstract class UshahidiApi {
 
-	protected UshahidiApiTaskFactory factory;
+    protected UshahidiApiTaskFactory factory;
 
-	public int connectionTimeout = 30000;
+    public int connectionTimeout = 30000;
 
-	public int socketTimeout = 30000;
+    public int socketTimeout = 30000;
 
-	public UshahidiApi() {
-		factory = UshahidiApiTaskFactory.newInstance(Preferences.domain);
-		factory.client = new UshahidiHttpClient();
-		factory.client.setConnectionTimeout(connectionTimeout);
-		factory.client.setSocketTimeout(socketTimeout);
-	}
+    public UshahidiApi() {
+        factory = UshahidiApiTaskFactory.newInstance(Preferences.domain);
+        factory.client = new UshahidiHttpClient();
+        factory.client.setConnectionTimeout(connectionTimeout);
+        factory.client.setSocketTimeout(socketTimeout);
+    }
 
-	protected void log(String message) {
-		if (MainApplication.LOGGING_MODE)
-			Log.i(getClass().getName(), message);
-	}
+    protected void log(String message) {
+        if (MainApplication.LOGGING_MODE)
+            Log.i(getClass().getName(), message);
+    }
 
-	protected void log(String message, Exception ex) {
-		if (MainApplication.LOGGING_MODE)
-			Log.e(getClass().getName(), message, ex);
-	}
+    protected void log(String message, Exception ex) {
+        if (MainApplication.LOGGING_MODE)
+            Log.e(getClass().getName(), message, ex);
+    }
 }
