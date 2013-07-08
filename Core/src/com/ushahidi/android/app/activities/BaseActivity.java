@@ -275,8 +275,16 @@ public abstract class BaseActivity<V extends View> extends
      */
     @Override
     public void onBackPressed() {
+        if (drawerLayout != null) {
+            if (drawerLayout.isDrawerOpen(listView)) {
+                drawerLayout.closeDrawer(listView);
+            }
 
-        super.onBackPressed();
+            moveTaskToBack(true);
+        } else {
+            super.onBackPressed();
+        }
+
     }
 
     @Override

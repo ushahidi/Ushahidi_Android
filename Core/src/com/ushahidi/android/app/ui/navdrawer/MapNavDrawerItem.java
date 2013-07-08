@@ -43,20 +43,20 @@ public class MapNavDrawerItem extends BaseNavDrawerItem {
 
     }
 
+    public boolean isSelected() {
+        return mActivity instanceof ListMapActivity;
+    }
+
     @Override
     public void onSelectItem() {
 
         // TODO Auto-generated method stub
-        if (Util.isTablet(mActivity.getApplicationContext())) {
+        if (Util.isTablet(mActivity.getApplicationContext()))
 
             mIntent = new Intent(mActivity.getApplicationContext(), DashboardActivity.class);
-            mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
-        } else {
+        else
             mIntent = new Intent(mActivity.getApplicationContext(), ListMapActivity.class);
-            mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-        }
         mActivity.startActivity(mIntent);
 
     }

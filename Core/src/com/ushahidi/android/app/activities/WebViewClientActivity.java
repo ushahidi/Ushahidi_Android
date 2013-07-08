@@ -92,6 +92,7 @@ public class WebViewClientActivity extends BaseActivity<View> {
             mWebView.goBack();
         else
             super.onBackPressed();
+
     }
 
     protected class UshahidiWebClient extends WebViewClient {
