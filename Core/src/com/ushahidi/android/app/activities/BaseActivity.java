@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
@@ -97,12 +96,6 @@ public abstract class BaseActivity<V extends View> extends
      */
     protected final int listViewId;
 
-    protected static final int MAP_ACTIVITY = 0;
-    protected static final int ADMIN_ACTIVITY = 1;
-    protected static final int SETTINGS_ACTIVITY = 2;
-    protected static final int ABOUT_ACTIVITY = 3;
-    private boolean mXLargeDevice = false;
-
     /**
      * BaseActivity
      * 
@@ -141,8 +134,6 @@ public abstract class BaseActivity<V extends View> extends
         super.onCreate(savedInstanceState);
         log("onCreate");
 
-        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4)
-            mXLargeDevice = true;
         if (layout != 0)
             setContentView(layout);
 
@@ -411,28 +402,16 @@ public abstract class BaseActivity<V extends View> extends
         // update selected item and title, then close the drawer
         listView.setItemChecked(position, true);
         BaseNavDrawerItem item = navDrawerAdapter.getItem(position);
-        item.selectItem();
+
+        // Perform selection only if item is selected
+        if (!item.isSelected())
+            item.selectItem();
         drawerLayout.closeDrawer(listView);
     }
 
     protected void startActivityZoomIn(final Intent i) {
         startActivity(i);
         overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
-    }
-
-    protected void startActivityWithDelay(final Intent i) {
-        if (mXLargeDevice
-                && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            startActivity(i);
-        } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(i);
-                }
-            }, 400);
-        }
-
     }
 
     protected EditText findEditTextById(int id) {

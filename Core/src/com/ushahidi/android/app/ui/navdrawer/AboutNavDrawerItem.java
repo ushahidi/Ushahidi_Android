@@ -58,11 +58,11 @@ public class AboutNavDrawerItem extends BaseNavDrawerItem {
         if (Util.isTablet(mActivity.getApplicationContext())) {
             showAboutDialog();
         } else {
-            if (!isSelected()) {
-                mIntent = new Intent(mActivity.getApplicationContext(), AboutActivity.class);
-                mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                mActivity.startActivity(mIntent);
-            }
+
+            mIntent = new Intent(mActivity.getApplicationContext(), AboutActivity.class);
+            mIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            mActivity.startActivity(mIntent);
+
         }
 
     }
