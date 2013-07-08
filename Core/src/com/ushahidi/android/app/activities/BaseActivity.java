@@ -26,6 +26,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.widget.AdapterView;
@@ -165,17 +166,12 @@ public abstract class BaseActivity<V extends View> extends
 
     private void initNavDrawer() {
         navDrawerAdapter = new NavDrawerAdapter(this);
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        listView.setDivider(null);
-        listView.setDividerHeight(0);
-        listView.setCacheColorHint(android.R.color.transparent);
-
         listView.setOnItemClickListener(new NavDrawerItemClickListener());
         listView.setAdapter(navDrawerAdapter);
 
         if (drawerLayout != null) {
-            // drawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-            // GravityCompat.START);
+            drawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+                    GravityCompat.START);
             // ActionBarDrawerToggle ties together the the proper interactions
             // between the sliding drawer and the action bar app icon
             drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer,

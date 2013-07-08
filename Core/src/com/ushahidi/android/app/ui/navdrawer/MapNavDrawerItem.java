@@ -50,7 +50,6 @@ public class MapNavDrawerItem extends BaseNavDrawerItem {
     @Override
     public void onSelectItem() {
 
-        // TODO Auto-generated method stub
         if (Util.isTablet(mActivity.getApplicationContext()))
 
             mIntent = new Intent(mActivity.getApplicationContext(), DashboardActivity.class);
