@@ -17,6 +17,7 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
+
 package com.ushahidi.android.app.api;
 
 import java.util.ArrayList;
@@ -45,199 +46,183 @@ import com.ushahidi.java.sdk.net.content.Body;
 
 /**
  * Handles Reports API task
- * 
  */
 public class ReportsApi extends UshahidiApi {
 
-	private IncidentsTask task;
-	private ReportTask reportTask;
-	private List<ReportEntity> reports;
-	private boolean processingResult;
+    private IncidentsTask task;
+    private ReportTask reportTask;
+    private List<ReportEntity> reports;
+    private boolean processingResult;
 
-	public ReportsApi() {
-		task = factory.createIncidentsTask();
-		task.limit = Integer.valueOf(Preferences.totalReports);
-		processingResult = true;
-		reports = new ArrayList<ReportEntity>();
-	}
+    public ReportsApi() {
+        task = factory.createIncidentsTask();
+        task.setLimit(Integer.valueOf(Preferences.totalReports));
+        processingResult = true;
+        reports = new ArrayList<ReportEntity>();
+    }
 
-	/**
-	 * Fetch reports via the Ushahidi API
-	 * 
-	 * @param context
-	 *            The calling activity
-	 * 
-	 * @return The list of reports
-	 */
-	private List<ReportEntity> getReportList(Context context) {
-		log("Save report");
-		if (processingResult) {
-			try {
-				List<Incidents> incidents = task.all();
-				if (incidents != null && incidents.size() > 0) {
-					for (Incidents i : incidents) {
-						ReportEntity report = new ReportEntity();
-						report.setIncident(i.incident);
-						reports.add(report);
-						// save categories
-						if ((i.getCategories() != null)
-								&& (i.getCategories().size() > 0)) {
-							for (Category c : i.getCategories()) {
-								saveCategories(c.getId(), i.incident.getId());
-							}
-						}
+    /**
+     * Fetch reports via the Ushahidi API
+     * 
+     * @param context The calling activity
+     * @return The list of reports
+     */
+    private List<ReportEntity> getReportList(Context context) {
+        log("Save report");
+        if (processingResult) {
+            try {
+                List<Incidents> incidents = task.all();
+                if (incidents != null && incidents.size() > 0) {
+                    for (Incidents i : incidents) {
+                        ReportEntity report = new ReportEntity();
+                        report.setIncident(i.incident);
+                        reports.add(report);
+                        // save categories
+                        if ((i.getCategories() != null)
+                                && (i.getCategories().size() > 0)) {
+                            for (Category c : i.getCategories()) {
+                                saveCategories(c.getId(), i.incident.getId());
+                            }
+                        }
 
-						// save media
-						if ((i.getMedia() != null) && (!i.getMedia().isEmpty())) {
-							for (com.ushahidi.java.sdk.api.Media m : i
-									.getMedia()) {
+                        // save media
+                        if ((i.getMedia() != null) && (!i.getMedia().isEmpty())) {
+                            for (com.ushahidi.java.sdk.api.Media m : i
+                                    .getMedia()) {
 
-								// find photos, it's type is 1
-								if (m != null) {
-									if (m.getType() == 1) {
+                                // find photos, it's type is 1
+                                if (m != null) {
+                                    if (m.getType() == 1) {
 
-										// save photo to a file
+                                        // save photo to a file
 
-										if (m.getLinkUrl() != null) {
-											final String fileName = Util
-													.getDateTime() + ".jpg";
-											// save details of photo to database
-											saveMedia(m.getId(),
-													i.incident.getId(),
-													m.getType(), fileName);
-											
-											saveImages(m.getLinkUrl(),
-													fileName, context);
-										}
+                                        if (m.getLinkUrl() != null) {
+                                            final String fileName = Util
+                                                    .getDateTime() + ".jpg";
+                                            // save details of photo to database
+                                            saveMedia(m.getId(),
+                                                    i.incident.getId(),
+                                                    m.getType(), fileName);
 
-									} else {
-										// other media type to database
-										if (m.getLink() != null)
-											saveMedia(m.getId(),
-													(int) i.incident.getId(),
-													m.getType(), m.getLink());
-									}
-								}
-							}
-						}
-					}
-				}
-			} catch (UshahidiException e) {
-				log("UshahidiException", e);
-				processingResult = false;
-			} catch (JsonSyntaxException e) {
-				log("JSONSyntaxException", e);
-				processingResult = false;
-			}
+                                            saveImages(m.getLinkUrl(),
+                                                    fileName, context);
+                                        }
 
-		}
-		return reports;
-	}
+                                    } else {
+                                        // other media type to database
+                                        if (m.getLink() != null)
+                                            saveMedia(m.getId(),
+                                                    (int) i.incident.getId(),
+                                                    m.getType(), m.getLink());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (UshahidiException e) {
+                log("UshahidiException", e);
+                processingResult = false;
+            } catch (JsonSyntaxException e) {
+                log("JSONSyntaxException", e);
+                processingResult = false;
+            }
 
-	/**
-	 * Save fetched reports to the database
-	 * 
-	 * @param context
-	 *            The calling activity
-	 * 
-	 * @return boolean
-	 */
-	public boolean saveReports(Context context) {
-		List<ReportEntity> reports = getReportList(context);
+        }
+        return reports;
+    }
 
-		if (reports != null)
-			return Database.mReportDao.addReport(reports);
-		return false;
-	}
+    /**
+     * Save fetched reports to the database
+     * 
+     * @param context The calling activity
+     * @return boolean
+     */
+    public boolean saveReports(Context context) {
+        List<ReportEntity> reports = getReportList(context);
 
-	public Response submitReport(ReportFields report) {
-		reportTask = factory.createReportTask();
+        if (reports != null)
+            return Database.mReportDao.addReport(reports);
+        return false;
+    }
 
-		try {
-			return reportTask.submit(report);
-		} catch (UshahidiException e) {
-			e.printStackTrace();
-		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
-		}
+    public Response submitReport(ReportFields report) {
+        reportTask = factory.createReportTask();
 
-		return null;
-	}
+        try {
+            return reportTask.submit(report);
+        } catch (UshahidiException e) {
+            e.printStackTrace();
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
 
-	public boolean upload(String url, Body body) {
-		final String response = task.getClient().sendMultipartPostRequest(url,
-				body);
-		return response != null ? true : false;
-	}
+        return null;
+    }
 
-	/**
-	 * Save details of categories to the database
-	 * 
-	 * @param categoryId
-	 *            The ID of the category
-	 * @param reportId
-	 *            The ID of the report
-	 * 
-	 * @return void
-	 */
-	private void saveCategories(int categoryId, int reportId) {
+    public boolean upload(String url, Body body) {
+        final String response = task.getClient().sendMultipartPostRequest(url,
+                body);
+        return response != null ? true : false;
+    }
 
-		ReportCategory reportCategory = new ReportCategory();
-		reportCategory.setCategoryId(categoryId);
-		reportCategory.setReportId(reportId);
-		reportCategory.setStatus(IReportSchema.FETCHED);
-		List<ReportCategory> reportCategories = new ArrayList<ReportCategory>();
-		reportCategories.add(reportCategory);
+    /**
+     * Save details of categories to the database
+     * 
+     * @param categoryId The ID of the category
+     * @param reportId The ID of the report
+     * @return void
+     */
+    private void saveCategories(int categoryId, int reportId) {
 
-		// save new data
-		Database.mReportCategoryDao.addReportCategories(reportCategories);
-	}
+        ReportCategory reportCategory = new ReportCategory();
+        reportCategory.setCategoryId(categoryId);
+        reportCategory.setReportId(reportId);
+        reportCategory.setStatus(IReportSchema.FETCHED);
+        List<ReportCategory> reportCategories = new ArrayList<ReportCategory>();
+        reportCategories.add(reportCategory);
 
-	/**
-	 * Save fetched media to the database
-	 * 
-	 * @param mediaId
-	 *            The ID of the media
-	 * @param reportId
-	 *            The report ID associated with the media
-	 * @param type
-	 *            The media type. 1 for image, 2 for news link, 3 for video link
-	 * @param link
-	 *            The URL of the media
-	 * 
-	 * @return void
-	 */
-	private void saveMedia(int mediaId, int reportId, int type, String link) {
-		log("downloading... " + link + " ReportId: " + reportId);
-		MediaEntity media = new MediaEntity();
-		media.setMediaId(mediaId);
-		media.setReportId(reportId);
-		media.setType(type);
-		media.setLink(link);
-		List<MediaEntity> sMedia = new ArrayList<MediaEntity>();
-		sMedia.add(media);
+        // save new data
+        Database.mReportCategoryDao.addReportCategories(reportCategories);
+    }
 
-		// save new data
-		Database.mMediaDao.addMedia(sMedia);
-	}
+    /**
+     * Save fetched media to the database
+     * 
+     * @param mediaId The ID of the media
+     * @param reportId The report ID associated with the media
+     * @param type The media type. 1 for image, 2 for news link, 3 for video
+     *            link
+     * @param link The URL of the media
+     * @return void
+     */
+    private void saveMedia(int mediaId, int reportId, int type, String link) {
+        log("downloading... " + link + " ReportId: " + reportId);
+        MediaEntity media = new MediaEntity();
+        media.setMediaId(mediaId);
+        media.setReportId(reportId);
+        media.setType(type);
+        media.setLink(link);
+        List<MediaEntity> sMedia = new ArrayList<MediaEntity>();
+        sMedia.add(media);
 
-	/**
-	 * Download image from the web
-	 * 
-	 * @param linkUrl
-	 *            The URL of the image to be downloaded
-	 * @param fileName
-	 *            The file name to give to the donwloaded image
-	 * @param context
-	 *            The calling activity
-	 * 
-	 * @return void
-	 */
-	private void saveImages(String linkUrl, String fileName, Context context) {
+        // save new data
+        Database.mMediaDao.addMedia(sMedia);
+    }
 
-		if (!TextUtils.isEmpty(linkUrl)) {
-			ImageManager.downloadImage(linkUrl, fileName, context);
-		}
-	}
+    /**
+     * Download image from the web
+     * 
+     * @param linkUrl The URL of the image to be downloaded
+     * @param fileName The file name to give to the donwloaded image
+     * @param context The calling activity
+     * @return void
+     */
+    private void saveImages(String linkUrl, String fileName, Context context) {
+
+        if (!TextUtils.isEmpty(linkUrl)) {
+            ImageManager.downloadImage(linkUrl, fileName, context);
+        }
+    }
 
 }
