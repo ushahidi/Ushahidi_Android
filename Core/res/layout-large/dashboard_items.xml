@@ -10,25 +10,43 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/layout_background"
-    android:baselineAligned="false"
-    android:orientation="horizontal" >
+    android:layout_height="match_parent" >
 
-    <fragment
-        android:id="@+id/list_map_fragment"
-        android:layout_width="0dip"
+    <FrameLayout
+        android:id="@+id/show_map_fragment"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="30"
-        class="com.ushahidi.android.app.ui.tablet.ListMapFragment"
-        android:paddingRight="2dip" />
+        android:background="@color/background_color" >
 
-    <fragment
-        android:id="@+id/show_report_fragment"
-        android:layout_width="0dip"
-        android:layout_height="match_parent"
-        android:layout_weight="60"
-        class="com.ushahidi.android.app.ui.tablet.ListReportFragment" />
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/layout_background"
+            android:baselineAligned="false"
+            android:orientation="horizontal" >
+
+            <fragment
+                android:id="@+id/list_map_fragment"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="30"
+                class="com.ushahidi.android.app.ui.tablet.ListMapFragment"
+                android:paddingRight="2dip" />
+
+            <fragment
+                android:id="@+id/show_report_fragment"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="60"
+                class="com.ushahidi.android.app.ui.tablet.ListReportFragment" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <ListView
+        android:id="@+id/left_drawer"
+        style="@style/NavDrawerList" />
+
+</android.support.v4.widget.DrawerLayout>

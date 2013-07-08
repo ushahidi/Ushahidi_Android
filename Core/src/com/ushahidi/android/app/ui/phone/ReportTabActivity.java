@@ -1,3 +1,4 @@
+
 package com.ushahidi.android.app.ui.phone;
 
 import android.os.Bundle;
@@ -13,67 +14,60 @@ import com.ushahidi.android.app.ui.tablet.ListReportFragment;
 import com.ushahidi.android.app.ui.tablet.MapFragment;
 import com.ushahidi.android.app.views.View;
 
-public class ReportTabActivity<V extends View> extends BaseActivity<V> {
+public class ReportTabActivity extends BaseActivity<View> {
 
-	public ReportTabActivity() {
+    /**
+     * @param view
+     * @param layout
+     * @param menu
+     */
+    public ReportTabActivity() {
+        super(View.class, R.layout.report_tab, 0, 0, 0);
+    }
 
-	}
+    private ReportViewPager mViewPager;
 
-	/**
-	 * @param view
-	 * @param layout
-	 * @param menu
-	 */
-	protected ReportTabActivity(Class<V> view, int layout, int menu) {
-		super(view, layout, menu);
-	}
+    private TabsAdapter mTabsAdapter;
 
-	private ReportViewPager mViewPager;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-	private TabsAdapter mTabsAdapter;
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+        setTitle();
+        ActionBar.Tab reportsTab = getSupportActionBar().newTab().setText(
+                getString(R.string.reports));
+        ActionBar.Tab mapTab = getSupportActionBar().newTab().setText(
+                getString(R.string.map));
 
-		// setContentView(R.layout.report_tab);
+        mViewPager = (ReportViewPager) findViewById(R.id.pager);
 
-		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		createMenuDrawer(R.layout.report_tab);
-		setTitle();
-		ActionBar.Tab reportsTab = getSupportActionBar().newTab().setText(
-				getString(R.string.reports));
-		ActionBar.Tab mapTab = getSupportActionBar().newTab().setText(
-				getString(R.string.map));
+        mTabsAdapter = new TabsAdapter(this, getSupportActionBar(), mViewPager);
 
-		mViewPager = (ReportViewPager) findViewById(R.id.pager);
+        mTabsAdapter.addTab(reportsTab, ListReportFragment.class);
+        mTabsAdapter.addTab(mapTab, MapFragment.class);
 
-		mTabsAdapter = new TabsAdapter(this, getSupportActionBar(), mViewPager);
+        if (savedInstanceState != null) {
+            getSupportActionBar().setSelectedNavigationItem(
+                    savedInstanceState.getInt("index"));
+        }
+    }
 
-		mTabsAdapter.addTab(reportsTab, ListReportFragment.class);
-		mTabsAdapter.addTab(mapTab, MapFragment.class);
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("index", getSupportActionBar()
+                .getSelectedNavigationIndex());
+    }
 
-		if (savedInstanceState != null) {
-			getSupportActionBar().setSelectedNavigationItem(
-					savedInstanceState.getInt("index"));
-		}
-	}
+    public void setTitle() {
+        Preferences.loadSettings(this);
+        if ((Preferences.activeMapName != null)
+                && (!TextUtils.isEmpty(Preferences.activeMapName))) {
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putInt("index", getSupportActionBar()
-				.getSelectedNavigationIndex());
-	}
-
-	public void setTitle() {
-		Preferences.loadSettings(this);
-		if ((Preferences.activeMapName != null)
-				&& (!TextUtils.isEmpty(Preferences.activeMapName))) {
-
-			getSupportActionBar().setTitle(Preferences.activeMapName);
-		}
-	}
+            getSupportActionBar().setTitle(Preferences.activeMapName);
+        }
+    }
 
 }

@@ -17,6 +17,7 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
+
 package com.ushahidi.android.app.activities;
 
 import android.content.Context;
@@ -27,7 +28,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.Window;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.views.View;
@@ -35,108 +35,93 @@ import com.ushahidi.android.app.views.View;
 /**
  * Base WebView activity
  */
-public class WebViewClientActivity<V extends View> extends BaseActivity<V> {
+public class WebViewClientActivity extends BaseActivity<View> {
 
-	/** Primary webview used to display content. */
-	protected WebView mWebView;
+    /** Primary webview used to display content. */
+    protected WebView mWebView;
 
-	private static final String USER_AGENT = "ushahidi-android";
+    private static final String USER_AGENT = "ushahidi-android";
 
-	private int mMenu;
+    public WebViewClientActivity() {
 
-	public WebViewClientActivity() {
+    }
 
-	}
+    public WebViewClientActivity(int menu) {
+        super(View.class, R.layout.webview, menu, R.id.drawer_layout,
+                R.id.left_drawer);
+    }
 
-	public WebViewClientActivity(int menu) {
-		mMenu = menu;
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+        super.onCreate(savedInstanceState);
+        
+        ActionBar ab = getSupportActionBar();
+        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        ab.setDisplayShowTitleEnabled(true);
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+        mWebView = (WebView) findViewById(R.id.webView);
+        mWebView.setWebViewClient(new UshahidiWebClient());
+        mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        mWebView.getSettings().setUserAgentString(USER_AGENT);
+        mWebView.getSettings().setBuiltInZoomControls(true);
+        mWebView.setScrollBarStyle(android.view.View.SCROLLBARS_INSIDE_OVERLAY);
 
-		requestWindowFeature(Window.FEATURE_PROGRESS);
+        // load URL if one was provided in the intent
+        String url = getIntent().getStringExtra("url");
+        if (url != null) {
+            loadUrl(url);
+        }
+    }
 
-		super.onCreate(savedInstanceState);
+    /**
+     * Load the specified URL in the Webview.
+     * 
+     * @param url URL to load in the Webview.
+     */
+    protected void loadUrl(String url) {
+        mWebView.loadUrl(url);
+    }
 
-		setContentView(R.layout.webview);
+    @Override
+    public void onBackPressed() {
 
-		ActionBar ab = getSupportActionBar();
-		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		ab.setDisplayShowTitleEnabled(true);
+        if (mWebView != null && mWebView.canGoBack())
+            mWebView.goBack();
+        else
+            super.onBackPressed();
 
-		mWebView = (WebView) findViewById(R.id.webView);
-		mWebView.setWebViewClient(new UshahidiWebClient());
-		mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-		mWebView.getSettings().setUserAgentString(USER_AGENT);
-		mWebView.getSettings().setBuiltInZoomControls(true);
-		mWebView.setScrollBarStyle(android.view.View.SCROLLBARS_INSIDE_OVERLAY);
+    }
 
-		// load URL if one was provided in the intent
-		String url = getIntent().getStringExtra("url");
-		if (url != null) {
-			loadUrl(url);
-		}
-	}
+    protected class UshahidiWebClient extends WebViewClient {
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		if (mMenu != 0) {
-			getSupportMenuInflater().inflate(mMenu, menu);
-			return true;
-		}
-		return false;
-	}
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
 
-	/**
-	 * Load the specified URL in the Webview.
-	 * 
-	 * @param url
-	 *            URL to load in the Webview.
-	 */
-	protected void loadUrl(String url) {
-		mWebView.loadUrl(url);
-	}
+    }
 
-	@Override
-	public void onBackPressed() {
+    /**
+     * WebChromeClient that displays "Loading..." title until the content of the
+     * webview is fully loaded.
+     */
+    protected class UshahidiWebChromeClient extends WebChromeClient {
+        private Context context;
 
-		if (mWebView != null && mWebView.canGoBack())
-			mWebView.goBack();
-		else
-			super.onBackPressed();
-	}
+        public UshahidiWebChromeClient(Context context) {
+            this.context = context;
+        }
 
-	protected class UshahidiWebClient extends WebViewClient {
+        public void onProgressChanged(WebView webView, int progress) {
+            setTitle(context.getResources().getText(R.string.loading_));
+            setSupportProgress(progress * 100);
 
-		@Override
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			view.loadUrl(url);
-			return true;
-		}
-
-	}
-
-	/**
-	 * WebChromeClient that displays "Loading..." title until the content of the
-	 * webview is fully loaded.
-	 */
-	protected class UshahidiWebChromeClient extends WebChromeClient {
-		private Context context;
-
-		public UshahidiWebChromeClient(Context context) {
-			this.context = context;
-		}
-
-		public void onProgressChanged(WebView webView, int progress) {
-			setTitle(context.getResources().getText(R.string.loading_));
-			setSupportProgress(progress * 100);
-
-			if (progress == 100) {
-				setTitle(webView.getTitle());
-			}
-		}
-	}
+            if (progress == 100) {
+                setTitle(webView.getTitle());
+            }
+        }
+    }
 
 }

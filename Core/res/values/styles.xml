@@ -374,22 +374,21 @@
         <item name="android:padding">5dp</item>
     </style>
 
-    <style name="MenuDrawer" parent="Widget.MenuDrawer">
-        <item name="mdMenuSize">250dp</item>
-    </style>
-
-    <style name="MenuDrawer.Button">
-        <item name="android:background">@drawable/md_list_selector</item>
+    <style name="NavDrawerItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawablePadding">5dp</item>
         <item name="android:padding">10dp</item>
-        <item name="android:drawablePadding">18dp</item>
+        <item name="android:textColor">#ffffff</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="MenuDrawer.Button.Text">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:textAppearance">?android:attr/textAppearance</item>
-        <item name="android:textColor">@color/white_color</item>
-        <item name="android:textSize">18sp</item>
+    <style name="NavDrawerList">
+        <item name="android:layout_width">240dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:background">#111</item>
+        <item name="android:choiceMode">singleChoice</item>
     </style>
 
 </resources>

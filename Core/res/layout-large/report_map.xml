@@ -14,22 +14,21 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/background_color"
-    android:padding="10dip"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="10dip" >
 
-    <LinearLayout 
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/map_rounded_corner_bg"
-        android:padding="10dip"
-        android:orientation="horizontal" >
-        
-    <fragment
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/map_fragment"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        class="com.ushahidi.android.app.ui.tablet.MapFragment" />
+        android:orientation="horizontal"
+        android:padding="10dip" >
+
+        <fragment
+            android:id="@+id/map_fragment"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            class="com.ushahidi.android.app.ui.tablet.MapFragment" />
     </LinearLayout>
 
 </LinearLayout>
