@@ -26,5 +26,17 @@
         android:id="@+id/menu_add_report"
         android:icon="@drawable/add"
         android:title="@string/add_report"/>
+    <item
+        android:id="@+id/menu_admin"
+        android:icon="@drawable/web"
+        android:title="@string/admin"/>
+    <item
+        android:id="@+id/menu_about"
+        android:icon="@drawable/about"
+        android:title="@string/about"/>
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/settings"
+        android:title="@string/settings"/>
 
 </menu>

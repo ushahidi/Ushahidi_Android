@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -150,8 +151,11 @@ public abstract class BaseActivity<V extends View> extends
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        if (drawerLayout != null) {
-            createNavDrawer();
+        if (TextUtils.isEmpty(getString(R.string.deployment_url))) {
+            if (drawerLayout != null) {
+                // default deployment is not set
+                createNavDrawer();
+            }
         }
 
     }
@@ -276,12 +280,19 @@ public abstract class BaseActivity<V extends View> extends
      */
     @Override
     public void onBackPressed() {
-        if (drawerLayout != null) {
-            if (drawerLayout.isDrawerOpen(listView)) {
-                drawerLayout.closeDrawer(listView);
+        if (TextUtils.isEmpty(getString(R.string.deployment_url))) {
+            if (drawerLayout != null) {
+
+                if (drawerLayout.isDrawerOpen(listView)) {
+                    drawerLayout.closeDrawer(listView);
+                }
+
+                moveTaskToBack(true);
+            }
+            else {
+                super.onBackPressed();
             }
 
-            moveTaskToBack(true);
         } else {
             super.onBackPressed();
         }
@@ -297,6 +308,7 @@ public abstract class BaseActivity<V extends View> extends
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (this.menu != 0) {
+
             getSupportMenuInflater().inflate(this.menu, menu);
 
         }
@@ -308,11 +320,17 @@ public abstract class BaseActivity<V extends View> extends
 
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (drawerLayout != null) {
-                    if (drawerLayout.isDrawerOpen(listView)) {
-                        drawerLayout.closeDrawer(listView);
+                if (TextUtils.isEmpty(getString(R.string.deployment_url))) {
+                    if (drawerLayout != null) {
+
+                        if (drawerLayout.isDrawerOpen(listView)) {
+                            drawerLayout.closeDrawer(listView);
+                        } else {
+                            drawerLayout.openDrawer(listView);
+                        }
+
                     } else {
-                        drawerLayout.openDrawer(listView);
+                        finish();
                     }
                 } else {
 
@@ -420,7 +438,7 @@ public abstract class BaseActivity<V extends View> extends
         drawerLayout.closeDrawer(listView);
     }
 
-    protected void startActivityZoomIn(final Intent i) {
+    public void startActivityZoomIn(final Intent i) {
         startActivity(i);
         overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
     }

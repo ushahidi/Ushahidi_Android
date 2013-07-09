@@ -24,10 +24,13 @@ import java.lang.reflect.InvocationTargetException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -209,6 +212,11 @@ public abstract class BaseSectionListFragment<V extends View, M extends Model, L
 			listView.setAdapter(adapter);
 		}
 	}
+	
+	public void startActivityZoomIn(final Intent i) {
+        startActivity(i);
+        getActivity().overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+    }
 
 	protected void log(String message) {
 			new Util().log(message);

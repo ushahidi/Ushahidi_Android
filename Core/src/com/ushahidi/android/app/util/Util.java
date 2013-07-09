@@ -38,6 +38,7 @@ import java.util.regex.Pattern;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -48,6 +49,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.provider.Settings;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -55,6 +58,7 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -64,6 +68,8 @@ import com.ushahidi.android.app.MapBoxTileProvider;
 import com.ushahidi.android.app.OpenStreetMapTileProvider;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.ui.phone.AboutActivity;
+import com.ushahidi.android.app.ui.tablet.AboutFragment;
 
 /**
  * This is a utility class that has common methods to be used by most clsses.
@@ -636,6 +642,34 @@ public class Util {
                 map.addTileOverlay(mapbox);
             }
         }
+    }
+
+    public static void showAbout(final SherlockFragmentActivity mActivity) {
+        if (Util.isTablet(mActivity.getApplicationContext())) {
+            // DialogFragment.show() will take care of adding the fragment
+            // in a transaction. We also want to remove any currently showing
+            // dialog, so make our own transaction and take care of that here.
+            FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
+            Fragment prev = mActivity.getSupportFragmentManager().findFragmentByTag("dialog");
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out,
+                    R.anim.slide_right_in, R.anim.slide_right_out);
+            ft.addToBackStack(null);
+
+            // Create and show the dialog.
+            AboutFragment newFragment = AboutFragment.newInstance();
+            newFragment.show(ft, "dialog");
+        } else {
+
+            Intent i = new Intent(mActivity.getApplicationContext(), AboutActivity.class);
+            mActivity.startActivity(i);
+            mActivity.overridePendingTransition(R.anim.home_enter,
+                    R.anim.home_exit);
+
+        }
+
     }
 
     /**

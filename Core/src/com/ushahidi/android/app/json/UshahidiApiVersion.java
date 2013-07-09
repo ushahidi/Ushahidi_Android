@@ -11,7 +11,6 @@ public class UshahidiApiVersion {
 		}
 
 		private List<Version> version;
-		private int checkins;
 		private String email;
 		private String sms;
 		private List<String> plugins;
