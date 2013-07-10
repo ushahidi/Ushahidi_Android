@@ -30,9 +30,9 @@ import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.adapters.PhotoScreenSwipeAdapter;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.util.ImageManager;
-import com.ushahidi.android.app.views.View;
+import com.ushahidi.android.app.views.SlideView;
 
-public class ViewReportPhotoActivity extends BaseActivity<View> {
+public class ViewReportPhotoActivity extends BaseActivity<SlideView> {
 
     private ListPhotoModel mPhoto;
 
@@ -52,7 +52,7 @@ public class ViewReportPhotoActivity extends BaseActivity<View> {
     private ViewPager mPager;
 
     public ViewReportPhotoActivity() {
-        super(View.class, R.layout.screen_slide, R.menu.view_media);
+        super(SlideView.class, R.layout.screen_slide, R.menu.view_media);
     }
 
     @Override

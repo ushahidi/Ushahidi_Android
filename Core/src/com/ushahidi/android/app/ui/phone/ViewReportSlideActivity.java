@@ -35,12 +35,12 @@ import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.helpers.MapPager;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.ui.tablet.ViewReportFragment;
-import com.ushahidi.android.app.views.View;
+import com.ushahidi.android.app.views.SlideView;
 
 /**
  * @author eyedol
  */
-public class ViewReportSlideActivity extends BaseActivity<View> {
+public class ViewReportSlideActivity extends BaseActivity<SlideView> {
 
     /**
      * The number of pages (wizard steps) to show in this demo.
@@ -67,7 +67,7 @@ public class ViewReportSlideActivity extends BaseActivity<View> {
     private ListReportModel mReports;
 
     public ViewReportSlideActivity() {
-        super(View.class, R.layout.view_report_slide, R.menu.view_report);
+        super(SlideView.class, R.layout.view_report_slide, R.menu.view_report);
     }
 
     @Override

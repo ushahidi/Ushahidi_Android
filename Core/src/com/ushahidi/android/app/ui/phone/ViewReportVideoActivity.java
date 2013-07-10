@@ -29,12 +29,12 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.adapters.VideoScreenSwipeAdapter;
 import com.ushahidi.android.app.models.ListReportVideoModel;
-import com.ushahidi.android.app.views.View;
+import com.ushahidi.android.app.views.SlideView;
 
 /**
  * View vidoes attached to a report
  */
-public class ViewReportVideoActivity extends BaseActivity<View> {
+public class ViewReportVideoActivity extends BaseActivity<SlideView> {
 
     private ListReportVideoModel mVideo;
 
@@ -54,7 +54,7 @@ public class ViewReportVideoActivity extends BaseActivity<View> {
     private ViewPager mPager;
 
     public ViewReportVideoActivity() {
-        super(View.class, R.layout.screen_slide, R.menu.view_media);
+        super(SlideView.class, R.layout.screen_slide, R.menu.view_media);
     }
 
     @Override

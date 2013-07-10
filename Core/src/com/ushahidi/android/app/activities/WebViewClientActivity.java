@@ -30,12 +30,12 @@ import android.webkit.WebViewClient;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Window;
 import com.ushahidi.android.app.R;
-import com.ushahidi.android.app.views.View;
+import com.ushahidi.android.app.views.SlideView;
 
 /**
  * Base WebView activity
  */
-public class WebViewClientActivity extends BaseActivity<View> {
+public class WebViewClientActivity extends BaseActivity<SlideView> {
 
     /** Primary webview used to display content. */
     protected WebView mWebView;
@@ -47,7 +47,7 @@ public class WebViewClientActivity extends BaseActivity<View> {
     }
 
     public WebViewClientActivity(int menu) {
-        super(View.class, R.layout.webview, menu, R.id.drawer_layout,
+        super(SlideView.class, R.layout.webview, menu, R.id.drawer_layout,
                 R.id.left_drawer);
     }
 

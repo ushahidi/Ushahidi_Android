@@ -29,12 +29,12 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseActivity;
 import com.ushahidi.android.app.adapters.NewsScreenSwipeAdapter;
 import com.ushahidi.android.app.models.ListReportNewsModel;
-import com.ushahidi.android.app.views.View;
+import com.ushahidi.android.app.views.SlideView;
 
 /**
  * @author eyedol
  */
-public class ViewReportNewsActivity extends BaseActivity<View> {
+public class ViewReportNewsActivity extends BaseActivity<SlideView> {
 
     private ListReportNewsModel mNews;
 
@@ -54,7 +54,7 @@ public class ViewReportNewsActivity extends BaseActivity<View> {
     private ViewPager mPager;
 
     public ViewReportNewsActivity() {
-        super(View.class, R.layout.screen_slide, R.menu.view_media);
+        super(SlideView.class, R.layout.screen_slide, R.menu.view_media);
     }
 
     @Override
