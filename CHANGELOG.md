@@ -1,12 +1,12 @@
 ### v3.8
 **Features:**
-* Switche to using the new navigation drawer library
+* Switch to using the new navigation drawer library
 * Upgrade Ushahidi Java SDK to v1.1
 * 
 
 **Bug:**
 * Fix issue with filtering report by categories - #147
-* Fix with crashed when location names return a null value - #148
+* Fix crashes when location names return a null value - #148
 * Remove nav drawer when a custom deployment URL is set.
 * Fix issue with report detail view not showing the correct status of a report - # 143
 * Improve how list views adapter binds data to views - #146
