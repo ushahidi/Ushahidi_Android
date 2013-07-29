@@ -12,7 +12,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.uchaguzi.android.app"
-     android:versionCode="35"
+    android:versionCode="35"
     android:versionName="3.8" >
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -311,7 +311,7 @@
             </intent-filter>
         </receiver>
 
-        <meta-data	
+        <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_map_api_key" />
     </application>

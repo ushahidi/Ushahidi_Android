@@ -123,4 +123,9 @@
     <!-- DEPLOYMENT TEXT -->
     <string name="about_text"/>
 
+    <!-- Dev Key -->
+    <string name="google_map_api_key">AIzaSyByeWOSEFtFvfpKtDcHO8Zg7jFSp0D88lM</string>
+    <!-- Live Key -->
+    <string name="google_map_api_key_live">AIzaSyAUwfY5bdA2xxA4r9Aqn6k82f_RyktwR_I</string>
+    
 </resources>
