@@ -158,6 +158,8 @@ public abstract class BaseActivity<V extends View> extends
                 createNavDrawer();
             }
         }
+        
+        EasyTracker.getInstance().setContext(this);
 
     }
 
