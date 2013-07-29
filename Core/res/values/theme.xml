@@ -98,6 +98,7 @@
     <string name="about_text"/>
 
     <!--GOOGLE MAPS API-->
+    
     <!--Ushahidi original key  -->
     <string name="google_map_api_key_dev"/> 
     <string name="google_map_api_key"/>

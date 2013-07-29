@@ -44,6 +44,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.NavDrawerAdapter;
@@ -227,6 +228,7 @@ public abstract class BaseActivity<V extends View> extends
     protected void onStart() {
         super.onStart();
         log("onStart");
+        EasyTracker.getInstance().activityStart(this);
     }
 
     @Override
@@ -252,6 +254,7 @@ public abstract class BaseActivity<V extends View> extends
     protected void onStop() {
         super.onStop();
         log("onStop");
+        EasyTracker.getInstance().activityStop(this);
     }
 
     @Override

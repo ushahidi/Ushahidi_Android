@@ -78,9 +78,11 @@ public abstract class BaseMapFragment extends SherlockMapFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
-		GoogleMapOptions op = new GoogleMapOptions();
-		op.zOrderOnTop(true);
-		newInstance(op);
+		//GoogleMapOptions op = new GoogleMapOptions();
+	
+		//op.zOrderOnTop(true);
+		
+		//newInstance(op);
 	}
 
 	@Override

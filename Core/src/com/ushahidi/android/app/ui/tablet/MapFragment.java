@@ -96,7 +96,6 @@ public class MapFragment extends BaseMapFragment implements
 
 		if (checkForGMap()) {
 			map = getMap();
-
 			Preferences.loadSettings(getActivity());
 
 			initMap();
