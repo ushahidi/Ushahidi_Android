@@ -30,6 +30,7 @@ import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -49,227 +50,237 @@ import com.ushahidi.android.app.views.View;
  * @author eyedol
  */
 public abstract class BaseSectionListFragment<V extends View, M extends Model, L extends BaseSectionListAdapter<M>>
-		extends SherlockListFragment {
+        extends SherlockListFragment {
 
-	/**
-	 * ListView resource id
-	 */
-	private final int listViewId;
+    /**
+     * ListView resource id
+     */
+    private final int listViewId;
 
-	/**
-	 * ListAdpater class
-	 */
-	private final Class<L> adapterClass;
+    /**
+     * ListAdpater class
+     */
+    private final Class<L> adapterClass;
 
-	/**
-	 * ListAdapter
-	 */
-	protected L adapter;
+    /**
+     * ListAdapter
+     */
+    protected L adapter;
 
-	/**
-	 * ListView
-	 */
-	protected ListView listView;
+    /**
+     * ListView
+     */
+    protected ListView listView;
 
-	/**
-	 * Menu resource id
-	 */
-	protected final int menu;
+    /**
+     * Menu resource id
+     */
+    protected final int menu;
 
-	/**
-	 * Layout resource id
-	 */
-	protected final int layout;
+    /**
+     * Layout resource id
+     */
+    protected final int layout;
 
-	/**
-	 * View class
-	 */
-	protected final Class<V> viewClass;
+    /**
+     * View class
+     */
+    protected final Class<V> viewClass;
 
-	/**
-	 * View
-	 */
-	protected V view;
+    /**
+     * View
+     */
+    protected V view;
 
-	/**
-	 * BaseListActivity
-	 * 
-	 * @param view
-	 *            View class type
-	 * @param adapter
-	 *            List adapter class type
-	 * @param layout
-	 *            layout resource id
-	 * @param menu
-	 *            menu resource id
-	 * @param listView
-	 *            list view resource id
-	 */
-	protected BaseSectionListFragment(Class<V> view, Class<L> adapter, int layout,
-			int menu, int listView) {
-		this.adapterClass = adapter;
-		this.listViewId = listView;
-		this.viewClass = view;
-		this.menu = menu;
-		this.layout = layout;
-	}
+    /**
+     * BaseListActivity
+     * 
+     * @param view View class type
+     * @param adapter List adapter class type
+     * @param layout layout resource id
+     * @param menu menu resource id
+     * @param listView list view resource id
+     */
+    protected BaseSectionListFragment(Class<V> view, Class<L> adapter, int layout,
+            int menu, int listView) {
+        this.adapterClass = adapter;
+        this.listViewId = listView;
+        this.viewClass = view;
+        this.menu = menu;
+        this.layout = layout;
+    }
 
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		setHasOptionsMenu(true);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
 
-		if (listViewId != 0) {
+        if (listViewId != 0) {
 
-			listView = getListView();
-			if (headerView() != null) {
-				listView.addHeaderView(headerView());
-			}
-			// listView.setOnItemClickListener(this);
-			android.view.View emptyView = getActivity().findViewById(
-					android.R.id.empty);
-			if (emptyView != null) {
-				listView.setEmptyView(emptyView);
-			}
-			
-			view = Objects.createInstance(viewClass, Activity.class, getActivity());
-			adapter = Objects.createInstance(adapterClass, Context.class, getActivity());
+            listView = getListView();
+            if (headerView() != null) {
+                listView.addHeaderView(headerView());
+            }
+            // listView.setOnItemClickListener(this);
+            android.view.View emptyView = getActivity().findViewById(
+                    android.R.id.empty);
+            if (emptyView != null) {
+                listView.setEmptyView(emptyView);
+            }
 
-			listView.setAdapter(adapter);
-			listView.setFocusable(true);
-			listView.setFocusableInTouchMode(true);
-		}
-	}
+            view = Objects.createInstance(viewClass, Activity.class, getActivity());
+            adapter = Objects.createInstance(adapterClass, Context.class, getActivity());
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            listView.setAdapter(adapter);
+            listView.setFocusable(true);
+            listView.setFocusableInTouchMode(true);
+        }
 
-		if (this.menu != 0) {
-			inflater.inflate(this.menu, menu);
-		}
+        EasyTracker.getInstance().setContext(getActivity());
+    }
 
-	}
+    @Override
+    public void onStart() {
+        super.onStart();
+        log("onStart");
+        EasyTracker.getInstance().activityStart(getActivity());
+    }
 
-	@Override
-	public android.view.View onCreateView(LayoutInflater inflater,
-			ViewGroup container, Bundle savedInstanceState) {
-		android.view.View root = null;
-		if (layout != 0) {
-			root = inflater.inflate(layout, container, false);
-		}
-		return root;
-	}
+    @Override
+    public void onStop() {
+        super.onStop();
+        log("onStop");
+        EasyTracker.getInstance().activityStop(getActivity());
+    }
 
-	/**
-	 * Called after ListAdapter has been loaded
-	 * 
-	 * @param success
-	 *            true is successfully loaded
-	 */
-	protected abstract void onLoaded(boolean success);
-	
-	protected abstract android.view.View headerView();
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-	@SuppressWarnings("unchecked")
-	protected M getSelectedItem() {
-		return (M) listView.getSelectedItem();
-	}
+        if (this.menu != 0) {
+            inflater.inflate(this.menu, menu);
+        }
 
-	public void onItemSelected(AdapterView<?> adapterView,
-			android.view.View view, int position, long id) {
-	}
+    }
 
-	public void onNothingSelected(AdapterView<?> adapterView) {
-	}
+    @Override
+    public android.view.View onCreateView(LayoutInflater inflater,
+            ViewGroup container, Bundle savedInstanceState) {
+        android.view.View root = null;
+        if (layout != 0) {
+            root = inflater.inflate(layout, container, false);
+        }
+        return root;
+    }
 
-	/**
-	 * ProgressTask sub-class for showing Loading... dialog while the
-	 * BaseListAdapter loads the data
-	 */
-	protected class LoadingTask extends ProgressTask {
-		public LoadingTask(Activity activity) {
-			super(activity, R.string.loading_);
-		}
+    /**
+     * Called after ListAdapter has been loaded
+     * 
+     * @param success true is successfully loaded
+     */
+    protected abstract void onLoaded(boolean success);
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			dialog.cancel();
-		}
+    protected abstract android.view.View headerView();
 
-		@Override
-		protected Boolean doInBackground(String... args) {
+    @SuppressWarnings("unchecked")
+    protected M getSelectedItem() {
+        return (M) listView.getSelectedItem();
+    }
 
-			adapter.refresh();
+    public void onItemSelected(AdapterView<?> adapterView,
+            android.view.View view, int position, long id) {
+    }
 
-			return true;
-		}
+    public void onNothingSelected(AdapterView<?> adapterView) {
+    }
 
-		@Override
-		protected void onPostExecute(Boolean success) {
-			super.onPostExecute(success);
+    /**
+     * ProgressTask sub-class for showing Loading... dialog while the
+     * BaseListAdapter loads the data
+     */
+    protected class LoadingTask extends ProgressTask {
+        public LoadingTask(Activity activity) {
+            super(activity, R.string.loading_);
+        }
 
-			onLoaded(success);
-			listView.setAdapter(adapter);
-		}
-	}
-	
-	public void startActivityZoomIn(final Intent i) {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.cancel();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... args) {
+
+            adapter.refresh();
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+
+            onLoaded(success);
+            listView.setAdapter(adapter);
+        }
+    }
+
+    public void startActivityZoomIn(final Intent i) {
         startActivity(i);
         getActivity().overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
     }
 
-	protected void log(String message) {
-			new Util().log(message);
-	}
+    protected void log(String message) {
+        new Util().log(message);
+    }
 
-	protected void log(String format, Object... args) {
-		new Util().log( String.format(format, args));	
-	}
+    protected void log(String format, Object... args) {
+        new Util().log(String.format(format, args));
+    }
 
-	protected void log(String message, Exception ex) {
-		new Util().log(message, ex);
-	}
+    protected void log(String message, Exception ex) {
+        new Util().log(message, ex);
+    }
 
-	protected void toastLong(String message) {
-		Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-	}
+    protected void toastLong(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+    }
 
-	protected void toastLong(int message) {
-		Toast.makeText(getActivity(), getText(message), Toast.LENGTH_LONG)
-				.show();
-	}
+    protected void toastLong(int message) {
+        Toast.makeText(getActivity(), getText(message), Toast.LENGTH_LONG)
+                .show();
+    }
 
-	protected void toastShort(int message) {
-		Toast.makeText(getActivity(), getText(message), Toast.LENGTH_SHORT)
-				.show();
-	}
+    protected void toastShort(int message) {
+        Toast.makeText(getActivity(), getText(message), Toast.LENGTH_SHORT)
+                .show();
+    }
 
-	protected void toastShort(CharSequence message) {
-		Toast.makeText(getActivity(), message.toString(), Toast.LENGTH_SHORT)
-				.show();
-	}
+    protected void toastShort(CharSequence message) {
+        Toast.makeText(getActivity(), message.toString(), Toast.LENGTH_SHORT)
+                .show();
+    }
 
-	@SuppressWarnings("unchecked")
-	protected <T> T createInstance(Class<?> type, Class<?> constructor,
-			Object... params) {
-		try {
-			return (T) type.getConstructor(constructor).newInstance(params);
-		} catch (InstantiationException e) {
-			log("InstantiationException", e);
-		} catch (IllegalAccessException e) {
-			log("IllegalAccessException", e);
-		} catch (InvocationTargetException e) {
-			log("InvocationTargetException", e);
-		} catch (NoSuchMethodException e) {
-			log("NoSuchMethodException", e);
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (java.lang.InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
+    @SuppressWarnings("unchecked")
+    protected <T> T createInstance(Class<?> type, Class<?> constructor,
+            Object... params) {
+        try {
+            return (T) type.getConstructor(constructor).newInstance(params);
+        } catch (InstantiationException e) {
+            log("InstantiationException", e);
+        } catch (IllegalAccessException e) {
+            log("IllegalAccessException", e);
+        } catch (InvocationTargetException e) {
+            log("InvocationTargetException", e);
+        } catch (NoSuchMethodException e) {
+            log("NoSuchMethodException", e);
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (java.lang.InstantiationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

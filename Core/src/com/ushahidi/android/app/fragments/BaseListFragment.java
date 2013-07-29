@@ -27,6 +27,8 @@ import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -135,7 +137,24 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
 			listView.setFocusable(true);
 			listView.setFocusableInTouchMode(true);
 		}
+		
+		// start tracking with google analytics
+		EasyTracker.getInstance().setContext(getActivity());
 	}
+	
+	@Override
+    public void onStart() {
+        super.onStart();
+        log("onStart");
+        EasyTracker.getInstance().activityStart(getActivity());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        log("onStop");
+        EasyTracker.getInstance().activityStop(getActivity());
+    }
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

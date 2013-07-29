@@ -27,8 +27,10 @@ import com.actionbarsherlock.internal.view.menu.MenuWrapper;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import android.os.Bundle;
 import android.support.v4.app.Watson.OnCreateOptionsMenuListener;
 import android.support.v4.app.Watson.OnOptionsItemSelectedListener;
 import android.support.v4.app.Watson.OnPrepareOptionsMenuListener;
@@ -46,6 +48,11 @@ public class SherlockMapFragment extends SupportMapFragment implements
     public SherlockFragmentActivity getSherlockActivity() {
         return mActivity;
     }
+    
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        EasyTracker.getInstance().setContext(getActivity());
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -56,6 +63,19 @@ public class SherlockMapFragment extends SupportMapFragment implements
         mActivity = (SherlockFragmentActivity) activity;
 
         super.onAttach(activity);
+    }
+    
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(getActivity());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(getActivity());
     }
 
     @Override

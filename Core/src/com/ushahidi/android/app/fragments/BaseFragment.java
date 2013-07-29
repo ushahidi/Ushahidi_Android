@@ -5,8 +5,12 @@ import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+
 import android.view.LayoutInflater;
+
 import com.actionbarsherlock.view.MenuInflater;
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -26,8 +30,25 @@ public class BaseFragment extends SherlockFragment {
 		log("onCreate");
 
 		setHasOptionsMenu(true);
+		
+		// start google analytics
+		EasyTracker.getInstance().setContext(getActivity());
 
 	}
+	
+	@Override
+    public void onStart() {
+        super.onStart();
+        log("onStart");
+        EasyTracker.getInstance().activityStart(getActivity());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        log("onStop");
+        EasyTracker.getInstance().activityStop(getActivity());
+    }
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
