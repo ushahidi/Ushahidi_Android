@@ -1,8 +1,15 @@
+### v3.9
+**Features:**
+* Add Google analytics support
+
+**Bug:**
+* Fix map pins not getting refreshed when filtered by category
+
 ### v3.8
 **Features:**
 * Switch to using the new navigation drawer library
 * Upgrade Ushahidi Java SDK to v1.1
-* 
+ 
 
 **Bug:**
 * Fix issue with filtering report by categories - #147
