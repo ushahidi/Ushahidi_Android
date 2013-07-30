@@ -279,16 +279,19 @@ public class MapFragment extends BaseMapFragment implements
 
 								filterCategory = spinnerArrayAdapter.getTag(
 										which).getCategoryId();
+								
 								final String all = spinnerArrayAdapter.getTag(
 										which).getCategoryTitle();
 								if ((all != null)
 										&& (!TextUtils.isEmpty(all))
 										&& (all != getString(R.string.all_categories))) {
-
-									mHandler.post(fetchReportListByCategory);
+								    
+								    mHandler.post(fetchReportListByCategory);
 
 								} else {
-									mHandler.post(fetchReportList);
+								 
+								    mHandler.post(fetchReportList);
+									
 								}
 
 								dialog.dismiss();
@@ -311,6 +314,7 @@ public class MapFragment extends BaseMapFragment implements
 						.loadReportByCategory(filterCategory);
 				if (loaded) {
 					mReportModel = mListReportModel.getReports();
+					log("Filter reports by category: "+mReportModel.size());
 					populateMap();
 				}
 			} catch (Exception e) {
@@ -376,7 +380,8 @@ public class MapFragment extends BaseMapFragment implements
 	public void populateMap() {
 
 		if (mReportModel != null) {
-			mMarker.markersHolder.clear();
+			mMarker.clearMapMarkers();
+			
 			for (ReportEntity reportEntity : mReportModel) {
 				double latitude = 0.0;
 				double longitude = 0.0;

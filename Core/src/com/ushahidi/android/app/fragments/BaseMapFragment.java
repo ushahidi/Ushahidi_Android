@@ -17,6 +17,7 @@
  ** Ushahidi developers at team@ushahidi.com.
  **
  **/
+
 package com.ushahidi.android.app.fragments;
 
 import java.util.ArrayList;
@@ -45,293 +46,303 @@ import com.ushahidi.android.app.util.Util;
 
 /**
  * @author eyedol
- * 
  */
 public abstract class BaseMapFragment extends SherlockMapFragment {
 
-	protected GoogleMap map;
-	protected UpdatableMarker updatableMarker;
-	protected static final String TAG_ERROR_DIALOG_FRAGMENT = "errorDialog";
+    protected GoogleMap map;
+    protected UpdatableMarker updatableMarker;
+    protected static final String TAG_ERROR_DIALOG_FRAGMENT = "errorDialog";
 
-	/**
-	 * Menu resource id
-	 */
-	protected final int menu;
+    /**
+     * Menu resource id
+     */
+    protected final int menu;
 
-	/**
-	 * BaseActivity
-	 * 
-	 * @param menu
-	 *            menu resource id
-	 */
-	public BaseMapFragment(int menu) {
-		this.menu = menu;
-	}
+    /**
+     * BaseActivity
+     * 
+     * @param menu menu resource id
+     */
+    public BaseMapFragment(int menu) {
+        this.menu = menu;
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		setHasOptionsMenu(true);
-		//GoogleMapOptions op = new GoogleMapOptions();
-	
-		//op.zOrderOnTop(true);
-		
-		//newInstance(op);
-	}
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
+        // GoogleMapOptions op = new GoogleMapOptions();
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if (this.menu != 0) {
-			inflater.inflate(this.menu, menu);
-		}
-	}
+        // op.zOrderOnTop(true);
 
-	@Override
-	public boolean onContextItemSelected(android.view.MenuItem item) {
-		return super.onContextItemSelected(item);
-	}
+        // newInstance(op);
+    }
 
-	protected void updateMarker(double latitude, double longitude,
-			boolean center) {
-		updateMarker(getPoint(latitude, longitude), center);
-	}
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (this.menu != 0) {
+            inflater.inflate(this.menu, menu);
+        }
+    }
 
-	/**
-	 * Convert latitude and longitude to a GeoPoint
-	 * 
-	 * @param latitude
-	 *            Latitude
-	 * @param longitude
-	 *            Lingitude
-	 * @return GeoPoint
-	 */
-	protected LatLng getPoint(double latitude, double longitude) {
-		return (new LatLng(latitude, longitude));
-	}
+    @Override
+    public boolean onContextItemSelected(android.view.MenuItem item) {
+        return super.onContextItemSelected(item);
+    }
 
-	protected void updateMarker(LatLng point, boolean center) {
-		if (map != null) {
-			if (updatableMarker == null) {
-				CameraUpdate p = CameraUpdateFactory.newLatLng(point);
-				map.moveCamera(p);
+    protected void updateMarker(double latitude, double longitude,
+            boolean center) {
+        updateMarker(getPoint(latitude, longitude), center);
+    }
 
-				updatableMarker = createUpdatableMarker(point);
+    /**
+     * Convert latitude and longitude to a GeoPoint
+     * 
+     * @param latitude Latitude
+     * @param longitude Lingitude
+     * @return GeoPoint
+     */
+    protected LatLng getPoint(double latitude, double longitude) {
+        return (new LatLng(latitude, longitude));
+    }
 
-			} else {
-				updatableMarker.update(point);
-			}
-			if (center) {
-				CameraUpdate c = CameraUpdateFactory.newLatLng(point);
-				map.moveCamera(c);
-			}
-			CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
-			map.animateCamera(zoom);
-			map.getUiSettings().setZoomControlsEnabled(false);
-		}
+    protected void updateMarker(LatLng point, boolean center) {
+        if (map != null) {
+            if (updatableMarker == null) {
+                CameraUpdate p = CameraUpdateFactory.newLatLng(point);
+                map.moveCamera(p);
 
-	}
+                updatableMarker = createUpdatableMarker(point);
 
-	/* Override this to set a custom marker */
-	protected UpdatableMarker createUpdatableMarker(LatLng point) {
-		return new MapMarker(point);
-	}
+            } else {
+                updatableMarker.update(point);
+            }
+            if (center) {
+                CameraUpdate c = CameraUpdateFactory.newLatLng(point);
+                map.moveCamera(c);
+            }
+            CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+            map.animateCamera(zoom);
+            map.getUiSettings().setZoomControlsEnabled(false);
+        }
 
-	/* Override this to set a custom marker */
-	protected UpdatableMarker createUpdatableMarker() {
-		return new MapMarker();
-	}
+    }
 
-	protected void createMarker(double lat, double lng, String title,
-			String snippet) {
-		if (map != null) {
-			MapMarker marker = new MapMarker();
-			marker.addMarker(map, lat, lng, title, snippet);
-		}
-	}
+    /* Override this to set a custom marker */
+    protected UpdatableMarker createUpdatableMarker(LatLng point) {
+        return new MapMarker(point);
+    }
 
-	protected void createMarker(double lat, double lng, String title,
-			String snippet, String fileName) {
-		if (map != null) {
-			MapMarker marker = new MapMarker();
-			marker.addMarkerWithIcon(map, lat, lng, title, snippet, fileName);
-		}
-	}
+    /* Override this to set a custom marker */
+    protected UpdatableMarker createUpdatableMarker() {
+        return new MapMarker();
+    }
 
-	/**
-	 * Check if Google Maps exist on the device
-	 * 
-	 * @return
-	 */
-	protected boolean checkForGMap() {
-		int status = GooglePlayServicesUtil
-				.isGooglePlayServicesAvailable(getActivity());
+    protected void createMarker(double lat, double lng, String title,
+            String snippet) {
+        if (map != null) {
+            MapMarker marker = new MapMarker();
+            marker.addMarker(map, lat, lng, title, snippet);
+        }
+    }
 
-		if (status == ConnectionResult.SUCCESS) {
-			return (true);
-		} else if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
-			ErrorDialogFragment.newInstance(status).show(
-					getActivity().getSupportFragmentManager(),
-					TAG_ERROR_DIALOG_FRAGMENT);
-		} else {
-			Util.showToast(getActivity(), R.string.no_maps);
-			getActivity().finish();
-		}
+    protected void createMarker(double lat, double lng, String title,
+            String snippet, String fileName) {
+        if (map != null) {
+            MapMarker marker = new MapMarker();
+            marker.addMarkerWithIcon(map, lat, lng, title, snippet, fileName);
+        }
+    }
 
-		return false;
-	}
+    /**
+     * Check if Google Maps exist on the device
+     * 
+     * @return
+     */
+    protected boolean checkForGMap() {
+        int status = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(getActivity());
 
-	private class MapMarker implements UpdatableMarker {
+        if (status == ConnectionResult.SUCCESS) {
+            return (true);
+        } else if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
+            ErrorDialogFragment.newInstance(status).show(
+                    getActivity().getSupportFragmentManager(),
+                    TAG_ERROR_DIALOG_FRAGMENT);
+        } else {
+            Util.showToast(getActivity(), R.string.no_maps);
+            getActivity().finish();
+        }
 
-		public MapMarker(LatLng point) {
-			update(point);
-		}
+        return false;
+    }
 
-		public MapMarker() {
-		}
+    private class MapMarker implements UpdatableMarker {
 
-		public LatLng getCenter(double lat, double lng) {
-			LatLngBounds bounds = new LatLngBounds.Builder().include(
-					new LatLng(lat, lng)).build();
+        public MapMarker(LatLng point) {
+            update(point);
+        }
 
-			return Util.getCenter(bounds);
-		}
+        public MapMarker() {
+        }
 
-		public void update(LatLng point) {
-			if (point != null) {
-				
-				map.addMarker(new MarkerOptions().position(point));
-			}
-		}
+        public LatLng getCenter(double lat, double lng) {
+            LatLngBounds bounds = new LatLngBounds.Builder().include(
+                    new LatLng(lat, lng)).build();
 
-		public void addMarker(GoogleMap map, final double lat, final double lng,
-				String title, String snippet) {
+            return Util.getCenter(bounds);
+        }
 
-			final LatLng latLng = new LatLng(lat, lng);
-			markersHolder.add(title);
-			map.addMarker(new MarkerOptions().position(latLng).title(title)
-					.snippet(snippet));
-		}
+        public void update(LatLng point) {
+            if (point != null) {
 
-		public void addMarkerWithIcon(GoogleMap map, final double lat, final double lng,
-				String title, String snippet, String filename) {
-			final LatLng latLng = new LatLng(lat, lng);
-			//FIX ME: Using the title to find which latlng have been tapped. 
-			// This ugly hack has to do with the limitation in Google maps api for android
-			// SEE: https://code.google.com/p/gmaps-api-issues/issues/detail?id=4650
-			markersHolder.add(title);
-			if ((filename != null) && (!TextUtils.isEmpty(filename))) {
-				
-				map.addMarker(new MarkerOptions().position(latLng)
-						.title(title).snippet(snippet)
-						.icon(BitmapDescriptorFactory.fromPath(filename)));
-			} else {
-				map.addMarker(new MarkerOptions().position(latLng)
-						.title(title).snippet(snippet));
-			}
-			
-		}
-	}
+                map.addMarker(new MarkerOptions().position(point));
+            }
+        }
 
-	public static class ErrorDialogFragment extends DialogFragment {
-		static final String ARG_STATUS = "status";
+        public void addMarker(GoogleMap map, final double lat, final double lng,
+                String title, String snippet) {
 
-		static ErrorDialogFragment newInstance(int status) {
-			Bundle args = new Bundle();
+            final LatLng latLng = new LatLng(lat, lng);
+            markersHolder.add(title);
+            map.addMarker(new MarkerOptions().position(latLng).title(title)
+                    .snippet(snippet));
+        }
 
-			args.putInt(ARG_STATUS, status);
+        public void addMarkerWithIcon(GoogleMap map, final double lat, final double lng,
+                String title, String snippet, String filename) {
+            final LatLng latLng = new LatLng(lat, lng);
+            // FIX ME: Using the title to find which latlng have been tapped.
+            // This ugly hack has to do with the limitation in Google maps api
+            // for android
+            // SEE:
+            // https://code.google.com/p/gmaps-api-issues/issues/detail?id=4650
+            markersHolder.add(title);
 
-			ErrorDialogFragment result = new ErrorDialogFragment();
+            if ((filename != null) && (!TextUtils.isEmpty(filename))) {
 
-			result.setArguments(args);
+                map.addMarker(new MarkerOptions().position(latLng)
+                        .title(title).snippet(snippet)
+                        .icon(BitmapDescriptorFactory.fromPath(filename)));
+            } else {
+                map.addMarker(new MarkerOptions().position(latLng)
+                        .title(title).snippet(snippet));
+            }
 
-			return (result);
-		}
+        }
 
-		@Override
-		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			Bundle args = getArguments();
+        public void clearMapMarkers() {
+            if (map != null && markersHolder != null) {
+                markersHolder.clear();
+                map.clear();
+            }
+        }
+    }
 
-			return GooglePlayServicesUtil.getErrorDialog(
-					args.getInt(ARG_STATUS), getActivity(), 0);
-		}
+    public static class ErrorDialogFragment extends DialogFragment {
+        static final String ARG_STATUS = "status";
 
-		@Override
-		public void onDismiss(DialogInterface dlg) {
-			if (getActivity() != null) {
-				getActivity().finish();
-			}
-		}
-	}
+        static ErrorDialogFragment newInstance(int status) {
+            Bundle args = new Bundle();
 
-	public abstract interface UpdatableMarker {
-		
-		// This is for a workaround regarding this issue
-		// https://code.google.com/p/gmaps-api-issues/issues/detail?id=4650
-		public List<String> markersHolder = new ArrayList<String>();
-		
-		public abstract void update(LatLng point);
+            args.putInt(ARG_STATUS, status);
 
-		public abstract void addMarker(GoogleMap map, double lat, double lng,
-				String title, String snippet);
+            ErrorDialogFragment result = new ErrorDialogFragment();
 
-		public abstract void addMarkerWithIcon(GoogleMap map, double lat,
-				double lng, String title, String snippet, String filename);
+            result.setArguments(args);
 
-		public abstract LatLng getCenter(double lat, double lng);
-	}
+            return (result);
+        }
 
-	protected void log(String message) {
-		new Util().log(message);
-	}
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            Bundle args = getArguments();
 
-	protected void log(String format, Object... args) {
-		new Util().log(String.format(format, args));
-	}
+            return GooglePlayServicesUtil.getErrorDialog(
+                    args.getInt(ARG_STATUS), getActivity(), 0);
+        }
 
-	protected void log(String message, Exception ex) {
-		new Util().log(message, ex);
-	}
+        @Override
+        public void onDismiss(DialogInterface dlg) {
+            if (getActivity() != null) {
+                getActivity().finish();
+            }
+        }
+    }
 
-	protected void toastLong(String message) {
-		Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-	}
+    public abstract interface UpdatableMarker {
 
-	protected void toastLong(int message) {
-		Toast.makeText(getActivity(), getText(message), Toast.LENGTH_LONG)
-				.show();
-	}
+        // This is for a workaround regarding this issue
+        // https://code.google.com/p/gmaps-api-issues/issues/detail?id=4650
+        public List<String> markersHolder = new ArrayList<String>();
 
-	protected void toastLong(String format, Object... args) {
-		Toast.makeText(getActivity(), String.format(format, args),
-				Toast.LENGTH_LONG).show();
-	}
+        public abstract void update(LatLng point);
 
-	protected void toastLong(CharSequence message) {
-		Toast.makeText(getActivity(), message.toString(), Toast.LENGTH_LONG)
-				.show();
-	}
+        public abstract void addMarker(GoogleMap map, double lat, double lng,
+                String title, String snippet);
 
-	protected void toastShort(String message) {
-		Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-	}
+        public abstract void addMarkerWithIcon(GoogleMap map, double lat,
+                double lng, String title, String snippet, String filename);
 
-	protected void toastShort(String format, Object... args) {
-		Toast.makeText(getActivity(), String.format(format, args),
-				Toast.LENGTH_SHORT).show();
-	}
+        public abstract LatLng getCenter(double lat, double lng);
+        
+        public abstract void clearMapMarkers();
+            
+        
+    }
 
-	protected void toastShort(int message) {
-		Toast.makeText(getActivity(), getActivity().getString(message),
-				Toast.LENGTH_SHORT).show();
-	}
+    protected void log(String message) {
+        new Util().log(message);
+    }
 
-	protected void toastShort(CharSequence message) {
-		Toast.makeText(getActivity(), message.toString(), Toast.LENGTH_SHORT)
-				.show();
-	}
+    protected void log(String format, Object... args) {
+        new Util().log(String.format(format, args));
+    }
+
+    protected void log(String message, Exception ex) {
+        new Util().log(message, ex);
+    }
+
+    protected void toastLong(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+    }
+
+    protected void toastLong(int message) {
+        Toast.makeText(getActivity(), getText(message), Toast.LENGTH_LONG)
+                .show();
+    }
+
+    protected void toastLong(String format, Object... args) {
+        Toast.makeText(getActivity(), String.format(format, args),
+                Toast.LENGTH_LONG).show();
+    }
+
+    protected void toastLong(CharSequence message) {
+        Toast.makeText(getActivity(), message.toString(), Toast.LENGTH_LONG)
+                .show();
+    }
+
+    protected void toastShort(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    protected void toastShort(String format, Object... args) {
+        Toast.makeText(getActivity(), String.format(format, args),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    protected void toastShort(int message) {
+        Toast.makeText(getActivity(), getActivity().getString(message),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    protected void toastShort(CharSequence message) {
+        Toast.makeText(getActivity(), message.toString(), Toast.LENGTH_SHORT)
+                .show();
+    }
 }
