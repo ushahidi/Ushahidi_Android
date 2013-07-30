@@ -1,19 +1,15 @@
 package com.ushahidi.android.app.fragments;
 
 import android.os.Bundle;
-
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
 import android.view.LayoutInflater;
-
-import com.actionbarsherlock.view.MenuInflater;
-import com.google.analytics.tracking.android.EasyTracker;
-
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.ushahidi.android.app.util.AnalyticsUtils;
 import com.ushahidi.android.app.util.Util;
 
 public class BaseFragment extends SherlockFragment {
@@ -32,7 +28,7 @@ public class BaseFragment extends SherlockFragment {
 		setHasOptionsMenu(true);
 		
 		// start google analytics
-		EasyTracker.getInstance().setContext(getActivity());
+		AnalyticsUtils.setContext(getActivity());
 
 	}
 	
@@ -40,14 +36,14 @@ public class BaseFragment extends SherlockFragment {
     public void onStart() {
         super.onStart();
         log("onStart");
-        EasyTracker.getInstance().activityStart(getActivity());
+       AnalyticsUtils.activityStart(getActivity());
     }
 
     @Override
     public void onStop() {
         super.onStop();
         log("onStop");
-        EasyTracker.getInstance().activityStop(getActivity());
+        AnalyticsUtils.activityStop(getActivity());
     }
 
 	@Override

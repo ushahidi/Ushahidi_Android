@@ -44,7 +44,6 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.analytics.tracking.android.EasyTracker;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.NavDrawerAdapter;
@@ -52,6 +51,7 @@ import com.ushahidi.android.app.ui.navdrawer.AboutNavDrawerItem;
 import com.ushahidi.android.app.ui.navdrawer.AdminNavDrawerItem;
 import com.ushahidi.android.app.ui.navdrawer.BaseNavDrawerItem;
 import com.ushahidi.android.app.ui.navdrawer.MapNavDrawerItem;
+import com.ushahidi.android.app.util.AnalyticsUtils;
 import com.ushahidi.android.app.util.Objects;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.View;
@@ -158,8 +158,8 @@ public abstract class BaseActivity<V extends View> extends
                 createNavDrawer();
             }
         }
-        
-        EasyTracker.getInstance().setContext(this);
+
+        AnalyticsUtils.setContext(this);
 
     }
 
@@ -230,7 +230,7 @@ public abstract class BaseActivity<V extends View> extends
     protected void onStart() {
         super.onStart();
         log("onStart");
-        EasyTracker.getInstance().activityStart(this);
+        AnalyticsUtils.activityStop(this);
     }
 
     @Override
@@ -256,7 +256,7 @@ public abstract class BaseActivity<V extends View> extends
     protected void onStop() {
         super.onStop();
         log("onStop");
-        EasyTracker.getInstance().activityStop(this);
+        AnalyticsUtils.activityStop(this);
     }
 
     @Override

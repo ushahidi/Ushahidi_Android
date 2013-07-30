@@ -39,147 +39,160 @@ import com.ushahidi.android.app.services.SyncServices;
 import com.ushahidi.android.app.ui.phone.ListMapActivity;
 import com.ushahidi.android.app.ui.phone.ReportTabActivity;
 import com.ushahidi.android.app.ui.tablet.DashboardActivity;
+import com.ushahidi.android.app.util.AnalyticsUtils;
 import com.ushahidi.android.app.util.ApiUtils;
 import com.ushahidi.android.app.util.Util;
 
 public class SplashScreenActivity extends FragmentActivity {
-	private boolean active = true;
+    private boolean active = true;
 
-	private int splashTime = 5000;
+    private int splashTime = 5000;
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		// getSupportActionBar().hide();
-		setContentView(R.layout.splash);
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // getSupportActionBar().hide();
+        setContentView(R.layout.splash);
+        AnalyticsUtils.setContext(this);
+        // thread for displaying the SplashScreen
+        Thread splashTread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    int waited = 0;
+                    while (active && (waited < splashTime)) {
+                        sleep(100);
+                        if (active) {
+                            waited += 100;
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    // do nothing
+                } finally {
 
-		// thread for displaying the SplashScreen
-		Thread splashTread = new Thread() {
-			@Override
-			public void run() {
-				try {
-					int waited = 0;
-					while (active && (waited < splashTime)) {
-						sleep(100);
-						if (active) {
-							waited += 100;
-						}
-					}
-				} catch (InterruptedException e) {
-					// do nothing
-				} finally {
+                    // check if default deployment is set
+                    if (!checkDefaultDeployment()) {
+                        if (Util.isTablet(SplashScreenActivity.this)) {
+                            startActivity(new Intent(SplashScreenActivity.this,
+                                    DashboardActivity.class));
+                            overridePendingTransition(R.anim.home_enter,
+                                    R.anim.home_exit);
+                            finish();
+                        } else {
+                            startActivity(new Intent(SplashScreenActivity.this,
+                                    ListMapActivity.class));
+                            overridePendingTransition(R.anim.home_enter,
+                                    R.anim.home_exit);
+                            finish();
+                        }
 
-					// check if default deployment is set
-					if (!checkDefaultDeployment()) {
-						if (Util.isTablet(SplashScreenActivity.this)) {
-							startActivity(new Intent(SplashScreenActivity.this,
-									DashboardActivity.class));
-							overridePendingTransition(R.anim.home_enter,
-									R.anim.home_exit);
-							finish();
-						} else {
-							startActivity(new Intent(SplashScreenActivity.this,
-									ListMapActivity.class));
-							overridePendingTransition(R.anim.home_enter,
-									R.anim.home_exit);
-							finish();
-						}
+                    }
+                }
+            }
+        };
+        splashTread.start();
+    }
 
-					}
-				}
-			}
-		};
-		splashTread.start();
-	}
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerReceiver(broadcastReceiver, new IntentFilter(
+                SyncServices.SYNC_SERVICES_ACTION));
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		registerReceiver(broadcastReceiver, new IntentFilter(
-				SyncServices.SYNC_SERVICES_ACTION));
-	}
+    @Override
+    public void onStart() {
+        super.onStart();
+        AnalyticsUtils.activityStop(this);
+    }
 
-	protected void onPause() {
-		super.onPause();
-		try {
-			unregisterReceiver(broadcastReceiver);
-		} catch (IllegalArgumentException e) {
-		}
+    protected void onPause() {
+        super.onPause();
+        try {
+            unregisterReceiver(broadcastReceiver);
+        } catch (IllegalArgumentException e) {
+        }
 
-	}
+    }
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			active = false;
-		}
-		return true;
-	}
+    @Override
+    public void onStop() {
+        super.onStop();
+        AnalyticsUtils.activityStop(this);
+    }
 
-	/**
-	 * Check if default deployment has been set.
-	 */
-	private boolean checkDefaultDeployment() {
-		try {
-			// Check if default domain has been set.
-			final String deployment = getString(R.string.deployment_url);
-			if (!TextUtils.isEmpty(deployment)) {
-				Log.i("Dashboard",
-						"Determing if default deployment has been set "
-								+ deployment);
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            active = false;
+        }
+        return true;
+    }
 
-				// validate URL
-				if (ApiUtils.validateUshahidiInstance(deployment)) {
-					Log.i("Dashboard", "Validate Domain " + deployment);
-					Preferences.domain = deployment;
-					Preferences.saveSettings(this);
+    /**
+     * Check if default deployment has been set.
+     */
+    private boolean checkDefaultDeployment() {
+        try {
+            // Check if default domain has been set.
+            final String deployment = getString(R.string.deployment_url);
+            if (!TextUtils.isEmpty(deployment)) {
+                Log.i("Dashboard",
+                        "Determing if default deployment has been set "
+                                + deployment);
 
-					// refresh for new reports
-					if (Preferences.appRunsFirstTime == 0) {
-						// refreshReports();
-						Preferences.appRunsFirstTime = 1;
-						Preferences.saveSettings(this);
-						startService(new Intent(this, FetchReports.class));
-						return true;
-					}
-				}
+                // validate URL
+                if (ApiUtils.validateUshahidiInstance(deployment)) {
+                    Log.i("Dashboard", "Validate Domain " + deployment);
+                    Preferences.domain = deployment;
+                    Preferences.saveSettings(this);
 
-				goToReports();
-				return true;
-			}
-		} catch (Exception ex) {
-			Log.e("Dashboard", "checkDefaultDeployment Exception", ex);
-		}
-		return false;
-	}
+                    // refresh for new reports
+                    if (Preferences.appRunsFirstTime == 0) {
+                        // refreshReports();
+                        Preferences.appRunsFirstTime = 1;
+                        Preferences.saveSettings(this);
+                        startService(new Intent(this, FetchReports.class));
+                        return true;
+                    }
+                }
 
-	private void goToReports() {
-		Intent launchIntent;
-		launchIntent = new Intent(this, ReportTabActivity.class);
-		startActivityForResult(launchIntent, 0);
-		overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
-		setResult(RESULT_OK);
-		finish();
+                goToReports();
+                return true;
+            }
+        } catch (Exception ex) {
+            Log.e("Dashboard", "checkDefaultDeployment Exception", ex);
+        }
+        return false;
+    }
 
-	}
+    private void goToReports() {
+        Intent launchIntent;
+        launchIntent = new Intent(this, ReportTabActivity.class);
+        startActivityForResult(launchIntent, 0);
+        overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
+        setResult(RESULT_OK);
+        finish();
 
-	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (intent != null) {
-				try {
-					unregisterReceiver(broadcastReceiver);
-				} catch (IllegalArgumentException e) {
-				
-				}
-				
-				goToReports();
+    }
 
-			}
-		}
-	};
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                try {
+                    unregisterReceiver(broadcastReceiver);
+                } catch (IllegalArgumentException e) {
+
+                }
+
+                goToReports();
+
+            }
+        }
+    };
 
 }

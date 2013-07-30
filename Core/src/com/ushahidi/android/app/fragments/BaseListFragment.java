@@ -23,22 +23,20 @@ package com.ushahidi.android.app.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.google.analytics.tracking.android.EasyTracker;
-
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.adapters.BaseListAdapter;
 import com.ushahidi.android.app.models.Model;
 import com.ushahidi.android.app.tasks.ProgressTask;
+import com.ushahidi.android.app.util.AnalyticsUtils;
 import com.ushahidi.android.app.util.Objects;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.View;
@@ -139,21 +137,21 @@ public abstract class BaseListFragment<V extends View, M extends Model, L extend
 		}
 		
 		// start tracking with google analytics
-		EasyTracker.getInstance().setContext(getActivity());
+		AnalyticsUtils.setContext(getActivity());
 	}
 	
 	@Override
     public void onStart() {
         super.onStart();
         log("onStart");
-        EasyTracker.getInstance().activityStart(getActivity());
+        AnalyticsUtils.activityStart(getActivity());
     }
 
     @Override
     public void onStop() {
         super.onStop();
         log("onStop");
-        EasyTracker.getInstance().activityStop(getActivity());
+        AnalyticsUtils.activityStop(getActivity());
     }
 
 	@Override

@@ -20,6 +20,10 @@
 package com.ushahidi.android.app.fragments;
 
 import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Watson.OnCreateOptionsMenuListener;
+import android.support.v4.app.Watson.OnOptionsItemSelectedListener;
+import android.support.v4.app.Watson.OnPrepareOptionsMenuListener;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.internal.view.menu.MenuItemWrapper;
@@ -27,13 +31,8 @@ import com.actionbarsherlock.internal.view.menu.MenuWrapper;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.maps.SupportMapFragment;
-
-import android.os.Bundle;
-import android.support.v4.app.Watson.OnCreateOptionsMenuListener;
-import android.support.v4.app.Watson.OnOptionsItemSelectedListener;
-import android.support.v4.app.Watson.OnPrepareOptionsMenuListener;
+import com.ushahidi.android.app.util.AnalyticsUtils;
 
 /**
  * A workaround to provide actionbar menu
@@ -51,7 +50,7 @@ public class SherlockMapFragment extends SupportMapFragment implements
     
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        EasyTracker.getInstance().setContext(getActivity());
+        AnalyticsUtils.setContext(getActivity());
     }
 
     @Override
@@ -69,13 +68,13 @@ public class SherlockMapFragment extends SupportMapFragment implements
     @Override
     public void onStart() {
         super.onStart();
-        EasyTracker.getInstance().activityStart(getActivity());
+        AnalyticsUtils.activityStart(getActivity());
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        EasyTracker.getInstance().activityStop(getActivity());
+        AnalyticsUtils.activityStop(getActivity());
     }
 
     @Override
