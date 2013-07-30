@@ -12,8 +12,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ushahidi.android.app"
-    android:versionCode="35"
-    android:versionName="3.8" >
+    android:versionCode="36"
+    android:versionName="3.9" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -42,7 +42,7 @@
         android:targetSdkVersion="18" />
 
     <application
-        android:name=".MainApplication"
+        android:name="com.ushahidi.android.app.MainApplication"
         android:hardwareAccelerated="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_title"
