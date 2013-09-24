@@ -14,13 +14,13 @@
 
     <item
         android:id="@+id/menu_refresh"
-        android:icon="@drawable/button_refresh"
+        android:icon="@drawable/refresh"
         android:orderInCategory="0"
         android:showAsAction="ifRoom"
         android:title="@string/menu_refresh"/>
     <item
         android:id="@+id/menu_add"
-        android:icon="@drawable/button_add"
+        android:icon="@drawable/add"
         android:orderInCategory="1"
         android:showAsAction="ifRoom"
         android:title="@string/add_report"/>
