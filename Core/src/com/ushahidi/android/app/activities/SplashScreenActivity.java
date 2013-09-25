@@ -145,20 +145,20 @@ public class SplashScreenActivity extends FragmentActivity {
                                 + deployment);
 
                 // validate URL
-                if (ApiUtils.validateUshahidiInstance(deployment)) {
-                    Log.i("Dashboard", "Validate Domain " + deployment);
-                    Preferences.domain = deployment;
-                    Preferences.saveSettings(this);
-
-                    // refresh for new reports
-                    if (Preferences.appRunsFirstTime == 0) {
-                        // refreshReports();
-                        Preferences.appRunsFirstTime = 1;
-                        Preferences.saveSettings(this);
-                        startService(new Intent(this, FetchReports.class));
-                        return true;
-                    }
-                }
+//                if (ApiUtils.validateUshahidiInstance(deployment)) {
+//                    Log.i("Dashboard", "Validate Domain " + deployment);
+//                    Preferences.domain = deployment;
+//                    Preferences.saveSettings(this);
+//
+//                    // refresh for new reports
+//                    if (Preferences.appRunsFirstTime == 0) {
+//                        // refreshReports();
+//                        Preferences.appRunsFirstTime = 1;
+//                        Preferences.saveSettings(this);
+//                        startService(new Intent(this, FetchReports.class));
+//                        return true;
+//                    }
+//                }
 
                 goToReports();
                 return true;

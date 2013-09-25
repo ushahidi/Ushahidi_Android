@@ -22,7 +22,7 @@
 
 	<!-- BACKROUND IMAGES -->
     <drawable name="splash_background">@drawable/splash</drawable>
-    <drawable name="about_background">@color/white_color</drawable>
+    <drawable name="about_background">@drawable/logo_geobeyond</drawable>
     <drawable name="actionbar_background">@null</drawable>
 
 	<!-- COLOR CODES -->
