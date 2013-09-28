@@ -30,6 +30,7 @@ import java.util.Locale;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.java.sdk.api.Incident;
@@ -180,8 +181,8 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 				+ " cats ON reports." + ID + " = cats."
 				+ IReportCategorySchema.REPORT_ID + " WHERE cats."
 				+ IReportCategorySchema.CATEGORY_ID + " =? AND " + "cats."
-				+ IReportCategorySchema.STATUS + " =?  AND cats." + INCIDENT_PENDING
-				+ "=? ORDER BY  " + sortOrder;
+				+ IReportCategorySchema.STATUS + " =?  AND cats."
+				+ INCIDENT_PENDING + "=? ORDER BY  " + sortOrder;
 		final String selectionArgs[] = { String.valueOf(categoryId),
 				String.valueOf(IReportSchema.PENDING),
 				String.valueOf(IReportSchema.PENDING) };
@@ -210,10 +211,49 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 				+ " cats ON reports." + INCIDENT_ID + " = cats."
 				+ IReportCategorySchema.REPORT_ID + " WHERE cats."
 				+ IReportCategorySchema.CATEGORY_ID + " =? AND " + "cats."
-				+ IReportCategorySchema.STATUS + " =?  AND cats." + INCIDENT_PENDING
-				+ "=? ORDER BY  " + sortOrder;
+				+ IReportCategorySchema.STATUS + " =?  AND cats."
+				+ INCIDENT_PENDING + "=? ORDER BY  " + sortOrder;
 		final String selectionArgs[] = { String.valueOf(categoryId),
-				String.valueOf(IReportSchema.FETCHED),String.valueOf(IReportSchema.FETCHED) };
+				String.valueOf(IReportSchema.FETCHED),
+				String.valueOf(IReportSchema.FETCHED) };
+
+		listReport = new ArrayList<ReportEntity>();
+
+		cursor = super.rawQuery(sql, selectionArgs);
+		if (cursor != null) {
+
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				ReportEntity report = cursorToEntity(cursor);
+				listReport.add(report);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		}
+
+		return listReport;
+	}
+
+	public List<ReportEntity> fetchReportByCategoryIds(int[] categoryIds) {
+		StringBuffer categories = new StringBuffer();
+		for (int i = 0; i < categoryIds.length; i++) {
+			categories.append("cats." + IReportCategorySchema.CATEGORY_ID
+					+ " = '" + categoryIds[i] + "'");
+			if (i != categoryIds.length - 1)
+				categories.append(" OR ");
+		}
+
+		final String sortOrder = INCIDENT_TITLE + " DESC";
+		final String sql = "SELECT * FROM " + INCIDENTS_TABLE
+				+ " reports INNER JOIN " + IReportCategorySchema.TABLE
+				+ " cats ON reports." + INCIDENT_ID + " = cats."
+				+ IReportCategorySchema.REPORT_ID + " WHERE "
+				+ categories.toString() + " AND " + "cats."
+				+ IReportCategorySchema.STATUS + " =?  AND cats."
+				+ INCIDENT_PENDING + "=? ORDER BY  " + sortOrder;
+		final String selectionArgs[] = { 
+				String.valueOf(IReportSchema.FETCHED),
+				String.valueOf(IReportSchema.FETCHED) };
 
 		listReport = new ArrayList<ReportEntity>();
 
