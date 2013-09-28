@@ -105,4 +105,15 @@ public class CategoryEntity extends Model implements IDbEntity {
 		return this.parentId;
 	}
 
+	@Override
+	public String toString() {
+		return "CategoryEntity [categoryTitle=" + categoryTitle
+				+ ", categoryDescription=" + categoryDescription
+				+ ", categoryColor=" + categoryColor + ", categoryPosition="
+				+ categoryPosition + ", parentId=" + parentId + ", categoryId="
+				+ categoryId + "]";
+	}
+	
+	
+
 }

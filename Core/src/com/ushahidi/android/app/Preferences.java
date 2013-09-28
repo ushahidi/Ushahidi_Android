@@ -25,7 +25,7 @@ public class Preferences {
 
 	public static String email = "";
 
-	public static String totalReports = "20";
+	public static String totalReports = "5";
 	
 	public static String mapTiles = "google";
 
@@ -76,9 +76,8 @@ public class Preferences {
 		lastname = settings.getString("Lastname", "");
 		email = settings.getString("Email", "");
 		
-		totalReports = settings.getString("TotalReports", "20");
+		totalReports = settings.getString("TotalReports", "5");
 		mapTiles = settings.getString("MapTiles", "google");
-		Log.d("GEOAVALANCHE","CURRENT MAP TILES IS:  "+mapTiles);
 		isCheckinEnabled = settings.getInt("CheckinEnabled", isCheckinEnabled);
 		activeDeployment = settings.getInt("ActiveDeployment", 0);
 		activeMapName = settings.getString("ActiveMapName", "");

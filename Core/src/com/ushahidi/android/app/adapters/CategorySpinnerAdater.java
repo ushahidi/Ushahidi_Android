@@ -24,8 +24,10 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -75,6 +77,14 @@ public class CategorySpinnerAdater extends BaseArrayAdapter<CategoryEntity> {
 		if (getTag(position).getCategoryTitle() != null) {
 			widget.title.setText(getTag(position).getCategoryTitle());
 		}
+		if (getTag(position).getParentId() != 0){
+			MarginLayoutParams lp = (MarginLayoutParams) widget.color.getLayoutParams();
+			lp.leftMargin = (int)(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25, getContext().getResources().getDisplayMetrics()));
+		}else{
+			MarginLayoutParams lp = (MarginLayoutParams) widget.color.getLayoutParams();
+			lp.leftMargin = 0;
+		}
+		
 
 		// check if color is set
 		if (getTag(position).getCategoryColor() != null) {
@@ -113,6 +123,7 @@ public class CategorySpinnerAdater extends BaseArrayAdapter<CategoryEntity> {
 	@Override
 	public void refresh() {
 		ListReportModel mListReportModel = new ListReportModel();
+		//TODO check Strange behaviour get parent categories get all categories... 
 		List<CategoryEntity> listCategories = mListReportModel.getParentCategories();
 
 		if (listCategories != null && listCategories.size() > 0) {
