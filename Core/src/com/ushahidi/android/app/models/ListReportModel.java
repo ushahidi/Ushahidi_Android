@@ -22,6 +22,8 @@ package com.ushahidi.android.app.models;
 
 import java.util.List;
 
+import android.util.Log;
+
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IMediaSchema;
 import com.ushahidi.android.app.database.IReportSchema;
@@ -76,7 +78,16 @@ public class ListReportModel{
 	}
 
 	public boolean loadReportByCategory(int categoryId) {
-		mReports = Database.mReportDao.fetchReportByCategoryId(categoryId);
+		
+		//get parent categories
+		List<CategoryEntity> categories = Database.mCategoryDao.fetchChildrenCategories(categoryId);
+		int[] cat = new int[categories.size() +1];
+		cat[0] = categoryId;
+		for(int i = 0; i < categories.size(); i++){
+			cat[i+1] = categories.get(i).getCategoryId();
+		}
+		
+		mReports = Database.mReportDao.fetchReportByCategoryIds(cat);
 
 		if (mReports != null) {
 			return true;
@@ -90,6 +101,10 @@ public class ListReportModel{
 	
 	public List<CategoryEntity> getParentCategories() {
 		return Database.mCategoryDao.fetchAllCategoryTitles();
+
+	}
+	public CategoryEntity getParentCategory(int parentId) {
+		return Database.mCategoryDao.fetchParentCategory(parentId);
 
 	}
 	

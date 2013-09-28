@@ -96,6 +96,26 @@ public class CategoryDao extends DbContentProvider implements ICategoryDao,
 		return listCategory;
 
 	}
+	public CategoryEntity fetchParentCategory(int parentId) {
+
+		final String columns[] = { ID, CATEGORY_ID, TITLE, COLOR, POSITION,
+				PARENT_ID };
+		final String selection = CATEGORY_ID +" = ?";
+		listCategory = new ArrayList<CategoryEntity>();
+		
+		cursor = super.query(TABLE, columns, selection, new String[]{String.valueOf(parentId)}, GROUP_BY, null,
+				SORT_ORDER, null);
+
+		if (cursor != null && cursor.moveToFirst()) {
+			
+			CategoryEntity category = cursorToEntity(cursor);
+			cursor.close();
+			return category;
+		}
+
+		return null;
+
+	}
 
 	@Override
 	public List<CategoryEntity> fetchCategoryByReportId(int reportId) {
