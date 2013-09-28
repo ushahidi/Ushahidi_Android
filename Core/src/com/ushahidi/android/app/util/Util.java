@@ -627,21 +627,23 @@ public class Util {
 
         TileOverlayOptions mapbox = new TileOverlayOptions()
                 .tileProvider(new MapBoxTileProvider());
-
-        final String mapTile = Preferences.mapTiles;
-        if (map != null) {
-            map.setMapType(GoogleMap.MAP_TYPE_NONE);
-            map.addTileOverlay(osm).remove();
-            map.addTileOverlay(mapbox).remove();
-            map.clear();
-            if (mapTile.equals("google")) {
-                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            } else if (mapTile.equals("osm")) {
-                map.addTileOverlay(osm);
-            } else {
-                map.addTileOverlay(mapbox);
-            }
-        }
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        
+//        map.addTileOverlay(mapbox).remove();
+//        final String mapTile = Preferences.mapTiles;
+//        if (map != null) {
+//            map.setMapType(GoogleMap.MAP_TYPE_NONE);
+//            map.addTileOverlay(osm).remove();
+//            map.addTileOverlay(mapbox).remove();
+//            map.clear();
+//            if (mapTile.equals("google")) {
+//                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+//            } else if (mapTile.equals("osm")) {
+//                map.addTileOverlay(osm);
+//            } else {
+//                map.addTileOverlay(mapbox);
+//            }
+//        }
     }
 
     public static void showAbout(final SherlockFragmentActivity mActivity) {

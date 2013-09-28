@@ -46,7 +46,7 @@ import com.ushahidi.android.app.util.Util;
 public class SplashScreenActivity extends FragmentActivity {
     private boolean active = true;
 
-    private int splashTime = 5000;
+    private int splashTime = 1000;
 
     /** Called when the activity is first created. */
     @Override
@@ -145,20 +145,20 @@ public class SplashScreenActivity extends FragmentActivity {
                                 + deployment);
 
                 // validate URL
-//                if (ApiUtils.validateUshahidiInstance(deployment)) {
-//                    Log.i("Dashboard", "Validate Domain " + deployment);
-//                    Preferences.domain = deployment;
-//                    Preferences.saveSettings(this);
-//
-//                    // refresh for new reports
-//                    if (Preferences.appRunsFirstTime == 0) {
-//                        // refreshReports();
-//                        Preferences.appRunsFirstTime = 1;
-//                        Preferences.saveSettings(this);
-//                        startService(new Intent(this, FetchReports.class));
-//                        return true;
-//                    }
-//                }
+                if (ApiUtils.validateUshahidiInstance(deployment)) {
+                    Log.i("Dashboard", "Validate Domain " + deployment);
+                    Preferences.domain = deployment;
+                    Preferences.saveSettings(this);
+
+                    // refresh for new reports
+                    if (Preferences.appRunsFirstTime == 0) {
+                        // refreshReports();
+                        Preferences.appRunsFirstTime = 1;
+                        Preferences.saveSettings(this);
+                        startService(new Intent(this, FetchReports.class));
+                        return true;
+                    }
+                }
 
                 goToReports();
                 return true;

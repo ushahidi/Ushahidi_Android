@@ -107,8 +107,8 @@ Volunteers, mountaineers, stakeholders who collect, sort and reliably report war
 	 <!--GOOGLE MAPS API-->
 	 
     <!--  Dev Key  -->
-    <string name="google_map_api_key_dev">AIzaSyAe8zTBWDGzeuzt9RACm7mg_Men5nS9Cyc</string> 
+    <string name="google_map_api_key_dev">AIzaSyBlW6-Q8hxJL7pw8proXeQuGHje9d9oFOI</string> 
     <!-- Live Key -->
-    <string name="google_map_api_key">AIzaSyDfmnptOeDh0XVELv3WJkyMbckdtMW7Aiw</string>
+    <string name="google_map_api_key">AIzaSyBlW6-Q8hxJL7pw8proXeQuGHje9d9oFOI</string>
 
 </resources>
