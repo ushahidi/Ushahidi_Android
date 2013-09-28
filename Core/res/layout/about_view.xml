@@ -44,11 +44,11 @@
                     android:paddingBottom="15dp"
                     android:paddingRight="15dp" >
 
-                    <TextView
+                    <ImageView
                         android:id="@+id/title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/logo_icon" />
+                        android:src="@drawable/logo_icon" />
 
                     <TextView
                         android:id="@+id/version"
@@ -84,11 +84,11 @@
                 android:layout_alignParentBottom="true"
                 android:orientation="vertical" >
 
-                <TextView
+                <ImageView
                     android:id="@+id/sky_bg"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/about_background" />
+                    android:layout_height="50dp"
+                    android:src="@drawable/about_background" />
 
                 <LinearLayout
                     android:id="@+id/bottom_menu_bar_separator"

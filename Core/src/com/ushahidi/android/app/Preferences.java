@@ -4,6 +4,7 @@ import java.io.File;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class Preferences {
 	
@@ -24,9 +25,9 @@ public class Preferences {
 
 	public static String email = "";
 
-	public static String totalReports = "";
+	public static String totalReports = "20";
 	
-	public static String mapTiles = "";
+	public static String mapTiles = "google";
 
 	public static String fileName = "";
 
@@ -77,6 +78,7 @@ public class Preferences {
 		
 		totalReports = settings.getString("TotalReports", "20");
 		mapTiles = settings.getString("MapTiles", "google");
+		Log.d("GEOAVALANCHE","CURRENT MAP TILES IS:  "+mapTiles);
 		isCheckinEnabled = settings.getInt("CheckinEnabled", isCheckinEnabled);
 		activeDeployment = settings.getInt("ActiveDeployment", 0);
 		activeMapName = settings.getString("ActiveMapName", "");
@@ -126,6 +128,8 @@ public class Preferences {
 		editor.putString("Phonenumber", phonenumber);
 		editor.putString("OgsPluginVersion", ogsPluginVersion);
 		editor.putString("MapTiles", mapTiles);
+		editor.putString("TotalReports", totalReports);
+
 		editor.commit();
 	}
 }

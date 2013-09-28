@@ -25,6 +25,8 @@
             android:id="@+id/footer_text"
             style="@style/TextView.FilterBy"
             android:padding="10dip"
+            android:textStyle="italic"
+            android:textSize="18sp"
             android:text="@string/all_categories" />
     </LinearLayout>
     <!-- List report -->
