@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LinearLayout.Vertical.Wrap"
+    android:paddingBottom="10dp" >
+
+    <TextView
+            android:id="@+id/title"
+            style="@style/TextView.Label" />
+
+        <LinearLayout
+            style="@style/LinearLayout.Vertical"
+            android:layout_margin="5dp"
+            android:background="@drawable/list_even_row_rounded_corner"
+            android:padding="3dp" >
+
+            <TextView
+                android:id="@+id/value"
+                style="@style/TextView.Title" />
+        </LinearLayout>
+
+</LinearLayout>

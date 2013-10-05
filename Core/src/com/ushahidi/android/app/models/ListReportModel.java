@@ -183,6 +183,11 @@ public class ListReportModel{
 		if (Database.mMediaDao.deleteAllMedia()) {
 			new Util().log("Media deleted");
 		}
+		//delete custom forms values
+		if (Database.mReportCustomFormDao.deleteAllReportCustomForms()) {
+			new Util().log( "Report CustomForms deleted");
+		}
+		
 		return true;
 	}
 }

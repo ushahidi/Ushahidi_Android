@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Vector;
 
 import android.app.AlertDialog;
@@ -44,10 +45,10 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import com.actionbarsherlock.view.MenuItem;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
@@ -55,27 +56,35 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.ViewSwitcher;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseEditMapActivity;
+import com.ushahidi.android.app.adapters.CustomFormAdapter;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IOpenGeoSmsSchema;
 import com.ushahidi.android.app.database.IReportSchema;
 import com.ushahidi.android.app.database.OpenGeoSmsDao;
 import com.ushahidi.android.app.entities.CategoryEntity;
+import com.ushahidi.android.app.entities.CustomFormEntity;
+import com.ushahidi.android.app.entities.CustomFormMetaEntity;
 import com.ushahidi.android.app.entities.MediaEntity;
 import com.ushahidi.android.app.entities.PhotoEntity;
-import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.entities.ReportCategory;
+import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.models.AddReportModel;
 import com.ushahidi.android.app.models.ListReportModel;
 import com.ushahidi.android.app.tasks.GeocoderTask;
@@ -190,8 +199,12 @@ public class AddReportActivity extends
 
 		registerForContextMenu(view.gallery);
 		createSendMethodDialog();
+		
+		setupCustomForms();
 
 	}
+
+	
 
 	@Override
 	protected void onStart() {
@@ -375,6 +388,9 @@ public class AddReportActivity extends
 			mErrorMessage += getString(R.string.location);
 			required = true;
 		}
+		
+		//TODO add custom form validation check
+		
 
 		if (required) {
 			createDialog(DIALOG_SHOW_REQUIRED);
@@ -436,11 +452,16 @@ public class AddReportActivity extends
 
 		report.setIncident(incident);
 		report.setPending(1);
+		
+		
+		Map<Integer,String> cfValues = CustomFormAdapter.getValuesFromLayout(customForms,this);
+		Log.d("GEOAVALANCHE","Custom readed values: "+cfValues.size()+" "+cfValues.toString());
+		
 
 		if (id == 0) {
 			// Add a new pending report
 			if (model.addPendingReport(report, mVectorCategories,
-					pendingPhotos, view.mNews.getText().toString())) {
+					pendingPhotos, view.mNews.getText().toString(),selectedCustomFormId,cfValues)) {
 				// move saved photos
 				log("Moving photos to fetched folder");
 				ImageManager.movePendingPhotos(this);
@@ -1187,6 +1208,48 @@ public class AddReportActivity extends
 	protected boolean onDiscardChanges() {
 		deleteExistingPhoto();
 		return true;
+	}
+	
+	Spinner spinner;
+	ArrayList<CustomFormMetaEntity> customForms = new ArrayList<CustomFormMetaEntity>();
+	int selectedCustomFormId = 0;
+	
+	/**
+	 * Setup custom forms. Create spinner for form selection and create dynamically the forms.
+	 */
+	private void setupCustomForms() {
+		spinner = (Spinner) findViewById(R.id.cf_spinner);
+
+		List<CustomFormEntity> cfs = Database.mCustomFormDao.fetchAllCustomForms();
+		final ArrayAdapter<CustomFormEntity> adapter = new ArrayAdapter(getApplicationContext(), R.layout.customform_spinner_item,cfs);
+		
+		adapter.setDropDownViewResource(R.layout.customform_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+		
+		
+		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+				
+				CustomFormEntity cf = adapter.getItem(position);
+				selectedCustomFormId = cf.getCustomFormId();
+				List<CustomFormMetaEntity> cfm = Database.mCustomFormMetaDao.fetchCustomFormMetaByFormId(cf.getCustomFormId());
+				LinearLayout customFormView = (LinearLayout)findViewById(R.id.report_custom_form);
+				customFormView.removeAllViews();
+				customForms.clear();
+				customForms.addAll(cfm);
+				for(CustomFormMetaEntity cfmEntry : cfm){
+					customFormView.addView(CustomFormAdapter.createView(getApplicationContext(), cfmEntry));
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+			
+		});
+		
 	}
 
 }
