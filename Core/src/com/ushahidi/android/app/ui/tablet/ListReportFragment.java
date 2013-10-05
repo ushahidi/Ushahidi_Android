@@ -22,6 +22,7 @@ package com.ushahidi.android.app.ui.tablet;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -32,6 +33,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,17 +48,19 @@ import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
 import com.ushahidi.android.app.adapters.BaseListReportAdapter;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
+import com.ushahidi.android.app.adapters.CustomFormAdapter;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.adapters.ListPendingReportAdapter;
 import com.ushahidi.android.app.adapters.UploadPhotoAdapter;
 import com.ushahidi.android.app.api.CategoriesApi;
+import com.ushahidi.android.app.api.CustomFormApi;
 import com.ushahidi.android.app.api.ReportsApi;
-import com.ushahidi.android.app.database.CategoryDao;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IOpenGeoSmsSchema;
 import com.ushahidi.android.app.database.OpenGeoSmsDao;
 import com.ushahidi.android.app.entities.CategoryEntity;
 import com.ushahidi.android.app.entities.PhotoEntity;
+import com.ushahidi.android.app.entities.ReportCustomFormEntity;
 import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.fragments.BaseSectionListFragment;
 import com.ushahidi.android.app.models.AddReportModel;
@@ -70,11 +74,9 @@ import com.ushahidi.android.app.ui.phone.ViewReportSlideActivity;
 import com.ushahidi.android.app.util.ImageManager;
 import com.ushahidi.android.app.util.Util;
 import com.ushahidi.android.app.views.ListReportView;
-import com.ushahidi.java.sdk.api.Category;
 import com.ushahidi.java.sdk.api.Incident;
 import com.ushahidi.java.sdk.api.Person;
 import com.ushahidi.java.sdk.api.ReportFields;
-import com.ushahidi.java.sdk.api.json.Categories;
 import com.ushahidi.java.sdk.api.json.Response;
 import com.ushahidi.java.sdk.net.content.Body;
 import com.ushahidi.java.sdk.net.content.FileBody;
@@ -515,7 +517,7 @@ public class ListReportFragment
 		if (mPendingReports != null) {
 			for (ReportEntity report : mPendingReports) {
 				long rid = report.getDbId();
-				;
+				
 				int state = Database.mOpenGeoSmsDao.getReportState(rid);
 				if (state != IOpenGeoSmsSchema.STATE_NOT_OPENGEOSMS) {
 					if (!sendOpenGeoSmsReport(report, state)) {
@@ -550,6 +552,20 @@ public class ListReportFragment
 						.pendingPhotos((int) report.getDbId());
 				if (photos != null && photos.size() > 0)
 					fields.addPhotos(photos);
+				
+				//Add custom forms values
+				
+				List<ReportCustomFormEntity> pendingCustomForms = Database.mReportCustomFormDao.fetchPendingReportCustomForms(report.getDbId());
+				Log.d("GEOAVALANCHE", "pending custom forms: "+pendingCustomForms.size());
+				if(pendingCustomForms!= null && pendingCustomForms.size() > 0){
+					Map<String, String> fieldMap = CustomFormAdapter.convertEntityToMap(pendingCustomForms);
+					Log.d("GEOAVALANCHE", "custom form map"+fieldMap);
+					fields.addCustomFields(fieldMap);
+					fields.setFormId(String.valueOf(pendingCustomForms.get(0).getFormId()));
+					Log.d("GEOAVALANCHE", "Form ID: "+pendingCustomForms.get(0).getFormId());
+				}
+				
+				
 
 				// Upload
 				Response response = reportApi.submitReport(fields);
@@ -579,6 +595,7 @@ public class ListReportFragment
 					ImageManager.deletePendingPhoto(getActivity(), "/"
 							+ pendingPhoto.getItem(i).getPhoto());
 				}
+				
 			}
 		}
 	}
@@ -597,6 +614,9 @@ public class ListReportFragment
 				}
 			}
 
+		}
+		if (Database.mReportCustomFormDao.deleteAllReportCustomForms()) {
+			new Util().log( "Report CustomForms deleted");
 		}
 
 	}
@@ -670,9 +690,15 @@ public class ListReportFragment
 					// delete everything before updating with a new one
 					deleteFetchedReport();
 
-					status = new ReportsApi().saveReports(getActivity()) ? 0
-							: 99;
-
+					boolean reportFetched = new ReportsApi().saveReports(getActivity());
+					
+					if(reportFetched){//fetch also customforms values
+						List<ReportEntity> reports = Database.mReportDao.fetchAllReports();
+						new CustomFormApi().fetchReportCustomFormList(reports);
+					}
+						
+					//TODO adding CONSTANT status values	
+					status = reportFetched ? 0 : 99;
 					// fetch categories -- assuming everything will go just
 					new CategoriesApi().getCategoriesList();
 					return true;

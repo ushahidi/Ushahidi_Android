@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,11 +35,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.adapters.CustomFormAdapter;
 import com.ushahidi.android.app.adapters.ListCommentAdapter;
 import com.ushahidi.android.app.adapters.ListNewsAdapter;
 import com.ushahidi.android.app.adapters.ListPhotoAdapter;
 import com.ushahidi.android.app.adapters.ListVideoAdapter;
+import com.ushahidi.android.app.database.CustomFormMetaDao;
+import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.PhotoEntity;
+import com.ushahidi.android.app.entities.ReportCustomFormEntity;
 import com.ushahidi.android.app.models.ListPhotoModel;
 import com.ushahidi.android.app.util.ImageViewWorker;
 
@@ -89,6 +94,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 
 	public ImageView photo;
 	public TextView total;
+	
+	private LinearLayout reportCustomFormLayout;
 
 	public ViewReportView(ViewGroup activity, Context context) { 
 		super(activity);
@@ -140,6 +147,8 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 		if (listCommentEmptyView != null) {
 			listComments.setEmptyView(listCommentEmptyView);
 		}
+		
+		reportCustomFormLayout = (LinearLayout)activity.findViewById(R.id.report_custom_form);
 
 	}
 
@@ -241,6 +250,19 @@ public class ViewReportView extends com.ushahidi.android.app.views.View {
 			}
 		}
 	}
+	
+	public void setReportCustomFormsValues(int reportId) {
+		if (reportCustomFormLayout != null) {
+			reportCustomFormLayout.removeAllViews();
+			List<ReportCustomFormEntity> values = Database.mReportCustomFormDao.fetchReportCustomForms(reportId);
+			
+			for(ReportCustomFormEntity entity: values){
+				View v = CustomFormAdapter.createTextView(context, entity);
+				reportCustomFormLayout.addView(v);
+			}
+		}
+	}
+
 
 	public ImageView getListPhotos() {
 		return this.photo;
