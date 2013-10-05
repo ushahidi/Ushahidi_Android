@@ -15,17 +15,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <FrameLayout
-        android:id="@+id/show_map_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background_color" >
+
 
         <RelativeLayout
             android:id="@+id/relativeLayout1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/background_color" >
+            android:background="@color/background_color"  >
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -72,9 +68,7 @@
                         android:textStyle="bold" >
                     </TextView>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                    
                 </LinearLayout>
             </ScrollView>
 
@@ -127,10 +121,7 @@
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
-    </FrameLayout>
 
-    <ListView
-        android:id="@+id/left_drawer"
-        style="@style/NavDrawerList" />
+   
 
 </android.support.v4.widget.DrawerLayout>
