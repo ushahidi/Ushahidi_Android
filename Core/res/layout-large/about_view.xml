@@ -10,16 +10,16 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relativeLayout1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_color" >
+    android:layout_height="wrap_content"
+    android:background="@color/background_color"
+    android:orientation="vertical" >
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:fadeScrollbars="true"
         android:gravity="center"
         android:padding="25dp"
@@ -59,60 +59,50 @@
                 android:textColor="@color/date_color"
                 android:textStyle="bold" >
             </TextView>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
         </LinearLayout>
     </ScrollView>
 
+    <ImageView
+        android:id="@+id/sky_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/about_background" />
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical" >
+        android:id="@+id/bottom_menu_bar_separator"
+        style="@style/BottomActionBarContainer"
+        android:baselineAligned="false" >
 
-        <TextView
-            android:id="@+id/sky_bg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/about_background" />
+        <Button
+            android:id="@+id/team_link"
+            style="@style/BottomActionbarButton"
+            android:drawableTop="@drawable/button_team"
+            android:text="@string/team" />
 
-        <LinearLayout
-            android:id="@+id/bottom_menu_bar_separator"
-            style="@style/BottomActionBarContainer"
-            android:baselineAligned="false" >
+        <Button
+            android:id="@+id/media_link"
+            style="@style/BottomActionbarButton"
+            android:drawableTop="@drawable/button_media"
+            android:text="@string/media" />
 
-            <Button
-                android:id="@+id/team_link"
-                style="@style/BottomActionbarButton"
-                android:drawableTop="@drawable/button_team"
-                android:text="@string/team" />
+        <Button
+            android:id="@+id/twitter_link"
+            style="@style/BottomActionbarButton"
+            android:drawableTop="@drawable/button_twitter"
+            android:text="@string/twitter" />
 
-            <Button
-                android:id="@+id/media_link"
-                style="@style/BottomActionbarButton"
-                android:drawableTop="@drawable/button_media"
-                android:text="@string/media" />
+        <Button
+            android:id="@+id/facebook_link"
+            style="@style/BottomActionbarButton"
+            android:drawableTop="@drawable/button_facebook"
+            android:text="@string/facebook" />
 
-            <Button
-                android:id="@+id/twitter_link"
-                style="@style/BottomActionbarButton"
-                android:drawableTop="@drawable/button_twitter"
-                android:text="@string/twitter" />
-
-            <Button
-                android:id="@+id/facebook_link"
-                style="@style/BottomActionbarButton"
-                android:drawableTop="@drawable/button_facebook"
-                android:text="@string/facebook" />
-
-            <Button
-                android:id="@+id/contact_link"
-                style="@style/BottomActionbarButton"
-                android:drawableTop="@drawable/button_contact"
-                android:text="@string/contact" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/contact_link"
+            style="@style/BottomActionbarButton"
+            android:drawableTop="@drawable/button_contact"
+            android:text="@string/contact" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
