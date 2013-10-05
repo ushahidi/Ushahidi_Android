@@ -9,6 +9,7 @@ import android.content.Context;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -35,10 +36,10 @@ public class CustomFormAdapter {
 		return view;
 	}
 
-	public static View createView(Context context, CustomFormMetaEntity cf) {
+	public static View createView( CustomFormMetaEntity cf, ViewGroup root) {
 
 		View view = null;
-		LayoutInflater inflater = (LayoutInflater) context
+		LayoutInflater inflater = (LayoutInflater) root.getContext()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		switch (cf.getType()) {
@@ -46,17 +47,17 @@ public class CustomFormAdapter {
 		case CustomFormMeta.TYPE_CHECKBOX:
 		case CustomFormMeta.TYPE_DATE:
 		case CustomFormMeta.TYPE_DROPDOWN:
-			view = inflater.inflate(R.layout.customform_dropdown, null);
+			view = inflater.inflate(R.layout.customform_dropdown, root,false);
 			Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
 			spinner.setId(cf.getFieldId());
 			String[] values = getCleanedValues(cf.getDefaultValues());
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,  R.layout.customform_spinner_item,values);
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(root.getContext(),  R.layout.customform_spinner_item,values);
 
 			adapter.setDropDownViewResource(R.layout.customform_spinner_dropdown_item);
 			spinner.setAdapter(adapter);
 			break;
 		case CustomFormMeta.TYPE_PASSWORD:
-			view = inflater.inflate(R.layout.customform_edittext, null);
+			view = inflater.inflate(R.layout.customform_edittext, root,false);
 			EditText etPassword = (EditText) view.findViewById(R.id.edittext);
 			etPassword.setId(cf.getFieldId());
 			etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -66,7 +67,7 @@ public class CustomFormAdapter {
 			
 		case CustomFormMeta.TYPE_TEXTAREA:
 		case CustomFormMeta.TYPE_TEXT:
-			view = inflater.inflate(R.layout.customform_edittext, null);
+			view = inflater.inflate(R.layout.customform_edittext, root,false);
 			EditText et = (EditText) view.findViewById(R.id.edittext);
 			et.setId(cf.getFieldId());
 			break;

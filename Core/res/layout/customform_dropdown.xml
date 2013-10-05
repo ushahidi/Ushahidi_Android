@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/LinearLayout.Vertical.Wrap"
-    android:paddingBottom="10dp" >
+    android:paddingBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:duplicateParentState="true" >
 
     <TextView
         android:id="@+id/title"
@@ -9,7 +12,9 @@
 
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:duplicateParentState="true"
+        />
 
 </LinearLayout>
