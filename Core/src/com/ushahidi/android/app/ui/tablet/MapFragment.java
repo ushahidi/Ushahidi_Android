@@ -50,7 +50,9 @@ import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.adapters.PopupAdapter;
 import com.ushahidi.android.app.api.CategoriesApi;
+import com.ushahidi.android.app.api.CustomFormApi;
 import com.ushahidi.android.app.api.ReportsApi;
+import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.fragments.BaseMapFragment;
@@ -433,6 +435,9 @@ public class MapFragment extends BaseMapFragment implements
 			}
 
 		}
+		if (Database.mReportCustomFormDao.deleteAllReportCustomForms()) {
+			new Util().log( "Report CustomForms deleted");
+		}
 
 	}
 
@@ -469,8 +474,15 @@ public class MapFragment extends BaseMapFragment implements
 					// right!
 					new CategoriesApi().getCategoriesList();
 
-					status = new ReportsApi().saveReports(getActivity()) ? 0
-							: 99;
+					boolean reportFetched = new ReportsApi().saveReports(getActivity());
+					
+					if(reportFetched){//fetch also customforms values
+						List<ReportEntity> reports = Database.mReportDao.fetchAllReports();
+						new CustomFormApi().fetchReportCustomFormList(reports);
+					}
+						
+					//TODO adding CONSTANT status values	
+					status = reportFetched ? 0 : 99;
 				}
 
 				Thread.sleep(1000);

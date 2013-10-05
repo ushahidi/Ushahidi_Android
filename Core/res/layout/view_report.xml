@@ -96,6 +96,14 @@
         </LinearLayout>
 
         <!-- Category ends -->
+        
+        <!-- Custom Form Fields starts. -->
+		<LinearLayout android:id="@+id/report_custom_form" 
+		    android:layout_width="match_parent" 
+		    android:layout_height="wrap_content" 
+		    android:orientation="vertical">
+		</LinearLayout>
+		<!-- Custom Form Fields ends. -->
 
 
         <!-- Date starts -->

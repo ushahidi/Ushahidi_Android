@@ -21,6 +21,7 @@ package com.ushahidi.android.app.models;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import com.ushahidi.android.app.database.Database;
@@ -29,6 +30,7 @@ import com.ushahidi.android.app.database.IReportSchema;
 import com.ushahidi.android.app.entities.MediaEntity;
 import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.entities.ReportCategory;
+import com.ushahidi.android.app.entities.ReportCustomFormEntity;
 import com.ushahidi.android.app.entities.ReportEntity;
 
 /**
@@ -38,7 +40,7 @@ import com.ushahidi.android.app.entities.ReportEntity;
 public class AddReportModel extends Model {
 
 	public boolean addPendingReport(ReportEntity report,
-			Vector<Integer> category, File[] pendingPhotos, String news) {
+			Vector<Integer> category, File[] pendingPhotos, String news,int customFormId, Map<Integer, String> customForms) {
 		boolean status;
 		// add pending reports
 		status = Database.mReportDao.addReport(report);
@@ -87,6 +89,20 @@ public class AddReportModel extends Model {
 				media.setReportId(id);
 				media.setType(IMediaSchema.NEWS);
 				Database.mMediaDao.addMedia(media);
+			}
+			
+			//save pending custom forms
+			if(customForms != null && customForms.size() > 0){
+				for(Integer fieldId : customForms.keySet()){
+					ReportCustomFormEntity rcf = new ReportCustomFormEntity();
+					rcf.setFormId(customFormId);
+					rcf.setFieldId(fieldId);
+					rcf.setValue(customForms.get(fieldId));
+					rcf.setReportId(id);
+					rcf.setPending(1);
+					Database.mReportCustomFormDao.addReportCustomForm(rcf);
+				}
+				
 			}
 		}
 
@@ -178,6 +194,8 @@ public class AddReportModel extends Model {
 
 		// delete media
 		Database.mMediaDao.deleteMediaByReportId(reportId);
+		
+		Database.mReportCustomFormDao.deleteReportCustomFormsByReportId(reportId);
 		return true;
 	}
 }

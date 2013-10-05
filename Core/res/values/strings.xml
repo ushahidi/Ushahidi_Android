@@ -254,4 +254,7 @@
     <string name="map_tiles_summary">The map provider to use. Default is Google</string>
     <string name="title_template_step">Viewing <xliff:g id="step_number">%1$d</xliff:g> / <xliff:g id="total_number">%2$d</xliff:g></string>
 
+    <!-- Custom Form  -->
+    <string name="custom_form_selection_title">Select Report Type</string>
+    
 </resources>
