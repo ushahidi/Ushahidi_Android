@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
+<!--
+  Copyright (c) 2010 Ushahidi Inc All rights reserved Contact: team@ushahidi.com 
   Website: http://www.ushahidi.com GNU Lesser General Public License Usage 
   This file may be used under the terms of the GNU Lesser General Public License 
   version 3 as published by the Free Software Foundation and appearing in the 
@@ -7,16 +8,35 @@
   following information to ensure the GNU Lesser General Public License version 
   3 requirements will be met: http://www.gnu.org/licenses/lgpl.html. If you 
   have questions regarding the use of this file, please contact Ushahidi developers 
-  at team@ushahidi.com. -->
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:background="@color/white_color"
-  >
-  <ImageView 
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:src="@drawable/splash_background"/>
-  </LinearLayout>
+  at team@ushahidi.com.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white_color"
+    android:gravity="center_vertical"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:src="@drawable/splash_background" />
+
+    <ProgressBar
+        android:id="@+id/marker_progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:indeterminate="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:text="loading reports..."
+        android:textSize="18sp" />
+
+</LinearLayout>
