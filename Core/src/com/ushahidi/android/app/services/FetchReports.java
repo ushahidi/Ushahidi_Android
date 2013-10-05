@@ -88,10 +88,6 @@ public class FetchReports extends SyncServices {
 		// fetch custom form definitions 
 		new CustomFormApi().fetchCustomFormList();
 		
-		List<CustomFormMetaEntity> cfm = Database.mCustomFormMetaDao.fetchAllCustomFormMetas();
-		for(CustomFormMetaEntity cf : cfm){
-			System.out.println(cf);
-		}
 		// fetch reports
 		boolean reportFetched = new ReportsApi().saveReports(this);
 		
