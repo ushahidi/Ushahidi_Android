@@ -1230,7 +1230,7 @@ public class AddReportActivity extends
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
-			public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+			public void onItemSelected(AdapterView<?> adapterView, View viewInner, int position, long id) {
 				
 				CustomFormEntity cf = adapter.getItem(position);
 				selectedCustomFormId = cf.getCustomFormId();
@@ -1240,7 +1240,7 @@ public class AddReportActivity extends
 				customForms.clear();
 				customForms.addAll(cfm);
 				for(CustomFormMetaEntity cfmEntry : cfm){
-					customFormView.addView(CustomFormAdapter.createView(getApplicationContext(), cfmEntry));
+					customFormView.addView(CustomFormAdapter.createView(cfmEntry,customFormView));
 				}
 			}
 
