@@ -1,9 +1,9 @@
 <resources>
 
     <!-- DEPLOYMENT INFORMATION -->
-    <string name="app_title">Geo Avalanche</string>
+    <string name="app_title">GeoAvalanche</string>
     <string name="app_name">GeoAvalanche</string>
-    <string name="deployment_url">http://geoavalanche.org/incident</string>
+    <string name="deployment_url">http://geoavalanche.org/incident/</string>
     <string name="team_url">http://geoavalanche.org/incident/page/index/1</string>
     <string name="media_url"/>
     <string name="twitter_url"/>
@@ -101,9 +101,7 @@
     
 
     <!-- DEPLOYMENT TEXT -->
-    <string name="about_text">Geoavalanche project was born in the late 2011, hands of Geobeyond, as a such experiment of social mapping for learning the responsiveness of mountaineers to avalanches.
-Volunteers, mountaineers, stakeholders who collect, sort and reliably report warnings, avalanches and related incidents in a worldwide map.
-</string>
+    <string name="about_text">Your free snow avalanche information network at your hands. Report the latest terrain conditions. Benefit from location based warnings in a timely manner.</string>
 	 <!--GOOGLE MAPS API-->
 	 
     <!--  Dev Key  -->
