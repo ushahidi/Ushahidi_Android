@@ -1,7 +1,7 @@
 <resources>
 
     <!-- DEPLOYMENT INFORMATION -->
-    <string name="app_title">GeoAvalanche</string>
+    <string name="app_title">Geo Avalanche</string>
     <string name="app_name">GeoAvalanche</string>
     <string name="deployment_url">http://geoavalanche.org/incident/</string>
     <string name="team_url">http://geoavalanche.org/incident/page/index/1</string>
