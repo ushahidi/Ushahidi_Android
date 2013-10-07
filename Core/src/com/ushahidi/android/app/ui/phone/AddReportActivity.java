@@ -1244,6 +1244,24 @@ public class AddReportActivity extends
 				for(CustomFormMetaEntity cfmEntry : cfm){
 					customFormView.addView(CustomFormAdapter.createView(cfmEntry,customFormView));
 				}
+				
+				//USED ONLY ON GEOAVALANCHE
+				mVectorCategories.clear();
+				if(cf.getCustomFormTitle().toLowerCase().equals("default form")){
+					setSelectedCategories(mVectorCategories);
+					return;
+				}
+					
+				
+				for(String categoryId : mCategoriesTitle.keySet()){
+					String categoryName = mCategoriesTitle.get(categoryId);
+					if(categoryName.toLowerCase().equals(cf.getCustomFormTitle().toLowerCase())){
+						mVectorCategories.add(Integer.valueOf(categoryId));
+					}
+				}
+				setSelectedCategories(mVectorCategories);
+				
+				
 			}
 
 			@Override

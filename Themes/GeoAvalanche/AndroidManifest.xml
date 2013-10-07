@@ -12,7 +12,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.geoavalanche.android.app"
-    android:versionCode="37"
+    android:versionCode="38"
     android:versionName="3.9" >
     
      <permission
@@ -312,7 +312,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="@string/google_map_api_key_dev" />
+            android:value="@string/google_map_api_key" />
     </application>
 
 </manifest>
