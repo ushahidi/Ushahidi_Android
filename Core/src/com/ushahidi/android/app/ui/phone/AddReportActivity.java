@@ -458,7 +458,6 @@ public class AddReportActivity extends
 		
 		
 		Map<Integer,String> cfValues = CustomFormAdapter.getValuesFromLayout(customForms,this);
-		Log.d("GEOAVALANCHE","Custom readed values: "+cfValues.size()+" "+cfValues.toString());
 		
 
 		if (id == 0) {

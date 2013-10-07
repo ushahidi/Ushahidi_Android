@@ -106,7 +106,7 @@
 	 <!--GOOGLE MAPS API-->
 	 
     <!--  Dev Key  -->
-    <string name="google_map_api_key_dev">AIzaSyBlW6-Q8hxJL7pw8proXeQuGHje9d9oFOI</string> 
+    <string name="google_map_api_key_dev">AIzaSyDtLQaO7TN_t84doFbJh5srdUTN_HwGubo</string> 
     <!-- Live Key -->
     <string name="google_map_api_key">AIzaSyCpkU8Lme4y8W9WV4yD84F3xBU0LtGXIhU</string>
 

@@ -98,7 +98,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 	@Override
 	public List<ReportEntity> fetchPendingReportByCategory(String category) {
-		final String sortOrder = INCIDENT_TITLE + " DESC";
+		final String sortOrder = INCIDENT_DATE + " DESC";
 		final String selectionArgs[] = { category, String.valueOf(1) };
 
 		final String selection = INCIDENT_CATEGORIES + " LIKE ? AND "
@@ -150,7 +150,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 	@Override
 	public List<ReportEntity> fetchReportByCategory(String category) {
-		final String sortOrder = INCIDENT_TITLE + " DESC";
+		final String sortOrder = INCIDENT_DATE + " DESC";
 		final String selectionArgs[] = { category };
 
 		final String selection = INCIDENT_CATEGORIES + " LIKE ?";
@@ -205,7 +205,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 
 	@Override
 	public List<ReportEntity> fetchReportByCategoryId(int categoryId) {
-		final String sortOrder = INCIDENT_TITLE + " DESC";
+		final String sortOrder = INCIDENT_DATE + " DESC";
 		final String sql = "SELECT * FROM " + INCIDENTS_TABLE
 				+ " reports INNER JOIN " + IReportCategorySchema.TABLE
 				+ " cats ON reports." + INCIDENT_ID + " = cats."
@@ -243,7 +243,7 @@ public class ReportDao extends DbContentProvider implements IReportDao,
 				categories.append(" OR ");
 		}
 
-		final String sortOrder = INCIDENT_TITLE + " DESC";
+		final String sortOrder = INCIDENT_DATE + " DESC";
 		final String sql = "SELECT * FROM " + INCIDENTS_TABLE
 				+ " reports INNER JOIN " + IReportCategorySchema.TABLE
 				+ " cats ON reports." + INCIDENT_ID + " = cats."
