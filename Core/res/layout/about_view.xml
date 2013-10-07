@@ -57,6 +57,18 @@
                         android:id="@+id/spacer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+                    
+                    <TextView
+                        android:id="@+id/about_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0px"
+                        android:text="@string/about_title"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/date_color"
+                        android:textStyle="bold"
+                        android:textSize="20sp" >
+                    </TextView>
 
                     <TextView
                         android:id="@+id/about_text"
@@ -64,8 +76,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="0px"
                         android:text="@string/about_text"
+                        android:gravity="center_horizontal"
                         android:textColor="@color/date_color"
-                        android:textStyle="bold" >
+                        android:textStyle="italic"
+                        android:textSize="18sp" >
                     </TextView>
 
                     

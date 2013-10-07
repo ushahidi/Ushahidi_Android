@@ -20,17 +20,24 @@
 
 package com.ushahidi.android.app.activities;
 
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
@@ -58,42 +65,8 @@ public class SplashScreenActivity extends FragmentActivity {
         setContentView(R.layout.splash);
         AnalyticsUtils.setContext(this);
         // thread for displaying the SplashScreen
-        Thread splashTread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    int waited = 0;
-                    while (active && (waited < splashTime)) {
-                        sleep(100);
-                        if (active) {
-                            waited += 100;
-                        }
-                    }
-                } catch (InterruptedException e) {
-                    // do nothing
-                } finally {
-
-                    // check if default deployment is set
-                    if (!checkDefaultDeployment()) {
-                        if (Util.isTablet(SplashScreenActivity.this)) {
-                            startActivity(new Intent(SplashScreenActivity.this,
-                                    DashboardActivity.class));
-                            overridePendingTransition(R.anim.home_enter,
-                                    R.anim.home_exit);
-                            finish();
-                        } else {
-                            startActivity(new Intent(SplashScreenActivity.this,
-                                    ListMapActivity.class));
-                            overridePendingTransition(R.anim.home_enter,
-                                    R.anim.home_exit);
-                            finish();
-                        }
-
-                    }
-                }
-            }
-        };
-        splashTread.start();
+        checkGoogleServices();
+       
     }
 
     @Override
@@ -194,5 +167,113 @@ public class SplashScreenActivity extends FragmentActivity {
             }
         }
     };
+    
+    private void checkGoogleServices(){
+    	// See if google play services are installed.
+    	boolean services = false;
+    	try
+    	{
+    		ApplicationInfo info = getPackageManager().getApplicationInfo("com.google.android.gms", 0);
+    		services = true;
+    	}
+    	catch(PackageManager.NameNotFoundException e)
+    	{
+    		services = false;
+    	}
+
+    	if (services)
+    	{
+    		// Ok, do whatever.
+    		 Thread splashTread = new Thread() {
+    	            @Override
+    	            public void run() {
+    	                try {
+    	                    int waited = 0;
+    	                    while (active && (waited < splashTime)) {
+    	                        sleep(100);
+    	                        if (active) {
+    	                            waited += 100;
+    	                        }
+    	                    }
+    	                } catch (InterruptedException e) {
+    	                    // do nothing
+    	                } finally {
+
+    	                    // check if default deployment is set
+    	                    if (!checkDefaultDeployment()) {
+    	                        if (Util.isTablet(SplashScreenActivity.this)) {
+    	                            startActivity(new Intent(SplashScreenActivity.this,
+    	                                    DashboardActivity.class));
+    	                            overridePendingTransition(R.anim.home_enter,
+    	                                    R.anim.home_exit);
+    	                            finish();
+    	                        } else {
+    	                            startActivity(new Intent(SplashScreenActivity.this,
+    	                                    ListMapActivity.class));
+    	                            overridePendingTransition(R.anim.home_enter,
+    	                                    R.anim.home_exit);
+    	                            finish();
+    	                        }
+
+    	                    }
+    	                }
+    	            }
+    	        };
+    	        splashTread.start();
+    		return;
+    	}
+    	else
+    	{
+    		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SplashScreenActivity.this);
+
+    		// set dialog message
+    		alertDialogBuilder
+    				.setTitle("GeoAvalanche")
+    				.setMessage("GeoAvalanche requires Google Play Services to be installed.")
+    				.setCancelable(true)
+    				.setPositiveButton("Install", new DialogInterface.OnClickListener() {
+    					public void onClick(DialogInterface dialog,int id) {
+    						dialog.dismiss();
+    						// Try the new HTTP method (I assume that is the official way now given that google uses it).
+    						try
+    						{
+    							Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+    							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+    							intent.setPackage("com.android.vending");
+    							startActivity(intent);
+    						}
+    						catch (ActivityNotFoundException e)
+    						{
+    							// Ok that didn't work, try the market method.
+    							try
+    							{
+    								Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.gms"));
+    								intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+    								intent.setPackage("com.android.vending");
+    								startActivity(intent);
+    							}
+    							catch (ActivityNotFoundException f)
+    							{
+    								// Ok, weird. Maybe they don't have any market app. Just show the website.
+
+    								Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+    								intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+    								startActivity(intent);
+    							}
+    						}
+    					}
+    				})
+    				.setNegativeButton("No",new DialogInterface.OnClickListener() {
+    					public void onClick(DialogInterface dialog,int id) {
+    						dialog.cancel();
+    						SplashScreenActivity.this.finish();
+    						Toast.makeText(getApplicationContext(), "GeoAvalanche cannot run without Google Play Services library installed. Please restart the app and install Google Play Services.", Toast.LENGTH_LONG).show();
+    					}
+    				})
+    				.create()
+    				.show();
+    	}
+
+    }
 
 }

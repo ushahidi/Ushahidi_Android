@@ -46,7 +46,7 @@ public class Settings extends PreferenceActivity implements
 
 	private ListPreference totalReportsPref;
 
-	private ListPreference mapTileProviderPref;
+//	private ListPreference mapTileProviderPref;
 
 	private SeekBarPreference photoSizePref;
 
@@ -84,7 +84,7 @@ public class Settings extends PreferenceActivity implements
 		photoSizePref.setMax(Util.getScreenWidth(this));
 		recentReports = getString(R.string.recent_reports);
 		totalReportsPref = new ListPreference(this);
-		mapTileProviderPref = new ListPreference(this);
+//		mapTileProviderPref = new ListPreference(this);
 
 		new ListPreference(this);
 
@@ -107,19 +107,18 @@ public class Settings extends PreferenceActivity implements
 		// set list values
 		// TODO:// need to look into how to properly handle this. It looks ugly
 		// but it works.
-		CharSequence[] totalReportsEntries = { "20 ".concat(recentReports),
-				"40 ".concat(recentReports), "60 ".concat(recentReports),
-				"80 ".concat(recentReports), "100 ".concat(recentReports),
-				"250 ".concat(recentReports), "500 ".concat(recentReports),
-				"1000 ".concat(recentReports) };
+		CharSequence[] totalReportsEntries = { "5 ".concat(recentReports),
+				"10 ".concat(recentReports), "20 ".concat(recentReports),
+				"30 ".concat(recentReports), "40 ".concat(recentReports),
+				"50 ".concat(recentReports), "100 ".concat(recentReports),
+				"500 ".concat(recentReports) };
 
-		CharSequence[] totalReportsValues = { "20", "40", "60", "80", "100",
-				"250", "500", "1000" };
+		CharSequence[] totalReportsValues = { "5", "10", "20", "30", "40",
+				"50", "100", "500" };
 
-		CharSequence[] mapTileEntries = { "Google Tiles", "OSM Tiles ",
-				"Mapbox Tiles" };
+		CharSequence[] mapTileEntries = { "Google Tiles"};
 
-		CharSequence[] mapTileValues = { "google", "osm", "mapbox" };
+		CharSequence[] mapTileValues = { "google" };
 
 		totalReportsPref.setEntries(totalReportsEntries);
 		totalReportsPref.setEntryValues(totalReportsValues);
@@ -130,15 +129,15 @@ public class Settings extends PreferenceActivity implements
 		totalReportsPref.setSummary(R.string.hint_total_reports);
 		basicPrefCat.addPreference(totalReportsPref);
 
-		// Map tile preference
-		mapTileProviderPref.setEntries(mapTileEntries);
-		mapTileProviderPref.setKey(MAP_TILE_PROVIDER_PREFERENCE);
-		mapTileProviderPref.setTitle(R.string.map_tiles);
-		mapTileProviderPref.setSummary(R.string.map_tiles_summary);
-		mapTileProviderPref.setDialogTitle(R.string.map_tiles);
-		mapTileProviderPref.setEntryValues(mapTileValues);
-		mapTileProviderPref.setDefaultValue(mapTileValues[0]);
-		basicPrefCat.addPreference(mapTileProviderPref);
+//		// Map tile preference
+//		mapTileProviderPref.setEntries(mapTileEntries);
+//		mapTileProviderPref.setKey(MAP_TILE_PROVIDER_PREFERENCE);
+//		mapTileProviderPref.setTitle(R.string.map_tiles);
+//		mapTileProviderPref.setSummary(R.string.map_tiles_summary);
+//		mapTileProviderPref.setDialogTitle(R.string.map_tiles);
+//		mapTileProviderPref.setEntryValues(mapTileValues);
+//		mapTileProviderPref.setDefaultValue(mapTileValues[0]);
+//		basicPrefCat.addPreference(mapTileProviderPref);
 
 		// First name entry field
 		firstNamePref.setDialogTitle(R.string.txt_first_name);
@@ -186,14 +185,14 @@ public class Settings extends PreferenceActivity implements
 		editor = settings.edit();
 
 		String totalReports = totalReportsPref.getValue();
-		String  mapTiles = mapTileProviderPref.getValue();
+//		String  mapTiles = mapTileProviderPref.getValue();
 		editor.putString("Domain", Preferences.domain);
 		editor.putString("Firstname", firstNamePref.getText());
 		editor.putString("Lastname", lastNamePref.getText());
 		editor.putString("Email", emailAddressPref.getText());
 		editor.putString("Phonenumber", phoneNumberPref.getText());
 		editor.putString("TotalReports", totalReports);
-		editor.putString("MapTiles", mapTiles);
+//		editor.putString("MapTiles", mapTiles);
 		editor.putInt("CheckinEnabled", Preferences.isCheckinEnabled);
 		editor.putInt("PhotoWidth", photoSizePref.getProgress());
 		editor.commit();

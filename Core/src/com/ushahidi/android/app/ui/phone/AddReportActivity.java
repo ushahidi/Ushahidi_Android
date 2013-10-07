@@ -169,6 +169,9 @@ public class AddReportActivity extends
 			SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.location_map);
 			view.map = mapFrag.getMap();
+			view.map.getUiSettings().setAllGesturesEnabled(false);
+			view.map.getUiSettings().setZoomControlsEnabled(true);
+
 		}
 
 		view.mBtnPicture.setOnClickListener(this);
