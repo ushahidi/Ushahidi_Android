@@ -79,7 +79,7 @@ public class FetchReports extends SyncServices {
 	@Override
 	protected void executeTask(Intent intent) {
 
-		new Util().log("executeTask() executing this task");
+		new Util().log("Executing first time report fetch task");
 		clearCachedData();
 		ApiUtils.updateDomain(this);
 		// fetch categories

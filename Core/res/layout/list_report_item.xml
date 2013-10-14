@@ -24,6 +24,7 @@
         android:layout_height="50dip"
         android:layout_alignParentLeft="true"
         android:adjustViewBounds="true"
+        android:layout_centerInParent="true"
         android:paddingRight="5dip" />
 
     <TextView
@@ -99,6 +100,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
         android:layout_weight="1"
+        android:src="@drawable/arrow"
         android:gravity="center_vertical|center_horizontal"
         android:padding="5dip" />
 

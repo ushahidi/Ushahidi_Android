@@ -16,11 +16,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/title_color" />
+        
+        <View 
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/tab_background"/>
 
         <TextView
             android:id="@+id/report_title"
             style="@style/TextView.Label"
             android:text="@string/title" />
+
 
         <LinearLayout
             android:id="@+id/title_layout"

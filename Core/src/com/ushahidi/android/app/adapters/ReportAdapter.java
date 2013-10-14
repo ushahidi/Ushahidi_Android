@@ -60,7 +60,6 @@ public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
 
         ImageView thumbnail;
 
-        ImageView arrow;
 
         public Widgets(View view) {
 
@@ -74,7 +73,6 @@ public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
             this.categories = (TextView) view
                     .findViewById(R.id.report_categories);
             this.status = (TextView) view.findViewById(R.id.report_status);
-            this.arrow = (ImageView) view.findViewById(R.id.report_arrow);
         }
 
     }
@@ -162,8 +160,7 @@ public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
 
         widgets.status.setText(status((position)));
 
-        widgets.arrow.setImageDrawable(context.getResources().getDrawable(
-                R.drawable.arrow));
+       
 
         return view;
     }

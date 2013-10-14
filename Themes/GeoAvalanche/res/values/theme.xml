@@ -45,6 +45,7 @@
     <color name="gray_color">#5D5D5D</color>
     <color name="dark_gray_color">#5D5D5D</color>
     <color name="light_gray_color">#DFDFDF</color>
+    <color name="light_blue_color">#22aadd</color>
 	
     
     <color name="title_background">#453727</color>
@@ -64,7 +65,7 @@
     <color name="tab_selected_color">#77bbee</color>
     <color name="tab_unselected_color">#33b5e5</color>
 	<color name="selectable_color">#c6c6c6</color>
-	<color name="tab_background">#DFDFDF</color>
+	<color name="tab_background">@color/light_blue_color</color>
 	
     <color name="verified_text_color">#99CC99</color>
     <color name="unverified_text_color">#CC6666</color>

@@ -576,7 +576,8 @@ public class ListReportFragment
 						retVal = false;
 					}
 				} else {
-					deletePendingReport((int) report.getDbId());
+					retVal = false;
+//					deletePendingReport((int) report.getDbId());
 				}
 			}
 		}

@@ -1,10 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <stroke
-        android:width="4dp"
-        android:color="@color/table_even_row_color" />
+     <!-- Drop Shadow Stack -->
+     <item>
+        <shape>
+            <padding android:top="0dp" android:right="0dp" android:bottom="2dp" android:left="0dp" />
+            <solid android:color="#20CCCCCC" />
+        </shape>
+    </item>
+     <item>
+        <shape>
+            <padding android:top="0dp" android:right="0dp" android:bottom="2dp" android:left="0dp" />
+            <solid android:color="#30CCCCCC" />
+        </shape>
+    </item>
+     <item>
+        <shape>
+            <padding android:top="0dp" android:right="0dp" android:bottom="2dp" android:left="0dp" />
+            <solid android:color="#40CCCCCC" />
+        </shape>
+    </item>
+     <item>
+        <shape>
+            <padding android:top="0dp" android:right="0dp" android:bottom="2dp" android:left="0dp" />
+            <solid android:color="#50CCCCCC" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <padding android:top="0dp" android:right="0dp" android:bottom="2dp" android:left="0dp" />
+            <solid android:color="#60CCCCCC" />
+        </shape>
+    </item>
 
+    <!-- Background -->
+    <item>
+	<shape>
+       
     <solid android:color="@color/table_even_row_color" />
 
     <padding
@@ -13,6 +45,8 @@
         android:right="5dp"
         android:top="5dp" />
 
-    <corners android:radius="1dp" />
+    <corners android:radius="2dp" />
 
-</shape>
+	</shape>
+    </item>
+</layer-list>
