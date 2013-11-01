@@ -560,13 +560,10 @@ public class ListReportFragment
 				//Add custom forms values
 				
 				List<ReportCustomFormEntity> pendingCustomForms = Database.mReportCustomFormDao.fetchPendingReportCustomForms(report.getDbId());
-				Log.d("GEOAVALANCHE", "pending custom forms: "+pendingCustomForms.size());
 				if(pendingCustomForms!= null && pendingCustomForms.size() > 0){
 					Map<String, String> fieldMap = CustomFormAdapter.convertEntityToMap(pendingCustomForms);
-					Log.d("GEOAVALANCHE", "custom form map"+fieldMap);
 					fields.addCustomFields(fieldMap);
 					fields.setFormId(String.valueOf(pendingCustomForms.get(0).getFormId()));
-					Log.d("GEOAVALANCHE", "Form ID: "+pendingCustomForms.get(0).getFormId());
 				}
 				
 				

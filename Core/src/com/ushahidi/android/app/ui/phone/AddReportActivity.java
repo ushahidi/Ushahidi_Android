@@ -83,6 +83,7 @@ import com.ushahidi.android.app.entities.CustomFormMetaEntity;
 import com.ushahidi.android.app.entities.MediaEntity;
 import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.entities.ReportCategory;
+import com.ushahidi.android.app.entities.ReportCustomFormEntity;
 import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.models.AddReportModel;
 import com.ushahidi.android.app.models.ListReportModel;
@@ -96,10 +97,8 @@ import com.ushahidi.java.sdk.api.Incident;
 /**
  * @author eyedol
  */
-public class AddReportActivity extends
-		BaseEditMapActivity<AddReportView, AddReportModel> implements
-		OnClickListener, ViewSwitcher.ViewFactory, OnItemClickListener,
-		DialogInterface.OnClickListener {
+public class AddReportActivity extends BaseEditMapActivity<AddReportView, AddReportModel> implements OnClickListener, ViewSwitcher.ViewFactory,
+		OnItemClickListener, DialogInterface.OnClickListener {
 
 	private ReverseGeocoderTask reverseGeocoderTask;
 
@@ -154,8 +153,7 @@ public class AddReportActivity extends
 	private AddReportModel model;
 
 	public AddReportActivity() {
-		super(AddReportView.class, R.layout.add_report, R.menu.add_report,
-				R.id.location_map);
+		super(AddReportView.class, R.layout.add_report, R.menu.add_report, R.id.location_map);
 		model = new AddReportModel();
 	}
 
@@ -165,8 +163,7 @@ public class AddReportActivity extends
 		view.mLatitude.addTextChangedListener(latLonTextWatcher);
 		view.mLongitude.addTextChangedListener(latLonTextWatcher);
 		if (checkForGMap()) {
-			SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager()
-					.findFragmentById(R.id.location_map);
+			SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.location_map);
 			view.map = mapFrag.getMap();
 			view.map.getUiSettings().setAllGesturesEnabled(false);
 			view.map.getUiSettings().setZoomControlsEnabled(true);
@@ -186,6 +183,9 @@ public class AddReportActivity extends
 			this.id = getIntent().getExtras().getInt("id", 0);
 		}
 		mOgsDao = Database.mOpenGeoSmsDao;
+
+		setupCustomForms();
+
 		// edit existing report
 		if (id > 0) {
 
@@ -201,12 +201,8 @@ public class AddReportActivity extends
 
 		registerForContextMenu(view.gallery);
 		createSendMethodDialog();
-		
-		setupCustomForms();
 
 	}
-
-	
 
 	@Override
 	protected void onStart() {
@@ -233,8 +229,7 @@ public class AddReportActivity extends
 
 	// Context Menu Stuff
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		new MenuInflater(this).inflate(R.menu.photo_context, menu);
 
@@ -242,8 +237,7 @@ public class AddReportActivity extends
 
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
-				.getMenuInfo();
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 		boolean result = performAction(item, info.position);
 
 		if (!result) {
@@ -262,16 +256,14 @@ public class AddReportActivity extends
 			if (id == 0) {
 
 				// Delete by name
-				if (ImageManager.deletePendingPhoto(this, "/"
-						+ pendingPhoto.getItem(position).getPhoto())) {
+				if (ImageManager.deletePendingPhoto(this, "/" + pendingPhoto.getItem(position).getPhoto())) {
 					pendingPhoto.refresh();
 				}
 				return true;
 			} else {
 
 				// editing existing report
-				if (ImageManager.deletePendingPhoto(this, "/"
-						+ pendingPhoto.getItem(position).getPhoto())) {
+				if (ImageManager.deletePendingPhoto(this, "/" + pendingPhoto.getItem(position).getPhoto())) {
 
 					pendingPhoto.removeItem(position);
 				}
@@ -340,8 +332,7 @@ public class AddReportActivity extends
 			mErrorMessage = getString(R.string.title) + "\n";
 			required = true;
 
-		} else if (view.mIncidentTitle.getText().length() < 3
-				|| view.mIncidentTitle.getText().length() > 200) {
+		} else if (view.mIncidentTitle.getText().length() < 3 || view.mIncidentTitle.getText().length() > 200) {
 			mErrorMessage = getString(R.string.less_report_title) + "\n";
 			mError = true;
 		}
@@ -390,9 +381,8 @@ public class AddReportActivity extends
 			mErrorMessage += getString(R.string.location);
 			required = true;
 		}
-		
-		//TODO add custom form validation check
-		
+
+		// TODO add custom form validation check
 
 		if (required) {
 			createDialog(DIALOG_SHOW_REQUIRED);
@@ -418,10 +408,8 @@ public class AddReportActivity extends
 
 	private void createSendMethodDialog() {
 		Resources r = getResources();
-		String[] items = new String[] { r.getString(R.string.internet),
-				r.getString(R.string.opengeosms) };
-		mDlgSendMethod = new AlertDialog.Builder(this).setItems(items, this)
-				.setTitle(R.string.send_report_dlg_title).create();
+		String[] items = new String[] { r.getString(R.string.internet), r.getString(R.string.opengeosms) };
+		mDlgSendMethod = new AlertDialog.Builder(this).setItems(items, this).setTitle(R.string.send_report_dlg_title).create();
 	}
 
 	private OpenGeoSmsDao mOgsDao;
@@ -442,10 +430,8 @@ public class AddReportActivity extends
 		incident.setMode(0);
 		incident.setLocationName(view.mIncidentLocation.getText().toString());
 		incident.setVerified(0);
-		incident.setLatitude(Double
-				.valueOf(view.mLatitude.getText().toString()));
-		incident.setLongitude(Double.valueOf(view.mLongitude.getText()
-				.toString()));
+		incident.setLatitude(Double.valueOf(view.mLatitude.getText().toString()));
+		incident.setLongitude(Double.valueOf(view.mLongitude.getText().toString()));
 		if (date != null) {
 			incident.setDate(date);
 		} else {
@@ -454,15 +440,12 @@ public class AddReportActivity extends
 
 		report.setIncident(incident);
 		report.setPending(1);
-		
-		
-		Map<Integer,String> cfValues = CustomFormAdapter.getValuesFromLayout(customForms,this);
-		
+
+		Map<Integer, String> cfValues = CustomFormAdapter.getValuesFromLayout(customForms, this);
 
 		if (id == 0) {
 			// Add a new pending report
-			if (model.addPendingReport(report, mVectorCategories,
-					pendingPhotos, view.mNews.getText().toString(),selectedCustomFormId,cfValues)) {
+			if (model.addPendingReport(report, mVectorCategories, pendingPhotos, view.mNews.getText().toString(), selectedCustomFormId, cfValues)) {
 				// move saved photos
 				log("Moving photos to fetched folder");
 				ImageManager.movePendingPhotos(this);
@@ -476,8 +459,7 @@ public class AddReportActivity extends
 			for (int i = 0; i < pendingPhoto.getCount(); i++) {
 				photos.add(pendingPhoto.getItem(i));
 			}
-			if (model.updatePendingReport(id, report, mVectorCategories,
-					photos, view.mNews.getText().toString())) {
+			if (model.updatePendingReport(id, report, mVectorCategories, photos, view.mNews.getText().toString())) {
 				// move saved photos
 				log("Moving photos to fetched folder");
 				ImageManager.movePendingPhotos(this);
@@ -506,12 +488,9 @@ public class AddReportActivity extends
 		if (report != null) {
 			view.mIncidentTitle.setText(report.getIncident().getTitle());
 			view.mIncidentDesc.setText(report.getIncident().getDescription());
-			view.mLongitude.setText(String.valueOf(report.getIncident()
-					.getLongitude()));
-			view.mLatitude.setText(String.valueOf(report.getIncident()
-					.getLatitude()));
-			view.mIncidentLocation.setText(report.getIncident()
-					.getLocationName());
+			view.mLongitude.setText(String.valueOf(report.getIncident().getLongitude()));
+			view.mLatitude.setText(String.valueOf(report.getIncident().getLatitude()));
+			view.mIncidentLocation.setText(report.getIncident().getLocationName());
 
 			// set date and time
 			setDateAndTime(report.getIncident().getDate());
@@ -519,8 +498,7 @@ public class AddReportActivity extends
 
 		// set Categories.
 		mVectorCategories.clear();
-		for (ReportCategory reportCategory : model
-				.fetchReportCategories(reportId, IReportSchema.PENDING)) {
+		for (ReportCategory reportCategory : model.fetchReportCategories(reportId, IReportSchema.PENDING)) {
 			mVectorCategories.add(reportCategory.getCategoryId());
 		}
 
@@ -538,16 +516,22 @@ public class AddReportActivity extends
 		mIsReportEditable = mOgsDao.getReportState(id) != IOpenGeoSmsSchema.STATE_SENT;
 
 		if (!mIsReportEditable) {
-			View views[] = new View[] { view.mBtnAddCategory,
-					view.mIncidentDesc, view.mIncidentLocation,
-					view.mIncidentTitle, view.mLatitude, view.mLongitude,
+			View views[] = new View[] { view.mBtnAddCategory, view.mIncidentDesc, view.mIncidentLocation, view.mIncidentTitle, view.mLatitude, view.mLongitude,
 					view.mPickDate, view.mPickTime };
 			for (View v : views) {
 				v.setEnabled(false);
 			}
-			updateMarker(report.getIncident().getLatitude(), report
-					.getIncident().getLongitude(), true);
+			updateMarker(report.getIncident().getLatitude(), report.getIncident().getLongitude(), true);
 		}
+
+		// TODO show custom form values
+
+		List<ReportCustomFormEntity> customFormEntityList = Database.mReportCustomFormDao.fetchPendingReportCustomForms(id);
+
+		for (ReportCustomFormEntity e : customFormEntityList) {
+
+		}
+
 	}
 
 	private boolean mIsReportEditable = true;
@@ -558,8 +542,7 @@ public class AddReportActivity extends
 			if (model.deleteReport(id)) {
 				// delete images
 				for (int i = 0; i < pendingPhoto.getCount(); i++) {
-					ImageManager.deletePendingPhoto(this, "/"
-							+ pendingPhoto.getItem(i).getPhoto());
+					ImageManager.deletePendingPhoto(this, "/" + pendingPhoto.getItem(i).getPhoto());
 				}
 				// return to report listing page.
 				finish();
@@ -573,73 +556,51 @@ public class AddReportActivity extends
 	private void createDialog(int id) {
 		switch (id) {
 		case DIALOG_ERROR_NETWORK: {
-			Dialog dialog = new AlertDialog.Builder(this)
-					.setTitle(R.string.network_error)
-					.setMessage(R.string.network_error_msg)
-					.setPositiveButton(getString(R.string.ok),
-							new Dialog.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									dialog.dismiss();
-								}
-							}).setCancelable(false).create();
+			Dialog dialog = new AlertDialog.Builder(this).setTitle(R.string.network_error).setMessage(R.string.network_error_msg)
+					.setPositiveButton(getString(R.string.ok), new Dialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					}).setCancelable(false).create();
 			dialog.show();
 			break;
 		}
 		case DIALOG_ERROR_SAVING: {
-			Dialog dialog = new AlertDialog.Builder(this)
-					.setTitle(R.string.network_error)
-					.setMessage(R.string.file_system_error_msg)
-					.setPositiveButton(getString(R.string.ok),
-							new Dialog.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									dialog.dismiss();
-								}
-							}).setCancelable(false).create();
+			Dialog dialog = new AlertDialog.Builder(this).setTitle(R.string.network_error).setMessage(R.string.file_system_error_msg)
+					.setPositiveButton(getString(R.string.ok), new Dialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					}).setCancelable(false).create();
 			dialog.show();
 			break;
 		}
 
 		case DIALOG_CHOOSE_IMAGE_METHOD: {
 
-			Dialog dialog = new AlertDialog.Builder(this)
-					.setTitle(R.string.choose_method)
-					.setMessage(R.string.how_to_select_pic)
-					.setPositiveButton(getString(R.string.gallery_option),
-							new Dialog.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									Intent intent = new Intent();
-									intent.setAction(Intent.ACTION_PICK);
-									intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-									startActivityForResult(intent,
-											REQUEST_CODE_IMAGE);
-									dialog.dismiss();
-								}
-							})
-					.setNegativeButton(getString(R.string.cancel),
-							new Dialog.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									dialog.dismiss();
-								}
-							})
+			Dialog dialog = new AlertDialog.Builder(this).setTitle(R.string.choose_method).setMessage(R.string.how_to_select_pic)
+					.setPositiveButton(getString(R.string.gallery_option), new Dialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							Intent intent = new Intent();
+							intent.setAction(Intent.ACTION_PICK);
+							intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+							startActivityForResult(intent, REQUEST_CODE_IMAGE);
+							dialog.dismiss();
+						}
+					}).setNegativeButton(getString(R.string.cancel), new Dialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					})
 
-					.setNeutralButton(R.string.camera_option,
-							new Dialog.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									Intent intent = new Intent(
-											android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-									intent.putExtra(MediaStore.EXTRA_OUTPUT,
-											PhotoUtils.getPhotoUri(photoName,
-													AddReportActivity.this));
-									startActivityForResult(intent,
-											REQUEST_CODE_CAMERA);
-									dialog.dismiss();
-								}
-							})
+					.setNeutralButton(R.string.camera_option, new Dialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+							intent.putExtra(MediaStore.EXTRA_OUTPUT, PhotoUtils.getPhotoUri(photoName, AddReportActivity.this));
+							startActivityForResult(intent, REQUEST_CODE_CAMERA);
+							dialog.dismiss();
+						}
+					})
 
 					.setCancelable(false).create();
 			dialog.show();
@@ -648,64 +609,47 @@ public class AddReportActivity extends
 
 		case DIALOG_MULTIPLE_CATEGORY: {
 			if (showCategories() != null) {
-				new AlertDialog.Builder(this)
-						.setTitle(R.string.choose_categories)
-						.setMultiChoiceItems(
-								showCategories(),
-								setCheckedCategories(),
-								new DialogInterface.OnMultiChoiceClickListener() {
-									public void onClick(DialogInterface dialog,
-											int whichButton, boolean isChecked) {
-										// see if categories have previously
+				new AlertDialog.Builder(this).setTitle(R.string.choose_categories)
+						.setMultiChoiceItems(showCategories(), setCheckedCategories(), new DialogInterface.OnMultiChoiceClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton, boolean isChecked) {
+								// see if categories have previously
 
-										if (isChecked) {
-											mVectorCategories.add(mCategoriesId
-													.get(whichButton));
+								if (isChecked) {
+									mVectorCategories.add(mCategoriesId.get(whichButton));
 
-											mError = false;
-										} else {
-											mVectorCategories
-													.remove(mCategoriesId
-															.get(whichButton));
-										}
+									mError = false;
+								} else {
+									mVectorCategories.remove(mCategoriesId.get(whichButton));
+								}
 
-										setSelectedCategories(mVectorCategories);
-									}
-								})
-						.setPositiveButton(R.string.ok,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int whichButton) {
+								setSelectedCategories(mVectorCategories);
+							}
+						}).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
 
-										/* User clicked Yes so do some stuff */
-									}
-								}).create().show();
+								/* User clicked Yes so do some stuff */
+							}
+						}).create().show();
 			}
 			break;
 		}
 
 		case TIME_DIALOG_ID:
-			new TimePickerDialog(this, mTimeSetListener,
-					mCalendar.get(Calendar.HOUR),
-					mCalendar.get(Calendar.MINUTE), false).show();
+			new TimePickerDialog(this, mTimeSetListener, mCalendar.get(Calendar.HOUR), mCalendar.get(Calendar.MINUTE), false).show();
 			break;
 
 		case DATE_DIALOG_ID:
-			new DatePickerDialog(this, mDateSetListener,
-					mCalendar.get(Calendar.YEAR),
-					mCalendar.get(Calendar.MONTH),
-					mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+			new DatePickerDialog(this, mDateSetListener, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH))
+					.show();
 			break;
 
 		case DIALOG_SHOW_MESSAGE:
 			AlertDialog.Builder messageBuilder = new AlertDialog.Builder(this);
-			messageBuilder.setMessage(mErrorMessage).setPositiveButton(
-					getString(R.string.ok),
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-						}
-					});
+			messageBuilder.setMessage(mErrorMessage).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
 
 			AlertDialog showDialog = messageBuilder.create();
 			showDialog.show();
@@ -714,13 +658,11 @@ public class AddReportActivity extends
 		case DIALOG_SHOW_REQUIRED:
 			AlertDialog.Builder requiredBuilder = new AlertDialog.Builder(this);
 			requiredBuilder.setTitle(R.string.required_fields);
-			requiredBuilder.setMessage(mErrorMessage).setPositiveButton(
-					getString(R.string.ok),
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-						}
-					});
+			requiredBuilder.setMessage(mErrorMessage).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
 
 			AlertDialog showRequiredDialog = requiredBuilder.create();
 			showRequiredDialog.show();
@@ -728,27 +670,19 @@ public class AddReportActivity extends
 
 		// prompt for unsaved changes
 		case DIALOG_SHOW_PROMPT: {
-			Dialog dialog = new AlertDialog.Builder(this)
-					.setTitle(R.string.unsaved_changes)
-					.setMessage(R.string.want_to_cancel)
-					.setNegativeButton(getString(R.string.no),
-							new Dialog.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
+			Dialog dialog = new AlertDialog.Builder(this).setTitle(R.string.unsaved_changes).setMessage(R.string.want_to_cancel)
+					.setNegativeButton(getString(R.string.no), new Dialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
 
-									dialog.dismiss();
-								}
-							})
-					.setPositiveButton(getString(R.string.yes),
-							new Dialog.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									new DiscardTask(AddReportActivity.this)
-											.execute((String) null);
-									finish();
-									dialog.dismiss();
-								}
-							})
+							dialog.dismiss();
+						}
+					}).setPositiveButton(getString(R.string.yes), new Dialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							new DiscardTask(AddReportActivity.this).execute((String) null);
+							finish();
+							dialog.dismiss();
+						}
+					})
 
 					.setCancelable(false).create();
 			dialog.show();
@@ -757,26 +691,19 @@ public class AddReportActivity extends
 
 		// prompt for report deletion
 		case DIALOG_SHOW_DELETE_PROMPT: {
-			Dialog dialog = new AlertDialog.Builder(this)
-					.setTitle(R.string.delete_report)
-					.setMessage(R.string.want_to_delete)
-					.setNegativeButton(getString(R.string.no),
-							new Dialog.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
+			Dialog dialog = new AlertDialog.Builder(this).setTitle(R.string.delete_report).setMessage(R.string.want_to_delete)
+					.setNegativeButton(getString(R.string.no), new Dialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
 
-									dialog.dismiss();
-								}
-							})
-					.setPositiveButton(getString(R.string.yes),
-							new Dialog.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									// delete report
-									deleteReport();
-									dialog.dismiss();
-								}
-							}).setCancelable(false).create();
+							dialog.dismiss();
+						}
+					}).setPositiveButton(getString(R.string.yes), new Dialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							// delete report
+							deleteReport();
+							dialog.dismiss();
+						}
+					}).setCancelable(false).create();
 			dialog.show();
 		}
 			break;
@@ -787,15 +714,10 @@ public class AddReportActivity extends
 	protected void onPrepareDialog(int id, Dialog dialog) {
 		switch (id) {
 		case TIME_DIALOG_ID:
-			((TimePickerDialog) dialog).updateTime(
-					mCalendar.get(Calendar.HOUR_OF_DAY),
-					mCalendar.get(Calendar.MINUTE));
+			((TimePickerDialog) dialog).updateTime(mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE));
 			break;
 		case DATE_DIALOG_ID:
-			((DatePickerDialog) dialog).updateDate(
-					mCalendar.get(Calendar.YEAR),
-					mCalendar.get(Calendar.MONTH),
-					mCalendar.get(Calendar.DAY_OF_MONTH));
+			((DatePickerDialog) dialog).updateDate(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
 			break;
 
 		case DIALOG_MULTIPLE_CATEGORY:
@@ -829,8 +751,7 @@ public class AddReportActivity extends
 	// fetch categories
 	public String[] showCategories() {
 		ListReportModel mListReportModel = new ListReportModel();
-		List<CategoryEntity> listCategories = mListReportModel
-				.getAllCategories();
+		List<CategoryEntity> listCategories = mListReportModel.getAllCategories();
 		if (listCategories != null && listCategories.size() > 0) {
 			int categoryCount = listCategories.size();
 			int categoryAmount = 0;
@@ -849,8 +770,7 @@ public class AddReportActivity extends
 			for (CategoryEntity category : mListReportModel.getAllCategories()) {
 
 				categories[i] = category.getCategoryTitle();
-				mCategoriesTitle.put(String.valueOf(category.getCategoryId()),
-						category.getCategoryTitle());
+				mCategoriesTitle.put(String.valueOf(category.getCategoryId()), category.getCategoryTitle());
 				mCategoriesId.add(category.getCategoryId());
 				i++;
 			}
@@ -862,12 +782,10 @@ public class AddReportActivity extends
 	private void updateDisplay() {
 		date = mCalendar.getTime();
 		if (date != null) {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy",
-					Locale.US);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
 			view.mPickDate.setText(dateFormat.format(date));
 
-			SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a",
-					Locale.US);
+			SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.US);
 			view.mPickTime.setText(timeFormat.format(date));
 
 		} else {
@@ -878,22 +796,19 @@ public class AddReportActivity extends
 	}
 
 	private void setDateAndTime(Date d) {
-		
+
 		if (d != null) {
-			SimpleDateFormat dateFormat = new SimpleDateFormat(
-					"yyyy-MM-dd HH:mm:ss", Locale.US);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 			String formatedDate = Util.datePattern("yyyy-MM-dd HH:mm:ss", d);
 			try {
 
 				date = dateFormat.parse(formatedDate);
 
 				if (date != null) {
-					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-							"MMMM dd, yyyy", Locale.US);
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
 					view.mPickDate.setText(simpleDateFormat.format(date));
 
-					SimpleDateFormat timeFormat = new SimpleDateFormat(
-							"h:mm a", Locale.US);
+					SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.US);
 					view.mPickTime.setText(timeFormat.format(date));
 
 				} else {
@@ -910,8 +825,7 @@ public class AddReportActivity extends
 	}
 
 	private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-		public void onDateSet(DatePicker view, int year, int monthOfYear,
-				int dayOfMonth) {
+		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 			mCalendar.set(year, monthOfYear, dayOfMonth);
 			updateDisplay();
 		}
@@ -943,8 +857,7 @@ public class AddReportActivity extends
 					categories.append(", ");
 				}
 				if (category > 0) {
-					categories.append(mCategoriesTitle.get(String
-							.valueOf(category)));
+					categories.append(mCategoriesTitle.get(String.valueOf(category)));
 				}
 			}
 
@@ -965,8 +878,7 @@ public class AddReportActivity extends
 		// FIXME: Look into making this more efficient
 		if (mVectorCategories != null && mVectorCategories.size() > 0) {
 			ListReportModel mListReportModel = new ListReportModel();
-			List<CategoryEntity> listCategories = mListReportModel
-					.getAllCategories();
+			List<CategoryEntity> listCategories = mListReportModel.getAllCategories();
 			if (listCategories != null && listCategories.size() > 0) {
 				int categoryCount = listCategories.size();
 				int categoryAmount = 0;
@@ -980,11 +892,9 @@ public class AddReportActivity extends
 				mCategoryLength = categories.length;
 
 				int i = 0;
-				for (CategoryEntity category : mListReportModel
-						.getAllCategories()) {
+				for (CategoryEntity category : mListReportModel.getAllCategories()) {
 
-					if (mVectorCategories.contains(String.valueOf(category
-							.getCategoryId()))) {
+					if (mVectorCategories.contains(String.valueOf(category.getCategoryId()))) {
 
 						categories[i] = true;
 					} else {
@@ -1026,10 +936,8 @@ public class AddReportActivity extends
 		Intent intent = getIntent();
 		String action = intent.getAction();
 		if (action != null) {
-			if (action.equals(Intent.ACTION_SEND)
-					|| action.equals(Intent.ACTION_CHOOSER)) {
-				CharSequence text = intent
-						.getCharSequenceExtra(Intent.EXTRA_TEXT);
+			if (action.equals(Intent.ACTION_SEND) || action.equals(Intent.ACTION_CHOOSER)) {
+				CharSequence text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT);
 				if (text != null) {
 					view.mIncidentDesc.setText(text);
 				}
@@ -1049,16 +957,13 @@ public class AddReportActivity extends
 				Uri uri = PhotoUtils.getPhotoUri(photoName, this);
 				Bitmap bitmap = PhotoUtils.getCameraPhoto(this, uri);
 				PhotoUtils.savePhoto(this, bitmap, photoName);
-				log(String.format("REQUEST_CODE_CAMERA %dx%d",
-						bitmap.getWidth(), bitmap.getHeight()));
+				log(String.format("REQUEST_CODE_CAMERA %dx%d", bitmap.getWidth(), bitmap.getHeight()));
 
 			} else if (requestCode == REQUEST_CODE_IMAGE) {
 
-				Bitmap bitmap = PhotoUtils
-						.getGalleryPhoto(this, data.getData());
+				Bitmap bitmap = PhotoUtils.getGalleryPhoto(this, data.getData());
 				PhotoUtils.savePhoto(this, bitmap, photoName);
-				log(String.format("REQUEST_CODE_IMAGE %dx%d",
-						bitmap.getWidth(), bitmap.getHeight()));
+				log(String.format("REQUEST_CODE_IMAGE %dx%d", bitmap.getWidth(), bitmap.getHeight()));
 			}
 
 			if (id > 0) {
@@ -1097,8 +1002,7 @@ public class AddReportActivity extends
 
 		@Override
 		protected void onPostExecute(String result) {
-			log(getClass().getSimpleName(),
-					String.format("onPostExecute %s", result));
+			log(getClass().getSimpleName(), String.format("onPostExecute %s", result));
 			if (TextUtils.isEmpty(view.mIncidentLocation.getText().toString()))
 				view.mIncidentLocation.setText(result);
 			executing = false;
@@ -1109,17 +1013,13 @@ public class AddReportActivity extends
 		public void afterTextChanged(Editable s) {
 		}
 
-		public void beforeTextChanged(CharSequence s, int start, int count,
-				int after) {
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 		}
 
-		public void onTextChanged(CharSequence s, int start, int before,
-				int count) {
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
 			try {
 				if (view.mLatitude.hasFocus() || view.mLongitude.hasFocus()) {
-					locationChanged(Double.parseDouble(view.mLatitude.getText()
-							.toString()), Double.parseDouble(view.mLongitude
-							.getText().toString()));
+					locationChanged(Double.parseDouble(view.mLatitude.getText().toString()), Double.parseDouble(view.mLongitude.getText().toString()));
 				}
 			} catch (Exception ex) {
 				log("TextWatcher", ex);
@@ -1161,9 +1061,7 @@ public class AddReportActivity extends
 		ImageView i = new ImageView(this);
 		i.setAdjustViewBounds(true);
 		i.setScaleType(ImageView.ScaleType.FIT_CENTER);
-		i.setLayoutParams(new ImageSwitcher.LayoutParams(
-				android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
-				android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+		i.setLayoutParams(new ImageSwitcher.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 
 		return i;
 	}
@@ -1175,11 +1073,8 @@ public class AddReportActivity extends
 	 *      .AdapterView, android.view.View, int, long)
 	 */
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		this.view.mSwitcher.setImageDrawable(ImageManager.getPendingDrawables(
-				this, pendingPhoto.getItem(position).getPhoto(),
-				Util.getScreenWidth(this)));
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		this.view.mSwitcher.setImageDrawable(ImageManager.getPendingDrawables(this, pendingPhoto.getItem(position).getPhoto(), Util.getScreenWidth(this)));
 
 	}
 
@@ -1210,65 +1105,93 @@ public class AddReportActivity extends
 		deleteExistingPhoto();
 		return true;
 	}
-	
+
 	Spinner spinner;
 	ArrayList<CustomFormMetaEntity> customForms = new ArrayList<CustomFormMetaEntity>();
 	int selectedCustomFormId = 0;
-	
+
 	/**
-	 * Setup custom forms. Create spinner for form selection and create dynamically the forms.
+	 * Setup custom forms. Create spinner for form selection and create
+	 * dynamically the forms.
 	 */
 	private void setupCustomForms() {
+		List<ReportCustomFormEntity> customFormValues = null;
+
 		spinner = (Spinner) findViewById(R.id.cf_spinner);
 
 		List<CustomFormEntity> cfs = Database.mCustomFormDao.fetchAllCustomForms();
-		final ArrayAdapter<CustomFormEntity> adapter = new ArrayAdapter(getApplicationContext(), R.layout.customform_spinner_item,cfs);
-		
+		final ArrayAdapter<CustomFormEntity> adapter = new ArrayAdapter(getApplicationContext(), R.layout.customform_spinner_item, cfs);
+
 		adapter.setDropDownViewResource(R.layout.customform_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
-		
-		
+
+		if (id != -1) {
+			customFormValues = Database.mReportCustomFormDao.fetchPendingReportCustomForms(id);
+			if (customFormValues.size() > 0) {
+				// set selected custom form
+				for (int i = 0; i < cfs.size(); i++) {
+					if (cfs.get(i).getCustomFormId() == customFormValues.get(0).getFormId()) {
+						spinner.setSelection(i);
+						break;
+					}
+				}
+
+			}
+
+		}
+
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
-			public void onItemSelected(AdapterView<?> adapterView, View viewInner, int position, long id) {
-				
+			public void onItemSelected(AdapterView<?> adapterView, View viewInner, int position, long viewId) {
+
 				CustomFormEntity cf = adapter.getItem(position);
 				selectedCustomFormId = cf.getCustomFormId();
 				List<CustomFormMetaEntity> cfm = Database.mCustomFormMetaDao.fetchCustomFormMetaByFormId(cf.getCustomFormId());
-				LinearLayout customFormView = (LinearLayout)findViewById(R.id.report_custom_form);
+				LinearLayout customFormView = (LinearLayout) findViewById(R.id.report_custom_form);
 				customFormView.removeAllViews();
 				customForms.clear();
 				customForms.addAll(cfm);
-				for(CustomFormMetaEntity cfmEntry : cfm){
-					customFormView.addView(CustomFormAdapter.createView(cfmEntry,customFormView));
+
+				List<ReportCustomFormEntity> customFormValues = Database.mReportCustomFormDao.fetchPendingReportCustomForms(id);
+
+				for (CustomFormMetaEntity cfmEntry : cfm) {
+					customFormView.addView(CustomFormAdapter.createView(cfmEntry, customFormView,
+							getValueForCustomForm(customFormValues, cfmEntry.getFieldId())));
 				}
-				
-				//USED ONLY ON GEOAVALANCHE
+
+				// USED ONLY ON GEOAVALANCHE
 				mVectorCategories.clear();
-				if(cf.getCustomFormTitle().toLowerCase().equals("default form")){
+				if (cf.getCustomFormTitle().toLowerCase().equals("default form")) {
 					setSelectedCategories(mVectorCategories);
 					return;
 				}
-					
-				
-				for(String categoryId : mCategoriesTitle.keySet()){
+
+				for (String categoryId : mCategoriesTitle.keySet()) {
 					String categoryName = mCategoriesTitle.get(categoryId);
-					if(categoryName.toLowerCase().equals(cf.getCustomFormTitle().toLowerCase())){
+					if (categoryName.toLowerCase().equals(cf.getCustomFormTitle().toLowerCase())) {
 						mVectorCategories.add(Integer.valueOf(categoryId));
 					}
 				}
 				setSelectedCategories(mVectorCategories);
-				
-				
+
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
 			}
-			
+
 		});
-		
+
+	}
+
+	private String getValueForCustomForm(List<ReportCustomFormEntity> customFormValues, int fieldId) {
+		for (ReportCustomFormEntity cfe : customFormValues) {
+			if (cfe.getFieldId() == fieldId) {
+				return cfe.getValue();
+			}
+		}
+		return null;
 	}
 
 }

@@ -24,11 +24,10 @@ import com.ushahidi.java.sdk.api.CustomFormMeta;
 
 public class CustomFormAdapter {
 
-	
-	public static View createTextView(Context context, ReportCustomFormEntity rcf){
+	public static View createTextView(Context context, ReportCustomFormEntity rcf) {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout view = (LinearLayout)inflater.inflate(R.layout.reportcustomform_textview, null);
-		new Util().log("Creating text view with "+view+" of childs:"+view.getChildCount());
+		LinearLayout view = (LinearLayout) inflater.inflate(R.layout.reportcustomform_textview, null);
+		new Util().log("Creating text view with " + view + " of childs:" + view.getChildCount());
 		TextView title = (TextView) view.findViewById(R.id.title);
 		title.setText(rcf.getFieldName());
 		TextView value = (TextView) view.findViewById(R.id.value);
@@ -36,40 +35,53 @@ public class CustomFormAdapter {
 		return view;
 	}
 
-	public static View createView( CustomFormMetaEntity cf, ViewGroup root) {
+	public static View createView(CustomFormMetaEntity cf, ViewGroup root, String value) {
 
 		View view = null;
-		LayoutInflater inflater = (LayoutInflater) root.getContext()
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) root.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		switch (cf.getType()) {
 
 		case CustomFormMeta.TYPE_CHECKBOX:
 		case CustomFormMeta.TYPE_DATE:
+		case CustomFormMeta.TYPE_RADIO:
 		case CustomFormMeta.TYPE_DROPDOWN:
-			view = inflater.inflate(R.layout.customform_dropdown, root,false);
+			view = inflater.inflate(R.layout.customform_dropdown, root, false);
 			Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
 			spinner.setId(cf.getFieldId());
 			String[] values = getCleanedValues(cf.getDefaultValues());
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(root.getContext(),  R.layout.customform_spinner_item,values);
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(root.getContext(), R.layout.customform_spinner_item, values);
 
 			adapter.setDropDownViewResource(R.layout.customform_spinner_dropdown_item);
 			spinner.setAdapter(adapter);
+			if (value != null) {
+				for (int i = 0; i < values.length; i++) {
+					if (values[i].equals(value)) {
+						spinner.setSelection(i);
+						break;
+					}
+				}
+			}
+
 			break;
 		case CustomFormMeta.TYPE_PASSWORD:
-			view = inflater.inflate(R.layout.customform_edittext, root,false);
+			view = inflater.inflate(R.layout.customform_edittext, root, false);
 			EditText etPassword = (EditText) view.findViewById(R.id.edittext);
 			etPassword.setId(cf.getFieldId());
 			etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 			etPassword.setId(cf.getFieldId());
+			if (value != null)
+				etPassword.setText(value);
 			break;
-		case CustomFormMeta.TYPE_RADIO:
+		
 			
 		case CustomFormMeta.TYPE_TEXTAREA:
 		case CustomFormMeta.TYPE_TEXT:
-			view = inflater.inflate(R.layout.customform_edittext, root,false);
+			view = inflater.inflate(R.layout.customform_edittext, root, false);
 			EditText et = (EditText) view.findViewById(R.id.edittext);
 			et.setId(cf.getFieldId());
+			if (value != null)
+				et.setText(value);
 			break;
 		}
 
@@ -78,46 +90,45 @@ public class CustomFormAdapter {
 
 		return view;
 	}
-	public static String[] getCleanedValues(String defaultValues){
+
+	public static String[] getCleanedValues(String defaultValues) {
 		String[] values = defaultValues.split(",");
-		for(int i = 0; i < values.length; i++){
+		for (int i = 0; i < values.length; i++) {
 			values[i] = values[i].replace(" ", "");
 		}
 		return values;
 	}
-	
-	public static Map<Integer,String> getValuesFromLayout(List<CustomFormMetaEntity> customFormsDefs, Activity context){
-		HashMap<Integer,String> map = new HashMap<Integer,String>();
-		
-		for(CustomFormMetaEntity cfme : customFormsDefs){
-			
+
+	public static Map<Integer, String> getValuesFromLayout(List<CustomFormMetaEntity> customFormsDefs, Activity context) {
+		HashMap<Integer, String> map = new HashMap<Integer, String>();
+
+		for (CustomFormMetaEntity cfme : customFormsDefs) {
+
 			switch (cfme.getType()) {
 
 			case CustomFormMeta.TYPE_CHECKBOX:
 			case CustomFormMeta.TYPE_DATE:
 			case CustomFormMeta.TYPE_DROPDOWN:
-				Spinner spinner = (Spinner) context.findViewById(cfme.getFieldId());
-				map.put(cfme.getFieldId(),spinner.getSelectedItem().toString());
-				break;	
 			case CustomFormMeta.TYPE_RADIO:
+				Spinner spinner = (Spinner) context.findViewById(cfme.getFieldId());
+				map.put(cfme.getFieldId(), spinner.getSelectedItem().toString());
 				break;
 			case CustomFormMeta.TYPE_PASSWORD:
 			case CustomFormMeta.TYPE_TEXTAREA:
 			case CustomFormMeta.TYPE_TEXT:
-				EditText view = (EditText)context.findViewById(cfme.getFieldId());
-				map.put(cfme.getFieldId(),view.getText().toString());
+				EditText view = (EditText) context.findViewById(cfme.getFieldId());
+				map.put(cfme.getFieldId(), view.getText().toString());
 				break;
 			}
 		}
-		
-		
+
 		return map;
 	}
-	
-	public static Map<String,String> convertEntityToMap(List<ReportCustomFormEntity> list){
-		Map<String,String> map = new HashMap<String,String>();
-		for(ReportCustomFormEntity rcfe : list){
-			map.put(String.valueOf(rcfe.getFieldId()),rcfe.getValue());
+
+	public static Map<String, String> convertEntityToMap(List<ReportCustomFormEntity> list) {
+		Map<String, String> map = new HashMap<String, String>();
+		for (ReportCustomFormEntity rcfe : list) {
+			map.put(String.valueOf(rcfe.getFieldId()), rcfe.getValue());
 		}
 		return map;
 	}
