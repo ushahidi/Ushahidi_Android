@@ -21,8 +21,6 @@ package com.ushahidi.android.app.util;
 
 import java.lang.ref.WeakReference;
 
-import com.ushahidi.android.app.BuildConfig;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -33,6 +31,8 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
+
+import com.ushahidi.android.app.BuildConfig;
 
 public class ImageViewWorker {
 

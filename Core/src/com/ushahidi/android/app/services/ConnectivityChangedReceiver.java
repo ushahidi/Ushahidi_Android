@@ -1,13 +1,13 @@
 package com.ushahidi.android.app.services;
 
-import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.util.Util;
-
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+
+import com.ushahidi.android.app.Preferences;
+import com.ushahidi.android.app.util.Util;
 
 /**
  * This Receiver class is designed to listen for changes in connectivity. When

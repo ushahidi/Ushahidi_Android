@@ -46,6 +46,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.Settings;
+import com.ushahidi.android.app.activities.WeatherMapActivity;
 import com.ushahidi.android.app.adapters.BaseListReportAdapter;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.CustomFormAdapter;
@@ -284,6 +285,9 @@ public class ListReportFragment
 		} else if (item.getItemId() == R.id.menu_settings) {
 			startActivityZoomIn(new Intent(getActivity(), Settings.class));
 			return true;
+		} else if (item.getItemId() == R.id.show_weather){
+			Intent i = new Intent(getActivity(), WeatherMapActivity.class);
+			startActivity(i);
 		}
 		return super.onOptionsItemSelected(item);
 	}

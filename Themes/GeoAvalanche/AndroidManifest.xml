@@ -12,7 +12,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.geoavalanche.android.app"
-    android:versionCode="39"
+    android:versionCode="41"
     android:versionName="3.9" >
     
      <permission
@@ -283,6 +283,16 @@
             android:name="com.ushahidi.android.app.ui.phone.AddCommentActivity"
             android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
             android:label="@string/comments" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+         <activity
+            android:name="com.ushahidi.android.app.activities.WeatherMapActivity"
+            android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

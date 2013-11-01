@@ -19,12 +19,12 @@
  **/
 package com.ushahidi.android.app.adapters;
 
-import com.ushahidi.android.app.ui.tablet.ViewReportPhotoFragment;
-
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.ushahidi.android.app.ui.tablet.ViewReportPhotoFragment;
 
 /**
  * Page adapter for photo swipe screen

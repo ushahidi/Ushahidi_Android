@@ -22,8 +22,6 @@ package com.ushahidi.android.app.models;
 
 import java.util.List;
 
-import android.util.Log;
-
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.database.IMediaSchema;
 import com.ushahidi.android.app.database.IReportSchema;

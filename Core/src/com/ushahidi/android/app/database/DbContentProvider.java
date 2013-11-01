@@ -1,10 +1,10 @@
 package com.ushahidi.android.app.database;
 
-import com.ushahidi.android.app.entities.IDbEntity;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.ushahidi.android.app.entities.IDbEntity;
 
 public abstract class DbContentProvider {
 

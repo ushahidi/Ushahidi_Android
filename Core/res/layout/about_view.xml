@@ -10,132 +10,102 @@
     have questions regarding the use of this file, please contact Ushahidi developers 
     at team@ushahidi.com.
 -->
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/white_color"
+    android:orientation="vertical" >
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/background_image"
+        android:layout_alignParentTop="true"
+        android:fadeScrollbars="true"
+        android:fillViewport="true"
+        android:padding="5dp"
+        android:scrollbars="vertical" >
 
-
-        <RelativeLayout
-            android:id="@+id/relativeLayout1"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/background_color"  >
+            android:layout_height="wrap_content"
+            android:gravity="center|top"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" >
 
-            <ScrollView
+            <ImageView
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:fadeScrollbars="true"
-                android:gravity="center"
-                android:padding="25dp"
-                android:scrollbars="vertical" >
+                android:layout_gravity="center_horizontal"
+                android:adjustViewBounds="true"
+                android:paddingTop="10dp"
+                android:src="@drawable/logo" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingBottom="15dp"
-                    android:paddingRight="15dp" >
-
-                    <ImageView
-                        android:id="@+id/title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/logo_icon" />
-
-                    <TextView
-                        android:id="@+id/version"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/date_color"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/spacer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                    
-                    <TextView
-                        android:id="@+id/about_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="0px"
-                        android:text="@string/about_title"
-                        android:gravity="center_horizontal"
-                        android:textColor="@color/date_color"
-                        android:textStyle="bold"
-                        android:textSize="20sp" >
-                    </TextView>
-
-                    <TextView
-                        android:id="@+id/about_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="0px"
-                        android:text="@string/about_text"
-                        android:gravity="center_horizontal"
-                        android:textColor="@color/date_color"
-                        android:textStyle="italic"
-                        android:textSize="18sp" >
-                    </TextView>
-
-                    
-                </LinearLayout>
-            </ScrollView>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/about_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:orientation="vertical" >
+                android:gravity="center_horizontal"
+                android:paddingTop="10dp"
+                android:text="Your free snow avalanche information network at your hands."
+                android:textColor="@color/date_color"
+                android:textSize="20sp"
+                android:textStyle="bold" >
+            </TextView>
 
-                <ImageView
-                    android:id="@+id/sky_bg"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:src="@drawable/about_background" />
+            <TextView
+                android:id="@+id/about_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingTop="10dp"
+                android:text="Report the latest terrain conditions. Benefit from location based warnings in a timely manner."
+                android:textColor="@color/date_color"
+                android:textSize="15sp"
+                android:textStyle="italic" >
+            </TextView>
+        </LinearLayout>
+    </ScrollView>
 
-                <LinearLayout
-                    android:id="@+id/bottom_menu_bar_separator"
-                    style="@style/BottomActionBarContainer"
-                    android:baselineAligned="false" >
+    <ImageView
+        android:id="@+id/background_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_menu_bar_separator"
+        android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
+        android:maxHeight="200dp"
+        android:src="@drawable/background" />
 
-                    <Button
-                        android:id="@+id/team_link"
-                        style="@style/BottomActionbarButton"
-                        android:drawableTop="@drawable/button_team"
-                        android:text="@string/team" />
+    <LinearLayout
+        android:id="@+id/bottom_menu_bar_separator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal" >
 
-                    <Button
-                        android:id="@+id/media_link"
-                        style="@style/BottomActionbarButton"
-                        android:drawableTop="@drawable/button_media"
-                        android:text="@string/media" />
+        <Button
+            android:id="@+id/team_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:drawableTop="@drawable/button_team"
+            android:text="@string/team"
+            android:textColor="@color/date_color" />
 
-                    <Button
-                        android:id="@+id/twitter_link"
-                        style="@style/BottomActionbarButton"
-                        android:drawableTop="@drawable/button_twitter"
-                        android:text="@string/twitter" />
+        <Button
+            android:id="@+id/contact_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:drawableTop="@drawable/button_contact"
+            android:textColor="@color/date_color"
+            android:text="@string/contact" />
+    </LinearLayout>
 
-                    <Button
-                        android:id="@+id/facebook_link"
-                        style="@style/BottomActionbarButton"
-                        android:drawableTop="@drawable/button_facebook"
-                        android:text="@string/facebook" />
-
-                    <Button
-                        android:id="@+id/contact_link"
-                        style="@style/BottomActionbarButton"
-                        android:drawableTop="@drawable/button_contact"
-                        android:text="@string/contact" />
-                </LinearLayout>
-            </LinearLayout>
-        </RelativeLayout>
-
-   
-
-</android.support.v4.widget.DrawerLayout>
+</RelativeLayout>

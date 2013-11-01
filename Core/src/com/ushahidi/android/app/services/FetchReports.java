@@ -27,7 +27,6 @@ import com.ushahidi.android.app.api.CategoriesApi;
 import com.ushahidi.android.app.api.CustomFormApi;
 import com.ushahidi.android.app.api.ReportsApi;
 import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.entities.CustomFormMetaEntity;
 import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.models.ListCommentModel;
 import com.ushahidi.android.app.models.ListReportModel;

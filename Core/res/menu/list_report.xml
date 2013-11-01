@@ -38,5 +38,9 @@
         android:id="@+id/menu_settings"
         android:icon="@drawable/settings"
         android:title="@string/settings"/>
+     <item
+        android:id="@+id/show_weather"
+        android:showAsAction="ifRoom"
+        android:title="Weather"/>
 
 </menu>

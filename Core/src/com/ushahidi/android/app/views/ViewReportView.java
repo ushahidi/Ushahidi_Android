@@ -40,7 +40,6 @@ import com.ushahidi.android.app.adapters.ListCommentAdapter;
 import com.ushahidi.android.app.adapters.ListNewsAdapter;
 import com.ushahidi.android.app.adapters.ListPhotoAdapter;
 import com.ushahidi.android.app.adapters.ListVideoAdapter;
-import com.ushahidi.android.app.database.CustomFormMetaDao;
 import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.entities.ReportCustomFormEntity;

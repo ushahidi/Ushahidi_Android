@@ -24,10 +24,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import com.actionbarsherlock.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.activities.BaseListActivity;
 import com.ushahidi.android.app.adapters.CommentAdapter;

@@ -46,6 +46,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.activities.WeatherMapActivity;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.adapters.PopupAdapter;
@@ -111,7 +112,8 @@ public class MapFragment extends BaseMapFragment implements
 
 	private void initMap() {
 		// set up the map tile use
-		Util.setMapTile(getActivity(), map);
+		//Util.setMapTile(getActivity(), map);
+		
 		if (mReportModel.size() > 0) {
 			setupMapCenter();
 			mHandler.post(mMarkersOnMap);
@@ -119,6 +121,8 @@ public class MapFragment extends BaseMapFragment implements
 		} else {
 			toastLong(R.string.no_reports);
 		}
+		
+		
 	}
 
 	@Override
@@ -253,6 +257,9 @@ public class MapFragment extends BaseMapFragment implements
 			showDropDownNav();
 
 			return true;
+		} else if (item.getItemId() == R.id.show_weather){
+			Intent i = new Intent(getActivity(), WeatherMapActivity.class);
+			startActivity(i);
 		}
 
 		return super.onOptionsItemSelected(item);
