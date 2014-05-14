@@ -18,7 +18,7 @@
  **
  **/
 
-package com.ushahidi.android.app.api;
+package com.school.android.app.api;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +27,14 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.google.gson.JsonSyntaxException;
-import com.ushahidi.android.app.Preferences;
-import com.ushahidi.android.app.database.Database;
-import com.ushahidi.android.app.database.IReportSchema;
-import com.ushahidi.android.app.entities.MediaEntity;
-import com.ushahidi.android.app.entities.ReportCategory;
-import com.ushahidi.android.app.entities.ReportEntity;
-import com.ushahidi.android.app.util.ImageManager;
-import com.ushahidi.android.app.util.Util;
+import com.school.android.app.Preferences;
+import com.school.android.app.database.Database;
+import com.school.android.app.database.IReportSchema;
+import com.school.android.app.entities.MediaEntity;
+import com.school.android.app.entities.ReportCategory;
+import com.school.android.app.entities.ReportEntity;
+import com.school.android.app.util.ImageManager;
+import com.school.android.app.util.Util;
 import com.ushahidi.java.sdk.UshahidiException;
 import com.ushahidi.java.sdk.api.Category;
 import com.ushahidi.java.sdk.api.Incidents;
@@ -98,7 +98,7 @@ public class ReportsApi extends UshahidiApi {
 
                                         if (m.getLinkUrl() != null) {
                                             final String fileName = Util
-                                                    .getDateTime() + ".jpg";
+                                                    .getDateTime()+ "_" + new java.util.Random().nextInt(100000) + ".jpg";
                                             // save details of photo to database
                                             saveMedia(m.getId(),
                                                     i.incident.getId(),
