@@ -99,8 +99,7 @@ public class ViewReportSlideActivity extends BaseActivity<SlideView> {
                 // to have each
                 // fragment expose actions itself (rather than the activity
                 // exposing actions),
-                // but for simplicity, the activity provides the actions in this
-                // sample.
+                // but for simplicity, the activity provides the actions in this one
                 supportInvalidateOptionsMenu();
             }
         });
@@ -156,7 +155,7 @@ public class ViewReportSlideActivity extends BaseActivity<SlideView> {
     }
 
     /**
-     * A simple pager adapter that represents 5 {@link ViewReportFragment}
+     * A simple pager adapter that represents  {@link ViewReportFragment}
      * objects, in sequence.
      */
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
