@@ -10,17 +10,19 @@
 	have questions regarding the use of this file, please contact Ushahidi developers 
 	at team@ushahidi.com.
 -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <!-- style actionbar selectable items -->
-    <style name="Theme.Ushahidi" parent="Theme.Sherlock">
+    <style name="Theme.Ushahidi" parent="@style/Theme.Sherlock">
         <item name="selectableItemBackground">@drawable/ad_selectable_background</item>
+        <item name="android:actionBarTabStyle" tools:ignore="NewApi">@style/UshahidiActionBarTabStyle</item>
         <item name="actionBarTabStyle">@style/UshahidiActionBarTabStyle</item>
     </style>
 
     <!-- style for the tabs -->
-    <style name="UshahidiActionBarTabStyle" parent="Widget.Sherlock.Light.ActionBar.TabView">
-        <item name="android:background">@drawable/actionbar_tab_bg</item>
+    <style name="UshahidiActionBarTabStyle" parent="@style/Widget.Sherlock.Light.ActionBar.TabView">
+         <item name="android:background">@drawable/actionbar_tab_bg</item>
+        <item name="background">@drawable/actionbar_tab_bg</item>
         <item name="android:paddingLeft">32dp</item>
         <item name="android:paddingRight">32dp</item>
         <item name="android:paddingBottom">10dp</item>
@@ -251,7 +253,7 @@
 
     <style name="EditText" parent="@android:style/Widget.EditText">
         <item name="android:cursorVisible">true</item>
-        <item name="android:textCursorDrawable">@drawable/edit_text_cursor</item>
+        <item name="android:textCursorDrawable" tools:ignore="NewApi">@drawable/edit_text_cursor</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
