@@ -124,8 +124,8 @@
     <string name="about_text"/>
 
     <!-- Dev Key -->
-    <string name="google_map_api_key">AIzaSyC_CF-HafPAZRgLkfpMT2QjnQ2a-LWaiis</string>
+    <string name="google_map_api_key_debug">AIzaSyC_CF-HafPAZRgLkfpMT2QjnQ2a-LWaiis</string>
     <!-- Live Key -->
-    <string name="google_map_api_key_live">AIzaSyAUwfY5bdA2xxA4r9Aqn6k82f_RyktwR_I</string>
+    <string name="google_map_api_key">AIzaSyCqPP1ROCQg_uVTcKWFzw1kP-nR-UrH7cw</string>
     
 </resources>

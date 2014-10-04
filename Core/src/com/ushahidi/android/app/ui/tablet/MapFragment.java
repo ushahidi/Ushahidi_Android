@@ -117,6 +117,7 @@ public class MapFragment extends BaseMapFragment implements
 		} else {
 			toastLong(R.string.no_reports);
 		}
+		super.map = map;
 	}
 
 	@Override
