@@ -1,4 +1,5 @@
-# Ushahidi Android app [Deprecated] #
+Ushahidi Android app [Deprecated]
+=================================
 
 Ushahidi is an open source platform for democratizing information, increasing transparency and lowering the barriers for individuals to share their stories. 
 
@@ -13,7 +14,8 @@ For more information visit:
 * [API Documentation For Ushahidi](https://wiki.ushahidi.com/display/WIKI/REST+API)
 * [Code Repository](http://github.com/ushahidi/Ushahidi_Android)
 
-## Deprecation Notice##
+Deprecation Notice
+------------------
 
 We are channeling all energies into developing the new [Android client](https://github.com/ushahidi/platform-android) built on top of [v3](https://github.com/ushahidi/platform) APIs. We will still accept `PR` and will publish a release once we get a couple of `PRs` for fixes and features from the community. 
 
