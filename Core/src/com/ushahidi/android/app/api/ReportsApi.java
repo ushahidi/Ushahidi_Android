@@ -99,6 +99,7 @@ public class ReportsApi extends UshahidiApi {
                                         if (m.getLinkUrl() != null) {
                                             final String fileName = Util
                                                     .getDateTime() + ".jpg";
+                                                    .getDateTime()+ "_" + new java.util.Random().nextInt(100000) + ".jpg";
                                             // save details of photo to database
                                             saveMedia(m.getId(),
                                                     i.incident.getId(),
