@@ -871,7 +871,7 @@ public class AddReportActivity extends
 					view.mPickDate.setText(simpleDateFormat.format(date));
 
 					SimpleDateFormat timeFormat = new SimpleDateFormat(
-							"h:mm a", Locale.US);
+							"h:mm a", Locale.FR);
 					view.mPickTime.setText(timeFormat.format(date));
 
 				} else {

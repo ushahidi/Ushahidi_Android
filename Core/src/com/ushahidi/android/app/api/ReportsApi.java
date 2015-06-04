@@ -97,8 +97,8 @@ public class ReportsApi extends UshahidiApi {
                                         // save photo to a file
 
                                         if (m.getLinkUrl() != null) {
-                                            final String fileName = Util
-                                                    .getDateTime() + ".jpg";
+                                        	//This will capture entire picture descriptor to prevent duplicates
+                                            final String fileName = m.getLinkUrl().substring(m.getLinkUrl().lastIndexOf('/')+1, m.getLinkUrl().length());
                                             // save details of photo to database
                                             saveMedia(m.getId(),
                                                     i.incident.getId(),
