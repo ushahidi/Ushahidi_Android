@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <item android:id="@+id/menu_precipitation" android:title="Precipitation" android:showAsAction="never"></item>
+    <item android:id="@+id/menu_rain" android:title="Rain" android:showAsAction="never"></item>
+    <item android:id="@+id/menu_snow" android:title="Snow" android:showAsAction="never"></item>
+    <item android:id="@+id/menu_temp" android:title="Temperature" android:showAsAction="never"></item>
+    <item android:id="@+id/menu_clouds" android:title="Clouds" android:showAsAction="never"></item>
+    <item android:id="@+id/menu_wind" android:title="Wind" android:showAsAction="never"></item>
+    
+
+</menu>

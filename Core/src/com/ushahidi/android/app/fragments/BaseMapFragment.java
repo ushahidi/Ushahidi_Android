@@ -169,17 +169,19 @@ public abstract class BaseMapFragment extends SherlockMapFragment {
                 .isGooglePlayServicesAvailable(getActivity());
 
         if (status == ConnectionResult.SUCCESS) {
-            return (true);
+            return true;
         } else if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
             ErrorDialogFragment.newInstance(status).show(
                     getActivity().getSupportFragmentManager(),
                     TAG_ERROR_DIALOG_FRAGMENT);
+           
+            getActivity().finish();
+            return false;
         } else {
             Util.showToast(getActivity(), R.string.no_maps);
             getActivity().finish();
+            return false;
         }
-
-        return false;
     }
 
     private class MapMarker implements UpdatableMarker {

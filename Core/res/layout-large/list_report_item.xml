@@ -58,7 +58,8 @@
         android:layout_toLeftOf="@+id/report_arrow"
         android:layout_toRightOf="@+id/report_thumbnail"
         android:padding="3dip"
-        android:textColor="@color/gray_color" />
+        android:textColor="@color/gray_color"
+        android:textStyle="italic" />
 
     <TextView
         android:id="@+id/report_date"
@@ -77,8 +78,9 @@
         android:layout_toRightOf="@+id/report_thumbnail"
         android:ellipsize="end"
         android:lines="1"
-        android:padding="5dip"
-        android:textColor="@color/date_color" />
+        android:padding="3dip"
+        android:textColor="@color/date_color"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/report_status"

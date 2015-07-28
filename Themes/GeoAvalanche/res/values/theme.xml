@@ -1,0 +1,114 @@
+<resources>
+
+    <!-- DEPLOYMENT INFORMATION -->
+    <string name="app_title">Geo Avalanche</string>
+    <string name="app_name">GeoAvalanche</string>
+    <string name="deployment_url">http://geoavalanche.org/incident</string>
+    <string name="team_url">http://geoavalanche.org/incident/page/index/1</string>
+    <string name="media_url"/>
+    <string name="twitter_url"/>
+    <string name="facebook_url"/>
+    <string name="contact_url">http://geoavalanche.org/incident/contact</string>
+
+    <!-- DEPLOYMENT PROVIDER AUTHORITIES. USUALLY PACKAGE NAME AND CLASS NAME Eg. com.ushahidi.android.app.data.deploymentprovider -->
+    <string name="provider_authorities"/>
+	
+    <!-- ICON IMAGES -->
+    <drawable name="app_icon">@drawable/icon</drawable>
+    <drawable name="logo_icon">@drawable/logo</drawable>
+    <drawable name="report_icon">@drawable/report</drawable>
+    <drawable name="actionbar_icon">@drawable/icon</drawable>
+    <drawable name="notification_icon">@drawable/notification</drawable>
+
+	<!-- BACKROUND IMAGES -->
+    <drawable name="splash_background">@drawable/splash</drawable>
+    <drawable name="about_background">@drawable/logo_geobeyond</drawable>
+    <drawable name="actionbar_background">@null</drawable>
+
+	<!-- COLOR CODES -->
+    <color name="title_color">@color/dark_gray_color</color>
+    <color name="date_color">@color/dark_gray_color</color>
+    <color name="report_table">#f6f6ee</color>
+    <color name="header_color">#3E51BC</color>
+    <color name="background_color">@color/light_gray_color</color>
+    <color name="thick_background_color">@color/light_gray_color</color>
+    <color name="button_background_color">#ffffff</color>
+    <color name="button_stroke_color">#cac7c0</color>
+
+    <!-- Report listing screen -->
+    <color name="filter_by_text_color">@color/dark_gray_color</color>
+    <color name="filter_by_background_color">@color/light_gray_color</color>
+    
+    <color name="white_color">#FFFFFF</color>
+    <color name="verified_color">#25991C</color>
+    <color name="black_color">#000000</color>
+    <color name="gray_color">#5D5D5D</color>
+    <color name="dark_gray_color">#5D5D5D</color>
+    <color name="light_gray_color">#DFDFDF</color>
+    <color name="light_blue_color">#22aadd</color>
+	
+    
+    <color name="title_background">#453727</color>
+    <color name="title_separator">@color/dark_gray_color</color>
+    <color name="title_text">@color/dark_gray_color</color>
+    <color name="title_text_alt">@color/dark_gray_color</color>
+    <color name="icon_title">@color/dark_gray_color</color>
+
+    
+    <!-- Report COLORS -->
+    <color name="list_view_date">#90544a</color>
+    <color name="table_background">@color/gray_color</color>
+    <color name="table_odd_row_color">@color/white_color</color>
+    <color name="table_even_row_color">@color/white_color</color>
+    <color name="table_selected_row_color">#8d817a</color>
+    <color name="table_header_color">#e6ddbe</color>
+    <color name="tab_selected_color">#77bbee</color>
+    <color name="tab_unselected_color">#33b5e5</color>
+	<color name="selectable_color">#c6c6c6</color>
+	<color name="tab_background">@color/light_blue_color</color>
+	
+    <color name="verified_text_color">#99CC99</color>
+    <color name="unverified_text_color">#CC6666</color>
+
+   
+    <color name="list_divider_color">#e0e0e0</color>
+    <color name="overlay_text_color">#aa000000</color>
+    
+    
+    <color name="text_value_color">#838385</color>
+    
+    <color name="tab_medium">#2B2B2B</color>
+    <color name="tab_dark">#000000</color>
+    <color name="tab_transparent">#10ffffff</color>
+    <color name="edit_text_cursor">#A6A6A6</color>
+    
+    <!--  Menu Drawer -->
+	
+	<!-- Colors for menu drawer. -->
+    <color name="md_itemBackground">#CC2EA2CC</color>
+    <color name="md_iconTintColor">#DDFFFFFF</color>
+    <color name="md_shadowColor">#44000000</color>
+    <color name="md_selected_item">#464646</color>
+    
+	<!-- TEXT SIZE -->
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_large">22sp</dimen>
+    <dimen name="top_padding">10dip</dimen>
+
+    <dimen name="actionbar_height">45dip</dimen>
+    <dimen name="actionbar_button_height">30dip</dimen>
+    <dimen name="bottom_actionbar_height">65dip</dimen>
+    
+
+    <!-- DEPLOYMENT TEXT -->
+    <string name="about_title">Your free snow avalanche information network at your hands.</string>
+    <string name="about_text">Report the latest terrain conditions. Benefit from location based warnings in a timely manner.</string>
+	 <!--GOOGLE MAPS API-->
+	 
+    <!--  Dev Key  -->
+    <string name="google_map_api_key_dev">AIzaSyDtLQaO7TN_t84doFbJh5srdUTN_HwGubo</string> 
+    <!-- Live Key -->
+    <string name="google_map_api_key">AIzaSyCpkU8Lme4y8W9WV4yD84F3xBU0LtGXIhU</string>
+
+</resources>

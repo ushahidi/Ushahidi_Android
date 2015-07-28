@@ -17,7 +17,7 @@
 
     <LinearLayout
         android:id="@+id/filter_by_layout"
-        style="@style/LinearLayout.Horizontal"
+        style="@style/LinearLayout.Vertical"
         android:background="@color/filter_by_background_color"
          >
 
@@ -25,15 +25,22 @@
             android:id="@+id/footer_text"
             style="@style/TextView.FilterBy"
             android:padding="10dip"
+            android:textStyle="italic"
+            android:textSize="18sp"
             android:text="@string/all_categories" />
+                <View 
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/tab_background"/>
     </LinearLayout>
+            
     <!-- List report -->
 
     <ListView
         android:id="@android:id/list"
         style="@style/ListView"
         android:layout_below="@+id/filter_by_layout"
-        android:padding="10dip" />
+        android:layout_margin="10dp" />
 
     <!-- Here is the view to show if the list is emtpy -->
 

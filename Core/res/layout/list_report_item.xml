@@ -24,6 +24,7 @@
         android:layout_height="50dip"
         android:layout_alignParentLeft="true"
         android:adjustViewBounds="true"
+        android:layout_centerInParent="true"
         android:paddingRight="5dip" />
 
     <TextView
@@ -67,16 +68,18 @@
         android:layout_toLeftOf="@+id/report_arrow"
         android:layout_toRightOf="@+id/report_thumbnail"
         android:paddingLeft="3dip"
-        android:textColor="@color/gray_color" />
+        android:textColor="@color/gray_color"
+        android:textStyle="italic" />
     <TextView
         android:id="@+id/report_categories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/report_location"
         android:layout_toRightOf="@+id/report_thumbnail"
-        android:padding="5dip"
+        android:paddingLeft="3dip"
         android:ellipsize="end"
         android:lines="1"
+        android:textStyle="bold"
         android:textColor="@color/date_color" />
 
     <TextView
@@ -86,7 +89,7 @@
         android:layout_below="@+id/report_categories"
         android:layout_toLeftOf="@+id/report_arrow"
         android:layout_toRightOf="@+id/report_thumbnail"
-        android:paddingLeft="3dip"
+        android:padding="3dip"
         android:textStyle="bold"
         android:textColor="@color/verified_text_color" />
 
@@ -97,6 +100,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
         android:layout_weight="1"
+        android:src="@drawable/arrow"
         android:gravity="center_vertical|center_horizontal"
         android:padding="5dip" />
 

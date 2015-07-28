@@ -96,6 +96,7 @@
 
 	<!-- DEPLOYMENT TEXT -->
     <string name="about_text"/>
+    <string name="about_title"/>
 
     <!--GOOGLE MAPS API-->
     

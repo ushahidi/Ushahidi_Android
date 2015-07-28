@@ -20,12 +20,12 @@
 
 package com.ushahidi.android.app.util;
 
-import com.google.analytics.tracking.android.EasyTracker;
-import com.ushahidi.android.app.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.ushahidi.android.app.R;
 
 /**
  * @author eyedol

@@ -40,5 +40,11 @@
         android:orderInCategory="4"
         android:showAsAction="never"
         android:title="@string/satellite"/>
+    
+     <item
+        android:id="@+id/show_weather"
+        android:showAsAction="ifRoom"
+        android:title="Weather"/>
+ 
 
 </menu>

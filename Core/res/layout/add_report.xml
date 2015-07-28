@@ -19,8 +19,26 @@
     <!-- Parent layout starts -->
 
     <LinearLayout
+        android:id="@+id/report_form_layout"
         style="@style/LinearLayout.Vertical.Full"
         android:padding="10dip" >
+        
+        
+        <LinearLayout
+            style="@style/LinearLayout.Vertical.Wrap"
+            android:paddingBottom="10dp" >
+
+            <TextView
+                android:id="@+id/cf_title"
+                style="@style/TextView.Label"
+                android:text="@string/custom_form_selection_title" />
+
+            <Spinner
+    			android:id="@+id/cf_spinner"
+    			android:layout_width="fill_parent"
+   				android:layout_height="wrap_content" />
+        </LinearLayout>
+        
 
         <!-- Title layout begins -->
 
@@ -77,7 +95,15 @@
                 android:text="@string/select_category" />
         </LinearLayout>
         <!-- Categories layout ends. -->
-
+		
+		<!-- Custom Form Fields starts. -->
+		<LinearLayout android:id="@+id/report_custom_form" 
+		    android:layout_width="match_parent" 
+		    android:layout_height="wrap_content" 
+		    android:orientation="vertical">
+		</LinearLayout>
+		<!-- Custom Form Fields ends. -->
+		
 
         <!-- Date layout starts. -->
 
@@ -108,8 +134,9 @@
             </LinearLayout>
         </LinearLayout>
         <!-- Date layout ends. -->
-
-
+		
+		
+        
         <!-- Location layout starts. -->
 
         <LinearLayout

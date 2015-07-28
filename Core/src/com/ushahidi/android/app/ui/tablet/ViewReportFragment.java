@@ -315,6 +315,7 @@ public class ViewReportFragment extends SherlockFragment {
                                     R.anim.home_enter, R.anim.home_exit);
                         }
                     });
+            mView.setReportCustomFormsValues((int)mReportId);
         }
     }
 

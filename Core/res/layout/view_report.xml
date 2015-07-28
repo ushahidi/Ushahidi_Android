@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/table_even_row_color"
+    android:background="@color/background_color"
     android:fillViewport="true" >
 
     <LinearLayout style="@style/LinearLayout.Vertical" >
@@ -15,17 +15,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textStyle="bold" />
+            android:textColor="@color/title_color" />
+        
+        <View 
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/tab_background"/>
 
         <TextView
             android:id="@+id/report_title"
             style="@style/TextView.Label"
             android:text="@string/title" />
 
+
         <LinearLayout
             android:id="@+id/title_layout"
             style="@style/LinearLayout.Vertical"
-            android:background="@color/table_odd_row_color" >
+            android:layout_margin="5dp"
+            android:background="@drawable/list_even_row_rounded_corner"
+            android:padding="3dp" >
 
             <TextView
                 android:id="@+id/title"
@@ -43,7 +51,9 @@
 
         <LinearLayout
             style="@style/LinearLayout.Vertical"
-            android:background="@color/table_odd_row_color" >
+            android:layout_margin="5dp"
+            android:background="@drawable/list_even_row_rounded_corner"
+            android:padding="3dp" >
 
             <TextView
                 android:id="@+id/status"
@@ -61,7 +71,9 @@
 
         <LinearLayout
             style="@style/LinearLayout.Vertical"
-            android:background="@color/table_odd_row_color" >
+            android:layout_margin="5dp"
+            android:background="@drawable/list_even_row_rounded_corner"
+            android:padding="3dp" >
 
             <TextView
                 android:id="@+id/desc"
@@ -80,7 +92,9 @@
 
         <LinearLayout
             style="@style/LinearLayout.Vertical"
-            android:background="@color/table_odd_row_color" >
+            android:layout_margin="5dp"
+            android:background="@drawable/list_even_row_rounded_corner"
+            android:padding="3dp" >
 
             <TextView
                 android:id="@+id/category"
@@ -88,6 +102,14 @@
         </LinearLayout>
 
         <!-- Category ends -->
+        
+        <!-- Custom Form Fields starts. -->
+		<LinearLayout android:id="@+id/report_custom_form" 
+		    android:layout_width="match_parent" 
+		    android:layout_height="wrap_content" 
+		    android:orientation="vertical">
+		</LinearLayout>
+		<!-- Custom Form Fields ends. -->
 
 
         <!-- Date starts -->
@@ -99,7 +121,9 @@
 
         <LinearLayout
             style="@style/LinearLayout.Vertical"
-            android:background="@color/table_odd_row_color" >
+            android:layout_margin="5dp"
+            android:background="@drawable/list_even_row_rounded_corner"
+            android:padding="3dp" >
 
             <TextView
                 android:id="@+id/date"
@@ -116,7 +140,11 @@
             style="@style/TextView.Label"
             android:text="@string/location" />
 
-        <LinearLayout style="@style/LinearLayout.Vertical" >
+        <LinearLayout
+            style="@style/LinearLayout.Vertical"
+            android:layout_margin="5dp"
+            android:background="@drawable/list_even_row_rounded_corner"
+            android:padding="3dp" >
 
             <TextView
                 android:id="@+id/location"
@@ -131,7 +159,8 @@
             android:id="@+id/map_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/table_odd_row_color"
+            android:layout_margin="5dp"
+            android:background="@drawable/list_even_row_rounded_corner"
             android:orientation="vertical"
             android:padding="10dip" >
 
@@ -149,19 +178,20 @@
 
         <TextView
             android:id="@+id/report_photo"
+            style="@style/TextView.Label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dip"
             android:text="@string/photos"
-            android:textColor="@color/title_color"
-            android:textStyle="bold" />
+            android:textColor="@color/title_color" />
 
         <LinearLayout
             android:id="@+id/list_photo_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/table_odd_row_color"
-            android:orientation="vertical" >
+            android:layout_margin="5dp"
+            android:background="@drawable/list_even_row_rounded_corner"
+            android:orientation="vertical"
+            android:padding="3dp" >
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -192,8 +222,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dip"
-                android:text="@string/no_photos"
-                android:textColor="@color/black_color" />
+                android:text="@string/no_photos" />
         </LinearLayout>
 
         <!-- Photo ends -->
@@ -203,19 +232,21 @@
 
         <TextView
             android:id="@+id/report_news"
+            style="@style/TextView.Label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dip"
             android:text="@string/news"
-            android:textColor="@color/title_color"
-            android:textStyle="bold" />
+            android:textColor="@color/title_color" />
 
         <LinearLayout
             android:id="@+id/list_news_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/table_odd_row_color"
-            android:orientation="vertical" >
+            android:layout_margin="5dp"
+            android:background="@drawable/list_even_row_rounded_corner"
+            android:orientation="vertical"
+            android:padding="3dp" >
 
             <ListView
                 android:id="@+id/list_news"
@@ -229,8 +260,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dip"
-                android:text="@string/no_news"
-                android:textColor="@color/black_color" />
+                android:text="@string/no_news" />
         </LinearLayout>
 
         <!-- News ends -->
@@ -240,18 +270,19 @@
 
         <TextView
             android:id="@+id/report_video"
+            style="@style/TextView.Label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dip"
             android:text="@string/video"
-            android:textColor="@color/title_color"
-            android:textStyle="bold" />
+            android:textColor="@color/title_color" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/table_odd_row_color"
-            android:orientation="vertical" >
+            android:layout_margin="5dp"
+            android:background="@drawable/list_even_row_rounded_corner"
+            android:orientation="vertical"
+            android:padding="3dp" >
 
             <ListView
                 android:id="@+id/list_video"
@@ -265,8 +296,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dip"
-                android:text="@string/no_video"
-                android:textColor="@color/black_color" />
+                android:text="@string/no_video" />
         </LinearLayout>
         <!-- Video ends -->
 
@@ -275,18 +305,19 @@
 
         <TextView
             android:id="@+id/report_comment"
+            style="@style/TextView.Label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dip"
             android:text="@string/comments"
-            android:textColor="@color/title_color"
-            android:textStyle="bold" />
+            android:textColor="@color/title_color" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/table_odd_row_color"
-            android:orientation="vertical" >
+            android:layout_margin="5dp"
+            android:background="@drawable/list_even_row_rounded_corner"
+            android:orientation="vertical"
+            android:padding="3dp" >
 
             <ListView
                 android:id="@+id/list_comments"
@@ -300,8 +331,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dip"
-                android:text="@string/no_comments"
-                android:textColor="@color/black_color" />
+                android:text="@string/no_comments" />
         </LinearLayout>
         <!-- Comment ends -->
     </LinearLayout>

@@ -21,6 +21,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
          android:paddingTop="20dip"
+         android:textStyle="italic"
+            android:textSize="18sp"
         android:textColor="@color/title_color" />
     <!-- List incidents -->
 

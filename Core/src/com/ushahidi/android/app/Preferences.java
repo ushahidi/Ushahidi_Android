@@ -24,9 +24,9 @@ public class Preferences {
 
 	public static String email = "";
 
-	public static String totalReports = "";
+	public static String totalReports = "5";
 	
-	public static String mapTiles = "";
+	public static String mapTiles = "google";
 
 	public static String fileName = "";
 
@@ -75,7 +75,7 @@ public class Preferences {
 		lastname = settings.getString("Lastname", "");
 		email = settings.getString("Email", "");
 		
-		totalReports = settings.getString("TotalReports", "20");
+		totalReports = settings.getString("TotalReports", "5");
 		mapTiles = settings.getString("MapTiles", "google");
 		isCheckinEnabled = settings.getInt("CheckinEnabled", isCheckinEnabled);
 		activeDeployment = settings.getInt("ActiveDeployment", 0);
@@ -126,6 +126,8 @@ public class Preferences {
 		editor.putString("Phonenumber", phonenumber);
 		editor.putString("OgsPluginVersion", ogsPluginVersion);
 		editor.putString("MapTiles", mapTiles);
+		editor.putString("TotalReports", totalReports);
+
 		editor.commit();
 	}
 }

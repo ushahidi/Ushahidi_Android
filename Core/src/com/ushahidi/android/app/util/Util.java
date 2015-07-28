@@ -62,10 +62,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.ushahidi.android.app.MainApplication;
-import com.ushahidi.android.app.MapBoxTileProvider;
-import com.ushahidi.android.app.OpenStreetMapTileProvider;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
 import com.ushahidi.android.app.ui.phone.AboutActivity;
@@ -622,26 +619,26 @@ public class Util {
     public static void setMapTile(Context context, GoogleMap map) {
         // load preferences
         Preferences.loadSettings(context);
-        TileOverlayOptions osm = new TileOverlayOptions()
-                .tileProvider(new OpenStreetMapTileProvider());
-
-        TileOverlayOptions mapbox = new TileOverlayOptions()
-                .tileProvider(new MapBoxTileProvider());
-
-        final String mapTile = Preferences.mapTiles;
-        if (map != null) {
-            map.setMapType(GoogleMap.MAP_TYPE_NONE);
-            map.addTileOverlay(osm).remove();
-            map.addTileOverlay(mapbox).remove();
-            map.clear();
-            if (mapTile.equals("google")) {
-                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            } else if (mapTile.equals("osm")) {
-                map.addTileOverlay(osm);
-            } else {
-                map.addTileOverlay(mapbox);
-            }
-        }
+//        TileOverlayOptions osm = new TileOverlayOptions()
+//                .tileProvider(new OpenStreetMapTileProvider());
+//
+//        TileOverlayOptions mapbox = new TileOverlayOptions()
+//                .tileProvider(new MapBoxTileProvider());
+//
+//        final String mapTile = Preferences.mapTiles;
+//        if (map != null) {
+//            map.setMapType(GoogleMap.MAP_TYPE_NONE);
+//            map.addTileOverlay(osm).remove();
+//            map.addTileOverlay(mapbox).remove();
+//            map.clear();
+//            if (mapTile.equals("google")) {
+//                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+//            } else if (mapTile.equals("osm")) {
+//                map.addTileOverlay(osm);
+//            } else {
+//                map.addTileOverlay(mapbox);
+//            }
+//        }
     }
 
     public static void showAbout(final SherlockFragmentActivity mActivity) {

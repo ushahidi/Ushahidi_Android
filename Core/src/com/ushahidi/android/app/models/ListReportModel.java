@@ -76,7 +76,16 @@ public class ListReportModel{
 	}
 
 	public boolean loadReportByCategory(int categoryId) {
-		mReports = Database.mReportDao.fetchReportByCategoryId(categoryId);
+		
+		//get parent categories
+		List<CategoryEntity> categories = Database.mCategoryDao.fetchChildrenCategories(categoryId);
+		int[] cat = new int[categories.size() +1];
+		cat[0] = categoryId;
+		for(int i = 0; i < categories.size(); i++){
+			cat[i+1] = categories.get(i).getCategoryId();
+		}
+		
+		mReports = Database.mReportDao.fetchReportByCategoryIds(cat);
 
 		if (mReports != null) {
 			return true;
@@ -90,6 +99,10 @@ public class ListReportModel{
 	
 	public List<CategoryEntity> getParentCategories() {
 		return Database.mCategoryDao.fetchAllCategoryTitles();
+
+	}
+	public CategoryEntity getParentCategory(int parentId) {
+		return Database.mCategoryDao.fetchParentCategory(parentId);
 
 	}
 	
@@ -168,6 +181,11 @@ public class ListReportModel{
 		if (Database.mMediaDao.deleteAllMedia()) {
 			new Util().log("Media deleted");
 		}
+		//delete custom forms values
+		if (Database.mReportCustomFormDao.deleteAllReportCustomForms()) {
+			new Util().log( "Report CustomForms deleted");
+		}
+		
 		return true;
 	}
 }

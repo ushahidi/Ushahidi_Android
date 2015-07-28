@@ -20,15 +20,15 @@ package com.ushahidi.android.app.tasks;
  **
  **/
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * An abstract Reverse Geocoder Task

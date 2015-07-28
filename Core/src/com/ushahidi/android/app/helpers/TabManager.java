@@ -23,13 +23,14 @@ package com.ushahidi.android.app.helpers;
 import java.util.ArrayList;
 
 import android.content.Context;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
 
 public class TabManager extends FragmentPagerAdapter implements
 		ViewPager.OnPageChangeListener, ActionBar.TabListener {

@@ -46,11 +46,14 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.ushahidi.android.app.Preferences;
 import com.ushahidi.android.app.R;
+import com.ushahidi.android.app.activities.WeatherMapActivity;
 import com.ushahidi.android.app.adapters.CategorySpinnerAdater;
 import com.ushahidi.android.app.adapters.ListFetchedReportAdapter;
 import com.ushahidi.android.app.adapters.PopupAdapter;
 import com.ushahidi.android.app.api.CategoriesApi;
+import com.ushahidi.android.app.api.CustomFormApi;
 import com.ushahidi.android.app.api.ReportsApi;
+import com.ushahidi.android.app.database.Database;
 import com.ushahidi.android.app.entities.PhotoEntity;
 import com.ushahidi.android.app.entities.ReportEntity;
 import com.ushahidi.android.app.fragments.BaseMapFragment;
@@ -109,7 +112,8 @@ public class MapFragment extends BaseMapFragment implements
 
 	private void initMap() {
 		// set up the map tile use
-		Util.setMapTile(getActivity(), map);
+		//Util.setMapTile(getActivity(), map);
+		
 		if (mReportModel.size() > 0) {
 			setupMapCenter();
 			mHandler.post(mMarkersOnMap);
@@ -117,6 +121,8 @@ public class MapFragment extends BaseMapFragment implements
 		} else {
 			toastLong(R.string.no_reports);
 		}
+		
+		
 	}
 
 	@Override
@@ -251,6 +257,9 @@ public class MapFragment extends BaseMapFragment implements
 			showDropDownNav();
 
 			return true;
+		} else if (item.getItemId() == R.id.show_weather){
+			Intent i = new Intent(getActivity(), WeatherMapActivity.class);
+			startActivity(i);
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -433,6 +442,9 @@ public class MapFragment extends BaseMapFragment implements
 			}
 
 		}
+		if (Database.mReportCustomFormDao.deleteAllReportCustomForms()) {
+			new Util().log( "Report CustomForms deleted");
+		}
 
 	}
 
@@ -469,8 +481,15 @@ public class MapFragment extends BaseMapFragment implements
 					// right!
 					new CategoriesApi().getCategoriesList();
 
-					status = new ReportsApi().saveReports(getActivity()) ? 0
-							: 99;
+					boolean reportFetched = new ReportsApi().saveReports(getActivity());
+					
+					if(reportFetched){//fetch also customforms values
+						List<ReportEntity> reports = Database.mReportDao.fetchAllReports();
+						new CustomFormApi().fetchReportCustomFormList(reports);
+					}
+						
+					//TODO adding CONSTANT status values	
+					status = reportFetched ? 0 : 99;
 				}
 
 				Thread.sleep(1000);

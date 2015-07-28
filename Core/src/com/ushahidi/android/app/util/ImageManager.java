@@ -20,8 +20,8 @@
 
 package com.ushahidi.android.app.util;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;

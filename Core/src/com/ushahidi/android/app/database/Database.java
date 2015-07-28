@@ -42,7 +42,7 @@ public class Database {
 
 	public static final String DATABASE_NAME = "ushahidi_db";
 
-	private static final int DATABASE_VERSION = 19;
+	private static final int DATABASE_VERSION = 20;
 
 	private final Context mContext;
 
@@ -65,6 +65,10 @@ public class Database {
 	public static CommentDao mCommentDao; // comment
 
 	public static OpenGeoSmsDao mOpenGeoSmsDao;
+	
+	public static CustomFormDao mCustomFormDao; // Custom form table
+	public static CustomFormMetaDao mCustomFormMetaDao; // Custom form table
+	public static ReportCustomFormDao mReportCustomFormDao;
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		DatabaseHelper(Context context) {
@@ -90,6 +94,10 @@ public class Database {
 			db.execSQL(IOfflineReportSchema.OFFLINE_REPORT_TABLE_CREATE);
 			db.execSQL(ICommentSchema.COMMENT_TABLE_CREATE);
 			db.execSQL(IOpenGeoSmsSchema.OPENGEOSMS_TABLE_CREATE);
+			db.execSQL(ICustomFormSchema.CUSTOM_FORM_TABLE_CREATE);
+			db.execSQL(ICustomFormMetaSchema.CUSTOM_FORM_META_TABLE_CREATE);
+			db.execSQL(IReportCustomFormSchema.REPORT_CUSTOM_FORM_TABLE_CREATE);
+
 		}
 
 		@Override
@@ -240,6 +248,9 @@ public class Database {
 		mUserDao = new UserDao(mDb);
 		mCommentDao = new CommentDao(mDb);
 		mOpenGeoSmsDao = new OpenGeoSmsDao(mDb);
+		mCustomFormDao = new CustomFormDao(mDb);
+		mCustomFormMetaDao = new CustomFormMetaDao(mDb);
+		mReportCustomFormDao = new ReportCustomFormDao(mDb);
 		return this;
 	}
 
