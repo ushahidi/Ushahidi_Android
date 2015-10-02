@@ -1,7 +1,7 @@
 [Deprecated] Ushahidi Android app For [Ushahidi V2.x.x](https://github.com/ushahidi/Ushahidi_Web)
 =================================
 
-Ushahidi Android app For [Ushahidi V2.x.x](https://github.com/ushahidi/Ushahidi_Web) is not compatible with [V3.x.x](https://github.com/ushahidi/platform/) We're working a new Android app that works with V3.x.x at https://github.com/ushahidi/platform-android/
+Ushahidi Android app For [Ushahidi V2.x.x](https://github.com/ushahidi/Ushahidi_Web) is not compatible with [V3.x.x](https://github.com/ushahidi/platform/) We're working on a new Android app that works with V3.x.x at https://github.com/ushahidi/platform-android/
 
 
 Ushahidi is an open source platform for democratizing information, increasing transparency and lowering the barriers for individuals to share their stories. 
