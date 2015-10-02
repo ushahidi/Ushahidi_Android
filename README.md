@@ -1,5 +1,7 @@
-[Deprecated] Ushahidi Android app For [Ushahidi V2.x.x](https://github.com/ushahidi/Ushahidi_Web). Moved to https://github.com/ushahidi/platform-android/
+[Deprecated] Ushahidi Android app For [Ushahidi V2.x.x](https://github.com/ushahidi/Ushahidi_Web)
 =================================
+
+Ushahidi Android app For [Ushahidi V2.x.x](https://github.com/ushahidi/Ushahidi_Web) moved to https://github.com/ushahidi/platform-android/
 
 Ushahidi is an open source platform for democratizing information, increasing transparency and lowering the barriers for individuals to share their stories. 
 
