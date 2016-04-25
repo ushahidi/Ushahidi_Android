@@ -148,8 +148,11 @@ public abstract class ReportAdapter extends BaseListAdapter<ReportEntity>
         widgets.categories.setText(Util.capitalizeString(Util.limitString(
                 fetchCategories((int) getItem(position).getIncident().getId()),
                 100)));
-        widgets.iLocation.setText(Util.capitalizeString(getItem(position)
-                .getIncident().getLocationName()));
+        // El API retorna LocationName null
+        String toCap = getItem(position)
+                .getIncident().getLocationName()==null?"Sin localizacion":getItem(position)
+                        .getIncident().getLocationName();
+        widgets.iLocation.setText(Util.capitalizeString(toCap));
         // change the status color
 
         if (getItem(position).getIncident().getVerified() == 1) {
