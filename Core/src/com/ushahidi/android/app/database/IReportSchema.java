@@ -58,8 +58,9 @@ public interface IReportSchema {
 			+ " INTEGER, "
 			+ INCIDENT_VERIFIED
 			+ " INTEGER, "
+			// El API retorna LocationName null, se elimina NOT NULL del campo INCIDENT_LOC_NAME
 			+ INCIDENT_LOC_NAME
-			+ " TEXT NOT NULL, "
+			+ " TEXT, "
 			+ INCIDENT_LOC_LATITUDE
 			+ " TEXT NOT NULL, "
 			+ INCIDENT_LOC_LONGITUDE
