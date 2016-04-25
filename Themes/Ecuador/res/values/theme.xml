@@ -1,7 +1,7 @@
 <resources>
 
     <!-- DEPLOYMENT INFORMATION -->
-    <string name="app_title">Ushahidi</string>
+    <string name="app_title">Ayuda Ec</string>
     <string name="deployment_url">https://mapa.desastre.ec</string>
     <string name="team_url">http://desastre.ec</string>
     <string name="media_url">http://www.ushahidi.com</string>
